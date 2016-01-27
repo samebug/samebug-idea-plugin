@@ -18,7 +18,7 @@ public class ConsoleScannerSolutionSearch extends AutomatedSolutionSearch implem
         super(project);
 
         this.consoleScannerManager = new ConsoleScannerManager(logScannerFactory);
-        MessageBusConnection messageBusConnection = project.getMessageBus().connect(project);
+        MessageBusConnection messageBusConnection = project.getMessageBus().connect();
         messageBusConnection.subscribe(RunContentManager.TOPIC, this);
     }
 

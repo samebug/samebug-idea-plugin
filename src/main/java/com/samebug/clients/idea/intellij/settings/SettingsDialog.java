@@ -13,14 +13,14 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.*;
 
-public class SetupDialog extends JDialog implements Configurable {
+public class SettingsDialog extends JDialog implements Configurable {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JTextField apiKeyTextField;
     private JTextPane descriptionTextPane;
 
-    public SetupDialog() {
+    public SettingsDialog() {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -67,10 +67,9 @@ public class SetupDialog extends JDialog implements Configurable {
     }
 
     public static void setup() {
-        SetupDialog dialog = new SetupDialog();
+        SettingsDialog dialog = new SettingsDialog();
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(null);
-
         dialog.pack();
         SamebugIdeaPlugin plugin = SamebugIdeaPlugin.getInstance();
         if (plugin != null && plugin.getApiKey() != null) {

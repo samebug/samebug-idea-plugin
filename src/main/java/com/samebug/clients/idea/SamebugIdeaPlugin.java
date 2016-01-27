@@ -20,7 +20,7 @@ import java.net.URI;
 @State(
         name = "SamebugConfiguration",
         storages = {
-                @Storage(id = "samebugClient", file = "$APP_CONFIG$/samebugClient.xml")
+                @Storage(id = "SamebugClient", file = "$APP_CONFIG$/SamebugClient.xml")
         }
 )
 public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateComponent<SamebugState> {

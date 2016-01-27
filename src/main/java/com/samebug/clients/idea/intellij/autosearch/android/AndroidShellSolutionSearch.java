@@ -14,17 +14,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class AndroidShellSolutionSearch extends AutomatedSolutionSearch implements AndroidDebugBridge.IDeviceChangeListener, Disposable, RunContentWithExecutorListener {
+
     public AndroidShellSolutionSearch() {
-        this(null);
-    }
-
-
-    public AndroidShellSolutionSearch(Project project) {
         super();
         this.outputScannerManager = new ShellOutputScannerManager(logScannerFactory);
         initialize();
     }
-
 
     @Override
     public void deviceConnected(IDevice device) {
@@ -61,6 +56,9 @@ public class AndroidShellSolutionSearch extends AutomatedSolutionSearch implemen
         }
         if (bridge.isConnected()) {
             AndroidDebugBridge.addDeviceChangeListener(this);
+            for (IDevice device: bridge.getDevices()) {
+                deviceConnected(device);
+            }
             initialized = true;
         } else {
             initialized = false;

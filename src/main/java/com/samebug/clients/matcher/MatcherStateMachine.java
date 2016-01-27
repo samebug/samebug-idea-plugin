@@ -39,8 +39,6 @@ abstract class MatcherStateMachine {
         switch (state) {
             case StackTraceStarted:
             case More:
-            case ExceptionStartedWithMessage:
-            case ExceptionStartedWithoutMessage:
                 stackTraceFound();
         }
     }
