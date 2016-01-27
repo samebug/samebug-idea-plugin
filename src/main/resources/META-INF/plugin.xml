@@ -1,0 +1,44 @@
+<idea-plugin version="2">
+    <id>Samebug</id>
+    <name>Samebug</name>
+    <version>${project.version}</version>
+    <vendor email="hello@samebug.io" url="http://samebug.io">Samebug</vendor>
+
+    <description><![CDATA[
+      Automated exception search
+    ]]></description>
+
+    <change-notes><![CDATA[
+      Initial release of the plugin.
+    ]]>
+    </change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="141..0"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Samebug" icon="/icons/samebug/samebug-r270-13x13.png" anchor="right"
+                    factoryClass="com.samebug.clients.idea.intellij.toolwindow.SamebugToolWindowFactory"/>
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+
+    <application-components>
+        <component>
+            <implementation-class>com.samebug.clients.idea.SamebugIdeaPlugin</implementation-class>
+        </component>
+    </application-components>
+    <project-components>
+        <component>
+            <implementation-class>com.samebug.clients.idea.SamebugProjectComponent</implementation-class>
+        </component>
+    </project-components>
+</idea-plugin>
