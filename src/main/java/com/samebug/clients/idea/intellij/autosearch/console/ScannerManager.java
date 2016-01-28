@@ -10,9 +10,9 @@ import java.util.Map;
 /**
  * Installs a ProcessOutputScanner on Run/Debug Process standard and error outputs
  */
-public class ConsoleScannerManager {
+public class ScannerManager {
 
-    public ConsoleScannerManager(@NotNull LogScannerFactory scannerFactory) {
+    public ScannerManager(@NotNull LogScannerFactory scannerFactory) {
         this.scannerFactory = scannerFactory;
     }
 

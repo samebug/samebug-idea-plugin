@@ -6,6 +6,7 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.extensions.PluginId;
+import com.samebug.clients.idea.intellij.autosearch.StackTraceSearch;
 import com.samebug.clients.rest.SamebugClient;
 import com.samebug.clients.rest.entities.UserInfo;
 import com.samebug.clients.rest.exceptions.SamebugClientException;
@@ -24,52 +25,45 @@ import java.net.URI;
         }
 )
 public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateComponent<SamebugState> {
-    private AndroidShellSolutionSearch androidShellSolutionSearch;
+    private StackTraceSearch stackTraceSearch;
 
     public SamebugIdeaPlugin() {
         SamebugNotification.registerNotificationGroups();
         this.client = new SamebugClient(this, URI.create("https://samebug.io/"));
+        this.stackTraceSearch = new StackTraceSearch(client);
     }
 
-    @Nullable
+    @NotNull
     public static SamebugIdeaPlugin getInstance() {
-        return ApplicationManager.getApplication().getComponent(SamebugIdeaPlugin.class);
+        SamebugIdeaPlugin instance = ApplicationManager.getApplication().getComponent(SamebugIdeaPlugin.class);
+        if (instance == null) {
+            throw new Error("No Samebug IDEA plugin available");
+        } else {
+            return instance;
+        }
+    }
+
+    @NotNull
+    public static SamebugClient getClient() {
+        return getInstance().client;
     }
 
     @Nullable
-    public static SamebugClient getClient() {
-        SamebugIdeaPlugin plugin = getInstance();
-        return plugin != null ? plugin.client : null;
-    }
-
-    public static AndroidShellSolutionSearch getAndroidShellSolutionSearch() {
-        SamebugIdeaPlugin plugin = getInstance();
-        return plugin != null ? plugin.androidShellSolutionSearch : null;
+    public static StackTraceSearch getSearchEngine() {
+        return getInstance().stackTraceSearch;
     }
 
     public static boolean isInitialized() {
-        SamebugIdeaPlugin instance = getInstance();
-        if (instance != null) {
-            SamebugState state = instance.getState();
-            return state.getApiKey() != null;
-        }
-        return false;
+        return getInstance().getApiKey() != null;
     }
 
     @Override
     public void initComponent() {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                SamebugIdeaPlugin.this.androidShellSolutionSearch = new AndroidShellSolutionSearch();
-            }
-        });
     }
 
 
     @Override
     public void disposeComponent() {
-        androidShellSolutionSearch.dispose();
     }
 
     @Override

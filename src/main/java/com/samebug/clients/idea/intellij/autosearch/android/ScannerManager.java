@@ -13,9 +13,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Installs a ProcessOutputScanner on Run/Debug Process standard and error outputs
  */
-public class ShellOutputScannerManager {
+public class ScannerManager {
 
-    public ShellOutputScannerManager(@NotNull LogScannerFactory scannerFactory) {
+    public ScannerManager( @NotNull LogScannerFactory scannerFactory) {
         this.scannerFactory = scannerFactory;
     }
 
@@ -30,7 +30,7 @@ public class ShellOutputScannerManager {
 
     private IShellOutputReceiver createReceiver(@NotNull IDevice device, Integer deviceHashCode) throws UnableToCreateReceiver {
         try {
-            AndroidShellOutputScanner receiver = new AndroidShellOutputScanner(scannerFactory.createScanner());
+            OutputScanner receiver = new OutputScanner(scannerFactory.createScanner());
             device.executeShellCommand("logcat -v long", receiver, 0L, TimeUnit.NANOSECONDS);
             return receiver;
         } catch (TimeoutException e) {
@@ -46,7 +46,7 @@ public class ShellOutputScannerManager {
 
     synchronized void removeReceiver(@NotNull IDevice device) {
         Integer descriptorHashCode = System.identityHashCode(device);
-        AndroidShellOutputScanner receiver =  receivers.get(descriptorHashCode);
+        OutputScanner receiver =  receivers.get(descriptorHashCode);
         if (receiver != null) {
             receiver.finish();
         }
@@ -54,6 +54,6 @@ public class ShellOutputScannerManager {
     }
 
     private final LogScannerFactory scannerFactory;
-    private final Map<Integer, AndroidShellOutputScanner> receivers = new HashMap<Integer, AndroidShellOutputScanner>();
+    private final Map<Integer, OutputScanner> receivers = new HashMap<Integer, OutputScanner>();
 }
 

@@ -6,20 +6,24 @@ import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunContentWithExecutorListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.samebug.clients.idea.SamebugProjectComponent;
-import com.samebug.clients.idea.intellij.autosearch.AutomatedSolutionSearch;
+import com.samebug.clients.api.StackTraceListener;
+import com.samebug.clients.idea.intellij.autosearch.StackTraceSearch;
+import com.samebug.clients.idea.intellij.autosearch.StackTraceMatcherFactory;
 import com.samebug.clients.idea.intellij.autosearch.android.exceptions.UnableToCreateReceiver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class AndroidShellSolutionSearch extends AutomatedSolutionSearch implements AndroidDebugBridge.IDeviceChangeListener, Disposable, RunContentWithExecutorListener {
+public class AndroidShellSolutionSearch implements StackTraceListener, AndroidDebugBridge.IDeviceChangeListener, Disposable, RunContentWithExecutorListener {
 
-    public AndroidShellSolutionSearch() {
+    public AndroidShellSolutionSearch(StackTraceSearch stacktraceSearch, StackTraceSearch.SearchResultListener searchResultListener) {
         super();
-        this.outputScannerManager = new ShellOutputScannerManager(logScannerFactory);
+        this.stacktraceSearch = stacktraceSearch;
+        this.searchResultListener = searchResultListener;
+        this.logScannerFactory = new StackTraceMatcherFactory(this);
+        this.outputScannerManager = new ScannerManager(logScannerFactory);
         initialize();
     }
+
 
     @Override
     public void deviceConnected(IDevice device) {
@@ -65,10 +69,12 @@ public class AndroidShellSolutionSearch extends AutomatedSolutionSearch implemen
         }
     }
 
-
-    private final static Logger logger = Logger.getInstance(SamebugProjectComponent.class);
-    private final ShellOutputScannerManager outputScannerManager;
+    private final static Logger logger = Logger.getInstance(AndroidShellSolutionSearch.class);
+    private final StackTraceMatcherFactory logScannerFactory;
+    private final ScannerManager outputScannerManager;
     private volatile boolean initialized;
+    private final StackTraceSearch stacktraceSearch;
+    private final StackTraceSearch.SearchResultListener searchResultListener;
 
     @Override
     public void dispose() {
@@ -83,5 +89,10 @@ public class AndroidShellSolutionSearch extends AutomatedSolutionSearch implemen
     @Override
     public void contentRemoved(@Nullable RunContentDescriptor runContentDescriptor, @NotNull Executor executor) {
 
+    }
+
+    @Override
+    public void stacktraceFound(String stacktrace) {
+        stacktraceSearch.search(stacktrace, searchResultListener);
     }
 }
