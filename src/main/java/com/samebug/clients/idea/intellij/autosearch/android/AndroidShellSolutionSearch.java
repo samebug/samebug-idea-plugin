@@ -56,11 +56,12 @@ public class AndroidShellSolutionSearch implements StackTraceListener, AndroidDe
 
     private void initialize() {
         AndroidDebugBridge bridge = AndroidDebugBridge.getBridge();
+        AndroidDebugBridge.addDeviceChangeListener(this);
+        AndroidDebugBridge.addClientChangeListener(this);
+        AndroidDebugBridge.addDebugBridgeChangeListener(this);
+
 
         if (bridge.isConnected()) {
-            AndroidDebugBridge.addDeviceChangeListener(this);
-            AndroidDebugBridge.addClientChangeListener(this);
-            AndroidDebugBridge.addDebugBridgeChangeListener(this);
             for (IDevice device: bridge.getDevices()) {
                 deviceConnected(device);
             }
@@ -106,6 +107,8 @@ public class AndroidShellSolutionSearch implements StackTraceListener, AndroidDe
     @Override
     public void bridgeChanged(AndroidDebugBridge bridge) {
         logger.info("Bridge changed: "+ bridge);
-
+        for (IDevice device: bridge.getDevices()) {
+            deviceConnected(device);
+        }
     }
 }

@@ -15,11 +15,11 @@ import java.util.concurrent.TimeUnit;
  */
 public class ScannerManager {
 
-    public ScannerManager( @NotNull LogScannerFactory scannerFactory) {
+    ScannerManager( @NotNull LogScannerFactory scannerFactory) {
         this.scannerFactory = scannerFactory;
     }
 
-    public synchronized IShellOutputReceiver initReceiver(@NotNull IDevice device) throws UnableToCreateReceiver {
+    synchronized IShellOutputReceiver initReceiver(@NotNull IDevice device) throws UnableToCreateReceiver {
         Integer deviceHashCode = System.identityHashCode(device);
         IShellOutputReceiver receiver = receivers.get(deviceHashCode);
         if (receiver == null) {
