@@ -2,48 +2,50 @@
 // The above triggers groovy syntax highlighting in vim
 
 plugins {
-  id "org.jetbrains.intellij" version "0.0.39"
+    id "org.jetbrains.intellij" version "0.0.39"
+}
+
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+
+sourceSets {
+    main {
+        java.srcDirs 'src/main/java'
+        resources.srcDir 'src/main/resources'
+    }
+    test {
+        java.srcDirs 'src/test/java'
+        resources.srcDir 'src/test/resources'
+    }
 }
 
 apply plugin: 'org.jetbrains.intellij'
 
-group = 'com.samebug.clients.idea'
-description = 'Samebug for IntelliJ IDEA'
-
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
-
 intellij {
-  if (project.hasProperty("ijVersion")){
-    version ijVersion
-  } else {
-    version '15.0.1'
-  }
-  pluginName 'Samebug'
-  updateSinceUntilBuild false
+    version project.hasProperty('ideaVersion') ? ideaVersion : 'IC-15.0.3'
+    plugins 'android'
+
+    pluginName 'samebug-idea-plugin'
+    updateSinceUntilBuild false
 }
 
 repositories {
-  jcenter()
-  mavenLocal()
-  mavenCentral()
+    jcenter()
+    mavenLocal()
+    mavenCentral()
 }
 
 dependencies {
-  compile 'com.google.code.gson:gson:2.5'
-  compile 'com.android.tools.ddms:ddmlib:24.5.0'
-  testCompile 'junit:junit:4.11'
-  testCompile 'org.mockito:mockito-core:1.10.19'
-}
-/*
-samebug {
-  properties {
-    property 'samebug.projectName', 'Samebug for IntelliJ IDEA'
-  }
+    compile 'com.google.code.gson:gson:2.5'
+    compile 'com.android.tools.ddms:ddmlib:24.5.0'
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.mockito:mockito-core:1.10.19'
 }
 
-license {
-  strictCheck true
-}
-
-*/
+group = 'com.samebug.clients.idea'
+description = 'Samebug for IntelliJ IDEA'
+version '0.2.0-SNAPSHOT'
