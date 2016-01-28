@@ -6,6 +6,7 @@ import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.idea.adb.AndroidSdkUtils;
 import com.samebug.clients.idea.intellij.autosearch.StackTraceSearch;
 import com.samebug.clients.idea.intellij.autosearch.android.AndroidShellSolutionSearch;
 import com.samebug.clients.idea.intellij.autosearch.console.ConsoleScannerStackTraceSearch;

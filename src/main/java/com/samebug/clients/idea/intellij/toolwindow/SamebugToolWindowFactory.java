@@ -7,6 +7,7 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.samebug.clients.idea.SamebugIdeaPlugin;
+import com.samebug.clients.idea.SamebugProjectComponent;
 import com.samebug.clients.idea.intellij.autosearch.android.AndroidShellSolutionSearch;
 import com.samebug.clients.idea.intellij.autosearch.console.ConsoleScannerStackTraceSearch;
 import com.samebug.clients.idea.intellij.settings.SettingsDialog;
@@ -20,6 +21,7 @@ public class SamebugToolWindowFactory implements ToolWindowFactory {
     private JButton settingsButton;
     private JPanel contentPanel;
     private JToolBar toolbar;
+    private JButton debugButton;
     private ToolWindow toolWindow;
     private ConsoleScannerStackTraceSearch consoleSearch;
     private AndroidShellSolutionSearch androidShellSolutionSearch;
@@ -34,7 +36,12 @@ public class SamebugToolWindowFactory implements ToolWindowFactory {
                 SettingsDialog.setup();
             }
         });
-
+        debugButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                logger.info("debug");
+            }
+        });
     }
 
     @Override

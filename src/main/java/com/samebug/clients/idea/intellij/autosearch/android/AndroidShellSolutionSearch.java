@@ -13,7 +13,9 @@ import com.samebug.clients.idea.intellij.autosearch.android.exceptions.UnableToC
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class AndroidShellSolutionSearch implements StackTraceListener, AndroidDebugBridge.IDeviceChangeListener, Disposable, RunContentWithExecutorListener {
+
+
+public class AndroidShellSolutionSearch implements StackTraceListener, AndroidDebugBridge.IDeviceChangeListener, Disposable, RunContentWithExecutorListener, AndroidDebugBridge.IClientChangeListener, AndroidDebugBridge.IDebugBridgeChangeListener {
 
     public AndroidShellSolutionSearch(StackTraceSearch stacktraceSearch, StackTraceSearch.SearchResultListener searchResultListener) {
         super();
@@ -53,13 +55,12 @@ public class AndroidShellSolutionSearch implements StackTraceListener, AndroidDe
     }
 
     private void initialize() {
-        AndroidDebugBridge.initIfNeeded(false);
         AndroidDebugBridge bridge = AndroidDebugBridge.getBridge();
-        if (bridge == null) {
-            bridge = AndroidDebugBridge.createBridge();
-        }
+
         if (bridge.isConnected()) {
             AndroidDebugBridge.addDeviceChangeListener(this);
+            AndroidDebugBridge.addClientChangeListener(this);
+            AndroidDebugBridge.addDebugBridgeChangeListener(this);
             for (IDevice device: bridge.getDevices()) {
                 deviceConnected(device);
             }
@@ -94,5 +95,17 @@ public class AndroidShellSolutionSearch implements StackTraceListener, AndroidDe
     @Override
     public void stacktraceFound(String stacktrace) {
         stacktraceSearch.search(stacktrace, searchResultListener);
+    }
+
+    @Override
+    public void clientChanged(Client client, int changeMask) {
+        logger.info("Client changed: "+ client);
+
+    }
+
+    @Override
+    public void bridgeChanged(AndroidDebugBridge bridge) {
+        logger.info("Bridge changed: "+ bridge);
+
     }
 }

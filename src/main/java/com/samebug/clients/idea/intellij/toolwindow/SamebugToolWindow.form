@@ -46,6 +46,12 @@
                   <toolTipText value="Samebug Settings"/>
                 </properties>
               </component>
+              <component id="e8c3a" class="javax.swing.JButton" binding="debugButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Debug"/>
+                </properties>
+              </component>
             </children>
           </toolbar>
         </children>

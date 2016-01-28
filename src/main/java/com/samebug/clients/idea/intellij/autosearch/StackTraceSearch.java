@@ -21,7 +21,6 @@ public class StackTraceSearch {
                     final SearchResults results = client.searchSolutions(stacktrace);
                     resultHandler.handleResults(results);
                 } catch (SamebugClientException e) {
-                    // TODO
                     resultHandler.handleException(e);
                 }
             }

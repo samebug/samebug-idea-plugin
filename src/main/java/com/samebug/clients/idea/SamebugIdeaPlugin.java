@@ -1,5 +1,6 @@
 package com.samebug.clients.idea;
 
+import com.android.ddmlib.AndroidDebugBridge;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -31,6 +32,8 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
         SamebugNotification.registerNotificationGroups();
         this.client = new SamebugClient(this, URI.create("https://samebug.io/"));
         this.stackTraceSearch = new StackTraceSearch(client);
+        AndroidDebugBridge.initIfNeeded(false);
+        AndroidDebugBridge.createBridge();
     }
 
     @NotNull
