@@ -2,6 +2,7 @@ package com.samebug.clients.idea;
 
 import com.intellij.execution.ui.RunContentManager;
 import com.intellij.ide.BrowserUtil;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -88,7 +89,12 @@ public class SamebugProjectComponent implements ProjectComponent {
                 }
             }
         });
-        notification.notify(project);
+        logger.debug("Showing Samebug notification about search " + results.searchId);
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            public void run() {
+                notification.notify(project);
+            }
+        });
     }
 
     @Override

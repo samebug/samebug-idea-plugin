@@ -14,7 +14,7 @@ public class StackTraceSearch {
     }
 
     public void search(final String stacktrace, final SearchResultListener resultHandler) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
                 try {

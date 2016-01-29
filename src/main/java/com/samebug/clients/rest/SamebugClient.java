@@ -81,6 +81,8 @@ public class SamebugClient {
     @NotNull
     private HttpResponse execute(Request request) throws IOException, UnsuccessfulResponseStatus, RemoteError {
         addDefaultHeaders(request);
+        request.connectTimeout(3000);
+        request.socketTimeout(5000);
         Response response = request.execute();
 
         final HttpResponse httpResponse = response.returnResponse();
