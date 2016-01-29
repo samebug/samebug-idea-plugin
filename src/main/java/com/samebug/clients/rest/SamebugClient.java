@@ -35,7 +35,8 @@ public class SamebugClient {
         Request post = Request.Post(url.toString());
         Request request = post.bodyForm(form, Consts.UTF_8);
 
-        return requestJson(request, SearchResults.class);
+        SearchResults searchResults = requestJson(request, SearchResults.class);
+        return searchResults;
     }
 
     public URL getSearchUrl(int searchId) throws SamebugClientException {
