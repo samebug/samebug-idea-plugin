@@ -13,6 +13,7 @@ import com.samebug.clients.idea.intellij.autosearch.android.AndroidShellSolution
 import com.samebug.clients.idea.intellij.autosearch.console.ConsoleScannerStackTraceSearch;
 import com.samebug.clients.idea.intellij.notification.NotificationActionListener;
 import com.samebug.clients.idea.intellij.notification.SearchResultsNotification;
+import com.samebug.clients.idea.intellij.settings.SettingsDialog;
 import com.samebug.clients.idea.messages.SamebugBundle;
 import com.samebug.clients.rest.SamebugClient;
 import com.samebug.clients.rest.entities.SearchResults;
@@ -40,7 +41,8 @@ public class SamebugProjectComponent implements ProjectComponent {
 
     @Override
     public void initComponent() {
-
+        final SamebugIdeaPlugin plugin = SamebugIdeaPlugin.getInstance();
+        if (plugin.getApiKey() == null) SettingsDialog.setup(plugin);
     }
 
     private void initScanners(@NotNull Project project) {
@@ -48,7 +50,7 @@ public class SamebugProjectComponent implements ProjectComponent {
         this.consoleSearch = new ConsoleScannerStackTraceSearch(searchEngine, project, new StackTraceSearch.SearchResultListener() {
             @Override
             public void handleResults(SearchResults results) {
-                if (results.totalSolutions>0) showNotificationPopup(results);
+                if (results.totalSolutions > 0) showNotificationPopup(results);
             }
 
             @Override
@@ -59,7 +61,7 @@ public class SamebugProjectComponent implements ProjectComponent {
         this.androidShellSolutionSearch = new AndroidShellSolutionSearch(searchEngine, new StackTraceSearch.SearchResultListener() {
             @Override
             public void handleResults(SearchResults results) {
-                if (results.totalSolutions>0) showNotificationPopup(results);
+                if (results.totalSolutions > 0) showNotificationPopup(results);
             }
 
             @Override

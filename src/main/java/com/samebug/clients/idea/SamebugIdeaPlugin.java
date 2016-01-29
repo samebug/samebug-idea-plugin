@@ -8,6 +8,7 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.extensions.PluginId;
 import com.samebug.clients.idea.intellij.autosearch.StackTraceSearch;
+import com.samebug.clients.idea.intellij.settings.SettingsDialog;
 import com.samebug.clients.rest.SamebugClient;
 import com.samebug.clients.rest.entities.UserInfo;
 import com.samebug.clients.rest.exceptions.SamebugClientException;
@@ -62,6 +63,7 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
 
     @Override
     public void initComponent() {
+
     }
 
 

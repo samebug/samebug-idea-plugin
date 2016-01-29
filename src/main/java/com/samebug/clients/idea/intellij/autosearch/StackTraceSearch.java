@@ -5,6 +5,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.rest.SamebugClient;
 import com.samebug.clients.rest.entities.SearchResults;
 import com.samebug.clients.rest.exceptions.SamebugClientException;
+import com.samebug.clients.rest.exceptions.UserUnauthorized;
 
 public class StackTraceSearch {
     protected final SamebugClient client;
@@ -17,9 +18,12 @@ public class StackTraceSearch {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
+                final SearchResults results;
                 try {
-                    final SearchResults results = client.searchSolutions(stacktrace);
+                    results = client.searchSolutions(stacktrace);
                     resultHandler.handleResults(results);
+                } catch (UserUnauthorized ignored) {
+
                 } catch (SamebugClientException e) {
                     resultHandler.handleException(e);
                 }
@@ -32,6 +36,7 @@ public class StackTraceSearch {
 
     public interface SearchResultListener {
         void handleResults(SearchResults results);
+
         void handleException(SamebugClientException exception);
     }
 

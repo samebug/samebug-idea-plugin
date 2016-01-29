@@ -28,12 +28,9 @@ public class SamebugToolWindowFactory implements ToolWindowFactory {
     private Project project;
 
     public SamebugToolWindowFactory() {
-        if (!SamebugIdeaPlugin.isInitialized())
-            SettingsDialog.setup();
-
         settingsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SettingsDialog.setup();
+                SettingsDialog.setup(SamebugIdeaPlugin.getInstance());
             }
         });
         debugButton.addActionListener(new ActionListener() {

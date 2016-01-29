@@ -79,7 +79,7 @@ public class SamebugClient {
     }
 
     @NotNull
-    private HttpResponse execute(Request request) throws IOException, UnsuccessfulResponseStatus, RemoteError {
+    private HttpResponse execute(Request request) throws IOException, UnsuccessfulResponseStatus, RemoteError, UserUnauthorized {
         addDefaultHeaders(request);
         request.connectTimeout(3000);
         request.socketTimeout(5000);
@@ -87,15 +87,19 @@ public class SamebugClient {
 
         final HttpResponse httpResponse = response.returnResponse();
         int statusCode = httpResponse.getStatusLine().getStatusCode();
-        if (statusCode != HttpStatus.SC_OK) {
-            throw new UnsuccessfulResponseStatus(statusCode);
-        }
 
-        final Header errors = httpResponse.getFirstHeader("X-Samebug-Errors");
-        if (errors != null) {
-            throw new RemoteError(errors.getValue());
+        switch (statusCode) {
+            case HttpStatus.SC_OK:
+                final Header errors = httpResponse.getFirstHeader("X-Samebug-Errors");
+                if (errors != null) {
+                    throw new RemoteError(errors.getValue());
+                }
+                return httpResponse;
+            case HttpStatus.SC_UNAUTHORIZED:
+                throw new UserUnauthorized();
+            default:
+                throw new UnsuccessfulResponseStatus(statusCode);
         }
-        return httpResponse;
     }
 
     private final SamebugIdeaPlugin plugin;
