@@ -46,4 +46,4 @@ dependencies {
 
 group = 'com.samebug.clients.idea'
 description = 'Samebug for IntelliJ IDEA'
-version '0.2.0-SNAPSHOT'
+version '0.2.0'
