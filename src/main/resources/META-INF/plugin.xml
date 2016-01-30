@@ -1,7 +1,6 @@
 <idea-plugin version="2">
     <id>Samebug</id>
     <name>Samebug</name>
-    <version>${project.version}</version>
     <vendor email="hello@samebug.io" url="http://samebug.io">Samebug</vendor>
 
     <description><![CDATA[

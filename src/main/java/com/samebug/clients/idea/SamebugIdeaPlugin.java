@@ -6,14 +6,13 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import com.samebug.clients.exceptions.UnknownApiKey;
 import com.samebug.clients.idea.intellij.autosearch.StackTraceSearch;
+import com.samebug.clients.idea.intellij.notification.SamebugNotification;
 import com.samebug.clients.idea.intellij.settings.SettingsDialog;
 import com.samebug.clients.rest.SamebugClient;
 import com.samebug.clients.rest.entities.UserInfo;
 import com.samebug.clients.rest.exceptions.SamebugClientException;
-import com.samebug.clients.exceptions.UnknownApiKey;
-import com.samebug.clients.idea.intellij.notification.SamebugNotification;
-import com.sun.org.apache.xpath.internal.operations.And;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
