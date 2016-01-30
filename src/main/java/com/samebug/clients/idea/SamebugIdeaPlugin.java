@@ -51,7 +51,7 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
             }
         }
     };
-    
+
     @NotNull
     public static SamebugIdeaPlugin getInstance() {
         SamebugIdeaPlugin instance = ApplicationManager.getApplication().getComponent(SamebugIdeaPlugin.class);
