@@ -1,20 +1,42 @@
 package com.samebug.clients.idea.intellij.autosearch.console;
 
 import com.intellij.execution.ui.RunContentDescriptor;
-import com.samebug.clients.api.LogScannerFactory;
+import com.intellij.execution.ui.RunContentManager;
+import com.intellij.execution.ui.RunContentWithExecutorListener;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
+import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.api.StackTraceListener;
+import com.samebug.clients.idea.intellij.autosearch.StackTraceSearch;
+import com.samebug.clients.idea.intellij.autosearch.StackTraceMatcherFactory;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Installs a ProcessOutputScanner on Run/Debug Process standard and error outputs
- */
-public class ConsoleScannerManager {
+public class ConsoleScannerManager implements RunContentWithExecutorListener {
+    public ConsoleScannerManager(Project project, StackTraceListener stackTraceListener) {
 
-    public ConsoleScannerManager(@NotNull LogScannerFactory scannerFactory) {
-        this.scannerFactory = scannerFactory;
+        this.scannerFactory = new StackTraceMatcherFactory(stackTraceListener);
+        MessageBusConnection messageBusConnection = project.getMessageBus().connect();
+        messageBusConnection.subscribe(RunContentManager.TOPIC, this);
     }
+
+    public void contentSelected(@Nullable RunContentDescriptor descriptor, @NotNull com.intellij.execution.Executor executor) {
+        if (descriptor != null) {
+            initListener(descriptor);
+        }
+    }
+
+    public void contentRemoved(@Nullable RunContentDescriptor descriptor, @NotNull com.intellij.execution.Executor executor) {
+        if (descriptor != null) {
+            removeListener(descriptor);
+        }
+    }
+
+    private final static Logger logger = Logger.getInstance(ConsoleScannerManager.class);
+
 
     public synchronized ConsoleScanner initListener(@NotNull RunContentDescriptor descriptor) {
         Integer descriptorHashCode = System.identityHashCode(descriptor);
@@ -41,7 +63,6 @@ public class ConsoleScannerManager {
         listeners.remove(descriptorHashCode);
     }
 
-    private final LogScannerFactory scannerFactory;
     private final Map<Integer, ConsoleScanner> listeners = new HashMap<Integer, ConsoleScanner>();
+    private final StackTraceMatcherFactory scannerFactory;
 }
-

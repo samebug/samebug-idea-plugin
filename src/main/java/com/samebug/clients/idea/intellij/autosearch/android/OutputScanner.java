@@ -8,11 +8,11 @@ import java.io.*;
 /**
  * Scans running process outputs
  */
-class AndroidShellOutputScanner extends MultiLineReceiver {
+class OutputScanner extends MultiLineReceiver {
 
     private final LogScanner logScanner;
 
-    public AndroidShellOutputScanner(LogScanner logScanner) throws IOException {
+    public OutputScanner(LogScanner logScanner) throws IOException {
         this.logScanner = logScanner;
 
     }

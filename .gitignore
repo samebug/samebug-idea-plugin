@@ -1,5 +1,6 @@
 # IntelliJ project files
 .idea
+.gradle
 *.iml
 out
 gen
@@ -12,8 +13,12 @@ gen
 *.war
 *.ear
 
-# Maven build target
+# Build target
 /target
+/build
+/gradle
+/gradlew
+/gradlew.bat
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*

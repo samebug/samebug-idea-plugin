@@ -1,59 +1,58 @@
 package com.samebug.clients.idea.intellij.toolwindow;
 
-import com.intellij.execution.ui.RunContentManager;
+import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
-import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.SamebugIdeaPlugin;
-import com.samebug.clients.idea.intellij.autosearch.android.AndroidShellSolutionSearch;
-import com.samebug.clients.idea.intellij.autosearch.console.ConsoleScannerSolutionSearch;
+import com.samebug.clients.idea.intellij.actions.SettingsAction;
 import com.samebug.clients.idea.intellij.settings.SettingsDialog;
+import com.samebug.clients.idea.messages.SamebugBundle;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
 
 public class SamebugToolWindowFactory implements ToolWindowFactory {
-    private JButton settingsButton;
     private JPanel contentPanel;
-    private JToolBar toolbar;
+    private JPanel toolbarPanel;
     private ToolWindow toolWindow;
-
-    public SamebugToolWindowFactory() {
-        if (!SamebugIdeaPlugin.isInitialized())
-            SettingsDialog.setup();
-
-        settingsButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                SettingsDialog.setup();
-            }
-        });
-    }
+    private Project project;
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        initContent(toolWindow);
-        initSearchEngine(project);
+        this.project = project;
+        this.toolWindow = toolWindow;
+
+
+        initContent();
     }
 
-    private void initContent(@NotNull ToolWindow toolWindow) {
-        this.toolWindow = toolWindow;
+    private void initContent() {
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-        Content content = contentFactory.createContent(contentPanel, "", false);
+        Content content = contentFactory.createContent(contentPanel, SamebugBundle.message("samebug.toolwindow.displayName"), false);
+
         toolWindow.getContentManager().addContent(content);
     }
 
-    private void initSearchEngine(@NotNull Project project) {
-        ConsoleScannerSolutionSearch consoleSearch = new ConsoleScannerSolutionSearch(project);
 
-        AndroidShellSolutionSearch androidShellSolutionSearch = SamebugIdeaPlugin.getAndroidShellSolutionSearch();
-        if (androidShellSolutionSearch != null) {
-            MessageBusConnection messageBusConnection = project.getMessageBus().connect();
-            messageBusConnection.subscribe(RunContentManager.TOPIC, androidShellSolutionSearch);
-        }
+    private final static Logger logger = Logger.getInstance(SamebugToolWindowFactory.class);
+
+    private void createUIComponents() {
+        this.toolbarPanel = createToolbarPanel();
+    }
+
+    private JPanel createToolbarPanel() {
+        final DefaultActionGroup group = new DefaultActionGroup();
+
+        group.add(new SettingsAction());
+
+        final ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+        final JPanel buttonsPanel = new JPanel(new BorderLayout());
+        buttonsPanel.add(actionToolBar.getComponent(), BorderLayout.CENTER);
+        return buttonsPanel;
     }
 }

@@ -15,23 +15,23 @@ import java.awt.event.*;
 
 public class SettingsDialog extends JDialog implements Configurable {
     private JPanel contentPane;
-    private JButton buttonOK;
-    private JButton buttonCancel;
     private JTextField apiKeyTextField;
     private JTextPane descriptionTextPane;
+    private JButton cancelButton;
+    private JButton okButton;
 
     public SettingsDialog() {
         setContentPane(contentPane);
         setModal(true);
-        getRootPane().setDefaultButton(buttonOK);
+        getRootPane().setDefaultButton(okButton);
 
-        buttonOK.addActionListener(new ActionListener() {
+        okButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onOK();
             }
         });
 
-        buttonCancel.addActionListener(new ActionListener() {
+        cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onCancel();
             }
@@ -58,7 +58,7 @@ public class SettingsDialog extends JDialog implements Configurable {
             apply();
             dispose();
         } catch (ConfigurationException e) {
-            Messages.showErrorDialog("Cannot configure: " + e.getMessage(), "Samebug Setup Error");
+            Messages.showErrorDialog(e.getMessage(), "Samebug Settings Error");
         }
     }
 
@@ -66,12 +66,11 @@ public class SettingsDialog extends JDialog implements Configurable {
         dispose();
     }
 
-    public static void setup() {
+    public static void setup(SamebugIdeaPlugin plugin) {
         SettingsDialog dialog = new SettingsDialog();
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(null);
         dialog.pack();
-        SamebugIdeaPlugin plugin = SamebugIdeaPlugin.getInstance();
         if (plugin != null && plugin.getApiKey() != null) {
             dialog.apiKeyTextField.setText(plugin.getApiKey());
         }
@@ -104,17 +103,13 @@ public class SettingsDialog extends JDialog implements Configurable {
     @Override
     public void apply() throws ConfigurationException {
         SamebugIdeaPlugin plugin = SamebugIdeaPlugin.getInstance();
-        if (plugin != null) {
-            try {
-                String apiKey = apiKeyTextField.getText();
-                plugin.setApiKey(apiKey);
-            } catch (SamebugClientException e) {
-                throw new ConfigurationException("Cannot save settings: Samebug Server Error");
-            } catch (UnknownApiKey unknownApiKey) {
-                throw new ConfigurationException("Cannot save settings: Unknown API Key");
-            }
-        } else {
-            throw new ConfigurationException("Cannot save settings: No Plugin");
+        try {
+            String apiKey = apiKeyTextField.getText();
+            plugin.setApiKey(apiKey);
+        } catch (SamebugClientException e) {
+            throw new ConfigurationException("Error during API Key validation. Samebug server is not available currently.");
+        } catch (UnknownApiKey unknownApiKey) {
+            throw new ConfigurationException("Unknown Samebug API Key.");
         }
     }
 

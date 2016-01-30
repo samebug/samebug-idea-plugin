@@ -10,16 +10,14 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.net.*;
 import java.util.List;
 
 public class SamebugClient {
@@ -35,7 +33,8 @@ public class SamebugClient {
         Request post = Request.Post(url.toString());
         Request request = post.bodyForm(form, Consts.UTF_8);
 
-        return requestJson(request, SearchResults.class);
+        SearchResults searchResults = requestJson(request, SearchResults.class);
+        return searchResults;
     }
 
     public URL getSearchUrl(int searchId) throws SamebugClientException {
@@ -78,21 +77,37 @@ public class SamebugClient {
     }
 
     @NotNull
-    private HttpResponse execute(Request request) throws IOException, UnsuccessfulResponseStatus, RemoteError {
+    private HttpResponse execute(Request request) throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthorized, IOException {
         addDefaultHeaders(request);
-        Response response = request.execute();
+        request.connectTimeout(3000);
+        request.socketTimeout(5000);
 
-        final HttpResponse httpResponse = response.returnResponse();
-        int statusCode = httpResponse.getStatusLine().getStatusCode();
-        if (statusCode != HttpStatus.SC_OK) {
-            throw new UnsuccessfulResponseStatus(statusCode);
-        }
+        Response response = null;
+        try {
+            response = request.execute();
 
-        final Header errors = httpResponse.getFirstHeader("X-Samebug-Errors");
-        if (errors != null) {
-            throw new RemoteError(errors.getValue());
+            final HttpResponse httpResponse = response.returnResponse();
+            int statusCode = httpResponse.getStatusLine().getStatusCode();
+
+            switch (statusCode) {
+                case HttpStatus.SC_OK:
+                    final Header errors = httpResponse.getFirstHeader("X-Samebug-Errors");
+                    if (errors != null) {
+                        throw new RemoteError(errors.getValue());
+                    }
+                    return httpResponse;
+                case HttpStatus.SC_UNAUTHORIZED:
+                    throw new UserUnauthorized();
+                default:
+                    throw new UnsuccessfulResponseStatus(statusCode);
+            }
+        } catch (SocketTimeoutException e) {
+            throw new SamebugSocketTimeout(e);
+        } catch (ConnectTimeoutException e) {
+            throw new SamebugConnectTimeout(e);
+        } catch (IOException e) {
+            throw e;
         }
-        return httpResponse;
     }
 
     private final SamebugIdeaPlugin plugin;
