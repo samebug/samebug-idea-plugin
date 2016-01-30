@@ -10,16 +10,14 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.net.*;
 import java.util.List;
 
 public class SamebugClient {
@@ -79,26 +77,36 @@ public class SamebugClient {
     }
 
     @NotNull
-    private HttpResponse execute(Request request) throws IOException, UnsuccessfulResponseStatus, RemoteError, UserUnauthorized {
+    private HttpResponse execute(Request request) throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthorized, IOException {
         addDefaultHeaders(request);
         request.connectTimeout(3000);
         request.socketTimeout(5000);
-        Response response = request.execute();
 
-        final HttpResponse httpResponse = response.returnResponse();
-        int statusCode = httpResponse.getStatusLine().getStatusCode();
+        Response response = null;
+        try {
+            response = request.execute();
 
-        switch (statusCode) {
-            case HttpStatus.SC_OK:
-                final Header errors = httpResponse.getFirstHeader("X-Samebug-Errors");
-                if (errors != null) {
-                    throw new RemoteError(errors.getValue());
-                }
-                return httpResponse;
-            case HttpStatus.SC_UNAUTHORIZED:
-                throw new UserUnauthorized();
-            default:
-                throw new UnsuccessfulResponseStatus(statusCode);
+            final HttpResponse httpResponse = response.returnResponse();
+            int statusCode = httpResponse.getStatusLine().getStatusCode();
+
+            switch (statusCode) {
+                case HttpStatus.SC_OK:
+                    final Header errors = httpResponse.getFirstHeader("X-Samebug-Errors");
+                    if (errors != null) {
+                        throw new RemoteError(errors.getValue());
+                    }
+                    return httpResponse;
+                case HttpStatus.SC_UNAUTHORIZED:
+                    throw new UserUnauthorized();
+                default:
+                    throw new UnsuccessfulResponseStatus(statusCode);
+            }
+        } catch (SocketTimeoutException e) {
+            throw new SamebugSocketTimeout(e);
+        } catch (ConnectTimeoutException e) {
+            throw new SamebugConnectTimeout(e);
+        } catch (IOException e) {
+            throw e;
         }
     }
 

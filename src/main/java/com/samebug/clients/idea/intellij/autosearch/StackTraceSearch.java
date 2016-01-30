@@ -1,10 +1,16 @@
 package com.samebug.clients.idea.intellij.autosearch;
 
+import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.samebug.clients.idea.SamebugIdeaPlugin;
+import com.samebug.clients.idea.intellij.notification.NotificationActionListener;
+import com.samebug.clients.idea.intellij.notification.SearchResultsNotification;
+import com.samebug.clients.idea.messages.SamebugBundle;
 import com.samebug.clients.rest.SamebugClient;
 import com.samebug.clients.rest.entities.SearchResults;
 import com.samebug.clients.rest.exceptions.SamebugClientException;
+import com.samebug.clients.rest.exceptions.SamebugTimeout;
 import com.samebug.clients.rest.exceptions.UserUnauthorized;
 
 public class StackTraceSearch {
@@ -22,6 +28,8 @@ public class StackTraceSearch {
                 try {
                     results = client.searchSolutions(stacktrace);
                     resultHandler.handleResults(results);
+                } catch (SamebugTimeout e) {
+
                 } catch (UserUnauthorized ignored) {
 
                 } catch (SamebugClientException e) {
@@ -39,6 +47,4 @@ public class StackTraceSearch {
 
         void handleException(SamebugClientException exception);
     }
-
-
 }

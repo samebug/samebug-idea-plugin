@@ -7,24 +7,22 @@ import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.adb.AndroidSdkUtils;
+import com.samebug.clients.api.StackTraceListener;
 import com.samebug.clients.idea.intellij.autosearch.StackTraceSearch;
-import com.samebug.clients.idea.intellij.autosearch.android.AndroidShellSolutionSearch;
-import com.samebug.clients.idea.intellij.autosearch.console.ConsoleScannerStackTraceSearch;
+import com.samebug.clients.idea.intellij.autosearch.android.LogcatScannerManager;
+import com.samebug.clients.idea.intellij.autosearch.console.ConsoleScannerManager;
 import com.samebug.clients.idea.intellij.notification.NotificationActionListener;
 import com.samebug.clients.idea.intellij.notification.SearchResultsNotification;
-import com.samebug.clients.idea.intellij.settings.SettingsDialog;
 import com.samebug.clients.idea.messages.SamebugBundle;
 import com.samebug.clients.rest.SamebugClient;
 import com.samebug.clients.rest.entities.SearchResults;
 import com.samebug.clients.rest.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 
-public class SamebugProjectComponent implements ProjectComponent {
+public class SamebugProjectComponent implements ProjectComponent, StackTraceListener {
 
-    private StackTraceSearch searchEngine;
-    private ConsoleScannerStackTraceSearch consoleSearch;
-    private AndroidShellSolutionSearch androidShellSolutionSearch;
+    private SearchResultNotifier searchResultNotifier;
+    private StackTraceSearch stackTraceSearch;
 
     public SamebugProjectComponent(final Project project) {
         this.project = project;
@@ -41,37 +39,61 @@ public class SamebugProjectComponent implements ProjectComponent {
 
     @Override
     public void initComponent() {
-        final SamebugIdeaPlugin plugin = SamebugIdeaPlugin.getInstance();
-        if (plugin.getApiKey() == null) SettingsDialog.setup(plugin);
+        SamebugIdeaPlugin.initIfNeeded();
     }
 
-    private void initScanners(@NotNull Project project) {
-        this.searchEngine = SamebugIdeaPlugin.getSearchEngine();
-        this.consoleSearch = new ConsoleScannerStackTraceSearch(searchEngine, project, new StackTraceSearch.SearchResultListener() {
-            @Override
-            public void handleResults(SearchResults results) {
-                if (results.totalSolutions > 0) showNotificationPopup(results);
-            }
+    private void initScanners(@NotNull final Project project) {
 
-            @Override
-            public void handleException(SamebugClientException exception) {
-                logger.error("Error in Samebug console search", exception);
-            }
-        });
-        this.androidShellSolutionSearch = new AndroidShellSolutionSearch(searchEngine, new StackTraceSearch.SearchResultListener() {
-            @Override
-            public void handleResults(SearchResults results) {
-                if (results.totalSolutions > 0) showNotificationPopup(results);
-            }
-
-            @Override
-            public void handleException(SamebugClientException exception) {
-                logger.error("Error in Samebug console search", exception);
-            }
-        });
+        this.stackTraceSearch = SamebugIdeaPlugin.getStackTraceSearch();
+        this.searchResultNotifier = new SearchResultNotifier(project);
+        ConsoleScannerManager consoleScannerManager = new ConsoleScannerManager(project,this);
+        LogcatScannerManager logcatScannerManager = new LogcatScannerManager(this);
 
         MessageBusConnection messageBusConnection = project.getMessageBus().connect();
-        messageBusConnection.subscribe(RunContentManager.TOPIC, androidShellSolutionSearch);
+        messageBusConnection.subscribe(RunContentManager.TOPIC, logcatScannerManager);
+    }
+
+
+    @Override
+    public void disposeComponent() {
+    }
+
+    @Override
+    @NotNull
+    public String getComponentName() {
+        return getClass().getSimpleName();
+    }
+
+
+    @Override
+    public void projectClosed() {
+    }
+
+    private final Project project;
+
+
+    private final static Logger logger = Logger.getInstance(SamebugProjectComponent.class);
+
+
+    @Override
+    public void stacktraceFound(String stacktrace) {
+        stackTraceSearch.search(stacktrace, searchResultNotifier);
+    }
+}
+
+class SearchResultNotifier implements StackTraceSearch.SearchResultListener {
+    public SearchResultNotifier(Project project) {
+        this.project = project;
+    }
+
+    @Override
+    public void handleResults(SearchResults results) {
+        if (results.totalSolutions > 0) showNotificationPopup(results);
+    }
+
+    @Override
+    public void handleException(SamebugClientException exception) {
+        logger.error("Error in Samebug console search", exception);
     }
 
     private void showNotificationPopup(final SearchResults results) {
@@ -99,24 +121,7 @@ public class SamebugProjectComponent implements ProjectComponent {
         });
     }
 
-    @Override
-    public void disposeComponent() {
-    }
-
-    @Override
-    @NotNull
-    public String getComponentName() {
-        return getClass().getSimpleName();
-    }
-
-
-    @Override
-    public void projectClosed() {
-    }
-
     private final Project project;
-
-
-    private final static Logger logger = Logger.getInstance(SamebugProjectComponent.class);
+    private final static Logger logger = Logger.getInstance(SearchResultNotifier.class);
 }
 

@@ -6,15 +6,14 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.extensions.PluginId;
 import com.samebug.clients.idea.intellij.autosearch.StackTraceSearch;
 import com.samebug.clients.idea.intellij.settings.SettingsDialog;
 import com.samebug.clients.rest.SamebugClient;
 import com.samebug.clients.rest.entities.UserInfo;
 import com.samebug.clients.rest.exceptions.SamebugClientException;
 import com.samebug.clients.exceptions.UnknownApiKey;
-import com.samebug.clients.idea.intellij.autosearch.android.AndroidShellSolutionSearch;
 import com.samebug.clients.idea.intellij.notification.SamebugNotification;
+import com.sun.org.apache.xpath.internal.operations.And;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,16 +26,32 @@ import java.net.URI;
         }
 )
 public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateComponent<SamebugState> {
-    private StackTraceSearch stackTraceSearch;
 
     public SamebugIdeaPlugin() {
         SamebugNotification.registerNotificationGroups();
         this.client = new SamebugClient(this, URI.create("https://samebug.io/"));
         this.stackTraceSearch = new StackTraceSearch(client);
         AndroidDebugBridge.initIfNeeded(false);
+
         AndroidDebugBridge.createBridge();
+
+        ApplicationManager.getApplication().executeOnPooledThread(stopBridgeIfCannotConnect);
     }
 
+    private final Runnable stopBridgeIfCannotConnect = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(60000);
+                AndroidDebugBridge bridge = AndroidDebugBridge.getBridge();
+                if (bridge != null && !bridge.isConnected()) {
+                    AndroidDebugBridge.disconnectBridge();
+                }
+            } catch (InterruptedException ignored) {
+            }
+        }
+    };
+    
     @NotNull
     public static SamebugIdeaPlugin getInstance() {
         SamebugIdeaPlugin instance = ApplicationManager.getApplication().getComponent(SamebugIdeaPlugin.class);
@@ -47,13 +62,18 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
         }
     }
 
+    public static void initIfNeeded() {
+        final SamebugIdeaPlugin plugin = SamebugIdeaPlugin.getInstance();
+        if (plugin.getApiKey() == null) SettingsDialog.setup(plugin);
+    }
+
     @NotNull
     public static SamebugClient getClient() {
         return getInstance().client;
     }
 
     @Nullable
-    public static StackTraceSearch getSearchEngine() {
+    public static StackTraceSearch getStackTraceSearch() {
         return getInstance().stackTraceSearch;
     }
 
@@ -101,7 +121,7 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
         state.setApiKey(apiKey);
     }
 
-    private static final PluginId PLUGIN_ID = PluginId.getId("com.samebug.clients.idea");
+    private StackTraceSearch stackTraceSearch;
     private final SamebugClient client;
     private SamebugState state = new SamebugState();
 }

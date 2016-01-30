@@ -16,7 +16,7 @@ import java.util.Map;
  * Scans running process outputs
  */
 class ConsoleScanner extends ProcessAdapter {
-    public ConsoleScanner(@NotNull LogScannerFactory scannerFactory, @NotNull ScannerManager manager, @NotNull RunContentDescriptor descriptor) {
+    public ConsoleScanner(@NotNull LogScannerFactory scannerFactory, @NotNull ConsoleScannerManager manager, @NotNull RunContentDescriptor descriptor) {
         this.scannerFactory = scannerFactory;
         this.manager = manager;
         this.descriptor = descriptor;
@@ -55,6 +55,6 @@ class ConsoleScanner extends ProcessAdapter {
 
     private Map<Key, LogScanner> scanners = new HashMap<Key, LogScanner>();
     private final LogScannerFactory scannerFactory;
-    private final ScannerManager manager;
+    private final ConsoleScannerManager manager;
     private final RunContentDescriptor descriptor;
 }
