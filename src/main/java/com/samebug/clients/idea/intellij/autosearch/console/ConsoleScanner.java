@@ -21,7 +21,7 @@ import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.util.Key;
 import com.samebug.clients.api.LogScanner;
 import com.samebug.clients.api.LogScannerFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -31,7 +31,7 @@ import java.util.Map;
  * Scans running process outputs
  */
 class ConsoleScanner extends ProcessAdapter {
-    public ConsoleScanner(@NotNull LogScannerFactory scannerFactory, @NotNull ConsoleScannerManager manager, @NotNull RunContentDescriptor descriptor) {
+    public ConsoleScanner(@Nonnull LogScannerFactory scannerFactory, @Nonnull ConsoleScannerManager manager, @Nonnull RunContentDescriptor descriptor) {
         this.scannerFactory = scannerFactory;
         this.manager = manager;
         this.descriptor = descriptor;

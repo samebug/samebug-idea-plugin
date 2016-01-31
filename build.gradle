@@ -8,9 +8,11 @@ plugins {
 
 apply plugin: 'java'
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
-tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+allprojects {
+    sourceCompatibility = 1.6
+    targetCompatibility = 1.6
+    tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+}
 
 sourceSets {
     main {
@@ -26,8 +28,10 @@ sourceSets {
 apply plugin: 'org.jetbrains.intellij'
 
 intellij {
-    version project.hasProperty('ideaVersion') ? ideaVersion : 'IC-15.0.3'
+    version = project.hasProperty('ideaVersion') ? ideaVersion : 'IC-15.0.3'
     plugins 'android'
+
+    alternativeIdePath = '/Applications/Android Studio.app/Contents/'
 
     pluginName 'samebug-idea-plugin'
     updateSinceUntilBuild false
@@ -62,7 +66,7 @@ license {
         email = "hello@samebug.io"
     }
     mapping {
-        form='XML_STYLE'
+        form = 'XML_STYLE'
     }
 
     include "**/*.java"
@@ -72,13 +76,13 @@ license {
 
 group = 'com.samebug.clients.idea'
 description = 'Samebug for IntelliJ IDEA'
-version '0.2.0'
+version '0.3.0-SNAPSHOT'
 
 task checkstyle(type: Checkstyle) {
-  configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")
-  source 'src'
-  include '**/*.java'
-  exclude '**/gen/**'
+    configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
 
-  classpath = files()
+    classpath = files()
 }

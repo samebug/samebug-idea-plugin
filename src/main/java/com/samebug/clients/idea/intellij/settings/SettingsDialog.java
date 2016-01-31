@@ -23,7 +23,7 @@ import com.samebug.clients.exceptions.UnknownApiKey;
 import com.samebug.clients.rest.exceptions.SamebugClientException;
 import com.samebug.clients.idea.messages.SamebugBundle;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.*;

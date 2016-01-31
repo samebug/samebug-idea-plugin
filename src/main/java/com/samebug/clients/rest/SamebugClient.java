@@ -26,7 +26,7 @@ import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.conn.ConnectTimeoutException;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -89,7 +89,7 @@ public class SamebugClient {
         }
     }
 
-    @NotNull
+    @Nonnull
     private HttpResponse execute(Request request) throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthorized, IOException {
         addDefaultHeaders(request);
         request.connectTimeout(3000);

@@ -17,7 +17,7 @@ package com.samebug.clients.idea.intellij.notification;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.event.HyperlinkEvent;
 
@@ -26,7 +26,7 @@ class NotificationListenerFactory {
         if (actionListener == null) return null;
         return new NotificationListener() {
             @Override
-            public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent hyperlinkEvent) {
+            public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent hyperlinkEvent) {
                 String action = hyperlinkEvent.getDescription();
                 HyperlinkEvent.EventType eventType = hyperlinkEvent.getEventType();
                 if (eventType == HyperlinkEvent.EventType.ACTIVATED) {

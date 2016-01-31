@@ -15,31 +15,31 @@
  */
 package com.samebug.clients.matcher;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.regex.Matcher;
 
 import static com.samebug.clients.matcher.LineType.*;
 
 abstract class Line {
-    @NotNull
+    @Nonnull
     public LineType getType() {
         return type;
     }
 
-    @NotNull
+    @Nonnull
     public String getRaw() {
         return raw;
     }
 
-    @NotNull
+    @Nonnull
     private final String raw;
 
-    @NotNull
+    @Nonnull
     private final LineType type;
 
-    Line(@NotNull LineType type, @NotNull String raw) {
+    Line(@Nonnull LineType type, @Nonnull String raw) {
         this.raw = raw;
         this.type = type;
     }
@@ -58,13 +58,13 @@ class StackFrame extends Line {
     @Nullable
     private final String packageName;
 
-    @NotNull
+    @Nonnull
     private final String className;
 
-    @NotNull
+    @Nonnull
     private final String methodName;
 
-    @NotNull
+    @Nonnull
     private final String location;
 }
 
@@ -77,10 +77,10 @@ class ExceptionStart extends Line {
         this.message = type == ExceptionStartTypeWithMessage ? matcher.group(3) : null;
     }
 
-    @NotNull
+    @Nonnull
     private final String packageName;
 
-    @NotNull
+    @Nonnull
     private final String className;
 
     @Nullable
@@ -96,10 +96,10 @@ class CausedBy extends Line {
         this.message = type == CausedByTypeWithMessage ? matcher.group(3) : null;
     }
 
-    @NotNull
+    @Nonnull
     private final String packageName;
 
-    @NotNull
+    @Nonnull
     private final String className;
 
     @Nullable

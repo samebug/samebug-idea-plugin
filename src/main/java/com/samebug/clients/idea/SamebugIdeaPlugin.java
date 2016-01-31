@@ -28,9 +28,9 @@ import com.samebug.clients.idea.intellij.settings.SettingsDialog;
 import com.samebug.clients.rest.SamebugClient;
 import com.samebug.clients.rest.entities.UserInfo;
 import com.samebug.clients.rest.exceptions.SamebugClientException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.net.URI;
 
 @State(
@@ -66,7 +66,7 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
         }
     };
 
-    @NotNull
+    @Nonnull
     public static SamebugIdeaPlugin getInstance() {
         SamebugIdeaPlugin instance = ApplicationManager.getApplication().getComponent(SamebugIdeaPlugin.class);
         if (instance == null) {
@@ -81,7 +81,7 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
         if (plugin.getApiKey() == null) SettingsDialog.setup(plugin);
     }
 
-    @NotNull
+    @Nonnull
     public static SamebugClient getClient() {
         return getInstance().client;
     }
@@ -106,12 +106,12 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public String getComponentName() {
         return getClass().getSimpleName();
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public SamebugState getState() {
         return this.state;

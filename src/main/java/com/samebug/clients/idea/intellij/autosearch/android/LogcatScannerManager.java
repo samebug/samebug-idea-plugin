@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,15 +18,20 @@ package com.samebug.clients.idea.intellij.autosearch.android;
 import com.android.ddmlib.*;
 import com.intellij.execution.Executor;
 import com.intellij.execution.ui.RunContentDescriptor;
+import com.intellij.execution.ui.RunContentManager;
 import com.intellij.execution.ui.RunContentWithExecutorListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
+import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.api.StackTraceListener;
 import com.samebug.clients.idea.intellij.autosearch.StackTraceMatcherFactory;
 import com.samebug.clients.idea.intellij.autosearch.android.exceptions.UnableToCreateReceiver;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.samebug.clients.util.AndroidSdkUtil;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -94,7 +99,7 @@ public class LogcatScannerManager
     private volatile boolean initialized;
 
 
-    private synchronized IShellOutputReceiver initReceiver(@NotNull IDevice device) throws UnableToCreateReceiver {
+    private synchronized IShellOutputReceiver initReceiver(@Nonnull IDevice device) throws UnableToCreateReceiver {
         Integer deviceHashCode = System.identityHashCode(device);
         IShellOutputReceiver receiver = receivers.get(deviceHashCode);
         if (receiver == null) {
@@ -103,7 +108,7 @@ public class LogcatScannerManager
         return receiver;
     }
 
-    private IShellOutputReceiver createReceiver(@NotNull IDevice device, Integer deviceHashCode) throws UnableToCreateReceiver {
+    private IShellOutputReceiver createReceiver(@Nonnull IDevice device, Integer deviceHashCode) throws UnableToCreateReceiver {
         try {
             OutputScanner receiver = new OutputScanner(scannerFactory.createScanner());
             device.executeShellCommand("logcat -v long", receiver, 0L, TimeUnit.NANOSECONDS);
@@ -120,7 +125,7 @@ public class LogcatScannerManager
         }
     }
 
-    private synchronized void removeReceiver(@NotNull IDevice device) {
+    private synchronized void removeReceiver(@Nonnull IDevice device) {
         Integer descriptorHashCode = System.identityHashCode(device);
         OutputScanner receiver = receivers.get(descriptorHashCode);
         if (receiver != null) {
@@ -137,12 +142,12 @@ public class LogcatScannerManager
     }
 
     @Override
-    public void contentSelected(@Nullable RunContentDescriptor runContentDescriptor, @NotNull Executor executor) {
+    public void contentSelected(@Nullable RunContentDescriptor runContentDescriptor, @Nonnull Executor executor) {
         if (!initialized) initialize();
     }
 
     @Override
-    public void contentRemoved(@Nullable RunContentDescriptor runContentDescriptor, @NotNull Executor executor) {
+    public void contentRemoved(@Nullable RunContentDescriptor runContentDescriptor, @Nonnull Executor executor) {
 
     }
 
@@ -157,6 +162,20 @@ public class LogcatScannerManager
         LOGGER.info("Bridge changed: " + bridge);
         for (IDevice device : bridge.getDevices()) {
             deviceConnected(device);
+        }
+    }
+
+    @Nullable
+    public static LogcatScannerManager createManagerForAndroidProject(Project project, StackTraceListener stackTraceListener) {
+        File adb = AndroidSdkUtil.getAdb(project);
+        if (adb != null) {
+            LogcatScannerManager logcatScannerManager = new LogcatScannerManager(stackTraceListener);
+
+            MessageBusConnection messageBusConnection = project.getMessageBus().connect();
+            messageBusConnection.subscribe(RunContentManager.TOPIC, logcatScannerManager);
+            return logcatScannerManager;
+        } else {
+            return null;
         }
     }
 }
