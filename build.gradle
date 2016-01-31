@@ -31,6 +31,11 @@ intellij {
 
     pluginName 'samebug-idea-plugin'
     updateSinceUntilBuild false
+
+    publish {
+        pluginId '8174'
+        channel 'nightly'
+    }
 }
 
 repositories {
@@ -45,7 +50,8 @@ dependencies {
 }
 
 apply plugin: 'license'
-
+apply plugin: 'checkstyle'
+apply plugin: 'jacoco'
 
 license {
     strictCheck true
@@ -67,3 +73,12 @@ license {
 group = 'com.samebug.clients.idea'
 description = 'Samebug for IntelliJ IDEA'
 version '0.2.0'
+
+task checkstyle(type: Checkstyle) {
+  configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")
+  source 'src'
+  include '**/*.java'
+  exclude '**/gen/**'
+
+  classpath = files()
+}

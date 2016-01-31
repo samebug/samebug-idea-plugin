@@ -19,6 +19,6 @@ import java.net.MalformedURLException;
 
 public class IllegalUriException extends SamebugClientError {
     public IllegalUriException(String uri, MalformedURLException e) {
-        super("Illegal uri: "+ uri, e);
+        super("Illegal uri: " + uri, e);
     }
 }

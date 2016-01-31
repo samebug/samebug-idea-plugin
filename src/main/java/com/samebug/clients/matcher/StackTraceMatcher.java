@@ -17,11 +17,6 @@ package com.samebug.clients.matcher;
 
 import com.samebug.clients.api.LogScanner;
 import com.samebug.clients.api.StackTraceListener;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-
-import static com.samebug.clients.matcher.State.*;
 
 public class StackTraceMatcher extends MatcherStateMachine implements LogScanner {
     private final StackTraceListener listener;

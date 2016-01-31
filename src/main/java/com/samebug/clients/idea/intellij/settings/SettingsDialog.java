@@ -35,7 +35,7 @@ public class SettingsDialog extends JDialog implements Configurable {
     private JButton cancelButton;
     private JButton okButton;
 
-    public SettingsDialog() {
+    private SettingsDialog() {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(okButton);

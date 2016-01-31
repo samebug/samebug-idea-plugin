@@ -24,11 +24,11 @@ import javax.swing.*;
 
 public abstract class SamebugNotification extends Notification {
 
-    public SamebugNotification(@NotNull String title, @NotNull String content, @NotNull NotificationType type, NotificationListener listener) {
+    SamebugNotification(@NotNull String title, @NotNull String content, @NotNull NotificationType type, NotificationListener listener) {
         super(SAMEBUG_NOTIFICATION_GROUP, title, content, type, listener);
     }
 
-    public static String SAMEBUG_NOTIFICATION_GROUP = "Sambug Notifications";
+    private static final String SAMEBUG_NOTIFICATION_GROUP = "Samebug Notifications";
 
     public static void registerNotificationGroups() {
         NotificationsConfiguration.getNotificationsConfiguration().register(SAMEBUG_NOTIFICATION_GROUP, NotificationDisplayType.BALLOON, false);
@@ -37,7 +37,7 @@ public abstract class SamebugNotification extends Notification {
     @Nullable
     @Override
     public Icon getIcon() {
-        return SamebugIcons.samebugNotification;
+        return SamebugIcons.notification;
     }
 
     @NotNull

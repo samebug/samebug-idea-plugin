@@ -19,20 +19,18 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-import static com.samebug.clients.matcher.State.ExceptionStartedWithMessage;
-import static com.samebug.clients.matcher.State.StackTraceStarted;
-import static com.samebug.clients.matcher.State.WaitingForExceptionStart;
+import static com.samebug.clients.matcher.State.*;
 
 abstract class MatcherStateMachine {
     protected abstract void stackTraceFound();
 
     protected abstract void matchingFailed();
 
-    public MatcherStateMachine() {
-        this(WaitingForExceptionStart, new ArrayList<Line>());
+    MatcherStateMachine() {
+        this(new ArrayList<Line>());
     }
 
-    public MatcherStateMachine step(String line) {
+    MatcherStateMachine step(String line) {
         Line matchingLine = state.matchLine(line);
         State nextState;
         if (matchingLine == null) {
@@ -50,11 +48,12 @@ abstract class MatcherStateMachine {
         }
     }
 
-    public void stop() {
+    void stop() {
         switch (state) {
             case StackTraceStarted:
             case More:
                 stackTraceFound();
+            default:
         }
     }
 
@@ -70,8 +69,8 @@ abstract class MatcherStateMachine {
         }
     }
 
-    private MatcherStateMachine(State state, ArrayList<Line> lines) {
-        this.state = state;
+    private MatcherStateMachine(ArrayList<Line> lines) {
+        this.state = State.WaitingForExceptionStart;
         this.lines = lines;
     }
 
@@ -93,7 +92,7 @@ abstract class MatcherStateMachine {
         }
     }
 
-    protected String getStackTrace() {
+    String getStackTrace() {
         StringBuilder b = new StringBuilder();
         boolean first = true;
         for (Line line : lines) {
@@ -104,13 +103,13 @@ abstract class MatcherStateMachine {
         return b.toString();
     }
 
-    public MatcherStateMachine reset() {
+    private MatcherStateMachine reset() {
         lines.clear();
         state = WaitingForExceptionStart;
         return this;
     }
 
     private State state;
-    protected final ArrayList<Line> lines;
+    private final ArrayList<Line> lines;
     private int nonChangingSteps = 0;
 }

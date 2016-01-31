@@ -16,7 +16,7 @@
 package com.samebug.clients.rest.exceptions;
 
 public class SamebugClientError extends Error {
-    public SamebugClientError() {
+    SamebugClientError() {
         super();
     }
 
@@ -24,7 +24,7 @@ public class SamebugClientError extends Error {
         super(message);
     }
 
-    public SamebugClientError(String message, Throwable cause) {
+    SamebugClientError(String message, Throwable cause) {
         super(message, cause);
     }
 

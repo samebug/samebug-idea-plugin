@@ -22,7 +22,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.api.StackTraceListener;
-import com.samebug.clients.idea.intellij.autosearch.StackTraceSearch;
 import com.samebug.clients.idea.intellij.autosearch.StackTraceMatcherFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -50,10 +49,10 @@ public class ConsoleScannerManager implements RunContentWithExecutorListener {
         }
     }
 
-    private final static Logger logger = Logger.getInstance(ConsoleScannerManager.class);
+    private final static Logger LOGGER = Logger.getInstance(ConsoleScannerManager.class);
 
 
-    public synchronized ConsoleScanner initListener(@NotNull RunContentDescriptor descriptor) {
+    private synchronized ConsoleScanner initListener(@NotNull RunContentDescriptor descriptor) {
         Integer descriptorHashCode = System.identityHashCode(descriptor);
         ConsoleScanner existingScanner = listeners.get(descriptorHashCode);
 

@@ -39,7 +39,7 @@ public class SamebugProjectComponent implements ProjectComponent, StackTraceList
     private SearchResultNotifier searchResultNotifier;
     private StackTraceSearch stackTraceSearch;
 
-    public SamebugProjectComponent(final Project project) {
+    private SamebugProjectComponent(final Project project) {
         this.project = project;
     }
 
@@ -61,7 +61,7 @@ public class SamebugProjectComponent implements ProjectComponent, StackTraceList
 
         this.stackTraceSearch = SamebugIdeaPlugin.getStackTraceSearch();
         this.searchResultNotifier = new SearchResultNotifier(project);
-        ConsoleScannerManager consoleScannerManager = new ConsoleScannerManager(project,this);
+        ConsoleScannerManager consoleScannerManager = new ConsoleScannerManager(project, this);
         LogcatScannerManager logcatScannerManager = new LogcatScannerManager(this);
 
         MessageBusConnection messageBusConnection = project.getMessageBus().connect();
@@ -87,7 +87,7 @@ public class SamebugProjectComponent implements ProjectComponent, StackTraceList
     private final Project project;
 
 
-    private final static Logger logger = Logger.getInstance(SamebugProjectComponent.class);
+    private final static Logger LOGGER = Logger.getInstance(SamebugProjectComponent.class);
 
 
     @Override
@@ -108,7 +108,7 @@ class SearchResultNotifier implements StackTraceSearch.SearchResultListener {
 
     @Override
     public void handleException(SamebugClientException exception) {
-        logger.error("Error in Samebug console search", exception);
+        LOGGER.error("Error in Samebug console search", exception);
     }
 
     private void showNotificationPopup(final SearchResults results) {
@@ -120,15 +120,11 @@ class SearchResultNotifier implements StackTraceSearch.SearchResultListener {
             @Override
             public void actionActivated(String action) {
                 if (SearchResultsNotification.SHOW.equals(action)) {
-                    try {
-                        BrowserUtil.browse(client.getSearchUrl(Integer.parseInt(results.searchId)));
-                    } catch (SamebugClientException e) {
-                        logger.error("Unable to open results in browser for search " + results.searchId, e);
-                    }
+                    BrowserUtil.browse(client.getSearchUrl(Integer.parseInt(results.searchId)));
                 }
             }
         });
-        logger.debug("Showing Samebug notification about search " + results.searchId);
+        LOGGER.debug("Showing Samebug notification about search " + results.searchId);
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             public void run() {
                 notification.notify(project);
@@ -137,6 +133,6 @@ class SearchResultNotifier implements StackTraceSearch.SearchResultListener {
     }
 
     private final Project project;
-    private final static Logger logger = Logger.getInstance(SearchResultNotifier.class);
+    private final static Logger LOGGER = Logger.getInstance(SearchResultNotifier.class);
 }
 

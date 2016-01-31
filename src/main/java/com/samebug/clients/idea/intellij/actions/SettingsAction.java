@@ -24,7 +24,9 @@ import com.samebug.clients.idea.messages.SamebugIcons;
 
 public class SettingsAction extends AnAction {
     public SettingsAction() {
-        super(SamebugBundle.message("samebug.toolwindow.toolbar.actions.settings.text"), SamebugBundle.message("samebug.toolwindow.toolbar.actions.settings.description"), SamebugIcons.settingsIcon);
+        super(SamebugBundle.message("samebug.toolwindow.toolbar.actions.settings.text"),
+                SamebugBundle.message("samebug.toolwindow.toolbar.actions.settings.description"),
+                SamebugIcons.settingsIcon);
     }
 
     @Override

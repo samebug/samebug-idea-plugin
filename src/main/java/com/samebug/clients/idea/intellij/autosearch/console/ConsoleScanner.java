@@ -68,7 +68,7 @@ class ConsoleScanner extends ProcessAdapter {
         }
     }
 
-    private Map<Key, LogScanner> scanners = new HashMap<Key, LogScanner>();
+    private final Map<Key, LogScanner> scanners = new HashMap<Key, LogScanner>();
     private final LogScannerFactory scannerFactory;
     private final ConsoleScannerManager manager;
     private final RunContentDescriptor descriptor;

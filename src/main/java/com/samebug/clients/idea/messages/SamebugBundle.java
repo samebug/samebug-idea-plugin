@@ -23,7 +23,7 @@ import org.jetbrains.annotations.PropertyKey;
 public class SamebugBundle extends AbstractBundle {
     private static final SamebugBundle BUNDLE = new SamebugBundle();
 
-    public SamebugBundle() {
+    private SamebugBundle() {
         super(PATH_TO_BUNDLE);
     }
 

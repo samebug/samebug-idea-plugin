@@ -48,11 +48,10 @@ public class SamebugClient {
         Request post = Request.Post(url.toString());
         Request request = post.bodyForm(form, Consts.UTF_8);
 
-        SearchResults searchResults = requestJson(request, SearchResults.class);
-        return searchResults;
+        return requestJson(request, SearchResults.class);
     }
 
-    public URL getSearchUrl(int searchId) throws SamebugClientException {
+    public URL getSearchUrl(int searchId) {
         String uri = "search/" + searchId;
         try {
             return root.resolve(uri).toURL();
@@ -68,7 +67,6 @@ public class SamebugClient {
         } catch (UnsupportedEncodingException e) {
             throw new Error("WTF");
         }
-        List<NameValuePair> form = Form.form().add("apiKey", apiKey).build();
         Request request = Request.Get(url);
 
         return requestJson(request, UserInfo.class);
@@ -97,7 +95,7 @@ public class SamebugClient {
         request.connectTimeout(3000);
         request.socketTimeout(5000);
 
-        Response response = null;
+        Response response;
         try {
             response = request.execute();
 
@@ -128,7 +126,7 @@ public class SamebugClient {
     private final SamebugIdeaPlugin plugin;
     private final URI root;
     private final URI gateway;
-    private static Gson gson = new Gson();
+    private static final Gson gson = new Gson();
 
     private URL getApiUrl(String uri) throws SamebugClientError {
         URL url;
@@ -140,7 +138,6 @@ public class SamebugClient {
         return url;
     }
 
-    @NotNull
     private void addDefaultHeaders(Request request) {
         String apiKey = plugin.getApiKey();
         if (apiKey != null) request.addHeader("X-Samebug-ApiKey", apiKey);

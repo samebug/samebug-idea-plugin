@@ -50,6 +50,6 @@ public class SearchResultsNotification extends SamebugNotification {
     }
 
 
-    private int NOTIFICATION_EXPIRATION_DELAY = 10000;
+    private final int NOTIFICATION_EXPIRATION_DELAY = 10000;
     public final static String SHOW = "#show";
 }

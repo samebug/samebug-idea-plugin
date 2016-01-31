@@ -21,7 +21,7 @@ import com.samebug.clients.api.StackTraceListener;
 import com.samebug.clients.matcher.StackTraceMatcher;
 
 public class StackTraceMatcherFactory implements LogScannerFactory {
-    private StackTraceListener listener;
+    private final StackTraceListener listener;
 
     public StackTraceMatcherFactory(StackTraceListener listener) {
         this.listener = listener;

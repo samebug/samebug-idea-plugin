@@ -41,7 +41,7 @@ import java.net.URI;
 )
 public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateComponent<SamebugState> {
 
-    public SamebugIdeaPlugin() {
+    private SamebugIdeaPlugin() {
         SamebugNotification.registerNotificationGroups();
         this.client = new SamebugClient(this, URI.create("https://samebug.io/"));
         this.stackTraceSearch = new StackTraceSearch(client);
@@ -135,7 +135,7 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
         state.setApiKey(apiKey);
     }
 
-    private StackTraceSearch stackTraceSearch;
+    private final StackTraceSearch stackTraceSearch;
     private final SamebugClient client;
     private SamebugState state = new SamebugState();
 }
