@@ -3,8 +3,8 @@
 
 plugins {
     id "org.jetbrains.intellij" version "0.0.39"
+    id "com.github.hierynomus.license" version "0.12.1"
 }
-
 
 apply plugin: 'java'
 
@@ -42,6 +42,26 @@ dependencies {
     compile 'com.android.tools.ddms:ddmlib:24.5.0'
     testCompile 'junit:junit:4.11'
     testCompile 'org.mockito:mockito-core:1.10.19'
+}
+
+apply plugin: 'license'
+
+
+license {
+    strictCheck true
+    header project.file('licenses/HEADER.txt')
+    ext {
+        year = Calendar.getInstance().get(Calendar.YEAR)
+        name = "Samebug, Inc."
+        email = "hello@samebug.io"
+    }
+    mapping {
+        form='XML_STYLE'
+    }
+
+    include "**/*.java"
+    include "**/*.form"
+    exclude "**/*Test.java"
 }
 
 group = 'com.samebug.clients.idea'
