@@ -17,7 +17,6 @@ package com.samebug.clients.matcher;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.regex.Matcher;
 
 import static com.samebug.clients.matcher.LineType.*;

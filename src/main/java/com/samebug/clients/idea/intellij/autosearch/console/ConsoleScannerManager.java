@@ -18,18 +18,18 @@ package com.samebug.clients.idea.intellij.autosearch.console;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunContentManager;
 import com.intellij.execution.ui.RunContentWithExecutorListener;
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.api.StackTraceListener;
 import com.samebug.clients.idea.intellij.autosearch.StackTraceMatcherFactory;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class ConsoleScannerManager implements RunContentWithExecutorListener {
+public class ConsoleScannerManager implements RunContentWithExecutorListener, Disposable {
     public ConsoleScannerManager(Project project, StackTraceListener stackTraceListener) {
 
         this.scannerFactory = new StackTraceMatcherFactory(stackTraceListener);
@@ -48,9 +48,6 @@ public class ConsoleScannerManager implements RunContentWithExecutorListener {
             removeListener(descriptor);
         }
     }
-
-    private final static Logger LOGGER = Logger.getInstance(ConsoleScannerManager.class);
-
 
     private synchronized ConsoleScanner initListener(@Nonnull RunContentDescriptor descriptor) {
         Integer descriptorHashCode = System.identityHashCode(descriptor);
@@ -79,4 +76,11 @@ public class ConsoleScannerManager implements RunContentWithExecutorListener {
 
     private final Map<Integer, ConsoleScanner> listeners = new HashMap<Integer, ConsoleScanner>();
     private final StackTraceMatcherFactory scannerFactory;
+
+    public void dispose() {
+       for (Map.Entry<Integer, ConsoleScanner> entry :  listeners.entrySet()) {
+           entry.getValue().stop();
+       }
+        listeners.clear();
+    }
 }

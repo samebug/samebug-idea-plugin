@@ -16,7 +16,6 @@
 package com.samebug.clients.matcher;
 
 import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
 
 import static com.samebug.clients.matcher.State.*;

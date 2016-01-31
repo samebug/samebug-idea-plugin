@@ -25,12 +25,14 @@ import com.samebug.clients.idea.intellij.autosearch.console.ConsoleScannerManage
 
 import javax.annotation.Nonnull;
 
-public class SamebugProjectComponent implements ProjectComponent, StackTraceListener {
+public class ProjectExceptionWatcher implements ProjectComponent, StackTraceListener {
 
     private SearchResultNotifier searchResultNotifier;
     private StackTraceSearch stackTraceSearch;
+    private ConsoleScannerManager consoleScannerManager;
+    private LogcatScannerManager logcatScannerManager;
 
-    private SamebugProjectComponent(final Project project) {
+    private ProjectExceptionWatcher(final Project project) {
         this.project = project;
     }
 
@@ -49,16 +51,19 @@ public class SamebugProjectComponent implements ProjectComponent, StackTraceList
     }
 
     private void initScanners(@Nonnull final Project project) {
-
         this.stackTraceSearch = SamebugIdeaPlugin.getStackTraceSearch();
         this.searchResultNotifier = new SearchResultNotifier(project);
-        ConsoleScannerManager consoleScannerManager = new ConsoleScannerManager(project, this);
-        LogcatScannerManager logcatScannerManager = LogcatScannerManager.createManagerForAndroidProject(project, this);
+        this.consoleScannerManager = new ConsoleScannerManager(project, this);
+        this.logcatScannerManager = LogcatScannerManager.createManagerForAndroidProject(project, this);
     }
 
 
     @Override
     public void disposeComponent() {
+        consoleScannerManager.dispose();
+        if (logcatScannerManager != null) {
+            logcatScannerManager.dispose();
+        }
     }
 
     @Override
@@ -75,7 +80,7 @@ public class SamebugProjectComponent implements ProjectComponent, StackTraceList
     private final Project project;
 
 
-    private final static Logger LOGGER = Logger.getInstance(SamebugProjectComponent.class);
+    private final static Logger LOGGER = Logger.getInstance(ProjectExceptionWatcher.class);
 
 
     @Override

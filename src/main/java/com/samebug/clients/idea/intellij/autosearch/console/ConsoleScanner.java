@@ -21,8 +21,8 @@ import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.util.Key;
 import com.samebug.clients.api.LogScanner;
 import com.samebug.clients.api.LogScannerFactory;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -45,6 +45,10 @@ class ConsoleScanner extends ProcessAdapter {
 
     @Override
     public void processTerminated(ProcessEvent event) {
+        stop();
+    }
+
+    public void stop() {
         stopScanners();
         manager.removeListener(descriptor);
     }

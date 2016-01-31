@@ -17,8 +17,8 @@ package com.samebug.clients.idea.intellij.notification;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.event.HyperlinkEvent;
 
 class NotificationListenerFactory {

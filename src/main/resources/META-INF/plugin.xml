@@ -28,6 +28,10 @@
 
     <actions>
         <!-- Add your actions here -->
+        <group id="Samebug.ToolWindowMenu" text="Samebug menu" description="Samebug menu">
+            <add-to-group group-id="ToolsMenu" anchor="last"  />
+            <action id="Samebug.Settings" class="com.samebug.clients.idea.intellij.actions.SettingsAction" icon="/icons/samebug/cogwheel.png" text="Settings" description="Samebug configuration" />
+        </group>
     </actions>
 
     <application-components>
@@ -37,7 +41,7 @@
     </application-components>
     <project-components>
         <component>
-            <implementation-class>com.samebug.clients.idea.SamebugProjectComponent</implementation-class>
+            <implementation-class>com.samebug.clients.idea.ProjectExceptionWatcher</implementation-class>
         </component>
     </project-components>
 </idea-plugin>

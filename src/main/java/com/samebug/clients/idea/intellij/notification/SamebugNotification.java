@@ -17,9 +17,9 @@ package com.samebug.clients.idea.intellij.notification;
 
 import com.intellij.notification.*;
 import com.samebug.clients.idea.messages.SamebugIcons;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 public abstract class SamebugNotification extends Notification {

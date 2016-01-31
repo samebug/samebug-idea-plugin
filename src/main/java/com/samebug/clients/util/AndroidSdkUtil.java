@@ -8,13 +8,12 @@ import org.jetbrains.android.facet.AndroidFacet;
 import org.jetbrains.android.sdk.AndroidPlatform;
 import org.jetbrains.android.sdk.AndroidSdkData;
 
-import static com.android.SdkConstants.*;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.List;
 
+import static com.android.SdkConstants.FN_ADB;
 import static org.jetbrains.android.util.AndroidCommonUtils.platformToolPath;
 
 public class AndroidSdkUtil {

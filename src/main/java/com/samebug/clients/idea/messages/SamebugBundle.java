@@ -17,8 +17,9 @@ package com.samebug.clients.idea.messages;
 
 
 import com.intellij.AbstractBundle;
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.PropertyKey;
+
+import javax.annotation.Nonnull;
 
 public class SamebugBundle extends AbstractBundle {
     private static final SamebugBundle BUNDLE = new SamebugBundle();

@@ -45,26 +45,9 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
         SamebugNotification.registerNotificationGroups();
         this.client = new SamebugClient(this, URI.create("https://samebug.io/"));
         this.stackTraceSearch = new StackTraceSearch(client);
-        AndroidDebugBridge.initIfNeeded(false);
 
-        AndroidDebugBridge.createBridge();
 
-        ApplicationManager.getApplication().executeOnPooledThread(stopBridgeIfCannotConnect);
     }
-
-    private final Runnable stopBridgeIfCannotConnect = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                Thread.sleep(60000);
-                AndroidDebugBridge bridge = AndroidDebugBridge.getBridge();
-                if (bridge != null && !bridge.isConnected()) {
-                    AndroidDebugBridge.disconnectBridge();
-                }
-            } catch (InterruptedException ignored) {
-            }
-        }
-    };
 
     @Nonnull
     public static SamebugIdeaPlugin getInstance() {

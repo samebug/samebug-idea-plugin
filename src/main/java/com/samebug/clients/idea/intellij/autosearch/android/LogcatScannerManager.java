@@ -16,14 +16,9 @@
 package com.samebug.clients.idea.intellij.autosearch.android;
 
 import com.android.ddmlib.*;
-import com.intellij.execution.Executor;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.execution.ui.RunContentManager;
-import com.intellij.execution.ui.RunContentWithExecutorListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.api.StackTraceListener;
 import com.samebug.clients.idea.intellij.autosearch.StackTraceMatcherFactory;
 import com.samebug.clients.idea.intellij.autosearch.android.exceptions.UnableToCreateReceiver;
@@ -40,7 +35,6 @@ import java.util.concurrent.TimeUnit;
 
 public class LogcatScannerManager
         implements AndroidDebugBridge.IDeviceChangeListener, Disposable,
-        RunContentWithExecutorListener, AndroidDebugBridge.IClientChangeListener,
         AndroidDebugBridge.IDebugBridgeChangeListener {
 
     public LogcatScannerManager(StackTraceListener stackTraceListener) {
@@ -52,6 +46,10 @@ public class LogcatScannerManager
 
     @Override
     public void deviceConnected(IDevice device) {
+        initReceiverIfDeviceIsOnline(device);
+    }
+
+    public void initReceiverIfDeviceIsOnline(IDevice device) {
         try {
             if (device.isOnline()) {
                 initReceiver(device);
@@ -68,36 +66,34 @@ public class LogcatScannerManager
 
     @Override
     public void deviceChanged(IDevice device, int changeMask) {
-        try {
-            if (device.isOnline()) {
-                initReceiver(device);
-            }
-        } catch (UnableToCreateReceiver e) {
-            LOGGER.error("Unable to connect device", e);
-        }
+        initReceiverIfDeviceIsOnline(device);
     }
 
     private void initialize() {
-        AndroidDebugBridge bridge = AndroidDebugBridge.getBridge();
         AndroidDebugBridge.addDeviceChangeListener(this);
-        AndroidDebugBridge.addClientChangeListener(this);
         AndroidDebugBridge.addDebugBridgeChangeListener(this);
 
-
+        AndroidDebugBridge bridge = AndroidDebugBridge.getBridge();
         if (bridge.isConnected()) {
             for (IDevice device : bridge.getDevices()) {
-                deviceConnected(device);
+                initReceiverIfDeviceIsOnline(device);
             }
-            initialized = true;
-        } else {
-            initialized = false;
         }
+    }
+
+
+    @Override
+    public void dispose() {
+        AndroidDebugBridge.addDeviceChangeListener(this);
+        AndroidDebugBridge.addDebugBridgeChangeListener(this);
+        for (Map.Entry<Integer, OutputScanner> entry : receivers.entrySet()) {
+            entry.getValue().finish();
+        }
+        receivers.clear();
     }
 
     private final static Logger LOGGER = Logger.getInstance(LogcatScannerManager.class);
     private final StackTraceMatcherFactory scannerFactory;
-    private volatile boolean initialized;
-
 
     private synchronized IShellOutputReceiver initReceiver(@Nonnull IDevice device) throws UnableToCreateReceiver {
         Integer deviceHashCode = System.identityHashCode(device);
@@ -137,29 +133,7 @@ public class LogcatScannerManager
     private final Map<Integer, OutputScanner> receivers = new HashMap<Integer, OutputScanner>();
 
     @Override
-    public void dispose() {
-        AndroidDebugBridge.terminate();
-    }
-
-    @Override
-    public void contentSelected(@Nullable RunContentDescriptor runContentDescriptor, @Nonnull Executor executor) {
-        if (!initialized) initialize();
-    }
-
-    @Override
-    public void contentRemoved(@Nullable RunContentDescriptor runContentDescriptor, @Nonnull Executor executor) {
-
-    }
-
-    @Override
-    public void clientChanged(Client client, int changeMask) {
-        LOGGER.info("Client changed: " + client);
-
-    }
-
-    @Override
     public void bridgeChanged(AndroidDebugBridge bridge) {
-        LOGGER.info("Bridge changed: " + bridge);
         for (IDevice device : bridge.getDevices()) {
             deviceConnected(device);
         }
@@ -167,15 +141,14 @@ public class LogcatScannerManager
 
     @Nullable
     public static LogcatScannerManager createManagerForAndroidProject(Project project, StackTraceListener stackTraceListener) {
-        File adb = AndroidSdkUtil.getAdb(project);
-        if (adb != null) {
-            LogcatScannerManager logcatScannerManager = new LogcatScannerManager(stackTraceListener);
-
-            MessageBusConnection messageBusConnection = project.getMessageBus().connect();
-            messageBusConnection.subscribe(RunContentManager.TOPIC, logcatScannerManager);
-            return logcatScannerManager;
-        } else {
-            return null;
+        AndroidDebugBridge.initIfNeeded(false);
+        try {
+            File adb = AndroidSdkUtil.getAdb(project);
+            String adbLocation = adb != null ? adb.getPath() : null;
+            AndroidDebugBridge.createBridge(adbLocation, false);
+        } catch (NoClassDefFoundError ignored) {
+            AndroidDebugBridge.createBridge();
         }
+        return new LogcatScannerManager(stackTraceListener);
     }
 }

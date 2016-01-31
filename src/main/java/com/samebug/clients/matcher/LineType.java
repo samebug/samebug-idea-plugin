@@ -16,7 +16,6 @@
 package com.samebug.clients.matcher;
 
 import javax.annotation.Nonnull;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

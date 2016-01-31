@@ -17,8 +17,8 @@ package com.samebug.clients.idea.intellij.notification;
 
 import com.intellij.notification.NotificationType;
 import com.samebug.clients.idea.messages.SamebugBundle;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

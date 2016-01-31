@@ -49,9 +49,6 @@ public class StackTraceSearch {
         });
     }
 
-
-    private final static Logger LOGGER = Logger.getInstance(StackTraceSearch.class);
-
     public interface SearchResultListener {
         void handleResults(SearchResults results);
 

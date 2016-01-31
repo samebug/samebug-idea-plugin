@@ -15,7 +15,10 @@
  */
 package com.samebug.clients.idea.intellij.toolwindow;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -24,8 +27,8 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.samebug.clients.idea.intellij.actions.SettingsAction;
 import com.samebug.clients.idea.messages.SamebugBundle;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -59,9 +62,7 @@ public class SamebugToolWindowFactory implements ToolWindowFactory {
     }
 
     private JPanel createToolbarPanel() {
-        final DefaultActionGroup group = new DefaultActionGroup();
-
-        group.add(new SettingsAction());
+        final DefaultActionGroup group = (DefaultActionGroup) ActionManager.getInstance().getAction("Samebug.ToolWindowMenu");
 
         final ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
         final JPanel buttonsPanel = new JPanel(new BorderLayout());

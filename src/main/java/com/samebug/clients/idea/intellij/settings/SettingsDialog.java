@@ -18,13 +18,13 @@ package com.samebug.clients.idea.intellij.settings;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.Messages;
-import com.samebug.clients.idea.SamebugIdeaPlugin;
 import com.samebug.clients.exceptions.UnknownApiKey;
-import com.samebug.clients.rest.exceptions.SamebugClientException;
+import com.samebug.clients.idea.SamebugIdeaPlugin;
 import com.samebug.clients.idea.messages.SamebugBundle;
+import com.samebug.clients.rest.exceptions.SamebugClientException;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.*;
 
