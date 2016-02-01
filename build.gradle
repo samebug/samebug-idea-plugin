@@ -36,9 +36,7 @@ intellij {
     publish {
         pluginId '8174'
 
-        username System.getenv('PLUGIN_USER')
-        password System.getenv('PLUGIN_PASSWORD')
-        channel System.getenv('PLUGIN_CHANNEL') ?: ''
+        apply from: "gradle.properties"
     }
 }
 
