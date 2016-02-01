@@ -61,7 +61,7 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
 
     public static void initIfNeeded() {
         final SamebugIdeaPlugin plugin = SamebugIdeaPlugin.getInstance();
-        if (!isInitialized()) SettingsDialog.setup(plugin);
+        if (!isInitialized(plugin)) SettingsDialog.setup(plugin);
     }
 
     @NotNull
@@ -74,9 +74,9 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
         return getInstance().stackTraceSearch;
     }
 
-    public static boolean isInitialized() {
-        SamebugState state = getInstance().getState();
-        return state.getApiKey() != null &&  state.getUserId() == null;
+    public static boolean isInitialized(SamebugIdeaPlugin plugin) {
+        SamebugState state = plugin.getState();
+        return state.isInitialized();
     }
 
     @Override
