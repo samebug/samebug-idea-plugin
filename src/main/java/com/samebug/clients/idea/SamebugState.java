@@ -45,4 +45,8 @@ public class SamebugState {
     private Integer userId;
     private String userDisplayName;
     private String apiKey;
+
+    public boolean isInitialized() {
+        return getApiKey() != null &&  getUserId() != null;
+    }
 }

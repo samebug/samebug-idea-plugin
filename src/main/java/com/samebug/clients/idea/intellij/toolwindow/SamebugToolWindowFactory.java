@@ -25,10 +25,9 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
-import com.samebug.clients.idea.intellij.actions.SettingsAction;
 import com.samebug.clients.idea.messages.SamebugBundle;
-
 import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import java.awt.*;
 

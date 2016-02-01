@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.idea;
 
-import com.android.ddmlib.AndroidDebugBridge;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -28,9 +27,9 @@ import com.samebug.clients.idea.intellij.settings.SettingsDialog;
 import com.samebug.clients.rest.SamebugClient;
 import com.samebug.clients.rest.entities.UserInfo;
 import com.samebug.clients.rest.exceptions.SamebugClientException;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.net.URI;
 
 @State(
@@ -61,7 +60,7 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
 
     public static void initIfNeeded() {
         final SamebugIdeaPlugin plugin = SamebugIdeaPlugin.getInstance();
-        if (!isInitialized()) SettingsDialog.setup(plugin);
+        if (!isInitialized(plugin)) SettingsDialog.setup(plugin);
     }
 
     @NotNull
@@ -74,9 +73,9 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
         return getInstance().stackTraceSearch;
     }
 
-    public static boolean isInitialized() {
-        SamebugState state = getInstance().getState();
-        return state.getApiKey() != null &&  state.getUserId() == null;
+    public static boolean isInitialized(SamebugIdeaPlugin plugin) {
+        SamebugState state = plugin.getState();
+        return state.isInitialized();
     }
 
     @Override

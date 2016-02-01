@@ -8,7 +8,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
-      Initial release of the plugin.
+      - fixed a bug that blocked IntelliJ during project switching
     ]]>
     </change-notes>
 
