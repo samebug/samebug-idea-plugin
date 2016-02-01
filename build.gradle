@@ -35,7 +35,10 @@ intellij {
 
     publish {
         pluginId '8174'
-        channel 'nightly'
+
+        username System.getenv('PLUGIN_USER')
+        password System.getenv('PLUGIN_PASSWORD')
+        channel System.getenv('PLUGIN_CHANNEL') ?: ''
     }
 }
 
