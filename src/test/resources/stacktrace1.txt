@@ -1,0 +1,8 @@
+                                       android.content.res.Resources$NotFoundException: Resource ID #0x10801a3
+                                           at android.content.res.Resources.getValue(Resources.java:1193)
+                                           at android.content.res.Resources.getDrawable(Resources.java:744)
+                                           at android.content.res.Resources.getDrawable(Resources.java:718)
+                                           at com.android.internal.os.ZygoteInit.preloadDrawables(ZygoteInit.java:446)
+                                           at com.android.internal.os.ZygoteInit.preloadResources(ZygoteInit.java:381)
+                                           at com.android.internal.os.ZygoteInit.preload(ZygoteInit.java:251)
+                                           at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:608)

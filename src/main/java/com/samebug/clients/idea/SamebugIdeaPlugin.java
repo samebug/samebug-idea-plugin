@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.idea;
 
-import com.android.ddmlib.AndroidDebugBridge;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -28,9 +27,9 @@ import com.samebug.clients.idea.intellij.settings.SettingsDialog;
 import com.samebug.clients.rest.SamebugClient;
 import com.samebug.clients.rest.entities.UserInfo;
 import com.samebug.clients.rest.exceptions.SamebugClientException;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.net.URI;
 
 @State(

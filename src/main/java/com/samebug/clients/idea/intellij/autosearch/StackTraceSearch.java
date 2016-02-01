@@ -16,7 +16,6 @@
 package com.samebug.clients.idea.intellij.autosearch;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.rest.SamebugClient;
 import com.samebug.clients.rest.entities.SearchResults;
 import com.samebug.clients.rest.exceptions.SamebugClientException;

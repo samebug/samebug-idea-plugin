@@ -1,0 +1,10 @@
+                                                                  java.util.concurrent.TimeoutException: Cannot get spooler!
+                                                                      at com.android.server.print.RemotePrintSpooler.bindLocked(RemotePrintSpooler.java:376)
+                                                                      at com.android.server.print.RemotePrintSpooler.getRemoteInstanceLazy(RemotePrintSpooler.java:352)
+                                                                      at com.android.server.print.RemotePrintSpooler.removeObsoletePrintJobs(RemotePrintSpooler.java:287)
+                                                                      at com.android.server.print.UserState.removeObsoletePrintJobs(UserState.java:164)
+                                                                      at com.android.server.print.PrintManagerService$PrintManagerImpl$1.run(PrintManagerService.java:127)
+                                                                      at android.os.Handler.handleCallback(Handler.java:738)
+                                                                      at android.os.Handler.dispatchMessage(Handler.java:95)
+                                                                      at android.os.Looper.loop(Looper.java:135)
+                                                                      at android.os.HandlerThread.run(HandlerThread.java:61)
