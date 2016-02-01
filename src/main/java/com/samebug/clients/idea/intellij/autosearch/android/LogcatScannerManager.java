@@ -1,13 +1,25 @@
+/**
+ * Copyright 2016 Samebug, Inc.
+ * <p/>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.samebug.clients.idea.intellij.autosearch.android;
 
 import com.android.ddmlib.*;
-import com.intellij.execution.Executor;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.execution.ui.RunContentWithExecutorListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
 import com.samebug.clients.api.StackTraceListener;
-import com.samebug.clients.idea.intellij.autosearch.StackTraceSearch;
 import com.samebug.clients.idea.intellij.autosearch.StackTraceMatcherFactory;
 import com.samebug.clients.idea.intellij.autosearch.android.exceptions.UnableToCreateReceiver;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +31,9 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
-public class LogcatScannerManager implements AndroidDebugBridge.IDeviceChangeListener, Disposable, RunContentWithExecutorListener, AndroidDebugBridge.IClientChangeListener, AndroidDebugBridge.IDebugBridgeChangeListener {
+public class LogcatScannerManager
+        implements AndroidDebugBridge.IDeviceChangeListener, Disposable,
+        AndroidDebugBridge.IDebugBridgeChangeListener {
 
     public LogcatScannerManager(StackTraceListener stackTraceListener) {
         super();
@@ -30,12 +44,16 @@ public class LogcatScannerManager implements AndroidDebugBridge.IDeviceChangeLis
 
     @Override
     public void deviceConnected(IDevice device) {
+        initReceiverIfDeviceIsOnline(device);
+    }
+
+    public void initReceiverIfDeviceIsOnline(IDevice device) {
         try {
             if (device.isOnline()) {
                 initReceiver(device);
             }
         } catch (UnableToCreateReceiver e) {
-            logger.error("Unable to connect device", e);
+            LOGGER.error("Unable to connect device", e);
         }
     }
 
@@ -46,38 +64,36 @@ public class LogcatScannerManager implements AndroidDebugBridge.IDeviceChangeLis
 
     @Override
     public void deviceChanged(IDevice device, int changeMask) {
-        try {
-            if (device.isOnline()) {
-                initReceiver(device);
-            }
-        } catch (UnableToCreateReceiver e) {
-            logger.error("Unable to connect device", e);
-        }
+        initReceiverIfDeviceIsOnline(device);
     }
 
     private void initialize() {
-        AndroidDebugBridge bridge = AndroidDebugBridge.getBridge();
         AndroidDebugBridge.addDeviceChangeListener(this);
-        AndroidDebugBridge.addClientChangeListener(this);
         AndroidDebugBridge.addDebugBridgeChangeListener(this);
 
-
+        AndroidDebugBridge bridge = AndroidDebugBridge.getBridge();
         if (bridge.isConnected()) {
             for (IDevice device : bridge.getDevices()) {
-                deviceConnected(device);
+                initReceiverIfDeviceIsOnline(device);
             }
-            initialized = true;
-        } else {
-            initialized = false;
         }
     }
 
-    private final static Logger logger = Logger.getInstance(LogcatScannerManager.class);
+
+    @Override
+    public void dispose() {
+        AndroidDebugBridge.addDeviceChangeListener(this);
+        AndroidDebugBridge.addDebugBridgeChangeListener(this);
+        for (Map.Entry<Integer, OutputScanner> entry : receivers.entrySet()) {
+            entry.getValue().finish();
+        }
+        receivers.clear();
+    }
+
+    private final static Logger LOGGER = Logger.getInstance(LogcatScannerManager.class);
     private final StackTraceMatcherFactory scannerFactory;
-    private volatile boolean initialized;
 
-
-    synchronized IShellOutputReceiver initReceiver(@NotNull IDevice device) throws UnableToCreateReceiver {
+    private synchronized IShellOutputReceiver initReceiver(@NotNull IDevice device) throws UnableToCreateReceiver {
         Integer deviceHashCode = System.identityHashCode(device);
         IShellOutputReceiver receiver = receivers.get(deviceHashCode);
         if (receiver == null) {
@@ -103,7 +119,7 @@ public class LogcatScannerManager implements AndroidDebugBridge.IDeviceChangeLis
         }
     }
 
-    synchronized void removeReceiver(@NotNull IDevice device) {
+    private synchronized void removeReceiver(@NotNull IDevice device) {
         Integer descriptorHashCode = System.identityHashCode(device);
         OutputScanner receiver = receivers.get(descriptorHashCode);
         if (receiver != null) {
@@ -115,31 +131,16 @@ public class LogcatScannerManager implements AndroidDebugBridge.IDeviceChangeLis
     private final Map<Integer, OutputScanner> receivers = new HashMap<Integer, OutputScanner>();
 
     @Override
-    public void dispose() {
-        AndroidDebugBridge.terminate();
-    }
-
-    @Override
-    public void contentSelected(@Nullable RunContentDescriptor runContentDescriptor, @NotNull Executor executor) {
-        if (!initialized) initialize();
-    }
-
-    @Override
-    public void contentRemoved(@Nullable RunContentDescriptor runContentDescriptor, @NotNull Executor executor) {
-
-    }
-
-    @Override
-    public void clientChanged(Client client, int changeMask) {
-        logger.info("Client changed: " + client);
-
-    }
-
-    @Override
     public void bridgeChanged(AndroidDebugBridge bridge) {
-        logger.info("Bridge changed: " + bridge);
         for (IDevice device : bridge.getDevices()) {
             deviceConnected(device);
         }
+    }
+
+    @Nullable
+    public static LogcatScannerManager createManagerForAndroidProject(Project project, StackTraceListener stackTraceListener) {
+        AndroidDebugBridge.initIfNeeded(false);
+        AndroidDebugBridge.createBridge();
+        return new LogcatScannerManager(stackTraceListener);
     }
 }

@@ -1,3 +1,18 @@
+/**
+ * Copyright 2016 Samebug, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.samebug.clients.idea;
 
 import com.android.ddmlib.AndroidDebugBridge;
@@ -13,9 +28,9 @@ import com.samebug.clients.idea.intellij.settings.SettingsDialog;
 import com.samebug.clients.rest.SamebugClient;
 import com.samebug.clients.rest.entities.UserInfo;
 import com.samebug.clients.rest.exceptions.SamebugClientException;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.net.URI;
 
 @State(
@@ -26,30 +41,13 @@ import java.net.URI;
 )
 public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateComponent<SamebugState> {
 
-    public SamebugIdeaPlugin() {
+    private SamebugIdeaPlugin() {
         SamebugNotification.registerNotificationGroups();
         this.client = new SamebugClient(this, URI.create("https://samebug.io/"));
         this.stackTraceSearch = new StackTraceSearch(client);
-        AndroidDebugBridge.initIfNeeded(false);
 
-        AndroidDebugBridge.createBridge();
 
-        ApplicationManager.getApplication().executeOnPooledThread(stopBridgeIfCannotConnect);
     }
-
-    private final Runnable stopBridgeIfCannotConnect = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                Thread.sleep(60000);
-                AndroidDebugBridge bridge = AndroidDebugBridge.getBridge();
-                if (bridge != null && !bridge.isConnected()) {
-                    AndroidDebugBridge.disconnectBridge();
-                }
-            } catch (InterruptedException ignored) {
-            }
-        }
-    };
 
     @NotNull
     public static SamebugIdeaPlugin getInstance() {
@@ -63,7 +61,7 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
 
     public static void initIfNeeded() {
         final SamebugIdeaPlugin plugin = SamebugIdeaPlugin.getInstance();
-        if (plugin.getApiKey() == null) SettingsDialog.setup(plugin);
+        if (!isInitialized()) SettingsDialog.setup(plugin);
     }
 
     @NotNull
@@ -77,12 +75,12 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
     }
 
     public static boolean isInitialized() {
-        return getInstance().getApiKey() != null;
+        SamebugState state = getInstance().getState();
+        return state.getApiKey() != null &&  state.getUserId() == null;
     }
 
     @Override
     public void initComponent() {
-
     }
 
 
@@ -118,9 +116,12 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
             throw new UnknownApiKey(apiKey);
         }
         state.setApiKey(apiKey);
+        state.setUserId(userInfo.userId);
+        state.setUserDisplayName(userInfo.displayName);
+
     }
 
-    private StackTraceSearch stackTraceSearch;
+    private final StackTraceSearch stackTraceSearch;
     private final SamebugClient client;
     private SamebugState state = new SamebugState();
 }

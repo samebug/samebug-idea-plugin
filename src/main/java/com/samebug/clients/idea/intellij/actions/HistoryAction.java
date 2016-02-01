@@ -15,16 +15,20 @@
  */
 package com.samebug.clients.idea.intellij.actions;
 
+import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.samebug.clients.idea.SamebugIdeaPlugin;
-import com.samebug.clients.idea.intellij.settings.SettingsDialog;
-import com.samebug.clients.idea.messages.SamebugBundle;
-import com.samebug.clients.idea.messages.SamebugIcons;
+import com.samebug.clients.rest.SamebugClient;
 
-public class SettingsAction extends AnAction {
+public class HistoryAction extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
-        SettingsDialog.setup(SamebugIdeaPlugin.getInstance());
+        final SamebugIdeaPlugin plugin = SamebugIdeaPlugin.getInstance();
+        final Integer userId = plugin.getState().getUserId();
+        final SamebugClient client = SamebugIdeaPlugin.getClient();
+        if (userId != null) {
+            BrowserUtil.browse(client.getUserProfileUrl(userId));
+        }
     }
 }

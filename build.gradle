@@ -3,14 +3,16 @@
 
 plugins {
     id "org.jetbrains.intellij" version "0.0.39"
+    id "com.github.hierynomus.license" version "0.12.1"
 }
-
 
 apply plugin: 'java'
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
-tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+allprojects {
+    sourceCompatibility = 1.6
+    targetCompatibility = 1.6
+    tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+}
 
 sourceSets {
     main {
@@ -26,11 +28,15 @@ sourceSets {
 apply plugin: 'org.jetbrains.intellij'
 
 intellij {
-    version project.hasProperty('ideaVersion') ? ideaVersion : 'IC-15.0.3'
-    plugins 'android'
+    version = project.hasProperty('ideaVersion') ? ideaVersion : 'IC-15.0.3'
 
     pluginName 'samebug-idea-plugin'
     updateSinceUntilBuild false
+
+    publish {
+        pluginId '8174'
+        channel 'nightly'
+    }
 }
 
 repositories {
@@ -44,6 +50,36 @@ dependencies {
     testCompile 'org.mockito:mockito-core:1.10.19'
 }
 
+apply plugin: 'license'
+apply plugin: 'checkstyle'
+apply plugin: 'jacoco'
+
+license {
+    strictCheck true
+    header project.file('licenses/HEADER.txt')
+    ext {
+        year = Calendar.getInstance().get(Calendar.YEAR)
+        name = "Samebug, Inc."
+        email = "hello@samebug.io"
+    }
+    mapping {
+        form = 'XML_STYLE'
+    }
+
+    include "**/*.java"
+    include "**/*.form"
+    exclude "**/*Test.java"
+}
+
 group = 'com.samebug.clients.idea'
 description = 'Samebug for IntelliJ IDEA'
-version '0.2.0'
+version '0.3.0'
+
+task checkstyle(type: Checkstyle) {
+    configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    classpath = files()
+}

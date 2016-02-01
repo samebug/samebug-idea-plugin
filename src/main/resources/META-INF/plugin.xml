@@ -13,7 +13,7 @@
     </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="141..0"/>
+    <idea-version since-build="141.0"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -28,6 +28,12 @@
 
     <actions>
         <!-- Add your actions here -->
+        <group id="Samebug.ToolWindowMenu" text="Samebug menu" description="Samebug menu">
+            <add-to-group group-id="ToolsMenu" anchor="last"  />
+            <action id="Samebug.Settings" class="com.samebug.clients.idea.intellij.actions.SettingsAction" icon="/icons/samebug/cogwheel.png" text="Settings" description="Change Samebug configuration" />
+            <action id="Samebug.History" class="com.samebug.clients.idea.intellij.actions.HistoryAction" icon="/icons/samebug/history.png" text="History" description="View your last crashes" />
+
+        </group>
     </actions>
 
     <application-components>
@@ -37,7 +43,7 @@
     </application-components>
     <project-components>
         <component>
-            <implementation-class>com.samebug.clients.idea.SamebugProjectComponent</implementation-class>
+            <implementation-class>com.samebug.clients.idea.ProjectExceptionWatcher</implementation-class>
         </component>
     </project-components>
 </idea-plugin>
