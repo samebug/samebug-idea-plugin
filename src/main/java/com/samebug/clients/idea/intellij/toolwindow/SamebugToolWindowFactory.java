@@ -28,7 +28,7 @@ import com.intellij.ui.content.ContentFactory;
 import com.samebug.clients.idea.intellij.actions.SettingsAction;
 import com.samebug.clients.idea.messages.SamebugBundle;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -39,7 +39,7 @@ public class SamebugToolWindowFactory implements ToolWindowFactory {
     private Project project;
 
     @Override
-    public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
+    public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         this.project = project;
         this.toolWindow = toolWindow;
 

@@ -29,8 +29,8 @@ import com.samebug.clients.rest.SamebugClient;
 import com.samebug.clients.rest.entities.UserInfo;
 import com.samebug.clients.rest.exceptions.SamebugClientException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.net.URI;
 
 @State(
@@ -49,7 +49,7 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
 
     }
 
-    @Nonnull
+    @NotNull
     public static SamebugIdeaPlugin getInstance() {
         SamebugIdeaPlugin instance = ApplicationManager.getApplication().getComponent(SamebugIdeaPlugin.class);
         if (instance == null) {
@@ -61,10 +61,10 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
 
     public static void initIfNeeded() {
         final SamebugIdeaPlugin plugin = SamebugIdeaPlugin.getInstance();
-        if (plugin.getApiKey() == null) SettingsDialog.setup(plugin);
+        if (!isInitialized()) SettingsDialog.setup(plugin);
     }
 
-    @Nonnull
+    @NotNull
     public static SamebugClient getClient() {
         return getInstance().client;
     }
@@ -75,12 +75,12 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
     }
 
     public static boolean isInitialized() {
-        return getInstance().getApiKey() != null;
+        SamebugState state = getInstance().getState();
+        return state.getApiKey() != null &&  state.getUserId() == null;
     }
 
     @Override
     public void initComponent() {
-
     }
 
 
@@ -89,12 +89,12 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public String getComponentName() {
         return getClass().getSimpleName();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public SamebugState getState() {
         return this.state;
@@ -116,6 +116,9 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
             throw new UnknownApiKey(apiKey);
         }
         state.setApiKey(apiKey);
+        state.setUserId(userInfo.userId);
+        state.setUserDisplayName(userInfo.displayName);
+
     }
 
     private final StackTraceSearch stackTraceSearch;

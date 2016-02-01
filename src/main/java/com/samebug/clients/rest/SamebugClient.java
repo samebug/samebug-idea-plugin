@@ -27,7 +27,7 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.conn.ConnectTimeoutException;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -53,6 +53,16 @@ public class SamebugClient {
 
     public URL getSearchUrl(int searchId) {
         String uri = "search/" + searchId;
+        try {
+            return root.resolve(uri).toURL();
+        } catch (MalformedURLException e) {
+            throw new IllegalUriException("Unable to resolve uri " + uri, e);
+        }
+    }
+
+
+    public URL getUserProfileUrl(Integer userId) {
+        String uri = "user/" + userId;
         try {
             return root.resolve(uri).toURL();
         } catch (MalformedURLException e) {
@@ -89,7 +99,7 @@ public class SamebugClient {
         }
     }
 
-    @Nonnull
+    @NotNull
     private HttpResponse execute(Request request) throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthorized, IOException {
         addDefaultHeaders(request);
         request.connectTimeout(3000);
@@ -146,5 +156,6 @@ public class SamebugClient {
 
     private static final String USER_AGENT = "Samebug-Idea-Client/1.0.0";
     private static final String API_VERSION = "1.0";
+
 }
 

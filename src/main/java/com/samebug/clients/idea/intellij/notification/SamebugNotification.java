@@ -18,13 +18,13 @@ package com.samebug.clients.idea.intellij.notification;
 import com.intellij.notification.*;
 import com.samebug.clients.idea.messages.SamebugIcons;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 public abstract class SamebugNotification extends Notification {
 
-    SamebugNotification(@Nonnull String title, @Nonnull String content, @Nonnull NotificationType type, NotificationListener listener) {
+    SamebugNotification(@NotNull String title, @NotNull String content, @NotNull NotificationType type, NotificationListener listener) {
         super(SAMEBUG_NOTIFICATION_GROUP, title, content, type, listener);
     }
 
@@ -40,7 +40,7 @@ public abstract class SamebugNotification extends Notification {
         return SamebugIcons.notification;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public NotificationType getType() {
         return super.getType();

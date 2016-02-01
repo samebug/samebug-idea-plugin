@@ -24,8 +24,8 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.api.StackTraceListener;
 import com.samebug.clients.idea.intellij.autosearch.StackTraceMatcherFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,19 +37,19 @@ public class ConsoleScannerManager implements RunContentWithExecutorListener, Di
         messageBusConnection.subscribe(RunContentManager.TOPIC, this);
     }
 
-    public void contentSelected(@Nullable RunContentDescriptor descriptor, @Nonnull com.intellij.execution.Executor executor) {
+    public void contentSelected(@Nullable RunContentDescriptor descriptor, @NotNull com.intellij.execution.Executor executor) {
         if (descriptor != null) {
             initListener(descriptor);
         }
     }
 
-    public void contentRemoved(@Nullable RunContentDescriptor descriptor, @Nonnull com.intellij.execution.Executor executor) {
+    public void contentRemoved(@Nullable RunContentDescriptor descriptor, @NotNull com.intellij.execution.Executor executor) {
         if (descriptor != null) {
             removeListener(descriptor);
         }
     }
 
-    private synchronized ConsoleScanner initListener(@Nonnull RunContentDescriptor descriptor) {
+    private synchronized ConsoleScanner initListener(@NotNull RunContentDescriptor descriptor) {
         Integer descriptorHashCode = System.identityHashCode(descriptor);
         ConsoleScanner existingScanner = listeners.get(descriptorHashCode);
 
@@ -60,7 +60,7 @@ public class ConsoleScannerManager implements RunContentWithExecutorListener, Di
         }
     }
 
-    private ConsoleScanner createScanner(@Nonnull RunContentDescriptor descriptor, Integer descriptorHashCode) {
+    private ConsoleScanner createScanner(@NotNull RunContentDescriptor descriptor, Integer descriptorHashCode) {
         if (descriptor.getProcessHandler() == null) return null;
 
         ConsoleScanner listener = new ConsoleScanner(scannerFactory, this, descriptor);

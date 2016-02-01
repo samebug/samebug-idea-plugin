@@ -19,7 +19,7 @@ package com.samebug.clients.idea.messages;
 import com.intellij.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class SamebugBundle extends AbstractBundle {
     private static final SamebugBundle BUNDLE = new SamebugBundle();
@@ -30,7 +30,7 @@ public class SamebugBundle extends AbstractBundle {
 
     public static final String PATH_TO_BUNDLE = "messages.SamebugBundle";
 
-    public static String message(@Nonnull @PropertyKey(resourceBundle = PATH_TO_BUNDLE) String key, @Nonnull Object... params) {
+    public static String message(@NotNull @PropertyKey(resourceBundle = PATH_TO_BUNDLE) String key, @NotNull Object... params) {
         return BUNDLE.getMessage(key, params);
     }
 }

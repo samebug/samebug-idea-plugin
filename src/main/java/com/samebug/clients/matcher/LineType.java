@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.matcher;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.InvocationTargetException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,7 +43,7 @@ enum LineType {
         return convertMatch(matcher);
     }
 
-    @Nonnull
+    @NotNull
     private Line convertMatch(Matcher matcher) {
         try {
             return lineClass.getConstructor(LineType.class, Matcher.class).newInstance(this, matcher);

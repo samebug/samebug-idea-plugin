@@ -22,11 +22,9 @@ import com.intellij.openapi.project.Project;
 import com.samebug.clients.api.StackTraceListener;
 import com.samebug.clients.idea.intellij.autosearch.StackTraceMatcherFactory;
 import com.samebug.clients.idea.intellij.autosearch.android.exceptions.UnableToCreateReceiver;
-import com.samebug.clients.util.AndroidSdkUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -95,7 +93,7 @@ public class LogcatScannerManager
     private final static Logger LOGGER = Logger.getInstance(LogcatScannerManager.class);
     private final StackTraceMatcherFactory scannerFactory;
 
-    private synchronized IShellOutputReceiver initReceiver(@Nonnull IDevice device) throws UnableToCreateReceiver {
+    private synchronized IShellOutputReceiver initReceiver(@NotNull IDevice device) throws UnableToCreateReceiver {
         Integer deviceHashCode = System.identityHashCode(device);
         IShellOutputReceiver receiver = receivers.get(deviceHashCode);
         if (receiver == null) {
@@ -104,7 +102,7 @@ public class LogcatScannerManager
         return receiver;
     }
 
-    private IShellOutputReceiver createReceiver(@Nonnull IDevice device, Integer deviceHashCode) throws UnableToCreateReceiver {
+    private IShellOutputReceiver createReceiver(@NotNull IDevice device, Integer deviceHashCode) throws UnableToCreateReceiver {
         try {
             OutputScanner receiver = new OutputScanner(scannerFactory.createScanner());
             device.executeShellCommand("logcat -v long", receiver, 0L, TimeUnit.NANOSECONDS);
@@ -121,7 +119,7 @@ public class LogcatScannerManager
         }
     }
 
-    private synchronized void removeReceiver(@Nonnull IDevice device) {
+    private synchronized void removeReceiver(@NotNull IDevice device) {
         Integer descriptorHashCode = System.identityHashCode(device);
         OutputScanner receiver = receivers.get(descriptorHashCode);
         if (receiver != null) {
@@ -142,13 +140,7 @@ public class LogcatScannerManager
     @Nullable
     public static LogcatScannerManager createManagerForAndroidProject(Project project, StackTraceListener stackTraceListener) {
         AndroidDebugBridge.initIfNeeded(false);
-        try {
-            File adb = AndroidSdkUtil.getAdb(project);
-            String adbLocation = adb != null ? adb.getPath() : null;
-            AndroidDebugBridge.createBridge(adbLocation, false);
-        } catch (NoClassDefFoundError ignored) {
-            AndroidDebugBridge.createBridge();
-        }
+        AndroidDebugBridge.createBridge();
         return new LogcatScannerManager(stackTraceListener);
     }
 }

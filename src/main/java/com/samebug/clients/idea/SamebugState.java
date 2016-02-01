@@ -16,6 +16,8 @@
 package com.samebug.clients.idea;
 
 public class SamebugState {
+
+
     public String getApiKey() {
         return apiKey;
     }
@@ -24,5 +26,23 @@ public class SamebugState {
         this.apiKey = apiKey;
     }
 
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserDisplayName(String userDisplayName) {
+        this.userDisplayName = userDisplayName;
+    }
+
+    public String getUserDisplayName() {
+        return userDisplayName;
+    }
+
+    private Integer userId;
+    private String userDisplayName;
     private String apiKey;
 }

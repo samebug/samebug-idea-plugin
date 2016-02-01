@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.matcher;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 import static com.samebug.clients.matcher.State.*;
@@ -73,7 +73,7 @@ abstract class MatcherStateMachine {
         this.lines = lines;
     }
 
-    private MatcherStateMachine transition(@Nonnull State nextState, @Nonnull Line line) {
+    private MatcherStateMachine transition(@NotNull State nextState, @NotNull Line line) {
         if (state == nextState) {
             nonChangingSteps++;
         } else {

@@ -24,7 +24,7 @@ import com.samebug.clients.idea.messages.SamebugBundle;
 import com.samebug.clients.rest.exceptions.SamebugClientException;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.*;
 

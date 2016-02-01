@@ -23,7 +23,7 @@ import com.samebug.clients.idea.intellij.autosearch.StackTraceSearch;
 import com.samebug.clients.idea.intellij.autosearch.android.LogcatScannerManager;
 import com.samebug.clients.idea.intellij.autosearch.console.ConsoleScannerManager;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ProjectExceptionWatcher implements ProjectComponent, StackTraceListener {
 
@@ -50,7 +50,7 @@ public class ProjectExceptionWatcher implements ProjectComponent, StackTraceList
         SamebugIdeaPlugin.initIfNeeded();
     }
 
-    private void initScanners(@Nonnull final Project project) {
+    private void initScanners(@NotNull final Project project) {
         this.stackTraceSearch = SamebugIdeaPlugin.getStackTraceSearch();
         this.searchResultNotifier = new SearchResultNotifier(project);
         this.consoleScannerManager = new ConsoleScannerManager(project, this);
@@ -67,7 +67,7 @@ public class ProjectExceptionWatcher implements ProjectComponent, StackTraceList
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public String getComponentName() {
         return getClass().getSimpleName();
     }
