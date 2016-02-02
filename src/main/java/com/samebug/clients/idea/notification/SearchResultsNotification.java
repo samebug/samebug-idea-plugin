@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.intellij.notification;
+package com.samebug.clients.idea.notification;
 
 import com.intellij.notification.NotificationType;
-import com.samebug.clients.idea.messages.SamebugBundle;
-
+import com.samebug.clients.idea.resources.SamebugBundle;
 import org.jetbrains.annotations.Nullable;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

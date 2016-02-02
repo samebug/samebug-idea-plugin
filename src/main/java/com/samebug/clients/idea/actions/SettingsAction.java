@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.intellij.actions;
+package com.samebug.clients.idea.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.samebug.clients.idea.SamebugIdeaPlugin;
-import com.samebug.clients.idea.intellij.settings.SettingsDialog;
+import com.samebug.clients.idea.settings.SettingsDialog;
 
 public class SettingsAction extends AnAction {
     @Override

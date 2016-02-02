@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.intellij.autosearch.console;
+package com.samebug.clients.idea.autosearch.console;
 
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunContentManager;
@@ -21,18 +21,17 @@ import com.intellij.execution.ui.RunContentWithExecutorListener;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.api.StackTraceListener;
-import com.samebug.clients.idea.intellij.autosearch.StackTraceMatcherFactory;
-
+import com.samebug.clients.idea.autosearch.StackTraceMatcherFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class ConsoleScannerManager implements RunContentWithExecutorListener, Disposable {
-    public ConsoleScannerManager(Project project, StackTraceListener stackTraceListener) {
+    public ConsoleScannerManager(Project project) {
 
-        this.scannerFactory = new StackTraceMatcherFactory(stackTraceListener);
+        this.scannerFactory = new StackTraceMatcherFactory(project.getMessageBus());
         MessageBusConnection messageBusConnection = project.getMessageBus().connect();
         messageBusConnection.subscribe(RunContentManager.TOPIC, this);
     }

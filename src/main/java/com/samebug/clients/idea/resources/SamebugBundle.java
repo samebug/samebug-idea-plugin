@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages;
+package com.samebug.clients.idea.resources;
 
 
 import com.intellij.AbstractBundle;
-import org.jetbrains.annotations.PropertyKey;
-
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.PropertyKey;
 
 public class SamebugBundle extends AbstractBundle {
     private static final SamebugBundle BUNDLE = new SamebugBundle();

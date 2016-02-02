@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.intellij.autosearch.console;
+package com.samebug.clients.idea.autosearch.console;
 
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
@@ -21,8 +21,8 @@ import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.util.Key;
 import com.samebug.clients.api.LogScanner;
 import com.samebug.clients.api.LogScannerFactory;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;

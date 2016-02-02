@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.intellij.notification;
+package com.samebug.clients.idea.notification;
 
 import com.intellij.notification.*;
-import com.samebug.clients.idea.messages.SamebugIcons;
-
+import com.samebug.clients.idea.resources.SamebugIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import javax.swing.*;
 
 public abstract class SamebugNotification extends Notification {

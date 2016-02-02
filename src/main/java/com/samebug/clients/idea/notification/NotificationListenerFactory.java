@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.intellij.notification;
+package com.samebug.clients.idea.notification;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
-
 import org.jetbrains.annotations.NotNull;
+
 import javax.swing.event.HyperlinkEvent;
 
 class NotificationListenerFactory {

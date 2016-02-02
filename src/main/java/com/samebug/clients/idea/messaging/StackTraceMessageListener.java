@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.intellij.notification;
+package com.samebug.clients.idea.messaging;
 
-public interface NotificationActionListener {
-    void actionActivated(String action);
+import com.intellij.util.messages.Topic;
+
+public interface StackTraceMessageListener {
+    Topic<StackTraceMessageListener> FOUND_TOPIC = Topic.create("stacktrace found", StackTraceMessageListener.class);
+
+    void stackTraceFound(String stackTrace);
 }
-

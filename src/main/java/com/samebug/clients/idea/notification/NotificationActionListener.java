@@ -13,22 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.intellij.autosearch;
+package com.samebug.clients.idea.notification;
 
-import com.samebug.clients.api.LogScanner;
-import com.samebug.clients.api.LogScannerFactory;
-import com.samebug.clients.api.StackTraceListener;
-import com.samebug.clients.matcher.StackTraceMatcher;
-
-public class StackTraceMatcherFactory implements LogScannerFactory {
-    private final StackTraceListener listener;
-
-    public StackTraceMatcherFactory(StackTraceListener listener) {
-        this.listener = listener;
-    }
-
-    @Override
-    public LogScanner createScanner() {
-        return new StackTraceMatcher(listener);
-    }
+public interface NotificationActionListener {
+    void actionActivated(String action);
 }
+

@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.intellij.autosearch.android;
+package com.samebug.clients.idea.autosearch.android;
 
 import com.android.ddmlib.*;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.api.StackTraceListener;
-import com.samebug.clients.idea.intellij.autosearch.StackTraceMatcherFactory;
-import com.samebug.clients.idea.intellij.autosearch.android.exceptions.UnableToCreateReceiver;
+import com.samebug.clients.idea.autosearch.StackTraceMatcherFactory;
+import com.samebug.clients.idea.autosearch.android.exceptions.UnableToCreateReceiver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,9 +34,9 @@ public class LogcatScannerManager
         implements AndroidDebugBridge.IDeviceChangeListener, Disposable,
         AndroidDebugBridge.IDebugBridgeChangeListener {
 
-    public LogcatScannerManager(StackTraceListener stackTraceListener) {
+    public LogcatScannerManager(Project project) {
         super();
-        this.scannerFactory = new StackTraceMatcherFactory(stackTraceListener);
+        this.scannerFactory = new StackTraceMatcherFactory(project.getMessageBus());
         initialize();
     }
 
@@ -138,9 +137,9 @@ public class LogcatScannerManager
     }
 
     @Nullable
-    public static LogcatScannerManager createManagerForAndroidProject(Project project, StackTraceListener stackTraceListener) {
+    public static LogcatScannerManager createManagerForAndroidProject(Project project) {
         AndroidDebugBridge.initIfNeeded(false);
         AndroidDebugBridge.createBridge();
-        return new LogcatScannerManager(stackTraceListener);
+        return new LogcatScannerManager(project);
     }
 }

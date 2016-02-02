@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.intellij.autosearch;
+package com.samebug.clients.idea.autosearch;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.util.messages.Topic;
 import com.samebug.clients.rest.SamebugClient;
 import com.samebug.clients.rest.entities.SearchResults;
 import com.samebug.clients.rest.exceptions.SamebugClientException;
 import com.samebug.clients.rest.exceptions.SamebugTimeout;
 import com.samebug.clients.rest.exceptions.UserUnauthorized;
+
+import java.util.UUID;
 
 public class StackTraceSearch {
     private final SamebugClient client;
@@ -29,28 +33,37 @@ public class StackTraceSearch {
         this.client = client;
     }
 
-    public void search(final String stacktrace, final SearchResultListener resultHandler) {
+    public void search(final String stacktrace, final Project project) {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
-                final SearchResults results;
+                StackTraceSearchListener listener = project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC);
+                String id = UUID.randomUUID().toString();
+                listener.searchStart(id, stacktrace);
                 try {
-                    results = client.searchSolutions(stacktrace);
-                    resultHandler.handleResults(results);
+                    listener.searchSucceeded(id, client.searchSolutions(stacktrace));
                 } catch (SamebugTimeout ignored) {
-
+                    listener.timeout(id);
                 } catch (UserUnauthorized ignored) {
-
+                    listener.unauthorized(id);
                 } catch (SamebugClientException e) {
-                    resultHandler.handleException(e);
+                    listener.searchFailed(id, e);
                 }
             }
         });
     }
 
-    public interface SearchResultListener {
-        void handleResults(SearchResults results);
+    public interface StackTraceSearchListener {
+        Topic<StackTraceSearchListener> SEARCH_TOPIC = Topic.create("stacktrace search", StackTraceSearchListener.class);
 
-        void handleException(SamebugClientException exception);
+        void searchStart(String id, String stackTrace);
+
+        void searchSucceeded(String id, SearchResults results);
+
+        void timeout(String id);
+
+        void unauthorized(String id);
+
+        void searchFailed(String id, SamebugClientException error);
     }
 }

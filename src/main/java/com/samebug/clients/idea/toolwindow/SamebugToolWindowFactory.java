@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.intellij.toolwindow;
+package com.samebug.clients.idea.toolwindow;
 
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
@@ -25,7 +25,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
-import com.samebug.clients.idea.messages.SamebugBundle;
+import com.samebug.clients.idea.resources.SamebugBundle;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

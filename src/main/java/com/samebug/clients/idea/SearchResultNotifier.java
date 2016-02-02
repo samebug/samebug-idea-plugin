@@ -19,27 +19,42 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.idea.intellij.autosearch.StackTraceSearch;
-import com.samebug.clients.idea.intellij.notification.NotificationActionListener;
-import com.samebug.clients.idea.intellij.notification.SearchResultsNotification;
-import com.samebug.clients.idea.messages.SamebugBundle;
+import com.samebug.clients.idea.autosearch.StackTraceSearch;
+import com.samebug.clients.idea.notification.NotificationActionListener;
+import com.samebug.clients.idea.notification.SearchResultsNotification;
+import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.rest.SamebugClient;
 import com.samebug.clients.rest.entities.SearchResults;
 import com.samebug.clients.rest.exceptions.SamebugClientException;
 
-class SearchResultNotifier implements StackTraceSearch.SearchResultListener {
+class SearchResultNotifier implements StackTraceSearch.StackTraceSearchListener {
     public SearchResultNotifier(Project project) {
         this.project = project;
     }
 
     @Override
-    public void handleResults(SearchResults results) {
+    public void searchStart(String id, String stackTrace) {
+
+    }
+
+    @Override
+    public void searchSucceeded(String id, SearchResults results) {
         if (results.totalSolutions > 0) showNotificationPopup(results);
     }
 
     @Override
-    public void handleException(SamebugClientException exception) {
-        LOGGER.error("Error in Samebug console search", exception);
+    public void timeout(String id) {
+
+    }
+
+    @Override
+    public void unauthorized(String id) {
+
+    }
+
+    @Override
+    public void searchFailed(String id, SamebugClientException error) {
+        LOGGER.error("Error in Samebug console search", error);
     }
 
     private void showNotificationPopup(final SearchResults results) {

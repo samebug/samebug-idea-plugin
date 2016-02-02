@@ -19,14 +19,13 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.api.StackTraceListener;
-import com.samebug.clients.idea.intellij.autosearch.StackTraceSearch;
-import com.samebug.clients.idea.intellij.autosearch.android.LogcatScannerManager;
-import com.samebug.clients.idea.intellij.autosearch.console.ConsoleScannerManager;
-
+import com.samebug.clients.idea.autosearch.StackTraceSearch;
+import com.samebug.clients.idea.autosearch.android.LogcatScannerManager;
+import com.samebug.clients.idea.autosearch.console.ConsoleScannerManager;
+import com.samebug.clients.idea.messaging.StackTraceMessageListener;
 import org.jetbrains.annotations.NotNull;
 
-public class ProjectExceptionWatcher implements ProjectComponent, StackTraceListener {
+public class ProjectExceptionWatcher implements ProjectComponent {
 
     private SearchResultNotifier searchResultNotifier;
     private StackTraceSearch stackTraceSearch;
@@ -58,9 +57,16 @@ public class ProjectExceptionWatcher implements ProjectComponent, StackTraceList
 
     private void initScanners(@NotNull final Project project) {
         this.stackTraceSearch = SamebugIdeaPlugin.getStackTraceSearch();
-        this.searchResultNotifier = new SearchResultNotifier(project);
-        this.consoleScannerManager = new ConsoleScannerManager(project, this);
-        this.logcatScannerManager = LogcatScannerManager.createManagerForAndroidProject(project, this);
+
+        this.consoleScannerManager = new ConsoleScannerManager(project);
+        this.logcatScannerManager = LogcatScannerManager.createManagerForAndroidProject(project);
+
+        project.getMessageBus().connect().subscribe(StackTraceMessageListener.FOUND_TOPIC, new StackTraceMessageListener() {
+            @Override
+            public void stackTraceFound(String stackTrace) {
+                stackTraceSearch.search(stackTrace, project);
+            }
+        });
     }
 
 
@@ -87,11 +93,5 @@ public class ProjectExceptionWatcher implements ProjectComponent, StackTraceList
 
 
     private final static Logger LOGGER = Logger.getInstance(ProjectExceptionWatcher.class);
-
-
-    @Override
-    public void stacktraceFound(String stacktrace) {
-        stackTraceSearch.search(stacktrace, searchResultNotifier);
-    }
 }
 
