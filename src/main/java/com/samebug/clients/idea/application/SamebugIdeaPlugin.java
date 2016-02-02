@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea;
+package com.samebug.clients.idea.application;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
@@ -21,9 +21,7 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.samebug.clients.exceptions.UnknownApiKey;
-import com.samebug.clients.idea.autosearch.StackTraceSearch;
 import com.samebug.clients.idea.notification.SamebugNotification;
-import com.samebug.clients.idea.settings.SettingsDialog;
 import com.samebug.clients.rest.SamebugClient;
 import com.samebug.clients.rest.entities.UserInfo;
 import com.samebug.clients.rest.exceptions.SamebugClientException;
@@ -38,14 +36,11 @@ import java.net.URI;
                 @Storage(id = "SamebugClient", file = "$APP_CONFIG$/SamebugClient.xml")
         }
 )
-public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateComponent<SamebugState> {
+public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateComponent<SamebugSettings> {
 
     private SamebugIdeaPlugin() {
         SamebugNotification.registerNotificationGroups();
         this.client = new SamebugClient(this, URI.create("https://samebug.io/"));
-        this.stackTraceSearch = new StackTraceSearch(client);
-
-
     }
 
     @NotNull
@@ -68,13 +63,8 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
         return getInstance().client;
     }
 
-    @Nullable
-    public static StackTraceSearch getStackTraceSearch() {
-        return getInstance().stackTraceSearch;
-    }
-
     public static boolean isInitialized(SamebugIdeaPlugin plugin) {
-        SamebugState state = plugin.getState();
+        SamebugSettings state = plugin.getState();
         return state.isInitialized();
     }
 
@@ -95,12 +85,12 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
 
     @NotNull
     @Override
-    public SamebugState getState() {
+    public SamebugSettings getState() {
         return this.state;
     }
 
     @Override
-    public void loadState(SamebugState state) {
+    public void loadState(SamebugSettings state) {
         this.state = state;
     }
 
@@ -120,7 +110,6 @@ public class SamebugIdeaPlugin implements ApplicationComponent, PersistentStateC
 
     }
 
-    private final StackTraceSearch stackTraceSearch;
     private final SamebugClient client;
-    private SamebugState state = new SamebugState();
+    private SamebugSettings state = new SamebugSettings();
 }

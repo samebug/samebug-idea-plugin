@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.autosearch.android;
+package com.samebug.clients.idea.project.autosearch.android;
 
 import com.android.ddmlib.*;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.idea.autosearch.StackTraceMatcherFactory;
-import com.samebug.clients.idea.autosearch.android.exceptions.UnableToCreateReceiver;
+import com.samebug.clients.idea.project.autosearch.StackTraceMatcherFactory;
+import com.samebug.clients.idea.project.autosearch.android.exceptions.UnableToCreateReceiver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

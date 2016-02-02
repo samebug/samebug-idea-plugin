@@ -16,7 +16,7 @@
 package com.samebug.clients.rest;
 
 import com.google.gson.Gson;
-import com.samebug.clients.idea.SamebugIdeaPlugin;
+import com.samebug.clients.idea.application.SamebugIdeaPlugin;
 import com.samebug.clients.rest.entities.SearchResults;
 import com.samebug.clients.rest.entities.UserInfo;
 import com.samebug.clients.rest.exceptions.*;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.autosearch;
+package com.samebug.clients.idea.project.autosearch;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
@@ -27,13 +27,15 @@ import com.samebug.clients.rest.exceptions.UserUnauthorized;
 import java.util.UUID;
 
 public class StackTraceSearch {
+    private final Project project;
     private final SamebugClient client;
 
-    public StackTraceSearch(SamebugClient client) {
+    public StackTraceSearch(Project project, SamebugClient client) {
+        this.project = project;
         this.client = client;
     }
 
-    public void search(final String stacktrace, final Project project) {
+    public void search(final String stacktrace) {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {

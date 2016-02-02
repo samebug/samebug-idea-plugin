@@ -18,7 +18,7 @@ package com.samebug.clients.idea.actions;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.samebug.clients.idea.SamebugIdeaPlugin;
+import com.samebug.clients.idea.application.SamebugIdeaPlugin;
 import com.samebug.clients.rest.SamebugClient;
 
 public class HistoryAction extends AnAction {

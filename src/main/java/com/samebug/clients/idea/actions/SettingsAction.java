@@ -17,8 +17,8 @@ package com.samebug.clients.idea.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.samebug.clients.idea.SamebugIdeaPlugin;
-import com.samebug.clients.idea.settings.SettingsDialog;
+import com.samebug.clients.idea.application.SamebugIdeaPlugin;
+import com.samebug.clients.idea.application.SettingsDialog;
 
 public class SettingsAction extends AnAction {
     @Override

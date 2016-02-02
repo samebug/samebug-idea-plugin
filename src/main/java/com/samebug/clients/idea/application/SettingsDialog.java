@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.settings;
+package com.samebug.clients.idea.application;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.Messages;
 import com.samebug.clients.exceptions.UnknownApiKey;
-import com.samebug.clients.idea.SamebugIdeaPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.rest.exceptions.SamebugClientException;
 import org.jetbrains.annotations.Nls;

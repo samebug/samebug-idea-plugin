@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea;
+package com.samebug.clients.idea.project;
 
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.idea.autosearch.StackTraceSearch;
+import com.samebug.clients.idea.application.SamebugIdeaPlugin;
 import com.samebug.clients.idea.notification.NotificationActionListener;
 import com.samebug.clients.idea.notification.SearchResultsNotification;
+import com.samebug.clients.idea.project.autosearch.StackTraceSearch;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.rest.SamebugClient;
 import com.samebug.clients.rest.entities.SearchResults;
@@ -30,6 +31,7 @@ import com.samebug.clients.rest.exceptions.SamebugClientException;
 class SearchResultNotifier implements StackTraceSearch.StackTraceSearchListener {
     public SearchResultNotifier(Project project) {
         this.project = project;
+        project.getMessageBus().connect().subscribe(StackTraceSearch.StackTraceSearchListener.SEARCH_TOPIC, this);
     }
 
     @Override

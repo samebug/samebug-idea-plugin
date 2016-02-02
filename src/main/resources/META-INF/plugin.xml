@@ -23,7 +23,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Samebug" icon="/icons/samebug/samebug-r270-13x13.png" anchor="right"
-                    factoryClass="com.samebug.clients.idea.toolwindow.SamebugToolWindowFactory"/>
+                    factoryClass="com.samebug.clients.idea.project.toolwindow.SamebugToolWindowFactory"/>
     </extensions>
 
     <actions>
@@ -39,12 +39,12 @@
 
     <application-components>
         <component>
-            <implementation-class>com.samebug.clients.idea.SamebugIdeaPlugin</implementation-class>
+            <implementation-class>com.samebug.clients.idea.application.SamebugIdeaPlugin</implementation-class>
         </component>
     </application-components>
     <project-components>
         <component>
-            <implementation-class>com.samebug.clients.idea.ProjectExceptionWatcher</implementation-class>
+            <implementation-class>com.samebug.clients.idea.project.ProjectExceptionWatcher</implementation-class>
         </component>
     </project-components>
 </idea-plugin>
