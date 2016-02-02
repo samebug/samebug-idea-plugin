@@ -39,7 +39,9 @@ intellij {
     publish {
         pluginId '8174'
 
-        apply from: "gradle.properties"
+        username project.hasProperty('JETBRAINS_USERNAME') ? project.getProperty('JETBRAINS_USERNAME') : null
+        password project.hasProperty('JETBRAINS_PASSWORD') ? project.getProperty('JETBRAINS_PASSWORD') : null
+        channel project.hasProperty('JETBRAINS_CHANNEL') ? project.getProperty('JETBRAINS_CHANNEL') : null
     }
 }
 
@@ -77,7 +79,7 @@ license {
 
 group = 'com.samebug.clients.idea'
 description = 'Samebug for IntelliJ IDEA'
-version '0.4.0-SNAPSHOT'
+version '0.4.0'
 
 task checkstyle(type: Checkstyle) {
     configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")
@@ -87,3 +89,4 @@ task checkstyle(type: Checkstyle) {
 
     classpath = files()
 }
+
