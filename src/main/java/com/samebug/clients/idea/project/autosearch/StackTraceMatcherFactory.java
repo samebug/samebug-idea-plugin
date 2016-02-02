@@ -19,7 +19,6 @@ import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.search.api.LogScanner;
 import com.samebug.clients.search.api.LogScannerFactory;
 import com.samebug.clients.search.api.StackTraceListener;
-import com.samebug.clients.idea.messaging.StackTraceMessageListener;
 import com.samebug.clients.search.matcher.StackTraceMatcher;
 
 public class StackTraceMatcherFactory implements LogScannerFactory {

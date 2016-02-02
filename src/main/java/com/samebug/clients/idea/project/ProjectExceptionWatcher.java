@@ -22,7 +22,7 @@ import com.samebug.clients.idea.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.project.autosearch.StackTraceSearch;
 import com.samebug.clients.idea.project.autosearch.android.LogcatScannerManager;
 import com.samebug.clients.idea.project.autosearch.console.ConsoleScannerManager;
-import com.samebug.clients.idea.messaging.StackTraceMessageListener;
+import com.samebug.clients.idea.project.autosearch.StackTraceMessageListener;
 import org.jetbrains.annotations.NotNull;
 
 public class ProjectExceptionWatcher implements ProjectComponent {
@@ -47,7 +47,7 @@ public class ProjectExceptionWatcher implements ProjectComponent {
 
     @Override
     public void initComponent() {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
                 IdeaSamebugPlugin.initIfNeeded();
@@ -57,10 +57,14 @@ public class ProjectExceptionWatcher implements ProjectComponent {
 
     private void initScanners(@NotNull final Project project) {
         this.stackTraceSearch = new StackTraceSearch(project, IdeaSamebugPlugin.getClient());
-
-        this.consoleScannerManager = new ConsoleScannerManager(project);
-        this.logcatScannerManager = LogcatScannerManager.createManagerForAndroidProject(project);
         this.searchResultNotifier = new SearchResultNotifier(project);
+        this.consoleScannerManager = new ConsoleScannerManager(project);
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                ProjectExceptionWatcher.this.logcatScannerManager = LogcatScannerManager.createManagerForAndroidProject(project);
+            }
+        });
         project.getMessageBus().connect().subscribe(StackTraceMessageListener.FOUND_TOPIC, new StackTraceMessageListener() {
             @Override
             public void stackTraceFound(String stackTrace) {

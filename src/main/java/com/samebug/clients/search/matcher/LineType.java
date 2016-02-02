@@ -16,6 +16,7 @@
 package com.samebug.clients.search.matcher;
 
 import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,7 +33,7 @@ enum LineType {
     private final Pattern pattern;
     private final Class<? extends Line> lineClass;
 
-     LineType(Class<? extends Line> lineClass, String regex) {
+    LineType(Class<? extends Line> lineClass, String regex) {
         this.lineClass = lineClass;
         this.pattern = Pattern.compile(regex, Pattern.DOTALL);
     }

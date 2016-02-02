@@ -21,11 +21,11 @@ import com.samebug.clients.search.api.LogScanner;
 /**
  * Scans running process outputs
  */
-class OutputScanner extends MultiLineReceiver {
+class LogcatScanner extends MultiLineReceiver {
 
     private final LogScanner logScanner;
 
-    public OutputScanner(LogScanner logScanner) {
+    public LogcatScanner(LogScanner logScanner) {
         this.logScanner = logScanner;
 
     }

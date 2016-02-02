@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- * <p/>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -85,7 +85,7 @@ public class LogcatScannerManager
     public void dispose() {
         AndroidDebugBridge.addDeviceChangeListener(this);
         AndroidDebugBridge.addDebugBridgeChangeListener(this);
-        for (Map.Entry<Integer, OutputScanner> entry : receivers.entrySet()) {
+        for (Map.Entry<Integer, LogcatScanner> entry : receivers.entrySet()) {
             entry.getValue().finish();
         }
         receivers.clear();
@@ -105,7 +105,7 @@ public class LogcatScannerManager
 
     private IShellOutputReceiver createReceiver(@NotNull IDevice device, Integer deviceHashCode) throws UnableToCreateReceiver {
         try {
-            OutputScanner receiver = new OutputScanner(scannerFactory.createScanner());
+            LogcatScanner receiver = new LogcatScanner(scannerFactory.createScanner());
             device.executeShellCommand("logcat -v long", receiver, 0L, TimeUnit.NANOSECONDS);
             receivers.put(deviceHashCode, receiver);
             return receiver;
@@ -122,14 +122,14 @@ public class LogcatScannerManager
 
     private synchronized void removeReceiver(@NotNull IDevice device) {
         Integer descriptorHashCode = System.identityHashCode(device);
-        OutputScanner receiver = receivers.get(descriptorHashCode);
+        LogcatScanner receiver = receivers.get(descriptorHashCode);
         if (receiver != null) {
             receiver.finish();
             receivers.remove(descriptorHashCode);
         }
     }
 
-    private final Map<Integer, OutputScanner> receivers = new HashMap<Integer, OutputScanner>();
+    private final Map<Integer, LogcatScanner> receivers = new HashMap<Integer, LogcatScanner>();
 
     @Override
     public void bridgeChanged(AndroidDebugBridge bridge) {
@@ -141,8 +141,8 @@ public class LogcatScannerManager
     @Nullable
     public static LogcatScannerManager createManagerForAndroidProject(Project project) {
         File adb = AndroidSdkUtil.getAdb(project);
-        AndroidDebugBridge.initIfNeeded(false);
         if (adb != null) {
+            AndroidDebugBridge.initIfNeeded(false);
             AndroidDebugBridge.createBridge(adb.getPath(), false);
             return new LogcatScannerManager(project);
         } else {
