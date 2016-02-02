@@ -16,6 +16,7 @@
 package com.samebug.clients.idea.project.autosearch;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.util.messages.Topic;
 import com.samebug.clients.search.api.LogScanner;
 import com.samebug.clients.search.api.LogScannerFactory;
 import com.samebug.clients.search.api.StackTraceListener;
@@ -47,5 +48,11 @@ public class StackTraceMatcherFactory implements LogScannerFactory {
         public void stacktraceFound(String stacktrace) {
             project.getMessageBus().syncPublisher(StackTraceMatcherListener.FOUND_TOPIC).stackTraceFound(project, stacktrace);
         }
+    }
+
+    public interface StackTraceMatcherListener {
+        Topic<StackTraceMatcherListener> FOUND_TOPIC = Topic.create("stacktrace found", StackTraceMatcherListener.class, Topic.BroadcastDirection.TO_PARENT);
+
+        void stackTraceFound(Project project, String stackTrace);
     }
 }

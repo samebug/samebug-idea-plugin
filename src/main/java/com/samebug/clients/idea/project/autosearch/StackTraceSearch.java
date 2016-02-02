@@ -69,7 +69,8 @@ public class StackTraceSearch implements ApplicationComponent, Disposable {
 
     @Override
     public void initComponent() {
-        ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(StackTraceMatcherListener.FOUND_TOPIC, new StackTraceMatcherListener() {
+        ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(
+                StackTraceMatcherFactory.StackTraceMatcherListener.FOUND_TOPIC, new StackTraceMatcherFactory.StackTraceMatcherListener() {
             @Override
             public void stackTraceFound(Project project, String stackTrace) {
                 search(project, stackTrace);
