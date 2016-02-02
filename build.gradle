@@ -30,6 +30,8 @@ apply plugin: 'org.jetbrains.intellij'
 intellij {
     version = project.hasProperty('ideaVersion') ? ideaVersion : 'IC-15.0.3'
 
+    plugins 'android'
+
     alternativeIdePath '/Applications/Android Studio.app/Contents'
     pluginName 'samebug-idea-plugin'
     updateSinceUntilBuild false
