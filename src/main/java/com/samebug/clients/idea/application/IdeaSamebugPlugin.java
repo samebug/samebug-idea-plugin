@@ -15,63 +15,20 @@
  */
 package com.samebug.clients.idea.application;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.samebug.clients.search.api.exceptions.UnknownApiKey;
 import com.samebug.clients.idea.notification.SamebugNotification;
-import com.samebug.clients.search.api.SamebugClient;
-import com.samebug.clients.search.api.entities.UserInfo;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.net.URI;
 
-@State(
-        name = "SamebugConfiguration",
-        storages = {
-                @Storage(id = "SamebugClient", file = "$APP_CONFIG$/SamebugClient.xml")
-        }
-)
-public class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<SamebugSettings> {
+public class IdeaSamebugPlugin implements ApplicationComponent {
 
     private IdeaSamebugPlugin() {
-        SamebugNotification.registerNotificationGroups();
-        this.client = new IdeaSamebugClient(this, URI.create("https://samebug.io/"));
-    }
-
-    @NotNull
-    public static IdeaSamebugPlugin getInstance() {
-        IdeaSamebugPlugin instance = ApplicationManager.getApplication().getComponent(IdeaSamebugPlugin.class);
-        if (instance == null) {
-            throw new Error("No Samebug IDEA plugin available");
-        } else {
-            return instance;
-        }
-    }
-
-    public static void initIfNeeded() {
-        final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-        if (!isInitialized(plugin)) SettingsDialog.setup(plugin);
-    }
-
-    @NotNull
-    public static SamebugClient getClient() {
-        return getInstance().client;
-    }
-
-    public static boolean isInitialized(IdeaSamebugPlugin plugin) {
-        SamebugSettings state = plugin.getState();
-        return state.isInitialized();
     }
 
     @Override
     public void initComponent() {
+        SamebugNotification.registerNotificationGroups();
     }
-
 
     @Override
     public void disposeComponent() {
@@ -82,31 +39,4 @@ public class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateC
     public String getComponentName() {
         return getClass().getSimpleName();
     }
-
-    @NotNull
-    @Override
-    public SamebugSettings getState() {
-        return this.state;
-    }
-
-    @Override
-    public void loadState(SamebugSettings state) {
-        this.state = state;
-    }
-
-    @Nullable
-    public String getApiKey() {
-        return state.getApiKey();
-    }
-
-    public void setApiKey(String apiKey) throws SamebugClientException, UnknownApiKey {
-        UserInfo userInfo = client.getUserInfo(apiKey);
-        state.setApiKey(apiKey);
-        state.setUserId(userInfo.userId);
-        state.setUserDisplayName(userInfo.displayName);
-
-    }
-
-    private final SamebugClient client;
-    private SamebugSettings state = new SamebugSettings();
 }

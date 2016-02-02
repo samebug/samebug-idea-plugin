@@ -80,13 +80,13 @@ public class SettingsDialog extends JDialog implements Configurable {
         dispose();
     }
 
-    public static void setup(IdeaSamebugPlugin plugin) {
+    public static void setup(IdeaSamebugClient client) {
         SettingsDialog dialog = new SettingsDialog();
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(null);
         dialog.pack();
-        if (plugin != null && plugin.getApiKey() != null) {
-            dialog.apiKeyTextField.setText(plugin.getApiKey());
+        if (client != null && client.getApiKey() != null) {
+            dialog.apiKeyTextField.setText(client.getApiKey());
         }
         dialog.setVisible(true);
     }
@@ -116,10 +116,10 @@ public class SettingsDialog extends JDialog implements Configurable {
 
     @Override
     public void apply() throws ConfigurationException {
-        IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
+        IdeaSamebugClient client = IdeaSamebugClient.getInstance();
         try {
             String apiKey = apiKeyTextField.getText();
-            plugin.setApiKey(apiKey);
+            client.setApiKey(apiKey);
         } catch (UnknownApiKey unknownApiKey) {
             throw new ConfigurationException("Unknown Samebug API Key.");
         } catch (SamebugClientException e) {

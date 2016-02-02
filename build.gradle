@@ -32,7 +32,7 @@ intellij {
 
     plugins 'android'
 
-    alternativeIdePath '/Applications/Android Studio.app/Contents'
+    // alternativeIdePath '/Applications/Android Studio.app/Contents'
     pluginName 'samebug-idea-plugin'
     updateSinceUntilBuild false
 

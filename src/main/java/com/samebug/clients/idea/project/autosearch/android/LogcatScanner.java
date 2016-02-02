@@ -40,6 +40,7 @@ class LogcatScanner extends MultiLineReceiver {
     public void finish() {
         flush();
         logScanner.end();
+        done();
     }
 
     @Override

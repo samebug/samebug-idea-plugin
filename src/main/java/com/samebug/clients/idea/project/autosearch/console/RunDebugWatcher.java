@@ -19,6 +19,7 @@ import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunContentManager;
 import com.intellij.execution.ui.RunContentWithExecutorListener;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.project.autosearch.StackTraceMatcherFactory;
@@ -28,14 +29,21 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ConsoleScannerManager implements RunContentWithExecutorListener, Disposable {
-    public ConsoleScannerManager(Project project) {
+public class RunDebugWatcher extends AbstractProjectComponent implements RunContentWithExecutorListener, Disposable {
+    public RunDebugWatcher(Project project) {
+        super(project);
 
-        this.scannerFactory = new StackTraceMatcherFactory(project.getMessageBus());
-        MessageBusConnection messageBusConnection = project.getMessageBus().connect();
+    }
+
+    // ProjectComponent overrides
+    @Override
+    public void projectOpened() {
+        this.scannerFactory = new StackTraceMatcherFactory(myProject);
+        MessageBusConnection messageBusConnection = myProject.getMessageBus().connect();
         messageBusConnection.subscribe(RunContentManager.TOPIC, this);
     }
 
+    // RunContentWithExecutorListener overrides
     public void contentSelected(@Nullable RunContentDescriptor descriptor, @NotNull com.intellij.execution.Executor executor) {
         if (descriptor != null) {
             initListener(descriptor);
@@ -46,6 +54,14 @@ public class ConsoleScannerManager implements RunContentWithExecutorListener, Di
         if (descriptor != null) {
             removeListener(descriptor);
         }
+    }
+
+    // Displosable overrides
+    public void dispose() {
+        for (Map.Entry<Integer, ConsoleScanner> entry : listeners.entrySet()) {
+            entry.getValue().stop();
+        }
+        listeners.clear();
     }
 
     private synchronized ConsoleScanner initListener(@NotNull RunContentDescriptor descriptor) {
@@ -74,12 +90,7 @@ public class ConsoleScannerManager implements RunContentWithExecutorListener, Di
     }
 
     private final Map<Integer, ConsoleScanner> listeners = new HashMap<Integer, ConsoleScanner>();
-    private final StackTraceMatcherFactory scannerFactory;
+    private StackTraceMatcherFactory scannerFactory;
 
-    public void dispose() {
-       for (Map.Entry<Integer, ConsoleScanner> entry :  listeners.entrySet()) {
-           entry.getValue().stop();
-       }
-        listeners.clear();
-    }
+
 }

@@ -41,10 +41,22 @@
         <component>
             <implementation-class>com.samebug.clients.idea.application.IdeaSamebugPlugin</implementation-class>
         </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.application.IdeaSamebugClient</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.project.autosearch.StackTraceSearch</implementation-class>
+        </component>
     </application-components>
     <project-components>
         <component>
-            <implementation-class>com.samebug.clients.idea.project.ProjectExceptionWatcher</implementation-class>
+            <implementation-class>com.samebug.clients.idea.project.autosearch.android.LogcatProcessWatcher</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.project.autosearch.console.RunDebugWatcher</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.project.SearchResultNotifier</implementation-class>
         </component>
     </project-components>
 </idea-plugin>

@@ -17,12 +17,12 @@ package com.samebug.clients.idea.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.samebug.clients.idea.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.application.IdeaSamebugClient;
 import com.samebug.clients.idea.application.SettingsDialog;
 
 public class SettingsAction extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
-        SettingsDialog.setup(IdeaSamebugPlugin.getInstance());
+        SettingsDialog.setup(IdeaSamebugClient.getInstance());
     }
 }

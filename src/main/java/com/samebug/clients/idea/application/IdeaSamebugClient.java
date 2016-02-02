@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,11 @@
 package com.samebug.clients.idea.application;
 
 import com.google.gson.Gson;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
@@ -25,6 +30,7 @@ import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -36,10 +42,76 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 
-public class IdeaSamebugClient implements SamebugClient {
-    public IdeaSamebugClient(IdeaSamebugPlugin plugin, URI root) {
-        this.plugin = plugin;
-        this.root = root;
+@State(
+        name = "SamebugConfiguration",
+        storages = {
+                @Storage(id = "SamebugClient", file = "$APP_CONFIG$/SamebugClient.xml")
+        }
+)
+public class IdeaSamebugClient implements SamebugClient, ApplicationComponent, PersistentStateComponent<SamebugSettings> {
+
+    public void initIfNeeded() {
+        if (!state.isInitialized()) ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                SettingsDialog.setup(IdeaSamebugClient.this);
+            }
+        });
+    }
+
+    @NotNull
+    public static IdeaSamebugClient getInstance() {
+        IdeaSamebugClient instance = ApplicationManager.getApplication().getComponent(IdeaSamebugClient.class);
+        if (instance == null) {
+            throw new Error("No Samebug IDEA client available");
+        } else {
+            return instance;
+        }
+    }
+
+
+    @Nullable
+    public String getApiKey() {
+        return state.getApiKey();
+    }
+
+    @Override
+    public void initComponent() {
+        initIfNeeded();
+    }
+
+    @Override
+    public void disposeComponent() {
+
+    }
+
+    @NotNull
+    @Override
+    public String getComponentName() {
+        return getClass().getSimpleName();
+    }
+
+    @Nullable
+    @Override
+    public SamebugSettings getState() {
+        return this.state;
+    }
+
+    @Override
+    public void loadState(SamebugSettings state) {
+        this.state = state;
+    }
+
+    public void setApiKey(String apiKey) throws SamebugClientException, UnknownApiKey {
+        UserInfo userInfo = getUserInfo(apiKey);
+        state.setApiKey(apiKey);
+        state.setUserId(userInfo.userId);
+        state.setUserDisplayName(userInfo.displayName);
+
+    }
+
+    public IdeaSamebugClient() {
+        this.root = URI.create("https://samebug.io/");
         this.gateway = root.resolve("sandbox/api/").resolve(API_VERSION + "/");
     }
 
@@ -153,7 +225,6 @@ public class IdeaSamebugClient implements SamebugClient {
         }
     }
 
-    private final IdeaSamebugPlugin plugin;
     private final URI root;
     private final URI gateway;
     private static final Gson gson = new Gson();
@@ -169,7 +240,7 @@ public class IdeaSamebugClient implements SamebugClient {
     }
 
     private void addDefaultHeaders(Request request) {
-        String apiKey = plugin.getApiKey();
+        String apiKey = getApiKey();
         if (apiKey != null) request.addHeader("X-Samebug-ApiKey", apiKey);
         request.addHeader("User-Agent", USER_AGENT);
     }
@@ -177,5 +248,6 @@ public class IdeaSamebugClient implements SamebugClient {
     private static final String USER_AGENT = "Samebug-Idea-Client/1.0.0";
     private static final String API_VERSION = "1.0";
 
+    private SamebugSettings state = new SamebugSettings();
 }
 

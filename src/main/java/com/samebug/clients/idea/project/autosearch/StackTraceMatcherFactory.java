@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.idea.project.autosearch;
 
-import com.intellij.util.messages.MessageBus;
+import com.intellij.openapi.project.Project;
 import com.samebug.clients.search.api.LogScanner;
 import com.samebug.clients.search.api.LogScannerFactory;
 import com.samebug.clients.search.api.StackTraceListener;
@@ -23,9 +23,11 @@ import com.samebug.clients.search.matcher.StackTraceMatcher;
 
 public class StackTraceMatcherFactory implements LogScannerFactory {
     private final StackTraceListener listener;
+    private final Project project;
 
-    public StackTraceMatcherFactory(MessageBus messageBus) {
-        this.listener = new PublisherListener(messageBus);
+    public StackTraceMatcherFactory(Project project) {
+        this.project = project;
+        this.listener = new PublisherListener(project);
     }
 
     @Override
@@ -35,16 +37,15 @@ public class StackTraceMatcherFactory implements LogScannerFactory {
 
 
     static class PublisherListener implements StackTraceListener {
-        private final MessageBus messageBus;
+        private final Project project;
 
-        PublisherListener(MessageBus messageBus) {
-
-            this.messageBus = messageBus;
+        PublisherListener(Project project) {
+            this.project = project;
         }
 
         @Override
         public void stacktraceFound(String stacktrace) {
-            messageBus.syncPublisher(StackTraceMessageListener.FOUND_TOPIC).stackTraceFound(stacktrace);
+            project.getMessageBus().syncPublisher(StackTraceMatcherListener.FOUND_TOPIC).stackTraceFound(project, stacktrace);
         }
     }
 }

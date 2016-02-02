@@ -15,27 +15,39 @@
  */
 package com.samebug.clients.idea.project.autosearch;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
+import com.samebug.clients.idea.application.IdeaSamebugClient;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.search.api.exceptions.SamebugTimeout;
 import com.samebug.clients.search.api.exceptions.UserUnauthorized;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class StackTraceSearch {
-    private final Project project;
-    private final SamebugClient client;
-
-    public StackTraceSearch(Project project, SamebugClient client) {
-        this.project = project;
-        this.client = client;
+public class StackTraceSearch implements ApplicationComponent, Disposable {
+    @NotNull
+    private static SamebugClient getClient() {
+        return IdeaSamebugClient.getInstance();
     }
 
-    public void search(final String stacktrace) {
+    @NotNull
+    public static StackTraceSearch getInstance() {
+        StackTraceSearch instance = ApplicationManager.getApplication().getComponent(StackTraceSearch.class);
+        if (instance == null) {
+            throw new Error("No Samebug IDEA search available");
+        } else {
+            return instance;
+        }
+    }
+
+
+    public void search(final Project project, final String stacktrace) {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
@@ -43,7 +55,7 @@ public class StackTraceSearch {
                 String id = UUID.randomUUID().toString();
                 listener.searchStart(id, stacktrace);
                 try {
-                    listener.searchSucceeded(id, client.searchSolutions(stacktrace));
+                    listener.searchSucceeded(id, getClient().searchSolutions(stacktrace));
                 } catch (SamebugTimeout ignored) {
                     listener.timeout(id);
                 } catch (UserUnauthorized ignored) {
@@ -53,6 +65,33 @@ public class StackTraceSearch {
                 }
             }
         });
+    }
+
+    @Override
+    public void initComponent() {
+        ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(StackTraceMatcherListener.FOUND_TOPIC, new StackTraceMatcherListener() {
+            @Override
+            public void stackTraceFound(Project project, String stackTrace) {
+                search(project, stackTrace);
+            }
+        });
+    }
+
+    @Override
+    public void disposeComponent() {
+
+    }
+
+
+    @NotNull
+    @Override
+    public String getComponentName() {
+        return getClass().getSimpleName();
+    }
+
+    @Override
+    public void dispose() {
+
     }
 
     public interface StackTraceSearchListener {

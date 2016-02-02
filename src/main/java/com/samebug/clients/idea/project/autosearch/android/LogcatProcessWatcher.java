@@ -17,13 +17,13 @@ package com.samebug.clients.idea.project.autosearch.android;
 
 import com.android.ddmlib.*;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.android.AndroidSdkUtil;
 import com.samebug.clients.idea.project.autosearch.StackTraceMatcherFactory;
 import com.samebug.clients.idea.project.autosearch.android.exceptions.UnableToCreateReceiver;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,14 +32,18 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
-public class LogcatScannerManager
+public class LogcatProcessWatcher extends AbstractProjectComponent
         implements AndroidDebugBridge.IDeviceChangeListener, Disposable,
         AndroidDebugBridge.IDebugBridgeChangeListener {
 
-    public LogcatScannerManager(Project project) {
-        super();
-        this.scannerFactory = new StackTraceMatcherFactory(project.getMessageBus());
-        initialize();
+    public LogcatProcessWatcher(Project project) {
+        super(project);
+    }
+
+    @Override
+    public void projectOpened() {
+        this.scannerFactory = new StackTraceMatcherFactory(myProject);
+        initializeDebugBridge();
     }
 
 
@@ -68,14 +72,19 @@ public class LogcatScannerManager
         initReceiverIfDeviceIsOnline(device);
     }
 
-    private void initialize() {
-        AndroidDebugBridge.addDeviceChangeListener(this);
-        AndroidDebugBridge.addDebugBridgeChangeListener(this);
+    private void initializeDebugBridge() {
+        File adb = AndroidSdkUtil.getAdb(myProject);
+        if (adb != null) {
+            AndroidDebugBridge.initIfNeeded(false);
+            AndroidDebugBridge bridge = AndroidDebugBridge.createBridge(adb.getPath(), false);
 
-        AndroidDebugBridge bridge = AndroidDebugBridge.getBridge();
-        if (bridge.isConnected()) {
-            for (IDevice device : bridge.getDevices()) {
-                initReceiverIfDeviceIsOnline(device);
+            AndroidDebugBridge.addDeviceChangeListener(this);
+            AndroidDebugBridge.addDebugBridgeChangeListener(this);
+
+            if (bridge.isConnected()) {
+                for (IDevice device : bridge.getDevices()) {
+                    initReceiverIfDeviceIsOnline(device);
+                }
             }
         }
     }
@@ -91,8 +100,8 @@ public class LogcatScannerManager
         receivers.clear();
     }
 
-    private final static Logger LOGGER = Logger.getInstance(LogcatScannerManager.class);
-    private final StackTraceMatcherFactory scannerFactory;
+    private final static Logger LOGGER = Logger.getInstance(LogcatProcessWatcher.class);
+    private StackTraceMatcherFactory scannerFactory;
 
     private synchronized IShellOutputReceiver initReceiver(@NotNull IDevice device) throws UnableToCreateReceiver {
         Integer deviceHashCode = System.identityHashCode(device);
@@ -135,18 +144,6 @@ public class LogcatScannerManager
     public void bridgeChanged(AndroidDebugBridge bridge) {
         for (IDevice device : bridge.getDevices()) {
             deviceConnected(device);
-        }
-    }
-
-    @Nullable
-    public static LogcatScannerManager createManagerForAndroidProject(Project project) {
-        File adb = AndroidSdkUtil.getAdb(project);
-        if (adb != null) {
-            AndroidDebugBridge.initIfNeeded(false);
-            AndroidDebugBridge.createBridge(adb.getPath(), false);
-            return new LogcatScannerManager(project);
-        } else {
-            return null;
         }
     }
 }

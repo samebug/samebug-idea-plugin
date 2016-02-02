@@ -15,10 +15,11 @@
  */
 package com.samebug.clients.idea.project.autosearch;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
 
-public interface StackTraceMessageListener {
-    Topic<StackTraceMessageListener> FOUND_TOPIC = Topic.create("stacktrace found", StackTraceMessageListener.class);
+public interface StackTraceMatcherListener {
+    Topic<StackTraceMatcherListener> FOUND_TOPIC = Topic.create("stacktrace found", StackTraceMatcherListener.class, Topic.BroadcastDirection.TO_PARENT);
 
-    void stackTraceFound(String stackTrace);
+    void stackTraceFound(Project project, String stackTrace);
 }

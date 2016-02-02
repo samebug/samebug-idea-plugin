@@ -16,10 +16,12 @@
 package com.samebug.clients.idea.project;
 
 import com.intellij.ide.BrowserUtil;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.idea.application.IdeaSamebugPlugin;
+import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.idea.application.IdeaSamebugClient;
 import com.samebug.clients.idea.notification.NotificationActionListener;
 import com.samebug.clients.idea.notification.SearchResultsNotification;
 import com.samebug.clients.idea.project.autosearch.StackTraceSearch;
@@ -28,10 +30,16 @@ import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
-class SearchResultNotifier implements StackTraceSearch.StackTraceSearchListener {
+class SearchResultNotifier extends AbstractProjectComponent implements StackTraceSearch.StackTraceSearchListener, Disposable {
     public SearchResultNotifier(Project project) {
-        this.project = project;
-        project.getMessageBus().connect().subscribe(StackTraceSearch.StackTraceSearchListener.SEARCH_TOPIC, this);
+        super(project);
+    }
+
+    @Override
+    public void projectOpened() {
+        super.projectOpened();
+        MessageBusConnection messageBusConnection = myProject.getMessageBus().connect(this);
+        messageBusConnection.subscribe(StackTraceSearch.StackTraceSearchListener.SEARCH_TOPIC, this);
     }
 
     @Override
@@ -59,7 +67,7 @@ class SearchResultNotifier implements StackTraceSearch.StackTraceSearchListener 
     }
 
     private void showNotificationPopup(final SearchResults results) {
-        final SamebugClient client = IdeaSamebugPlugin.getClient();
+        final SamebugClient client = IdeaSamebugClient.getInstance();
 
         String message = SamebugBundle.message("samebug.notification.searchresults.message", results.totalSolutions);
         final SearchResultsNotification notification = new SearchResultsNotification(
@@ -71,14 +79,14 @@ class SearchResultNotifier implements StackTraceSearch.StackTraceSearchListener 
                 }
             }
         });
-        LOGGER.debug("Showing Samebug notification about search " + results.searchId);
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             public void run() {
-                notification.notify(project);
+                notification.notify(myProject);
             }
         });
     }
 
-    private final Project project;
-    private final static Logger LOGGER = Logger.getInstance(SearchResultNotifier.class);
+    @Override
+    public void dispose() {
+    }
 }
