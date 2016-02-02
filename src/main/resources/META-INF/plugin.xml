@@ -18,32 +18,45 @@
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <!-- uncomment to enable plugin in all products
-    <depends>com.intellij.modules.lang</depends>
     -->
+    <depends>org.jetbrains.android</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Samebug" icon="/icons/samebug/samebug-r270-13x13.png" anchor="right"
-                    factoryClass="com.samebug.clients.idea.intellij.toolwindow.SamebugToolWindowFactory"/>
+                    factoryClass="com.samebug.clients.idea.project.toolwindow.SamebugToolWindowFactory"/>
     </extensions>
 
     <actions>
         <!-- Add your actions here -->
         <group id="Samebug.ToolWindowMenu" text="Samebug menu" description="Samebug menu">
-            <add-to-group group-id="ToolsMenu" anchor="last"  />
-            <action id="Samebug.Settings" class="com.samebug.clients.idea.intellij.actions.SettingsAction" icon="/icons/samebug/cogwheel.png" text="Settings" description="Change Samebug configuration" />
-            <action id="Samebug.History" class="com.samebug.clients.idea.intellij.actions.HistoryAction" icon="/icons/samebug/history.png" text="History" description="View your last crashes" />
-
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <action id="Samebug.Settings" class="com.samebug.clients.idea.actions.SettingsAction"
+                    icon="/icons/samebug/cogwheel.png" text="Settings" description="Change Samebug configuration"/>
+            <action id="Samebug.History" class="com.samebug.clients.idea.actions.HistoryAction"
+                    icon="/icons/samebug/history.png" text="History" description="View your last crashes"/>
         </group>
     </actions>
 
     <application-components>
         <component>
-            <implementation-class>com.samebug.clients.idea.SamebugIdeaPlugin</implementation-class>
+            <implementation-class>com.samebug.clients.idea.application.IdeaSamebugPlugin</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.application.IdeaSamebugClient</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.project.autosearch.StackTraceSearch</implementation-class>
         </component>
     </application-components>
     <project-components>
         <component>
-            <implementation-class>com.samebug.clients.idea.ProjectExceptionWatcher</implementation-class>
+            <implementation-class>com.samebug.clients.idea.project.autosearch.android.LogcatProcessWatcher</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.project.autosearch.console.RunDebugWatcher</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.project.SearchResultNotifier</implementation-class>
         </component>
     </project-components>
 </idea-plugin>
