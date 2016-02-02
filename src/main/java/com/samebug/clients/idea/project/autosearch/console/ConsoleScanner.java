@@ -19,8 +19,8 @@ import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.util.Key;
-import com.samebug.clients.api.LogScanner;
-import com.samebug.clients.api.LogScannerFactory;
+import com.samebug.clients.search.api.LogScanner;
+import com.samebug.clients.search.api.LogScannerFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;

@@ -18,15 +18,15 @@ package com.samebug.clients.idea.actions;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.samebug.clients.idea.application.SamebugIdeaPlugin;
-import com.samebug.clients.rest.SamebugClient;
+import com.samebug.clients.idea.application.IdeaSamebugPlugin;
+import com.samebug.clients.search.api.SamebugClient;
 
 public class HistoryAction extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
-        final SamebugIdeaPlugin plugin = SamebugIdeaPlugin.getInstance();
+        final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
         final Integer userId = plugin.getState().getUserId();
-        final SamebugClient client = SamebugIdeaPlugin.getClient();
+        final SamebugClient client = IdeaSamebugPlugin.getClient();
         if (userId != null) {
             BrowserUtil.browse(client.getUserProfileUrl(userId));
         }

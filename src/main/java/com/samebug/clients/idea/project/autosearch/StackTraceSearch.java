@@ -18,11 +18,11 @@ package com.samebug.clients.idea.project.autosearch;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.rest.SamebugClient;
-import com.samebug.clients.rest.entities.SearchResults;
-import com.samebug.clients.rest.exceptions.SamebugClientException;
-import com.samebug.clients.rest.exceptions.SamebugTimeout;
-import com.samebug.clients.rest.exceptions.UserUnauthorized;
+import com.samebug.clients.search.api.SamebugClient;
+import com.samebug.clients.search.api.entities.SearchResults;
+import com.samebug.clients.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.search.api.exceptions.SamebugTimeout;
+import com.samebug.clients.search.api.exceptions.UserUnauthorized;
 
 import java.util.UUID;
 

@@ -13,16 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.actions;
+package com.samebug.clients.search.api.exceptions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.samebug.clients.idea.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.application.SettingsDialog;
+public class SamebugClientException extends Exception {
+    SamebugClientException() {
+        super();
+    }
 
-public class SettingsAction extends AnAction {
-    @Override
-    public void actionPerformed(AnActionEvent e) {
-        SettingsDialog.setup(IdeaSamebugPlugin.getInstance());
+    public SamebugClientException(String message) {
+        super(message);
+    }
+
+    public SamebugClientException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    SamebugClientException(Throwable cause) {
+        super(cause);
     }
 }

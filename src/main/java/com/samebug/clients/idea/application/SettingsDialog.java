@@ -18,9 +18,9 @@ package com.samebug.clients.idea.application;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.Messages;
-import com.samebug.clients.exceptions.UnknownApiKey;
+import com.samebug.clients.search.api.exceptions.UnknownApiKey;
 import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.rest.exceptions.SamebugClientException;
+import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
@@ -80,7 +80,7 @@ public class SettingsDialog extends JDialog implements Configurable {
         dispose();
     }
 
-    public static void setup(SamebugIdeaPlugin plugin) {
+    public static void setup(IdeaSamebugPlugin plugin) {
         SettingsDialog dialog = new SettingsDialog();
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(null);
@@ -116,14 +116,14 @@ public class SettingsDialog extends JDialog implements Configurable {
 
     @Override
     public void apply() throws ConfigurationException {
-        SamebugIdeaPlugin plugin = SamebugIdeaPlugin.getInstance();
+        IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
         try {
             String apiKey = apiKeyTextField.getText();
             plugin.setApiKey(apiKey);
-        } catch (SamebugClientException e) {
-            throw new ConfigurationException("Error during API Key validation. Samebug server is not available currently.");
         } catch (UnknownApiKey unknownApiKey) {
             throw new ConfigurationException("Unknown Samebug API Key.");
+        } catch (SamebugClientException e) {
+            throw new ConfigurationException("Error during API Key validation. Samebug server is not available currently.");
         }
     }
 

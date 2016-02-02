@@ -19,14 +19,14 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.idea.application.SamebugIdeaPlugin;
+import com.samebug.clients.idea.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.notification.NotificationActionListener;
 import com.samebug.clients.idea.notification.SearchResultsNotification;
 import com.samebug.clients.idea.project.autosearch.StackTraceSearch;
 import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.rest.SamebugClient;
-import com.samebug.clients.rest.entities.SearchResults;
-import com.samebug.clients.rest.exceptions.SamebugClientException;
+import com.samebug.clients.search.api.SamebugClient;
+import com.samebug.clients.search.api.entities.SearchResults;
+import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
 class SearchResultNotifier implements StackTraceSearch.StackTraceSearchListener {
     public SearchResultNotifier(Project project) {
@@ -60,7 +60,7 @@ class SearchResultNotifier implements StackTraceSearch.StackTraceSearchListener 
     }
 
     private void showNotificationPopup(final SearchResults results) {
-        final SamebugClient client = SamebugIdeaPlugin.getClient();
+        final SamebugClient client = IdeaSamebugPlugin.getClient();
 
         String message = SamebugBundle.message("samebug.notification.searchresults.message", results.totalSolutions);
         final SearchResultsNotification notification = new SearchResultsNotification(

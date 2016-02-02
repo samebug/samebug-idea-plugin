@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.project.autosearch.android;
 
 import com.android.ddmlib.MultiLineReceiver;
-import com.samebug.clients.api.LogScanner;
+import com.samebug.clients.search.api.LogScanner;
 
 /**
  * Scans running process outputs

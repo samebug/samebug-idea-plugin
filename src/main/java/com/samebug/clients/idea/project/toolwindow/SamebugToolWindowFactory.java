@@ -42,7 +42,6 @@ public class SamebugToolWindowFactory implements ToolWindowFactory {
         this.project = project;
         this.toolWindow = toolWindow;
 
-
         initContent();
     }
 

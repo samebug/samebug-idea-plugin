@@ -39,7 +39,7 @@
 
     <application-components>
         <component>
-            <implementation-class>com.samebug.clients.idea.application.SamebugIdeaPlugin</implementation-class>
+            <implementation-class>com.samebug.clients.idea.application.IdeaSamebugPlugin</implementation-class>
         </component>
     </application-components>
     <project-components>
