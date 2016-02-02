@@ -56,7 +56,6 @@ class SearchResultNotifier implements StackTraceSearch.StackTraceSearchListener 
 
     @Override
     public void searchFailed(String id, SamebugClientException error) {
-        LOGGER.error("Error in Samebug console search", error);
     }
 
     private void showNotificationPopup(final SearchResults results) {
