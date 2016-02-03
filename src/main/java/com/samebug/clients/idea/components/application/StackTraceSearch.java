@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,22 +31,36 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class StackTraceSearch implements ApplicationComponent, Disposable {
+public class StackTraceSearch implements ApplicationComponent, StackTraceMatcherFactory.StackTraceMatcherListener {
+    // ApplicationComponent overrides
+
+    @Override
+    public void initComponent() {
+        MessageBusConnection messageBusConnection = ApplicationManager.getApplication().getMessageBus().connect();
+        messageBusConnection.subscribe(StackTraceMatcherFactory.StackTraceMatcherListener.FOUND_TOPIC, this);
+    }
+
+    @Override
+    public void disposeComponent() {
+
+    }
+
+    @NotNull
+    @Override
+    public String getComponentName() {
+        return getClass().getSimpleName();
+    }
+
+    // StackTraceMatcherListener overrides
+    @Override
+    public void stackTraceFound(Project project, String stackTrace) {
+        search(project, stackTrace);
+    }
+
     @NotNull
     private static SamebugClient getClient() {
         return IdeaSamebugClient.getInstance();
     }
-
-    @NotNull
-    public static StackTraceSearch getInstance() {
-        StackTraceSearch instance = ApplicationManager.getApplication().getComponent(StackTraceSearch.class);
-        if (instance == null) {
-            throw new Error("No Samebug IDEA search available");
-        } else {
-            return instance;
-        }
-    }
-
 
     public void search(final Project project, final String stacktrace) {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
@@ -66,35 +80,6 @@ public class StackTraceSearch implements ApplicationComponent, Disposable {
                 }
             }
         });
-    }
-
-    @Override
-    public void initComponent() {
-        MessageBusConnection messageBusConnection = ApplicationManager.getApplication().getMessageBus().connect(this);
-        messageBusConnection.subscribe(
-                StackTraceMatcherFactory.StackTraceMatcherListener.FOUND_TOPIC, new StackTraceMatcherFactory.StackTraceMatcherListener() {
-            @Override
-            public void stackTraceFound(Project project, String stackTrace) {
-                search(project, stackTrace);
-            }
-        });
-    }
-
-    @Override
-    public void disposeComponent() {
-
-    }
-
-
-    @NotNull
-    @Override
-    public String getComponentName() {
-        return getClass().getSimpleName();
-    }
-
-    @Override
-    public void dispose() {
-
     }
 
     public interface StackTraceSearchListener {

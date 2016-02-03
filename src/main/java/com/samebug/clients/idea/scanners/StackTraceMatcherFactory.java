@@ -26,7 +26,7 @@ public class StackTraceMatcherFactory implements LogScannerFactory {
     private final StackTraceListener listener;
 
     public StackTraceMatcherFactory(Project project) {
-        this.listener = new PublisherListener(project);
+        this.listener = new StackTracePublisher(project);
     }
 
     @Override
@@ -35,10 +35,10 @@ public class StackTraceMatcherFactory implements LogScannerFactory {
     }
 
 
-    static class PublisherListener implements StackTraceListener {
+    static class StackTracePublisher implements StackTraceListener {
         private final Project project;
 
-        PublisherListener(Project project) {
+        StackTracePublisher(Project project) {
             this.project = project;
         }
 

@@ -65,6 +65,7 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
         listeners.clear();
     }
 
+    // implementation
     private synchronized ConsoleScanner initListener(@NotNull RunContentDescriptor descriptor) {
         Integer descriptorHashCode = System.identityHashCode(descriptor);
         ConsoleScanner existingScanner = listeners.get(descriptorHashCode);

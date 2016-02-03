@@ -23,7 +23,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Samebug" icon="/icons/samebug/samebug-r270-13x13.png" anchor="right"
-                    factoryClass="com.samebug.clients.idea.scanners.toolwindow.SamebugToolWindowFactory"/>
+                    factoryClass="com.samebug.clients.idea.ui.SamebugToolWindowFactory"/>
     </extensions>
 
     <actions>
@@ -56,7 +56,7 @@
             <implementation-class>com.samebug.clients.idea.components.project.RunDebugWatcher</implementation-class>
         </component>
         <component>
-            <implementation-class>com.samebug.clients.idea.scanners.SearchResultNotifier</implementation-class>
+            <implementation-class>com.samebug.clients.idea.components.project.SearchResultNotifier</implementation-class>
         </component>
     </project-components>
 </idea-plugin>

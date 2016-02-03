@@ -21,11 +21,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
 
 public abstract class SamebugNotification extends Notification {
 
-    SamebugNotification(@NotNull String title, @NotNull String content, @NotNull NotificationType type, NotificationListener listener) {
-        super(SAMEBUG_NOTIFICATION_GROUP, title, content, type, listener);
+    protected SamebugNotification(@NotNull String title, @NotNull String content, @NotNull NotificationType type,final NotificationActionListener actionListener) {
+        super(SAMEBUG_NOTIFICATION_GROUP, title, content, type, createListener(actionListener));
     }
 
     private static final String SAMEBUG_NOTIFICATION_GROUP = "Samebug Notifications";
@@ -46,4 +47,17 @@ public abstract class SamebugNotification extends Notification {
         return super.getType();
     }
 
+    public static NotificationListener createListener(final NotificationActionListener actionListener) {
+        if (actionListener == null) return null;
+        return new NotificationListener() {
+            @Override
+            public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent hyperlinkEvent) {
+                HyperlinkEvent.EventType eventType = hyperlinkEvent.getEventType();
+                if (eventType == HyperlinkEvent.EventType.ACTIVATED) {
+                    String action = hyperlinkEvent.getDescription();
+                    actionListener.actionActivated(action);
+                }
+            }
+        };
+    }
 }

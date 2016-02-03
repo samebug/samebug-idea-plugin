@@ -195,10 +195,10 @@ public class IdeaSamebugClient implements SamebugClient, ApplicationComponent, P
      * @param request the http request
      * @return the http response
      * @throws SamebugTimeout             if the server exceeded the timeout during connection or execure
+     * @throws HttpError                  in case of a problem or the connection was aborted or   if the response is not readable
      * @throws UnsuccessfulResponseStatus if the response status is not 200
      * @throws RemoteError                if the server returned error in the X-Samebug-Errors header
      * @throws UserUnauthorized           if the user was not authorized
-     * @throws HttpError                  in case of a problem or the connection was aborted or   if the response is not readable
      */
     @NotNull
     private HttpResponse execute(Request request) throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthorized, HttpError {

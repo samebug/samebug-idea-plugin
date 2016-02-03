@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,21 +16,26 @@
 package com.samebug.clients.idea.components.project;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.openapi.Disposable;
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.components.application.IdeaSamebugClient;
 import com.samebug.clients.idea.notification.NotificationActionListener;
-import com.samebug.clients.idea.notification.SearchResultsNotification;
+import com.samebug.clients.idea.notification.SamebugNotification;
 import com.samebug.clients.idea.components.application.StackTraceSearch;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
+import org.jetbrains.annotations.Nullable;
 
-class SearchResultNotifier extends AbstractProjectComponent implements StackTraceSearch.StackTraceSearchListener, Disposable {
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+class SearchResultNotifier extends AbstractProjectComponent implements StackTraceSearch.StackTraceSearchListener {
     public SearchResultNotifier(Project project) {
         super(project);
     }
@@ -38,7 +43,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements StackTrac
     @Override
     public void projectOpened() {
         super.projectOpened();
-        MessageBusConnection messageBusConnection = myProject.getMessageBus().connect(this);
+        MessageBusConnection messageBusConnection = myProject.getMessageBus().connect();
         messageBusConnection.subscribe(StackTraceSearch.StackTraceSearchListener.SEARCH_TOPIC, this);
     }
 
@@ -79,14 +84,38 @@ class SearchResultNotifier extends AbstractProjectComponent implements StackTrac
                 }
             }
         });
+
+        final Timer timer = new Timer(NOTIFICATION_EXPIRATION_DELAY, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                notification.expire();
+            }
+        });
+
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             public void run() {
                 notification.notify(myProject);
+                timer.start();
             }
         });
     }
 
-    @Override
-    public void dispose() {
+    private final int NOTIFICATION_EXPIRATION_DELAY = 10000;
+
+}
+
+class SearchResultsNotification extends SamebugNotification {
+    public SearchResultsNotification(String message, @Nullable NotificationActionListener actionListener) {
+        super(SamebugBundle.message("samebug.notification.searchresults.title"), message, NotificationType.INFORMATION, actionListener);
+
+        whenExpired(new Runnable() {
+            @Override
+            public void run() {
+                hideBalloon();
+            }
+        });
     }
+
+
+    public final static String SHOW = "#show";
 }

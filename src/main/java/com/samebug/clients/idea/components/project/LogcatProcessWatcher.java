@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,6 +37,7 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
         implements AndroidDebugBridge.IDeviceChangeListener, Disposable,
         AndroidDebugBridge.IDebugBridgeChangeListener {
 
+    // AbstractProjectComponent overrides
     public LogcatProcessWatcher(Project project) {
         super(project);
     }
@@ -48,20 +49,12 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
     }
 
 
+    // IDeviceChangeListener overrides
     @Override
     public void deviceConnected(IDevice device) {
         initReceiverIfDeviceIsOnline(device);
     }
 
-    public void initReceiverIfDeviceIsOnline(IDevice device) {
-        try {
-            if (device.isOnline()) {
-                initReceiver(device);
-            }
-        } catch (UnableToCreateReceiver e) {
-            LOGGER.error("Unable to connect device", e);
-        }
-    }
 
     @Override
     public void deviceDisconnected(IDevice device) {
@@ -73,6 +66,15 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
         initReceiverIfDeviceIsOnline(device);
     }
 
+
+    @Override
+    public void bridgeChanged(AndroidDebugBridge bridge) {
+        for (IDevice device : bridge.getDevices()) {
+            deviceConnected(device);
+        }
+    }
+
+    // IDebugBridgeChangeListener overrides
     private void initializeDebugBridge() {
         File adb = AndroidSdkUtil.getAdb(myProject);
         if (adb != null) {
@@ -90,7 +92,7 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
         }
     }
 
-
+    // Disposable overrides
     @Override
     public void dispose() {
         AndroidDebugBridge.addDeviceChangeListener(this);
@@ -100,6 +102,19 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
         }
         receivers.clear();
     }
+
+
+    // implementation
+    private void initReceiverIfDeviceIsOnline(IDevice device) {
+        try {
+            if (device.isOnline()) {
+                initReceiver(device);
+            }
+        } catch (UnableToCreateReceiver e) {
+            LOGGER.error("Unable to connect device", e);
+        }
+    }
+
 
     private final static Logger LOGGER = Logger.getInstance(LogcatProcessWatcher.class);
     private StackTraceMatcherFactory scannerFactory;
@@ -141,10 +156,4 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
 
     private final Map<Integer, LogcatScanner> receivers = new HashMap<Integer, LogcatScanner>();
 
-    @Override
-    public void bridgeChanged(AndroidDebugBridge bridge) {
-        for (IDevice device : bridge.getDevices()) {
-            deviceConnected(device);
-        }
-    }
 }
