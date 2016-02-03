@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.project;
+package com.samebug.clients.idea.components.project;
 
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.Disposable;
@@ -21,10 +21,10 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.application.IdeaSamebugClient;
+import com.samebug.clients.idea.components.application.IdeaSamebugClient;
 import com.samebug.clients.idea.notification.NotificationActionListener;
 import com.samebug.clients.idea.notification.SearchResultsNotification;
-import com.samebug.clients.idea.project.autosearch.StackTraceSearch;
+import com.samebug.clients.idea.components.application.StackTraceSearch;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.SearchResults;

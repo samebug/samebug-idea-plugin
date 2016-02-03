@@ -13,38 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.project.autosearch.android;
+package com.samebug.clients.idea.components.application;
 
-import com.android.ddmlib.MultiLineReceiver;
-import com.samebug.clients.search.api.LogScanner;
+import com.intellij.openapi.components.ApplicationComponent;
+import com.samebug.clients.idea.notification.SamebugNotification;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * Scans running process outputs
- */
-class LogcatScanner extends MultiLineReceiver {
 
-    private final LogScanner logScanner;
+public class IdeaSamebugPlugin implements ApplicationComponent {
 
-    public LogcatScanner(LogScanner logScanner) {
-        this.logScanner = logScanner;
-
+    private IdeaSamebugPlugin() {
     }
 
     @Override
-    public void processNewLines(String[] lines) {
-        for (String line : lines) {
-            logScanner.line(line + "\n");
-        }
-    }
-
-    public void finish() {
-        flush();
-        logScanner.end();
-        done();
+    public void initComponent() {
+        SamebugNotification.registerNotificationGroups();
     }
 
     @Override
-    public boolean isCancelled() {
-        return false;
+    public void disposeComponent() {
+    }
+
+    @Override
+    @NotNull
+    public String getComponentName() {
+        return getClass().getSimpleName();
     }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.project.autosearch.console;
+package com.samebug.clients.idea.components.project;
 
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunContentManager;
@@ -22,7 +22,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.project.autosearch.StackTraceMatcherFactory;
+import com.samebug.clients.idea.scanners.StackTraceMatcherFactory;
+import com.samebug.clients.idea.scanners.ConsoleScanner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -78,7 +79,7 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
     private ConsoleScanner createScanner(@NotNull RunContentDescriptor descriptor, Integer descriptorHashCode) {
         if (descriptor.getProcessHandler() == null) return null;
 
-        ConsoleScanner listener = new ConsoleScanner(scannerFactory, this, descriptor);
+        ConsoleScanner listener = new ConsoleScanner(scannerFactory);
         listeners.put(descriptorHashCode, listener);
         descriptor.getProcessHandler().addProcessListener(listener);
         return listener;

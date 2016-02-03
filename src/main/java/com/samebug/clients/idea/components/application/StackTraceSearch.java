@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.project.autosearch;
+package com.samebug.clients.idea.components.application;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.idea.application.IdeaSamebugClient;
+import com.samebug.clients.idea.scanners.StackTraceMatcherFactory;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
@@ -69,7 +70,8 @@ public class StackTraceSearch implements ApplicationComponent, Disposable {
 
     @Override
     public void initComponent() {
-        ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(
+        MessageBusConnection messageBusConnection = ApplicationManager.getApplication().getMessageBus().connect(this);
+        messageBusConnection.subscribe(
                 StackTraceMatcherFactory.StackTraceMatcherListener.FOUND_TOPIC, new StackTraceMatcherFactory.StackTraceMatcherListener() {
             @Override
             public void stackTraceFound(Project project, String stackTrace) {

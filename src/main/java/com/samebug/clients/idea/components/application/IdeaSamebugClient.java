@@ -1,19 +1,19 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.application;
+package com.samebug.clients.idea.components.application;
 
 import com.google.gson.Gson;
 import com.intellij.openapi.application.ApplicationManager;
@@ -21,6 +21,7 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import com.samebug.clients.idea.ui.SettingsDialog;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
@@ -48,15 +49,18 @@ import java.util.List;
                 @Storage(id = "SamebugClient", file = "$APP_CONFIG$/SamebugClient.xml")
         }
 )
-public class IdeaSamebugClient implements SamebugClient, ApplicationComponent, PersistentStateComponent<SamebugSettings> {
+public class IdeaSamebugClient implements SamebugClient, ApplicationComponent, PersistentStateComponent<IdeaSamebugClient.Settings> {
+    public IdeaSamebugClient() {
+        this.root = URI.create("https://samebug.io/");
+        this.gateway = root.resolve("sandbox/api/").resolve(API_VERSION + "/");
+    }
 
-    public void initIfNeeded() {
-        if (!state.isInitialized()) ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-            @Override
-            public void run() {
-                SettingsDialog.setup(IdeaSamebugClient.this);
-            }
-        });
+    public void setApiKey(String apiKey) throws SamebugClientException, UnknownApiKey {
+        UserInfo userInfo = getUserInfo(apiKey);
+        state.setApiKey(apiKey);
+        state.setUserId(userInfo.userId);
+        state.setUserDisplayName(userInfo.displayName);
+
     }
 
     @NotNull
@@ -75,9 +79,16 @@ public class IdeaSamebugClient implements SamebugClient, ApplicationComponent, P
         return state.getApiKey();
     }
 
+    // ApplicationComponent overrides
+
     @Override
     public void initComponent() {
-        initIfNeeded();
+        if (!state.isInitialized()) ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                SettingsDialog.setup(IdeaSamebugClient.this);
+            }
+        });
     }
 
     @Override
@@ -91,29 +102,21 @@ public class IdeaSamebugClient implements SamebugClient, ApplicationComponent, P
         return getClass().getSimpleName();
     }
 
+    // PersistentStateComponent overrides
     @Nullable
     @Override
-    public SamebugSettings getState() {
+    public Settings getState() {
         return this.state;
     }
 
     @Override
-    public void loadState(SamebugSettings state) {
+    public void loadState(Settings state) {
         this.state = state;
     }
 
-    public void setApiKey(String apiKey) throws SamebugClientException, UnknownApiKey {
-        UserInfo userInfo = getUserInfo(apiKey);
-        state.setApiKey(apiKey);
-        state.setUserId(userInfo.userId);
-        state.setUserDisplayName(userInfo.displayName);
+    private Settings state = new Settings();
 
-    }
-
-    public IdeaSamebugClient() {
-        this.root = URI.create("https://samebug.io/");
-        this.gateway = root.resolve("sandbox/api/").resolve(API_VERSION + "/");
-    }
+    // SamebugClient overrides
 
     @Override
     public SearchResults searchSolutions(String stacktrace) throws SamebugTimeout, RemoteError, HttpError, UserUnauthorized, UnsuccessfulResponseStatus {
@@ -161,6 +164,13 @@ public class IdeaSamebugClient implements SamebugClient, ApplicationComponent, P
         return userInfo;
     }
 
+    private final URI root;
+    private final URI gateway;
+    private static final String USER_AGENT = "Samebug-Idea-Client/1.0.0";
+    private static final String API_VERSION = "1.0";
+
+
+    // implementation
     private <T> T requestJson(Request request, Class<T> classOfT) throws RemoteError, UserUnauthorized, UnsuccessfulResponseStatus, SamebugTimeout, HttpError {
         final HttpResponse httpResponse;
         httpResponse = execute(request.setHeader("Accept", "application/json"));
@@ -225,8 +235,7 @@ public class IdeaSamebugClient implements SamebugClient, ApplicationComponent, P
         }
     }
 
-    private final URI root;
-    private final URI gateway;
+
     private static final Gson gson = new Gson();
 
     private URL getApiUrl(String uri) throws SamebugClientError {
@@ -245,9 +254,41 @@ public class IdeaSamebugClient implements SamebugClient, ApplicationComponent, P
         request.addHeader("User-Agent", USER_AGENT);
     }
 
-    private static final String USER_AGENT = "Samebug-Idea-Client/1.0.0";
-    private static final String API_VERSION = "1.0";
 
-    private SamebugSettings state = new SamebugSettings();
+
+
+    public static class Settings {
+        public String getApiKey() {
+            return apiKey;
+        }
+
+        public void setApiKey(String apiKey) {
+            this.apiKey = apiKey;
+        }
+
+        public void setUserId(Integer userId) {
+            this.userId = userId;
+        }
+
+        public Integer getUserId() {
+            return userId;
+        }
+
+        public void setUserDisplayName(String userDisplayName) {
+            this.userDisplayName = userDisplayName;
+        }
+
+        public String getUserDisplayName() {
+            return userDisplayName;
+        }
+
+        private Integer userId;
+        private String userDisplayName;
+        private String apiKey;
+
+        public boolean isInitialized() {
+            return getApiKey() != null && getUserId() != null;
+        }
+    }
 }
 
