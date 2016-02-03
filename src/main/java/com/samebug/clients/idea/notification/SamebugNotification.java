@@ -25,7 +25,8 @@ import javax.swing.event.HyperlinkEvent;
 
 public abstract class SamebugNotification extends Notification {
 
-    protected SamebugNotification(@NotNull String title, @NotNull String content, @NotNull NotificationType type,final NotificationActionListener actionListener) {
+    protected SamebugNotification(@NotNull String title, @NotNull String content,
+                                  @NotNull NotificationType type, final NotificationActionListener actionListener) {
         super(SAMEBUG_NOTIFICATION_GROUP, title, content, type, createListener(actionListener));
     }
 
