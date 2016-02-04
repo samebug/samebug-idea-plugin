@@ -17,13 +17,14 @@ package com.samebug.clients.idea.components.project;
 
 import com.android.ddmlib.*;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.scanners.LogcatScanner;
-import com.samebug.clients.idea.util.AndroidSdkUtil;
 import com.samebug.clients.idea.scanners.StackTraceMatcherFactory;
 import com.samebug.clients.idea.scanners.exceptions.UnableToCreateReceiver;
+import com.samebug.clients.idea.util.AndroidSdkUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -45,7 +46,12 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
     @Override
     public void projectOpened() {
         this.scannerFactory = new StackTraceMatcherFactory(myProject);
-        initializeDebugBridge();
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                initializeDebugBridge();
+            }
+        });
     }
 
 
@@ -80,7 +86,6 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
         if (adb != null) {
             AndroidDebugBridge.initIfNeeded(false);
             AndroidDebugBridge bridge = AndroidDebugBridge.createBridge(adb.getPath(), false);
-
             AndroidDebugBridge.addDeviceChangeListener(this);
             AndroidDebugBridge.addDebugBridgeChangeListener(this);
 
@@ -95,8 +100,8 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
     // Disposable overrides
     @Override
     public void dispose() {
-        AndroidDebugBridge.addDeviceChangeListener(this);
-        AndroidDebugBridge.addDebugBridgeChangeListener(this);
+        AndroidDebugBridge.removeDeviceChangeListener(this);
+        AndroidDebugBridge.removeDebugBridgeChangeListener(this);
         for (Map.Entry<Integer, LogcatScanner> entry : receivers.entrySet()) {
             entry.getValue().finish();
         }
@@ -111,13 +116,11 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
                 initReceiver(device);
             }
         } catch (UnableToCreateReceiver e) {
-            LOGGER.error("Unable to connect device", e);
+            LOGGER.warn("Unable to connect device", e);
         }
     }
 
 
-    private final static Logger LOGGER = Logger.getInstance(LogcatProcessWatcher.class);
-    private StackTraceMatcherFactory scannerFactory;
 
     private synchronized IShellOutputReceiver initReceiver(@NotNull IDevice device) throws UnableToCreateReceiver {
         Integer deviceHashCode = System.identityHashCode(device);
@@ -154,6 +157,7 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
         }
     }
 
+    private StackTraceMatcherFactory scannerFactory;
     private final Map<Integer, LogcatScanner> receivers = new HashMap<Integer, LogcatScanner>();
-
+    private final static Logger LOGGER = Logger.getInstance(LogcatProcessWatcher.class);
 }
