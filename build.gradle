@@ -32,7 +32,9 @@ intellij {
 
     plugins 'android'
 
-    alternativeIdePath '/opt/idea-IU-143.382.35'
+    // alternativeIdePath '/Applications/Android Studio.app/Contents'
+    // alternativeIdePath '/opt/idea-IU-143.382.35'
+    // alternativeIdePath '/opt/android_studio'
     pluginName 'samebug-idea-plugin'
     updateSinceUntilBuild false
 
