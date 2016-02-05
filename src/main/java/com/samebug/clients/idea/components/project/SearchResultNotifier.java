@@ -24,18 +24,18 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.components.application.IdeaSamebugClient;
 import com.samebug.clients.idea.notification.NotificationActionListener;
 import com.samebug.clients.idea.notification.SamebugNotification;
-import com.samebug.clients.idea.components.application.StackTraceSearch;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.search.api.messages.StackTraceSearchListener;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class SearchResultNotifier extends AbstractProjectComponent implements StackTraceSearch.StackTraceSearchListener {
+class SearchResultNotifier extends AbstractProjectComponent implements StackTraceSearchListener {
     public SearchResultNotifier(Project project) {
         super(project);
     }
@@ -43,8 +43,13 @@ class SearchResultNotifier extends AbstractProjectComponent implements StackTrac
     @Override
     public void projectOpened() {
         super.projectOpened();
-        MessageBusConnection messageBusConnection = myProject.getMessageBus().connect();
-        messageBusConnection.subscribe(StackTraceSearch.StackTraceSearchListener.SEARCH_TOPIC, this);
+        messageBusConnection = myProject.getMessageBus().connect();
+        messageBusConnection.subscribe(StackTraceSearchListener.SEARCH_TOPIC, this);
+    }
+
+    @Override
+    public void projectClosed() {
+        messageBusConnection.disconnect();
     }
 
     @Override
@@ -101,6 +106,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements StackTrac
     }
 
     private final int NOTIFICATION_EXPIRATION_DELAY = 10000;
+    private MessageBusConnection messageBusConnection;
 
 }
 
