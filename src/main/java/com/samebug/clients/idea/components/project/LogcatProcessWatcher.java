@@ -16,14 +16,12 @@
 package com.samebug.clients.idea.components.project;
 
 import com.android.ddmlib.*;
-import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.idea.scanners.LogcatScanner;
+import com.samebug.clients.idea.processadapters.LogcatAdapter;
 import com.samebug.clients.idea.util.AndroidSdkUtil;
-import com.samebug.clients.idea.scanners.StackTraceMatcherFactory;
-import com.samebug.clients.idea.scanners.exceptions.UnableToCreateReceiver;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -34,8 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 
 public class LogcatProcessWatcher extends AbstractProjectComponent
-        implements AndroidDebugBridge.IDeviceChangeListener, Disposable,
-        AndroidDebugBridge.IDebugBridgeChangeListener {
+        implements AndroidDebugBridge.IDeviceChangeListener {
 
     // AbstractProjectComponent overrides
     public LogcatProcessWatcher(Project project) {
@@ -45,14 +42,32 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
     @Override
     public void projectOpened() {
         this.scannerFactory = new StackTraceMatcherFactory(myProject);
-        initializeDebugBridge();
+        File adb = AndroidSdkUtil.getAdb(myProject);
+        if (adb != null) {
+            AndroidDebugBridge.initIfNeeded(false);
+            AndroidDebugBridge bridge = AndroidDebugBridge.createBridge(adb.getPath(), false);
+            AndroidDebugBridge.addDeviceChangeListener(this);
+            if (bridge.isConnected()) {
+                for (IDevice device : bridge.getDevices()) {
+                    initReceiver(device);
+                }
+            }
+        }
     }
 
+    @Override
+    public void projectClosed() {
+        AndroidDebugBridge.removeDeviceChangeListener(this);
+        for (LogcatAdapter listener : listeners.values()) {
+            listener.finish();
+        }
+        listeners.clear();
+    }
 
     // IDeviceChangeListener overrides
     @Override
     public void deviceConnected(IDevice device) {
-        initReceiverIfDeviceIsOnline(device);
+        initReceiver(device);
     }
 
 
@@ -63,97 +78,51 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
 
     @Override
     public void deviceChanged(IDevice device, int changeMask) {
-        initReceiverIfDeviceIsOnline(device);
+        initReceiver(device);
     }
-
-
-    @Override
-    public void bridgeChanged(AndroidDebugBridge bridge) {
-        for (IDevice device : bridge.getDevices()) {
-            deviceConnected(device);
-        }
-    }
-
-    // IDebugBridgeChangeListener overrides
-    private void initializeDebugBridge() {
-        File adb = AndroidSdkUtil.getAdb(myProject);
-        if (adb != null) {
-            AndroidDebugBridge.initIfNeeded(false);
-            AndroidDebugBridge bridge = AndroidDebugBridge.createBridge(adb.getPath(), false);
-
-            AndroidDebugBridge.addDeviceChangeListener(this);
-            AndroidDebugBridge.addDebugBridgeChangeListener(this);
-
-            if (bridge.isConnected()) {
-                for (IDevice device : bridge.getDevices()) {
-                    initReceiverIfDeviceIsOnline(device);
-                }
-            }
-        }
-    }
-
-    // Disposable overrides
-    @Override
-    public void dispose() {
-        AndroidDebugBridge.addDeviceChangeListener(this);
-        AndroidDebugBridge.addDebugBridgeChangeListener(this);
-        for (Map.Entry<Integer, LogcatScanner> entry : receivers.entrySet()) {
-            entry.getValue().finish();
-        }
-        receivers.clear();
-    }
-
 
     // implementation
-    private void initReceiverIfDeviceIsOnline(IDevice device) {
-        try {
-            if (device.isOnline()) {
-                initReceiver(device);
+    private synchronized void initReceiver(@NotNull IDevice device) {
+        if (device.isOnline()) {
+            Integer deviceHashCode = System.identityHashCode(device);
+            if (listeners.get(deviceHashCode) == null) {
+                createReceiver(device, deviceHashCode);
             }
-        } catch (UnableToCreateReceiver e) {
-            LOGGER.error("Unable to connect device", e);
         }
     }
 
-
-    private final static Logger LOGGER = Logger.getInstance(LogcatProcessWatcher.class);
-    private StackTraceMatcherFactory scannerFactory;
-
-    private synchronized IShellOutputReceiver initReceiver(@NotNull IDevice device) throws UnableToCreateReceiver {
-        Integer deviceHashCode = System.identityHashCode(device);
-        IShellOutputReceiver receiver = receivers.get(deviceHashCode);
-        if (receiver == null) {
-            receiver = createReceiver(device, deviceHashCode);
-        }
+    private LogcatAdapter createReceiver(@NotNull final IDevice device, Integer deviceHashCode) {
+        final LogcatAdapter receiver = new LogcatAdapter(scannerFactory.createScanner());
+        listeners.put(deviceHashCode, receiver);
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    device.executeShellCommand("logcat -v long", receiver, 0L, TimeUnit.NANOSECONDS);
+                } catch (TimeoutException e) {
+                    LOGGER.warn("Unable to create receiver for device " + device.getName(), e);
+                } catch (AdbCommandRejectedException e) {
+                    LOGGER.warn("Unable to create receiver for device " + device.getName(), e);
+                } catch (ShellCommandUnresponsiveException e) {
+                    LOGGER.warn("Unable to create receiver for device " + device.getName(), e);
+                } catch (IOException e) {
+                    LOGGER.warn("Unable to create receiver for device " + device.getName(), e);
+                }
+            }
+        });
         return receiver;
     }
 
-    private IShellOutputReceiver createReceiver(@NotNull IDevice device, Integer deviceHashCode) throws UnableToCreateReceiver {
-        try {
-            LogcatScanner receiver = new LogcatScanner(scannerFactory.createScanner());
-            device.executeShellCommand("logcat -v long", receiver, 0L, TimeUnit.NANOSECONDS);
-            receivers.put(deviceHashCode, receiver);
-            return receiver;
-        } catch (TimeoutException e) {
-            throw new UnableToCreateReceiver("Unable to create receiver for device " + device.getName(), e);
-        } catch (AdbCommandRejectedException e) {
-            throw new UnableToCreateReceiver("Unable to create receiver for device " + device.getName(), e);
-        } catch (ShellCommandUnresponsiveException e) {
-            throw new UnableToCreateReceiver("Unable to create receiver for device " + device.getName(), e);
-        } catch (IOException e) {
-            throw new UnableToCreateReceiver("Unable to create receiver for device " + device.getName(), e);
-        }
-    }
-
     private synchronized void removeReceiver(@NotNull IDevice device) {
-        Integer descriptorHashCode = System.identityHashCode(device);
-        LogcatScanner receiver = receivers.get(descriptorHashCode);
+        Integer deviceHashCode = System.identityHashCode(device);
+        LogcatAdapter receiver = listeners.get(deviceHashCode);
         if (receiver != null) {
             receiver.finish();
-            receivers.remove(descriptorHashCode);
+            listeners.remove(deviceHashCode);
         }
     }
 
-    private final Map<Integer, LogcatScanner> receivers = new HashMap<Integer, LogcatScanner>();
-
+    private StackTraceMatcherFactory scannerFactory;
+    private final Map<Integer, LogcatAdapter> listeners = new HashMap<Integer, LogcatAdapter>();
+    private final static Logger LOGGER = Logger.getInstance(LogcatProcessWatcher.class);
 }

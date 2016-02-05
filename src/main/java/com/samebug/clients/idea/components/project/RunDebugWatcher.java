@@ -18,22 +18,19 @@ package com.samebug.clients.idea.components.project;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunContentManager;
 import com.intellij.execution.ui.RunContentWithExecutorListener;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.scanners.StackTraceMatcherFactory;
-import com.samebug.clients.idea.scanners.ConsoleScanner;
+import com.samebug.clients.idea.processadapters.RunDebugAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class RunDebugWatcher extends AbstractProjectComponent implements RunContentWithExecutorListener, Disposable {
+public class RunDebugWatcher extends AbstractProjectComponent implements RunContentWithExecutorListener {
     public RunDebugWatcher(Project project) {
         super(project);
-
     }
 
     // ProjectComponent overrides
@@ -42,6 +39,14 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
         this.scannerFactory = new StackTraceMatcherFactory(myProject);
         MessageBusConnection messageBusConnection = myProject.getMessageBus().connect();
         messageBusConnection.subscribe(RunContentManager.TOPIC, this);
+    }
+
+    @Override
+    public void projectClosed() {
+        for (RunDebugAdapter listener : listeners.values()) {
+            listener.stop();
+        }
+        listeners.clear();
     }
 
     // RunContentWithExecutorListener overrides
@@ -57,18 +62,10 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
         }
     }
 
-    // Displosable overrides
-    public void dispose() {
-        for (Map.Entry<Integer, ConsoleScanner> entry : listeners.entrySet()) {
-            entry.getValue().stop();
-        }
-        listeners.clear();
-    }
-
     // implementation
-    private synchronized ConsoleScanner initListener(@NotNull RunContentDescriptor descriptor) {
+    private synchronized RunDebugAdapter initListener(@NotNull RunContentDescriptor descriptor) {
         Integer descriptorHashCode = System.identityHashCode(descriptor);
-        ConsoleScanner existingScanner = listeners.get(descriptorHashCode);
+        RunDebugAdapter existingScanner = listeners.get(descriptorHashCode);
 
         if (existingScanner != null) {
             return existingScanner;
@@ -77,10 +74,10 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
         }
     }
 
-    private ConsoleScanner createScanner(@NotNull RunContentDescriptor descriptor, Integer descriptorHashCode) {
+    private RunDebugAdapter createScanner(@NotNull RunContentDescriptor descriptor, Integer descriptorHashCode) {
         if (descriptor.getProcessHandler() == null) return null;
 
-        ConsoleScanner listener = new ConsoleScanner(scannerFactory);
+        RunDebugAdapter listener = new RunDebugAdapter(scannerFactory);
         listeners.put(descriptorHashCode, listener);
         descriptor.getProcessHandler().addProcessListener(listener);
         return listener;
@@ -91,8 +88,6 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
         listeners.remove(descriptorHashCode);
     }
 
-    private final Map<Integer, ConsoleScanner> listeners = new HashMap<Integer, ConsoleScanner>();
+    private final Map<Integer, RunDebugAdapter> listeners = new HashMap<Integer, RunDebugAdapter>();
     private StackTraceMatcherFactory scannerFactory;
-
-
 }

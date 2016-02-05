@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.scanners;
+package com.samebug.clients.idea.processadapters;
 
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
@@ -27,10 +27,14 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * Scans running process outputs
+ * Receives the output of a run or debug task.
+ *
+ * The output is forwarded to a {@link LogScanner}.
+ * There could be multiple types of output (e.g. stdout and stderr), so this class
+ * uses a {@link LogScannerFactory} instead of a single instance of a LogScanner.
  */
-public class ConsoleScanner extends ProcessAdapter {
-    public ConsoleScanner(@NotNull LogScannerFactory scannerFactory) {
+public class RunDebugAdapter extends ProcessAdapter {
+    public RunDebugAdapter(@NotNull LogScannerFactory scannerFactory) {
         this.scannerFactory = scannerFactory;
     }
 

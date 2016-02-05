@@ -13,21 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.scanners.exceptions;
+package com.samebug.clients.search.api.messages;
 
-public class UnableToCreateReceiver extends Exception {
-    public UnableToCreateReceiver() {
-    }
+import com.intellij.openapi.project.Project;
+import com.intellij.util.messages.Topic;
 
-    public UnableToCreateReceiver(String message) {
-        super(message);
-    }
+/**
+ * Created by poroszd on 2/5/16.
+ */
+public interface StackTraceMatcherListener {
+    Topic<StackTraceMatcherListener> FOUND_TOPIC = Topic.create("stacktrace found", StackTraceMatcherListener.class, Topic.BroadcastDirection.TO_PARENT);
 
-    public UnableToCreateReceiver(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public UnableToCreateReceiver(Throwable cause) {
-        super(cause);
-    }
+    void stackTraceFound(Project project, String stackTrace);
 }

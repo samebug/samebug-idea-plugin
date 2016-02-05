@@ -19,29 +19,28 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.intellij.util.messages.Topic;
-import com.samebug.clients.idea.scanners.StackTraceMatcherFactory;
 import com.samebug.clients.search.api.SamebugClient;
-import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.search.api.exceptions.SamebugTimeout;
 import com.samebug.clients.search.api.exceptions.UserUnauthorized;
+import com.samebug.clients.search.api.messages.StackTraceMatcherListener;
+import com.samebug.clients.search.api.messages.StackTraceSearchListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class StackTraceSearch implements ApplicationComponent, StackTraceMatcherFactory.StackTraceMatcherListener {
+public class StackTraceSearch implements ApplicationComponent, StackTraceMatcherListener {
     // ApplicationComponent overrides
 
     @Override
     public void initComponent() {
-        MessageBusConnection messageBusConnection = ApplicationManager.getApplication().getMessageBus().connect();
-        messageBusConnection.subscribe(StackTraceMatcherFactory.StackTraceMatcherListener.FOUND_TOPIC, this);
+        messageBusConnection = ApplicationManager.getApplication().getMessageBus().connect();
+        messageBusConnection.subscribe(StackTraceMatcherListener.FOUND_TOPIC, this);
     }
 
     @Override
     public void disposeComponent() {
-
+        messageBusConnection.disconnect();
     }
 
     @NotNull
@@ -81,17 +80,5 @@ public class StackTraceSearch implements ApplicationComponent, StackTraceMatcher
         });
     }
 
-    public interface StackTraceSearchListener {
-        Topic<StackTraceSearchListener> SEARCH_TOPIC = Topic.create("stacktrace search", StackTraceSearchListener.class);
-
-        void searchStart(String id, String stackTrace);
-
-        void searchSucceeded(String id, SearchResults results);
-
-        void timeout(String id);
-
-        void unauthorized(String id);
-
-        void searchFailed(String id, SamebugClientException error);
-    }
+    private MessageBusConnection messageBusConnection;
 }
