@@ -20,8 +20,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.idea.scanners.LogcatAdapter;
-import com.samebug.clients.idea.scanners.StackTraceMatcherFactory;
+import com.samebug.clients.idea.processadapters.LogcatAdapter;
 import com.samebug.clients.idea.util.AndroidSdkUtil;
 import org.jetbrains.annotations.NotNull;
 

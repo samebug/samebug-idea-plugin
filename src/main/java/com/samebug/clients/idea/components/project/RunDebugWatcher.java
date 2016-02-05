@@ -21,8 +21,7 @@ import com.intellij.execution.ui.RunContentWithExecutorListener;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.scanners.RunDebugAdapter;
-import com.samebug.clients.idea.scanners.StackTraceMatcherFactory;
+import com.samebug.clients.idea.processadapters.RunDebugAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
