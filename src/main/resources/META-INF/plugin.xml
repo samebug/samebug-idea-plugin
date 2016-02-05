@@ -23,7 +23,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Samebug" icon="/icons/samebug/samebug-r270-13x13.png" anchor="right"
-                    factoryClass="com.samebug.clients.idea.project.toolwindow.SamebugToolWindowFactory"/>
+                    factoryClass="com.samebug.clients.idea.ui.SamebugToolWindowFactory"/>
     </extensions>
 
     <actions>
@@ -39,24 +39,24 @@
 
     <application-components>
         <component>
-            <implementation-class>com.samebug.clients.idea.application.IdeaSamebugPlugin</implementation-class>
+            <implementation-class>com.samebug.clients.idea.components.application.IdeaSamebugPlugin</implementation-class>
         </component>
         <component>
-            <implementation-class>com.samebug.clients.idea.application.IdeaSamebugClient</implementation-class>
+            <implementation-class>com.samebug.clients.idea.components.application.IdeaSamebugClient</implementation-class>
         </component>
         <component>
-            <implementation-class>com.samebug.clients.idea.project.autosearch.StackTraceSearch</implementation-class>
+            <implementation-class>com.samebug.clients.idea.components.application.StackTraceSearch</implementation-class>
         </component>
     </application-components>
     <project-components>
         <component>
-            <implementation-class>com.samebug.clients.idea.project.autosearch.android.LogcatProcessWatcher</implementation-class>
+            <implementation-class>com.samebug.clients.idea.components.project.LogcatProcessWatcher</implementation-class>
         </component>
         <component>
-            <implementation-class>com.samebug.clients.idea.project.autosearch.console.RunDebugWatcher</implementation-class>
+            <implementation-class>com.samebug.clients.idea.components.project.RunDebugWatcher</implementation-class>
         </component>
         <component>
-            <implementation-class>com.samebug.clients.idea.project.SearchResultNotifier</implementation-class>
+            <implementation-class>com.samebug.clients.idea.components.project.SearchResultNotifier</implementation-class>
         </component>
     </project-components>
 </idea-plugin>

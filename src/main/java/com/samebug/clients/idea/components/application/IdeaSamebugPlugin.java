@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.application;
+package com.samebug.clients.idea.components.application;
 
 import com.intellij.openapi.components.ApplicationComponent;
 import com.samebug.clients.idea.notification.SamebugNotification;

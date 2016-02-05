@@ -17,5 +17,6 @@ package com.samebug.clients.search.api;
 
 public interface LogScanner {
     void line(String line);
+
     void end();
 }

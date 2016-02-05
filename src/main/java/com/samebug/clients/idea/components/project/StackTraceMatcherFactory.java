@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.project.autosearch;
+package com.samebug.clients.idea.components.project;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.util.messages.Topic;
 import com.samebug.clients.search.api.LogScanner;
 import com.samebug.clients.search.api.LogScannerFactory;
 import com.samebug.clients.search.api.StackTraceListener;
+import com.samebug.clients.search.api.messages.StackTraceMatcherListener;
 import com.samebug.clients.search.matcher.StackTraceMatcher;
 
 public class StackTraceMatcherFactory implements LogScannerFactory {
     private final StackTraceListener listener;
-    private final Project project;
 
     public StackTraceMatcherFactory(Project project) {
-        this.project = project;
-        this.listener = new PublisherListener(project);
+        this.listener = new StackTracePublisher(project);
     }
 
     @Override
@@ -37,10 +35,10 @@ public class StackTraceMatcherFactory implements LogScannerFactory {
     }
 
 
-    static class PublisherListener implements StackTraceListener {
+    static private class StackTracePublisher implements StackTraceListener {
         private final Project project;
 
-        PublisherListener(Project project) {
+        StackTracePublisher(Project project) {
             this.project = project;
         }
 
@@ -50,9 +48,4 @@ public class StackTraceMatcherFactory implements LogScannerFactory {
         }
     }
 
-    public interface StackTraceMatcherListener {
-        Topic<StackTraceMatcherListener> FOUND_TOPIC = Topic.create("stacktrace found", StackTraceMatcherListener.class, Topic.BroadcastDirection.TO_PARENT);
-
-        void stackTraceFound(Project project, String stackTrace);
-    }
 }

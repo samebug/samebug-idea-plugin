@@ -18,6 +18,11 @@ package com.samebug.clients.search.matcher;
 import com.samebug.clients.search.api.LogScanner;
 import com.samebug.clients.search.api.StackTraceListener;
 
+/**
+ * Scans the log for stacktrace.
+ *
+ * When a stacktrace is found, notifies the StackTraceListener.
+ */
 public class StackTraceMatcher extends MatcherStateMachine implements LogScanner {
     private final StackTraceListener listener;
 

@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.project.autosearch.android;
+package com.samebug.clients.idea.processadapters;
 
 import com.android.ddmlib.MultiLineReceiver;
 import com.samebug.clients.search.api.LogScanner;
 
 /**
- * Scans running process outputs
+ * Receives the output of the logcat process.
+ *
+ * The logcat output is forwarded to a LogScanner.
  */
-class LogcatScanner extends MultiLineReceiver {
+public class LogcatAdapter extends MultiLineReceiver {
 
     private final LogScanner logScanner;
+    private boolean finished = false;
 
-    public LogcatScanner(LogScanner logScanner) {
+    public LogcatAdapter(LogScanner logScanner) {
         this.logScanner = logScanner;
 
     }
@@ -38,6 +41,7 @@ class LogcatScanner extends MultiLineReceiver {
     }
 
     public void finish() {
+        finished = true;
         flush();
         logScanner.end();
         done();
@@ -45,6 +49,6 @@ class LogcatScanner extends MultiLineReceiver {
 
     @Override
     public boolean isCancelled() {
-        return false;
+        return finished;
     }
 }

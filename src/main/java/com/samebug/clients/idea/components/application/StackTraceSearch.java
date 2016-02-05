@@ -13,39 +13,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.project.autosearch;
+package com.samebug.clients.idea.components.application;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.messages.Topic;
-import com.samebug.clients.idea.application.IdeaSamebugClient;
+import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.search.api.SamebugClient;
-import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.search.api.exceptions.SamebugTimeout;
 import com.samebug.clients.search.api.exceptions.UserUnauthorized;
+import com.samebug.clients.search.api.messages.StackTraceMatcherListener;
+import com.samebug.clients.search.api.messages.StackTraceSearchListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class StackTraceSearch implements ApplicationComponent, Disposable {
+public class StackTraceSearch implements ApplicationComponent, StackTraceMatcherListener {
+    // ApplicationComponent overrides
+
+    @Override
+    public void initComponent() {
+        messageBusConnection = ApplicationManager.getApplication().getMessageBus().connect();
+        messageBusConnection.subscribe(StackTraceMatcherListener.FOUND_TOPIC, this);
+    }
+
+    @Override
+    public void disposeComponent() {
+        messageBusConnection.disconnect();
+    }
+
+    @NotNull
+    @Override
+    public String getComponentName() {
+        return getClass().getSimpleName();
+    }
+
+    // StackTraceMatcherListener overrides
+    @Override
+    public void stackTraceFound(Project project, String stackTrace) {
+        search(project, stackTrace);
+    }
+
     @NotNull
     private static SamebugClient getClient() {
         return IdeaSamebugClient.getInstance();
     }
-
-    @NotNull
-    public static StackTraceSearch getInstance() {
-        StackTraceSearch instance = ApplicationManager.getApplication().getComponent(StackTraceSearch.class);
-        if (instance == null) {
-            throw new Error("No Samebug IDEA search available");
-        } else {
-            return instance;
-        }
-    }
-
 
     public void search(final Project project, final String stacktrace) {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
@@ -67,45 +80,5 @@ public class StackTraceSearch implements ApplicationComponent, Disposable {
         });
     }
 
-    @Override
-    public void initComponent() {
-        ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(
-                StackTraceMatcherFactory.StackTraceMatcherListener.FOUND_TOPIC, new StackTraceMatcherFactory.StackTraceMatcherListener() {
-            @Override
-            public void stackTraceFound(Project project, String stackTrace) {
-                search(project, stackTrace);
-            }
-        });
-    }
-
-    @Override
-    public void disposeComponent() {
-
-    }
-
-
-    @NotNull
-    @Override
-    public String getComponentName() {
-        return getClass().getSimpleName();
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    public interface StackTraceSearchListener {
-        Topic<StackTraceSearchListener> SEARCH_TOPIC = Topic.create("stacktrace search", StackTraceSearchListener.class);
-
-        void searchStart(String id, String stackTrace);
-
-        void searchSucceeded(String id, SearchResults results);
-
-        void timeout(String id);
-
-        void unauthorized(String id);
-
-        void searchFailed(String id, SamebugClientException error);
-    }
+    private MessageBusConnection messageBusConnection;
 }

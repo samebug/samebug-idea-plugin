@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.project.autosearch.console;
+package com.samebug.clients.idea.processadapters;
 
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
-import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.util.Key;
 import com.samebug.clients.search.api.LogScanner;
 import com.samebug.clients.search.api.LogScannerFactory;
@@ -28,13 +27,15 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * Scans running process outputs
+ * Receives the output of a run or debug task.
+ *
+ * The output is forwarded to a {@link LogScanner}.
+ * There could be multiple types of output (e.g. stdout and stderr), so this class
+ * uses a {@link LogScannerFactory} instead of a single instance of a LogScanner.
  */
-class ConsoleScanner extends ProcessAdapter {
-    public ConsoleScanner(@NotNull LogScannerFactory scannerFactory, @NotNull RunDebugWatcher manager, @NotNull RunContentDescriptor descriptor) {
+public class RunDebugAdapter extends ProcessAdapter {
+    public RunDebugAdapter(@NotNull LogScannerFactory scannerFactory) {
         this.scannerFactory = scannerFactory;
-        this.manager = manager;
-        this.descriptor = descriptor;
     }
 
     @Override
@@ -50,7 +51,6 @@ class ConsoleScanner extends ProcessAdapter {
 
     public void stop() {
         stopScanners();
-        manager.removeListener(descriptor);
     }
 
     private synchronized LogScanner getOrCreateScanner(Key outputType) {
@@ -74,6 +74,4 @@ class ConsoleScanner extends ProcessAdapter {
 
     private final Map<Key, LogScanner> scanners = new HashMap<Key, LogScanner>();
     private final LogScannerFactory scannerFactory;
-    private final RunDebugWatcher manager;
-    private final RunContentDescriptor descriptor;
 }
