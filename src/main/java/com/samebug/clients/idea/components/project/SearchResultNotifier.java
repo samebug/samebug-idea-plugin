@@ -28,7 +28,7 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
-import com.samebug.clients.search.api.messages.StackTraceSearchListener;
+import com.samebug.clients.idea.messages.StackTraceSearchListener;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;

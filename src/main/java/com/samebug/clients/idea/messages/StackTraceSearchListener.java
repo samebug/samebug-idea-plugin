@@ -13,16 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api.messages;
+package com.samebug.clients.idea.messages;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
+import com.samebug.clients.search.api.entities.SearchResults;
+import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
 /**
  * Created by poroszd on 2/5/16.
  */
-public interface StackTraceMatcherListener {
-    Topic<StackTraceMatcherListener> FOUND_TOPIC = Topic.create("stacktrace found", StackTraceMatcherListener.class, Topic.BroadcastDirection.TO_PARENT);
+public interface StackTraceSearchListener {
+    Topic<StackTraceSearchListener> SEARCH_TOPIC = Topic.create("stacktrace search", StackTraceSearchListener.class);
 
-    void stackTraceFound(Project project, String stackTrace);
+    void searchStart(String id, String stackTrace);
+
+    void searchSucceeded(String id, SearchResults results);
+
+    void timeout(String id);
+
+    void unauthorized(String id);
+
+    void searchFailed(String id, SamebugClientException error);
 }
