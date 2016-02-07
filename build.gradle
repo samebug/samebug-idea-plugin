@@ -81,7 +81,7 @@ license {
 
 group = 'com.samebug.clients.idea'
 description = 'Samebug for IntelliJ IDEA'
-version '0.5.0-SNAPSHOT'
+version '0.4.2'
 
 task checkstyle(type: Checkstyle) {
     configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")
