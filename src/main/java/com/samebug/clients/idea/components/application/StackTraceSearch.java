@@ -23,8 +23,8 @@ import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.search.api.exceptions.SamebugTimeout;
 import com.samebug.clients.search.api.exceptions.UserUnauthorized;
-import com.samebug.clients.search.api.messages.StackTraceMatcherListener;
-import com.samebug.clients.search.api.messages.StackTraceSearchListener;
+import com.samebug.clients.idea.messages.StackTraceMatcherListener;
+import com.samebug.clients.idea.messages.StackTraceSearchListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
