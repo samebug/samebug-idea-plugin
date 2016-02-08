@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.search.api;
 
+import com.samebug.clients.search.api.entities.History;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
@@ -30,4 +31,6 @@ public interface SamebugClient {
     URL getUserProfileUrl(Integer userId);
 
     UserInfo getUserInfo(String apiKey) throws UnknownApiKey, SamebugClientException;
+
+    History getSearchHistory() throws SamebugClientException;
 }

@@ -23,6 +23,7 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.samebug.clients.idea.ui.SettingsDialog;
 import com.samebug.clients.search.api.SamebugClient;
+import com.samebug.clients.search.api.entities.History;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
 import com.samebug.clients.search.api.exceptions.*;
@@ -51,7 +52,7 @@ import java.util.List;
 )
 public class IdeaSamebugClient implements SamebugClient, ApplicationComponent, PersistentStateComponent<IdeaSamebugClient.Settings> {
     public IdeaSamebugClient() {
-        this.root = URI.create("https://samebug.io/");
+        this.root = URI.create("http://localhost:9000/");
         this.gateway = root.resolve("sandbox/api/").resolve(API_VERSION + "/");
     }
 
@@ -162,6 +163,15 @@ public class IdeaSamebugClient implements SamebugClient, ApplicationComponent, P
         UserInfo userInfo = requestJson(request, UserInfo.class);
         if (!userInfo.isUserExist) throw new UnknownApiKey(apiKey);
         return userInfo;
+    }
+
+    @Override
+    public History getSearchHistory() throws SamebugClientException {
+        URL url = getApiUrl("history");
+        Request request = Request.Get(url.toString());
+
+        History history = requestJson(request, History.class);
+        return history;
     }
 
     private final URI root;

@@ -15,25 +15,32 @@
  */
 package com.samebug.clients.idea.ui;
 
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.ActionToolbar;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.ide.BrowserUtil;
+import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import com.samebug.clients.idea.components.application.IdeaSamebugClient;
 import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.search.api.entities.History;
+import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
+import java.net.URL;
 
 public class SamebugToolWindowFactory implements ToolWindowFactory {
     private JPanel contentPanel;
     private JPanel toolbarPanel;
+    private JEditorPane historyPane;
     private ToolWindow toolWindow;
     private Project project;
 
@@ -61,7 +68,38 @@ public class SamebugToolWindowFactory implements ToolWindowFactory {
 
     private JPanel createToolbarPanel() {
         final DefaultActionGroup group = (DefaultActionGroup) ActionManager.getInstance().getAction("Samebug.ToolWindowMenu");
-
+        group.add(new AnAction() {
+            @Override
+            public void actionPerformed(AnActionEvent e) {
+                ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final IdeaSamebugClient client = IdeaSamebugClient.getInstance();
+                        try {
+                            final History history = client.getSearchHistory();
+                            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                                public void run() {
+                                    historyPane.setEditable(false);
+                                    HTMLEditorKit kit = new HTMLEditorKit();
+                                    historyPane.setEditorKit(kit);
+                                    historyPane.addHyperlinkListener(new HyperlinkListener() {
+                                        public void hyperlinkUpdate(HyperlinkEvent e) {
+                                            if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                                                URL url = e.getURL();
+                                                BrowserUtil.browse(url);
+                                            }
+                                        }
+                                    });
+                                    historyPane.setText(history.html);
+                                }
+                            });
+                        } catch (SamebugClientException e1) {
+                            LOGGER.error("Failed to retrieve history", e1);
+                        }
+                    }
+                });
+            }
+        });
         final ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
         final JPanel buttonsPanel = new JPanel(new BorderLayout());
         buttonsPanel.add(actionToolBar.getComponent(), BorderLayout.CENTER);
