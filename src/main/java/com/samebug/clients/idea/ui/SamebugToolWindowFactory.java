@@ -16,7 +16,10 @@
 package com.samebug.clients.idea.ui;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -24,9 +27,12 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.components.application.IdeaSamebugClient;
+import com.samebug.clients.idea.messages.StackTraceSearchListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.search.api.entities.History;
+import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,14 +41,17 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
 
-public class SamebugToolWindowFactory implements ToolWindowFactory {
+public class SamebugToolWindowFactory implements ToolWindowFactory, StackTraceSearchListener {
     private JPanel contentPanel;
     private JPanel toolbarPanel;
     private JEditorPane historyPane;
     private ToolWindow toolWindow;
     private Project project;
+    private Timer timer;
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
@@ -50,13 +59,30 @@ public class SamebugToolWindowFactory implements ToolWindowFactory {
         this.toolWindow = toolWindow;
 
         initContent();
+        initHistoryPane();
+    }
+
+    private void initHistoryPane() {
+        MessageBusConnection messageBusConnection = project.getMessageBus().connect(project);
+        messageBusConnection.subscribe(StackTraceSearchListener.SEARCH_TOPIC, this);
+        loadHistory();
     }
 
     private void initContent() {
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(contentPanel, SamebugBundle.message("samebug.toolwindow.displayName"), false);
-
         toolWindow.getContentManager().addContent(content);
+        historyPane.setEditable(false);
+        HTMLEditorKit kit = new HTMLEditorKit();
+        historyPane.setEditorKit(kit);
+        historyPane.addHyperlinkListener(new HyperlinkListener() {
+            public void hyperlinkUpdate(HyperlinkEvent e) {
+                if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                    URL url = e.getURL();
+                    BrowserUtil.browse(url);
+                }
+            }
+        });
     }
 
 
@@ -68,41 +94,58 @@ public class SamebugToolWindowFactory implements ToolWindowFactory {
 
     private JPanel createToolbarPanel() {
         final DefaultActionGroup group = (DefaultActionGroup) ActionManager.getInstance().getAction("Samebug.ToolWindowMenu");
-        group.add(new AnAction() {
-            @Override
-            public void actionPerformed(AnActionEvent e) {
-                ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        final IdeaSamebugClient client = IdeaSamebugClient.getInstance();
-                        try {
-                            final History history = client.getSearchHistory();
-                            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                                public void run() {
-                                    historyPane.setEditable(false);
-                                    HTMLEditorKit kit = new HTMLEditorKit();
-                                    historyPane.setEditorKit(kit);
-                                    historyPane.addHyperlinkListener(new HyperlinkListener() {
-                                        public void hyperlinkUpdate(HyperlinkEvent e) {
-                                            if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                                                URL url = e.getURL();
-                                                BrowserUtil.browse(url);
-                                            }
-                                        }
-                                    });
-                                    historyPane.setText(history.html);
-                                }
-                            });
-                        } catch (SamebugClientException e1) {
-                            LOGGER.error("Failed to retrieve history", e1);
-                        }
-                    }
-                });
-            }
-        });
         final ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
         final JPanel buttonsPanel = new JPanel(new BorderLayout());
         buttonsPanel.add(actionToolBar.getComponent(), BorderLayout.CENTER);
         return buttonsPanel;
     }
+
+    private void refreshHistoryPane(final History history) {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            public void run() {
+                historyPane.setText(history.html);
+            }
+        });
+    }
+
+    private void loadHistory() {
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                final IdeaSamebugClient client = IdeaSamebugClient.getInstance();
+                try {
+                    final History history = client.getSearchHistory();
+                    refreshHistoryPane(history);
+                } catch (SamebugClientException e1) {
+                    LOGGER.error("Failed to retrieve history", e1);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void searchStart(String id, String stackTrace) { }
+
+    @Override
+    public void searchSucceeded(String id, SearchResults results) {
+        if (timer == null) {
+            timer = new Timer(300, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    loadHistory();
+                }
+            });
+        } else {
+            timer.restart();
+        }
+    }
+
+    @Override
+    public void timeout(String id) { }
+
+    @Override
+    public void unauthorized(String id) { }
+
+    @Override
+    public void searchFailed(String id, SamebugClientException error) { }
 }
