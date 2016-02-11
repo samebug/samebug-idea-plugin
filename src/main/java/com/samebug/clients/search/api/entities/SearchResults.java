@@ -15,7 +15,11 @@
  */
 package com.samebug.clients.search.api.entities;
 
+import java.util.Date;
+
 public class SearchResults {
-    public int totalSolutions;
+    public String searchType;
     public String searchId;
+    public int ownMatches;
+    public Long lastSeenTime;
 }

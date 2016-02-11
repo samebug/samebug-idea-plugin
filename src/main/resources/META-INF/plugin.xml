@@ -58,5 +58,8 @@
         <component>
             <implementation-class>com.samebug.clients.idea.components.project.SearchResultNotifier</implementation-class>
         </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.components.project.BatchStackTraceSearchNotifier</implementation-class>
+        </component>
     </project-components>
 </idea-plugin>

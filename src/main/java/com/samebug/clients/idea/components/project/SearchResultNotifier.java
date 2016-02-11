@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,22 +20,24 @@ import com.intellij.notification.NotificationType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.components.application.IdeaSamebugClient;
+import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.notification.NotificationActionListener;
 import com.samebug.clients.idea.notification.SamebugNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.ui.SamebugToolWindowFactory;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.SearchResults;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
-import com.samebug.clients.idea.messages.StackTraceSearchListener;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
-class SearchResultNotifier extends AbstractProjectComponent implements StackTraceSearchListener {
+class SearchResultNotifier extends AbstractProjectComponent implements BatchStackTraceSearchListener {
     public SearchResultNotifier(Project project) {
         super(project);
     }
@@ -44,7 +46,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements StackTrac
     public void projectOpened() {
         super.projectOpened();
         messageBusConnection = myProject.getMessageBus().connect();
-        messageBusConnection.subscribe(StackTraceSearchListener.SEARCH_TOPIC, this);
+        messageBusConnection.subscribe(BatchStackTraceSearchListener.BATCH_SEARCH_TOPIC, this);
     }
 
     @Override
@@ -53,39 +55,30 @@ class SearchResultNotifier extends AbstractProjectComponent implements StackTrac
     }
 
     @Override
-    public void searchStart(String id, String stackTrace) {
+    public void batchStart() {
 
     }
 
     @Override
-    public void searchSucceeded(String id, SearchResults results) {
-        if (results.totalSolutions > 0) showNotificationPopup(results);
+    public void batchFinished(List<SearchResults> results, int failed) {
+        showNotification(results);
     }
 
-    @Override
-    public void timeout(String id) {
-
-    }
-
-    @Override
-    public void unauthorized(String id) {
-
-    }
-
-    @Override
-    public void searchFailed(String id, SamebugClientException error) {
-    }
-
-    private void showNotificationPopup(final SearchResults results) {
+    private void showNotification(final List<SearchResults> results) {
         final SamebugClient client = IdeaSamebugClient.getInstance();
 
-        String message = SamebugBundle.message("samebug.notification.searchresults.message", results.totalSolutions);
+        String message = SamebugBundle.message("samebug.notification.searchresults.message", results.size());
         final SearchResultsNotification notification = new SearchResultsNotification(
                 message, new NotificationActionListener() {
             @Override
             public void actionActivated(String action) {
                 if (SearchResultsNotification.SHOW.equals(action)) {
-                    BrowserUtil.browse(client.getSearchUrl(Integer.parseInt(results.searchId)));
+                    ToolWindowManager.getInstance(myProject).getToolWindow("Samebug").show(new Runnable() {
+                        @Override
+                        public void run() {
+
+                        }
+                    });
                 }
             }
         });
