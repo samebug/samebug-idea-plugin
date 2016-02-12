@@ -99,31 +99,13 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, BatchStackTr
 
     private JPanel createToolbarPanel() {
         final DefaultActionGroup group = (DefaultActionGroup) ActionManager.getInstance().getAction("Samebug.ToolWindowMenu");
-        group.addAction(new AnAction() {
-            @Override
-            public void actionPerformed(AnActionEvent e) {
-                loadHistory();
-            }
-        });
         final ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
         final JPanel buttonsPanel = new JPanel(new BorderLayout());
         buttonsPanel.add(actionToolBar.getComponent(), BorderLayout.CENTER);
         return buttonsPanel;
     }
 
-    private void refreshHistoryPane(final History history) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            public void run() {
-                HTMLEditorKit kit = (HTMLEditorKit) historyPane.getEditorKit();
-                StyleSheet ss = kit.getStyleSheet();
-                kit.setStyleSheet(ss);
-                historyPane.setText(history.html);
-                historyPane.setCaretPosition(0);
-            }
-        });
-    }
-
-    private void loadHistory() {
+    public void loadHistory() {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
@@ -134,6 +116,18 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, BatchStackTr
                 } catch (SamebugClientException e1) {
                     LOGGER.error("Failed to retrieve history", e1);
                 }
+            }
+        });
+    }
+
+    private void refreshHistoryPane(final History history) {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            public void run() {
+                HTMLEditorKit kit = (HTMLEditorKit) historyPane.getEditorKit();
+                StyleSheet ss = kit.getStyleSheet();
+                kit.setStyleSheet(ss);
+                historyPane.setText(history.html);
+                historyPane.setCaretPosition(0);
             }
         });
     }
