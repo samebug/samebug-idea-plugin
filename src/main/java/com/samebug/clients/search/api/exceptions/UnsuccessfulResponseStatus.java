@@ -24,6 +24,6 @@ public class UnsuccessfulResponseStatus extends SamebugClientException {
 
     @Override
     public String getMessage() {
-        return "Unable to requestJson request, status: " + statusCode;
+        return "Unable to execute requestJson request, status: " + statusCode;
     }
 }
