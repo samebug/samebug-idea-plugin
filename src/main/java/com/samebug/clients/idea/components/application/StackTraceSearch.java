@@ -19,19 +19,20 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.idea.messages.StackTraceMatcherListener;
+import com.samebug.clients.idea.messages.StackTraceSearchListener;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.search.api.exceptions.SamebugTimeout;
 import com.samebug.clients.search.api.exceptions.UserUnauthorized;
-import com.samebug.clients.idea.messages.StackTraceMatcherListener;
-import com.samebug.clients.idea.messages.StackTraceSearchListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
 public class StackTraceSearch implements ApplicationComponent, StackTraceMatcherListener {
-    // ApplicationComponent overrides
+    private MessageBusConnection messageBusConnection;
 
+    // ApplicationComponent overrides
     @Override
     public void initComponent() {
         messageBusConnection = ApplicationManager.getApplication().getMessageBus().connect();
@@ -51,24 +52,16 @@ public class StackTraceSearch implements ApplicationComponent, StackTraceMatcher
 
     // StackTraceMatcherListener overrides
     @Override
-    public void stackTraceFound(Project project, String stackTrace) {
-        search(project, stackTrace);
-    }
-
-    @NotNull
-    private static SamebugClient getClient() {
-        return IdeaSamebugClient.getInstance();
-    }
-
-    public void search(final Project project, final String stacktrace) {
+    public void stackTraceFound(final Project project, final String stackTrace) {
+        final SamebugClient client = IdeaSamebugPlugin.getInstance().getClient();
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
                 StackTraceSearchListener listener = project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC);
                 String id = UUID.randomUUID().toString();
-                listener.searchStart(id, stacktrace);
+                listener.searchStart(id, stackTrace);
                 try {
-                    listener.searchSucceeded(id, getClient().searchSolutions(stacktrace));
+                    listener.searchSucceeded(id, client.searchSolutions(stackTrace));
                 } catch (SamebugTimeout ignored) {
                     listener.timeout(id);
                 } catch (UserUnauthorized ignored) {
@@ -79,6 +72,4 @@ public class StackTraceSearch implements ApplicationComponent, StackTraceMatcher
             }
         });
     }
-
-    private MessageBusConnection messageBusConnection;
 }

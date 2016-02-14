@@ -15,18 +15,28 @@
  */
 package com.samebug.clients.idea.actions;
 
-import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.samebug.clients.idea.components.application.IdeaSamebugClient;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.ui.SamebugHistoryWindow;
 
 public class HistoryAction extends AnAction {
+    private SamebugHistoryWindow historyWindow;
+
+    // TODO disable action when user is not logged in
+
     @Override
     public void actionPerformed(AnActionEvent e) {
-        final IdeaSamebugClient client = IdeaSamebugClient.getInstance();
-        final Integer userId = client.getState().getUserId();
-        if (userId != null) {
-            BrowserUtil.browse(client.getUserProfileUrl(userId));
-        }
+        historyWindow.loadHistory();
+    }
+
+    @Override
+    public void update(AnActionEvent e) {
+        boolean clientInitializated = IdeaSamebugPlugin.getInstance().isInitialized();
+        e.getPresentation().setEnabled(clientInitializated);
+    }
+
+    public void setHook(SamebugHistoryWindow historyWindow) {
+        this.historyWindow = historyWindow;
     }
 }

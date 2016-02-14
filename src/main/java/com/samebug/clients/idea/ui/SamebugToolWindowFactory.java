@@ -16,55 +16,40 @@
 package com.samebug.clients.idea.ui;
 
 import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.ActionToolbar;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.idea.actions.HistoryAction;
+import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-import java.awt.*;
 
-public class SamebugToolWindowFactory implements ToolWindowFactory {
-    private JPanel contentPanel;
-    private JPanel toolbarPanel;
-    private ToolWindow toolWindow;
-    private Project project;
+public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        this.project = project;
-        this.toolWindow = toolWindow;
-
-        initContent();
-    }
-
-    private void initContent() {
+        SamebugHistoryWindow historyWindow = initializeHistoryWindow(project);
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-        Content content = contentFactory.createContent(contentPanel, SamebugBundle.message("samebug.toolwindow.displayName"), false);
-
+        Content content = contentFactory.createContent(historyWindow.getControlPanel(), SamebugBundle.message("samebug.toolwindow.displayName"), false);
         toolWindow.getContentManager().addContent(content);
     }
 
+    private SamebugHistoryWindow initializeHistoryWindow(Project project) {
+        SamebugHistoryWindow historyWindow = new SamebugHistoryWindow(project);
 
-    private final static Logger LOGGER = Logger.getInstance(SamebugToolWindowFactory.class);
+        historyWindow.initHistoryPane();
 
-    private void createUIComponents() {
-        this.toolbarPanel = createToolbarPanel();
-    }
+        final HistoryAction historyAction = (HistoryAction) ActionManager.getInstance().getAction("Samebug.History");
+        historyAction.setHook(historyWindow);
 
-    private JPanel createToolbarPanel() {
-        final DefaultActionGroup group = (DefaultActionGroup) ActionManager.getInstance().getAction("Samebug.ToolWindowMenu");
+        MessageBusConnection messageBusConnection = project.getMessageBus().connect(project);
+        messageBusConnection.subscribe(BatchStackTraceSearchListener.BATCH_SEARCH_TOPIC, historyWindow);
 
-        final ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
-        final JPanel buttonsPanel = new JPanel(new BorderLayout());
-        buttonsPanel.add(actionToolBar.getComponent(), BorderLayout.CENTER);
-        return buttonsPanel;
+        return historyWindow;
     }
 }

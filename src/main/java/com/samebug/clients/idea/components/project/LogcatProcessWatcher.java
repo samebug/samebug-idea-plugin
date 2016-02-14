@@ -104,16 +104,20 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
                     device.executeShellCommand("logcat -v long", receiver, 0L, TimeUnit.NANOSECONDS);
                 } catch (TimeoutException e) {
                     LOGGER.warn("Unable to create receiver for device " + device.getName(), e);
-                    Notifications.Bus.notify(new Notification("samebug", "Adb connection failure", "Unable to create receiver for device " + device.getName(), NotificationType.WARNING));
+                    Notifications.Bus.notify(new Notification("samebug", "Adb connection failure",
+                            "Unable to create receiver for device " + device.getName(), NotificationType.WARNING));
                 } catch (AdbCommandRejectedException e) {
                     LOGGER.warn("Unable to create receiver for device " + device.getName(), e);
-                    Notifications.Bus.notify(new Notification("samebug", "Adb connection failure", "Unable to create receiver for device " + device.getName(), NotificationType.WARNING));
+                    Notifications.Bus.notify(new Notification("samebug", "Adb connection failure",
+                            "Unable to create receiver for device " + device.getName(), NotificationType.WARNING));
                 } catch (ShellCommandUnresponsiveException e) {
                     LOGGER.warn("Unable to create receiver for device " + device.getName(), e);
-                    Notifications.Bus.notify(new Notification("samebug", "Adb connection failure", "Unable to create receiver for device " + device.getName(), NotificationType.WARNING));
+                    Notifications.Bus.notify(new Notification("samebug", "Adb connection failure",
+                            "Unable to create receiver for device " + device.getName(), NotificationType.WARNING));
                 } catch (IOException e) {
                     LOGGER.warn("Unable to create receiver for device " + device.getName(), e);
-                    Notifications.Bus.notify(new Notification("samebug", "Adb connection failure", "Unable to create receiver for device " + device.getName(), NotificationType.WARNING));
+                    Notifications.Bus.notify(new Notification("samebug", "Adb connection failure",
+                            "Unable to create receiver for device " + device.getName(), NotificationType.WARNING));
                 }
             }
         });
