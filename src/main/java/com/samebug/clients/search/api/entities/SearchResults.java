@@ -19,5 +19,6 @@ public class SearchResults {
     public String searchType;
     public String searchId;
     public int ownMatches;
+    public Long firstSeenTime;
     public Long lastSeenTime;
 }
