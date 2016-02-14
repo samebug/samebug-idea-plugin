@@ -42,9 +42,6 @@
             <implementation-class>com.samebug.clients.idea.components.application.IdeaSamebugPlugin</implementation-class>
         </component>
         <component>
-            <implementation-class>com.samebug.clients.idea.components.application.IdeaSamebugClient</implementation-class>
-        </component>
-        <component>
             <implementation-class>com.samebug.clients.idea.components.application.StackTraceSearch</implementation-class>
         </component>
     </application-components>

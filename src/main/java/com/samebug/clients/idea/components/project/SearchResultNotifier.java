@@ -15,19 +15,17 @@
  */
 package com.samebug.clients.idea.components.project;
 
-import com.intellij.ide.BrowserUtil;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.components.application.IdeaSamebugClient;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.notification.NotificationActionListener;
 import com.samebug.clients.idea.notification.SamebugNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.idea.ui.SamebugToolWindowFactory;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.SearchResults;
 import org.jetbrains.annotations.Nullable;
@@ -65,7 +63,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
     }
 
     private void showNotification(final List<SearchResults> results) {
-        final SamebugClient client = IdeaSamebugClient.getInstance();
+        final SamebugClient client = IdeaSamebugPlugin.getInstance().getClient();
 
         String message = SamebugBundle.message("samebug.notification.searchresults.message", results.size());
         final SearchResultsNotification notification = new SearchResultsNotification(
