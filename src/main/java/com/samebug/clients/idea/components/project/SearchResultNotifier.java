@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- * <p/>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,12 +21,10 @@ import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.notification.NotificationActionListener;
 import com.samebug.clients.idea.notification.SamebugNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.SearchResults;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,20 +61,13 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
     }
 
     private void showNotification(final List<SearchResults> results) {
-        final SamebugClient client = IdeaSamebugPlugin.getInstance().getClient();
-
         String message = SamebugBundle.message("samebug.notification.searchresults.message", results.size());
         final SearchResultsNotification notification = new SearchResultsNotification(
                 message, new NotificationActionListener() {
             @Override
             public void actionActivated(String action) {
                 if (SearchResultsNotification.SHOW.equals(action)) {
-                    ToolWindowManager.getInstance(myProject).getToolWindow("Samebug").show(new Runnable() {
-                        @Override
-                        public void run() {
-
-                        }
-                    });
+                    ToolWindowManager.getInstance(myProject).getToolWindow("Samebug").show(null);
                 }
             }
         });
