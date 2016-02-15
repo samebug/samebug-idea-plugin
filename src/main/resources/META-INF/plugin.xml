@@ -16,7 +16,8 @@
       <ul>
         <li>Reduce the number of notifications during search</li>
         <li>Integrated search history in the tool window</li>
-        <li>The toolbar is active while the project is indexing</li>
+        <li>The tool window is active while the project is indexing</li>
+        <li>One-time welcome message to show the tool window</li>
       </ul>
     ]]>
     </change-notes>
