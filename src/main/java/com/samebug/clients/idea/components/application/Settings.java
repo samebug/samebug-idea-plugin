@@ -19,6 +19,11 @@ package com.samebug.clients.idea.components.application;
  * Created by poroszd on 2/12/16.
  */
 public class Settings {
+    private Integer userId;
+    private String userDisplayName;
+    private String apiKey;
+    private boolean firstRun = true;
+
     public String getApiKey() {
         return apiKey;
     }
@@ -43,11 +48,15 @@ public class Settings {
         return userDisplayName;
     }
 
-    private Integer userId;
-    private String userDisplayName;
-    private String apiKey;
-
     public boolean isInitialized() {
         return getApiKey() != null && getUserId() != null;
+    }
+
+    public boolean isFirstRun() {
+        return firstRun;
+    }
+
+    public void setFirstRun(boolean firstRun) {
+        this.firstRun = firstRun;
     }
 }

@@ -34,9 +34,7 @@
             <preferred-size width="-1" height="40"/>
           </grid>
         </constraints>
-        <properties>
-          <background color="-1250068"/>
-        </properties>
+        <properties/>
         <border type="none"/>
         <children>
           <component id="79fe4" class="javax.swing.JButton" binding="cancelButton" default-binding="true">

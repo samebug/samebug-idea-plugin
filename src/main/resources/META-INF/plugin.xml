@@ -4,11 +4,21 @@
     <vendor email="hello@samebug.io" url="http://samebug.io">Samebug</vendor>
 
     <description><![CDATA[
-      Automated exception search
+      Automated stack search integration from <a href="https://samebug.io">samebug.io</a>
+      <ul>
+        <li>Captures stack traces on your debug console</li>
+        <li>search solutions on Samebug</li>
+        <li>preserves your exception history</li>
+      </ul>
     ]]></description>
 
     <change-notes><![CDATA[
-      - fixed a bug that blocked IntelliJ during project switching
+      <ul>
+        <li>Reduce the number of notifications during search</li>
+        <li>Integrated search history in the tool window</li>
+        <li>The tool window is active while the project is indexing</li>
+        <li>One-time welcome message to show the tool window</li>
+      </ul>
     ]]>
     </change-notes>
 
@@ -57,6 +67,9 @@
         </component>
         <component>
             <implementation-class>com.samebug.clients.idea.components.project.BatchStackTraceSearchNotifier</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.components.project.UtilComponent</implementation-class>
         </component>
     </project-components>
 </idea-plugin>
