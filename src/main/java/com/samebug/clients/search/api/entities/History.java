@@ -13,17 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api.exceptions;
+package com.samebug.clients.search.api.entities;
 
-public class UnsuccessfulResponseStatus extends SamebugClientException {
-    private final int statusCode;
-
-    public UnsuccessfulResponseStatus(int statusCode) {
-        this.statusCode = statusCode;
-    }
-
-    @Override
-    public String getMessage() {
-        return "Unable to execute requestJson request, status: " + statusCode;
-    }
+/**
+ * Created by poroszd on 2/8/16.
+ */
+public class History {
+    public String html;
 }

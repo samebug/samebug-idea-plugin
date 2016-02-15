@@ -23,7 +23,7 @@ public class RemoteError extends SamebugClientException {
 
     @Override
     public String getMessage() {
-        return "Unable to requestJson request, errors in header: " + errorMessage;
+        return "Unable to execute requestJson request, errors in header: " + errorMessage;
     }
 
     private final String errorMessage;

@@ -18,4 +18,3 @@ package com.samebug.clients.idea.notification;
 public interface NotificationActionListener {
     void actionActivated(String action);
 }
-
