@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,18 +15,13 @@
  */
 package com.samebug.clients.idea.components.project;
 
-import com.intellij.notification.NotificationType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
-import com.samebug.clients.idea.notification.NotificationActionListener;
-import com.samebug.clients.idea.notification.SamebugNotification;
-import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.notification.SearchResultsNotification;
 import com.samebug.clients.search.api.entities.SearchResults;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -61,16 +56,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
     }
 
     private void showNotification(final List<SearchResults> results) {
-        String message = SamebugBundle.message("samebug.notification.searchresults.message", results.size());
-        final SearchResultsNotification notification = new SearchResultsNotification(
-                message, new NotificationActionListener() {
-            @Override
-            public void actionActivated(String action) {
-                if (SearchResultsNotification.SHOW.equals(action)) {
-                    ToolWindowManager.getInstance(myProject).getToolWindow("Samebug").show(null);
-                }
-            }
-        });
+        final SearchResultsNotification notification = new SearchResultsNotification(myProject, results.size());
 
         final Timer timer = new Timer(NOTIFICATION_EXPIRATION_DELAY, new ActionListener() {
             @Override
@@ -87,23 +73,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
         });
     }
 
-    private final int NOTIFICATION_EXPIRATION_DELAY = 10000;
+    private final static int NOTIFICATION_EXPIRATION_DELAY = 10000;
     private MessageBusConnection messageBusConnection;
 
-}
-
-class SearchResultsNotification extends SamebugNotification {
-    public SearchResultsNotification(String message, @Nullable NotificationActionListener actionListener) {
-        super(SamebugBundle.message("samebug.notification.searchresults.title"), message, NotificationType.INFORMATION, actionListener);
-
-        whenExpired(new Runnable() {
-            @Override
-            public void run() {
-                hideBalloon();
-            }
-        });
-    }
-
-
-    public final static String SHOW = "#show";
 }
