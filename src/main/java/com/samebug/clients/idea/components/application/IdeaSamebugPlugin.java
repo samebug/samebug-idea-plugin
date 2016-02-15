@@ -15,16 +15,12 @@
  */
 package com.samebug.clients.idea.components.application;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.samebug.clients.idea.notification.OperationalNotification;
 import com.samebug.clients.idea.notification.SamebugNotifications;
-import com.samebug.clients.idea.notification.SearchResultsNotification;
 import com.samebug.clients.idea.ui.SettingsDialog;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.UserInfo;
