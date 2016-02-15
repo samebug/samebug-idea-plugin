@@ -20,7 +20,7 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.samebug.clients.idea.notification.SamebugNotification;
+import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.ui.SettingsDialog;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.UserInfo;
@@ -75,7 +75,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     // ApplicationComponent overrides
     @Override
     public void initComponent() {
-        SamebugNotification.registerNotificationGroups();
+        SamebugNotifications.registerNotificationGroups();
         if (!state.isInitialized()) ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
