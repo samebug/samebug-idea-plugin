@@ -25,10 +25,10 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 public class SearchResultsNotification extends Notification {
-    public SearchResultsNotification(final Project project, int nResults) {
+    public SearchResultsNotification(final Project project, int nInterestingResults) {
         super(SamebugNotifications.SAMEBUG_SEARCH_NOTIFICATIONS,
                 SamebugBundle.message("samebug.notification.searchresults.title"),
-                SamebugBundle.message("samebug.notification.searchresults.message", nResults),
+                SamebugBundle.message("samebug.notification.searchresults.message", nInterestingResults),
                 NotificationType.INFORMATION,
                 SamebugNotifications.basicNotificationListener(project, "results"));
 
