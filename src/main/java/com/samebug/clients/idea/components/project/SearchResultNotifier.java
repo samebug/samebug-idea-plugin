@@ -53,10 +53,10 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
 
     @Override
     public void batchFinished(final List<SearchResults> results, int failed) {
-        Long millisAnHourAgo = new Date().getTime() - (1 * 60 * 60 * 1000);
+        Long timelimitForFreshSearch = new Date().getTime() - (1 * 60 * 1000);
         int nInterestingResults = 0;
         for (SearchResults result : results) {
-            if (result.firstSeenTime != null && result.firstSeenTime > millisAnHourAgo) ++nInterestingResults;
+            if (result.firstSeenTime == null || result.firstSeenTime > timelimitForFreshSearch) ++nInterestingResults;
         }
 
         if (nInterestingResults > 0) {
