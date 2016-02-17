@@ -32,7 +32,7 @@ public class OperationalNotification extends Notification {
                 title,
                 content,
                 NotificationType.INFORMATION,
-                SamebugNotifications.basicLinkHandler(project, "help"));
+                SamebugNotifications.basicNotificationListener(project, "help"));
     }
 
     @Nullable

@@ -30,7 +30,7 @@ public class SearchResultsNotification extends Notification {
                 SamebugBundle.message("samebug.notification.searchresults.title"),
                 SamebugBundle.message("samebug.notification.searchresults.message", nResults),
                 NotificationType.INFORMATION,
-                SamebugNotifications.basicLinkHandler(project, "results"));
+                SamebugNotifications.basicNotificationListener(project, "results"));
 
         whenExpired(new Runnable() {
             @Override

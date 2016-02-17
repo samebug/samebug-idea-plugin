@@ -15,15 +15,23 @@
  */
 package com.samebug.clients.idea.components.project;
 
-import com.intellij.notification.Notification;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.MessageType;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Settings;
 import com.samebug.clients.idea.components.application.Tracking;
-import com.samebug.clients.idea.notification.OperationalNotification;
+import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by poroszd on 2/15/16.
@@ -42,14 +50,35 @@ public class UtilComponent extends AbstractProjectComponent {
     @Override
     public void projectOpened() {
         super.projectOpened();
-        Settings pluginState = IdeaSamebugPlugin.getInstance().getState();
+        final Settings pluginState = IdeaSamebugPlugin.getInstance().getState();
         if (pluginState != null && pluginState.isFirstRun()) {
-            Notification n = new OperationalNotification(myProject,
-                    SamebugBundle.message("samebug.notification.operational.welcome.title"),
-                    SamebugBundle.message("samebug.notification.operational.welcome.message"));
-            n.notify(myProject);
-            Tracking.projectTracking(myProject).trace(Events.pluginInstall());
-            pluginState.setFirstRun(false);
+            // At this point, the Samebug toolwindow is likely not initialized, so we delay the notification
+            final int DELAY_MS = 15 * 1000;
+            final Timer timer = new Timer(DELAY_MS, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        public void run() {
+                            try {
+                                ToolWindowManager.getInstance(myProject).notifyByBalloon(
+                                        "Samebug",
+                                        MessageType.INFO, SamebugBundle.message("samebug.notification.operational.welcome.message"),
+                                        SamebugIcons.notification,
+                                        SamebugNotifications.basicHyperlinkListener(myProject, "help"));
+                                Tracking.projectTracking(myProject).trace(Events.pluginInstall());
+                                pluginState.setFirstRun(false);
+                            } catch (IllegalStateException e1) {
+                                LOGGER.warn("Samebug tool window was not initialized after "
+                                        + DELAY_MS + " millis, welcome message could not be displayed", e1);
+                            } catch (Exception e2) {
+                                LOGGER.warn("Welcome message could not be displayed", e2);
+                            }
+                        }
+                    });
+                }
+            });
+            timer.setRepeats(false);
+            timer.start();
         }
 
 
@@ -61,4 +90,5 @@ public class UtilComponent extends AbstractProjectComponent {
         Tracking.projectTracking(myProject).trace(Events.projectClose(myProject));
     }
 
+    private final static Logger LOGGER = Logger.getInstance(UtilComponent.class);
 }
