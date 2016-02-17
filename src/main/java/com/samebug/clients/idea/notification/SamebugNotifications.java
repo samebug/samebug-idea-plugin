@@ -25,6 +25,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 /**
  * Created by poroszd on 2/15/16.
@@ -41,7 +42,7 @@ public class SamebugNotifications {
 
     public final static String SHOW = "#showToolWindow";
 
-    public static NotificationListener basicLinkHandler(final Project project) {
+    public static NotificationListener basicNotificationListener(final Project project) {
         return new NotificationListener() {
             @Override
             public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent hyperlinkEvent) {
@@ -52,6 +53,21 @@ public class SamebugNotifications {
                 } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && SHOW.equals(action)) {
                     ToolWindowManager.getInstance(project).getToolWindow("Samebug").show(null);
                     notification.expire();
+                }
+            }
+        };
+    }
+
+    public static HyperlinkListener basicHyperlinkListener(final Project project) {
+        return new HyperlinkListener() {
+            @Override
+            public void hyperlinkUpdate(HyperlinkEvent hyperlinkEvent) {
+                HyperlinkEvent.EventType eventType = hyperlinkEvent.getEventType();
+                String action = hyperlinkEvent.getDescription();
+                if (eventType == HyperlinkEvent.EventType.ACTIVATED && hyperlinkEvent.getURL() != null) {
+                    BrowserUtil.browse(hyperlinkEvent.getURL());
+                } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && SHOW.equals(action)) {
+                    ToolWindowManager.getInstance(project).getToolWindow("Samebug").show(null);
                 }
             }
         };
