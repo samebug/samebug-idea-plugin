@@ -18,17 +18,17 @@ package com.samebug.clients.search.api;
 import com.google.gson.Gson;
 import com.samebug.clients.search.api.entities.History;
 import com.samebug.clients.search.api.entities.SearchResults;
+import com.samebug.clients.search.api.entities.TrackEvent;
 import com.samebug.clients.search.api.entities.UserInfo;
 import com.samebug.clients.search.api.exceptions.*;
 import org.apache.http.*;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -45,8 +45,8 @@ public class SamebugClient {
 
     public SamebugClient(final String apiKey) {
         this.apiKey = apiKey;
-//        this.root = URI.create("http://localhost:9000/");
-        this.root = URI.create("https://samebug.io/");
+        this.root = URI.create("http://localhost:9000/");
+//        this.root = URI.create("https://samebug.io/");
         this.gateway = root.resolve("sandbox/api/").resolve(API_VERSION + "/");
     }
 
@@ -107,6 +107,10 @@ public class SamebugClient {
         return requestJson(request, History.class);
     }
 
+    public void trace(TrackEvent event) throws SamebugClientException {
+        Request post = Request.Post("http://nightly.samebug.com/track/trace");
+        postJson(post, event.fields);
+    }
 
     // implementation
     private <T> T requestJson(Request request, Class<T> classOfT) throws RemoteError, UserUnauthorized, UnsuccessfulResponseStatus, SamebugTimeout, HttpError {
@@ -127,6 +131,13 @@ public class SamebugClient {
             } catch (IOException ignored) {
             }
         }
+    }
+
+    private void postJson(Request post, Object data) throws RemoteError, UserUnauthorized, UnsuccessfulResponseStatus, SamebugTimeout, HttpError {
+        String json = gson.toJson(data);
+        post.addHeader("Content-Type", "application/json");
+        post.body(new StringEntity(json, ContentType.APPLICATION_JSON));
+        execute(post);
     }
 
     /**
