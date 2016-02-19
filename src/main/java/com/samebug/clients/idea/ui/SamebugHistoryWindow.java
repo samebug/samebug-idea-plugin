@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,8 +24,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
-import com.samebug.clients.idea.messages.TrackingListener;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.History;
@@ -107,7 +107,7 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                     URL url = e.getURL();
                     BrowserUtil.browse(url);
-                    project.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC).trace(Events.linkClick(project, url));
+                    Tracking.projectTracking(project).trace(Events.linkClick(project, url));
                 }
             }
         });

@@ -21,7 +21,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.messages.StackTraceMatcherListener;
 import com.samebug.clients.idea.messages.StackTraceSearchListener;
-import com.samebug.clients.idea.messages.TrackingListener;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.SearchResults;
@@ -66,7 +65,7 @@ public class StackTraceSearch implements ApplicationComponent, StackTraceMatcher
                 try {
                     SearchResults result = client.searchSolutions(stackTrace);
                     listener.searchSucceeded(searchInfo, result);
-                    ApplicationManager.getApplication().getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC).trace(Events.searchSucceeded(searchInfo, result));
+                    Tracking.projectTracking(project).trace(Events.searchSucceeded(searchInfo, result));
                 } catch (SamebugTimeout ignored) {
                     listener.timeout(searchInfo);
                 } catch (UserUnauthorized ignored) {

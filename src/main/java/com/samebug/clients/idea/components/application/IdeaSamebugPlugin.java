@@ -20,7 +20,6 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.samebug.clients.idea.messages.TrackingListener;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.SettingsDialog;
@@ -48,7 +47,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         state.setApiKey(apiKey);
         state.setUserId(userInfo.userId);
         state.setUserDisplayName(userInfo.displayName);
-        ApplicationManager.getApplication().getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC).trace(Events.apiKeySet());
+        Tracking.appTracking().trace(Events.apiKeySet());
     }
 
     @Nullable

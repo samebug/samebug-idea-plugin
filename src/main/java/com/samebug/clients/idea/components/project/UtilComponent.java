@@ -20,7 +20,7 @@ import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Settings;
-import com.samebug.clients.idea.messages.TrackingListener;
+import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.notification.OperationalNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.tracking.Events;
@@ -43,22 +43,22 @@ public class UtilComponent extends AbstractProjectComponent {
     public void projectOpened() {
         super.projectOpened();
         Settings pluginState = IdeaSamebugPlugin.getInstance().getState();
-        if (pluginState != null && pluginState.isFirstRun() || true) {
+        if (pluginState != null && pluginState.isFirstRun()) {
             Notification n = new OperationalNotification(myProject,
                     SamebugBundle.message("samebug.notification.operational.welcome.title"),
                     SamebugBundle.message("samebug.notification.operational.welcome.message"));
             n.notify(myProject);
-            myProject.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC).trace(Events.pluginInstall());
+            Tracking.projectTracking(myProject).trace(Events.pluginInstall());
             pluginState.setFirstRun(false);
         }
 
 
-        myProject.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC).trace(Events.projectOpen(myProject));
+        Tracking.projectTracking(myProject).trace(Events.projectOpen(myProject));
     }
 
     @Override
     public void projectClosed() {
-        myProject.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC).trace(Events.projectClose(myProject));
+        Tracking.projectTracking(myProject).trace(Events.projectClose(myProject));
     }
 
 }

@@ -21,7 +21,7 @@ import com.intellij.execution.ui.RunContentWithExecutorListener;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.messages.TrackingListener;
+import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.processadapters.RunDebugAdapter;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
@@ -81,7 +81,7 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
         if (descriptor.getProcessHandler() == null) return null;
 
         DebugSessionInfo sessionInfo = new DebugSessionInfo("run/debug");
-        myProject.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC).trace(Events.debugStart(myProject, sessionInfo));
+        Tracking.projectTracking(myProject).trace(Events.debugStart(myProject, sessionInfo));
         RunDebugAdapter listener = new RunDebugAdapter(scannerFactory, sessionInfo);
         listeners.put(descriptorHashCode, listener);
         debugSessionIds.put(descriptorHashCode, sessionInfo);
@@ -91,7 +91,7 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
 
     synchronized void removeListener(RunContentDescriptor descriptor) {
         Integer descriptorHashCode = System.identityHashCode(descriptor);
-        myProject.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC).trace(Events.debugStop(myProject, debugSessionIds.get(descriptorHashCode)));
+        Tracking.projectTracking(myProject).trace(Events.debugStop(myProject, debugSessionIds.get(descriptorHashCode)));
         debugSessionIds.remove(descriptorHashCode);
         listeners.remove(descriptorHashCode);
     }

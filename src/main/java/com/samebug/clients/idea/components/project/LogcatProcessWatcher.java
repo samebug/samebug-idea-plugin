@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,7 +23,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.idea.messages.TrackingListener;
+import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.processadapters.LogcatAdapter;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.util.AndroidSdkUtil;
@@ -102,7 +102,7 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
         final LogcatAdapter receiver = new LogcatAdapter(scannerFactory.createScanner(sessionInfo));
         listeners.put(deviceHashCode, receiver);
         debugSessionInfos.put(deviceHashCode, sessionInfo);
-        myProject.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC).trace(Events.debugStart(myProject, sessionInfo));
+        Tracking.projectTracking(myProject).trace(Events.debugStart(myProject, sessionInfo));
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
@@ -135,7 +135,7 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
         LogcatAdapter receiver = listeners.get(deviceHashCode);
         if (receiver != null) {
             receiver.finish();
-            myProject.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC).trace(Events.debugStop(myProject, debugSessionInfos.get(deviceHashCode)));
+            Tracking.projectTracking(myProject).trace(Events.debugStop(myProject, debugSessionInfos.get(deviceHashCode)));
             debugSessionInfos.remove(deviceHashCode);
             listeners.remove(deviceHashCode);
         }

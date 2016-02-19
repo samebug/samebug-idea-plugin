@@ -3,6 +3,7 @@ package com.samebug.clients.idea.components.application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.messages.TrackingListener;
 import com.samebug.clients.search.api.SamebugClient;
@@ -26,6 +27,14 @@ public class Tracking implements ApplicationComponent, TrackingListener {
                 }
             }
         });
+    }
+
+    public static TrackingListener appTracking() {
+        return ApplicationManager.getApplication().getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC);
+    }
+
+    public static TrackingListener projectTracking(Project project) {
+        return project.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC);
     }
 
     @Override

@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,7 @@ import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationsConfiguration;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.samebug.clients.idea.messages.TrackingListener;
+import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.tracking.Events;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,11 +51,11 @@ public class SamebugNotifications {
                 String action = hyperlinkEvent.getDescription();
                 if (eventType == HyperlinkEvent.EventType.ACTIVATED && hyperlinkEvent.getURL() != null) {
                     BrowserUtil.browse(hyperlinkEvent.getURL());
-                    project.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC).trace(Events.linkClick(project, hyperlinkEvent.getURL()));
+                    Tracking.projectTracking(project).trace(Events.linkClick(project, hyperlinkEvent.getURL()));
                 } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && SHOW.equals(action)) {
                     ToolWindowManager.getInstance(project).getToolWindow("Samebug").show(null);
                     notification.expire();
-                    project.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC).trace(Events.toolWindowOpen(project, categoryForTracking));
+                    Tracking.projectTracking(project).trace(Events.toolWindowOpen(project, categoryForTracking));
                 }
             }
         };
