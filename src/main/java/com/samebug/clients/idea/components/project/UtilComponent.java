@@ -58,6 +58,7 @@ public class UtilComponent extends AbstractProjectComponent {
 
     @Override
     public void projectClosed() {
+        myProject.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC).trace(Events.projectClose(myProject));
     }
 
 }
