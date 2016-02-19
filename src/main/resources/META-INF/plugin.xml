@@ -54,6 +54,9 @@
         <component>
             <implementation-class>com.samebug.clients.idea.components.application.StackTraceSearch</implementation-class>
         </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.components.application.Tracking</implementation-class>
+        </component>
     </application-components>
     <project-components>
         <component>

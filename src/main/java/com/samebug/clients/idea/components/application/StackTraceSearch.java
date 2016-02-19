@@ -21,13 +21,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.messages.StackTraceMatcherListener;
 import com.samebug.clients.idea.messages.StackTraceSearchListener;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.search.api.SamebugClient;
+import com.samebug.clients.search.api.entities.SearchResults;
+import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
+import com.samebug.clients.search.api.entities.tracking.SearchInfo;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.search.api.exceptions.SamebugTimeout;
 import com.samebug.clients.search.api.exceptions.UserUnauthorized;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.UUID;
 
 public class StackTraceSearch implements ApplicationComponent, StackTraceMatcherListener {
     private MessageBusConnection messageBusConnection;
@@ -52,22 +54,24 @@ public class StackTraceSearch implements ApplicationComponent, StackTraceMatcher
 
     // StackTraceMatcherListener overrides
     @Override
-    public void stackTraceFound(final Project project, final String stackTrace) {
+    public void stackTraceFound(final Project project, final DebugSessionInfo sessionInfo, final String stackTrace) {
         final SamebugClient client = IdeaSamebugPlugin.getInstance().getClient();
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
                 StackTraceSearchListener listener = project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC);
-                String id = UUID.randomUUID().toString();
-                listener.searchStart(id, stackTrace);
+                SearchInfo searchInfo = new SearchInfo(sessionInfo);
+                listener.searchStart(searchInfo, stackTrace);
                 try {
-                    listener.searchSucceeded(id, client.searchSolutions(stackTrace));
+                    SearchResults result = client.searchSolutions(stackTrace);
+                    listener.searchSucceeded(searchInfo, result);
+                    Tracking.projectTracking(project).trace(Events.searchSucceeded(searchInfo, result));
                 } catch (SamebugTimeout ignored) {
-                    listener.timeout(id);
+                    listener.timeout(searchInfo);
                 } catch (UserUnauthorized ignored) {
-                    listener.unauthorized(id);
+                    listener.unauthorized(searchInfo);
                 } catch (SamebugClientException e) {
-                    listener.searchFailed(id, e);
+                    listener.searchFailed(searchInfo, e);
                 }
             }
         });

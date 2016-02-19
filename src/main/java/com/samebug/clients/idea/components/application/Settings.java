@@ -15,6 +15,8 @@
  */
 package com.samebug.clients.idea.components.application;
 
+import java.util.UUID;
+
 /**
  * Created by poroszd on 2/12/16.
  */
@@ -22,6 +24,7 @@ public class Settings {
     private Integer userId;
     private String userDisplayName;
     private String apiKey;
+    private String instanceId = UUID.randomUUID().toString();
     private boolean firstRun = true;
 
     public String getApiKey() {
@@ -58,5 +61,13 @@ public class Settings {
 
     public void setFirstRun(boolean firstRun) {
         this.firstRun = firstRun;
+    }
+
+    public String getInstanceId() {
+        return instanceId;
+    }
+
+    public void setInstanceId(String instanceId) {
+        this.instanceId = instanceId;
     }
 }

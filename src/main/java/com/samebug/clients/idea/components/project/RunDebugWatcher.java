@@ -21,7 +21,10 @@ import com.intellij.execution.ui.RunContentWithExecutorListener;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.processadapters.RunDebugAdapter;
+import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -77,17 +80,23 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
     private RunDebugAdapter createScanner(@NotNull RunContentDescriptor descriptor, Integer descriptorHashCode) {
         if (descriptor.getProcessHandler() == null) return null;
 
-        RunDebugAdapter listener = new RunDebugAdapter(scannerFactory);
+        DebugSessionInfo sessionInfo = new DebugSessionInfo("run/debug");
+        Tracking.projectTracking(myProject).trace(Events.debugStart(myProject, sessionInfo));
+        RunDebugAdapter listener = new RunDebugAdapter(scannerFactory, sessionInfo);
         listeners.put(descriptorHashCode, listener);
+        debugSessionIds.put(descriptorHashCode, sessionInfo);
         descriptor.getProcessHandler().addProcessListener(listener);
         return listener;
     }
 
     synchronized void removeListener(RunContentDescriptor descriptor) {
         Integer descriptorHashCode = System.identityHashCode(descriptor);
+        Tracking.projectTracking(myProject).trace(Events.debugStop(myProject, debugSessionIds.get(descriptorHashCode)));
+        debugSessionIds.remove(descriptorHashCode);
         listeners.remove(descriptorHashCode);
     }
 
     private final Map<Integer, RunDebugAdapter> listeners = new HashMap<Integer, RunDebugAdapter>();
+    private final Map<Integer, DebugSessionInfo> debugSessionIds = new HashMap<Integer, DebugSessionInfo>();
     private StackTraceMatcherFactory scannerFactory;
 }

@@ -21,6 +21,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.messages.StackTraceSearchListener;
 import com.samebug.clients.search.api.entities.SearchResults;
+import com.samebug.clients.search.api.entities.tracking.SearchInfo;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
 import javax.swing.*;
@@ -50,7 +51,7 @@ public class BatchStackTraceSearchNotifier extends AbstractProjectComponent impl
     }
 
     @Override
-    synchronized public void searchStart(String id, String stackTrace) {
+    synchronized public void searchStart(SearchInfo searchInfo, String stackTrace) {
         if (started++ == 0) {
             timer = new Timer(500, new ActionListener() {
                 @Override
@@ -64,25 +65,25 @@ public class BatchStackTraceSearchNotifier extends AbstractProjectComponent impl
     }
 
     @Override
-    synchronized public void searchSucceeded(String id, SearchResults results) {
+    synchronized public void searchSucceeded(SearchInfo searchInfo, SearchResults results) {
         searches.add(results);
         timer.restart();
     }
 
     @Override
-    synchronized public void timeout(String id) {
+    synchronized public void timeout(SearchInfo searchInfo) {
         failed++;
         timer.restart();
     }
 
     @Override
-    synchronized public void unauthorized(String id) {
+    synchronized public void unauthorized(SearchInfo searchInfo) {
         failed++;
         timer.restart();
     }
 
     @Override
-    synchronized public void searchFailed(String id, SamebugClientException error) {
+    synchronized public void searchFailed(SearchInfo searchInfo, SamebugClientException error) {
         failed++;
         timer.restart();
     }

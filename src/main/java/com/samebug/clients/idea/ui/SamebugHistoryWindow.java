@@ -24,7 +24,9 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.History;
 import com.samebug.clients.search.api.entities.SearchResults;
@@ -67,7 +69,8 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
                         final History history = plugin.getClient().getSearchHistory();
                         refreshHistoryPane(history);
                     } catch (SamebugClientException e1) {
-                        LOGGER.error("Failed to retrieve history", e1);
+                        // TODO set some status, or notify the user in some other way
+                        LOGGER.warn("Failed to retrieve history", e1);
                     }
                 }
             });
@@ -104,6 +107,7 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                     URL url = e.getURL();
                     BrowserUtil.browse(url);
+                    Tracking.projectTracking(project).trace(Events.linkClick(project, url));
                 }
             }
         });

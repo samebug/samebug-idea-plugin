@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api;
+package com.samebug.clients.idea.messages;
 
-import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
+import com.intellij.util.messages.Topic;
+import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 
-import javax.annotation.Nullable;
+/**
+ * Created by poroszd on 2/18/16.
+ */
+public interface TrackingListener {
+    Topic<TrackingListener> TRACK_TOPIC = Topic.create("tracking", TrackingListener.class, Topic.BroadcastDirection.TO_PARENT);
 
-public interface StackTraceListener {
-    void stacktraceFound(@Nullable DebugSessionInfo sessionInfo, String stacktrace);
+    void trace(TrackEvent event);
+
 }
