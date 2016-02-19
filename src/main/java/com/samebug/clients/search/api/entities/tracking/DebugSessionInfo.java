@@ -13,12 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api;
+package com.samebug.clients.search.api.entities.tracking;
 
-import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
+import java.util.UUID;
 
-import javax.annotation.Nullable;
+/**
+ * Created by poroszd on 2/19/16.
+ */
+public class DebugSessionInfo {
+    private final UUID id = UUID.randomUUID();
+    private final String sessionType;
 
-public interface StackTraceListener {
-    void stacktraceFound(@Nullable DebugSessionInfo sessionInfo, String stacktrace);
+    public DebugSessionInfo(String sessionType) {
+        this.sessionType = sessionType;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+    public String getSessionType() {
+        return sessionType;
+    }
 }

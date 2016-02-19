@@ -14,10 +14,8 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>Reduce the number of notifications during search</li>
-        <li>Integrated search history in the tool window</li>
-        <li>The tool window is active while the project is indexing</li>
-        <li>One-time welcome message to show the tool window</li>
+        <li>Show notification only for fresh type of exceptions</li>
+        <li>Refreshing css in history window</li>
       </ul>
     ]]>
     </change-notes>
@@ -54,6 +52,9 @@
         <component>
             <implementation-class>com.samebug.clients.idea.components.application.StackTraceSearch</implementation-class>
         </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.components.application.Tracking</implementation-class>
+        </component>
     </application-components>
     <project-components>
         <component>
@@ -69,7 +70,7 @@
             <implementation-class>com.samebug.clients.idea.components.project.BatchStackTraceSearchNotifier</implementation-class>
         </component>
         <component>
-            <implementation-class>com.samebug.clients.idea.components.project.UtilComponent</implementation-class>
+            <implementation-class>com.samebug.clients.idea.components.project.HelpComponent</implementation-class>
         </component>
     </project-components>
 </idea-plugin>

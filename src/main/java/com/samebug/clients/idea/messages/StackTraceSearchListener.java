@@ -17,6 +17,7 @@ package com.samebug.clients.idea.messages;
 
 import com.intellij.util.messages.Topic;
 import com.samebug.clients.search.api.entities.SearchResults;
+import com.samebug.clients.search.api.entities.tracking.SearchInfo;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
 /**
@@ -25,13 +26,13 @@ import com.samebug.clients.search.api.exceptions.SamebugClientException;
 public interface StackTraceSearchListener {
     Topic<StackTraceSearchListener> SEARCH_TOPIC = Topic.create("stacktrace search", StackTraceSearchListener.class);
 
-    void searchStart(String id, String stackTrace);
+    void searchStart(SearchInfo searchInfo, String stackTrace);
 
-    void searchSucceeded(String id, SearchResults results);
+    void searchSucceeded(SearchInfo searchInfo, SearchResults results);
 
-    void timeout(String id);
+    void timeout(SearchInfo searchInfo);
 
-    void unauthorized(String id);
+    void unauthorized(SearchInfo searchInfo);
 
-    void searchFailed(String id, SamebugClientException error);
+    void searchFailed(SearchInfo searchInfo, SamebugClientException error);
 }

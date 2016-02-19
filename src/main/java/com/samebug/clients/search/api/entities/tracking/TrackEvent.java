@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api;
+package com.samebug.clients.search.api.entities.tracking;
 
-import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
+import java.util.Map;
 
-import javax.annotation.Nullable;
+/**
+ * Created by poroszd on 2/18/16.
+ */
+public class TrackEvent {
+    public TrackEvent(Map<String, String> fields) {
+        this.fields = fields;
+    }
 
-public interface StackTraceListener {
-    void stacktraceFound(@Nullable DebugSessionInfo sessionInfo, String stacktrace);
+    public Map<String, String> fields;
 }

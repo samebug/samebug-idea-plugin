@@ -19,7 +19,7 @@ public class StackTraceMatcherTest {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
 
         StackTraceListener listener = Mockito.mock(StackTraceListener.class);
-        StackTraceMatcher matcher = new StackTraceMatcher(listener);
+        StackTraceMatcher matcher = new StackTraceMatcher(listener, null);
 
         try {
             String line;
@@ -28,19 +28,19 @@ public class StackTraceMatcherTest {
             }
             matcher.end();
 
-            Mockito.verify(listener).stacktraceFound(getTextResource("/stacktrace1.txt"));
+            Mockito.verify(listener).stacktraceFound(null, getTextResource("/stacktrace1.txt"));
 
-            Mockito.verify(listener).stacktraceFound(getTextResource("/stacktrace2.txt"));
+            Mockito.verify(listener).stacktraceFound(null, getTextResource("/stacktrace2.txt"));
 
-            Mockito.verify(listener).stacktraceFound(getTextResource("/stacktrace3.txt"));
+            Mockito.verify(listener).stacktraceFound(null, getTextResource("/stacktrace3.txt"));
 
-            Mockito.verify(listener).stacktraceFound(getTextResource("/stacktrace4.txt"));
+            Mockito.verify(listener).stacktraceFound(null, getTextResource("/stacktrace4.txt"));
 
-            Mockito.verify(listener).stacktraceFound(getTextResource("/stacktrace5.txt"));
+            Mockito.verify(listener).stacktraceFound(null, getTextResource("/stacktrace5.txt"));
 
-            Mockito.verify(listener).stacktraceFound(getTextResource("/stacktrace6.txt"));
+            Mockito.verify(listener).stacktraceFound(null, getTextResource("/stacktrace6.txt"));
 
-            Mockito.verify(listener).stacktraceFound(getTextResource("/stacktrace7.txt"));
+            Mockito.verify(listener).stacktraceFound(null, getTextResource("/stacktrace7.txt"));
         } finally {
             reader.close();
         }
@@ -90,7 +90,7 @@ public class StackTraceMatcherTest {
 
     private void checkLineType(LineType expectedLineType, String line) {
         StackTraceListener listener = Mockito.mock(StackTraceListener.class);
-        StackTraceMatcher matcher = new StackTraceMatcher(listener);
+        StackTraceMatcher matcher = new StackTraceMatcher(listener, null);
         Line match = matcher.recognize(line);
         assertEquals(expectedLineType, match.getType());
     }
