@@ -34,11 +34,13 @@ public class Tracking implements ApplicationComponent, TrackingListener {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
-                SamebugClient client = IdeaSamebugPlugin.getInstance().getClient();
                 try {
+                    SamebugClient client = IdeaSamebugPlugin.getInstance().getClient();
                     client.trace(event);
                 } catch (SamebugClientException e) {
                     LOGGER.debug("Failed to send a track event to server", e);
+                } catch (Exception e) {
+                    LOGGER.warn("Error while tracking", e);
                 }
             }
         });
