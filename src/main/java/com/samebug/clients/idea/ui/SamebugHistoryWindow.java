@@ -67,7 +67,8 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
                         final History history = plugin.getClient().getSearchHistory();
                         refreshHistoryPane(history);
                     } catch (SamebugClientException e1) {
-                        LOGGER.error("Failed to retrieve history", e1);
+                        // TODO set some status, or notify the user in some other way
+                        LOGGER.warn("Failed to retrieve history", e1);
                     }
                 }
             });
