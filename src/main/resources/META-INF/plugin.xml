@@ -14,10 +14,8 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>Reduce the number of notifications during search</li>
-        <li>Integrated search history in the tool window</li>
-        <li>The tool window is active while the project is indexing</li>
-        <li>One-time welcome message to show the tool window</li>
+        <li>Show notification only for fresh type of exceptions</li>
+        <li>Refreshing css in history window</li>
       </ul>
     ]]>
     </change-notes>
