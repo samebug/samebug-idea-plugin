@@ -34,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
 public class StackTraceSearch implements ApplicationComponent, StackTraceMatcherListener {
     private MessageBusConnection messageBusConnection;
 
-    // ApplicationComponent overrides1
+    // ApplicationComponent overrides
     @Override
     public void initComponent() {
         messageBusConnection = ApplicationManager.getApplication().getMessageBus().connect();
