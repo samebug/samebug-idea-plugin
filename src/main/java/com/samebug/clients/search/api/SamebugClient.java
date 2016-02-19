@@ -38,6 +38,7 @@ import java.util.List;
 public class SamebugClient {
     private final String apiKey;
     private final URI root;
+    private final URI trackingGateway;
     private final URI gateway;
     private static final String USER_AGENT = "Samebug-Idea-Client/1.0.0";
     private static final String API_VERSION = "1.0";
@@ -46,7 +47,9 @@ public class SamebugClient {
     public SamebugClient(final String apiKey) {
         this.apiKey = apiKey;
         this.root = URI.create("http://localhost:9000/");
+        this.trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
 //        this.root = URI.create("https://samebug.io/");
+//        this.trackingGateway = URI.create("https://samebug.io/").resolve("track/trace/");
         this.gateway = root.resolve("sandbox/api/").resolve(API_VERSION + "/");
     }
 
@@ -108,14 +111,14 @@ public class SamebugClient {
     }
 
     public void trace(TrackEvent event) throws SamebugClientException {
-        Request post = Request.Post("http://nightly.samebug.com/track/trace");
+        Request post = Request.Post(trackingGateway);
         postJson(post, event.fields);
     }
 
     // implementation
     private <T> T requestJson(Request request, Class<T> classOfT) throws RemoteError, UserUnauthorized, UnsuccessfulResponseStatus, SamebugTimeout, HttpError {
         final HttpResponse httpResponse;
-        httpResponse = execute(request.setHeader("Accept", "application/json"));
+        httpResponse = executePatient(request.setHeader("Accept", "application/json"));
 
         Reader reader;
         try {
@@ -137,22 +140,35 @@ public class SamebugClient {
         String json = gson.toJson(data);
         post.addHeader("Content-Type", "application/json");
         post.body(new StringEntity(json, ContentType.APPLICATION_JSON));
-        execute(post);
+        executeFailFast(post);
     }
+
+
+    private HttpResponse executeFailFast(Request request) throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthorized, HttpError {
+        return execute(request, 3000, 3000);
+    }
+
+    private HttpResponse executePatient(Request request) throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthorized, HttpError {
+        return execute(request, 10000, 30000);
+    }
+
+
 
     /**
      * @param request the http request
+     * @param connectTimeoutMillis max milliseconds to wait to connect before failure
+     * @param socketTimeoutMillis max milliseconds to wait during I/O between packets before failure
      * @return the http response
-     * @throws SamebugTimeout             if the server exceeded the timeout during connection or execure
+     * @throws SamebugTimeout             if the server exceeded the timeout during connection or execute
      * @throws HttpError                  in case of a problem or the connection was aborted or   if the response is not readable
      * @throws UnsuccessfulResponseStatus if the response status is not 200
      * @throws RemoteError                if the server returned error in the X-Samebug-Errors header
      * @throws UserUnauthorized           if the user was not authorized
      */
-    private HttpResponse execute(Request request) throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthorized, HttpError {
+    private HttpResponse execute(Request request, int connectTimeoutMillis, int socketTimeoutMillis) throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthorized, HttpError {
         addDefaultHeaders(request);
-        request.connectTimeout(3000);
-        request.socketTimeout(5000);
+        request.connectTimeout(connectTimeoutMillis);
+        request.socketTimeout(socketTimeoutMillis);
 
         Response response;
         try {
