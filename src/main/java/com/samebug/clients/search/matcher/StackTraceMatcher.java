@@ -19,6 +19,8 @@ import com.samebug.clients.search.api.LogScanner;
 import com.samebug.clients.search.api.StackTraceListener;
 import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
 
+import javax.annotation.Nullable;
+
 /**
  * Scans the log for stacktrace.
  *
@@ -27,7 +29,7 @@ import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
 public class StackTraceMatcher extends MatcherStateMachine implements LogScanner {
     private final StackTraceListener listener;
 
-    public StackTraceMatcher(StackTraceListener listener, DebugSessionInfo sessionInfo) {
+    public StackTraceMatcher(StackTraceListener listener, @Nullable DebugSessionInfo sessionInfo) {
         super(sessionInfo);
         this.listener = listener;
     }
