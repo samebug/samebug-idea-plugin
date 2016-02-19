@@ -26,6 +26,7 @@ import com.samebug.clients.search.api.entities.SearchResults;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.util.List;
 
 class SearchResultNotifier extends AbstractProjectComponent implements BatchStackTraceSearchListener {
@@ -51,12 +52,20 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
     }
 
     @Override
-    public void batchFinished(List<SearchResults> results, int failed) {
-        showNotification(results);
+    public void batchFinished(final List<SearchResults> results, int failed) {
+        Long timelimitForFreshSearch = new Date().getTime() - (1 * 60 * 1000);
+        int nInterestingResults = 0;
+        for (SearchResults result : results) {
+            if (result.firstSeenTime == null || result.firstSeenTime > timelimitForFreshSearch) ++nInterestingResults;
+        }
+
+        if (nInterestingResults > 0) {
+            showNotification(nInterestingResults, failed);
+        }
     }
 
-    private void showNotification(final List<SearchResults> results) {
-        final SearchResultsNotification notification = new SearchResultsNotification(myProject, results.size());
+    private void showNotification(int nInterestingResults, int failed) {
+        final SearchResultsNotification notification = new SearchResultsNotification(myProject, nInterestingResults);
 
         final Timer timer = new Timer(NOTIFICATION_EXPIRATION_DELAY, new ActionListener() {
             @Override
