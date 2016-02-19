@@ -79,4 +79,19 @@ public class SamebugNotifications {
         };
     }
 
+    public static HyperlinkListener basicHyperlinkListener(final Project project) {
+        return new HyperlinkListener() {
+            @Override
+            public void hyperlinkUpdate(HyperlinkEvent hyperlinkEvent) {
+                HyperlinkEvent.EventType eventType = hyperlinkEvent.getEventType();
+                String action = hyperlinkEvent.getDescription();
+                if (eventType == HyperlinkEvent.EventType.ACTIVATED && hyperlinkEvent.getURL() != null) {
+                    BrowserUtil.browse(hyperlinkEvent.getURL());
+                } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && SHOW.equals(action)) {
+                    ToolWindowManager.getInstance(project).getToolWindow("Samebug").show(null);
+                }
+            }
+        };
+    }
+
 }
