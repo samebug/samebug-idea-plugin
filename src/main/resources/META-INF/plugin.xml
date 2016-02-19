@@ -72,7 +72,7 @@
             <implementation-class>com.samebug.clients.idea.components.project.BatchStackTraceSearchNotifier</implementation-class>
         </component>
         <component>
-            <implementation-class>com.samebug.clients.idea.components.project.UtilComponent</implementation-class>
+            <implementation-class>com.samebug.clients.idea.components.project.HelpComponent</implementation-class>
         </component>
     </project-components>
 </idea-plugin>

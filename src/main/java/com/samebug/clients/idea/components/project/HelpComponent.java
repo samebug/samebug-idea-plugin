@@ -42,8 +42,8 @@ import java.awt.event.ActionListener;
  * <p/>
  * Renaming this class or moving this functionality is welcomed.
  */
-public class UtilComponent extends AbstractProjectComponent {
-    protected UtilComponent(Project project) {
+public class HelpComponent extends AbstractProjectComponent {
+    protected HelpComponent(Project project) {
         super(project);
     }
 
@@ -62,7 +62,7 @@ public class UtilComponent extends AbstractProjectComponent {
                             try {
                                 ToolWindowManager.getInstance(myProject).notifyByBalloon(
                                         "Samebug",
-                                        MessageType.INFO, SamebugBundle.message("samebug.notification.operational.welcome.message"),
+                                        MessageType.INFO, SamebugBundle.message("samebug.notification.help.welcome.message"),
                                         SamebugIcons.notification,
                                         SamebugNotifications.basicHyperlinkListener(myProject, "help"));
                                 Tracking.projectTracking(myProject).trace(Events.pluginInstall());
@@ -90,5 +90,5 @@ public class UtilComponent extends AbstractProjectComponent {
         Tracking.projectTracking(myProject).trace(Events.projectClose(myProject));
     }
 
-    private final static Logger LOGGER = Logger.getInstance(UtilComponent.class);
+    private final static Logger LOGGER = Logger.getInstance(HelpComponent.class);
 }

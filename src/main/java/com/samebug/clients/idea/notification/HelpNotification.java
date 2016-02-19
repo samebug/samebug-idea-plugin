@@ -26,9 +26,9 @@ import javax.swing.*;
 /**
  * Created by poroszd on 2/15/16.
  */
-public class OperationalNotification extends Notification {
-    public OperationalNotification(final Project project, String title, String content) {
-        super(SamebugNotifications.SAMEBUG_OPERATIONAL_NOTIFICATIONS,
+public class HelpNotification extends Notification {
+    public HelpNotification(final Project project, String title, String content) {
+        super(SamebugNotifications.SAMEBUG_HELP_NOTIFICATIONS,
                 title,
                 content,
                 NotificationType.INFORMATION,
