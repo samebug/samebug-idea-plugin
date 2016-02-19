@@ -23,8 +23,11 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.samebug.clients.idea.messages.TrackingListener;
 import com.samebug.clients.idea.processadapters.LogcatAdapter;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.util.AndroidSdkUtil;
+import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -95,8 +98,11 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
     }
 
     private LogcatAdapter createReceiver(@NotNull final IDevice device, Integer deviceHashCode) {
-        final LogcatAdapter receiver = new LogcatAdapter(scannerFactory.createScanner());
+        DebugSessionInfo sessionInfo = new DebugSessionInfo("logcat");
+        final LogcatAdapter receiver = new LogcatAdapter(scannerFactory.createScanner(sessionInfo));
         listeners.put(deviceHashCode, receiver);
+        debugSessionInfos.put(deviceHashCode, sessionInfo);
+        myProject.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC).trace(Events.debugStart(myProject, sessionInfo));
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
@@ -129,11 +135,14 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
         LogcatAdapter receiver = listeners.get(deviceHashCode);
         if (receiver != null) {
             receiver.finish();
+            myProject.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC).trace(Events.debugStop(myProject, debugSessionInfos.get(deviceHashCode)));
+            debugSessionInfos.remove(deviceHashCode);
             listeners.remove(deviceHashCode);
         }
     }
 
     private StackTraceMatcherFactory scannerFactory;
     private final Map<Integer, LogcatAdapter> listeners = new HashMap<Integer, LogcatAdapter>();
+    private final Map<Integer, DebugSessionInfo> debugSessionInfos = new HashMap<Integer, DebugSessionInfo>();
     private final static Logger LOGGER = Logger.getInstance(LogcatProcessWatcher.class);
 }

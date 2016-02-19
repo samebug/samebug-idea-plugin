@@ -15,6 +15,8 @@
  */
 package com.samebug.clients.search.api;
 
+import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
+
 public interface StackTraceListener {
-    void stacktraceFound(String stacktrace);
+    void stacktraceFound(DebugSessionInfo sessionInfo, String stacktrace);
 }

@@ -17,6 +17,7 @@ package com.samebug.clients.search.matcher;
 
 import com.samebug.clients.search.api.LogScanner;
 import com.samebug.clients.search.api.StackTraceListener;
+import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
 
 /**
  * Scans the log for stacktrace.
@@ -26,8 +27,8 @@ import com.samebug.clients.search.api.StackTraceListener;
 public class StackTraceMatcher extends MatcherStateMachine implements LogScanner {
     private final StackTraceListener listener;
 
-    public StackTraceMatcher(StackTraceListener listener) {
-        super();
+    public StackTraceMatcher(StackTraceListener listener, DebugSessionInfo sessionInfo) {
+        super(sessionInfo);
         this.listener = listener;
     }
 
@@ -51,7 +52,7 @@ public class StackTraceMatcher extends MatcherStateMachine implements LogScanner
 
     @Override
     protected void stackTraceFound() {
-        listener.stacktraceFound(getStackTrace());
+        listener.stacktraceFound(sessionInfo, getStackTrace());
     }
 
     @Override

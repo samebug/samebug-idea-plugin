@@ -4,9 +4,14 @@ package com.samebug.clients.idea.tracking;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.search.api.entities.TrackEvent;
+import com.samebug.clients.search.api.entities.SearchResults;
+import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
+import com.samebug.clients.search.api.entities.tracking.SearchInfo;
+import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +34,9 @@ public class Events {
     public static TrackEvent projectOpen(Project project) {
         Map<String, String> fields = new HashMap<String, String>();
         fields.put("type", "project-open");
+        String lookAndFeelName = null;
+        if (UIManager.getLookAndFeel() != null) lookAndFeelName = UIManager.getLookAndFeel().getName();
+        fields.put("lookAndFeel", lookAndFeelName);
         return createEvent(fields, project);
     }
 
@@ -38,16 +46,29 @@ public class Events {
         return createEvent(fields, project);
     }
 
-    public static TrackEvent debugStart(Project project) {
+    public static TrackEvent debugStart(Project project, DebugSessionInfo debugSessionInfo) {
         Map<String, String> fields = new HashMap<String, String>();
         fields.put("type", "debug-start");
+        fields.put("sessionInfo", debugSessionInfo.getId().toString());
+        fields.put("debugSessionType", debugSessionInfo.getSessionType());
         return createEvent(fields, project);
     }
 
-    public static TrackEvent debugStop(Project project) {
+    public static TrackEvent debugStop(Project project, DebugSessionInfo debugSessionInfo) {
         Map<String, String> fields = new HashMap<String, String>();
         fields.put("type", "debug-stop");
+        fields.put("sessionInfo", debugSessionInfo.getId().toString());
+        fields.put("debugSessionType", debugSessionInfo.getSessionType());
         return createEvent(fields, project);
+    }
+
+    public static TrackEvent searchSucceeded(SearchInfo searchInfo, SearchResults searchResults) {
+        Map<String, String> fields = new HashMap<String, String>();
+        fields.put("type", "search-succeeded");
+        fields.put("searchId", searchResults.searchId);
+        fields.put("sessionInfo", searchInfo.getSessionInfo().getId().toString());
+        fields.put("debugSessionType", searchInfo.getSessionInfo().getSessionType());
+        return createEvent(fields, null);
     }
 
     public static TrackEvent toolWindowOpen(Project project, String from) {
@@ -57,10 +78,12 @@ public class Events {
         return createEvent(fields, project);
     }
 
-    public static TrackEvent searchResultClick(Project project, String searchId) {
+    public static TrackEvent linkClick(Project project, URL url) {
         Map<String, String> fields = new HashMap<String, String>();
-        fields.put("type", "searchResult-click");
-        fields.put("searchId", searchId);
+        fields.put("type", "link-click");
+        String link = null;
+        if (url != null) link = url.toString();
+        fields.put("link", link);
         return createEvent(fields, project);
     }
 

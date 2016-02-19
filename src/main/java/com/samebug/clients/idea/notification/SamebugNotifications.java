@@ -22,6 +22,8 @@ import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationsConfiguration;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.samebug.clients.idea.messages.TrackingListener;
+import com.samebug.clients.idea.tracking.Events;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.HyperlinkEvent;
@@ -41,7 +43,7 @@ public class SamebugNotifications {
 
     public final static String SHOW = "#showToolWindow";
 
-    public static NotificationListener basicLinkHandler(final Project project) {
+    public static NotificationListener basicLinkHandler(final Project project, final String categoryForTracking) {
         return new NotificationListener() {
             @Override
             public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent hyperlinkEvent) {
@@ -49,9 +51,11 @@ public class SamebugNotifications {
                 String action = hyperlinkEvent.getDescription();
                 if (eventType == HyperlinkEvent.EventType.ACTIVATED && hyperlinkEvent.getURL() != null) {
                     BrowserUtil.browse(hyperlinkEvent.getURL());
+                    project.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC).trace(Events.linkClick(project, hyperlinkEvent.getURL()));
                 } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && SHOW.equals(action)) {
                     ToolWindowManager.getInstance(project).getToolWindow("Samebug").show(null);
                     notification.expire();
+                    project.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC).trace(Events.toolWindowOpen(project, categoryForTracking));
                 }
             }
         };

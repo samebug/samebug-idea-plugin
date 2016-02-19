@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.search.matcher;
 
+import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
@@ -25,8 +26,8 @@ abstract class MatcherStateMachine {
 
     protected abstract void matchingFailed();
 
-    MatcherStateMachine() {
-        this(new ArrayList<Line>());
+    MatcherStateMachine(DebugSessionInfo sessionInfo) {
+        this(new ArrayList<Line>(), sessionInfo);
     }
 
     MatcherStateMachine step(String line) {
@@ -68,9 +69,10 @@ abstract class MatcherStateMachine {
         }
     }
 
-    private MatcherStateMachine(ArrayList<Line> lines) {
+    private MatcherStateMachine(ArrayList<Line> lines, DebugSessionInfo sessionInfo) {
         this.state = State.WaitingForExceptionStart;
         this.lines = lines;
+        this.sessionInfo = sessionInfo;
     }
 
     private MatcherStateMachine transition(@NotNull State nextState, @NotNull Line line) {
@@ -110,5 +112,6 @@ abstract class MatcherStateMachine {
 
     private State state;
     private final ArrayList<Line> lines;
+    protected final DebugSessionInfo sessionInfo;
     private int nonChangingSteps = 0;
 }

@@ -1,7 +1,7 @@
 package com.samebug.clients.idea.messages;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.search.api.entities.TrackEvent;
+import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 
 /**
  * Created by poroszd on 2/18/16.

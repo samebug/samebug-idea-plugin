@@ -20,6 +20,7 @@ import com.samebug.clients.idea.messages.StackTraceMatcherListener;
 import com.samebug.clients.search.api.LogScanner;
 import com.samebug.clients.search.api.LogScannerFactory;
 import com.samebug.clients.search.api.StackTraceListener;
+import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
 import com.samebug.clients.search.matcher.StackTraceMatcher;
 
 public class StackTraceMatcherFactory implements LogScannerFactory {
@@ -30,8 +31,8 @@ public class StackTraceMatcherFactory implements LogScannerFactory {
     }
 
     @Override
-    public LogScanner createScanner() {
-        return new StackTraceMatcher(listener);
+    public LogScanner createScanner(DebugSessionInfo sessionInfo) {
+        return new StackTraceMatcher(listener, sessionInfo);
     }
 
 
@@ -43,8 +44,8 @@ public class StackTraceMatcherFactory implements LogScannerFactory {
         }
 
         @Override
-        public void stacktraceFound(String stacktrace) {
-            project.getMessageBus().syncPublisher(StackTraceMatcherListener.FOUND_TOPIC).stackTraceFound(project, stacktrace);
+        public void stacktraceFound(DebugSessionInfo sessionInfo, String stacktrace) {
+            project.getMessageBus().syncPublisher(StackTraceMatcherListener.FOUND_TOPIC).stackTraceFound(project, sessionInfo, stacktrace);
         }
     }
 

@@ -18,7 +18,7 @@ package com.samebug.clients.search.api;
 import com.google.gson.Gson;
 import com.samebug.clients.search.api.entities.History;
 import com.samebug.clients.search.api.entities.SearchResults;
-import com.samebug.clients.search.api.entities.TrackEvent;
+import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.entities.UserInfo;
 import com.samebug.clients.search.api.exceptions.*;
 import org.apache.http.*;
