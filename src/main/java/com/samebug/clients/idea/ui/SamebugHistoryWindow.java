@@ -67,6 +67,7 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
                 public void run() {
                     try {
                         final History history = plugin.getClient().getSearchHistory();
+                        setCssTheme(UIManager.getLookAndFeel().getName());
                         refreshHistoryPane(history);
                     } catch (SamebugClientException e1) {
                         // TODO set some status, or notify the user in some other way
@@ -111,7 +112,6 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
                 }
             }
         });
-        setCssTheme(UIManager.getLookAndFeel().getName());
         loadHistory();
     }
 
