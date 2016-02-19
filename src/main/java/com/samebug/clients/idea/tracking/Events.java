@@ -16,7 +16,9 @@
 package com.samebug.clients.idea.tracking;
 
 
+import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.search.api.entities.SearchResults;
@@ -120,6 +122,12 @@ public class Events {
             if (instanceId != null) fields.put("instanceId", instanceId);
         } catch (Throwable e) {
             LOGGER.debug("failed to write instanceId to tracking event", e);
+        }
+        try {
+            String pluginVersion = PluginManager.getPlugin(PluginId.getId("Samebug")).getVersion();
+            if (pluginVersion != null) fields.put("pluginVersion", pluginVersion);
+        } catch (Throwable e) {
+            LOGGER.debug("failed to write pluginVersion to tracking event", e);
         }
         if (project != null) {
             fields.put("projectName", project.getName());
