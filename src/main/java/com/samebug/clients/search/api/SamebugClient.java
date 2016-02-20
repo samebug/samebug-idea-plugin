@@ -52,7 +52,7 @@ public class SamebugClient {
 //        this.root = URI.create("http://localhost:9000/");
 //        this.trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
         this.root = URI.create("https://samebug.io/");
-        this.trackingGateway = URI.create("https://samebug.io/").resolve("track/trace/");
+        this.trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
         this.gateway = root.resolve("sandbox/api/").resolve(API_VERSION + "/");
     }
 
