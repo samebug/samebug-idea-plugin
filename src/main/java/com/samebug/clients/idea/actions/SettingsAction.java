@@ -19,6 +19,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
+import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.SettingsDialog;
 
@@ -38,13 +39,13 @@ public class SettingsAction extends AnAction implements ConnectionStatusListener
         if (nRequests > 0) {
             e.getPresentation().setIcon(SamebugIcons.statusWorking);
         } else if (connected && authorized) {
-            e.getPresentation().setText("You are connected with a valid api key");
+            e.getPresentation().setText(SamebugBundle.message("samebug.toolwindow.toolbar.actions.status.ok"));
             e.getPresentation().setIcon(SamebugIcons.statusOk);
         } else if (!connected) {
-            e.getPresentation().setText("Cannot connect to samebug.io");
+            e.getPresentation().setText(SamebugBundle.message("samebug.toolwindow.toolbar.actions.status.not-connected"));
             e.getPresentation().setIcon(SamebugIcons.statusNotConnected);
         } else {
-            e.getPresentation().setText("It seems your api key is not valid");
+            e.getPresentation().setText(SamebugBundle.message("samebug.toolwindow.toolbar.actions.status.invalid-apikey"));
             e.getPresentation().setIcon(SamebugIcons.statusInvalidApiKey);
         }
     }
