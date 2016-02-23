@@ -42,10 +42,10 @@ public class SettingsAction extends AnAction implements ConnectionStatusListener
             e.getPresentation().setText(SamebugBundle.message("samebug.toolwindow.toolbar.actions.status.ok"));
             e.getPresentation().setIcon(SamebugIcons.statusOk);
         } else if (!connected) {
-            e.getPresentation().setText(SamebugBundle.message("samebug.toolwindow.toolbar.actions.status.not-connected"));
+            e.getPresentation().setText(SamebugBundle.message("samebug.toolwindow.toolbar.actions.status.notConnected"));
             e.getPresentation().setIcon(SamebugIcons.statusNotConnected);
         } else {
-            e.getPresentation().setText(SamebugBundle.message("samebug.toolwindow.toolbar.actions.status.invalid-apikey"));
+            e.getPresentation().setText(SamebugBundle.message("samebug.toolwindow.toolbar.actions.status.invalidApiKey"));
             e.getPresentation().setIcon(SamebugIcons.statusInvalidApiKey);
         }
     }
