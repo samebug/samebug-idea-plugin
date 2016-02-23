@@ -16,6 +16,7 @@
       <ul>
         <li>Show notification only for fresh type of exceptions</li>
         <li>Refreshing css in history window</li>
+        <li>Toolbar shows connection status</li>
       </ul>
     ]]>
     </change-notes>
