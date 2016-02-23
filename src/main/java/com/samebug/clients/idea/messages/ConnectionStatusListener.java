@@ -8,6 +8,7 @@ import com.intellij.util.messages.Topic;
 public interface ConnectionStatusListener {
     Topic<ConnectionStatusListener> CONNECTION_STATUS_TOPIC = Topic.create("connection status change", ConnectionStatusListener.class);
 
-    void connectionStatusChange(boolean isConnected);
-    void apiKeyChange(String apiKey, boolean isValid);
+    void startRequest();
+    void finishRequest(boolean isConnected);
+    void authorizationChange(boolean isAuthorized);
 }

@@ -22,11 +22,10 @@ import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.SettingsDialog;
 
-import javax.swing.*;
-
 public class SettingsAction extends AnAction implements ConnectionStatusListener {
-    private boolean connected;
-    private boolean validApiKey;
+    private boolean connected = true;
+    private boolean authorized = true;
+    private int nRequests = 0;
 
     @Override
     public void actionPerformed(AnActionEvent e) {
@@ -36,7 +35,9 @@ public class SettingsAction extends AnAction implements ConnectionStatusListener
 
     @Override
     public void update(AnActionEvent e) {
-        if (connected && validApiKey) {
+        if (nRequests > 0) {
+          e.getPresentation().setIcon(SamebugIcons.statusWorking);
+        } else if (connected && authorized) {
             e.getPresentation().setText("You are connected with a valid api key");
             e.getPresentation().setIcon(SamebugIcons.statusOk);
         }
@@ -51,12 +52,18 @@ public class SettingsAction extends AnAction implements ConnectionStatusListener
     }
 
     @Override
-    public void connectionStatusChange(boolean isConnected) {
-        connected = isConnected;
+    public synchronized void startRequest() {
+        ++nRequests;
     }
 
     @Override
-    public void apiKeyChange(String apiKey, boolean isValid) {
-        validApiKey = isValid;
+    public synchronized void finishRequest(boolean isConnected) {
+        --nRequests;
+        this.connected = isConnected;
+    }
+
+    @Override
+    public synchronized void authorizationChange(boolean isAuthorized) {
+        this.authorized = isAuthorized;
     }
 }

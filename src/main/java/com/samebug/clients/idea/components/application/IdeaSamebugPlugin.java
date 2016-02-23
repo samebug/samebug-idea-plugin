@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,10 +20,11 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import com.intellij.util.messages.MessageBus;
+import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.SettingsDialog;
-import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.UserInfo;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.search.api.exceptions.UnknownApiKey;
@@ -39,6 +40,7 @@ import org.jetbrains.annotations.Nullable;
 )
 final public class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<Settings> {
     private IdeaClientService client = new IdeaClientService(null);
+    private final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
 
     // TODO Unlike other methods, this one executes the http request on the caller thread. Is it ok?
     public void setApiKey(@NotNull String apiKey) throws SamebugClientException, UnknownApiKey {
@@ -47,6 +49,12 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
             client = new IdeaClientService(apiKey);
             state.setApiKey(apiKey);
             userInfo = client.getUserInfo(apiKey);
+            if (!userInfo.isUserExist) {
+                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authorizationChange(false);
+                throw new UnknownApiKey(apiKey);
+            } else {
+                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authorizationChange(true);
+            }
         } finally {
             state.setUserId(userInfo == null ? null : userInfo.userId);
             state.setUserDisplayName(userInfo == null ? null : userInfo.displayName);

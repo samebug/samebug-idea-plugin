@@ -29,4 +29,5 @@ public class SamebugIcons {
     public final static Icon statusOk = IconLoader.getIcon("/icons/samebug/status-ok-16x16.png");
     public final static Icon statusNotConnected = IconLoader.getIcon("/icons/samebug/status-not-connected-16x16.png");
     public final static Icon statusInvalidApiKey = IconLoader.getIcon("/icons/samebug/status-invalid-apikey-16x16.png");
+    public final static Icon statusWorking = IconLoader.getIcon("/icons/samebug/status-working-16x16.png");
 }
