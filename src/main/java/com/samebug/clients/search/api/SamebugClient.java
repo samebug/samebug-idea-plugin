@@ -44,8 +44,8 @@ public class SamebugClient {
     private static final String API_VERSION = "1.0";
 //    private final static URI root =  URI.create("http://localhost:9000/");
     private final static URI root = URI.create("https://samebug.io/");
-    private final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
-//    private final static URI trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
+//    private final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
+    private final static URI trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
     private final static URI gateway = root.resolve("sandbox/api/").resolve(API_VERSION + "/");
     private static final Gson gson = new Gson();
 
