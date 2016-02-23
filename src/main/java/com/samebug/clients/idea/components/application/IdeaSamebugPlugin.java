@@ -38,13 +38,13 @@ import org.jetbrains.annotations.Nullable;
         }
 )
 final public class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<Settings> {
-    private SamebugClient client = new SamebugClient(null);
+    private IdeaClientService client = new IdeaClientService(null);
 
     // TODO Unlike other methods, this one executes the http request on the caller thread. Is it ok?
     public void setApiKey(@NotNull String apiKey) throws SamebugClientException, UnknownApiKey {
         UserInfo userInfo = null;
         try {
-            client = new SamebugClient(apiKey);
+            client = new IdeaClientService(apiKey);
             state.setApiKey(apiKey);
             userInfo = client.getUserInfo(apiKey);
         } finally {
@@ -70,7 +70,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     }
 
     @NotNull
-    public SamebugClient getClient() {
+    public IdeaClientService getClient() {
         return client;
     }
 
@@ -111,7 +111,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     @Override
     public void loadState(Settings state) {
         this.state = state;
-        client = new SamebugClient(state.getApiKey());
+        client = new IdeaClientService(state.getApiKey());
     }
 
     private Settings state = new Settings();

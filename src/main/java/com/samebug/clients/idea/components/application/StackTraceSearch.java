@@ -22,7 +22,6 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.messages.StackTraceMatcherListener;
 import com.samebug.clients.idea.messages.StackTraceSearchListener;
 import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
 import com.samebug.clients.search.api.entities.tracking.SearchInfo;
@@ -55,7 +54,7 @@ public class StackTraceSearch implements ApplicationComponent, StackTraceMatcher
     // StackTraceMatcherListener overrides
     @Override
     public void stackTraceFound(final Project project, final DebugSessionInfo sessionInfo, final String stackTrace) {
-        final SamebugClient client = IdeaSamebugPlugin.getInstance().getClient();
+        final IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {

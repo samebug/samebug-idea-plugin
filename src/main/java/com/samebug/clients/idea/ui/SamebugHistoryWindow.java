@@ -124,7 +124,6 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
     public void setCssTheme(String themeName) {
         HTMLEditorKit kit = (HTMLEditorKit) historyPane.getEditorKit();
         StyleSheet ss = kit.getStyleSheet();
-        final SamebugClient client = IdeaSamebugPlugin.getInstance().getClient();
         String themeId;
         if (themeName.equals("IntelliJ")) {
             themeId = "intellij";
@@ -133,7 +132,7 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
         } else {
             themeId = "intellij";
         }
-        ss.importStyleSheet(client.getHistoryCssUrl(themeId));
+        ss.importStyleSheet(SamebugClient.getHistoryCssUrl(themeId));
         kit.setStyleSheet(ss);
     }
 
