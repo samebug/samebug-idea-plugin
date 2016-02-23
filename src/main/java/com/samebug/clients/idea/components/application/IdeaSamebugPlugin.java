@@ -20,10 +20,11 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import com.intellij.util.messages.MessageBus;
+import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.SettingsDialog;
-import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.UserInfo;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.search.api.exceptions.UnknownApiKey;
@@ -38,16 +39,27 @@ import org.jetbrains.annotations.Nullable;
         }
 )
 final public class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<Settings> {
-    private SamebugClient client = new SamebugClient(null);
+    private IdeaClientService client = new IdeaClientService(null);
+    private final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
 
     // TODO Unlike other methods, this one executes the http request on the caller thread. Is it ok?
     public void setApiKey(@NotNull String apiKey) throws SamebugClientException, UnknownApiKey {
-        UserInfo userInfo = client.getUserInfo(apiKey);
-        client = new SamebugClient(apiKey);
-        state.setApiKey(apiKey);
-        state.setUserId(userInfo.userId);
-        state.setUserDisplayName(userInfo.displayName);
-        Tracking.appTracking().trace(Events.apiKeySet());
+        UserInfo userInfo = null;
+        try {
+            client = new IdeaClientService(apiKey);
+            state.setApiKey(apiKey);
+            userInfo = client.getUserInfo(apiKey);
+            if (!userInfo.isUserExist) {
+                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authorizationChange(false);
+                throw new UnknownApiKey(apiKey);
+            } else {
+                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authorizationChange(true);
+            }
+        } finally {
+            state.setUserId(userInfo == null ? null : userInfo.userId);
+            state.setUserDisplayName(userInfo == null ? null : userInfo.displayName);
+            Tracking.appTracking().trace(Events.apiKeySet());
+        }
     }
 
     @Nullable
@@ -66,7 +78,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     }
 
     @NotNull
-    public SamebugClient getClient() {
+    public IdeaClientService getClient() {
         return client;
     }
 
@@ -107,7 +119,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     @Override
     public void loadState(Settings state) {
         this.state = state;
-        client = new SamebugClient(state.getApiKey());
+        client = new IdeaClientService(state.getApiKey());
     }
 
     private Settings state = new Settings();

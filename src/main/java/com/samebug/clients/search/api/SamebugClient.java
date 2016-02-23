@@ -40,20 +40,44 @@ import java.util.List;
 
 public class SamebugClient {
     private final String apiKey;
-    private final URI root;
-    private final URI trackingGateway;
-    private final URI gateway;
     private static final String USER_AGENT = "Samebug-Idea-Client/1.0.0";
     private static final String API_VERSION = "1.0";
+//    private final static URI root =  URI.create("http://localhost:9000/");
+    private final static URI root = URI.create("https://samebug.io/");
+//    private final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
+    private final static URI trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
+    private final static URI gateway = root.resolve("sandbox/api/").resolve(API_VERSION + "/");
     private static final Gson gson = new Gson();
 
     public SamebugClient(final String apiKey) {
         this.apiKey = apiKey;
-//        this.root = URI.create("http://localhost:9000/");
-//        this.trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
-        this.root = URI.create("https://samebug.io/");
-        this.trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
-        this.gateway = root.resolve("sandbox/api/").resolve(API_VERSION + "/");
+    }
+
+    public static URL getSearchUrl(int searchId) {
+        String uri = "search/" + searchId;
+        try {
+            return root.resolve(uri).toURL();
+        } catch (MalformedURLException e) {
+            throw new IllegalUriException("Unable to resolve uri " + uri, e);
+        }
+    }
+
+    public static URL getUserProfileUrl(Integer userId) {
+        String uri = "user/" + userId;
+        try {
+            return root.resolve(uri).toURL();
+        } catch (MalformedURLException e) {
+            throw new IllegalUriException("Unable to resolve uri " + uri, e);
+        }
+    }
+
+    public static URL getHistoryCssUrl(String themeId) {
+        String uri = "assets-v/style/" + themeId + ".css";
+        try {
+            return root.resolve(uri).toURL();
+        } catch (MalformedURLException e) {
+            throw new IllegalUriException("Unable to resolve uri " + uri, e);
+        }
     }
 
     public SearchResults searchSolutions(String stacktrace)
@@ -66,34 +90,8 @@ public class SamebugClient {
         return requestJson(request, SearchResults.class);
     }
 
-    public URL getSearchUrl(int searchId) {
-        String uri = "search/" + searchId;
-        try {
-            return root.resolve(uri).toURL();
-        } catch (MalformedURLException e) {
-            throw new IllegalUriException("Unable to resolve uri " + uri, e);
-        }
-    }
-
-    public URL getUserProfileUrl(Integer userId) {
-        String uri = "user/" + userId;
-        try {
-            return root.resolve(uri).toURL();
-        } catch (MalformedURLException e) {
-            throw new IllegalUriException("Unable to resolve uri " + uri, e);
-        }
-    }
-
-    public URL getHistoryCssUrl(String themeId) {
-        String uri = "assets-v/style/" + themeId + ".css";
-        try {
-            return root.resolve(uri).toURL();
-        } catch (MalformedURLException e) {
-            throw new IllegalUriException("Unable to resolve uri " + uri, e);
-        }
-    }
-
-    public UserInfo getUserInfo(String apiKey) throws UnknownApiKey, SamebugClientException {
+    public UserInfo getUserInfo(String apiKey)
+            throws RemoteError, UserUnauthorized, HttpError, SamebugTimeout, UnsuccessfulResponseStatus {
         String url;
         try {
             url = getApiUrl("checkApiKey").toString() + "?apiKey=" + URLEncoder.encode(apiKey, "UTF-8");
@@ -102,19 +100,19 @@ public class SamebugClient {
         }
         Request request = Request.Get(url);
 
-        UserInfo userInfo = requestJson(request, UserInfo.class);
-        if (!userInfo.isUserExist) throw new UnknownApiKey(apiKey);
-        return userInfo;
+        return requestJson(request, UserInfo.class);
     }
 
-    public History getSearchHistory() throws SamebugClientException {
+    public History getSearchHistory()
+            throws RemoteError, UserUnauthorized, HttpError, SamebugTimeout, UnsuccessfulResponseStatus {
         URL url = getApiUrl("history");
         Request request = Request.Get(url.toString());
 
         return requestJson(request, History.class);
     }
 
-    public void trace(TrackEvent event) throws SamebugClientException {
+    public void trace(TrackEvent event)
+            throws RemoteError, UserUnauthorized, HttpError, SamebugTimeout, UnsuccessfulResponseStatus {
         Request post = Request.Post(trackingGateway);
         postJson(post, event.fields);
     }

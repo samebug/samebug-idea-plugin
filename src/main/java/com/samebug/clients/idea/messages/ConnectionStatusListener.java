@@ -13,26 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api.entities.tracking;
+package com.samebug.clients.idea.messages;
 
-import java.util.UUID;
+import com.intellij.util.messages.Topic;
 
 /**
- * Created by poroszd on 2/19/16.
+ * Created by poroszd on 2/23/16.
  */
-public class DebugSessionInfo {
-    private final UUID id = UUID.randomUUID();
-    private final String sessionType;
+public interface ConnectionStatusListener {
+    Topic<ConnectionStatusListener> CONNECTION_STATUS_TOPIC = Topic.create("connection status change", ConnectionStatusListener.class);
 
-    public DebugSessionInfo(String sessionType) {
-        this.sessionType = sessionType;
-    }
+    void startRequest();
 
-    public UUID getId() {
-        return id;
-    }
+    void finishRequest(boolean isConnected);
 
-    public String getSessionType() {
-        return sessionType;
-    }
+    void authorizationChange(boolean isAuthorized);
 }
