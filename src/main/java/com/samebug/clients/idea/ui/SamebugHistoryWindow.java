@@ -23,12 +23,9 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.actions.SettingsAction;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
-import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.History;
@@ -52,6 +49,8 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
     private JScrollPane scrollPane;
     private JEditorPane historyPane;
     private Project project;
+    private boolean recentFilterOn;
+
     private final static Logger LOGGER = Logger.getInstance(SamebugHistoryWindow.class);
 
     public SamebugHistoryWindow(Project project) {
@@ -60,51 +59,6 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
 
     public JComponent getControlPanel() {
         return controlPanel;
-    }
-
-    public void loadHistory() {
-        final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-        if (plugin.isInitialized()) {
-            ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        emptyHistoryPane();
-                        final History history = plugin.getClient().getSearchHistory();
-                        setCssTheme(UIManager.getLookAndFeel().getName());
-                        refreshHistoryPane(history);
-                    } catch (SamebugClientException e1) {
-                        // TODO set some status, or notify the user in some other way
-                        LOGGER.warn("Failed to retrieve history", e1);
-                    }
-                }
-            });
-        }
-    }
-
-    private void createUIComponents() {
-        this.toolbarPanel = createToolbarPanel();
-    }
-
-    private JPanel createToolbarPanel() {
-        final DefaultActionGroup group = (DefaultActionGroup) ActionManager.getInstance().getAction("Samebug.ToolWindowMenu");
-        final SettingsAction settingsAction = (SettingsAction) ActionManager.getInstance().getAction("Samebug.Settings");
-        MessageBusConnection messageBusConnection = ApplicationManager.getApplication().getMessageBus().connect(project);
-        messageBusConnection.subscribe(ConnectionStatusListener.CONNECTION_STATUS_TOPIC, settingsAction);
-        final ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
-        final JPanel buttonsPanel = new JPanel(new BorderLayout());
-        buttonsPanel.add(actionToolBar.getComponent(), BorderLayout.CENTER);
-        return buttonsPanel;
-    }
-
-    @Override
-    public void batchStart() {
-
-    }
-
-    @Override
-    public void batchFinished(java.util.List<SearchResults> results, int failed) {
-        loadHistory();
     }
 
     public void initHistoryPane() {
@@ -122,7 +76,55 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
         loadHistory();
     }
 
-    public void setCssTheme(String themeName) {
+    public void loadHistory() {
+        final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
+        if (plugin.isInitialized()) {
+            ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        emptyHistoryPane();
+                        final History history = plugin.getClient().getSearchHistory();
+                        setCssTheme(UIManager.getLookAndFeel().getName());
+                        refreshHistoryPane(history);
+                    } catch (SamebugClientException e1) {
+                        LOGGER.warn("Failed to retrieve history", e1);
+                    }
+                }
+            });
+        }
+    }
+
+    public boolean isRecentFilterOn() {
+        return recentFilterOn;
+    }
+
+    public void setRecentFilterOn(boolean recentFilterOn) {
+        this.recentFilterOn = recentFilterOn;
+    }
+    @Override
+    public void batchStart() {
+
+    }
+
+    @Override
+    public void batchFinished(java.util.List<SearchResults> results, int failed) {
+        loadHistory();
+    }
+
+    private void createUIComponents() {
+        this.toolbarPanel = createToolbarPanel();
+    }
+
+    private JPanel createToolbarPanel() {
+        final DefaultActionGroup group = (DefaultActionGroup) ActionManager.getInstance().getAction("Samebug.ToolWindowMenu");
+        final ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+        final JPanel buttonsPanel = new JPanel(new BorderLayout());
+        buttonsPanel.add(actionToolBar.getComponent(), BorderLayout.CENTER);
+        return buttonsPanel;
+    }
+
+    private void setCssTheme(String themeName) {
         HTMLEditorKit kit = (HTMLEditorKit) historyPane.getEditorKit();
         StyleSheet ss = kit.getStyleSheet();
         String themeId;

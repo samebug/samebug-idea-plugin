@@ -16,15 +16,22 @@
 package com.samebug.clients.idea.ui;
 
 import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.actions.HistoryAction;
+import com.samebug.clients.idea.actions.RecentFilterAction;
+import com.samebug.clients.idea.actions.SettingsAction;
+import com.samebug.clients.idea.components.project.Persistent;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
+import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,8 +54,16 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
         final HistoryAction historyAction = (HistoryAction) ActionManager.getInstance().getAction("Samebug.History");
         historyAction.setHook(historyWindow);
 
-        MessageBusConnection messageBusConnection = project.getMessageBus().connect(project);
-        messageBusConnection.subscribe(BatchStackTraceSearchListener.BATCH_SEARCH_TOPIC, historyWindow);
+        final RecentFilterAction recentFilterAction = (RecentFilterAction) ActionManager.getInstance().getAction("Samebug.RecentFilter");
+        recentFilterAction.setHook(historyWindow);
+        historyWindow.setRecentFilterOn(project.getComponent(Persistent.class).getState().isRecentFilter());
+
+        final SettingsAction settingsAction = (SettingsAction) ActionManager.getInstance().getAction("Samebug.Settings");
+        MessageBusConnection appMessageBus = ApplicationManager.getApplication().getMessageBus().connect(project);
+        appMessageBus.subscribe(ConnectionStatusListener.CONNECTION_STATUS_TOPIC, settingsAction);
+
+        MessageBusConnection projectMessageBus = project.getMessageBus().connect(project);
+        projectMessageBus.subscribe(BatchStackTraceSearchListener.BATCH_SEARCH_TOPIC, historyWindow);
 
         return historyWindow;
     }
