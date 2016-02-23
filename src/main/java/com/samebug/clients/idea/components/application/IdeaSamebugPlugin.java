@@ -42,12 +42,16 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
 
     // TODO Unlike other methods, this one executes the http request on the caller thread. Is it ok?
     public void setApiKey(@NotNull String apiKey) throws SamebugClientException, UnknownApiKey {
-        UserInfo userInfo = client.getUserInfo(apiKey);
-        client = new SamebugClient(apiKey);
-        state.setApiKey(apiKey);
-        state.setUserId(userInfo.userId);
-        state.setUserDisplayName(userInfo.displayName);
-        Tracking.appTracking().trace(Events.apiKeySet());
+        UserInfo userInfo = null;
+        try {
+            client = new SamebugClient(apiKey);
+            state.setApiKey(apiKey);
+            userInfo = client.getUserInfo(apiKey);
+        } finally {
+            state.setUserId(userInfo == null ? null : userInfo.userId);
+            state.setUserDisplayName(userInfo == null ? null : userInfo.displayName);
+            Tracking.appTracking().trace(Events.apiKeySet());
+        }
     }
 
     @Nullable

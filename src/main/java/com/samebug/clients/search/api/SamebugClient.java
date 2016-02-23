@@ -16,6 +16,10 @@
 package com.samebug.clients.search.api;
 
 import com.google.gson.Gson;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.util.messages.MessageBus;
+import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.search.api.entities.History;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
@@ -46,13 +50,14 @@ public class SamebugClient {
     private static final String USER_AGENT = "Samebug-Idea-Client/1.0.0";
     private static final String API_VERSION = "1.0";
     private static final Gson gson = new Gson();
+    private final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
 
     public SamebugClient(final String apiKey) {
         this.apiKey = apiKey;
 //        this.root = URI.create("http://localhost:9000/");
-//        this.trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
+        this.trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
         this.root = URI.create("https://samebug.io/");
-        this.trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
+//        this.trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
         this.gateway = root.resolve("sandbox/api/").resolve(API_VERSION + "/");
     }
 
@@ -103,7 +108,11 @@ public class SamebugClient {
         Request request = Request.Get(url);
 
         UserInfo userInfo = requestJson(request, UserInfo.class);
-        if (!userInfo.isUserExist) throw new UnknownApiKey(apiKey);
+        if (!userInfo.isUserExist) {
+            messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).apiKeyChange(apiKey, false);
+            throw new UnknownApiKey(apiKey);
+        }
+        messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).apiKeyChange(apiKey, true);
         return userInfo;
     }
 
@@ -182,6 +191,7 @@ public class SamebugClient {
         try {
             response = request.execute();
         } catch (IOException e) {
+            messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).connectionStatusChange(false);
             throw new HttpError(e);
         }
 
@@ -189,6 +199,7 @@ public class SamebugClient {
         try {
             httpResponse = response.returnResponse();
         } catch (IOException e) {
+            messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).connectionStatusChange(false);
             throw new HttpError(e);
         }
         int statusCode = httpResponse.getStatusLine().getStatusCode();
@@ -199,8 +210,10 @@ public class SamebugClient {
                 if (errors != null) {
                     throw new RemoteError(errors.getValue());
                 }
+                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).connectionStatusChange(true);
                 return httpResponse;
             case HttpStatus.SC_UNAUTHORIZED:
+                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).apiKeyChange(apiKey, false);
                 throw new UserUnauthorized();
             default:
                 throw new UnsuccessfulResponseStatus(statusCode);

@@ -23,9 +23,12 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.idea.actions.SettingsAction;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
+import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.History;
@@ -84,6 +87,9 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
 
     private JPanel createToolbarPanel() {
         final DefaultActionGroup group = (DefaultActionGroup) ActionManager.getInstance().getAction("Samebug.ToolWindowMenu");
+        final SettingsAction settingsAction = (SettingsAction) ActionManager.getInstance().getAction("Samebug.Settings") ;
+        MessageBusConnection messageBusConnection = ApplicationManager.getApplication().getMessageBus().connect(project);
+        messageBusConnection.subscribe(ConnectionStatusListener.CONNECTION_STATUS_TOPIC, settingsAction);
         final ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
         final JPanel buttonsPanel = new JPanel(new BorderLayout());
         buttonsPanel.add(actionToolBar.getComponent(), BorderLayout.CENTER);
