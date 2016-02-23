@@ -36,9 +36,7 @@ public class SettingsAction extends AnAction implements ConnectionStatusListener
 
     @Override
     public void update(AnActionEvent e) {
-        if (nRequests > 0) {
-            e.getPresentation().setIcon(SamebugIcons.statusWorking);
-        } else if (connected && authorized) {
+        if (connected && authorized) {
             e.getPresentation().setText(SamebugBundle.message("samebug.toolwindow.toolbar.actions.status.ok"));
             e.getPresentation().setIcon(SamebugIcons.statusOk);
         } else if (!connected) {
