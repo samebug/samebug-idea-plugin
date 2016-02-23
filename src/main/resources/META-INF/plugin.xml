@@ -38,7 +38,6 @@
     <actions>
         <!-- Add your actions here -->
         <group id="Samebug.ToolWindowMenu" text="Samebug menu" description="Samebug menu">
-            <add-to-group group-id="ToolsMenu" anchor="last"/>
             <action id="Samebug.Settings" class="com.samebug.clients.idea.actions.SettingsAction"
                     icon="/icons/samebug/status-ok-16x16.png" text="Connection status" description="Change Samebug configuration"/>
             <action id="Samebug.History" class="com.samebug.clients.idea.actions.HistoryAction"
