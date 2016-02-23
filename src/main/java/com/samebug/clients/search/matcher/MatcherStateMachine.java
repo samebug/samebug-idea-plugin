@@ -17,6 +17,7 @@ package com.samebug.clients.search.matcher;
 
 import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 import static com.samebug.clients.search.matcher.State.*;

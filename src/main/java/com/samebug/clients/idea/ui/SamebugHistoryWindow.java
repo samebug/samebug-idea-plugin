@@ -87,7 +87,7 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
 
     private JPanel createToolbarPanel() {
         final DefaultActionGroup group = (DefaultActionGroup) ActionManager.getInstance().getAction("Samebug.ToolWindowMenu");
-        final SettingsAction settingsAction = (SettingsAction) ActionManager.getInstance().getAction("Samebug.Settings") ;
+        final SettingsAction settingsAction = (SettingsAction) ActionManager.getInstance().getAction("Samebug.Settings");
         MessageBusConnection messageBusConnection = ApplicationManager.getApplication().getMessageBus().connect(project);
         messageBusConnection.subscribe(ConnectionStatusListener.CONNECTION_STATUS_TOPIC, settingsAction);
         final ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);

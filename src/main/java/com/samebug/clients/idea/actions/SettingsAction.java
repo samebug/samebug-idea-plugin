@@ -36,16 +36,14 @@ public class SettingsAction extends AnAction implements ConnectionStatusListener
     @Override
     public void update(AnActionEvent e) {
         if (nRequests > 0) {
-          e.getPresentation().setIcon(SamebugIcons.statusWorking);
+            e.getPresentation().setIcon(SamebugIcons.statusWorking);
         } else if (connected && authorized) {
             e.getPresentation().setText("You are connected with a valid api key");
             e.getPresentation().setIcon(SamebugIcons.statusOk);
-        }
-        else if (!connected) {
+        } else if (!connected) {
             e.getPresentation().setText("Cannot connect to samebug.io");
             e.getPresentation().setIcon(SamebugIcons.statusNotConnected);
-        }
-        else {
+        } else {
             e.getPresentation().setText("It seems your api key is not valid");
             e.getPresentation().setIcon(SamebugIcons.statusInvalidApiKey);
         }
