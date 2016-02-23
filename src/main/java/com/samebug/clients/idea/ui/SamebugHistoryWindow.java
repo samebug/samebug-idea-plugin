@@ -69,6 +69,7 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
                 @Override
                 public void run() {
                     try {
+                        emptyHistoryPane();
                         final History history = plugin.getClient().getSearchHistory();
                         setCssTheme(UIManager.getLookAndFeel().getName());
                         refreshHistoryPane(history);
@@ -134,6 +135,14 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
         }
         ss.importStyleSheet(SamebugClient.getHistoryCssUrl(themeId));
         kit.setStyleSheet(ss);
+    }
+
+    private void emptyHistoryPane() {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            public void run() {
+                historyPane.setText("");
+            }
+        });
     }
 
     private void refreshHistoryPane(final History history) {
