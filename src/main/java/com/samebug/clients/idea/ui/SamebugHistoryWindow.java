@@ -23,6 +23,8 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
@@ -37,6 +39,8 @@ import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
@@ -51,12 +55,15 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener, Conn
     private JScrollPane scrollPane;
     private JEditorPane historyPane;
     private JLabel statusIcon;
-    private Project project;
+    final private Project project;
+    final private SamebugSolutionsWindow solutionsWindow;
+    private boolean recentFilterOn;
 
     private final static Logger LOGGER = Logger.getInstance(SamebugHistoryWindow.class);
 
-    public SamebugHistoryWindow(Project project) {
+    public SamebugHistoryWindow(Project project, SamebugSolutionsWindow solutionsWindow) {
         this.project = project;
+        this.solutionsWindow = solutionsWindow;
     }
 
     public JComponent getControlPanel() {
@@ -70,7 +77,14 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener, Conn
             public void hyperlinkUpdate(HyperlinkEvent e) {
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                     URL url = e.getURL();
-                    BrowserUtil.browse(url);
+                    if (url.toString().contains("/search/")) {
+                        String searchId = (String) ((SimpleAttributeSet) e.getSourceElement().getAttributes().getAttribute(HTML.Tag.A)).getAttribute("data-search-id");
+                        solutionsWindow.loadSolutions(searchId);
+                        ToolWindow w = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
+                        w.getContentManager().setSelectedContent(w.getContentManager().getContent(solutionsWindow.getControlPanel()), true);
+                    } else {
+                        BrowserUtil.browse(url);
+                    }
                     Tracking.projectTracking(project).trace(Events.linkClick(project, url));
                 }
             }
@@ -87,8 +101,8 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener, Conn
                 public void run() {
                     try {
                         emptyHistoryPane();
-                        final History history = plugin.getClient().getSearchHistory(false);
-                        setCssTheme(UIManager.getLookAndFeel().getName());
+                        final History history = plugin.getClient().getSearchHistory(recentFilterOn);
+                        CssUtil.updatePaneStyleSheet(historyPane);
                         refreshHistoryPane(history);
                     } catch (SamebugClientException e1) {
                         LOGGER.warn("Failed to retrieve history", e1);
@@ -118,21 +132,6 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener, Conn
         final JPanel buttonsPanel = new JPanel(new BorderLayout());
         buttonsPanel.add(actionToolBar.getComponent(), BorderLayout.CENTER);
         return buttonsPanel;
-    }
-
-    private void setCssTheme(String themeName) {
-        HTMLEditorKit kit = (HTMLEditorKit) historyPane.getEditorKit();
-        StyleSheet ss = kit.getStyleSheet();
-        String themeId;
-        if (themeName.equals("IntelliJ")) {
-            themeId = "intellij";
-        } else if (themeName.equals("Darcula")) {
-            themeId = "darcula";
-        } else {
-            themeId = "intellij";
-        }
-        ss.importStyleSheet(SamebugClient.getHistoryCssUrl(themeId));
-        kit.setStyleSheet(ss);
     }
 
     private void emptyHistoryPane() {

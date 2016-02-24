@@ -22,6 +22,7 @@ import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.History;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
+import com.samebug.clients.search.api.entities.tracking.Solutions;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
 
@@ -36,10 +37,9 @@ public class IdeaClientService {
         this.client = new SamebugClient(apiKey);
     }
 
-    public SearchResults searchSolutions(final String stacktrace)
-            throws SamebugTimeout, RemoteError, HttpError, UserUnauthorized, UnsuccessfulResponseStatus {
+    public SearchResults searchSolutions(final String stacktrace) throws SamebugClientException {
         return new ConnectionAwareHttpRequest<SearchResults>() {
-            SearchResults request() throws SamebugTimeout, RemoteError, HttpError, UserUnauthorized, UnsuccessfulResponseStatus {
+            SearchResults request() throws SamebugClientException {
                 return client.searchSolutions(stacktrace);
             }
         }.execute();
@@ -47,7 +47,7 @@ public class IdeaClientService {
 
     public UserInfo getUserInfo(final String apiKey) throws SamebugClientException {
         return new ConnectionAwareHttpRequest<UserInfo>() {
-            UserInfo request() throws SamebugTimeout, RemoteError, HttpError, UserUnauthorized, UnsuccessfulResponseStatus {
+            UserInfo request() throws SamebugClientException {
                 return client.getUserInfo(apiKey);
             }
         }.execute();
@@ -55,20 +55,34 @@ public class IdeaClientService {
 
     public History getSearchHistory(final boolean recentFilterOn) throws SamebugClientException {
         return new ConnectionAwareHttpRequest<History>() {
-            History request() throws SamebugTimeout, RemoteError, HttpError, UserUnauthorized, UnsuccessfulResponseStatus {
+            History request() throws SamebugClientException {
                 return client.getSearchHistory(recentFilterOn);
             }
         }.execute();
     }
 
+    public Solutions getSolutions(final String searchId) throws SamebugClientException {
+        return new ConnectionAwareHttpRequest<Solutions>() {
+            Solutions request() throws SamebugClientException {
+                return client.getSolutions(searchId);
+            }
+        }.execute();
+    }
+
     public void trace(final TrackEvent event) throws SamebugClientException {
-        client.trace(event);
+        new ConnectionAwareHttpRequest<Void>() {
+            Void request() throws SamebugClientException {
+                client.trace(event);
+                return null;
+            }
+        }.execute();
+
     }
 
     private abstract class ConnectionAwareHttpRequest<T> {
-        abstract T request() throws SamebugTimeout, RemoteError, HttpError, UserUnauthorized, UnsuccessfulResponseStatus;
+        abstract T request() throws SamebugClientException;
 
-        public T execute() throws SamebugTimeout, RemoteError, HttpError, UserUnauthorized, UnsuccessfulResponseStatus {
+        public T execute() throws SamebugClientException {
             try {
                 messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).startRequest();
                 T result = request();
