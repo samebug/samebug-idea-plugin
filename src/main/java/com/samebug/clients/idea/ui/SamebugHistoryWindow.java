@@ -84,7 +84,7 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
                 public void run() {
                     try {
                         emptyHistoryPane();
-                        final History history = plugin.getClient().getSearchHistory();
+                        final History history = plugin.getClient().getSearchHistory(recentFilterOn);
                         setCssTheme(UIManager.getLookAndFeel().getName());
                         refreshHistoryPane(history);
                     } catch (SamebugClientException e1) {
@@ -102,6 +102,7 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
     public void setRecentFilterOn(boolean recentFilterOn) {
         this.recentFilterOn = recentFilterOn;
     }
+
     @Override
     public void batchStart() {
 

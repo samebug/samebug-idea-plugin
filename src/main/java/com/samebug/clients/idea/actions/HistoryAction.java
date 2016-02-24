@@ -23,8 +23,6 @@ import com.samebug.clients.idea.ui.SamebugHistoryWindow;
 public class HistoryAction extends AnAction {
     private SamebugHistoryWindow historyWindow;
 
-    // TODO disable action when user is not logged in
-
     @Override
     public void actionPerformed(AnActionEvent e) {
         historyWindow.loadHistory();
