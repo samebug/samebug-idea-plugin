@@ -17,21 +17,30 @@ package com.samebug.clients.idea.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.SamebugHistoryWindow;
 
-public class HistoryAction extends AnAction {
+/**
+ * Created by poroszd on 2/23/16.
+ */
+public class RecentFilterAction extends AnAction {
     private SamebugHistoryWindow historyWindow;
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        historyWindow.loadHistory();
+        historyWindow.setRecentFilterOn(!historyWindow.isRecentFilterOn());
     }
 
     @Override
     public void update(AnActionEvent e) {
-        boolean clientInitializated = IdeaSamebugPlugin.getInstance().isInitialized();
-        e.getPresentation().setEnabled(clientInitializated);
+        if (historyWindow == null) {
+            e.getPresentation().setEnabled(false);
+        } else if (historyWindow.isRecentFilterOn()) {
+            e.getPresentation().setEnabled(true);
+            e.getPresentation().setText("recent filter on");
+        } else {
+            e.getPresentation().setEnabled(true);
+            e.getPresentation().setText("recent filter off");
+        }
     }
 
     public void setHook(SamebugHistoryWindow historyWindow) {

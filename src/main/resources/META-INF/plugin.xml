@@ -42,6 +42,8 @@
                     icon="/icons/samebug/status-ok-16x16.png" text="Connection status" description="Change Samebug configuration"/>
             <action id="Samebug.History" class="com.samebug.clients.idea.actions.HistoryAction"
                     icon="/icons/samebug/history.png" text="Reload history" description="Reload your crash history"/>
+            <action id="Samebug.RecentFilter" class="com.samebug.clients.idea.actions.RecentFilterAction"
+                    icon="/icons/samebug/history.png" text="Only recent exceptions" description="Show only recent exceptions in crash history"/>
         </group>
     </actions>
 
@@ -71,6 +73,9 @@
         </component>
         <component>
             <implementation-class>com.samebug.clients.idea.components.project.HelpComponent</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.components.project.Persistent</implementation-class>
         </component>
     </project-components>
 </idea-plugin>
