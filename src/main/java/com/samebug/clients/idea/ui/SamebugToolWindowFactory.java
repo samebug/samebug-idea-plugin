@@ -38,14 +38,17 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        SamebugHistoryWindow historyWindow = initializeHistoryWindow(project);
+        SamebugSolutionsWindow solutionsWindow = initializeSolutionWindow(project);
+        SamebugHistoryWindow historyWindow = initializeHistoryWindow(project, solutionsWindow);
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-        Content content = contentFactory.createContent(historyWindow.getControlPanel(), SamebugBundle.message("samebug.toolwindow.displayName"), false);
+        Content content = contentFactory.createContent(historyWindow.getControlPanel(), SamebugBundle.message("samebug.toolwindow.history.tabName"), false);
+        Content solutionsContent = contentFactory.createContent(solutionsWindow.getControlPanel(), SamebugBundle.message("samebug.toolwindow.solutions.tabName"), false);
         toolWindow.getContentManager().addContent(content);
+        toolWindow.getContentManager().addContent(solutionsContent);
     }
 
-    private SamebugHistoryWindow initializeHistoryWindow(Project project) {
-        SamebugHistoryWindow historyWindow = new SamebugHistoryWindow(project);
+    private SamebugHistoryWindow initializeHistoryWindow(Project project, SamebugSolutionsWindow solutionsWindow) {
+        SamebugHistoryWindow historyWindow = new SamebugHistoryWindow(project, solutionsWindow);
 
         historyWindow.initHistoryPane();
 
@@ -64,5 +67,13 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
         projectMessageBus.subscribe(BatchStackTraceSearchListener.BATCH_SEARCH_TOPIC, historyWindow);
 
         return historyWindow;
+    }
+
+    private SamebugSolutionsWindow initializeSolutionWindow(Project project) {
+        SamebugSolutionsWindow solutionsWindow = new SamebugSolutionsWindow(project);
+
+        solutionsWindow.initSolutionsPane();
+
+        return solutionsWindow;
     }
 }
