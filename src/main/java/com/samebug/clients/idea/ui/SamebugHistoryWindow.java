@@ -75,8 +75,8 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
             public void hyperlinkUpdate(HyperlinkEvent e) {
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                     URL url = e.getURL();
-                    if (url.toString().contains("/search/")) {
-                        String searchId = (String) ((SimpleAttributeSet) e.getSourceElement().getAttributes().getAttribute(HTML.Tag.A)).getAttribute("data-search-id");
+                    String searchId = (String) ((SimpleAttributeSet) e.getSourceElement().getAttributes().getAttribute(HTML.Tag.A)).getAttribute("data-search-id");
+                    if (searchId != null) {
                         solutionsWindow.loadSolutions(searchId);
                         ToolWindow w = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
                         w.getContentManager().setSelectedContent(w.getContentManager().getContent(solutionsWindow.getControlPanel()), true);
