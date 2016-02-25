@@ -62,7 +62,7 @@ public class SamebugSolutionsWindow {
                         CssUtil.updatePaneStyleSheet(solutionsPane);
                         refreshSolutionsPane(solutions);
                     } catch (SamebugClientException e1) {
-                        LOGGER.warn("Failed to retrieve history", e1);
+                        LOGGER.warn("Failed to retrieve solutions for search " + searchId, e1);
                     }
                 }
             });
@@ -81,8 +81,6 @@ public class SamebugSolutionsWindow {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             public void run() {
                 HTMLEditorKit kit = (HTMLEditorKit) solutionsPane.getEditorKit();
-                StyleSheet ss = kit.getStyleSheet();
-                kit.setStyleSheet(ss);
                 solutionsPane.setText(solutions.html);
                 solutionsPane.setCaretPosition(0);
             }

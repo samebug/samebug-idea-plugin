@@ -151,8 +151,6 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             public void run() {
                 HTMLEditorKit kit = (HTMLEditorKit) historyPane.getEditorKit();
-                StyleSheet ss = kit.getStyleSheet();
-                kit.setStyleSheet(ss);
                 historyPane.setText(history.html);
                 historyPane.setCaretPosition(0);
             }
