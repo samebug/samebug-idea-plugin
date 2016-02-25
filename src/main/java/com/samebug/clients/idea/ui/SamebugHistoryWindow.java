@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,7 +31,6 @@ import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.History;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
@@ -42,9 +41,9 @@ import javax.swing.event.HyperlinkListener;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.net.URL;
+import java.util.Dictionary;
 
 /**
  * Created by poroszd on 2/14/16.
@@ -89,6 +88,14 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener, Conn
                 }
             }
         });
+        Dimension d = new Dimension(300, 1000);
+        historyPane.setSize(d);
+        historyPane.setMaximumSize(d);
+        historyPane.setMinimumSize(d);
+
+        if ((Dictionary) historyPane.getDocument().getProperty("imageCache") == null) {
+            historyPane.getDocument().putProperty("imageCache", HtmlUtil.imageCache);
+        }
         loadHistory();
         statusIcon.setIcon(null);
     }
@@ -102,7 +109,7 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener, Conn
                     try {
                         emptyHistoryPane();
                         final History history = plugin.getClient().getSearchHistory(recentFilterOn);
-                        CssUtil.updatePaneStyleSheet(historyPane);
+                        cssUtil.updatePaneStyleSheet(historyPane);
                         refreshHistoryPane(history);
                     } catch (SamebugClientException e1) {
                         LOGGER.warn("Failed to retrieve history", e1);

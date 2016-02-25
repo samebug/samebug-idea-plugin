@@ -9,7 +9,7 @@ import javax.swing.text.html.StyleSheet;
 /**
  * Created by poroszd on 2/24/16.
  */
-public class CssUtil {
+public class cssUtil {
     static String getUiThemeId() {
         String themeName = UIManager.getLookAndFeel().getName();
         String themeId;
@@ -26,7 +26,7 @@ public class CssUtil {
     static void updatePaneStyleSheet(JEditorPane pane) {
         HTMLEditorKit kit = (HTMLEditorKit) pane.getEditorKit();
         StyleSheet ss = kit.getStyleSheet();
-        String themeId = CssUtil.getUiThemeId();
+        String themeId = cssUtil.getUiThemeId();
         ss.importStyleSheet(SamebugClient.getHistoryCssUrl(themeId));
         kit.setStyleSheet(ss);
     }
