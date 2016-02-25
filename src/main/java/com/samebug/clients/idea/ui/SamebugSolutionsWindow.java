@@ -14,8 +14,8 @@ import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
 import java.net.URL;
+import java.util.Dictionary;
 
 /**
  * Created by poroszd on 2/24/16.
@@ -48,6 +48,9 @@ public class SamebugSolutionsWindow {
                 }
             }
         });
+        if ((Dictionary) solutionsPane.getDocument().getProperty("imageCache") == null) {
+            solutionsPane.getDocument().putProperty("imageCache", HtmlUtil.imageCache);
+        }
     }
 
     public void loadSolutions(final String searchId) {
@@ -59,7 +62,7 @@ public class SamebugSolutionsWindow {
                     try {
                         emptySolutionsPane();
                         final Solutions solutions = plugin.getClient().getSolutions(searchId);
-                        CssUtil.updatePaneStyleSheet(solutionsPane);
+                        cssUtil.updatePaneStyleSheet(solutionsPane);
                         refreshSolutionsPane(solutions);
                     } catch (SamebugClientException e1) {
                         LOGGER.warn("Failed to retrieve solutions for search " + searchId, e1);

@@ -20,11 +20,11 @@ import com.intellij.openapi.util.IconLoader;
 import javax.swing.*;
 
 public class SamebugIcons {
-    public final static Icon notification = IconLoader.getIcon("/icons/samebug/samebug-32x32.png");
+    public final static Icon notification = IconLoader.getIcon("/com/samebug/icons/samebug-32x32.png");
 
-    public final static Icon tab = IconLoader.getIcon("/icons/samebug/samebug-r270-13x13.png");
+    public final static Icon tab = IconLoader.getIcon("/com/samebug/icons/samebug-r270-13x13.png");
 
-    public final static Icon statusOk = IconLoader.getIcon("/icons/samebug/status-ok-16x16.png");
-    public final static Icon statusNotConnected = IconLoader.getIcon("/icons/samebug/status-not-connected-16x16.png");
-    public final static Icon statusInvalidApiKey = IconLoader.getIcon("/icons/samebug/status-invalid-apikey-16x16.png");
+    public final static Icon statusOk = IconLoader.getIcon("/com/samebug/icons/status-ok-16x16.png");
+    public final static Icon statusNotConnected = IconLoader.getIcon("/com/samebug/icons/status-not-connected-16x16.png");
+    public final static Icon statusInvalidApiKey = IconLoader.getIcon("/com/samebug/icons/status-invalid-apikey-16x16.png");
 }

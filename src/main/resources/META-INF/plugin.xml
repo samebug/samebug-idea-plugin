@@ -31,7 +31,7 @@
     <depends>org.jetbrains.android</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Samebug" icon="/icons/samebug/samebug-r270-13x13.png" anchor="right"
+        <toolWindow id="Samebug" icon="/com/samebug/icons/samebug-r270-13x13.png" anchor="right"
                     factoryClass="com.samebug.clients.idea.ui.SamebugToolWindowFactory"/>
     </extensions>
 
@@ -39,11 +39,11 @@
         <!-- Add your actions here -->
         <group id="Samebug.ToolWindowMenu" text="Samebug menu" description="Samebug menu">
             <action id="Samebug.Settings" class="com.samebug.clients.idea.actions.SettingsAction"
-                    icon="/icons/samebug/status-ok-16x16.png" text="Connection status" description="Change Samebug configuration"/>
+                    icon="/com/samebug/icons/status-ok-16x16.png" text="Connection status" description="Change Samebug configuration"/>
             <action id="Samebug.History" class="com.samebug.clients.idea.actions.HistoryAction"
-                    icon="/icons/samebug/history.png" text="Reload history" description="Reload your crash history"/>
+                    icon="/com/samebug/icons/history.png" text="Reload history" description="Reload your crash history"/>
             <action id="Samebug.RecentFilter" class="com.samebug.clients.idea.actions.RecentFilterAction"
-                    icon="/icons/samebug/history.png" text="Only recent exceptions" description="Show only recent exceptions in crash history"/>
+                    icon="/com/samebug/icons/history.png" text="Only recent exceptions" description="Show only recent exceptions in crash history"/>
         </group>
     </actions>
 
