@@ -25,9 +25,7 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.actions.HistoryAction;
-import com.samebug.clients.idea.actions.RecentFilterAction;
 import com.samebug.clients.idea.actions.SettingsAction;
-import com.samebug.clients.idea.components.project.Persistent;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
@@ -51,10 +49,6 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
 
         final HistoryAction historyAction = (HistoryAction) ActionManager.getInstance().getAction("Samebug.History");
         historyAction.setHook(historyWindow);
-
-        final RecentFilterAction recentFilterAction = (RecentFilterAction) ActionManager.getInstance().getAction("Samebug.RecentFilter");
-        recentFilterAction.setHook(historyWindow);
-        historyWindow.setRecentFilterOn(project.getComponent(Persistent.class).getState().isRecentFilter());
 
         final SettingsAction settingsAction = (SettingsAction) ActionManager.getInstance().getAction("Samebug.Settings");
         MessageBusConnection appMessageBus = ApplicationManager.getApplication().getMessageBus().connect(project);

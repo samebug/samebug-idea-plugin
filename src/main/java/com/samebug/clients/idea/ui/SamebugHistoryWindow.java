@@ -49,7 +49,6 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
     private JScrollPane scrollPane;
     private JEditorPane historyPane;
     private Project project;
-    private boolean recentFilterOn;
 
     private final static Logger LOGGER = Logger.getInstance(SamebugHistoryWindow.class);
 
@@ -84,7 +83,7 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
                 public void run() {
                     try {
                         emptyHistoryPane();
-                        final History history = plugin.getClient().getSearchHistory(recentFilterOn);
+                        final History history = plugin.getClient().getSearchHistory(false);
                         setCssTheme(UIManager.getLookAndFeel().getName());
                         refreshHistoryPane(history);
                     } catch (SamebugClientException e1) {
@@ -93,14 +92,6 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
                 }
             });
         }
-    }
-
-    public boolean isRecentFilterOn() {
-        return recentFilterOn;
-    }
-
-    public void setRecentFilterOn(boolean recentFilterOn) {
-        this.recentFilterOn = recentFilterOn;
     }
 
     @Override

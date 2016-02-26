@@ -53,7 +53,7 @@ public class IdeaClientService {
         }.execute();
     }
 
-    public History getSearchHistory(boolean recentFilterOn) throws SamebugClientException {
+    public History getSearchHistory(final boolean recentFilterOn) throws SamebugClientException {
         return new ConnectionAwareHttpRequest<History>() {
             History request() throws SamebugTimeout, RemoteError, HttpError, UserUnauthorized, UnsuccessfulResponseStatus {
                 return client.getSearchHistory(recentFilterOn);
