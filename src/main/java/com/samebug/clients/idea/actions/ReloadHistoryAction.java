@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.SamebugHistoryWindow;
 
-public class HistoryAction extends AnAction {
+public class ReloadHistoryAction extends AnAction {
     private SamebugHistoryWindow historyWindow;
 
     @Override
