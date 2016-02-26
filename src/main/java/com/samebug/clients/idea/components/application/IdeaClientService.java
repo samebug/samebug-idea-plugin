@@ -78,13 +78,8 @@ public class IdeaClientService {
     }
 
     public void trace(final TrackEvent event) throws SamebugClientException {
-        new ConnectionAwareHttpRequest<Void>() {
-            Void request() throws SamebugClientException {
-                client.trace(event);
-                return null;
-            }
-        }.execute();
-
+        // Trace bypasses connection status handling.
+        client.trace(event);
     }
 
     public boolean isConnected() {
