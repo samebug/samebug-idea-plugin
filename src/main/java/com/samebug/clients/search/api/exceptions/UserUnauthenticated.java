@@ -15,15 +15,10 @@
  */
 package com.samebug.clients.search.api.exceptions;
 
-public class UserUnauthorized extends SamebugClientException {
-    private final String reason;
-
-    public UserUnauthorized(String reason) {
-        this.reason = reason;
-    }
+public class UserUnauthenticated extends SamebugClientException {
 
     @Override
     public String getMessage() {
-        return "User is unauthorized: " + reason;
+        return "User is unauthenticated";
     }
 }

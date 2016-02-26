@@ -20,8 +20,6 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.util.messages.MessageBus;
-import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.SettingsDialog;
@@ -40,7 +38,6 @@ import org.jetbrains.annotations.Nullable;
 )
 final public class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<Settings> {
     private IdeaClientService client = new IdeaClientService(null);
-    private final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
 
     // TODO Unlike other methods, this one executes the http request on the caller thread. Is it ok?
     public void setApiKey(@NotNull String apiKey) throws SamebugClientException, UnknownApiKey {
@@ -50,10 +47,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
             state.setApiKey(apiKey);
             userInfo = client.getUserInfo(apiKey);
             if (!userInfo.isUserExist) {
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authorizationChange(false);
                 throw new UnknownApiKey(apiKey);
-            } else {
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authorizationChange(true);
             }
         } finally {
             state.setUserId(userInfo == null ? null : userInfo.userId);

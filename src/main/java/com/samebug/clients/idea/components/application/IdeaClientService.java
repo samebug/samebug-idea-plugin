@@ -32,6 +32,9 @@ import com.samebug.clients.search.api.exceptions.*;
 public class IdeaClientService {
     private final SamebugClient client;
     private final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
+    private boolean connected;
+    private boolean authenticated;
+    private int nRequests;
 
     public IdeaClientService(final String apiKey) {
         this.client = new SamebugClient(apiKey);
@@ -46,11 +49,16 @@ public class IdeaClientService {
     }
 
     public UserInfo getUserInfo(final String apiKey) throws SamebugClientException {
-        return new ConnectionAwareHttpRequest<UserInfo>() {
+        UserInfo userInfo = new ConnectionAwareHttpRequest<UserInfo>() {
             UserInfo request() throws SamebugClientException {
                 return client.getUserInfo(apiKey);
             }
         }.execute();
+
+        // TODO it smells bad. Successful authentication can happen at any request.
+        authenticated = userInfo.isUserExist;
+        messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authorizationChange(authenticated);
+        return userInfo;
     }
 
     public History getSearchHistory(final boolean recentFilterOn) throws SamebugClientException {
@@ -79,31 +87,54 @@ public class IdeaClientService {
 
     }
 
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public boolean isAuthenticated() {
+        return authenticated;
+    }
+
+    public int getNumberOfActiveRequests() {
+        return nRequests;
+    }
+
     private abstract class ConnectionAwareHttpRequest<T> {
         abstract T request() throws SamebugClientException;
 
         public T execute() throws SamebugClientException {
             try {
+                ++nRequests;
                 messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).startRequest();
                 T result = request();
                 messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(true);
+                connected = true;
                 return result;
             } catch (SamebugTimeout e) {
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(false);
+                connected = false;
                 throw e;
             } catch (RemoteError e) {
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(false);
+                connected = false;
                 throw e;
             } catch (HttpError e) {
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(false);
+                connected = false;
                 throw e;
             } catch (UnsuccessfulResponseStatus e) {
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(false);
+                connected = false;
+                throw e;
+            } catch (UserUnauthenticated e) {
+                connected = true;
+                authenticated = false;
+                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authorizationChange(authenticated);
                 throw e;
             } catch (UserUnauthorized e) {
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(true);
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authorizationChange(false);
+                connected = true;
+                authenticated = true;
+                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authorizationChange(authenticated);
                 throw e;
+            } finally {
+                --nRequests;
+                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(connected);
             }
         }
     }

@@ -124,7 +124,7 @@ public class SamebugClient {
 
     // implementation
     private <T> T requestJson(Request request, Class<T> classOfT)
-            throws RemoteError, UserUnauthorized, HttpError, SamebugTimeout, UnsuccessfulResponseStatus {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
         final HttpResponse httpResponse;
         httpResponse = executePatient(request.setHeader("Accept", "application/json"));
 
@@ -145,7 +145,7 @@ public class SamebugClient {
     }
 
     private void postJson(Request post, Object data)
-            throws RemoteError, UserUnauthorized, UnsuccessfulResponseStatus, SamebugTimeout, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
         String json = gson.toJson(data);
         post.addHeader("Content-Type", "application/json");
         post.body(new StringEntity(json, ContentType.APPLICATION_JSON));
@@ -154,12 +154,12 @@ public class SamebugClient {
 
 
     private HttpResponse executeFailFast(Request request)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthorized, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
         return execute(request, 3000, 3000);
     }
 
     private HttpResponse executePatient(Request request)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthorized, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
         return execute(request, 10000, 30000);
     }
 
@@ -173,10 +173,11 @@ public class SamebugClient {
      * @throws HttpError                  in case of a problem or the connection was aborted or   if the response is not readable
      * @throws UnsuccessfulResponseStatus if the response status is not 200
      * @throws RemoteError                if the server returned error in the X-Samebug-Errors header
-     * @throws UserUnauthorized           if the user was not authorized
+     * @throws UserUnauthenticated        if the user was not authenticated (401)
+     * @throws UserUnauthorized           if the user was not authorized (403)
      */
     private HttpResponse execute(Request request, int connectTimeoutMillis, int socketTimeoutMillis)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthorized, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
         addDefaultHeaders(request);
         request.connectTimeout(connectTimeoutMillis);
         request.socketTimeout(socketTimeoutMillis);
@@ -204,7 +205,9 @@ public class SamebugClient {
                 }
                 return httpResponse;
             case HttpStatus.SC_UNAUTHORIZED:
-                throw new UserUnauthorized();
+                throw new UserUnauthenticated();
+            case HttpStatus.SC_FORBIDDEN:
+                throw new UserUnauthorized(httpResponse.getStatusLine().getReasonPhrase());
             default:
                 throw new UnsuccessfulResponseStatus(statusCode);
         }
