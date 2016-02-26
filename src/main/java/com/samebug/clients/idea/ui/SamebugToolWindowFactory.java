@@ -25,7 +25,6 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.actions.ReloadHistoryAction;
-import com.samebug.clients.idea.actions.SettingsAction;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
@@ -53,11 +52,8 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
         final ReloadHistoryAction historyAction = (ReloadHistoryAction) ActionManager.getInstance().getAction("Samebug.History");
         historyAction.setHook(historyWindow);
 
-        final SettingsAction settingsAction = (SettingsAction) ActionManager.getInstance().getAction("Samebug.Settings");
         MessageBusConnection appMessageBus = ApplicationManager.getApplication().getMessageBus().connect(project);
-        appMessageBus.subscribe(ConnectionStatusListener.CONNECTION_STATUS_TOPIC, settingsAction);
-        MessageBusConnection appMessageBus2 = ApplicationManager.getApplication().getMessageBus().connect(project);
-        appMessageBus2.subscribe(ConnectionStatusListener.CONNECTION_STATUS_TOPIC, historyWindow);
+        appMessageBus.subscribe(ConnectionStatusListener.CONNECTION_STATUS_TOPIC, historyWindow);
 
         MessageBusConnection projectMessageBus = project.getMessageBus().connect(project);
         projectMessageBus.subscribe(BatchStackTraceSearchListener.BATCH_SEARCH_TOPIC, historyWindow);
