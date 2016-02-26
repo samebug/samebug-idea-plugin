@@ -26,7 +26,6 @@ import com.samebug.clients.idea.ui.SettingsDialog;
 public class SettingsAction extends AnAction implements ConnectionStatusListener {
     private boolean connected = true;
     private boolean authorized = true;
-    private int nRequests = 0;
 
     @Override
     public void actionPerformed(AnActionEvent e) {
@@ -38,24 +37,22 @@ public class SettingsAction extends AnAction implements ConnectionStatusListener
     public void update(AnActionEvent e) {
         if (connected && authorized) {
             e.getPresentation().setText(SamebugBundle.message("samebug.toolwindow.toolbar.actions.status.ok"));
-            e.getPresentation().setIcon(SamebugIcons.statusOk);
+            e.getPresentation().setIcon(SamebugIcons.cogwheel);
         } else if (!connected) {
             e.getPresentation().setText(SamebugBundle.message("samebug.toolwindow.toolbar.actions.status.notConnected"));
-            e.getPresentation().setIcon(SamebugIcons.statusNotConnected);
+            e.getPresentation().setIcon(SamebugIcons.cogwheel);
         } else {
             e.getPresentation().setText(SamebugBundle.message("samebug.toolwindow.toolbar.actions.status.invalidApiKey"));
-            e.getPresentation().setIcon(SamebugIcons.statusInvalidApiKey);
+            e.getPresentation().setIcon(SamebugIcons.cogwheelTodo);
         }
     }
 
     @Override
     public synchronized void startRequest() {
-        ++nRequests;
     }
 
     @Override
     public synchronized void finishRequest(boolean isConnected) {
-        --nRequests;
         this.connected = isConnected;
     }
 

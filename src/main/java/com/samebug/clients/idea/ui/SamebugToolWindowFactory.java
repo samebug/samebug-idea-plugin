@@ -53,6 +53,8 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
         final SettingsAction settingsAction = (SettingsAction) ActionManager.getInstance().getAction("Samebug.Settings");
         MessageBusConnection appMessageBus = ApplicationManager.getApplication().getMessageBus().connect(project);
         appMessageBus.subscribe(ConnectionStatusListener.CONNECTION_STATUS_TOPIC, settingsAction);
+        MessageBusConnection appMessageBus2 = ApplicationManager.getApplication().getMessageBus().connect(project);
+        appMessageBus2.subscribe(ConnectionStatusListener.CONNECTION_STATUS_TOPIC, historyWindow);
 
         MessageBusConnection projectMessageBus = project.getMessageBus().connect(project);
         projectMessageBus.subscribe(BatchStackTraceSearchListener.BATCH_SEARCH_TOPIC, historyWindow);

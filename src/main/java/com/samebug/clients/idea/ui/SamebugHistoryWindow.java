@@ -26,6 +26,8 @@ import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
+import com.samebug.clients.idea.messages.ConnectionStatusListener;
+import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.History;
@@ -43,11 +45,12 @@ import java.net.URL;
 /**
  * Created by poroszd on 2/14/16.
  */
-public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
+public class SamebugHistoryWindow implements BatchStackTraceSearchListener, ConnectionStatusListener {
     private JPanel controlPanel;
     private JPanel toolbarPanel;
     private JScrollPane scrollPane;
     private JEditorPane historyPane;
+    private JLabel statusIcon;
     private Project project;
 
     private final static Logger LOGGER = Logger.getInstance(SamebugHistoryWindow.class);
@@ -73,6 +76,7 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
             }
         });
         loadHistory();
+        statusIcon.setIcon(null);
     }
 
     public void loadHistory() {
@@ -149,5 +153,30 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
                 historyPane.setCaretPosition(0);
             }
         });
+    }
+
+    @Override
+    public void startRequest() {
+
+    }
+
+    @Override
+    public void finishRequest(final boolean isConnected) {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if (isConnected) {
+                    statusIcon.setIcon(null);
+                    statusIcon.setText(null);
+                } else {
+                    statusIcon.setIcon(SamebugIcons.linkError);
+                    statusIcon.setToolTipText("Connection lost");
+                }
+            }
+        });
+    }
+
+    @Override
+    public void authorizationChange(final boolean isAuthorized) {
     }
 }

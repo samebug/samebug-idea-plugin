@@ -62,13 +62,7 @@ public class IdeaClientService {
     }
 
     public void trace(final TrackEvent event) throws SamebugClientException {
-        new ConnectionAwareHttpRequest<Void>() {
-            Void request() throws SamebugTimeout, RemoteError, HttpError, UserUnauthorized, UnsuccessfulResponseStatus {
-                client.trace(event);
-                return null;
-            }
-        }.execute();
-
+        client.trace(event);
     }
 
     private abstract class ConnectionAwareHttpRequest<T> {
