@@ -42,7 +42,7 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
         Content content = contentFactory.createContent(historyWindow.getControlPanel(), SamebugBundle.message("samebug.toolwindow.history.tabName"), false);
         Content solutionsContent = contentFactory.createContent(solutionsWindow.getControlPanel(), SamebugBundle.message("samebug.toolwindow.solutions.tabName"), false);
         toolWindow.getContentManager().addContent(content);
-        toolWindow.getContentManager().addContent(solutionsContent);
+//        toolWindow.getContentManager().addContent(solutionsContent);
     }
 
     private SamebugHistoryWindow initializeHistoryWindow(Project project, SamebugSolutionsWindow solutionsWindow) {

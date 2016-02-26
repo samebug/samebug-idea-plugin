@@ -76,22 +76,19 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener, Conn
             public void hyperlinkUpdate(HyperlinkEvent e) {
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                     URL url = e.getURL();
-                    String searchId = (String) ((SimpleAttributeSet) e.getSourceElement().getAttributes().getAttribute(HTML.Tag.A)).getAttribute("data-search-id");
-                    if (searchId != null) {
-                        solutionsWindow.loadSolutions(searchId);
-                        ToolWindow w = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
-                        w.getContentManager().setSelectedContent(w.getContentManager().getContent(solutionsWindow.getControlPanel()), true);
-                    } else {
-                        BrowserUtil.browse(url);
-                    }
+//                    String searchId = (String) ((SimpleAttributeSet) e.getSourceElement().getAttributes().getAttribute(HTML.Tag.A)).getAttribute("data-search-id");
+//                    if (searchId != null) {
+//                        solutionsWindow.loadSolutions(searchId);
+//                        ToolWindow w = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
+//                        w.getContentManager().setSelectedContent(w.getContentManager().getContent(solutionsWindow.getControlPanel()), true);
+//                    } else {
+//                        BrowserUtil.browse(url);
+//                    }
+                    BrowserUtil.browse(url);
                     Tracking.projectTracking(project).trace(Events.linkClick(project, url));
                 }
             }
         });
-        Dimension d = new Dimension(300, 1000);
-        historyPane.setSize(d);
-        historyPane.setMaximumSize(d);
-        historyPane.setMinimumSize(d);
 
         if ((Dictionary) historyPane.getDocument().getProperty("imageCache") == null) {
             historyPane.getDocument().putProperty("imageCache", HtmlUtil.imageCache);
