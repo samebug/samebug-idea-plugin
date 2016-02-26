@@ -24,13 +24,7 @@ public class SamebugIcons {
 
     public final static Icon tab = IconLoader.getIcon("/com/samebug/icons/samebug-r270-13x13.png");
 
-<<<<<<< c3e44b82d604b3a2a183ad6845eae64b742bcdc8
-    public final static Icon cogwheel = IconLoader.getIcon("/icons/samebug/cogwheel-16x16.png");
-    public final static Icon cogwheelTodo = IconLoader.getIcon("/icons/samebug/cogwheel-todo-16x16.png");
-    public final static Icon linkError = IconLoader.getIcon("/icons/samebug/link-error-16x16.png");
-=======
-    public final static Icon statusOk = IconLoader.getIcon("/com/samebug/icons/status-ok-16x16.png");
-    public final static Icon statusNotConnected = IconLoader.getIcon("/com/samebug/icons/status-not-connected-16x16.png");
-    public final static Icon statusInvalidApiKey = IconLoader.getIcon("/com/samebug/icons/status-invalid-apikey-16x16.png");
->>>>>>> can show cached images in editor pane
+    public final static Icon cogwheel = IconLoader.getIcon("/com/samebug/icons/cogwheel-16x16.png");
+    public final static Icon cogwheelTodo = IconLoader.getIcon("/com/samebug/icons/cogwheel-todo-16x16.png");
+    public final static Icon linkError = IconLoader.getIcon("/com/samebug/icons/link-error-16x16.png");
 }
