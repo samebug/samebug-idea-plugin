@@ -17,16 +17,14 @@ package com.samebug.clients.idea.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.project.DumbAware;
+import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.SettingsDialog;
 
-public class SettingsAction extends AnAction implements ConnectionStatusListener {
-    private boolean connected = true;
-    private boolean authorized = true;
-
+public class ConfigureAction extends AnAction implements DumbAware {
     @Override
     public void actionPerformed(AnActionEvent e) {
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
@@ -35,29 +33,13 @@ public class SettingsAction extends AnAction implements ConnectionStatusListener
 
     @Override
     public void update(AnActionEvent e) {
-        if (connected && authorized) {
-            e.getPresentation().setText(SamebugBundle.message("samebug.toolwindow.toolbar.actions.status.ok"));
-            e.getPresentation().setIcon(SamebugIcons.cogwheel);
-        } else if (!connected) {
-            e.getPresentation().setText(SamebugBundle.message("samebug.toolwindow.toolbar.actions.status.notConnected"));
-            e.getPresentation().setIcon(SamebugIcons.cogwheel);
-        } else {
-            e.getPresentation().setText(SamebugBundle.message("samebug.toolwindow.toolbar.actions.status.invalidApiKey"));
+        IdeaClientService connectionService = IdeaSamebugPlugin.getInstance().getClient();
+        if (connectionService.isConnected() && !connectionService.isAuthenticated()) {
+            e.getPresentation().setText(SamebugBundle.message("samebug.actions.configure.text.invalidApiKey"));
             e.getPresentation().setIcon(SamebugIcons.cogwheelTodo);
+        } else {
+            e.getPresentation().setText(SamebugBundle.message("samebug.actions.configure.text.ok"));
+            e.getPresentation().setIcon(SamebugIcons.cogwheel);
         }
-    }
-
-    @Override
-    public synchronized void startRequest() {
-    }
-
-    @Override
-    public synchronized void finishRequest(boolean isConnected) {
-        this.connected = isConnected;
-    }
-
-    @Override
-    public synchronized void authorizationChange(boolean isAuthorized) {
-        this.authorized = isAuthorized;
     }
 }

@@ -22,6 +22,7 @@ import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.History;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
+import com.samebug.clients.search.api.entities.tracking.Solutions;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
 
@@ -31,65 +32,104 @@ import com.samebug.clients.search.api.exceptions.*;
 public class IdeaClientService {
     private final SamebugClient client;
     private final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
+    private boolean connected;
+    private boolean authenticated;
+    private int nRequests;
 
     public IdeaClientService(final String apiKey) {
         this.client = new SamebugClient(apiKey);
     }
 
-    public SearchResults searchSolutions(final String stacktrace)
-            throws SamebugTimeout, RemoteError, HttpError, UserUnauthorized, UnsuccessfulResponseStatus {
+    public SearchResults searchSolutions(final String stacktrace) throws SamebugClientException {
         return new ConnectionAwareHttpRequest<SearchResults>() {
-            SearchResults request() throws SamebugTimeout, RemoteError, HttpError, UserUnauthorized, UnsuccessfulResponseStatus {
+            SearchResults request() throws SamebugClientException {
                 return client.searchSolutions(stacktrace);
             }
         }.execute();
     }
 
     public UserInfo getUserInfo(final String apiKey) throws SamebugClientException {
-        return new ConnectionAwareHttpRequest<UserInfo>() {
-            UserInfo request() throws SamebugTimeout, RemoteError, HttpError, UserUnauthorized, UnsuccessfulResponseStatus {
+        UserInfo userInfo = new ConnectionAwareHttpRequest<UserInfo>() {
+            UserInfo request() throws SamebugClientException {
                 return client.getUserInfo(apiKey);
             }
         }.execute();
+
+        // TODO it smells bad. Successful authentication can happen at any request.
+        authenticated = userInfo.isUserExist;
+        messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authorizationChange(authenticated);
+        return userInfo;
     }
 
     public History getSearchHistory(final boolean recentFilterOn) throws SamebugClientException {
         return new ConnectionAwareHttpRequest<History>() {
-            History request() throws SamebugTimeout, RemoteError, HttpError, UserUnauthorized, UnsuccessfulResponseStatus {
+            History request() throws SamebugClientException {
                 return client.getSearchHistory(recentFilterOn);
             }
         }.execute();
     }
 
+    public Solutions getSolutions(final String searchId) throws SamebugClientException {
+        return new ConnectionAwareHttpRequest<Solutions>() {
+            Solutions request() throws SamebugClientException {
+                return client.getSolutions(searchId);
+            }
+        }.execute();
+    }
+
     public void trace(final TrackEvent event) throws SamebugClientException {
+        // Trace bypasses connection status handling.
         client.trace(event);
     }
 
-    private abstract class ConnectionAwareHttpRequest<T> {
-        abstract T request() throws SamebugTimeout, RemoteError, HttpError, UserUnauthorized, UnsuccessfulResponseStatus;
+    public boolean isConnected() {
+        return connected;
+    }
 
-        public T execute() throws SamebugTimeout, RemoteError, HttpError, UserUnauthorized, UnsuccessfulResponseStatus {
+    public boolean isAuthenticated() {
+        return authenticated;
+    }
+
+    public int getNumberOfActiveRequests() {
+        return nRequests;
+    }
+
+    private abstract class ConnectionAwareHttpRequest<T> {
+        abstract T request() throws SamebugClientException;
+
+        public T execute() throws SamebugClientException {
             try {
+                ++nRequests;
                 messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).startRequest();
                 T result = request();
                 messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(true);
+                connected = true;
                 return result;
             } catch (SamebugTimeout e) {
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(false);
+                connected = false;
                 throw e;
             } catch (RemoteError e) {
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(false);
+                connected = false;
                 throw e;
             } catch (HttpError e) {
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(false);
+                connected = false;
                 throw e;
             } catch (UnsuccessfulResponseStatus e) {
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(false);
+                connected = false;
+                throw e;
+            } catch (UserUnauthenticated e) {
+                connected = true;
+                authenticated = false;
+                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authorizationChange(authenticated);
                 throw e;
             } catch (UserUnauthorized e) {
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(true);
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authorizationChange(false);
+                connected = true;
+                authenticated = true;
+                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authorizationChange(authenticated);
                 throw e;
+            } finally {
+                --nRequests;
+                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(connected);
             }
         }
     }
