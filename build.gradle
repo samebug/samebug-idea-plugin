@@ -34,7 +34,7 @@ intellij {
 
 //    alternativeIdePath '/Applications/Android Studio.app/Contents'
 //    alternativeIdePath '/opt/idea-IU-143.382.35'
-    alternativeIdePath '/opt/android-studio'
+//    alternativeIdePath '/opt/android-studio'
     pluginName 'samebug-idea-plugin'
     updateSinceUntilBuild false
 
