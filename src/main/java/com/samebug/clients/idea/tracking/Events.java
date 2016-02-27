@@ -37,17 +37,17 @@ import java.util.Map;
  */
 public class Events {
     public static TrackEvent pluginInstall() {
-        return new TrackBuilder("plugin-install", null) {
+        return new TrackBuilder("Plugin", "FirstRun", null) {
         }.getEvent();
     }
 
     public static TrackEvent apiKeySet() {
-        return new TrackBuilder("apikey-set", null) {
+        return new TrackBuilder("Settings", "ChangeApiKey", null) {
         }.getEvent();
     }
 
     public static TrackEvent projectOpen(Project project) {
-        return new TrackBuilder("project-open", project) {
+        return new TrackBuilder("Project", "Open", project) {
             @Override
             protected void initFields() {
                 String lookAndFeelName = null;
@@ -58,57 +58,57 @@ public class Events {
     }
 
     public static TrackEvent projectClose(Project project) {
-        return new TrackBuilder("project-close", project) {
+        return new TrackBuilder("Project", "Close", project) {
         }.getEvent();
     }
 
     public static TrackEvent debugStart(Project project, final DebugSessionInfo debugSessionInfo) {
-        return new TrackBuilder("debug-start", project) {
+        return new TrackBuilder("Debug", "Start", project) {
             @Override
             protected void initFields() {
-                fields.put("sessionInfo", debugSessionInfo.getId().toString());
-                fields.put("debugSessionType", debugSessionInfo.getSessionType());
+                fields.put("sessionId", debugSessionInfo.getId().toString());
+                fields.put("sessionType", debugSessionInfo.getSessionType());
             }
         }.getEvent();
     }
 
     public static TrackEvent debugStop(Project project, final DebugSessionInfo debugSessionInfo) {
-        return new TrackBuilder("debug-stop", project) {
+        return new TrackBuilder("Debug", "Stop", project) {
             @Override
             protected void initFields() {
-                fields.put("sessionInfo", debugSessionInfo.getId().toString());
-                fields.put("debugSessionType", debugSessionInfo.getSessionType());
+                fields.put("sessionId", debugSessionInfo.getId().toString());
+                fields.put("sessionType", debugSessionInfo.getSessionType());
             }
         }.getEvent();
     }
 
     public static TrackEvent searchSucceeded(final SearchInfo searchInfo, final SearchResults searchResults) {
-        return new TrackBuilder("search-succeeded", null) {
+        return new TrackBuilder("Search", "Succeeded", null) {
             @Override
             protected void initFields() {
-                fields.put("searchId", searchResults.searchId);
-                fields.put("sessionInfo", searchInfo.getSessionInfo().getId().toString());
-                fields.put("debugSessionType", searchInfo.getSessionInfo().getSessionType());
+                fields.put("searchId", Integer.parseInt(searchResults.searchId));
+                fields.put("sessionId", searchInfo.getSessionInfo().getId().toString());
+                fields.put("sessionType", searchInfo.getSessionInfo().getSessionType());
             }
         }.getEvent();
     }
 
     public static TrackEvent toolWindowOpen(Project project, final String from) {
-        return new TrackBuilder("toolWindow-open", project) {
+        return new TrackBuilder("ToolWindow", "Open", project) {
             @Override
             protected void initFields() {
-                fields.put("from", from);
+                fields.put("location", from);
             }
         }.getEvent();
     }
 
     public static TrackEvent linkClick(Project project, final URL url) {
-        return new TrackBuilder("link-click", project) {
+        return new TrackBuilder("Link", "Click", project) {
             @Override
             protected void initFields() {
                 String link = null;
                 if (url != null) link = url.toString();
-                fields.put("link", link);
+                fields.put("url", link);
             }
         }.getEvent();
     }
@@ -116,12 +116,14 @@ public class Events {
     private final static Logger LOGGER = Logger.getInstance(Events.class);
 
     private static abstract class TrackBuilder {
-        final protected String eventType;
+        final protected String category;
+        final protected String action;
         final protected Project project;
-        final protected Map<String, String> fields = new HashMap<String, String>();
+        final protected Map<String, Object> fields = new HashMap<String, Object>();
 
-        public TrackBuilder(String eventType, @Nullable Project project) {
-            this.eventType = eventType;
+        public TrackBuilder(String category, String action, @Nullable Project project) {
+            this.category = category;
+            this.action = action;
             this.project = project;
         }
 
@@ -129,23 +131,24 @@ public class Events {
         }
 
         private void addCommonFields() {
-            fields.put("type", eventType);
+            fields.put("category", category);
+            fields.put("action", action);
             try {
                 Integer userId = IdeaSamebugPlugin.getInstance().getState().getUserId();
-                if (userId != null) fields.put("userId", userId.toString());
-            } catch (Throwable e) {
+                if (userId != null) fields.put("userId", userId);
+            } catch (Exception e) {
                 LOGGER.debug("failed to write userId to tracking event", e);
             }
             try {
                 String instanceId = IdeaSamebugPlugin.getInstance().getState().getInstanceId();
                 if (instanceId != null) fields.put("instanceId", instanceId);
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 LOGGER.debug("failed to write instanceId to tracking event", e);
             }
             try {
                 String pluginVersion = PluginManager.getPlugin(PluginId.getId("Samebug")).getVersion();
                 if (pluginVersion != null) fields.put("pluginVersion", pluginVersion);
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 LOGGER.debug("failed to write pluginVersion to tracking event", e);
             }
             if (project != null) {
