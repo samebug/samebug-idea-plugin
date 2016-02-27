@@ -38,6 +38,9 @@ public class IdeaClientService {
 
     public IdeaClientService(final String apiKey) {
         this.client = new SamebugClient(apiKey);
+        // Optimist initialization. If incorrect, that'll turn out soon
+        this.connected = true;
+        this.authenticated = true;
     }
 
     public SearchResults searchSolutions(final String stacktrace) throws SamebugClientException {

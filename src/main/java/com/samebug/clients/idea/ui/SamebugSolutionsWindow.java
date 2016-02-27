@@ -77,7 +77,7 @@ public class SamebugSolutionsWindow {
                     try {
                         emptySolutionsPane();
                         final Solutions solutions = plugin.getClient().getSolutions(searchId);
-                        cssUtil.updatePaneStyleSheet(solutionsPane);
+                        CssUtil.updatePaneStyleSheet(solutionsPane);
                         refreshSolutionsPane(solutions);
                     } catch (SamebugClientException e1) {
                         LOGGER.warn("Failed to retrieve solutions for search " + searchId, e1);

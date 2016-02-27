@@ -17,21 +17,25 @@ package com.samebug.clients.idea.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.project.DumbAware;
+import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.SamebugHistoryWindow;
 
-public class ReloadHistoryAction extends AnAction {
+public class ReloadHistoryAction extends AnAction implements DumbAware {
     private SamebugHistoryWindow historyWindow;
 
     @Override
     public void actionPerformed(AnActionEvent e) {
+        e.getPresentation().setEnabled(false);
         historyWindow.loadHistory();
     }
 
     @Override
     public void update(AnActionEvent e) {
-        boolean clientInitializated = IdeaSamebugPlugin.getInstance().isInitialized();
-        e.getPresentation().setEnabled(clientInitializated);
+        IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
+        IdeaClientService client = plugin.getClient();
+        e.getPresentation().setEnabled(client.getNumberOfActiveRequests() == 0 && plugin.isInitialized());
     }
 
     public void setHook(SamebugHistoryWindow historyWindow) {

@@ -27,8 +27,10 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
+import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.History;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
@@ -50,6 +52,7 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener, Conn
     private JScrollPane scrollPane;
     private JEditorPane historyPane;
     private JLabel statusIcon;
+    private JPanel statusToolbarPanel;
     final private Project project;
     final private SamebugSolutionsWindow solutionsWindow;
     private boolean recentFilterOn;
@@ -102,7 +105,7 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener, Conn
                     try {
                         emptyHistoryPane();
                         final History history = plugin.getClient().getSearchHistory(recentFilterOn);
-                        cssUtil.updatePaneStyleSheet(historyPane);
+                        CssUtil.updatePaneStyleSheet(historyPane);
                         refreshHistoryPane(history);
                     } catch (SamebugClientException e1) {
                         LOGGER.warn("Failed to retrieve history", e1);
@@ -148,6 +151,7 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener, Conn
                 HTMLEditorKit kit = (HTMLEditorKit) historyPane.getEditorKit();
                 historyPane.setText(history.html);
                 historyPane.setCaretPosition(0);
+                historyPane.invalidate();
             }
         });
     }
@@ -164,11 +168,12 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener, Conn
             public void run() {
                 if (isConnected) {
                     statusIcon.setIcon(null);
-                    statusIcon.setText(null);
+                    statusIcon.setToolTipText(null);
                 } else {
                     statusIcon.setIcon(SamebugIcons.linkError);
-                    statusIcon.setToolTipText("Connection lost");
+                    statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.notConnected", SamebugClient.root));
                 }
+                statusIcon.invalidate();
             }
         });
     }
