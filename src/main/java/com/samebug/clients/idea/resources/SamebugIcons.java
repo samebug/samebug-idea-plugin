@@ -20,11 +20,11 @@ import com.intellij.openapi.util.IconLoader;
 import javax.swing.*;
 
 public class SamebugIcons {
-    public final static Icon notification = IconLoader.getIcon("/com/samebug/icons/samebug-32x32.png");
+    public final static Icon notification = IconLoader.getIcon("/com/samebug/icons/samebug-notification.png");
 
-    public final static Icon tab = IconLoader.getIcon("/com/samebug/icons/samebug-r270-13x13.png");
+    public final static Icon tab = IconLoader.getIcon("/com/samebug/icons/samebug-r270.png");
 
-    public final static Icon cogwheel = IconLoader.getIcon("/com/samebug/icons/cogwheel-16x16.png");
-    public final static Icon cogwheelTodo = IconLoader.getIcon("/com/samebug/icons/cogwheel-todo-16x16.png");
-    public final static Icon linkError = IconLoader.getIcon("/com/samebug/icons/link-error-16x16.png");
+    public final static Icon cogwheel = IconLoader.getIcon("/com/samebug/icons/cogwheel.png");
+    public final static Icon cogwheelTodo = IconLoader.getIcon("/com/samebug/icons/cogwheel-todo.png");
+    public final static Icon linkError = IconLoader.getIcon("/com/samebug/icons/link-error.png");
 }

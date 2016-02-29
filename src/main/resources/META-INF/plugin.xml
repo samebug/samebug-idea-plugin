@@ -31,7 +31,7 @@
     <depends>org.jetbrains.android</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Samebug" icon="/com/samebug/icons/samebug-r270-13x13.png" anchor="right"
+        <toolWindow id="Samebug" icon="/com/samebug/icons/samebug-r270.png" anchor="right"
                     factoryClass="com.samebug.clients.idea.ui.SamebugToolWindowFactory"/>
     </extensions>
 
@@ -39,9 +39,9 @@
         <!-- Add your actions here -->
         <group id="Samebug.ToolWindowMenu" text="Samebug menu" description="Samebug menu">
             <action id="Samebug.Configure" class="com.samebug.clients.idea.actions.ConfigureAction"
-                    icon="/com/samebug/icons/cogwheel-16x16.png" text="Configure Samebug" description="Set Samebug API key"/>
+                    icon="/com/samebug/icons/cogwheel.png" text="Configure Samebug" description="Set Samebug API key"/>
             <action id="Samebug.History" class="com.samebug.clients.idea.actions.ReloadHistoryAction"
-                    icon="/com/samebug/icons/reload-16x16.png" text="Reload history" description="Reload crash history"/>
+                    icon="/com/samebug/icons/reload.png" text="Reload history" description="Reload crash history"/>
         </group>
     </actions>
 
