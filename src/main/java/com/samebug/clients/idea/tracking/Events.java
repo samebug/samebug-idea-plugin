@@ -17,6 +17,7 @@ package com.samebug.clients.idea.tracking;
 
 
 import com.intellij.ide.plugins.PluginManager;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
@@ -50,9 +51,14 @@ public class Events {
         return new TrackBuilder("Project", "Open", project) {
             @Override
             protected void initFields() {
-                String lookAndFeelName = null;
-                if (UIManager.getLookAndFeel() != null) lookAndFeelName = UIManager.getLookAndFeel().getName();
-                fields.put("lookAndFeel", lookAndFeelName);
+                Map<String, String> intellijInfo = new HashMap<String, String>();
+                LookAndFeel laf = UIManager.getLookAndFeel();
+                ApplicationInfo appInfo = ApplicationInfo.getInstance();
+                if (laf != null) intellijInfo.put("lookAndFeel", laf.getName());
+                intellijInfo.put("ideaApiVersion", appInfo.getApiVersion());
+                intellijInfo.put("ideaFullVersion", appInfo.getFullVersion());
+                intellijInfo.put("ideaVersionName", appInfo.getVersionName());
+                fields.put("intellijInfo", intellijInfo);
             }
         }.getEvent();
     }
