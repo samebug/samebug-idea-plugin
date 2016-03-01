@@ -14,10 +14,11 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>Show notification only for fresh type of exceptions</li>
-        <li>Refreshing css in history window</li>
         <li>Toolbar shows connection status</li>
+        <li>Compatibility checked from Idea 13.1.6</li>
       </ul>
+
+      Check it at <a href="https://medium.com/@samebug/samebug-plugin-0-7-0-update-is-out-fa06add50cfa">our blog</a>
     ]]>
     </change-notes>
 
