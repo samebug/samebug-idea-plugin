@@ -17,12 +17,12 @@ package com.samebug.clients.idea.components.application;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.messages.StackTraceMatcherListener;
 import com.samebug.clients.idea.messages.StackTraceSearchListener;
 import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
 import com.samebug.clients.search.api.entities.tracking.SearchInfo;
@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class StackTraceSearch implements ApplicationComponent, StackTraceMatcherListener {
     private MessageBusConnection messageBusConnection;
+    private final static Logger LOGGER = Logger.getInstance(StackTraceSearch.class);
 
     // ApplicationComponent overrides
     @Override
@@ -55,23 +56,27 @@ public class StackTraceSearch implements ApplicationComponent, StackTraceMatcher
     // StackTraceMatcherListener overrides
     @Override
     public void stackTraceFound(final Project project, final DebugSessionInfo sessionInfo, final String stackTrace) {
-        final SamebugClient client = IdeaSamebugPlugin.getInstance().getClient();
+        final IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
-                StackTraceSearchListener listener = project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC);
-                SearchInfo searchInfo = new SearchInfo(sessionInfo);
-                listener.searchStart(searchInfo, stackTrace);
                 try {
-                    SearchResults result = client.searchSolutions(stackTrace);
-                    listener.searchSucceeded(searchInfo, result);
-                    Tracking.projectTracking(project).trace(Events.searchSucceeded(searchInfo, result));
-                } catch (SamebugTimeout ignored) {
-                    listener.timeout(searchInfo);
-                } catch (UserUnauthorized ignored) {
-                    listener.unauthorized(searchInfo);
-                } catch (SamebugClientException e) {
-                    listener.searchFailed(searchInfo, e);
+                    StackTraceSearchListener listener = project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC);
+                    SearchInfo searchInfo = new SearchInfo(sessionInfo);
+                    listener.searchStart(searchInfo, stackTrace);
+                    try {
+                        SearchResults result = client.searchSolutions(stackTrace);
+                        listener.searchSucceeded(searchInfo, result);
+                        Tracking.projectTracking(project).trace(Events.searchSucceeded(searchInfo, result));
+                    } catch (SamebugTimeout ignored) {
+                        listener.timeout(searchInfo);
+                    } catch (UserUnauthorized ignored) {
+                        listener.unauthorized(searchInfo);
+                    } catch (SamebugClientException e) {
+                        listener.searchFailed(searchInfo, e);
+                    }
+                } catch (Exception e) {
+                    LOGGER.warn("Cannot publish stacktrace event, probably the project is already disposed", e);
                 }
             }
         });

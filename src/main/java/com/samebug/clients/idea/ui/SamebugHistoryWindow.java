@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.idea.ui;
 
-import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.ActionToolbar;
@@ -24,39 +23,56 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.idea.messages.ConnectionStatusListener;
+import com.samebug.clients.idea.notification.SamebugNotifications;
+import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.History;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
 import java.awt.*;
-import java.net.URL;
+import java.util.Dictionary;
 
 /**
  * Created by poroszd on 2/14/16.
  */
-public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
+public class SamebugHistoryWindow implements BatchStackTraceSearchListener, ConnectionStatusListener {
     private JPanel controlPanel;
     private JPanel toolbarPanel;
     private JScrollPane scrollPane;
     private JEditorPane historyPane;
-    private Project project;
+    private JLabel statusIcon;
+    private JPanel statusToolbarPanel;
+    final private Project project;
+    final private SamebugSolutionsWindow solutionsWindow;
+    private boolean recentFilterOn;
+
     private final static Logger LOGGER = Logger.getInstance(SamebugHistoryWindow.class);
 
-    public SamebugHistoryWindow(Project project) {
+    public SamebugHistoryWindow(Project project, SamebugSolutionsWindow solutionsWindow) {
         this.project = project;
+        this.solutionsWindow = solutionsWindow;
     }
 
     public JComponent getControlPanel() {
         return controlPanel;
+    }
+
+    public void initHistoryPane() {
+        HTMLEditorKit kit = new HTMLEditorKit();
+        historyPane.setEditorKit(kit);
+        historyPane.addHyperlinkListener(SamebugNotifications.basicHyperlinkListener(project));
+
+        if ((Dictionary) historyPane.getDocument().getProperty("imageCache") == null) {
+            historyPane.getDocument().putProperty("imageCache", HtmlUtil.imageCache);
+        }
+        loadHistory();
+        statusIcon.setIcon(null);
     }
 
     public void loadHistory() {
@@ -66,16 +82,26 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
                 @Override
                 public void run() {
                     try {
-                        final History history = plugin.getClient().getSearchHistory();
-                        setCssTheme(UIManager.getLookAndFeel().getName());
+                        emptyHistoryPane();
+                        final History history = plugin.getClient().getSearchHistory(recentFilterOn);
+                        CssUtil.updatePaneStyleSheet(historyPane);
                         refreshHistoryPane(history);
                     } catch (SamebugClientException e1) {
-                        // TODO set some status, or notify the user in some other way
                         LOGGER.warn("Failed to retrieve history", e1);
                     }
                 }
             });
         }
+    }
+
+    @Override
+    public void batchStart() {
+
+    }
+
+    @Override
+    public void batchFinished(java.util.List<SearchResults> results, int failed) {
+        loadHistory();
     }
 
     private void createUIComponents() {
@@ -90,56 +116,57 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener {
         return buttonsPanel;
     }
 
-    @Override
-    public void batchStart() {
-
-    }
-
-    @Override
-    public void batchFinished(java.util.List<SearchResults> results, int failed) {
-        loadHistory();
-    }
-
-    public void initHistoryPane() {
-        HTMLEditorKit kit = new HTMLEditorKit();
-        historyPane.setEditorKit(kit);
-        historyPane.addHyperlinkListener(new HyperlinkListener() {
-            public void hyperlinkUpdate(HyperlinkEvent e) {
-                if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    URL url = e.getURL();
-                    BrowserUtil.browse(url);
-                    Tracking.projectTracking(project).trace(Events.linkClick(project, url));
-                }
+    private void emptyHistoryPane() {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            public void run() {
+                historyPane.setText("");
             }
         });
-        loadHistory();
-    }
-
-    public void setCssTheme(String themeName) {
-        HTMLEditorKit kit = (HTMLEditorKit) historyPane.getEditorKit();
-        StyleSheet ss = kit.getStyleSheet();
-        final SamebugClient client = IdeaSamebugPlugin.getInstance().getClient();
-        String themeId;
-        if (themeName.equals("IntelliJ")) {
-            themeId = "intellij";
-        } else if (themeName.equals("Darcula")) {
-            themeId = "darcula";
-        } else {
-            themeId = "intellij";
-        }
-        ss.importStyleSheet(client.getHistoryCssUrl(themeId));
-        kit.setStyleSheet(ss);
     }
 
     private void refreshHistoryPane(final History history) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             public void run() {
                 HTMLEditorKit kit = (HTMLEditorKit) historyPane.getEditorKit();
-                StyleSheet ss = kit.getStyleSheet();
-                kit.setStyleSheet(ss);
                 historyPane.setText(history.html);
                 historyPane.setCaretPosition(0);
+                historyPane.invalidate();
             }
         });
+    }
+
+    @Override
+    public void startRequest() {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                statusIcon.setIcon(SamebugIcons.linkActive);
+                statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.loading"));
+                statusIcon.invalidate();
+            }
+        });
+    }
+
+    @Override
+    public void finishRequest(final boolean isConnected) {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if (IdeaSamebugPlugin.getInstance().getClient().getNumberOfActiveRequests() == 0) {
+                    if (isConnected) {
+                        statusIcon.setIcon(null);
+                        statusIcon.setToolTipText(null);
+                    } else {
+                        statusIcon.setIcon(SamebugIcons.linkError);
+                        statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.notConnected", SamebugClient.root));
+                    }
+                    statusIcon.invalidate();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void authorizationChange(final boolean isAuthorized) {
     }
 }

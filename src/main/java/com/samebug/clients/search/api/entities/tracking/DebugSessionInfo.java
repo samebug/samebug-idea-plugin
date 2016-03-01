@@ -31,6 +31,7 @@ public class DebugSessionInfo {
     public UUID getId() {
         return id;
     }
+
     public String getSessionType() {
         return sessionType;
     }

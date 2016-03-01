@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.actions;
+package com.samebug.clients.idea.components.project;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.ui.SettingsDialog;
+/**
+ * Created by poroszd on 2/23/16.
+ */
+public class Settings {
+    private boolean recentFilter;
 
-public class SettingsAction extends AnAction {
-    @Override
-    public void actionPerformed(AnActionEvent e) {
-        IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-        SettingsDialog.setup(plugin.getApiKey());
+    public boolean isRecentFilter() {
+        return recentFilter;
+    }
+
+    public void setRecentFilter(boolean recentFilter) {
+        this.recentFilter = recentFilter;
     }
 }

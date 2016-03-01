@@ -17,6 +17,7 @@ package com.samebug.clients.search.matcher;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.regex.Matcher;
 
 import static com.samebug.clients.search.matcher.LineType.*;
@@ -47,11 +48,11 @@ abstract class Line {
 
 class StackFrame extends Line {
     public StackFrame(LineType type, Matcher matcher) {
-        super(StackFrameType,  matcher.group(0));
-        this.packageName =  matcher.group(1);
-        this.className =  matcher.group(2);
-        this.methodName =  matcher.group(3);
-        this.location =  matcher.group(4);
+        super(StackFrameType, matcher.group(0));
+        this.packageName = matcher.group(1);
+        this.className = matcher.group(2);
+        this.methodName = matcher.group(3);
+        this.location = matcher.group(4);
     }
 
     @Nullable

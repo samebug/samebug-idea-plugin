@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api.exceptions;
+package com.samebug.clients.idea.messages;
 
-public class UserUnauthorized extends SamebugClientException {
-    private final String reason;
+import com.intellij.util.messages.Topic;
 
-    public UserUnauthorized(String reason) {
-        this.reason = reason;
-    }
+/**
+ * Created by poroszd on 2/23/16.
+ */
+public interface ConnectionStatusListener {
+    Topic<ConnectionStatusListener> CONNECTION_STATUS_TOPIC = Topic.create("connection status change", ConnectionStatusListener.class);
 
-    @Override
-    public String getMessage() {
-        return "User is unauthorized: " + reason;
-    }
+    void startRequest();
+
+    void finishRequest(boolean isConnected);
+
+    void authorizationChange(boolean isAuthorized);
 }

@@ -14,14 +14,16 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>Show notification only for fresh type of exceptions</li>
-        <li>Refreshing css in history window</li>
+        <li>Toolbar shows connection status</li>
+        <li>Compatibility checked from Idea 13.1.6</li>
       </ul>
+
+      Check it at <a href="https://medium.com/@samebug/samebug-plugin-0-7-0-update-is-out-fa06add50cfa">our blog</a>
     ]]>
     </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="141.0"/>
+    <idea-version since-build="135.1306"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -30,18 +32,17 @@
     <depends>org.jetbrains.android</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Samebug" icon="/icons/samebug/samebug-r270-13x13.png" anchor="right"
+        <toolWindow id="Samebug" icon="/com/samebug/icons/samebug-r270.png" anchor="right"
                     factoryClass="com.samebug.clients.idea.ui.SamebugToolWindowFactory"/>
     </extensions>
 
     <actions>
         <!-- Add your actions here -->
         <group id="Samebug.ToolWindowMenu" text="Samebug menu" description="Samebug menu">
-            <add-to-group group-id="ToolsMenu" anchor="last"/>
-            <action id="Samebug.Settings" class="com.samebug.clients.idea.actions.SettingsAction"
-                    icon="/icons/samebug/cogwheel.png" text="Settings" description="Change Samebug configuration"/>
-            <action id="Samebug.History" class="com.samebug.clients.idea.actions.HistoryAction"
-                    icon="/icons/samebug/history.png" text="History" description="Reload your crash history"/>
+            <action id="Samebug.Configure" class="com.samebug.clients.idea.actions.ConfigureAction"
+                    icon="/com/samebug/icons/cogwheel.png" text="Configure Samebug" description="Set Samebug API key"/>
+            <action id="Samebug.History" class="com.samebug.clients.idea.actions.ReloadHistoryAction"
+                    icon="/com/samebug/icons/reload.png" text="Reload history" description="Reload crash history"/>
         </group>
     </actions>
 

@@ -21,9 +21,9 @@ import java.util.Map;
  * Created by poroszd on 2/18/16.
  */
 public class TrackEvent {
-    public TrackEvent(Map<String, String> fields) {
+    public TrackEvent(Map<String, Object> fields) {
         this.fields = fields;
     }
 
-    public Map<String, String> fields;
+    public Map<String, Object> fields;
 }

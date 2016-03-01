@@ -21,7 +21,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.messages.TrackingListener;
-import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +34,7 @@ public class Tracking implements ApplicationComponent, TrackingListener {
             @Override
             public void run() {
                 try {
-                    SamebugClient client = IdeaSamebugPlugin.getInstance().getClient();
+                    IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
                     client.trace(event);
                 } catch (SamebugClientException e) {
                     LOGGER.debug("Failed to send a track event to server", e);
@@ -47,11 +46,22 @@ public class Tracking implements ApplicationComponent, TrackingListener {
     }
 
     public static TrackingListener appTracking() {
-        return ApplicationManager.getApplication().getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC);
+        try {
+            return ApplicationManager.getApplication().getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC);
+        } catch (Exception e) {
+            // Likely we were called asynchronously, and the message bus is already closed. Np, it's just tracking.
+            LOGGER.warn("Failed to get tracking listener, track event will be lost", e);
+            return new NopTracking();
+        }
     }
 
     public static TrackingListener projectTracking(Project project) {
-        return project.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC);
+        try {
+            return project.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC);
+        } catch (Exception e) {
+            LOGGER.warn("Failed to get tracking listener, track event will be lost", e);
+            return new NopTracking();
+        }
     }
 
     @Override
@@ -73,4 +83,16 @@ public class Tracking implements ApplicationComponent, TrackingListener {
 
     private MessageBusConnection messageBusConnection;
     private final static Logger LOGGER = Logger.getInstance(Tracking.class);
+}
+
+/**
+ * Mock implementation of a TrackingListener
+ *
+ * This implementation does nothing.
+ * It exists simply to avoid NPEs when the tracking message bus was closed, and we want to ignore the requested tracking event.
+ */
+class NopTracking implements TrackingListener {
+    @Override
+    public void trace(TrackEvent event) {
+    }
 }

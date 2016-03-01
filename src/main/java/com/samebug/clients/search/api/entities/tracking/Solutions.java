@@ -13,17 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api.exceptions;
+package com.samebug.clients.search.api.entities.tracking;
 
-public class UserUnauthorized extends SamebugClientException {
-    private final String reason;
-
-    public UserUnauthorized(String reason) {
-        this.reason = reason;
-    }
-
-    @Override
-    public String getMessage() {
-        return "User is unauthorized: " + reason;
-    }
+/**
+ * Created by poroszd on 2/24/16.
+ */
+public class Solutions {
+    public String html;
 }
