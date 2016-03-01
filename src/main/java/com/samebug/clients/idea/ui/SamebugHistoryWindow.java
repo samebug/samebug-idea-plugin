@@ -27,6 +27,7 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
+import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
@@ -71,23 +72,7 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener, Conn
     public void initHistoryPane() {
         HTMLEditorKit kit = new HTMLEditorKit();
         historyPane.setEditorKit(kit);
-        historyPane.addHyperlinkListener(new HyperlinkListener() {
-            public void hyperlinkUpdate(HyperlinkEvent e) {
-                if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    URL url = e.getURL();
-//                    String searchId = (String) ((SimpleAttributeSet) e.getSourceElement().getAttributes().getAttribute(HTML.Tag.A)).getAttribute("data-search-id");
-//                    if (searchId != null) {
-//                        solutionsWindow.loadSolutions(searchId);
-//                        ToolWindow w = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
-//                        w.getContentManager().setSelectedContent(w.getContentManager().getContent(solutionsWindow.getControlPanel()), true);
-//                    } else {
-//                        BrowserUtil.browse(url);
-//                    }
-                    BrowserUtil.browse(url);
-                    Tracking.projectTracking(project).trace(Events.linkClick(project, url));
-                }
-            }
-        });
+        historyPane.addHyperlinkListener(SamebugNotifications.basicHyperlinkListener(project));
 
         if ((Dictionary) historyPane.getDocument().getProperty("imageCache") == null) {
             historyPane.getDocument().putProperty("imageCache", HtmlUtil.imageCache);
