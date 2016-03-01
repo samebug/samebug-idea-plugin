@@ -158,7 +158,14 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener, Conn
 
     @Override
     public void startRequest() {
-
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                statusIcon.setIcon(SamebugIcons.linkActive);
+                statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.loading"));
+                statusIcon.invalidate();
+            }
+        });
     }
 
     @Override
@@ -166,14 +173,16 @@ public class SamebugHistoryWindow implements BatchStackTraceSearchListener, Conn
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
-                if (isConnected) {
-                    statusIcon.setIcon(null);
-                    statusIcon.setToolTipText(null);
-                } else {
-                    statusIcon.setIcon(SamebugIcons.linkError);
-                    statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.notConnected", SamebugClient.root));
+                if (IdeaSamebugPlugin.getInstance().getClient().getNumberOfActiveRequests() == 0) {
+                    if (isConnected) {
+                        statusIcon.setIcon(null);
+                        statusIcon.setToolTipText(null);
+                    } else {
+                        statusIcon.setIcon(SamebugIcons.linkError);
+                        statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.notConnected", SamebugClient.root));
+                    }
+                    statusIcon.invalidate();
                 }
-                statusIcon.invalidate();
             }
         });
     }

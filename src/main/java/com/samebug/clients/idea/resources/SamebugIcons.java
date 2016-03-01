@@ -27,4 +27,5 @@ public class SamebugIcons {
     public final static Icon cogwheel = IconLoader.getIcon("/com/samebug/icons/cogwheel.png");
     public final static Icon cogwheelTodo = IconLoader.getIcon("/com/samebug/icons/cogwheel-todo.png");
     public final static Icon linkError = IconLoader.getIcon("/com/samebug/icons/link-error.png");
+    public final static Icon linkActive = IconLoader.getIcon("/com/samebug/icons/link-active.png");
 }
