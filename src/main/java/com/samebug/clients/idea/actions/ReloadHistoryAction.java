@@ -20,15 +20,15 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
 import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.ui.SamebugHistoryWindow;
+import com.samebug.clients.idea.ui.controller.HistoryTabController;
 
 public class ReloadHistoryAction extends AnAction implements DumbAware {
-    private SamebugHistoryWindow historyWindow;
+    private HistoryTabController historyTab;
 
     @Override
     public void actionPerformed(AnActionEvent e) {
         e.getPresentation().setEnabled(false);
-        historyWindow.loadHistory();
+        historyTab.loadHistory();
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ReloadHistoryAction extends AnAction implements DumbAware {
         e.getPresentation().setEnabled(client.getNumberOfActiveRequests() == 0 && plugin.isInitialized());
     }
 
-    public void setHook(SamebugHistoryWindow historyWindow) {
-        this.historyWindow = historyWindow;
+    public void setHook(HistoryTabController historyTab) {
+        this.historyTab = historyTab;
     }
 }

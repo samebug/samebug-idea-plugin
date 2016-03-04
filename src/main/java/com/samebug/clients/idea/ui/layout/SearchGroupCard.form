@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.samebug.clients.idea.ui.layout.SearchGroupCard">
+  <grid id="27dc6" binding="controlPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="20" y="20" width="1262" height="435"/>
+    </constraints>
+    <properties/>
+    <border type="empty">
+      <size top="10" left="10" bottom="10" right="10"/>
+    </border>
+    <children>
+      <grid id="6d3d0" binding="leftPanel" layout-manager="GridBagLayout">
+        <constraints border-constraint="West"/>
+        <properties>
+          <minimumSize width="80" height="35"/>
+          <preferredSize width="80" height="35"/>
+        </properties>
+        <border type="empty"/>
+        <children>
+          <component id="fd8d0" class="javax.swing.JLabel" binding="hitsLabel">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties>
+              <text value="42 hits"/>
+            </properties>
+          </component>
+          <component id="484f2" class="javax.swing.JLabel" binding="timeLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties>
+              <text value="3:12 PM"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="8f3f0" binding="breadcrumbPanel" layout-manager="FlowLayout" hgap="0" vgap="0" flow-align="0">
+        <constraints border-constraint="South"/>
+        <properties/>
+        <border type="empty">
+          <size top="5" left="0" bottom="0" right="0"/>
+        </border>
+        <children>
+          <component id="eac2f" class="javax.swing.JEditorPane" binding="breadcrumbBar">
+            <constraints/>
+            <properties>
+              <contentType value="text/html"/>
+              <editable value="false"/>
+              <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;    &lt;span&gt;&lt;font color=&quot;black&quot;&gt;de.appplant.cordova&lt;/font&gt;&lt;/span&gt; &amp;#8249; &lt;a href=&quot;\/crashdocs/android.app/ActivityThread/main/java.lang.RuntimeException?pt=true\&quot;&gt;&lt;font color=&quot;black&quot;&gt;Android &#10;    Platform&lt;/font&gt; &lt;/a&gt;&amp;#8249; &lt;a href=&quot;\/crashdocs/java.lang.reflect/Method/invoke/java.lang.RuntimeException?pt=true\&quot;&gt;&lt;font color=&quot;red&quot;&gt;Java &#10;    RT&lt;/font&gt; &lt;/a&gt;&amp;#8249; &lt;a href=&quot;\/crashdocs/com.android.internal.os/ZygoteInit/main/java.lang.RuntimeException?pt=true\&quot;&gt;&lt;font color=&quot;green&quot;&gt;Android&lt;/font&gt; &#10;    &lt;/a&gt;&amp;#8249; &lt;a href=&quot;\/crashdocs/dalvik.system/NativeStart/main/java.lang.RuntimeException?pt=true\&quot;&gt;&lt;font color=&quot;red&quot;&gt;Android &#10;    Platform&lt;/font&gt; &lt;/a&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="fb99c" binding="contentPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="Center"/>
+        <properties/>
+        <border type="empty">
+          <size top="0" left="10" bottom="0" right="0"/>
+        </border>
+        <children>
+          <component id="f2b32" class="javax.swing.JLabel" binding="titleLabel">
+            <constraints border-constraint="Center"/>
+            <properties>
+              <font style="1"/>
+              <foreground color="-16776961"/>
+              <text value="&lt;html&gt;&lt;u&gt;HttpError: org.apache.http.conn.HttpHostConnectException: Connect to localhost:9000 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused&lt;/u&gt;&lt;/html&gt;"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>
