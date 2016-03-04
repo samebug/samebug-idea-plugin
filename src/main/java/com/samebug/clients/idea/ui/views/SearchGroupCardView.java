@@ -53,6 +53,7 @@ public class SearchGroupCardView {
         breadcrumbBar.setContentType("text/html");
         breadcrumbBar.setEditable(false);
         breadcrumbBar.setText("<html>\n  <head>\n    \n  </head>\n  <body>\n    <span><font color=\"black\">de.appplant.cordova</font></span> &#8249; <a href=\"\\/crashdocs/android.app/ActivityThread/main/java.lang.RuntimeException?pt=true\\\"><font color=\"black\">Android \n    Platform</font> </a>&#8249; <a href=\"\\/crashdocs/java.lang.reflect/Method/invoke/java.lang.RuntimeException?pt=true\\\"><font color=\"red\">Java \n    RT</font> </a>&#8249; <a href=\"\\/crashdocs/com.android.internal.os/ZygoteInit/main/java.lang.RuntimeException?pt=true\\\"><font color=\"green\">Android</font> \n    </a>&#8249; <a href=\"\\/crashdocs/dalvik.system/NativeStart/main/java.lang.RuntimeException?pt=true\\\"><font color=\"red\">Android \n    Platform</font> </a>\n  </body>\n</html>\n");
+        breadcrumbBar.setOpaque(false);
         breadcrumbPanel.add(breadcrumbBar);
         contentPanel = new JPanel();
         contentPanel.setLayout(new BorderLayout(0, 0));
@@ -64,4 +65,5 @@ public class SearchGroupCardView {
         titleLabel.setText("<html><u>HttpError: org.apache.http.conn.HttpHostConnectException: Connect to localhost:9000 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused</u></html>");
         contentPanel.add(titleLabel, BorderLayout.CENTER);
     }
+
 }

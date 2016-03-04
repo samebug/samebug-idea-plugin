@@ -16,4 +16,8 @@ public class SearchGroupCard {
     public JLabel timeLabel;
     public JLabel hitsLabel;
 
+    /**
+     * Manually modified:
+     *  - setOpaque(false) on breadcrumb bar
+     */
 }
