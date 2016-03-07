@@ -21,11 +21,11 @@ import javax.swing.*;
 
 public class SamebugIcons {
     public final static Icon notification = IconLoader.getIcon("/com/samebug/icons/samebug-notification.png");
-
-    public final static Icon tab = IconLoader.getIcon("/com/samebug/icons/samebug-r270.png");
-
     public final static Icon cogwheel = IconLoader.getIcon("/com/samebug/icons/cogwheel.png");
     public final static Icon cogwheelTodo = IconLoader.getIcon("/com/samebug/icons/cogwheel-todo.png");
     public final static Icon linkError = IconLoader.getIcon("/com/samebug/icons/link-error.png");
     public final static Icon linkActive = IconLoader.getIcon("/com/samebug/icons/link-active.png");
+    public final static Icon reload = IconLoader.getIcon("/com/samebug/icons/reload.png");
+    public final static Icon lightbulb = IconLoader.getIcon("/com/samebug/icons/filter-unknown.png");
+    public final static Icon calendar = IconLoader.getIcon("/com/samebug/icons/filter-old.png");
 }

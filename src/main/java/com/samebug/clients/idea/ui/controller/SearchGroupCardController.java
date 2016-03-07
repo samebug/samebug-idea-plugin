@@ -12,12 +12,15 @@ import javax.swing.*;
 public class SearchGroupCardController {
     final private static Logger LOGGER = Logger.getInstance(SearchGroupCardController.class);
     final private SearchGroupCardView view;
+    final private GroupedExceptionSearch model;
 
-    public SearchGroupCardController() {
+    public SearchGroupCardController(GroupedExceptionSearch model) {
         view = new SearchGroupCardView();
+        this.model = model;
+        updateFields();
     }
 
-    public void show(GroupedExceptionSearch model) {
+    private void updateFields() {
         view.setHits(model.numberOfSolutions);
         view.setLastSeen(model.lastSeenSimilar);
         view.setContent(model.exception);

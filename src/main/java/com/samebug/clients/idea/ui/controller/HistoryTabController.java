@@ -1,11 +1,15 @@
 package com.samebug.clients.idea.ui.controller;
 
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.samebug.clients.idea.actions.ShowOld;
+import com.samebug.clients.idea.actions.ShowZeroSolution;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
+import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.views.HistoryTabView;
@@ -14,11 +18,12 @@ import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.text.DefaultCaret;
-import java.awt.*;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,16 +33,22 @@ public class HistoryTabController {
     final private Project project;
     final private static Logger LOGGER = Logger.getInstance(HistoryTabController.class);
     final private HistoryTabView view;
+    @Nullable private GroupedHistory model;
+    final private List<SearchGroupCardController> searchGroups;
+
     final private HistoryReloader historyReloader;
     final private ConnectionStatusUpdater statusUpdater;
-    final private List<SearchGroupCardController> searchGroups;
+    final private HistoryUpdater historyUpdater;
+
 
     public HistoryTabController(Project project) {
         this.project = project;
         view = new HistoryTabView();
+        searchGroups = new ArrayList<SearchGroupCardController>();
+
         historyReloader = new HistoryReloader();
         statusUpdater = new ConnectionStatusUpdater();
-        searchGroups = new ArrayList<SearchGroupCardController>();
+        historyUpdater = new HistoryUpdater();
     }
 
     public HistoryReloader getHistoryReloader() {
@@ -46,6 +57,10 @@ public class HistoryTabController {
 
     public ConnectionStatusUpdater getStatusUpdater() {
         return statusUpdater;
+    }
+
+    public HistoryUpdater getHistoryUpdater() {
+        return historyUpdater;
     }
 
     public JPanel getControlPanel() {
@@ -60,8 +75,8 @@ public class HistoryTabController {
                 public void run() {
                     try {
                         emptyHistoryPane();
-                        final GroupedHistory history = plugin.getClient().getSearchHistory();
-                        refreshHistoryPane(history);
+                        model = plugin.getClient().getSearchHistory();
+                        refreshHistoryPane();
                     } catch (SamebugClientException e1) {
                         LOGGER.warn("Failed to retrieve history", e1);
                     }
@@ -74,20 +89,34 @@ public class HistoryTabController {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             public void run() {
                 view.contentPanel.removeAll();
-                view.controlPanel.invalidate();
             }
         });
     }
 
-    private void refreshHistoryPane(final GroupedHistory history) {
+    private void refreshHistoryPane() {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             public void run() {
+                view.contentPanel.removeAll();
                 searchGroups.clear();
-                for (GroupedExceptionSearch group : history.searchGroups) {
-                    SearchGroupCardController c = new SearchGroupCardController();
-                    searchGroups.add((c));
-                    view.contentPanel.add(c.getControlPanel());
-                    c.show(group);
+                if (model != null) {
+                    boolean showOldSearches = ((ShowOld) ActionManager.getInstance().getAction("Samebug.ShowOld")).isSelected(null);
+                    boolean showSearchesWithZeroSolution = ((ShowZeroSolution) ActionManager.getInstance().getAction("Samebug.ShowZeroSolution")).isSelected(null);
+                    Date now = new Date();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(now);
+                    cal.add(Calendar.DAY_OF_YEAR, -1);
+                    Date oneDayBefore = cal.getTime();
+                    for (GroupedExceptionSearch group : model.searchGroups) {
+                        if (!showSearchesWithZeroSolution && group.numberOfSolutions == 0) {
+                            // filtered because there is no solution for it
+                        } else if (!showOldSearches && group.firstSeenSimilar.before(oneDayBefore)) {
+                            // filtered because it is old
+                        } else {
+                            SearchGroupCardController c = new SearchGroupCardController(group);
+                            searchGroups.add(c);
+                            view.contentPanel.add(c.getControlPanel());
+                        }
+                    }
                 }
             }
         });
@@ -140,6 +169,24 @@ public class HistoryTabController {
         @Override
         public void batchFinished(java.util.List<SearchResults> results, int failed) {
             loadHistory();
+        }
+    }
+
+    class HistoryUpdater implements HistoryListener {
+
+        @Override
+        public void reload() {
+            loadHistory();
+        }
+
+        @Override
+        public void toggleShowSearchedWithZeroSolution(boolean enabled) {
+            refreshHistoryPane();
+        }
+
+        @Override
+        public void toggleShowOldSearches(boolean enabled) {
+            refreshHistoryPane();
         }
     }
 }

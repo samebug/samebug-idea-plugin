@@ -21,4 +21,5 @@ public class SearchResults {
     public int ownMatches;
     public Long firstSeenTime;
     public Long lastSeenTime;
+    public int deepestStackId;
 }

@@ -15,10 +15,14 @@
  */
 package com.samebug.clients.idea.components.project;
 
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.idea.actions.ShowOld;
+import com.samebug.clients.idea.actions.ShowZeroSolution;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.notification.SearchResultsNotification;
 import com.samebug.clients.search.api.entities.SearchResults;
@@ -26,8 +30,10 @@ import com.samebug.clients.search.api.entities.SearchResults;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 class SearchResultNotifier extends AbstractProjectComponent implements BatchStackTraceSearchListener {
     public SearchResultNotifier(Project project) {
@@ -54,8 +60,13 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
     @Override
     public void batchFinished(final List<SearchResults> results, int failed) {
         Long timelimitForFreshSearch = new Date().getTime() - (1 * 60 * 1000);
-        int nInterestingResults = 0;
+        Map<Integer, SearchResults> groupedResults = new HashMap<Integer, SearchResults>();
         for (SearchResults result : results) {
+            groupedResults.put(result.deepestStackId, result);
+        }
+
+        int nInterestingResults = 0;
+        for (SearchResults result : groupedResults.values()) {
             if (result.firstSeenTime == null || result.firstSeenTime > timelimitForFreshSearch) ++nInterestingResults;
         }
 

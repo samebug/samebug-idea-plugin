@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,20 +15,18 @@
  */
 package com.samebug.clients.idea.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.ide.actions.RefreshAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
 import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.ui.controller.HistoryTabController;
+import com.samebug.clients.idea.messages.HistoryListener;
 
-public class ReloadHistoryAction extends AnAction implements DumbAware {
-    private HistoryTabController historyTab;
-
+public class ReloadHistoryAction extends RefreshAction implements DumbAware {
     @Override
     public void actionPerformed(AnActionEvent e) {
         e.getPresentation().setEnabled(false);
-        historyTab.loadHistory();
+        e.getProject().getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).reload();
     }
 
     @Override
@@ -36,9 +34,5 @@ public class ReloadHistoryAction extends AnAction implements DumbAware {
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
         IdeaClientService client = plugin.getClient();
         e.getPresentation().setEnabled(client.getNumberOfActiveRequests() == 0 && plugin.isInitialized());
-    }
-
-    public void setHook(HistoryTabController historyTab) {
-        this.historyTab = historyTab;
     }
 }
