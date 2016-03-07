@@ -29,6 +29,7 @@ public class HistoryTabView {
         contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.PAGE_AXIS));
         scrollPane.setViewportView(contentPanel);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(50);
         statusIcon = new JLabel();
         statusIcon.setText(null);
         statusIcon.setIcon(null);

@@ -5,6 +5,10 @@ import java.awt.*;
 
 /**
  * Created by poroszd on 3/4/16.
+ *
+ * Manually modified:
+ *  - contentPanel should have BoxLayout (cannot set it in the designer)
+ *  - scrollPane.getVerticalScrollBar().setUnitIncrement(50);
  */
 public class HistoryTab {
     private JPanel controlPanel;
@@ -13,9 +17,4 @@ public class HistoryTab {
     private JPanel contentPanel;
     public JLabel actionToolbar;
     public JLabel statusIcon;
-
-    /**
-     * Manually modified:
-     *  - contentPanel should have BoxLayout (cannot set it in the designer)
-     */
 }
