@@ -19,7 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.search.api.SamebugClient;
-import com.samebug.clients.search.api.entities.History;
+import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
 import com.samebug.clients.search.api.entities.tracking.Solutions;
@@ -64,10 +64,10 @@ public class IdeaClientService {
         return userInfo;
     }
 
-    public History getSearchHistory(final boolean recentFilterOn) throws SamebugClientException {
-        return new ConnectionAwareHttpRequest<History>() {
-            History request() throws SamebugClientException {
-                return client.getSearchHistory(recentFilterOn);
+    public GroupedHistory getSearchHistory() throws SamebugClientException {
+        return new ConnectionAwareHttpRequest<GroupedHistory>() {
+            GroupedHistory request() throws SamebugClientException {
+                return client.getSearchHistory();
             }
         }.execute();
     }

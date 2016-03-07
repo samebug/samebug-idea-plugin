@@ -66,7 +66,7 @@
             <properties>
               <font style="1"/>
               <foreground color="-16776961"/>
-              <text value="&lt;html&gt;&lt;u&gt;HttpError: org.apache.http.conn.HttpHostConnectException: Connect to localhost:9000 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused&lt;/u&gt;&lt;/html&gt;"/>
+              <text value="HttpError: org.apache.http.conn.HttpHostConnectException: Connect to localhost:9000 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused"/>
             </properties>
           </component>
         </children>

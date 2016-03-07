@@ -11,6 +11,8 @@ public class HistoryTab {
     private JPanel toolbarPanel;
     private JScrollPane scrollPane;
     private JPanel contentPanel;
+    public JLabel actionToolbar;
+    public JLabel statusIcon;
 
     /**
      * Manually modified:

@@ -6,8 +6,11 @@ import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
+import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.views.HistoryTabView;
-import com.samebug.clients.search.api.entities.History;
+import com.samebug.clients.search.api.SamebugClient;
+import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
@@ -54,7 +57,7 @@ public class HistoryTabController {
                 public void run() {
                     try {
                         emptyHistoryPane();
-                        final History history = plugin.getClient().getSearchHistory(false);
+                        final GroupedHistory history = plugin.getClient().getSearchHistory();
                         refreshHistoryPane(history);
                     } catch (SamebugClientException e1) {
                         LOGGER.warn("Failed to retrieve history", e1);
@@ -73,7 +76,7 @@ public class HistoryTabController {
         });
     }
 
-    private void refreshHistoryPane(final History history) {
+    private void refreshHistoryPane(final GroupedHistory history) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             public void run() {
                 searchGroups.clear();
@@ -92,9 +95,9 @@ public class HistoryTabController {
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
-//                    statusIcon.setIcon(SamebugIcons.linkActive);
-//                    statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.loading"));
-//                    statusIcon.invalidate();
+                    view.statusIcon.setIcon(SamebugIcons.linkActive);
+                    view.statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.loading"));
+                    view.statusIcon.invalidate();
                 }
             });
         }
@@ -105,14 +108,14 @@ public class HistoryTabController {
                 @Override
                 public void run() {
                     if (IdeaSamebugPlugin.getInstance().getClient().getNumberOfActiveRequests() == 0) {
-//                        if (isConnected) {
-//                            statusIcon.setIcon(null);
-//                            statusIcon.setToolTipText(null);
-//                        } else {
-//                            statusIcon.setIcon(SamebugIcons.linkError);
-//                            statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.notConnected", SamebugClient.root));
-//                        }
-//                        statusIcon.invalidate();
+                        if (isConnected) {
+                            view.statusIcon.setIcon(null);
+                            view.statusIcon.setToolTipText(null);
+                        } else {
+                            view.statusIcon.setIcon(SamebugIcons.linkError);
+                            view.statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.notConnected", SamebugClient.root));
+                        }
+                        view.statusIcon.invalidate();
                     }
                 }
             });

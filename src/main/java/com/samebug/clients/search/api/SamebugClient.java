@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.search.api;
 
-import com.google.gson.Gson;
-import com.samebug.clients.search.api.entities.History;
+import com.google.gson.*;
+import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
 import com.samebug.clients.search.api.entities.tracking.Solutions;
@@ -37,18 +37,31 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.List;
 
 public class SamebugClient {
     private final String apiKey;
     private static final String USER_AGENT = "Samebug-Idea-Client/1.0.0";
     private static final String API_VERSION = "1.0";
-//        public final static URI root = URI.create("http://localhost:9000/");
-    public final static URI root = URI.create("https://samebug.io/");
+        public final static URI root = URI.create("http://localhost:9000/");
+//    public final static URI root = URI.create("https://samebug.io/");
         private final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
 //    private final static URI trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
     private final static URI gateway = root.resolve("sandbox/api/").resolve(API_VERSION + "/");
-    private static final Gson gson = new Gson();
+    private static final Gson gson;
+    // TODO is this a fine way of serialization of Date?
+    static {
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+                    @Override
+                    public Date deserialize(JsonElement json, java.lang.reflect.Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                        return new Date(json.getAsJsonPrimitive().getAsLong());
+                    }
+                }
+        );
+        gson = builder.create();
+    }
 
     public SamebugClient(final String apiKey) {
         this.apiKey = apiKey;
@@ -102,12 +115,11 @@ public class SamebugClient {
         return requestJson(request, UserInfo.class);
     }
 
-    public History getSearchHistory(boolean recentFilterOn) throws SamebugClientException {
-        // TODO use recentFilter
+    public GroupedHistory getSearchHistory() throws SamebugClientException {
         URL url = getApiUrl("history");
         Request request = Request.Get(url.toString());
 
-        return requestJson(request, History.class);
+        return requestJson(request, GroupedHistory.class);
     }
 
     public Solutions getSolutions(String searchId) throws SamebugClientException {

@@ -11,7 +11,21 @@
         <constraints border-constraint="North"/>
         <properties/>
         <border type="none"/>
-        <children/>
+        <children>
+          <component id="ef63e" class="javax.swing.JLabel" binding="actionToolbar">
+            <constraints border-constraint="West"/>
+            <properties>
+              <text value="actions"/>
+            </properties>
+          </component>
+          <component id="3be37" class="javax.swing.JLabel" binding="statusIcon">
+            <constraints border-constraint="East"/>
+            <properties>
+              <icon value="com/samebug/icons/link-active.png"/>
+              <text value=""/>
+            </properties>
+          </component>
+        </children>
       </grid>
       <scrollpane id="9a744" binding="scrollPane">
         <constraints border-constraint="Center"/>

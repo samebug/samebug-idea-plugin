@@ -1,7 +1,9 @@
 package com.samebug.clients.idea.ui.views;
 
-import javafx.scene.control.*;
-import javafx.scene.control.ScrollPane;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +14,7 @@ import java.awt.*;
 public class HistoryTabView {
     public JPanel controlPanel;
     public JPanel toolbarPanel;
+    public JLabel statusIcon;
     public JScrollPane scrollPane;
     public JPanel contentPanel;
 
@@ -26,6 +29,13 @@ public class HistoryTabView {
         contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.PAGE_AXIS));
         scrollPane.setViewportView(contentPanel);
+        statusIcon = new JLabel();
+        statusIcon.setText(null);
+        statusIcon.setIcon(null);
 
+        final DefaultActionGroup group = (DefaultActionGroup) ActionManager.getInstance().getAction("Samebug.ToolWindowMenu");
+        final ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+        toolbarPanel.add(actionToolBar.getComponent(), BorderLayout.WEST);
+        toolbarPanel.add(statusIcon, BorderLayout.EAST);
     }
 }
