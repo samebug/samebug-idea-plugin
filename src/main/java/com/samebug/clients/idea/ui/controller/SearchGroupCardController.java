@@ -2,6 +2,7 @@ package com.samebug.clients.idea.ui.controller;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.idea.ui.views.SearchGroupCardView;
+import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 
 import javax.swing.*;
 
@@ -14,6 +15,12 @@ public class SearchGroupCardController {
 
     public SearchGroupCardController() {
         view = new SearchGroupCardView();
+    }
+
+    public void show(GroupedExceptionSearch model) {
+        view.setHits(model.numberOfSolutions);
+        view.setLastSeen(model.lastSeenSimilar);
+        view.setContent(model.exception);
     }
 
     public JPanel getControlPanel() {

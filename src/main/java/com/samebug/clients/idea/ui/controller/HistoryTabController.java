@@ -10,11 +10,14 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.views.HistoryTabView;
 import com.samebug.clients.search.api.SamebugClient;
+import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,10 +83,11 @@ public class HistoryTabController {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             public void run() {
                 searchGroups.clear();
-                for (int i = 0; i < 10; ++i) {
+                for (GroupedExceptionSearch group : history.searchGroups) {
                     SearchGroupCardController c = new SearchGroupCardController();
                     searchGroups.add((c));
                     view.contentPanel.add(c.getControlPanel());
+                    c.show(group);
                 }
             }
         });

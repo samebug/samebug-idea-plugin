@@ -4,7 +4,9 @@
     <constraints>
       <xy x="20" y="20" width="1262" height="435"/>
     </constraints>
-    <properties/>
+    <properties>
+      <preferredSize width="400" height="150"/>
+    </properties>
     <border type="empty">
       <size top="10" left="10" bottom="10" right="10"/>
     </border>
@@ -49,6 +51,7 @@
             <properties>
               <contentType value="text/html"/>
               <editable value="false"/>
+              <opaque value="false"/>
               <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;    &lt;span&gt;&lt;font color=&quot;black&quot;&gt;de.appplant.cordova&lt;/font&gt;&lt;/span&gt; &amp;#8249; &lt;a href=&quot;\/crashdocs/android.app/ActivityThread/main/java.lang.RuntimeException?pt=true\&quot;&gt;&lt;font color=&quot;black&quot;&gt;Android &#10;    Platform&lt;/font&gt; &lt;/a&gt;&amp;#8249; &lt;a href=&quot;\/crashdocs/java.lang.reflect/Method/invoke/java.lang.RuntimeException?pt=true\&quot;&gt;&lt;font color=&quot;red&quot;&gt;Java &#10;    RT&lt;/font&gt; &lt;/a&gt;&amp;#8249; &lt;a href=&quot;\/crashdocs/com.android.internal.os/ZygoteInit/main/java.lang.RuntimeException?pt=true\&quot;&gt;&lt;font color=&quot;green&quot;&gt;Android&lt;/font&gt; &#10;    &lt;/a&gt;&amp;#8249; &lt;a href=&quot;\/crashdocs/dalvik.system/NativeStart/main/java.lang.RuntimeException?pt=true\&quot;&gt;&lt;font color=&quot;red&quot;&gt;Android &#10;    Platform&lt;/font&gt; &lt;/a&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
             </properties>
           </component>
@@ -62,11 +65,17 @@
         </border>
         <children>
           <component id="f2b32" class="javax.swing.JLabel" binding="titleLabel">
-            <constraints border-constraint="Center"/>
+            <constraints border-constraint="North"/>
             <properties>
               <font style="1"/>
               <foreground color="-16776961"/>
-              <text value="HttpError: org.apache.http.conn.HttpHostConnectException: Connect to localhost:9000 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused"/>
+              <text value="HttpError"/>
+            </properties>
+          </component>
+          <component id="881e9" class="javax.swing.JLabel" binding="messageLabel">
+            <constraints border-constraint="Center"/>
+            <properties>
+              <text value="4"/>
             </properties>
           </component>
         </children>
