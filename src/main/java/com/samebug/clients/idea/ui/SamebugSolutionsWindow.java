@@ -19,8 +19,6 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.tracking.Events;
@@ -31,7 +29,6 @@ import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLEditorKit;
-import java.awt.*;
 import java.net.URL;
 import java.util.Dictionary;
 
@@ -67,7 +64,7 @@ public class SamebugSolutionsWindow {
             }
         });
         if ((Dictionary) solutionsPane.getDocument().getProperty("imageCache") == null) {
-            solutionsPane.getDocument().putProperty("imageCache", HtmlUtil.imageCache);
+            solutionsPane.getDocument().putProperty("imageCache", ImageUtil.imageCache);
         }
     }
 

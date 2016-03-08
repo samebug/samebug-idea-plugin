@@ -21,9 +21,7 @@ public class SearchGroupCardController {
     }
 
     private void updateFields() {
-        view.setHits(model.numberOfSolutions);
-        view.setLastSeen(model.lastSeenSimilar);
-        view.setContent(model.exception);
+        view.setContent(model);
     }
 
     public JPanel getControlPanel() {
