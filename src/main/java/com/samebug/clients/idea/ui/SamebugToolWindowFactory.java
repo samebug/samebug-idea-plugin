@@ -35,16 +35,13 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        SamebugSolutionsWindow solutionsWindow = initializeSolutionWindow(project);
-        HistoryTabController historyTab = initializeHistoryTab(project, solutionsWindow);
+        HistoryTabController historyTab = initializeHistoryTab(project);
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(historyTab.getControlPanel(), SamebugBundle.message("samebug.toolwindow.history.tabName"), false);
-        Content solutionsContent = contentFactory.createContent(solutionsWindow.getControlPanel(), SamebugBundle.message("samebug.toolwindow.solutions.tabName"), false);
         toolWindow.getContentManager().addContent(content);
-//        toolWindow.getContentManager().addContent(solutionsContent);
     }
 
-    private HistoryTabController initializeHistoryTab(Project project, SamebugSolutionsWindow solutionsWindow) {
+    private HistoryTabController initializeHistoryTab(Project project) {
         HistoryTabController historyTab = new HistoryTabController(project);
         historyTab.loadHistory();
 
@@ -57,13 +54,5 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
         project.getMessageBus().connect(project).subscribe(HistoryListener.UPDATE_HISTORY_TOPIC, historyTab.getHistoryUpdater());
 
         return historyTab;
-    }
-
-    private SamebugSolutionsWindow initializeSolutionWindow(Project project) {
-        SamebugSolutionsWindow solutionsWindow = new SamebugSolutionsWindow(project);
-
-        solutionsWindow.initSolutionsPane();
-
-        return solutionsWindow;
     }
 }
