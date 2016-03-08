@@ -43,7 +43,7 @@ public class HtmlUtil {
 
     static private String color(int componentColorCode) {
         if (UIUtil.isUnderDarcula()) {
-            return DARKULA_COLORS[componentColorCode];
+            return DARCULA_COLORS[componentColorCode];
         } else {
             return DEFAULT_COLORS[componentColorCode];
         }
@@ -53,9 +53,9 @@ public class HtmlUtil {
             "#9C27B0", "#FF00EB", "#03B8D4", "#79141D",
             "#FFB600", "#3000E7", "#3EABFF", "#D50000",
             "#443328", "#E91D63", "#029688", "#B0BF16", "#FF5621"};
-    // TODO lighten
-    static private final String[] DARKULA_COLORS = {"#9A9A9A", "#14E3CF", "#8BC349", "#00384F",
-            "#9C27B0", "#FF00EB", "#03B8D4", "#79141D",
-            "#FFB600", "#3000E7", "#3EABFF", "#D50000",
-            "#443328", "#E91D63", "#029688", "#B0BF16", "#FF5621"};
+
+    static private final String[] DARCULA_COLORS = {"#9A9A9A", "#14E3CF", "#8BC349", "#0080B5",
+            "#BC37D3", "#FF00EB", "#03B8D4", "#D12232",
+            "#FFB600", "#9B81FF", "#3EABFF", "#D50000",
+            "#A37C62", "#E91D63", "#029688", "#B0BF16", "#FF5621"};
 }
