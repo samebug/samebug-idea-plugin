@@ -1,5 +1,6 @@
 package com.samebug.clients.idea.ui.views;
 
+import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.HtmlUtil;
 import com.samebug.clients.search.api.entities.ComponentStack;
 import com.samebug.clients.search.api.entities.Exception;
@@ -30,7 +31,11 @@ public class SearchGroupCardView {
         java.util.List<ComponentStack> stacks = search.componentStack;
 
         titleLabel.setText(String.format("<html><b><a href=\"%s\">%s</a></b></html>", search.searchUrl, exception.typeName));
-        messageLabel.setText(HtmlUtil.html(exception.message));
+        if (exception.message == null) {
+            messageLabel.setText(String.format("<html><i>%s</i></html>", SamebugBundle.message("samebug.exception.noMessage")));
+        } else {
+            messageLabel.setText(HtmlUtil.html(exception.message));
+        }
 
         final int LIMIT = 100;
         if (searchGroup.numberOfSolutions > LIMIT) {
@@ -97,7 +102,6 @@ public class SearchGroupCardView {
         titleLabel.setOpaque(false);
         contentPanel.add(titleLabel, BorderLayout.NORTH);
         messageLabel = new JLabel();
-        messageLabel.setEnabled(false);
         messageLabel.setFont(UIManager.getFont("TextArea.font"));
         messageLabel.setVerticalAlignment(1);
         contentPanel.add(messageLabel, BorderLayout.CENTER);

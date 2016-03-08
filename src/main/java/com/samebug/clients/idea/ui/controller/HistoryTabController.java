@@ -12,6 +12,8 @@ import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
+import com.samebug.clients.idea.ui.HtmlUtil;
+import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.views.HistoryTabView;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
@@ -33,7 +35,8 @@ public class HistoryTabController {
     final private Project project;
     final private static Logger LOGGER = Logger.getInstance(HistoryTabController.class);
     final private HistoryTabView view;
-    @Nullable private GroupedHistory model;
+    @Nullable
+    private GroupedHistory model;
     final private List<SearchGroupCardController> searchGroups;
 
     final private HistoryReloader historyReloader;
@@ -115,6 +118,19 @@ public class HistoryTabController {
                             SearchGroupCardController c = new SearchGroupCardController(group);
                             searchGroups.add(c);
                             view.contentPanel.add(c.getControlPanel());
+                        }
+                    }
+                    if (searchGroups.isEmpty()) {
+                        if (model.searchGroups.isEmpty()) {
+                            EmptyWarningPanel panel = new EmptyWarningPanel();
+                            panel.label.setText(HtmlUtil.html(SamebugBundle.message("samebug.toolwindow.history.content.noSearches")));
+                            view.contentPanel.add(panel.controlPanel);
+                            panel.label.invalidate();
+                        } else {
+                            EmptyWarningPanel panel = new EmptyWarningPanel();
+                            panel.label.setText(HtmlUtil.html(SamebugBundle.message("samebug.toolwindow.history.content.noVisibleSearches")));
+                            view.contentPanel.add(panel.controlPanel);
+                            panel.label.invalidate();
                         }
                     }
                 }
