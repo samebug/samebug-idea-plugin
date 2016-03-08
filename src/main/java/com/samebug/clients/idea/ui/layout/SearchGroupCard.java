@@ -13,7 +13,8 @@ import java.awt.*;
  */
 public class SearchGroupCard {
     public JPanel controlPanel;
-    public JPanel leftPanel;
+    public JPanel paddingPanel;
+    public JPanel infoBar;
     public JPanel breadcrumbPanel;
     public JPanel contentPanel;
     public JEditorPane breadcrumbBar;
