@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.idea.ui;
 
-import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
@@ -24,10 +23,11 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.actions.ReloadHistoryAction;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
+import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.ui.controller.HistoryTabController;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -35,37 +35,24 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        SamebugSolutionsWindow solutionsWindow = initializeSolutionWindow(project);
-        SamebugHistoryWindow historyWindow = initializeHistoryWindow(project, solutionsWindow);
+        HistoryTabController historyTab = initializeHistoryTab(project);
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-        Content content = contentFactory.createContent(historyWindow.getControlPanel(), SamebugBundle.message("samebug.toolwindow.history.tabName"), false);
-        Content solutionsContent = contentFactory.createContent(solutionsWindow.getControlPanel(), SamebugBundle.message("samebug.toolwindow.solutions.tabName"), false);
+        Content content = contentFactory.createContent(historyTab.getControlPanel(), SamebugBundle.message("samebug.toolwindow.history.tabName"), false);
         toolWindow.getContentManager().addContent(content);
-//        toolWindow.getContentManager().addContent(solutionsContent);
     }
 
-    private SamebugHistoryWindow initializeHistoryWindow(Project project, SamebugSolutionsWindow solutionsWindow) {
-        SamebugHistoryWindow historyWindow = new SamebugHistoryWindow(project, solutionsWindow);
-
-        historyWindow.initHistoryPane();
-
-        final ReloadHistoryAction historyAction = (ReloadHistoryAction) ActionManager.getInstance().getAction("Samebug.History");
-        historyAction.setHook(historyWindow);
+    private HistoryTabController initializeHistoryTab(Project project) {
+        HistoryTabController historyTab = new HistoryTabController(project);
+        historyTab.loadHistory();
 
         MessageBusConnection appMessageBus = ApplicationManager.getApplication().getMessageBus().connect(project);
-        appMessageBus.subscribe(ConnectionStatusListener.CONNECTION_STATUS_TOPIC, historyWindow);
+        appMessageBus.subscribe(ConnectionStatusListener.CONNECTION_STATUS_TOPIC, historyTab.getStatusUpdater());
 
         MessageBusConnection projectMessageBus = project.getMessageBus().connect(project);
-        projectMessageBus.subscribe(BatchStackTraceSearchListener.BATCH_SEARCH_TOPIC, historyWindow);
+        projectMessageBus.subscribe(BatchStackTraceSearchListener.BATCH_SEARCH_TOPIC, historyTab.getHistoryReloader());
 
-        return historyWindow;
-    }
+        project.getMessageBus().connect(project).subscribe(HistoryListener.UPDATE_HISTORY_TOPIC, historyTab.getHistoryUpdater());
 
-    private SamebugSolutionsWindow initializeSolutionWindow(Project project) {
-        SamebugSolutionsWindow solutionsWindow = new SamebugSolutionsWindow(project);
-
-        solutionsWindow.initSolutionsPane();
-
-        return solutionsWindow;
+        return historyTab;
     }
 }

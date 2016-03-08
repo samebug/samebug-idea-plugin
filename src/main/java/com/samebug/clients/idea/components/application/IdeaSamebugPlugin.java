@@ -20,6 +20,7 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.SettingsDialog;
@@ -37,13 +38,13 @@ import org.jetbrains.annotations.Nullable;
         }
 )
 final public class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<Settings> {
-    private IdeaClientService client = new IdeaClientService(null);
+    private IdeaClientService client = new IdeaClientService(null, false);
 
     // TODO Unlike other methods, this one executes the http request on the caller thread. Is it ok?
     public void setApiKey(@NotNull String apiKey) throws SamebugClientException, UnknownApiKey {
         UserInfo userInfo = null;
         try {
-            client = new IdeaClientService(apiKey);
+            client = new IdeaClientService(apiKey, state.getUserId() != null);
             state.setApiKey(apiKey);
             userInfo = client.getUserInfo(apiKey);
             if (!userInfo.isUserExist) {
@@ -84,10 +85,18 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     @Override
     public void initComponent() {
         SamebugNotifications.registerNotificationGroups();
-        if (!state.isInitialized()) ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
-                SettingsDialog.setup(state.getApiKey());
+                if (!state.isInitialized()) {
+                    SettingsDialog.setup(state.getApiKey());
+                } else {
+                    try {
+                        client.getUserInfo(state.getApiKey());
+                    } catch (SamebugClientException e) {
+                        LOGGER.warn("Failed to get user info", e);
+                    }
+                }
             }
         });
     }
@@ -113,8 +122,10 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     @Override
     public void loadState(Settings state) {
         this.state = state;
-        client = new IdeaClientService(state.getApiKey());
+        client = new IdeaClientService(state.getApiKey(), state.getUserId() == null);
     }
 
     private Settings state = new Settings();
+    final private static Logger LOGGER = Logger.getInstance(IdeaSamebugPlugin.class);
+
 }

@@ -15,11 +15,10 @@
  */
 package com.samebug.clients.search.api.entities;
 
-public class SearchResults {
-    public String searchType;
-    public String searchId;
-    public int ownMatches;
-    public Long firstSeenTime;
-    public Long lastSeenTime;
-    public int deepestStackId;
+/**
+ * Created by poroszd on 3/7/16.
+ */
+public class Exception {
+    public String typeName;
+    public String message;
 }

@@ -138,4 +138,5 @@ public class SettingsDialog extends JDialog implements Configurable {
     public void disposeUIResources() {
 
     }
+
 }

@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api.entities;
+package com.samebug.clients.idea.ui.layout;
 
-public class SearchResults {
-    public String searchType;
-    public String searchId;
-    public int ownMatches;
-    public Long firstSeenTime;
-    public Long lastSeenTime;
-    public int deepestStackId;
+import javax.swing.*;
+
+/**
+ * Created by poroszd on 3/8/16.
+ */
+public class EmptyWarningPanel {
+    public JPanel controlPanel;
+    public JLabel label;
+
 }

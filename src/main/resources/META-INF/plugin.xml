@@ -32,7 +32,7 @@
     <depends>org.jetbrains.android</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Samebug" icon="/com/samebug/icons/samebug-r270.png" anchor="right"
+        <toolWindow id="Samebug" icon="/com/samebug/samebug-r270.png" anchor="right"
                     factoryClass="com.samebug.clients.idea.ui.SamebugToolWindowFactory"/>
     </extensions>
 
@@ -43,6 +43,10 @@
                     icon="/com/samebug/icons/cogwheel.png" text="Configure Samebug" description="Set Samebug API key"/>
             <action id="Samebug.History" class="com.samebug.clients.idea.actions.ReloadHistoryAction"
                     icon="/com/samebug/icons/reload.png" text="Reload history" description="Reload crash history"/>
+            <action id="Samebug.ShowOld" class="com.samebug.clients.idea.actions.ShowOld"
+                    icon="/com/samebug/icons/filter-old.png" text="Show old" description="Show older searches"/>
+            <action id="Samebug.ShowZeroSolution" class="com.samebug.clients.idea.actions.ShowZeroSolution"
+                    icon="/com/samebug/icons/filter-unknown.png" text="Show unsolved" description="Show searches with zero solutions"/>
         </group>
     </actions>
 

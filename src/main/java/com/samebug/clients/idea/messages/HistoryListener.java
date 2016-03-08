@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api.entities;
+package com.samebug.clients.idea.messages;
 
-public class SearchResults {
-    public String searchType;
-    public String searchId;
-    public int ownMatches;
-    public Long firstSeenTime;
-    public Long lastSeenTime;
-    public int deepestStackId;
+import com.intellij.util.messages.Topic;
+
+/**
+ * Created by poroszd on 3/7/16.
+ */
+public interface HistoryListener {
+    Topic<HistoryListener> UPDATE_HISTORY_TOPIC = Topic.create("update samebug history", HistoryListener.class);
+
+    void reload();
+
+    void toggleShowSearchedWithZeroSolution(boolean enabled);
+
+    void toggleShowOldSearches(boolean enabled);
 }

@@ -126,7 +126,7 @@
                 </constraints>
                 <properties>
                   <horizontalTextPosition value="2"/>
-                  <icon value="com/samebug/icons/samebug-white-252x50.png"/>
+                  <icon value="com/samebug/messages/samebug-white-252x50.png"/>
                   <text value=""/>
                 </properties>
               </component>

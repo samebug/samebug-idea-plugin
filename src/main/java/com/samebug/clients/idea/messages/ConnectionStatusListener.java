@@ -27,5 +27,5 @@ public interface ConnectionStatusListener {
 
     void finishRequest(boolean isConnected);
 
-    void authorizationChange(boolean isAuthorized);
+    void authenticationChange(boolean isAuthenticated);
 }
