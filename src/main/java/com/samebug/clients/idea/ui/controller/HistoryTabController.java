@@ -115,7 +115,7 @@ public class HistoryTabController {
                         } else if (!showOldSearches && group.firstSeenSimilar.before(oneDayBefore)) {
                             // filtered because it is old
                         } else {
-                            SearchGroupCardController c = new SearchGroupCardController(group);
+                            SearchGroupCardController c = new SearchGroupCardController(group, project);
                             searchGroups.add(c);
                             view.contentPanel.add(c.getControlPanel());
                         }

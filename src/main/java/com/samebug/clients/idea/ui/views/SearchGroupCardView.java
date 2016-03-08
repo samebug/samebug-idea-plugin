@@ -1,5 +1,7 @@
 package com.samebug.clients.idea.ui.views;
 
+import com.intellij.openapi.project.Project;
+import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.HtmlUtil;
 import com.samebug.clients.search.api.entities.ComponentStack;
@@ -9,12 +11,14 @@ import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
+import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
 
 /**
  * Created by poroszd on 3/3/16.
  */
 public class SearchGroupCardView {
+    final private Project project;
     public JPanel controlPanel;
     public JPanel leftPanel;
     public JPanel breadcrumbPanel;
@@ -50,10 +54,12 @@ public class SearchGroupCardView {
         breadcrumbBar.setText(HtmlUtil.breadcrumbs(stacks));
     }
 
-    public SearchGroupCardView() {
+    public SearchGroupCardView(Project project) {
+        this.project = project;
         controlPanel = new JPanel();
         controlPanel.setLayout(new BorderLayout(0, 0));
         controlPanel.setPreferredSize(new Dimension(400, 150));
+        controlPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
         controlPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10), null));
         leftPanel = new JPanel();
         leftPanel.setLayout(new GridBagLayout());
@@ -108,6 +114,12 @@ public class SearchGroupCardView {
 
         ((DefaultCaret) breadcrumbBar.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
         ((DefaultCaret) titleLabel.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+        HTMLEditorKit kit = new HTMLEditorKit();
+        breadcrumbBar.setEditorKit(kit);
+        breadcrumbBar.addHyperlinkListener(SamebugNotifications.basicHyperlinkListener(project, "searches-breadcrumb"));
+        kit = new HTMLEditorKit();
+        titleLabel.setEditorKit(kit);
+        titleLabel.addHyperlinkListener(SamebugNotifications.basicHyperlinkListener(project, "searches-title"));
     }
 
 }
