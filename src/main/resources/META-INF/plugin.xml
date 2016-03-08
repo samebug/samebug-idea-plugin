@@ -14,11 +14,11 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>Toolbar shows connection status</li>
-        <li>Compatibility checked from Idea 13.1.6</li>
+        <li>Use native components instead of html</li>
+        <li>Filtering search groups</li>
       </ul>
 
-      Check it at <a href="https://medium.com/@samebug/samebug-plugin-0-7-0-update-is-out-fa06add50cfa">our blog</a>
+      Check it at <a href="https://medium.com/@samebug/samebug-integration-0-8-0-update-is-available-d591edaac6e8">our blog</a>
     ]]>
     </change-notes>
 
