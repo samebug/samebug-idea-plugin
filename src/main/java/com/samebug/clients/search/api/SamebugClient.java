@@ -44,12 +44,13 @@ public class SamebugClient {
     private final String apiKey;
     private static final String USER_AGENT = "Samebug-Idea-Client/1.0.0";
     private static final String API_VERSION = "1.0";
-        public final static URI root = URI.create("http://localhost:9000/");
-//    public final static URI root = URI.create("https://samebug.io/");
-        private final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
-//    private final static URI trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
+    //        public final static URI root = URI.create("http://localhost:9000/");
+    public final static URI root = URI.create("https://samebug.io/");
+    //        private final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
+    private final static URI trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
     private final static URI gateway = root.resolve("sandbox/api/").resolve(API_VERSION + "/");
     private static final Gson gson;
+
     // TODO is this a fine way of serialization of Date?
     static {
         GsonBuilder builder = new GsonBuilder();
