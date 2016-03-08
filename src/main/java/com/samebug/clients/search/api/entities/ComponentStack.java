@@ -15,11 +15,14 @@
  */
 package com.samebug.clients.search.api.entities;
 
-public class SearchResults {
-    public String searchType;
-    public String searchId;
-    public int ownMatches;
-    public Long firstSeenTime;
-    public Long lastSeenTime;
-    public int deepestStackId;
+import java.net.URL;
+
+/**
+ * Created by poroszd on 3/7/16.
+ */
+public class ComponentStack {
+    public int color;
+    public URL crashDocUrl;
+    public String name;
+    public String shortName;
 }

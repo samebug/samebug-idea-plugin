@@ -55,6 +55,7 @@ repositories {
 dependencies {
     compile 'com.google.code.gson:gson:2.5'
     compile 'com.android.tools.ddms:ddmlib:24.5.0'
+    compile 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
     testCompile 'junit:junit:4.11'
     testCompile 'org.mockito:mockito-core:1.10.19'
 }
@@ -82,7 +83,7 @@ license {
 
 group = 'com.samebug.clients.idea'
 description = 'Samebug for IntelliJ IDEA'
-version '0.7.0'
+version '0.8.0'
 
 task checkstyle(type: Checkstyle) {
     configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")

@@ -15,11 +15,14 @@
  */
 package com.samebug.clients.search.api.entities;
 
-public class SearchResults {
-    public String searchType;
-    public String searchId;
-    public int ownMatches;
-    public Long firstSeenTime;
-    public Long lastSeenTime;
-    public int deepestStackId;
+import java.util.List;
+
+/**
+ * Created by poroszd on 2/8/16.
+ */
+public class GroupedHistory {
+    public String html;
+    public List<GroupedExceptionSearch> searchGroups;
+
 }
+
