@@ -35,7 +35,7 @@ intellij {
 //    alternativeIdePath '/Applications/Android Studio.app/Contents'
 //    alternativeIdePath '/opt/idea-IC-135.1306'
 //    alternativeIdePath '/opt/idea-IU-143.382.35'
-    alternativeIdePath '/opt/android-studio'
+//    alternativeIdePath '/opt/android-studio'
     pluginName 'samebug-idea-plugin'
     updateSinceUntilBuild false
 
@@ -83,7 +83,7 @@ license {
 
 group = 'com.samebug.clients.idea'
 description = 'Samebug for IntelliJ IDEA'
-version '0.8.0-SNAPSHOT'
+version '0.8.0'
 
 task checkstyle(type: Checkstyle) {
     configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")
