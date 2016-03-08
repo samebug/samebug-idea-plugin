@@ -26,21 +26,25 @@ import com.samebug.clients.search.api.entities.tracking.Solutions;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Created by poroszd on 2/23/16.
  */
 public class IdeaClientService {
     private final SamebugClient client;
     private final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
-    private boolean connected;
-    private boolean authenticated;
-    private int nRequests;
+    private AtomicBoolean connected;
+    private AtomicBoolean authenticated;
+    private AtomicInteger nRequests;
 
-    public IdeaClientService(final String apiKey) {
+    public IdeaClientService(final String apiKey, boolean authenticated) {
         this.client = new SamebugClient(apiKey);
         // Optimist initialization. If incorrect, that'll turn out soon
-        this.connected = true;
-        this.authenticated = true;
+        this.connected = new AtomicBoolean(true);
+        this.authenticated = new AtomicBoolean(authenticated);
+        this.nRequests = new AtomicInteger(0);
     }
 
     public SearchResults searchSolutions(final String stacktrace) throws SamebugClientException {
@@ -59,8 +63,9 @@ public class IdeaClientService {
         }.execute();
 
         // TODO it smells bad. Successful authentication can happen at any request.
-        authenticated = userInfo.isUserExist;
-        messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authorizationChange(authenticated);
+        if (authenticated.getAndSet(userInfo.isUserExist) != userInfo.isUserExist) {
+            messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authenticationChange(authenticated.get());
+        }
         return userInfo;
     }
 
@@ -86,15 +91,15 @@ public class IdeaClientService {
     }
 
     public boolean isConnected() {
-        return connected;
+        return connected.get();
     }
 
     public boolean isAuthenticated() {
-        return authenticated;
+        return authenticated.get();
     }
 
     public int getNumberOfActiveRequests() {
-        return nRequests;
+        return nRequests.get();
     }
 
     private abstract class ConnectionAwareHttpRequest<T> {
@@ -102,37 +107,39 @@ public class IdeaClientService {
 
         public T execute() throws SamebugClientException {
             try {
-                ++nRequests;
+                nRequests.incrementAndGet();
                 messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).startRequest();
                 T result = request();
                 messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(true);
-                connected = true;
+                connected.set(true);
                 return result;
             } catch (SamebugTimeout e) {
-                connected = false;
+                connected.set(false);
                 throw e;
             } catch (RemoteError e) {
-                connected = false;
+                connected.set(false);
                 throw e;
             } catch (HttpError e) {
-                connected = false;
+                connected.set(false);
                 throw e;
             } catch (UnsuccessfulResponseStatus e) {
-                connected = false;
+                connected.set(false);
                 throw e;
             } catch (UserUnauthenticated e) {
-                connected = true;
-                authenticated = false;
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authorizationChange(authenticated);
+                connected.set(true);
+                if (authenticated.getAndSet(false)) {
+                    messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authenticationChange(authenticated.get());
+                }
                 throw e;
             } catch (UserUnauthorized e) {
-                connected = true;
-                authenticated = true;
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authorizationChange(authenticated);
+                connected.set(true);
+                if (!authenticated.getAndSet(true)) {
+                    messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authenticationChange(authenticated.get());
+                }
                 throw e;
             } finally {
-                --nRequests;
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(connected);
+                nRequests.decrementAndGet();
+                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(connected.get());
             }
         }
     }

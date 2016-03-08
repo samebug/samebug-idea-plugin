@@ -18,6 +18,7 @@ package com.samebug.clients.idea.resources;
 import com.intellij.openapi.util.IconLoader;
 
 import javax.swing.*;
+import java.net.URL;
 
 public class SamebugIcons {
     public final static Icon notification = IconLoader.getIcon("/com/samebug/icons/samebug-notification.png");
@@ -28,4 +29,9 @@ public class SamebugIcons {
     public final static Icon reload = IconLoader.getIcon("/com/samebug/icons/reload.png");
     public final static Icon lightbulb = IconLoader.getIcon("/com/samebug/icons/filter-unknown.png");
     public final static Icon calendar = IconLoader.getIcon("/com/samebug/icons/filter-old.png");
+
+    public final static URL cogwheelTodoUrl = SamebugIcons.class.getClassLoader().getResource("/com/samebug/icons/cogwheel-todo.png");
+    public final static URL lightbulbUrl = SamebugIcons.class.getClassLoader().getResource("/com/samebug/icons/filter-unknown.png");
+    public final static URL calendarUrl = SamebugIcons.class.getClassLoader().getResource("/com/samebug/icons/filter-old.png");
+
 }

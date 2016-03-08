@@ -6,6 +6,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.actions.ShowOld;
 import com.samebug.clients.idea.actions.ShowZeroSolution;
+import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
@@ -71,21 +72,20 @@ public class HistoryTabController {
     }
 
     public void loadHistory() {
-        final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-        if (plugin.isInitialized()) {
-            ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        emptyHistoryPane();
-                        model = plugin.getClient().getSearchHistory();
-                        refreshHistoryPane();
-                    } catch (SamebugClientException e1) {
-                        LOGGER.warn("Failed to retrieve history", e1);
-                    }
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                emptyHistoryPane();
+                model = null;
+                try {
+                    final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
+                    model = plugin.getClient().getSearchHistory();
+                } catch (SamebugClientException e1) {
+                    LOGGER.warn("Failed to retrieve history", e1);
                 }
-            });
-        }
+                refreshHistoryPane();
+            }
+        });
     }
 
     private void emptyHistoryPane() {
@@ -121,19 +121,25 @@ public class HistoryTabController {
                         }
                     }
                     if (searchGroups.isEmpty()) {
+                        EmptyWarningPanel panel = new EmptyWarningPanel();
                         if (model.searchGroups.isEmpty()) {
-                            EmptyWarningPanel panel = new EmptyWarningPanel();
-                            panel.label.setText(HtmlUtil.html(SamebugBundle.message("samebug.toolwindow.history.content.noSearches")));
-                            view.contentPanel.add(panel.controlPanel);
-                            panel.label.invalidate();
+                            panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.noSearches"));
                         } else {
-                            EmptyWarningPanel panel = new EmptyWarningPanel();
-                            panel.label.setText(HtmlUtil.html(SamebugBundle.message("samebug.toolwindow.history.content.noVisibleSearches")));
-                            view.contentPanel.add(panel.controlPanel);
-                            panel.label.invalidate();
+                            panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.noVisibleSearches", SamebugIcons.lightbulbUrl, SamebugIcons.calendarUrl));
                         }
+                        view.contentPanel.add(panel.controlPanel);
                     }
+                } else {
+                    IdeaClientService connectionService = IdeaSamebugPlugin.getInstance().getClient();
+                    EmptyWarningPanel panel = new EmptyWarningPanel();
+                    if (connectionService.isConnected() && !connectionService.isAuthenticated()) {
+                        panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.notLoggedIn", SamebugIcons.cogwheelTodoUrl));
+                    } else {
+                        panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.notConnected", SamebugClient.root));
+                    }
+                    view.contentPanel.add(panel.controlPanel);
                 }
+                view.controlPanel.invalidate();
             }
         });
     }
@@ -171,7 +177,8 @@ public class HistoryTabController {
         }
 
         @Override
-        public void authorizationChange(final boolean isAuthorized) {
+        public void authenticationChange(final boolean isAuthenticated) {
+            loadHistory();
         }
 
     }

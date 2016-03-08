@@ -170,6 +170,6 @@
 //    }
 //
 //    @Override
-//    public void authorizationChange(final boolean isAuthorized) {
+//    public void authenticationChange(final boolean isAuthorized) {
 //    }
 //}
