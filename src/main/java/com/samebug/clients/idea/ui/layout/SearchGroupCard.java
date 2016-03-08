@@ -1,6 +1,7 @@
 package com.samebug.clients.idea.ui.layout;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Created by poroszd on 3/3/16.

@@ -8,11 +8,13 @@ import com.samebug.clients.search.api.entities.ComponentStack;
 import com.samebug.clients.search.api.entities.Exception;
 import com.samebug.clients.search.api.entities.ExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
+import org.ocpsoft.prettytime.PrettyTime;
 
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
+import java.util.Locale;
 
 /**
  * Created by poroszd on 3/3/16.
@@ -49,7 +51,8 @@ public class SearchGroupCardView {
         }
 
 
-        timeLabel.setText(searchGroup.lastSeenSimilar.toString());
+        PrettyTime pretty = new PrettyTime(Locale.US);
+        timeLabel.setText(pretty.format(searchGroup.lastSeenSimilar));
 
         breadcrumbBar.setText(HtmlUtil.breadcrumbs(stacks));
     }
@@ -76,6 +79,7 @@ public class SearchGroupCardView {
         gbc.anchor = GridBagConstraints.WEST;
         leftPanel.add(hitsLabel, gbc);
         timeLabel = new JLabel();
+        timeLabel.setFont(new Font(timeLabel.getFont().getName(), timeLabel.getFont().getStyle(), 10));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;

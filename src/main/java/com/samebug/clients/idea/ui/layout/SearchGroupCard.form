@@ -35,7 +35,8 @@
               <gridbag weightx="1.0" weighty="0.0"/>
             </constraints>
             <properties>
-              <text value="3:12 PM"/>
+              <font size="10"/>
+              <text value="20 minutes ago"/>
             </properties>
           </component>
           <vspacer id="b389e">
@@ -83,7 +84,7 @@
           <component id="881e9" class="javax.swing.JLabel" binding="messageLabel">
             <constraints border-constraint="Center"/>
             <properties>
-              <enabled value="false"/>
+              <enabled value="true"/>
               <font swing-font="TextArea.font"/>
               <text value="&lt;html&gt;java.util.concurrent.ExecutionException: javax.ws.rs.ProcessingException: org.apache.http.conn.HttpHostConnectException: Connect to localhost:2375 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: connect&lt;/html&gt;"/>
               <verticalAlignment value="1"/>
