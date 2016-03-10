@@ -21,7 +21,6 @@ import java.util.List;
  * Created by poroszd on 2/8/16.
  */
 public class GroupedHistory {
-    public String html;
     public List<GroupedExceptionSearch> searchGroups;
 
 }
