@@ -16,6 +16,7 @@
       <ul>
         <li>Use native components instead of html</li>
         <li>Filtering search groups</li>
+        <li>Improved performance</li>
       </ul>
 
       Check it at <a href="https://medium.com/@samebug/samebug-integration-0-8-0-update-is-available-d591edaac6e8">our blog</a>
