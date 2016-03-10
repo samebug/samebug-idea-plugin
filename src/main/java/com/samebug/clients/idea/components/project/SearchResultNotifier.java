@@ -63,7 +63,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
 
         int nInterestingResults = 0;
         for (SearchResults result : groupedResults.values()) {
-            if (result.firstSeenTime == null || result.firstSeenTime > timelimitForFreshSearch) ++nInterestingResults;
+            if (result.firstSeenTime != null && result.firstSeenTime > timelimitForFreshSearch) ++nInterestingResults;
         }
 
         if (nInterestingResults > 0) {
