@@ -31,13 +31,8 @@ public class SearchGroupCardController {
     final private GroupedExceptionSearch model;
 
     public SearchGroupCardController(GroupedExceptionSearch model, Project project) {
-        view = new SearchGroupCardView(project);
+        this.view = new SearchGroupCardView(project, model);
         this.model = model;
-        updateFields();
-    }
-
-    private void updateFields() {
-        view.setContent(model);
     }
 
     public JPanel getControlPanel() {
