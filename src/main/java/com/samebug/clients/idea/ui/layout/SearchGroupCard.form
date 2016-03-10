@@ -1,21 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-    Copyright 2016 Samebug, Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
--->
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.samebug.clients.idea.ui.layout.SearchGroupCard">
   <grid id="d06b5" binding="controlPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
@@ -103,14 +86,12 @@
               <size top="0" left="0" bottom="0" right="0"/>
             </border>
             <children>
-              <component id="5ba22" class="javax.swing.JEditorPane" binding="titleLabel">
+              <component id="da2a2" class="javax.swing.JLabel" binding="titleLabel">
                 <constraints border-constraint="North"/>
                 <properties>
-                  <contentType value="text/html"/>
-                  <editable value="false"/>
-                  <margin top="1" left="0" bottom="0" right="0"/>
-                  <opaque value="false"/>
-                  <text value="&lt;html&gt;&#10;  &lt;head&gt;&#10;&#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;    &lt;p style=&quot;margin-top: 0&quot;&gt;&#10;      &#10;    &lt;/p&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;"/>
+                  <background color="-12064668"/>
+                  <opaque value="true"/>
+                  <text value="java.lang.Exception"/>
                 </properties>
               </component>
               <component id="881e9" class="javax.swing.JLabel" binding="messageLabel">

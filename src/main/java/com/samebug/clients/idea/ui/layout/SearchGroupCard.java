@@ -32,7 +32,7 @@ public class SearchGroupCard {
     public JPanel breadcrumbPanel;
     public JPanel contentPanel;
     public JEditorPane breadcrumbBar;
-    public JEditorPane titleLabel;
+    public JLabel titleLabel;
     public JLabel lastTimeLabel;
     public JLabel hitsLabel;
     public JLabel messageLabel;
