@@ -42,7 +42,7 @@ import java.util.List;
 
 public class SamebugClient {
     private final String apiKey;
-    private static final String USER_AGENT = "Samebug-Idea-Client/1.0.0";
+    private static final String USER_AGENT = "Samebug-Idea-Client/1.2.0";
     private static final String API_VERSION = "2.0";
             public final static URI root = URI.create("http://localhost:9000/");
 //    public final static URI root = URI.create("https://samebug.io/");
