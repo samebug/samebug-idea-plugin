@@ -33,9 +33,10 @@ public class SearchGroupCard {
     public JPanel contentPanel;
     public JEditorPane breadcrumbBar;
     public JEditorPane titleLabel;
-    public JLabel timeLabel;
+    public JLabel lastTimeLabel;
     public JLabel hitsLabel;
     public JLabel messageLabel;
+    public JLabel firstTimeLabel;
 
 
 }

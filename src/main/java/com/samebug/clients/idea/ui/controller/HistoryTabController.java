@@ -139,7 +139,7 @@ public class HistoryTabController {
                         if (model.searchGroups.isEmpty()) {
                             panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.noSearches"));
                         } else {
-                            panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.noVisibleSearches", SamebugIcons.lightbulbUrl, SamebugIcons.calendarUrl));
+                            panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.noVisibleSearches", SamebugIcons.calendarUrl, SamebugIcons.lightbulbUrl));
                         }
                         view.contentPanel.add(panel.controlPanel);
                     }

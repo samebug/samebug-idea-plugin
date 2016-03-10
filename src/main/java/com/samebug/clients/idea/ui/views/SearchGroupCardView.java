@@ -43,7 +43,8 @@ public class SearchGroupCardView {
     public JPanel contentPanel;
     public JEditorPane breadcrumbBar;
     public JEditorPane titleLabel;
-    public JLabel timeLabel;
+    public JLabel lastTimeLabel;
+    public JLabel firstTimeLabel;
     public JLabel hitsLabel;
     public JLabel messageLabel;
 
@@ -68,7 +69,8 @@ public class SearchGroupCardView {
 
 
         PrettyTime pretty = new PrettyTime(Locale.US);
-        timeLabel.setText(pretty.format(searchGroup.lastSeenSimilar));
+        lastTimeLabel.setText(String.format("%s", pretty.format(searchGroup.lastSeenSimilar)));
+        firstTimeLabel.setText(String.format("first %s", pretty.format(searchGroup.firstSeenSimilar)));
 
         breadcrumbBar.setText(HtmlUtil.breadcrumbs(stacks));
     }
@@ -86,28 +88,34 @@ public class SearchGroupCardView {
         infoBar.setLayout(new GridBagLayout());
         paddingPanel.add(infoBar, BorderLayout.NORTH);
         infoBar.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0), null));
-        hitsLabel = new JLabel();
+        lastTimeLabel = new JLabel();
+        lastTimeLabel.setHorizontalAlignment(2);
+        lastTimeLabel.setHorizontalTextPosition(2);
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.weightx = 0.3;
         gbc.anchor = GridBagConstraints.WEST;
-        infoBar.add(hitsLabel, gbc);
-        timeLabel = new JLabel();
-        timeLabel.setHorizontalAlignment(4);
-        timeLabel.setHorizontalTextPosition(4);
+        infoBar.add(lastTimeLabel, gbc);
+        firstTimeLabel = new JLabel();
+        firstTimeLabel.setHorizontalAlignment(4);
+        firstTimeLabel.setHorizontalTextPosition(4);
         gbc = new GridBagConstraints();
-        gbc.gridx = 3;
+        gbc.gridx = 2;
         gbc.gridy = 0;
+        gbc.weightx = 0.3;
         gbc.anchor = GridBagConstraints.EAST;
-        infoBar.add(timeLabel, gbc);
-        final JPanel spacer1 = new JPanel();
+        infoBar.add(firstTimeLabel, gbc);
+        hitsLabel = new JLabel();
+        hitsLabel.setFont(new Font(hitsLabel.getFont().getName(), Font.BOLD, hitsLabel.getFont().getSize()));
+        hitsLabel.setHorizontalAlignment(0);
+        hitsLabel.setHorizontalTextPosition(0);
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        infoBar.add(spacer1, gbc);
+        gbc.weightx = 0.3;
+        infoBar.add(hitsLabel, gbc);
         breadcrumbPanel = new JPanel();
         breadcrumbPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         paddingPanel.add(breadcrumbPanel, BorderLayout.SOUTH);
