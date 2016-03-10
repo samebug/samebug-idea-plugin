@@ -153,7 +153,8 @@ public class HistoryTabController {
                     }
                     view.contentPanel.add(panel.controlPanel);
                 }
-                view.controlPanel.invalidate();
+                view.controlPanel.revalidate();
+                view.controlPanel.repaint();
             }
         });
     }
@@ -166,7 +167,7 @@ public class HistoryTabController {
                 public void run() {
                     view.statusIcon.setIcon(SamebugIcons.linkActive);
                     view.statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.loading"));
-                    view.statusIcon.invalidate();
+                    view.statusIcon.repaint();
                 }
             });
         }
@@ -184,7 +185,7 @@ public class HistoryTabController {
                             view.statusIcon.setIcon(SamebugIcons.linkError);
                             view.statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.notConnected", SamebugClient.root));
                         }
-                        view.statusIcon.invalidate();
+                        view.statusIcon.repaint();
                     }
                 }
             });
