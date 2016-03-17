@@ -15,12 +15,16 @@
  */
 package com.samebug.clients.idea.ui.views;
 
+import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.project.Project;
+import com.samebug.clients.idea.ui.components.BreadcrumbBar;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Locale;
 
 /**
@@ -38,7 +42,6 @@ public class SearchGroupCardView {
     public JPanel infoBar;
     public JPanel breadcrumbPanel;
     public JPanel contentPanel;
-    public JEditorPane breadcrumbBar;
     public TitleLabel titleLabel;
     public LastTimeLabel lastTimeLabel;
     public FirstTimeLabel firstTimeLabel;
@@ -60,7 +63,7 @@ public class SearchGroupCardView {
         contentPanel = new JPanel();
         titleLabel = new TitleLabel();
         messageLabel = new MessageLabel();
-        breadcrumbPanel = new JPanel();
+        breadcrumbPanel = new BreadcrumbBar(searchGroup.lastSearch.componentStack);
 
         controlPanel.setLayout(new BorderLayout(0, 0));
         controlPanel.setMaximumSize(new Dimension(2147483647, 150));
@@ -99,24 +102,21 @@ public class SearchGroupCardView {
         contentPanel.add(titleLabel, BorderLayout.NORTH);
         contentPanel.add(messageLabel, BorderLayout.CENTER);
 
-        breadcrumbPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        breadcrumbPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0), null));
-//        breadcrumbPanel.add(breadcrumbBar);
-//        breadcrumbBar = new JEditorPane();
-//        breadcrumbBar.setContentType("text/html");
-//        breadcrumbBar.setEditable(false);
-//        breadcrumbBar.setMargin(new Insets(0, 0, 0, 0));
-//        breadcrumbBar.setOpaque(false);
-//        ((DefaultCaret) breadcrumbBar.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
-//        HTMLEditorKit kit = new HTMLEditorKit();
-//        breadcrumbBar.setEditorKit(kit);
-//        breadcrumbBar.addHyperlinkListener(SamebugNotifications.basicHyperlinkListener(project, "searches-breadcrumb"));
-
         hitsLabel.setFont(new Font(hitsLabel.getFont().getName(), Font.BOLD, hitsLabel.getFont().getSize()));
         messageLabel.setFont(UIManager.getFont("TextArea.font"));
+        titleLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
-    class TitleLabel extends JLabel {
+    public class TitleLabel extends JLabel {
+        public TitleLabel() {
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    BrowserUtil.browse(searchGroup.lastSearch.searchUrl);
+                }
+            });
+        }
+
         @Override
         public String getText() {
             return String.format("<html><b><a href=\"%s\">%s</a></b></html>",
@@ -124,38 +124,43 @@ public class SearchGroupCardView {
         }
     }
 
-    class FirstTimeLabel extends JLabel {
+    public class FirstTimeLabel extends JLabel {
         @Override
         public String getText() {
             return String.format("first %s", pretty.format(searchGroup.firstSeenSimilar));
         }
+
         @Override
         public int getHorizontalAlignment() {
             return SwingConstants.RIGHT;
         }
+
         @Override
         public int getHorizontalTextPosition() {
             return SwingConstants.RIGHT;
         }
     }
 
-    class LastTimeLabel extends JLabel {
+    public class LastTimeLabel extends JLabel {
         @Override
         public String getText() {
             return String.format("%s", pretty.format(searchGroup.lastSeenSimilar));
         }
+
         @Override
         public int getHorizontalAlignment() {
             return SwingConstants.LEFT;
         }
+
         @Override
         public int getHorizontalTextPosition() {
             return SwingConstants.LEFT;
         }
     }
 
-    class HitsLabel extends JLabel {
+    public class HitsLabel extends JLabel {
         static final int LIMIT = 100;
+
         @Override
         public String getText() {
             if (searchGroup.numberOfSolutions > LIMIT) {
@@ -164,21 +169,19 @@ public class SearchGroupCardView {
                 return String.format("%d hits", searchGroup.numberOfSolutions);
             }
         }
+
         @Override
         public int getHorizontalAlignment() {
             return SwingConstants.CENTER;
         }
+
         @Override
         public int getHorizontalTextPosition() {
             return SwingConstants.CENTER;
         }
     }
 
-    class BreadcrumbBar extends JPanel {
-
-    }
-
-    class MessageLabel extends JLabel {
+    public class MessageLabel extends JLabel {
         @Override
         public String getText() {
             String message = searchGroup.lastSearch.exception.message;
