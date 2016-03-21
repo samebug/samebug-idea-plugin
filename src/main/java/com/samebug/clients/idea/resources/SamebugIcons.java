@@ -30,8 +30,8 @@ public class SamebugIcons {
     public final static Icon lightbulb = IconLoader.getIcon("/com/samebug/icons/filter-unknown.png");
     public final static Icon calendar = IconLoader.getIcon("/com/samebug/icons/filter-old.png");
 
-    public final static Icon breadcrumbEnd = IconLoader.getIcon("/com/samebug/icons/fa-bolt.png");
-    public final static Icon breadcrumbDelimeter = IconLoader.getIcon("/com/samebug/icons/fa-left-angle.png");
+    public final static Icon breadcrumbEnd = IconLoader.getIcon("/com/samebug/icons/bolt.png");
+    public final static Icon breadcrumbDelimeter = IconLoader.getIcon("/com/samebug/icons/prev.png");
 
     public final static URL cogwheelTodoUrl = SamebugIcons.class.getClassLoader().getResource("/com/samebug/icons/cogwheel-todo.png");
     public final static URL lightbulbUrl = SamebugIcons.class.getClassLoader().getResource("/com/samebug/icons/filter-unknown.png");

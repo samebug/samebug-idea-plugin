@@ -16,7 +16,9 @@
 package com.samebug.clients.idea.ui.views;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.openapi.project.Project;
+import com.intellij.util.ui.UIUtil;
+import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.components.BreadcrumbBar;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import org.ocpsoft.prettytime.PrettyTime;
@@ -25,6 +27,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.font.TextAttribute;
+import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -33,78 +37,128 @@ import java.util.Locale;
 public class SearchGroupCardView {
     static final PrettyTime pretty = new PrettyTime(Locale.US);
 
-    final Project project;
     final GroupedExceptionSearch searchGroup;
-    boolean hover;
+    final String packageName;
+    final String className;
 
-    public JPanel controlPanel;
+    public ControlPanel controlPanel;
     public JPanel paddingPanel;
     public JPanel infoBar;
-    public JPanel breadcrumbPanel;
     public JPanel contentPanel;
+    public JPanel breadcrumbPanel;
+    public JPanel titlePanel;
+    public JPanel messagePanel;
+    public PackageLabel packageLabel;
     public TitleLabel titleLabel;
-    public LastTimeLabel lastTimeLabel;
-    public FirstTimeLabel firstTimeLabel;
+    public TimeLabel timeLabel;
     public HitsLabel hitsLabel;
     public MessageLabel messageLabel;
 
-
-    public SearchGroupCardView(Project project, GroupedExceptionSearch searchGroup) {
-        this.project = project;
+    public SearchGroupCardView(GroupedExceptionSearch searchGroup) {
         this.searchGroup = searchGroup;
+        int dotIndex = searchGroup.lastSearch.exception.typeName.lastIndexOf('.');
+        if (dotIndex < 0) {
+            this.packageName = null;
+            this.className = searchGroup.lastSearch.exception.typeName;
+        } else {
+            this.packageName = searchGroup.lastSearch.exception.typeName.substring(0, dotIndex);
+            this.className = searchGroup.lastSearch.exception.typeName.substring(dotIndex + 1);
+        }
 
         GridBagConstraints gbc;
-        controlPanel = new JPanel();
+        controlPanel = new ControlPanel();
         paddingPanel = new JPanel();
         infoBar = new JPanel();
-        lastTimeLabel = new LastTimeLabel();
+        timeLabel = new TimeLabel();
         hitsLabel = new HitsLabel();
-        firstTimeLabel = new FirstTimeLabel();
         contentPanel = new JPanel();
+        titlePanel = new JPanel();
+        packageLabel = new PackageLabel();
         titleLabel = new TitleLabel();
+        messagePanel = new JPanel();
         messageLabel = new MessageLabel();
         breadcrumbPanel = new BreadcrumbBar(searchGroup.lastSearch.componentStack);
 
         controlPanel.setLayout(new BorderLayout(0, 0));
-        controlPanel.setMaximumSize(new Dimension(2147483647, 150));
-        controlPanel.setPreferredSize(new Dimension(400, 150));
-        controlPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.black), null));
+        controlPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         controlPanel.add(paddingPanel, BorderLayout.CENTER);
 
         paddingPanel.setLayout(new BorderLayout(0, 0));
-        paddingPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 10, 5, 10), null));
+        paddingPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
         paddingPanel.add(infoBar, BorderLayout.NORTH);
         paddingPanel.add(contentPanel, BorderLayout.CENTER);
         paddingPanel.add(breadcrumbPanel, BorderLayout.SOUTH);
 
         infoBar.setLayout(new GridBagLayout());
-        infoBar.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0), null));
+        infoBar.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.weightx = 0.3;
+        gbc.weightx = 0.5;
         gbc.anchor = GridBagConstraints.WEST;
-        infoBar.add(lastTimeLabel, gbc);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 0;
-        gbc.weightx = 0.3;
-        gbc.anchor = GridBagConstraints.EAST;
-        infoBar.add(firstTimeLabel, gbc);
+        infoBar.add(timeLabel, gbc);
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.weightx = 0.3;
+        gbc.weightx = 0.5;
+        gbc.anchor = GridBagConstraints.EAST;
         infoBar.add(hitsLabel, gbc);
 
         contentPanel.setLayout(new BorderLayout(0, 0));
-        contentPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0), null));
-        contentPanel.add(titleLabel, BorderLayout.NORTH);
-        contentPanel.add(messageLabel, BorderLayout.CENTER);
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        contentPanel.add(titlePanel, BorderLayout.NORTH);
+        contentPanel.add(messagePanel, BorderLayout.CENTER);
 
-        hitsLabel.setFont(new Font(hitsLabel.getFont().getName(), Font.BOLD, hitsLabel.getFont().getSize()));
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.PAGE_AXIS));
+        titlePanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+        titlePanel.add(packageLabel);
+        titlePanel.add(titleLabel);
+
+        messagePanel.setLayout(new BorderLayout(0, 0));
+        messagePanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
+        messagePanel.add(messageLabel);
+
         messageLabel.setFont(UIManager.getFont("TextArea.font"));
+
         titleLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
+        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+        attributes.put(TextAttribute.SIZE, 16);
+        attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
+        titleLabel.setFont(titleLabel.getFont().deriveFont(attributes));
+    }
+
+    public class ControlPanel extends JPanel {
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension d = super.getPreferredSize();
+            return new Dimension(400, d.height);
+        }
+        @Override
+        public Dimension getMaximumSize() {
+            Dimension d = super.getPreferredSize();
+            return new Dimension(Integer.MAX_VALUE, Integer.min(d.height, 250));
+        }
+    }
+
+    public class PackageLabel extends JLabel {
+        @Override
+        public String getText() {
+            if (packageName == null) {
+                return String.format("%s", SamebugBundle.message("samebug.exception.noPackage"));
+            } else {
+                return String.format("%s", packageName);
+            }
+        }
+
+        @Override
+        public Color getForeground() {
+            if (UIUtil.isUnderDarcula()) {
+                return Colors.unemphasizedDarcula;
+            } else {
+                return Colors.unemphasized;
+            }
+        }
     }
 
     public class TitleLabel extends JLabel {
@@ -119,32 +173,19 @@ public class SearchGroupCardView {
 
         @Override
         public String getText() {
-            return String.format("<html><b><a href=\"%s\">%s</a></b></html>",
-                    searchGroup.lastSearch.searchUrl, searchGroup.lastSearch.exception.typeName);
+            return String.format("%s", className);
+        }
+
+        @Override
+        public Color getForeground() {
+            return Colors.samebugOrange;
         }
     }
 
-    public class FirstTimeLabel extends JLabel {
+    public class TimeLabel extends JLabel {
         @Override
         public String getText() {
-            return String.format("first %s", pretty.format(searchGroup.firstSeenSimilar));
-        }
-
-        @Override
-        public int getHorizontalAlignment() {
-            return SwingConstants.RIGHT;
-        }
-
-        @Override
-        public int getHorizontalTextPosition() {
-            return SwingConstants.RIGHT;
-        }
-    }
-
-    public class LastTimeLabel extends JLabel {
-        @Override
-        public String getText() {
-            return String.format("%s", pretty.format(searchGroup.lastSeenSimilar));
+            return String.format("%s | %d times, first %s", pretty.format(searchGroup.lastSeenSimilar), searchGroup.numberOfSimilars, pretty.format(searchGroup.firstSeenSimilar));
         }
 
         @Override
@@ -155,6 +196,15 @@ public class SearchGroupCardView {
         @Override
         public int getHorizontalTextPosition() {
             return SwingConstants.LEFT;
+        }
+
+        @Override
+        public Color getForeground() {
+            if (UIUtil.isUnderDarcula()) {
+                return Colors.unemphasizedDarcula;
+            } else {
+                return Colors.unemphasized;
+            }
         }
     }
 
@@ -172,12 +222,21 @@ public class SearchGroupCardView {
 
         @Override
         public int getHorizontalAlignment() {
-            return SwingConstants.CENTER;
+            return SwingConstants.RIGHT;
         }
 
         @Override
         public int getHorizontalTextPosition() {
-            return SwingConstants.CENTER;
+            return SwingConstants.RIGHT;
+        }
+
+        @Override
+        public Color getForeground() {
+            if (UIUtil.isUnderDarcula()) {
+                return Colors.unemphasizedDarcula;
+            } else {
+                return Colors.unemphasized;
+            }
         }
     }
 
@@ -188,7 +247,8 @@ public class SearchGroupCardView {
             if (message == null) {
                 return String.format("<html><i>No message provided</i></html>");
             } else {
-                return String.format("<html>%s</html>", message);
+                String broken = message.replaceAll("\\n", "<br>");
+                return String.format("<html>%s</html>", broken);
             }
         }
 
