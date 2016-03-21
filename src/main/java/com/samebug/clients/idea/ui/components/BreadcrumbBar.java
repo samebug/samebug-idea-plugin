@@ -17,7 +17,7 @@ public class BreadcrumbBar extends JPanel {
     public BreadcrumbBar(java.util.List<ComponentStack> stacks) {
         assert (stacks.size() > 0);
         setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         add(new BreadcrumbEndLabel());
         add(new BreadcrumbLabel(stacks.get(0)));
         for (int i = 1; i < stacks.size(); ++i) {
