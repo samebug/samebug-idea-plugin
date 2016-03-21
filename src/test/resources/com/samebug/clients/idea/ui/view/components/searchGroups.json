@@ -13,7 +13,7 @@
         "timestamp": 1458207553435,
         "exception": {
           "typeName": "java.lang.NullPointerException",
-          "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>"
+          "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
         },
         "componentStack": [
           {

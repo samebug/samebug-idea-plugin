@@ -21,6 +21,7 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.components.BreadcrumbBar;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import javax.swing.*;
@@ -241,15 +242,20 @@ public class SearchGroupCardView {
     }
 
     public class MessageLabel extends JLabel {
-        @Override
-        public String getText() {
+        private final String escapedText;
+        public MessageLabel() {
             String message = searchGroup.lastSearch.exception.message;
             if (message == null) {
-                return String.format("<html><i>No message provided</i></html>");
+                escapedText = String.format("<html><i>No message provided</i></html>");
             } else {
-                String broken = message.replaceAll("\\n", "<br>");
-                return String.format("<html>%s</html>", broken);
+                // Escape html, but keep line breaks
+                String broken = StringEscapeUtils.escapeHtml(message).replaceAll("\\n", "<br>");
+                escapedText = String.format("<html>%s</html>", broken);
             }
+        }
+        @Override
+        public String getText() {
+            return escapedText;
         }
 
         @Override
