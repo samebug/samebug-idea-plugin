@@ -12,11 +12,11 @@ import static org.junit.Assert.assertEquals;
 public class SamebugClientTest {
     @Test
     public void checkEndpoint() {
-        assertEquals(SamebugClient.root, URI.create("https://samebug.io/"));
+        assertEquals(URI.create("https://samebug.io/"), SamebugClient.root);
     }
 
     @Test
     public void checkTrackingEndpoint() {
-        assertEquals(SamebugClient.trackingGateway, URI.create("https://samebug.io/").resolve("track/trace"));
+        assertEquals(URI.create("https://samebug.io/").resolve("track/trace"), SamebugClient.trackingGateway);
     }
 }
