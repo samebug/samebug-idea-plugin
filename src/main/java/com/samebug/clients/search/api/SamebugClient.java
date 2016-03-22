@@ -25,14 +25,10 @@ import com.samebug.clients.search.api.exceptions.*;
 import org.apache.http.*;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -136,25 +132,15 @@ public class SamebugClient {
     }
 
     // implementation
-    private <T> T requestJson(Request request, Class<T> classOfT)
+    private <T> T requestJson(Request request, final Class<T> classOfT)
             throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
-        final HttpResponse httpResponse;
-        httpResponse = executePatient(request.setHeader("Accept", "application/json"));
-
-        Reader reader;
-        try {
-            reader = new InputStreamReader(httpResponse.getEntity().getContent());
-        } catch (IOException e) {
-            throw new HttpError(e);
-        }
-        try {
-            return gson.fromJson(reader, classOfT);
-        } finally {
-            try {
-                reader.close();
-            } catch (IOException ignored) {
+        final HttpResponse httpResponse = executePatient(request.setHeader("Accept", "application/json"));
+        return new HandleResponse<T>(httpResponse) {
+            @Override
+            T process(Reader reader) {
+                return gson.fromJson(reader, classOfT);
             }
-        }
+        }.handle();
     }
 
     private void postJson(Request post, Object data)
@@ -162,7 +148,14 @@ public class SamebugClient {
         String json = gson.toJson(data);
         post.addHeader("Content-Type", "application/json");
         post.body(new StringEntity(json, ContentType.APPLICATION_JSON));
-        executeFailFast(post);
+        HttpResponse httpResponse = executeFailFast(post);
+
+        new HandleResponse<Void>(httpResponse) {
+            @Override
+            Void process(Reader reader) {
+                return null;
+            }
+        }.handle();
     }
 
 
@@ -173,7 +166,7 @@ public class SamebugClient {
 
     private HttpResponse executePatient(Request request)
             throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
-        return execute(request, 10000, 30000);
+        return execute(request, 3000, 7000);
     }
 
 
@@ -195,19 +188,13 @@ public class SamebugClient {
         request.connectTimeout(connectTimeoutMillis);
         request.socketTimeout(socketTimeoutMillis);
 
-        Response response;
+        HttpResponse httpResponse;
         try {
-            response = request.execute();
+            httpResponse = request.execute().returnResponse();
         } catch (IOException e) {
             throw new HttpError(e);
         }
 
-        final HttpResponse httpResponse;
-        try {
-            httpResponse = response.returnResponse();
-        } catch (IOException e) {
-            throw new HttpError(e);
-        }
         int statusCode = httpResponse.getStatusLine().getStatusCode();
 
         switch (statusCode) {
@@ -239,5 +226,34 @@ public class SamebugClient {
     private void addDefaultHeaders(Request request) {
         if (apiKey != null) request.addHeader("X-Samebug-ApiKey", apiKey);
         request.addHeader("User-Agent", USER_AGENT);
+    }
+}
+
+
+abstract class HandleResponse<T> {
+    final HttpResponse response;
+
+    HandleResponse(HttpResponse response) {
+        this.response = response;
+    }
+
+    abstract T process(Reader reader);
+
+    public T handle() throws HttpError {
+        InputStream content = null;
+        Reader reader = null;
+        try {
+            content = response.getEntity().getContent();
+            reader = new InputStreamReader(content);
+            return process(reader);
+        } catch (IOException e) {
+            throw new HttpError(e);
+        } finally {
+            try {
+                if (content != null) content.close();
+                if (reader != null) reader.close();
+            } catch (IOException ignored) {
+            }
+        }
     }
 }
