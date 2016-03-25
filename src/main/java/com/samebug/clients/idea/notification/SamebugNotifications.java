@@ -34,11 +34,11 @@ import javax.swing.event.HyperlinkListener;
  */
 public class SamebugNotifications {
     public static final String SAMEBUG_SEARCH_NOTIFICATIONS = "Samebug Search Notifications";
-    public static final String SAMEBUG_HELP_NOTIFICATIONS = "Samebug Help Notifications";
+    public static final String SAMEBUG_TUTORIAL_NOTIFICATIONS = "Samebug Tutorial Notifications";
 
     public static void registerNotificationGroups() {
         NotificationsConfiguration.getNotificationsConfiguration().register(SAMEBUG_SEARCH_NOTIFICATIONS, NotificationDisplayType.BALLOON, false);
-        NotificationsConfiguration.getNotificationsConfiguration().register(SAMEBUG_HELP_NOTIFICATIONS, NotificationDisplayType.STICKY_BALLOON, true);
+        NotificationsConfiguration.getNotificationsConfiguration().register(SAMEBUG_TUTORIAL_NOTIFICATIONS, NotificationDisplayType.STICKY_BALLOON, true);
     }
 
 

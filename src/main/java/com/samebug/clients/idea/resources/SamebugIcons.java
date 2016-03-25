@@ -22,6 +22,9 @@ import java.net.URL;
 
 public class SamebugIcons {
     public final static Icon notification = IconLoader.getIcon("/com/samebug/icons/samebug-notification.png");
+    public final static Icon tutorial = IconLoader.getIcon("/com/samebug/icons/tutorial.png");
+
+
     public final static Icon cogwheel = IconLoader.getIcon("/com/samebug/icons/cogwheel.png");
     public final static Icon cogwheelTodo = IconLoader.getIcon("/com/samebug/icons/cogwheel-todo.png");
     public final static Icon linkError = IconLoader.getIcon("/com/samebug/icons/link-error.png");
