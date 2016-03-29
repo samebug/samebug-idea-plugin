@@ -17,6 +17,7 @@ package com.samebug.clients.idea.components.project;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
@@ -29,6 +30,7 @@ import com.samebug.clients.idea.notification.TutorialNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.idea.ui.controller.HistoryTabController;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -92,30 +94,40 @@ public class TutorialComponent extends AbstractProjectComponent {
     }
 
     public boolean offerSearchNotification(String searchNotification, SearchNotificationTutorialCase tutorialCase) {
-        if (tutorialCase == null) return false;
-
-        final ApplicationSettings pluginState = IdeaSamebugPlugin.getInstance().getState();
-        String htmlMessage = null;
-
-        // TODO notification tutorial states
-        switch (tutorialCase) {
-            case RECURRING_EXCEPTIONS:
-                htmlMessage = SamebugBundle.message("samebug.notification.tutorial.searchResults.recurring", searchNotification, SamebugIcons.calendarUrl);
-                break;
-            case ZERO_SOLUTION_EXCEPTIONS:
-                htmlMessage = SamebugBundle.message("samebug.notification.tutorial.searchResults.zeroSolution", searchNotification, SamebugIcons.lightbulbUrl);
-                break;
-            case MIXED_EXCEPTIONS:
-                htmlMessage = SamebugBundle.message("samebug.notification.tutorial.searchResults.mixed", searchNotification, SamebugIcons.calendarUrl, SamebugIcons.lightbulbUrl);
-                break;
-        }
-
-        if (htmlMessage != null) {
-            final TutorialNotification notification = new TutorialNotification(myProject, SamebugBundle.message("samebug.notification.searchresults.title"), htmlMessage);
-            notification.notify(myProject);
-            return true;
-        } else {
+        final ApplicationSettings applicationSettings = IdeaSamebugPlugin.getInstance().getState();
+        if (applicationSettings == null || tutorialCase == null) {
             return false;
+        } else {
+            String htmlMessage = null;
+            String clearMessage = searchNotification.replaceAll("<html>", "").replaceAll("</html>", "");
+
+            switch (tutorialCase) {
+                case RECURRING_EXCEPTIONS:
+                    if (!applicationSettings.isTutorialShowRecurringSearches()) break;
+                    htmlMessage = SamebugBundle.message("samebug.notification.tutorial.searchResults.recurring", clearMessage, SamebugIcons.calendarUrl);
+                    applicationSettings.setTutorialShowRecurringSearches(false);
+                    ServiceManager.getService(myProject, HistoryTabController.class).setShowRecurringSearches(false);
+                    break;
+                case ZERO_SOLUTION_EXCEPTIONS:
+                    if (!applicationSettings.isTutorialShowZeroSolutionSearches()) break;
+                    htmlMessage = SamebugBundle.message("samebug.notification.tutorial.searchResults.zeroSolution", clearMessage, SamebugIcons.lightbulbUrl);
+                    applicationSettings.setTutorialShowZeroSolutionSearches(false);
+                    ServiceManager.getService(myProject, HistoryTabController.class).setShowZeroSolutionSearches(false);
+                    break;
+                case MIXED_EXCEPTIONS:
+                    if (!applicationSettings.isTutorialShowMixedSearches()) break;
+                    htmlMessage = SamebugBundle.message("samebug.notification.tutorial.searchResults.mixed", clearMessage, SamebugIcons.calendarUrl, SamebugIcons.lightbulbUrl);
+                    applicationSettings.setTutorialShowMixedSearches(false);
+                    break;
+            }
+
+            if (htmlMessage != null) {
+                final TutorialNotification notification = new TutorialNotification(myProject, SamebugBundle.message("samebug.notification.searchresults.title"), htmlMessage);
+                notification.notify(myProject);
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
