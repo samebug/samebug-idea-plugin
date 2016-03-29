@@ -30,7 +30,8 @@ public class ReloadHistoryAction extends RefreshAction implements DumbAware {
     @Override
     public void actionPerformed(final AnActionEvent e) {
         e.getPresentation().setEnabled(false);
-        if (e.getProject() != null) e.getProject().getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).startLoading();
+        if (e.getProject() != null)
+            e.getProject().getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).startLoading();
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
