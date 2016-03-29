@@ -23,7 +23,6 @@ import com.samebug.clients.idea.actions.ShowOld;
 import com.samebug.clients.idea.actions.ShowZeroSolution;
 import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
@@ -33,7 +32,6 @@ import com.samebug.clients.idea.ui.views.HistoryTabView;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedHistory;
-import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,7 +52,6 @@ public class HistoryTabController {
     private GroupedHistory model;
     final private List<SearchGroupCardController> searchGroups;
 
-    final private HistoryReloader historyReloader;
     final private ConnectionStatusUpdater statusUpdater;
     final private HistoryUpdater historyUpdater;
 
@@ -64,13 +61,8 @@ public class HistoryTabController {
         view = new HistoryTabView();
         searchGroups = new ArrayList<SearchGroupCardController>();
 
-        historyReloader = new HistoryReloader();
         statusUpdater = new ConnectionStatusUpdater();
         historyUpdater = new HistoryUpdater();
-    }
-
-    public HistoryReloader getHistoryReloader() {
-        return historyReloader;
     }
 
     public ConnectionStatusUpdater getStatusUpdater() {
@@ -86,20 +78,20 @@ public class HistoryTabController {
     }
 
     public void loadHistory() {
+        emptyHistoryPane();
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
-                emptyHistoryPane();
-                model = null;
+                IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
                 try {
-                    final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-                    model = plugin.getClient().getSearchHistory();
+                    model = client.getSearchHistory();
+                    refreshHistoryPane();
                 } catch (SamebugClientException e1) {
                     LOGGER.warn("Failed to retrieve history", e1);
                 }
-                refreshHistoryPane();
             }
         });
+
     }
 
     private void emptyHistoryPane() {
@@ -190,31 +182,19 @@ public class HistoryTabController {
                 }
             });
         }
-
-        @Override
-        public void authenticationChange(final boolean isAuthenticated) {
-            loadHistory();
-        }
-
-    }
-
-    class HistoryReloader implements BatchStackTraceSearchListener {
-        @Override
-        public void batchStart() {
-
-        }
-
-        @Override
-        public void batchFinished(java.util.List<SearchResults> results, int failed) {
-            loadHistory();
-        }
     }
 
     class HistoryUpdater implements HistoryListener {
 
         @Override
-        public void reload() {
-            loadHistory();
+        public void startLoading() {
+            emptyHistoryPane();
+        }
+
+        @Override
+        public void update(GroupedHistory history) {
+            model = history;
+            refreshHistoryPane();
         }
 
         @Override

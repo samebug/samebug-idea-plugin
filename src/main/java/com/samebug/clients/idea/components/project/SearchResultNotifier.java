@@ -15,13 +15,17 @@
  */
 package com.samebug.clients.idea.components.project;
 
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.idea.actions.ShowOld;
+import com.samebug.clients.idea.actions.ShowZeroSolution;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
+import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.notification.SearchResultsNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
@@ -62,22 +66,20 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
     @Override
     public void batchFinished(final List<SearchResults> results, int failed) {
         Long timelimitForFreshSearch = new Date().getTime() - (1 * 60 * 1000);
-        // TODO do not load history again
         // TODO history does not contains the stack ids (or at least the deepest stack id)
         Map<Integer, GroupedExceptionSearch> history = new HashMap<Integer, GroupedExceptionSearch>();
         try {
             final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
             GroupedHistory h = plugin.getClient().getSearchHistory();
+            myProject.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(h);
             for (GroupedExceptionSearch s : h.searchGroups) {
                 history.put(s.lastSearch.searchId, s);
             }
         } catch (SamebugClientException e1) {
         }
 
-        // TODO read them from where?
-        boolean filterZeroSolution = false;
-        boolean filterRecurring = false;
-
+        boolean showOldSearches = ((ShowOld) ActionManager.getInstance().getAction("Samebug.ShowOld")).isSelected(null);
+        boolean showSearchesWithZeroSolution = ((ShowZeroSolution) ActionManager.getInstance().getAction("Samebug.ShowZeroSolution")).isSelected(null);
         Map<Integer, SearchResults> groupedResults = new HashMap<Integer, SearchResults>();
         for (SearchResults result : results) {
             groupedResults.put(result.deepestStackId, result);
@@ -87,11 +89,12 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
         int zeroSolutions = 0;
         List<String> searchIds = new ArrayList<String>();
         for (SearchResults result : groupedResults.values()) {
-            GroupedExceptionSearch historyResult = history.get(result.searchId);
+            int searchId = Integer.parseInt(result.searchId);
+            GroupedExceptionSearch historyResult = history.get(searchId);
             if (historyResult != null && historyResult.numberOfSolutions == 0) {
-                if (!filterZeroSolution) ++zeroSolutions; searchIds.add(result.searchId);
+                if (showSearchesWithZeroSolution) ++zeroSolutions; searchIds.add(result.searchId);
             } else if (result.firstSeenTime == null || result.firstSeenTime < timelimitForFreshSearch) {
-                if (!filterRecurring) ++recurrings; searchIds.add(result.searchId);
+                if (showOldSearches) ++recurrings; searchIds.add(result.searchId);
             }
         }
 
