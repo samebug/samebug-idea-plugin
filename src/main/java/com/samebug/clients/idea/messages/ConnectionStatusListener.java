@@ -26,6 +26,4 @@ public interface ConnectionStatusListener {
     void startRequest();
 
     void finishRequest(boolean isConnected);
-
-    void authenticationChange(boolean isAuthenticated);
 }

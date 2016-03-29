@@ -37,22 +37,22 @@ import org.jetbrains.annotations.Nullable;
                 @Storage(id = "SamebugClient", file = "$APP_CONFIG$/SamebugClient.xml")
         }
 )
-final public class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<Settings> {
-    private IdeaClientService client = new IdeaClientService(null, false);
+final public class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<ApplicationSettings> {
+    private IdeaClientService client = new IdeaClientService(null);
 
     // TODO Unlike other methods, this one executes the http request on the caller thread. Is it ok?
     public void setApiKey(@NotNull String apiKey) throws SamebugClientException, UnknownApiKey {
         UserInfo userInfo = null;
         try {
-            client = new IdeaClientService(apiKey, state.getUserId() != null);
+            client = new IdeaClientService(apiKey);
             state.setApiKey(apiKey);
             userInfo = client.getUserInfo(apiKey);
             if (!userInfo.isUserExist) {
                 throw new UnknownApiKey(apiKey);
+            } else {
+                state.setUserId(userInfo.userId);
             }
         } finally {
-            state.setUserId(userInfo == null ? null : userInfo.userId);
-            state.setUserDisplayName(userInfo == null ? null : userInfo.displayName);
             Tracking.appTracking().trace(Events.apiKeySet());
         }
     }
@@ -77,10 +77,6 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         return client;
     }
 
-    public boolean isInitialized() {
-        return state.isInitialized();
-    }
-
     // ApplicationComponent overrides
     @Override
     public void initComponent() {
@@ -88,7 +84,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
-                if (!state.isInitialized()) {
+                if (state.getApiKey() == null) {
                     SettingsDialog.setup(state.getApiKey());
                 } else {
                     try {
@@ -111,21 +107,20 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         return getClass().getSimpleName();
     }
 
-
     // PersistentStateComponent overrides
     @Nullable
     @Override
-    public Settings getState() {
+    public ApplicationSettings getState() {
         return this.state;
     }
 
     @Override
-    public void loadState(Settings state) {
+    public void loadState(ApplicationSettings state) {
         this.state = state;
-        client = new IdeaClientService(state.getApiKey(), state.getUserId() == null);
+        client = new IdeaClientService(state.getApiKey());
     }
 
-    private Settings state = new Settings();
+    private ApplicationSettings state = new ApplicationSettings();
     final private static Logger LOGGER = Logger.getInstance(IdeaSamebugPlugin.class);
 
 }

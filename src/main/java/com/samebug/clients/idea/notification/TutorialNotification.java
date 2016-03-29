@@ -26,18 +26,18 @@ import javax.swing.*;
 /**
  * Created by poroszd on 2/15/16.
  */
-public class HelpNotification extends Notification {
-    public HelpNotification(final Project project, String title, String content) {
-        super(SamebugNotifications.SAMEBUG_HELP_NOTIFICATIONS,
+public class TutorialNotification extends Notification {
+    public TutorialNotification(final Project project, String title, String content) {
+        super(SamebugNotifications.SAMEBUG_TUTORIAL_NOTIFICATIONS,
                 title,
                 content,
                 NotificationType.INFORMATION,
-                SamebugNotifications.basicNotificationListener(project, "help"));
+                SamebugNotifications.basicNotificationListener(project, "tutorial"));
     }
 
     @Nullable
     @Override
     public Icon getIcon() {
-        return SamebugIcons.notification;
+        return SamebugIcons.tutorial;
     }
 }

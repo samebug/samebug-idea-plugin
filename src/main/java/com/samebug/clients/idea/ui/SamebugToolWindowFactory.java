@@ -16,6 +16,7 @@
 package com.samebug.clients.idea.ui;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -23,7 +24,6 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
@@ -42,14 +42,11 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
     }
 
     private HistoryTabController initializeHistoryTab(Project project) {
-        HistoryTabController historyTab = new HistoryTabController(project);
+        HistoryTabController historyTab = ServiceManager.getService(project, HistoryTabController.class); //new HistoryTabController(project);
         historyTab.loadHistory();
 
         MessageBusConnection appMessageBus = ApplicationManager.getApplication().getMessageBus().connect(project);
         appMessageBus.subscribe(ConnectionStatusListener.CONNECTION_STATUS_TOPIC, historyTab.getStatusUpdater());
-
-        MessageBusConnection projectMessageBus = project.getMessageBus().connect(project);
-        projectMessageBus.subscribe(BatchStackTraceSearchListener.BATCH_SEARCH_TOPIC, historyTab.getHistoryReloader());
 
         project.getMessageBus().connect(project).subscribe(HistoryListener.UPDATE_HISTORY_TOPIC, historyTab.getHistoryUpdater());
 

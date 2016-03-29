@@ -17,22 +17,42 @@ package com.samebug.clients.idea.actions;
 
 import com.intellij.ide.actions.RefreshAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbAware;
 import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.HistoryListener;
+import com.samebug.clients.search.api.entities.GroupedHistory;
+import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
 public class ReloadHistoryAction extends RefreshAction implements DumbAware {
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(final AnActionEvent e) {
         e.getPresentation().setEnabled(false);
-        e.getProject().getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).reload();
+        if (e.getProject() != null)
+            e.getProject().getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).startLoading();
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
+                try {
+                    GroupedHistory history = client.getSearchHistory();
+                    if (e.getProject() != null) e.getProject().getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(history);
+                    e.getPresentation().setEnabled(true);
+                } catch (SamebugClientException e1) {
+                    LOGGER.warn("Failed to retrieve history", e1);
+                }
+            }
+        });
     }
 
     @Override
     public void update(AnActionEvent e) {
-        IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-        IdeaClientService client = plugin.getClient();
-        e.getPresentation().setEnabled(client.getNumberOfActiveRequests() == 0 && plugin.isInitialized());
+        IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
+        e.getPresentation().setEnabled(client.getNumberOfActiveRequests() == 0);
     }
+
+    final private static Logger LOGGER = Logger.getInstance(ReloadHistoryAction.class);
+
 }
