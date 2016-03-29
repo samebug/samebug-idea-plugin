@@ -15,12 +15,10 @@
  */
 package com.samebug.clients.idea.ui.controller;
 
-import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.idea.actions.ShowOld;
-import com.samebug.clients.idea.actions.ShowZeroSolution;
+import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
@@ -52,6 +50,9 @@ public class HistoryTabController {
     private GroupedHistory model;
     final private List<SearchGroupCardController> searchGroups;
 
+    private boolean showZeroSolutionSearches;
+    private boolean showRecurringSearches;
+
     final private ConnectionStatusUpdater statusUpdater;
     final private HistoryUpdater historyUpdater;
 
@@ -60,7 +61,11 @@ public class HistoryTabController {
         this.project = project;
         view = new HistoryTabView();
         searchGroups = new ArrayList<SearchGroupCardController>();
-
+        ApplicationSettings applicationSettings = IdeaSamebugPlugin.getInstance().getState();
+        if (applicationSettings != null) {
+            showZeroSolutionSearches = applicationSettings.isTutorialShowZeroSolutionSearches();
+            showRecurringSearches = applicationSettings.isTutorialShowZeroSolutionSearches();
+        }
         statusUpdater = new ConnectionStatusUpdater();
         historyUpdater = new HistoryUpdater();
     }
@@ -105,20 +110,27 @@ public class HistoryTabController {
     private void refreshHistoryPane() {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             public void run() {
+                IdeaClientService connectionService = IdeaSamebugPlugin.getInstance().getClient();
                 view.contentPanel.removeAll();
                 searchGroups.clear();
-                if (model != null) {
-                    boolean showOldSearches = ((ShowOld) ActionManager.getInstance().getAction("Samebug.ShowOld")).isSelected(null);
-                    boolean showSearchesWithZeroSolution = ((ShowZeroSolution) ActionManager.getInstance().getAction("Samebug.ShowZeroSolution")).isSelected(null);
+                if (!connectionService.isConnected()) {
+                    EmptyWarningPanel panel = new EmptyWarningPanel();
+                    panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.notConnected", SamebugClient.root));
+                    view.contentPanel.add(panel.controlPanel);
+                } else if (connectionService.isConnected() && !connectionService.isAuthenticated()) {
+                    EmptyWarningPanel panel = new EmptyWarningPanel();
+                    panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.notLoggedIn", SamebugIcons.cogwheelTodoUrl));
+                    view.contentPanel.add(panel.controlPanel);
+                } else if (model != null) {
                     Date now = new Date();
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(now);
                     cal.add(Calendar.DAY_OF_YEAR, -1);
                     Date oneDayBefore = cal.getTime();
                     for (GroupedExceptionSearch group : model.searchGroups) {
-                        if (!showSearchesWithZeroSolution && group.numberOfSolutions == 0) {
+                        if (!isShowZeroSolutionSearches() && group.numberOfSolutions == 0) {
                             // filtered because there is no solution for it
-                        } else if (!showOldSearches && group.firstSeenSimilar.before(oneDayBefore)) {
+                        } else if (!isShowRecurringSearches() && group.firstSeenSimilar.before(oneDayBefore)) {
                             // filtered because it is old
                         } else {
                             SearchGroupCardController c = new SearchGroupCardController(group);
@@ -135,20 +147,27 @@ public class HistoryTabController {
                         }
                         view.contentPanel.add(panel.controlPanel);
                     }
-                } else {
-                    IdeaClientService connectionService = IdeaSamebugPlugin.getInstance().getClient();
-                    EmptyWarningPanel panel = new EmptyWarningPanel();
-                    if (connectionService.isConnected() && !connectionService.isAuthenticated()) {
-                        panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.notLoggedIn", SamebugIcons.cogwheelTodoUrl));
-                    } else {
-                        panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.notConnected", SamebugClient.root));
-                    }
-                    view.contentPanel.add(panel.controlPanel);
                 }
                 view.controlPanel.revalidate();
                 view.controlPanel.repaint();
             }
         });
+    }
+
+    public boolean isShowZeroSolutionSearches() {
+        return showZeroSolutionSearches;
+    }
+
+    public void setShowZeroSolutionSearches(boolean showZeroSolutionSearches) {
+        this.showZeroSolutionSearches = showZeroSolutionSearches;
+    }
+
+    public boolean isShowRecurringSearches() {
+        return showRecurringSearches;
+    }
+
+    public void setShowRecurringSearches(boolean showRecurringSearches) {
+        this.showRecurringSearches = showRecurringSearches;
     }
 
     class ConnectionStatusUpdater implements ConnectionStatusListener {

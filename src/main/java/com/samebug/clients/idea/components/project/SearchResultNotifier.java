@@ -15,19 +15,18 @@
  */
 package com.samebug.clients.idea.components.project;
 
-import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.actions.ShowOld;
-import com.samebug.clients.idea.actions.ShowZeroSolution;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.notification.SearchResultsNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.ui.controller.HistoryTabController;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
@@ -78,8 +77,8 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
         } catch (SamebugClientException e1) {
         }
 
-        boolean showOldSearches = ((ShowOld) ActionManager.getInstance().getAction("Samebug.ShowOld")).isSelected(null);
-        boolean showSearchesWithZeroSolution = ((ShowZeroSolution) ActionManager.getInstance().getAction("Samebug.ShowZeroSolution")).isSelected(null);
+        boolean isShowRecurringSearches = ServiceManager.getService(myProject, HistoryTabController.class).isShowRecurringSearches();
+        boolean isShowZeroSolutionSearches = ServiceManager.getService(myProject, HistoryTabController.class).isShowZeroSolutionSearches();
         Map<Integer, SearchResults> groupedResults = new HashMap<Integer, SearchResults>();
         for (SearchResults result : results) {
             groupedResults.put(result.deepestStackId, result);
@@ -92,9 +91,9 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
             int searchId = Integer.parseInt(result.searchId);
             GroupedExceptionSearch historyResult = history.get(searchId);
             if (historyResult != null && historyResult.numberOfSolutions == 0) {
-                if (showSearchesWithZeroSolution) ++zeroSolutions; searchIds.add(result.searchId);
+                if (isShowZeroSolutionSearches) ++zeroSolutions; searchIds.add(result.searchId);
             } else if (result.firstSeenTime == null || result.firstSeenTime < timelimitForFreshSearch) {
-                if (showOldSearches) ++recurrings; searchIds.add(result.searchId);
+                if (isShowRecurringSearches) ++recurrings; searchIds.add(result.searchId);
             }
         }
 
@@ -102,7 +101,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
             // all searches filtered out, show no notification
         } else {
             // there are searches to report about
-            HelpComponent.SearchNotificationTutorialCase tutorial = null;
+            TutorialComponent.SearchNotificationTutorialCase tutorial = null;
             String message;
             if (zeroSolutions == 0 && recurrings == 0) {
                 // new exceptions with solutions
@@ -112,20 +111,20 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
                     message = SamebugBundle.message("samebug.notification.searchresults.multiple", searchIds.size());
                 }
             } else if (zeroSolutions == 0 && recurrings > 0) {
-                tutorial = HelpComponent.SearchNotificationTutorialCase.RECURRING_EXCEPTIONS;
+                tutorial = TutorialComponent.SearchNotificationTutorialCase.RECURRING_EXCEPTIONS;
                 if (searchIds.size() == 1) {
                     message = SamebugBundle.message("samebug.notification.searchresults.oneRecurring", searchIds.get(0));
                 } else {
                     message = SamebugBundle.message("samebug.notification.searchresults.multipleRecurring", searchIds.size());
                 }
             } else if (zeroSolutions > 0 && recurrings == 0) {
-                tutorial = HelpComponent.SearchNotificationTutorialCase.ZERO_SOLUTION_EXCEPTIONS;
+                tutorial = TutorialComponent.SearchNotificationTutorialCase.ZERO_SOLUTION_EXCEPTIONS;
                 message = SamebugBundle.message("samebug.notification.searchresults.noSolutions", searchIds.size());
             } else {
-                tutorial = HelpComponent.SearchNotificationTutorialCase.MIXED_EXCEPTIONS;
+                tutorial = TutorialComponent.SearchNotificationTutorialCase.MIXED_EXCEPTIONS;
                 message = SamebugBundle.message("samebug.notification.searchresults.mixed", searchIds.size());
             }
-            HelpComponent tutorialComponent = myProject.getComponent(HelpComponent.class);
+            TutorialComponent tutorialComponent = myProject.getComponent(TutorialComponent.class);
             if (!tutorialComponent.offerSearchNotification(message, tutorial)) {
                 showNotification(message);
             }

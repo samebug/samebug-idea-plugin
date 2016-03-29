@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.components.application.Settings;
+import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.notification.TutorialNotification;
@@ -43,16 +43,16 @@ import java.awt.event.ActionListener;
  * <p/>
  * Renaming this class or moving this functionality is welcomed.
  */
-public class HelpComponent extends AbstractProjectComponent {
-    protected HelpComponent(Project project) {
+public class TutorialComponent extends AbstractProjectComponent {
+    protected TutorialComponent(Project project) {
         super(project);
     }
 
     @Override
     public void projectOpened() {
         super.projectOpened();
-        final Settings pluginState = IdeaSamebugPlugin.getInstance().getState();
-        if (pluginState != null && pluginState.isFirstRun()) {
+        final ApplicationSettings pluginState = IdeaSamebugPlugin.getInstance().getState();
+        if (pluginState != null && pluginState.isTutorialFirstRun()) {
             // At this point, the Samebug toolwindow is likely not initialized, so we delay the notification
             final int DELAY_MS = 15 * 1000;
             final Timer timer = new Timer(DELAY_MS, new ActionListener() {
@@ -67,7 +67,7 @@ public class HelpComponent extends AbstractProjectComponent {
                                         SamebugIcons.notification,
                                         SamebugNotifications.basicHyperlinkListener(myProject, "help"));
                                 Tracking.projectTracking(myProject).trace(Events.pluginInstall());
-                                pluginState.setFirstRun(false);
+                                pluginState.setTutorialFirstRun(false);
                             } catch (IllegalStateException e1) {
                                 LOGGER.warn("Samebug tool window was not initialized after "
                                         + DELAY_MS + " millis, welcome message could not be displayed", e1);
@@ -94,7 +94,7 @@ public class HelpComponent extends AbstractProjectComponent {
     public boolean offerSearchNotification(String searchNotification, SearchNotificationTutorialCase tutorialCase) {
         if (tutorialCase == null) return false;
 
-        final Settings pluginState = IdeaSamebugPlugin.getInstance().getState();
+        final ApplicationSettings pluginState = IdeaSamebugPlugin.getInstance().getState();
         String htmlMessage = null;
 
         // TODO notification tutorial states
@@ -119,7 +119,7 @@ public class HelpComponent extends AbstractProjectComponent {
         }
     }
 
-    private final static Logger LOGGER = Logger.getInstance(HelpComponent.class);
+    private final static Logger LOGGER = Logger.getInstance(TutorialComponent.class);
 
     public enum SearchNotificationTutorialCase {
         RECURRING_EXCEPTIONS,

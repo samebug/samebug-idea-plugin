@@ -17,23 +17,29 @@ package com.samebug.clients.idea.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.DumbAware;
 import com.samebug.clients.idea.messages.HistoryListener;
+import com.samebug.clients.idea.ui.controller.HistoryTabController;
 
 /**
  * Created by poroszd on 3/7/16.
  */
-public class ShowOld extends ToggleAction implements DumbAware {
-    private boolean selected = false;
-
+public class ShowZeroSolutionSearches extends ToggleAction implements DumbAware {
     @Override
     public boolean isSelected(AnActionEvent e) {
-        return selected;
+        if (e.getProject() != null) {
+            return ServiceManager.getService(e.getProject(), HistoryTabController.class).isShowZeroSolutionSearches();
+        } else {
+            return false;
+        }
     }
 
     @Override
     public void setSelected(AnActionEvent e, boolean state) {
-        selected = state;
-        e.getProject().getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).toggleShowOldSearches(state);
+        if (e.getProject() != null) {
+            ServiceManager.getService(e.getProject(), HistoryTabController.class).setShowZeroSolutionSearches(state);
+            e.getProject().getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).toggleShowSearchedWithZeroSolution(state);
+        }
     }
 }

@@ -16,6 +16,7 @@
 package com.samebug.clients.idea.ui;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -41,7 +42,7 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
     }
 
     private HistoryTabController initializeHistoryTab(Project project) {
-        HistoryTabController historyTab = new HistoryTabController(project);
+        HistoryTabController historyTab = ServiceManager.getService(project, HistoryTabController.class); //new HistoryTabController(project);
         historyTab.loadHistory();
 
         MessageBusConnection appMessageBus = ApplicationManager.getApplication().getMessageBus().connect(project);
