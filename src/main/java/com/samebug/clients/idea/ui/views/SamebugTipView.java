@@ -1,6 +1,8 @@
 package com.samebug.clients.idea.ui.views;
 
+import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.components.BreadcrumbBar;
+import com.samebug.clients.idea.ui.components.ImagePanel;
 import com.samebug.clients.idea.ui.components.LinkLabel;
 import com.samebug.clients.search.api.entities.SamebugTip;
 import org.ocpsoft.prettytime.PrettyTime;
@@ -98,7 +100,9 @@ public class SamebugTipView {
         {
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
             setBorder(BorderFactory.createEmptyBorder());
-            add(new JLabel((Icon)null));
+            // TODO do not use getScaledInstance; https://community.oracle.com/docs/DOC-983611
+            Image profile = ImageUtil.getImage(tip.samebugAuthorAvatarUrl).getScaledInstance(64, 64, Image.SCALE_FAST);
+            add(new JLabel(new ImageIcon(profile)));
             add(new LinkLabel(tip.samebugAuthorName, tip.samebugAuthorUrl));
         }
     }

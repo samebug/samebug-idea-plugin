@@ -8,6 +8,7 @@ import java.util.Date;
  */
 public class SamebugTip extends Solution {
     public String tipText;
+    public URL samebugAuthorAvatarUrl;
     public String samebugAuthorName;
     public URL samebugAuthorUrl;
     public Date updated;
