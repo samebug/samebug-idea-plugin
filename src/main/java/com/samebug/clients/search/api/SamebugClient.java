@@ -19,7 +19,7 @@ import com.google.gson.*;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
-import com.samebug.clients.search.api.entities.tracking.Solutions;
+import com.samebug.clients.search.api.entities.Solutions;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
 import org.apache.http.*;
@@ -48,8 +48,8 @@ public class SamebugClient {
     final static String API_VERSION = "2.0";
     //    public final static URI root = URI.create("http://localhost:9000/");
     public final static URI root = URI.create("https://samebug.io/");
-    //    final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
-    final static URI trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
+        final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
+//    final static URI trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
     final static URI gateway = root.resolve("sandbox/api/").resolve(API_VERSION + "/");
     final static Gson gson;
     final static HttpClient httpClient = HttpClientBuilder.create()
@@ -128,10 +128,7 @@ public class SamebugClient {
     }
 
     public Solutions getSolutions(String searchId) throws SamebugClientException {
-        URL url = getApiUrl("search/" + searchId);
-        HttpGet request = new HttpGet(url.toString());
-
-        return requestJson(request, Solutions.class);
+        return gson.fromJson(new InputStreamReader(getClass().getResourceAsStream("/com/samebug/mock/solutions.json")), Solutions.class);
     }
 
     public void trace(TrackEvent event) throws SamebugClientException {

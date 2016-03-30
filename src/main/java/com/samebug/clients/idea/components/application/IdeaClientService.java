@@ -22,7 +22,7 @@ import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
-import com.samebug.clients.search.api.entities.tracking.Solutions;
+import com.samebug.clients.search.api.entities.Solutions;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
 

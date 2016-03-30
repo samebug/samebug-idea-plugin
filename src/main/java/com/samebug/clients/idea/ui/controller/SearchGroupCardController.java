@@ -15,11 +15,15 @@
  */
 package com.samebug.clients.idea.ui.controller;
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.ui.views.SearchGroupCardView;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 
 import javax.swing.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Created by poroszd on 3/4/16.
@@ -29,12 +33,21 @@ public class SearchGroupCardController {
     final private SearchGroupCardView view;
     final private GroupedExceptionSearch model;
 
-    public SearchGroupCardController(GroupedExceptionSearch model) {
+    public SearchGroupCardController(final GroupedExceptionSearch model, final Project project) {
         this.view = new SearchGroupCardView(model);
+        this.view.titleLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                ServiceManager.getService(project, SearchTabControllers.class).openSearchTab(model.lastSearch.searchId);
+            }
+        });
         this.model = model;
     }
 
     public JPanel getControlPanel() {
         return view.controlPanel;
     }
+
 }
+

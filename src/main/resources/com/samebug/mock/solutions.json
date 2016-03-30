@@ -1,0 +1,78 @@
+{
+  "search": {
+    "firstSeenSimilar": 1456835783000,
+    "lastSeenSimilar": 1458207553435,
+    "bestMatchLevel": -1,
+    "highestVote": 0,
+    "numberOfSimilars": 3,
+    "numberOfSolutions": 0,
+    "lastSearch": {
+      "searchId": 431629,
+      "searchUrl": "https://samebug.io/search/431629/java.lang.NullPointerException",
+      "timestamp": 1458207553435,
+      "exception": {
+        "typeName": "java.lang.NullPointerException",
+        "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+      },
+      "componentStack": [
+        {
+          "color": 0,
+          "crashDocUrl": null,
+          "name": "com.samebug.swing",
+          "shortName": "com.samebug.swing"
+        },
+        {
+          "color": 3,
+          "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+          "name": "Java Runtime Library",
+          "shortName": "Java RT"
+        },
+        {
+          "color": 6,
+          "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
+          "name": "IntelliJ IDEA",
+          "shortName": "IDEA"
+        }
+      ]
+    }
+  },
+  "solutions": [
+    {
+      "solutionId": 324548,
+      "samebugSolutionUrl": "https://samebug.io/exceptions/324548",
+      "tipText":"Upgrade to RESTHeart 0.10.1 or later.",
+      "samebugAuthorName":"poroszd",
+      "samebugAuthorUrl":"https://samebug.io/user/1/poroszd",
+      "updated":1458207553435,
+      "sourceName":"GitHub",
+      "sourceUrl":"https://github.com/SoftInstigate/restheart/issues/21#issuecomment-88624545",
+      "sourceIconUrl":"https://samebug.io/assets-v/images/sources/github.png",
+      "sourceAuthorName":"ujibang",
+      "sourceAuthorUrl":"https://github.com/ujibang",
+      "exception":{
+        "typeName": "java.lang.NullPointerException",
+        "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+      },
+      "componentStack": [
+        {
+          "color": 0,
+          "crashDocUrl": null,
+          "name": "com.samebug.swing",
+          "shortName": "com.samebug.swing"
+        },
+        {
+          "color": 3,
+          "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+          "name": "Java Runtime Library",
+          "shortName": "Java RT"
+        },
+        {
+          "color": 6,
+          "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
+          "name": "IntelliJ IDEA",
+          "shortName": "IDEA"
+        }
+      ]
+    }
+  ]
+}

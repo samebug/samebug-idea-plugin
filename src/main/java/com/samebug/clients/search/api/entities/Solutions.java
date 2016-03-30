@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.layout;
+package com.samebug.clients.search.api.entities;
 
-import javax.swing.*;
+import java.util.List;
 
 /**
- * Created by poroszd on 3/10/16.
+ * Created by poroszd on 2/24/16.
  */
-public class DocumentCard {
-    public JPanel controlPanel;
-    public JPanel paddingPanel;
-    public JPanel infoPanel;
-    public JPanel contentPanel;
-    public JPanel breadcrumbPanel;
-    public JEditorPane breadcrumbBar;
+public class Solutions {
+    public List<SamebugTip> solutions;
+    public GroupedExceptionSearch search;
 }

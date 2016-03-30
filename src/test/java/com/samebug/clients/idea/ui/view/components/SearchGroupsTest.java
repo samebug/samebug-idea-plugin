@@ -110,7 +110,7 @@ public class SearchGroupsTest extends JDialog {
         GroupedHistory history = gson.fromJson(new InputStreamReader(stream), GroupedHistory.class);
         for (int i = 0; i < 5; ++i) {
             GroupedExceptionSearch group = history.searchGroups.get(i);
-            SearchGroupCardController b = new SearchGroupCardController(group);
+            SearchGroupCardController b = new SearchGroupCardController(group, null);
             dialog.cards.add(b);
             dialog.scrolledPanel.add(b.getControlPanel());
         }

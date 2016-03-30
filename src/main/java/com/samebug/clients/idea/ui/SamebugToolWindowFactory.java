@@ -42,7 +42,7 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
     }
 
     private HistoryTabController initializeHistoryTab(Project project) {
-        HistoryTabController historyTab = ServiceManager.getService(project, HistoryTabController.class); //new HistoryTabController(project);
+        HistoryTabController historyTab = ServiceManager.getService(project, HistoryTabController.class);
         historyTab.loadHistory();
 
         MessageBusConnection appMessageBus = ApplicationManager.getApplication().getMessageBus().connect(project);

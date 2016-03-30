@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.idea.ui.views;
 
-import com.intellij.ide.BrowserUtil;
 import com.intellij.util.ui.UIUtil;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.Colors;
@@ -26,8 +25,6 @@ import org.ocpsoft.prettytime.PrettyTime;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 import java.util.Locale;
@@ -164,15 +161,6 @@ public class SearchGroupCardView {
     }
 
     public class TitleLabel extends JLabel {
-        public TitleLabel() {
-            addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    BrowserUtil.browse(searchGroup.lastSearch.searchUrl);
-                }
-            });
-        }
-
         @Override
         public String getText() {
             return String.format("%s", className);
