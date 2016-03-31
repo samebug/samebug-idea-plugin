@@ -1,6 +1,5 @@
 package com.samebug.clients.search.api.entities;
 
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -8,14 +7,11 @@ import java.util.List;
  */
 public class Solution {
     public int solutionId;
-    public URL samebugSolutionUrl;
-    public String sourceName;
-    public URL sourceUrl;
-    public URL sourceIconUrl;
-    public String sourceAuthorName;
-    public URL sourceAuthorUrl;
+    public Document document;
+
     public int numberOfMarks;
     public boolean markedByViewer;
+
     public Exception exception;
     public List<ComponentStack> componentStack;
 }

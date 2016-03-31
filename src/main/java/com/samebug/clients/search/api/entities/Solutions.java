@@ -21,6 +21,7 @@ import java.util.List;
  * Created by poroszd on 2/24/16.
  */
 public class Solutions {
-    public List<SamebugTip> solutions;
     public GroupedExceptionSearch search;
+    public List<Tip> tips;
+    public List<ExternalSolution> externalSolutions;
 }

@@ -7,7 +7,7 @@ import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.views.SamebugTipView;
 import com.samebug.clients.idea.ui.views.SearchTabView;
-import com.samebug.clients.search.api.entities.SamebugTip;
+import com.samebug.clients.search.api.entities.Tip;
 import com.samebug.clients.search.api.entities.Solution;
 import com.samebug.clients.search.api.entities.Solutions;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
@@ -40,13 +40,10 @@ public class SearchTabController {
             public void run() {
                 IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
                 try {
-                    model = client.getSolutions(Integer.toString(searchId));
+                    model = client.getSolutions(searchId);
                     view.contentPanel.removeAll();
-                    for (Solution s : model.solutions) {
-                        if (s instanceof SamebugTip) {
-                            SamebugTip t = (SamebugTip) s;
-                            view.contentPanel.add(new SamebugTipView(t).controlPanel);
-                        }
+                    for (Tip tip : model.tips) {
+                        view.contentPanel.add(new SamebugTipView(tip).controlPanel);
                     }
                 } catch (SamebugClientException e1) {
                     LOGGER.warn("Failed to retrieve history", e1);

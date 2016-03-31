@@ -36,20 +36,24 @@
       ]
     }
   },
-  "solutions": [
+  "tips": [
     {
       "solutionId": 324548,
-      "samebugSolutionUrl": "https://samebug.io/exceptions/324548",
-      "tipText":"Upgrade to RESTHeart 0.10.1 or later.",
-      "samebugAuthorName":"poroszd",
-      "samebugAuthorUrl":"https://samebug.io/user/1/poroszd",
-      "samebugAuthorAvatarUrl": "https://samebug.io/avatars/1/3",
-      "updated":1458207553435,
-      "sourceName":"GitHub",
-      "sourceUrl":"https://github.com/SoftInstigate/restheart/issues/21#issuecomment-88624545",
-      "sourceIconUrl":"https://samebug.io/assets-v/images/sources/github.png",
-      "sourceAuthorName":"ujibang",
-      "sourceAuthorUrl":"https://github.com/ujibang",
+      "document": {
+        "author": {
+          "name": "poroszd",
+          "url": "https://samebug.io/user/1/poroszd",
+          "avatarUrl": "https://samebug.io/avatars/1/3"
+        },
+        "source": {
+          "name": "Samebug",
+          "iconUrl": "???"
+        },
+        "url": "https://samebug.io/exceptions/324548",
+        "createdAt":1458207553435
+      },
+      "numberOfMarks":4,
+      "markedByViewer":false,
       "exception":{
         "typeName": "java.lang.NullPointerException",
         "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
@@ -73,7 +77,52 @@
           "name": "IntelliJ IDEA",
           "shortName": "IDEA"
         }
-      ]
+      ],
+      "tipText": "Upgrade to RESTHeart 0.10.1 or later.",
+      "referencedSolution": {
+        "solutionId": 1,
+        "document": {
+          "author": {
+            "name": "ujibang",
+            "url": "https://github.com/ujibang"
+          },
+          "source": {
+            "name": "GitHub",
+            "iconUrl": "https://samebug.io/assets-v/images/sources/github.png"
+          },
+          "url": "https://github.com/SoftInstigate/restheart/issues/21#issuecomment-88624545",
+          "createdAt":1458207553435
+        },
+        "numberOfMarks":4,
+        "markedByViewer":false,
+        "exception":{
+          "typeName": "java.lang.NullPointerException",
+          "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.swing",
+            "shortName": "com.samebug.swing"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ],
+        "title": "???"
+      }
     }
+  ],
+  "externalSolutions": [
   ]
 }

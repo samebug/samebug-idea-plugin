@@ -127,7 +127,7 @@ public class SamebugClient {
         return requestJson(request, GroupedHistory.class);
     }
 
-    public Solutions getSolutions(String searchId) throws SamebugClientException {
+    public Solutions getSolutions(int searchId) throws SamebugClientException {
         return gson.fromJson(new InputStreamReader(getClass().getResourceAsStream("/com/samebug/mock/solutions.json")), Solutions.class);
     }
 

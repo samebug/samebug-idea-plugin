@@ -71,7 +71,7 @@ public class IdeaClientService {
         }.execute();
     }
 
-    public Solutions getSolutions(final String searchId) throws SamebugClientException {
+    public Solutions getSolutions(final int searchId) throws SamebugClientException {
         return new ConnectionAwareHttpRequest<Solutions>() {
             Solutions request() throws SamebugClientException {
                 return client.getSolutions(searchId);

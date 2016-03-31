@@ -2,9 +2,8 @@ package com.samebug.clients.idea.ui.views;
 
 import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.components.BreadcrumbBar;
-import com.samebug.clients.idea.ui.components.ImagePanel;
 import com.samebug.clients.idea.ui.components.LinkLabel;
-import com.samebug.clients.search.api.entities.SamebugTip;
+import com.samebug.clients.search.api.entities.Tip;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import javax.swing.*;
@@ -17,7 +16,7 @@ import java.util.Locale;
 public class SamebugTipView {
     static final PrettyTime pretty = new PrettyTime(Locale.US);
 
-    final SamebugTip tip;
+    final Tip tip;
 
     public ControlPanel controlPanel;
     public JPanel breadcrumbPanel;
@@ -25,7 +24,7 @@ public class SamebugTipView {
     public SourceReferencePanel sourceReferencePanel;
     public ProfilePanel profilePanel;
 
-    public SamebugTipView(SamebugTip tip) {
+    public SamebugTipView(Tip tip) {
         this.tip = tip;
 
         controlPanel = new ControlPanel();
@@ -89,10 +88,10 @@ public class SamebugTipView {
         {
             setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
             setBorder(BorderFactory.createEmptyBorder());
-            add(new JLabel(String.format("%s | ", pretty.format(tip.updated))));
-            add(new LinkLabel(tip.sourceAuthorName, tip.sourceAuthorUrl));
+            add(new JLabel(String.format("%s | ", pretty.format(tip.document.createdAt))));
+            add(new LinkLabel(tip.referencedSolution.document.author.name, tip.referencedSolution.document.author.url));
             add(new JLabel(" via "));
-            add(new LinkLabel(tip.sourceName, tip.sourceUrl));
+            add(new LinkLabel(tip.referencedSolution.document.source.name, tip.referencedSolution.document.url));
         }
     }
 
@@ -101,9 +100,9 @@ public class SamebugTipView {
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
             setBorder(BorderFactory.createEmptyBorder());
             // TODO do not use getScaledInstance; https://community.oracle.com/docs/DOC-983611
-            Image profile = ImageUtil.getImage(tip.samebugAuthorAvatarUrl).getScaledInstance(64, 64, Image.SCALE_FAST);
+            Image profile = ImageUtil.getImage(tip.document.author.avatarUrl).getScaledInstance(64, 64, Image.SCALE_FAST);
             add(new JLabel(new ImageIcon(profile)));
-            add(new LinkLabel(tip.samebugAuthorName, tip.samebugAuthorUrl));
+            add(new LinkLabel(tip.document.author.name, tip.document.author.url));
         }
     }
 }
