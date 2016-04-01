@@ -20,8 +20,8 @@ import java.util.HashMap;
 public class ExternalSolutionView {
     final RestHit<SolutionReference> solution;
     final java.util.List<BreadCrumb> searchBreadcrumb;
-    final String packageName = "???";
-    final String className = "???";
+    final String packageName;
+    final String className;
 
     public JPanel controlPanel;
     public JPanel titlePanel;
@@ -34,14 +34,14 @@ public class ExternalSolutionView {
         this.solution = solution;
         this.searchBreadcrumb = searchBreadcrumb;
 
-//        int dotIndex = solution.exception.typeName.lastIndexOf('.');
-//        if (dotIndex < 0) {
-//            this.packageName = null;
-//            this.className = solution.exception.typeName;
-//        } else {
-//            this.packageName = solution.exception.typeName.substring(0, dotIndex);
-//            this.className = solution.exception.typeName.substring(dotIndex + 1);
-//        }
+        int dotIndex = solution.exception.typeName.lastIndexOf('.');
+        if (dotIndex < 0) {
+            this.packageName = null;
+            this.className = solution.exception.typeName;
+        } else {
+            this.packageName = solution.exception.typeName.substring(0, dotIndex);
+            this.className = solution.exception.typeName.substring(dotIndex + 1);
+        }
 
         controlPanel = new ControlPanel();
         breadcrumbPanel = new LegacyBreadcrumbBar(searchBreadcrumb.subList(0, solution.matchLevel));
@@ -128,7 +128,7 @@ public class ExternalSolutionView {
             setBorder(BorderFactory.createEmptyBorder());
             setOpaque(false);
             add(new JLabel(String.format("%s", className)), BorderLayout.NORTH);
-            add(new ExceptionMessageLabel(null), BorderLayout.CENTER);
+            add(new ExceptionMessageLabel(solution.exception.message), BorderLayout.CENTER);
         }
     }
 
