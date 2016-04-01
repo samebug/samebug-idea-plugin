@@ -30,21 +30,22 @@ public class ReloadHistoryAction extends RefreshAction implements DumbAware {
     @Override
     public void actionPerformed(final AnActionEvent e) {
         e.getPresentation().setEnabled(false);
-        if (e.getProject() != null)
+        if (e.getProject() != null) {
             e.getProject().getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).startLoading();
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-            @Override
-            public void run() {
-                IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
-                try {
-                    GroupedHistory history = client.getSearchHistory();
-                    if (e.getProject() != null) e.getProject().getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(history);
-                    e.getPresentation().setEnabled(true);
-                } catch (SamebugClientException e1) {
-                    LOGGER.warn("Failed to retrieve history", e1);
+            ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+                @Override
+                public void run() {
+                    IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
+                    try {
+                        GroupedHistory history = client.getSearchHistory();
+                        e.getProject().getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(history);
+                        e.getPresentation().setEnabled(true);
+                    } catch (SamebugClientException e1) {
+                        LOGGER.warn("Failed to retrieve history", e1);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override

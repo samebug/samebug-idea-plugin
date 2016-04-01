@@ -41,13 +41,183 @@
       "solutionId": 324548,
       "document": {
         "author": {
+          "name": "poroszdwithlongname",
+          "url": "https://samebug.io/user/1/poroszd",
+          "avatarUrl": "https://samebug.io/avatars/1/3"
+        },
+        "source": {
+          "name": "Samebug",
+          "iconUrl": "https://xxx"
+        },
+        "url": "https://samebug.io/exceptions/324548",
+        "createdAt":1458207553435
+      },
+      "numberOfMarks":4,
+      "markedByViewer":false,
+      "exception":{
+        "typeName": "java.lang.NullPointerException",
+        "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+      },
+      "componentStack": [
+        {
+          "color": 0,
+          "crashDocUrl": null,
+          "name": "com.samebug.swing",
+          "shortName": "com.samebug.swing"
+        },
+        {
+          "color": 3,
+          "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+          "name": "Java Runtime Library",
+          "shortName": "Java RT"
+        },
+        {
+          "color": 6,
+          "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
+          "name": "IntelliJ IDEA",
+          "shortName": "IDEA"
+        }
+      ],
+      "tipText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent non justo at leo convallis viverra. Nunc ultrices enim blandit, egestas sapien et, tincidunt urna. Mauris suscipit felis eget erat blandit, eget pellentesque turpis tincidunt. Quisque at augue lectus. Morbi pharetra, arcu vitae semper imperdiet, velit magna consequat justo, quis vehicula dui ligula quis est. Curabitur sodales nisl vitae sem accumsan, sit amet convallis quam placerat. Aliquam sollicitudin dui a urna venenatis, ut mattis dolor ornare. Nulla facilisi. Pellentesque euismod, dolor et vehicula tristique, metus diam feugiat enim, in porta sapien enim ac odio.\n\nProin imperdiet augue ut semper ornare. Nullam mattis sem ac ligula tempus semper id vitae lorem. Aenean ornare aliquet eros vitae condimentum. Quisque iaculis dictum interdum. Suspendisse sit amet odio a odio commodo gravida eu ut nibh. Mauris vel fermentum velit. Praesent imperdiet id augue ut iaculis. Integer id tortor tortor. Proin sagittis pulvinar massa ac varius. Vivamus eget est laoreet, dapibus tortor eu, tristique dui.\n\nCras molestie nisl id faucibus porttitor. Cras vulputate viverra tellus nec dictum. Mauris nec tempus orci. Vivamus gravida tellus in tristique porttitor. Donec non massa ut metus imperdiet pharetra euismod commodo tellus. Donec fringilla et turpis et bibendum. Cras finibus augue vitae nunc facilisis, et scelerisque nibh facilisis. Aliquam lectus eros, fringilla nec nisl vitae, dictum pulvinar libero. Vivamus consectetur lorem nec odio laoreet semper. Cras quis faucibus lacus, at tempor turpis. Ut in venenatis dui, vitae molestie leo. Ut vitae ultrices elit.\n\nUt mattis mauris vitae metus viverra, quis lobortis magna malesuada. Duis ac lobortis odio. Nunc mattis faucibus pretium. Cras tempus, sem vel euismod tempus, nisi magna consectetur nisi, vel molestie dui nunc et nunc. Donec consequat bibendum bibendum. Vestibulum ultrices at mauris vel ornare. Nunc aliquet aliquam neque, in consectetur justo tristique porta.\n\nMauris dignissim elit nec varius condimentum. Proin in erat nec sem ullamcorper pellentesque ut sit amet augue. Ut leo sem, euismod ac arcu eu, euismod placerat nunc. Maecenas venenatis, dui nec mattis euismod, ante metus lobortis est, quis pretium velit velit vitae nisl. Donec egestas sem quis arcu commodo feugiat. Sed at ligula quis arcu gravida feugiat rhoncus ut magna. Nulla quis velit egestas, finibus metus ac, luctus justo. Curabitur interdum in quam at pretium. Integer ac commodo tortor. Nullam commodo nisi sit amet ipsum varius pretium. Vivamus felis ante, posuere et felis ac, auctor imperdiet odio. Praesent turpis eros, pulvinar non commodo pellentesque, rutrum eu massa. Curabitur interdum nulla venenatis, tempor nunc sed, fringilla neque. Morbi sit amet ex elit.\n\nSed semper aliquet nulla ut sodales. Mauris vulputate pharetra ante, quis consequat est tristique nec. In sagittis enim enim, ac sollicitudin odio ultricies et. Morbi auctor tincidunt ligula, non auctor metus hendrerit non. Proin odio nisi, mattis vel efficitur nec, malesuada vel diam. Duis ac tortor lacinia, iaculis dolor interdum, elementum elit. Suspendisse sit amet venenatis mi.\n\nUt faucibus mollis lorem nec vestibulum. Vivamus ultricies, mauris nec faucibus porttitor, nisi ipsum hendrerit tellus, auctor feugiat nunc orci sed quam. Nam molestie ipsum in aliquam.",
+      "referencedSolution": {
+        "solutionId": 1,
+        "document": {
+          "author": {
+            "name": "ujibang",
+            "url": "https://github.com/ujibang"
+          },
+          "source": {
+            "name": "GitHub",
+            "iconUrl": "https://samebug.io/assets-v/images/sources/github.png"
+          },
+          "url": "https://github.com/SoftInstigate/restheart/issues/21#issuecomment-88624545",
+          "createdAt":1458207553435
+        },
+        "numberOfMarks":4,
+        "markedByViewer":false,
+        "exception":{
+          "typeName": "java.lang.NullPointerException",
+          "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.swing",
+            "shortName": "com.samebug.swing"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ],
+        "title": "???"
+      }
+    },
+    {
+      "solutionId": 324548,
+      "document": {
+        "author": {
+          "name": "pd",
+          "url": "https://samebug.io/user/1/poroszd",
+          "avatarUrl": "https://samebug.io/avatars/1/3"
+        },
+        "source": {
+          "name": "Samebug",
+          "iconUrl": "https://xxx"
+        },
+        "url": "https://samebug.io/exceptions/324548",
+        "createdAt":1458207553435
+      },
+      "numberOfMarks":4,
+      "markedByViewer":false,
+      "exception":{
+        "typeName": "java.lang.NullPointerException",
+        "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+      },
+      "componentStack": [
+        {
+          "color": 0,
+          "crashDocUrl": null,
+          "name": "com.samebug.swing",
+          "shortName": "com.samebug.swing"
+        },
+        {
+          "color": 3,
+          "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+          "name": "Java Runtime Library",
+          "shortName": "Java RT"
+        },
+        {
+          "color": 6,
+          "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
+          "name": "IntelliJ IDEA",
+          "shortName": "IDEA"
+        }
+      ],
+      "tipText": "Upgrade to RESTHeart 0.10.1 or later.",
+      "referencedSolution": {
+        "solutionId": 1,
+        "document": {
+          "author": {
+            "name": "ujibang",
+            "url": "https://github.com/ujibang"
+          },
+          "source": {
+            "name": "GitHub",
+            "iconUrl": "https://samebug.io/assets-v/images/sources/github.png"
+          },
+          "url": "https://github.com/SoftInstigate/restheart/issues/21#issuecomment-88624545",
+          "createdAt":1458207553435
+        },
+        "numberOfMarks":4,
+        "markedByViewer":false,
+        "exception":{
+          "typeName": "java.lang.NullPointerException",
+          "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.swing",
+            "shortName": "com.samebug.swing"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ],
+        "title": "???"
+      }
+    },
+    {
+      "solutionId": 324548,
+      "document": {
+        "author": {
           "name": "poroszd",
           "url": "https://samebug.io/user/1/poroszd",
           "avatarUrl": "https://samebug.io/avatars/1/3"
         },
         "source": {
           "name": "Samebug",
-          "iconUrl": "???"
+          "iconUrl": "https://xxx"
         },
         "url": "https://samebug.io/exceptions/324548",
         "createdAt":1458207553435
@@ -124,5 +294,173 @@
     }
   ],
   "externalSolutions": [
+    {
+      "solutionId": 1,
+      "document": {
+        "author": {
+          "name": "ujibang",
+          "url": "https://github.com/ujibang"
+        },
+        "source": {
+          "name": "GitHub",
+          "iconUrl": "https://samebug.io/assets-v/images/sources/github.png"
+        },
+        "url": "https://github.com/SoftInstigate/restheart/issues/21#issuecomment-88624545",
+        "createdAt":1458207553435
+      },
+      "numberOfMarks":4,
+      "markedByViewer":false,
+      "exception":{
+        "typeName": "java.lang.NullPointerException",
+        "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+      },
+      "componentStack": [
+        {
+          "color": 0,
+          "crashDocUrl": null,
+          "name": "com.samebug.swing",
+          "shortName": "com.samebug.swing"
+        },
+        {
+          "color": 3,
+          "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+          "name": "Java Runtime Library",
+          "shortName": "Java RT"
+        },
+        {
+          "color": 6,
+          "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
+          "name": "IntelliJ IDEA",
+          "shortName": "IDEA"
+        }
+      ],
+      "title": "???"
+    },
+    {
+      "solutionId": 1,
+      "document": {
+        "author": {
+          "name": "ujibang",
+          "url": "https://github.com/ujibang"
+        },
+        "source": {
+          "name": "GitHub",
+          "iconUrl": "https://samebug.io/assets-v/images/sources/github.png"
+        },
+        "url": "https://github.com/SoftInstigate/restheart/issues/21#issuecomment-88624545",
+        "createdAt":1458207553435
+      },
+      "numberOfMarks":4,
+      "markedByViewer":false,
+      "exception":{
+        "typeName": "java.lang.NullPointerException",
+        "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+      },
+      "componentStack": [
+        {
+          "color": 0,
+          "crashDocUrl": null,
+          "name": "com.samebug.swing",
+          "shortName": "com.samebug.swing"
+        },
+        {
+          "color": 3,
+          "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+          "name": "Java Runtime Library",
+          "shortName": "Java RT"
+        },
+        {
+          "color": 6,
+          "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
+          "name": "IntelliJ IDEA",
+          "shortName": "IDEA"
+        }
+      ],
+      "title": "???"
+    },
+    {
+      "solutionId": 1,
+      "document": {
+        "author": {
+          "name": "ujibang",
+          "url": "https://github.com/ujibang"
+        },
+        "source": {
+          "name": "GitHub",
+          "iconUrl": "https://samebug.io/assets-v/images/sources/github.png"
+        },
+        "url": "https://github.com/SoftInstigate/restheart/issues/21#issuecomment-88624545",
+        "createdAt":1458207553435
+      },
+      "numberOfMarks":4,
+      "markedByViewer":false,
+      "exception":{
+        "typeName": "java.lang.NullPointerException",
+        "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+      },
+      "componentStack": [
+        {
+          "color": 0,
+          "crashDocUrl": null,
+          "name": "com.samebug.swing",
+          "shortName": "com.samebug.swing"
+        },
+        {
+          "color": 3,
+          "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+          "name": "Java Runtime Library",
+          "shortName": "Java RT"
+        },
+        {
+          "color": 6,
+          "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
+          "name": "IntelliJ IDEA",
+          "shortName": "IDEA"
+        }
+      ],
+      "title": "???"
+    },
+    {
+      "solutionId": 1,
+      "document": {
+        "author": {
+          "name": "ujibang",
+          "url": "https://github.com/ujibang"
+        },
+        "source": {
+          "name": "GitHub",
+          "iconUrl": "https://samebug.io/assets-v/images/sources/github.png"
+        },
+        "url": "https://github.com/SoftInstigate/restheart/issues/21#issuecomment-88624545",
+        "createdAt":1458207553435
+      },
+      "numberOfMarks":4,
+      "markedByViewer":false,
+      "exception":{
+        "typeName": "java.lang.NullPointerException",
+        "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+      },
+      "componentStack": [
+        {
+          "color": 0,
+          "crashDocUrl": null,
+          "name": "com.samebug.swing",
+          "shortName": "com.samebug.swing"
+        },
+        {
+          "color": 3,
+          "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+          "name": "Java Runtime Library",
+          "shortName": "Java RT"
+        },
+        {
+          "color": 6,
+          "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
+          "name": "IntelliJ IDEA",
+          "shortName": "IDEA"
+        }
+      ],
+      "title": "???"
+    }
   ]
 }

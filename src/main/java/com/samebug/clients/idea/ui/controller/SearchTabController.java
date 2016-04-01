@@ -3,27 +3,29 @@ package com.samebug.clients.idea.ui.controller;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.idea.components.application.IdeaClientService;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.intellij.util.ui.components.BorderLayoutPanel;
+import com.samebug.clients.idea.ui.views.ExternalSolutionView;
 import com.samebug.clients.idea.ui.views.SamebugTipView;
+import com.samebug.clients.idea.ui.views.SearchGroupCardView;
 import com.samebug.clients.idea.ui.views.SearchTabView;
-import com.samebug.clients.search.api.entities.Tip;
-import com.samebug.clients.search.api.entities.Solution;
+import com.samebug.clients.search.api.entities.ExternalSolution;
 import com.samebug.clients.search.api.entities.Solutions;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.search.api.entities.Tip;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Created by poroszd on 3/29/16.
  */
 public class SearchTabController {
-    final private Project project;
-    final private static Logger LOGGER = Logger.getInstance(SearchTabController.class);
-    final private SearchTabView view;
+    final Project project;
+    final static Logger LOGGER = Logger.getInstance(SearchTabController.class);
+    final SearchTabView view;
+
     @Nullable
-    private Solutions model;
+    Solutions model;
 
     public SearchTabController(Project project) {
         this.project = project;
@@ -34,23 +36,29 @@ public class SearchTabController {
         return view.controlPanel;
     }
 
-    public void load(final int searchId) {
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-            @Override
+    public void update(final Solutions solutions) {
+        model = solutions;
+        refreshPane();
+    }
+
+    public void refreshPane() {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
             public void run() {
-                IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
-                try {
-                    model = client.getSolutions(searchId);
-                    view.contentPanel.removeAll();
-                    for (Tip tip : model.tips) {
-                        view.contentPanel.add(new SamebugTipView(tip).controlPanel);
+                view.solutionsPanel.removeAll();
+
+                if (model != null) {
+                    view.header.add(new SearchGroupCardView(model.search).controlPanel);
+                    for (final Tip tip : model.tips) {
+                        view.solutionsPanel.add(new SamebugTipView(tip).controlPanel);
                     }
-                } catch (SamebugClientException e1) {
-                    LOGGER.warn("Failed to retrieve history", e1);
+                    for (final ExternalSolution s : model.externalSolutions) {
+                        view.solutionsPanel.add(new ExternalSolutionView(s).controlPanel);
+                    }
+
+                    view.controlPanel.revalidate();
+                    view.controlPanel.repaint();
                 }
             }
         });
-
     }
-
 }

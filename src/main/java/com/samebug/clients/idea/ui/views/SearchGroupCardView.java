@@ -17,6 +17,7 @@ package com.samebug.clients.idea.ui.views;
 
 import com.intellij.util.ui.UIUtil;
 import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.components.BreadcrumbBar;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
@@ -39,7 +40,7 @@ public class SearchGroupCardView {
     final String packageName;
     final String className;
 
-    public ControlPanel controlPanel;
+    public JPanel controlPanel;
     public JPanel paddingPanel;
     public JPanel infoBar;
     public JPanel contentPanel;
@@ -152,11 +153,7 @@ public class SearchGroupCardView {
 
         @Override
         public Color getForeground() {
-            if (UIUtil.isUnderDarcula()) {
-                return Colors.unemphasizedDarcula;
-            } else {
-                return Colors.unemphasized;
-            }
+            return ColorUtil.unemphasized();
         }
     }
 
@@ -190,11 +187,7 @@ public class SearchGroupCardView {
 
         @Override
         public Color getForeground() {
-            if (UIUtil.isUnderDarcula()) {
-                return Colors.unemphasizedDarcula;
-            } else {
-                return Colors.unemphasized;
-            }
+            return ColorUtil.unemphasized();
         }
     }
 
@@ -222,11 +215,7 @@ public class SearchGroupCardView {
 
         @Override
         public Color getForeground() {
-            if (UIUtil.isUnderDarcula()) {
-                return Colors.unemphasizedDarcula;
-            } else {
-                return Colors.unemphasized;
-            }
+            return ColorUtil.unemphasized();
         }
     }
 

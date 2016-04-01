@@ -1,11 +1,15 @@
 package com.samebug.clients.idea.ui.controller;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.search.api.entities.Solutions;
+import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,8 +26,8 @@ public class SearchTabControllers {
         activeSearches = new HashMap<Integer, SearchTabController>();
     }
 
-    public SearchTabController openSearchTab(int searchId) {
-        ContentManager toolwindowCM = ToolWindowManager.getInstance(project).getToolWindow("Samebug").getContentManager();
+    public SearchTabController openSearchTab(final int searchId) {
+        final ContentManager toolwindowCM = ToolWindowManager.getInstance(project).getToolWindow("Samebug").getContentManager();
         SearchTabController tab = activeSearches.get(searchId);
         // FIXME: for now, we let at most one search tab
         for (Map.Entry<Integer, SearchTabController> opened : activeSearches.entrySet()) {
@@ -47,7 +51,19 @@ public class SearchTabControllers {
             Content content = toolwindowCM.getContent(tab.getControlPanel());
             toolwindowCM.requestFocus(content, true);
         }
-        tab.load(searchId);
+        final SearchTabController searchTab = tab;
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final Solutions solutions = IdeaSamebugPlugin.getInstance().getClient().getSolutions(searchId);
+                    searchTab.update(solutions);
+                } catch (SamebugClientException e) {
+                    // TODO
+                }
+
+            }
+        });
         return tab;
     }
 

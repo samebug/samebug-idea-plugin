@@ -16,6 +16,7 @@
 package com.samebug.clients.idea.ui.controller;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
@@ -27,6 +28,7 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.views.HistoryTabView;
+import com.samebug.clients.idea.ui.views.SearchGroupCardView;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedHistory;
@@ -34,6 +36,8 @@ import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,7 +52,7 @@ public class HistoryTabController {
     final private HistoryTabView view;
     @Nullable
     private GroupedHistory model;
-    final private List<SearchGroupCardController> searchGroups;
+    final private List<SearchGroupCardView> searchGroups;
 
     private boolean showZeroSolutionSearches;
     private boolean showRecurringSearches;
@@ -60,7 +64,7 @@ public class HistoryTabController {
     public HistoryTabController(Project project) {
         this.project = project;
         view = new HistoryTabView();
-        searchGroups = new ArrayList<SearchGroupCardController>();
+        searchGroups = new ArrayList<SearchGroupCardView>();
         ApplicationSettings applicationSettings = IdeaSamebugPlugin.getInstance().getState();
         if (applicationSettings != null) {
             showZeroSolutionSearches = applicationSettings.isTutorialShowZeroSolutionSearches();
@@ -80,23 +84,6 @@ public class HistoryTabController {
 
     public JPanel getControlPanel() {
         return view.controlPanel;
-    }
-
-    public void loadHistory() {
-        emptyHistoryPane();
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-            @Override
-            public void run() {
-                IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
-                try {
-                    model = client.getSearchHistory();
-                    refreshHistoryPane();
-                } catch (SamebugClientException e1) {
-                    LOGGER.warn("Failed to retrieve history", e1);
-                }
-            }
-        });
-
     }
 
     private void emptyHistoryPane() {
@@ -127,15 +114,22 @@ public class HistoryTabController {
                     cal.setTime(now);
                     cal.add(Calendar.DAY_OF_YEAR, -1);
                     Date oneDayBefore = cal.getTime();
-                    for (GroupedExceptionSearch group : model.searchGroups) {
+                    for (final GroupedExceptionSearch group : model.searchGroups) {
                         if (!isShowZeroSolutionSearches() && group.numberOfSolutions == 0) {
                             // filtered because there is no solution for it
                         } else if (!isShowRecurringSearches() && group.firstSeenSimilar.before(oneDayBefore)) {
                             // filtered because it is old
                         } else {
-                            SearchGroupCardController c = new SearchGroupCardController(group, project);
-                            searchGroups.add(c);
-                            view.contentPanel.add(c.getControlPanel());
+                            SearchGroupCardView searchGroupCard = new SearchGroupCardView(group);
+                            searchGroups.add(searchGroupCard);
+                            searchGroupCard.titleLabel.addMouseListener(new MouseAdapter() {
+                                @Override
+                                public void mouseClicked(MouseEvent e) {
+                                    super.mouseClicked(e);
+                                    ServiceManager.getService(project, SearchTabControllers.class).openSearchTab(group.lastSearch.searchId);
+                                }
+                            });
+                            view.contentPanel.add(searchGroupCard.controlPanel);
                         }
                     }
                     if (searchGroups.isEmpty()) {

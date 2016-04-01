@@ -1,9 +1,13 @@
 package com.samebug.clients.idea.ui.view.components;
 
 import com.google.gson.*;
-import com.samebug.clients.idea.ui.controller.SearchGroupCardController;
-import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
-import com.samebug.clients.search.api.entities.GroupedHistory;
+import com.samebug.clients.idea.ui.views.ExternalSolutionView;
+import com.samebug.clients.idea.ui.views.SamebugTipView;
+import com.samebug.clients.idea.ui.views.SearchGroupCardView;
+import com.samebug.clients.idea.ui.views.SearchTabView;
+import com.samebug.clients.search.api.entities.ExternalSolution;
+import com.samebug.clients.search.api.entities.Solutions;
+import com.samebug.clients.search.api.entities.Tip;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,30 +16,22 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Created by poroszd on 3/21/16.
  */
-public class SearchGroupsTest extends JDialog {
+public class SearchTabTest extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JPanel sandboxPane;
-    public JScrollPane scrollPane;
-    public JPanel scrolledPanel;
-    public java.util.List<SearchGroupCardController> cards;
+    public SearchTabView tab;
 
-    public SearchGroupsTest() {
-        scrolledPanel = new JPanel();
-        scrolledPanel.setLayout(new BoxLayout(scrolledPanel, BoxLayout.PAGE_AXIS));
-        scrollPane = new JScrollPane();
-        scrollPane.setViewportView(scrolledPanel);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+    public SearchTabTest() {
         sandboxPane = new JPanel();
-        sandboxPane.add(scrollPane, BorderLayout.CENTER);
-        cards = new ArrayList<SearchGroupCardController>();
+        tab = new SearchTabView();
+        sandboxPane.add(tab.controlPanel, BorderLayout.CENTER);
         contentPane = new JPanel();
         contentPane.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 1, new Insets(10, 10, 10, 10), -1, -1));
         sandboxPane.setLayout(new BoxLayout(sandboxPane, BoxLayout.PAGE_AXIS));
@@ -94,8 +90,8 @@ public class SearchGroupsTest extends JDialog {
 
     }
 
-    public static void main(String[] args) throws IOException {
-        SearchGroupsTest dialog = new SearchGroupsTest();
+    public static void main(String[] args) throws IOException, InterruptedException {
+        SearchTabTest dialog = new SearchTabTest();
         dialog.setPreferredSize(new Dimension(700, 500));
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
@@ -106,16 +102,21 @@ public class SearchGroupsTest extends JDialog {
                 }
         );
         Gson gson = builder.create();
-        InputStream stream = SearchGroupsTest.class.getResourceAsStream("/com/samebug/clients/idea/ui/view/components/searchGroups.json");
-        GroupedHistory history = gson.fromJson(new InputStreamReader(stream), GroupedHistory.class);
-        for (int i = 0; i < 5; ++i) {
-            GroupedExceptionSearch group = history.searchGroups.get(i);
-            SearchGroupCardController b = new SearchGroupCardController(group, null);
-            dialog.cards.add(b);
-            dialog.scrolledPanel.add(b.getControlPanel());
+        InputStream stream = SearchTabTest.class.getResourceAsStream("/com/samebug/mock/solutions.json");
+        Solutions solutions = gson.fromJson(new InputStreamReader(stream), Solutions.class);
+        SearchGroupCardView v = new SearchGroupCardView(solutions.search);
+        dialog.tab.header.add(v.controlPanel, BorderLayout.CENTER);
+        for (final Tip tip : solutions.tips) {
+            dialog.tab.solutionsPanel.add(new SamebugTipView(tip).controlPanel);
+        }
+        for (final ExternalSolution s : solutions.externalSolutions) {
+            dialog.tab.solutionsPanel.add(new ExternalSolutionView(s).controlPanel);
         }
         stream.close();
         dialog.pack();
+        System.out.println(v.controlPanel.getSize());
+        System.out.println(dialog.tab.header.getSize());
+        System.out.println(dialog.tab.solutionsPanel.getSize());
         dialog.setVisible(true);
         System.exit(0);
     }

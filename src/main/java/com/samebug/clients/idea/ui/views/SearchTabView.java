@@ -8,21 +8,32 @@ import java.awt.*;
  */
 public class SearchTabView {
     public JPanel controlPanel;
-    public JPanel contentPanel;
+    public JPanel header;
+    public JPanel solutionsPanel;
 
     public SearchTabView() {
+
         controlPanel = new JPanel() {
             {
                 setLayout(new BorderLayout(0, 0));
-                add(new JLabel("hello world"));
+                header = new JPanel() {
+                    {
+                        setLayout(new BorderLayout());
+                    }
+                    @Override
+                    public Dimension getPreferredSize() {
+                        return new Dimension(super.getPreferredSize().width, Math.min(super.getPreferredSize().height, 160));
+                    }
+                };
+                add(header, BorderLayout.NORTH);
                 add(new JScrollPane() {
                     {
-                        contentPanel = new JPanel() {
+                        solutionsPanel = new JPanel() {
                             {
                                 setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
                             }
                         };
-                        setViewportView(contentPanel);
+                        setViewportView(solutionsPanel);
                         getVerticalScrollBar().setUnitIncrement(50);
                     }
                 }, BorderLayout.CENTER);
