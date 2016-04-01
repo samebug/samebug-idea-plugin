@@ -97,15 +97,8 @@ public class ExternalSolutionView {
             setBorder(BorderFactory.createEmptyBorder());
             setOpaque(false);
             // TODO load image asynchronously
-            // TODO do not use getScaledInstance; https://community.oracle.com/docs/DOC-983611
-            final Image sourceIcon = ImageUtil.getImage(solution.solution.source.iconUrl).getScaledInstance(32, 32, Image.SCALE_FAST);
-            add(new JPanel() {
-                {
-                    setOpaque(false);
-                    setBorder(BorderFactory.createEmptyBorder());
-                    add(new JLabel(new ImageIcon(sourceIcon)));
-                }
-            }, BorderLayout.WEST);
+            final Image sourceIcon = ImageUtil.getImage(solution.solution.source.iconUrl);
+            add(new SourceIcon(sourceIcon), BorderLayout.WEST);
             add(new LinkLabel(solution.solution.title, solution.solution.url) {
                 {
                     HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
@@ -130,7 +123,6 @@ public class ExternalSolutionView {
         {
             setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
             setOpaque(false);
-//            add(new MarkPanel(solution));
         }
     }
 }

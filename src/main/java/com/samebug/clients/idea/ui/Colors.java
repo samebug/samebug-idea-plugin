@@ -31,5 +31,8 @@ public class Colors {
     public static final Color highlightPanel = new Color(0xFFFFFF);
     public static final Color highlightPanelDarcula = new Color(0x222222);
 
+    public static final Color sourceIconBackground = null;
+    public static final Color sourceIconBackgroundDarcula = new Color(0xFFFFFF);
+
 
 }

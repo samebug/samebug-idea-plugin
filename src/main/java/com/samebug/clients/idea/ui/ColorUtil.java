@@ -17,6 +17,9 @@ public class ColorUtil {
     public static Color highlightPanel() {
         return normalOrDarcula(Colors.highlightPanel, Colors.highlightPanelDarcula);
     }
+    public static Color sourceIconBackground() {
+        return normalOrDarcula(Colors.sourceIconBackground, Colors.sourceIconBackgroundDarcula);
+    }
 
 
     static Color normalOrDarcula(Color normal, Color darcula) {
