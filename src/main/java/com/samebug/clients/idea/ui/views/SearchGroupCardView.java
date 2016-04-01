@@ -15,13 +15,12 @@
  */
 package com.samebug.clients.idea.ui.views;
 
-import com.intellij.util.ui.UIUtil;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.components.BreadcrumbBar;
+import com.samebug.clients.idea.ui.components.ExceptionMessageLabel;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import javax.swing.*;
@@ -51,7 +50,6 @@ public class SearchGroupCardView {
     public TitleLabel titleLabel;
     public TimeLabel timeLabel;
     public HitsLabel hitsLabel;
-    public MessageLabel messageLabel;
 
     public SearchGroupCardView(GroupedExceptionSearch searchGroup) {
         this.searchGroup = searchGroup;
@@ -75,7 +73,6 @@ public class SearchGroupCardView {
         packageLabel = new PackageLabel();
         titleLabel = new TitleLabel();
         messagePanel = new JPanel();
-        messageLabel = new MessageLabel();
         breadcrumbPanel = new BreadcrumbBar(searchGroup.lastSearch.componentStack);
 
         controlPanel.setLayout(new BorderLayout(0, 0));
@@ -115,9 +112,7 @@ public class SearchGroupCardView {
 
         messagePanel.setLayout(new BorderLayout(0, 0));
         messagePanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
-        messagePanel.add(messageLabel);
-
-        messageLabel.setFont(UIManager.getFont("TextArea.font"));
+        messagePanel.add(new ExceptionMessageLabel(searchGroup.lastSearch.exception.message));
 
         titleLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
@@ -153,7 +148,7 @@ public class SearchGroupCardView {
 
         @Override
         public Color getForeground() {
-            return ColorUtil.unemphasized();
+            return ColorUtil.unemphasizedText();
         }
     }
 
@@ -187,7 +182,7 @@ public class SearchGroupCardView {
 
         @Override
         public Color getForeground() {
-            return ColorUtil.unemphasized();
+            return ColorUtil.unemphasizedText();
         }
     }
 
@@ -215,32 +210,7 @@ public class SearchGroupCardView {
 
         @Override
         public Color getForeground() {
-            return ColorUtil.unemphasized();
-        }
-    }
-
-    public class MessageLabel extends JLabel {
-        private final String escapedText;
-
-        public MessageLabel() {
-            String message = searchGroup.lastSearch.exception.message;
-            if (message == null) {
-                escapedText = String.format("<html><i>No message provided</i></html>");
-            } else {
-                // Escape html, but keep line breaks
-                String broken = StringEscapeUtils.escapeHtml(message).replaceAll("\\n", "<br>");
-                escapedText = String.format("<html>%s</html>", broken);
-            }
-        }
-
-        @Override
-        public String getText() {
-            return escapedText;
-        }
-
-        @Override
-        public int getVerticalAlignment() {
-            return SwingConstants.TOP;
+            return ColorUtil.unemphasizedText();
         }
     }
 }

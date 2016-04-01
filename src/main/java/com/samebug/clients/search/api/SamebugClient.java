@@ -19,7 +19,7 @@ import com.google.gson.*;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
-import com.samebug.clients.search.api.entities.Solutions;
+import com.samebug.clients.search.api.entities.legacy.Solutions;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
 import org.apache.http.*;

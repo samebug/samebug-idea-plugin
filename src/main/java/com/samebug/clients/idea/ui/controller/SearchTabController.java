@@ -3,18 +3,19 @@ package com.samebug.clients.idea.ui.controller;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.samebug.clients.idea.ui.views.ExternalSolutionView;
 import com.samebug.clients.idea.ui.views.SamebugTipView;
 import com.samebug.clients.idea.ui.views.SearchGroupCardView;
 import com.samebug.clients.idea.ui.views.SearchTabView;
-import com.samebug.clients.search.api.entities.ExternalSolution;
-import com.samebug.clients.search.api.entities.Solutions;
-import com.samebug.clients.search.api.entities.Tip;
+import com.samebug.clients.search.api.entities.ComponentStack;
+import com.samebug.clients.search.api.entities.ExceptionSearch;
+import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
+import com.samebug.clients.search.api.entities.legacy.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by poroszd on 3/29/16.
@@ -26,6 +27,8 @@ public class SearchTabController {
 
     @Nullable
     Solutions model;
+    @Nullable
+    GroupedExceptionSearch search;
 
     public SearchTabController(Project project) {
         this.project = project;
@@ -36,8 +39,34 @@ public class SearchTabController {
         return view.controlPanel;
     }
 
-    public void update(final Solutions solutions) {
+    public void update(@NotNull final Solutions solutions) {
         model = solutions;
+        search = new GroupedExceptionSearch() {
+            {
+                firstSeenSimilar = model.searchGroup.firstSeen;
+                lastSeenSimilar = model.searchGroup.lastSeen;
+                numberOfSimilars = model.searchGroup.numberOfSimilars;
+                numberOfSolutions = model.tips.size() + model.references.size();
+                lastSearch = new ExceptionSearch() {
+                    {
+                        searchId = model.search._id;
+                        exception = model.search.exception;
+                        componentStack = new ArrayList<ComponentStack>();
+                        for (final BreadCrumb b : model.breadcrumb) {
+                            componentStack.add(new ComponentStack() {
+                                {
+                                    color = b.component.color;
+                                    crashDocUrl = b.detailsUrl;
+                                    name = b.component.shortName;
+                                    shortName = b.component.shortName;
+                                }
+                            });
+                        }
+
+                    }
+                };
+            }
+        };
         refreshPane();
     }
 
@@ -47,12 +76,12 @@ public class SearchTabController {
                 view.solutionsPanel.removeAll();
 
                 if (model != null) {
-                    view.header.add(new SearchGroupCardView(model.search).controlPanel);
-                    for (final Tip tip : model.tips) {
-                        view.solutionsPanel.add(new SamebugTipView(tip).controlPanel);
+                    view.header.add(new SearchGroupCardView(search).controlPanel);
+                    for (final RestHit<Tip> tip : model.tips) {
+                        view.solutionsPanel.add(new SamebugTipView(tip, model.breadcrumb).controlPanel);
                     }
-                    for (final ExternalSolution s : model.externalSolutions) {
-                        view.solutionsPanel.add(new ExternalSolutionView(s).controlPanel);
+                    for (final RestHit<SolutionReference> s : model.references) {
+                        view.solutionsPanel.add(new ExternalSolutionView(s, model.breadcrumb).controlPanel);
                     }
 
                     view.controlPanel.revalidate();

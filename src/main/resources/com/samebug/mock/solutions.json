@@ -1,466 +1,330 @@
 {
-  "search": {
-    "firstSeenSimilar": 1456835783000,
-    "lastSeenSimilar": 1458207553435,
-    "bestMatchLevel": -1,
-    "highestVote": 0,
-    "numberOfSimilars": 3,
-    "numberOfSolutions": 0,
-    "lastSearch": {
-      "searchId": 431629,
-      "searchUrl": "https://samebug.io/search/431629/java.lang.NullPointerException",
-      "timestamp": 1458207553435,
-      "exception": {
-        "typeName": "java.lang.NullPointerException",
-        "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+  "search" : {
+    "type" : "exception",
+    "_id" : 113913,
+    "timestamp" : 1459426520591,
+    "query" : "java.lang.RuntimeException: java.sql.SQLException: Invalid socket timeout value or state\r\n    at com.mysql.jdbc.ConnectionImpl$12.run(ConnectionImpl.java:5568)[mysql.mysql-connector-java-5.1.38.jar]\r\n    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)\r\n    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)\r\n    at java.lang.Thread.run(Thread.java:745)\r\nCaused by: java.sql.SQLException: Invalid socket timeout value or state\r\n    at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:957)[mysql.mysql-connector-java-5.1.38.jar]\r\n    at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:896)[mysql.mysql-connector-java-5.1.38.jar]\r\n    at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:885)[mysql.mysql-connector-java-5.1.38.jar]\r\n    at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:860)[mysql.mysql-connector-java-5.1.38.jar]\r\n    at com.mysql.jdbc.MysqlIO.setSocketTimeout(MysqlIO.java:4881)[mysql.mysql-connector-java-5.1.38.jar]\r\n    at com.mysql.jdbc.ConnectionImpl$12.run(ConnectionImpl.java:5566)[mysql.mysql-connector-java-5.1.38.jar]\r\n    ... 3 more\r\nCaused by: java.net.SocketException: Socket is closed\r\n    at java.net.Socket.setSoTimeout(Socket.java:1137)\r\n    at com.mysql.jdbc.MysqlIO.setSocketTimeout(MysqlIO.java:4879)[mysql.mysql-connector-java-5.1.38.jar]\r\n    ... 4 more",
+    "indexed" : true,
+    "exception" : {
+      "typeName" : "java.lang.RuntimeException",
+      "message" : "java.sql.SQLException: Invalid socket timeout value or state",
+      "cause" : {
+        "typeName" : "java.sql.SQLException",
+        "message" : "Invalid socket timeout value or state",
+        "cause" : {
+          "typeName" : "java.net.SocketException",
+          "message" : "Socket is closed",
+          "frames" : "java.net.Socket.setSoTimeout(Socket.java:1137)\ncom.mysql.jdbc.MysqlIO.setSocketTimeout(MysqlIO.java:4879)[mysql.mysql-connector-java-5.1.38.jar]\ncom.mysql.jdbc.ConnectionImpl$12.run(ConnectionImpl.java:5566)[mysql.mysql-connector-java-5.1.38.jar]\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)\njava.lang.Thread.run(Thread.java:745)"
+        },
+        "common" : 4,
+        "frames" : "com.mysql.jdbc.SQLError.createSQLException(SQLError.java:957)[mysql.mysql-connector-java-5.1.38.jar]\ncom.mysql.jdbc.SQLError.createSQLException(SQLError.java:896)[mysql.mysql-connector-java-5.1.38.jar]\ncom.mysql.jdbc.SQLError.createSQLException(SQLError.java:885)[mysql.mysql-connector-java-5.1.38.jar]\ncom.mysql.jdbc.SQLError.createSQLException(SQLError.java:860)[mysql.mysql-connector-java-5.1.38.jar]\ncom.mysql.jdbc.MysqlIO.setSocketTimeout(MysqlIO.java:4881)[mysql.mysql-connector-java-5.1.38.jar]"
       },
-      "componentStack": [
-        {
-          "color": 0,
-          "crashDocUrl": null,
-          "name": "com.samebug.swing",
-          "shortName": "com.samebug.swing"
+      "common" : 3,
+      "frames" : "com.mysql.jdbc.ConnectionImpl$12.run(ConnectionImpl.java:5568)[mysql.mysql-connector-java-5.1.38.jar]"
+    },
+    "segments" : [ {
+      "id" : 21239,
+      "frames" : 1,
+      "componentId" : 2674
+    }, {
+      "id" : 44080,
+      "frames" : 2,
+      "componentId" : 4754
+    }, {
+      "id" : 44086,
+      "frames" : 3,
+      "componentId" : 2674
+    } ],
+    "userId" : 2,
+    "searchProtected" : true
+  },
+  "breadcrumb" : [ {
+    "component" : {
+      "shortName" : "Java RT",
+      "color" : 1
+    },
+    "entry" : {
+      "packageName" : "java.net",
+      "className" : "Socket",
+      "methodName" : "setSoTimeout"
+    },
+    "confidence" : "NotApplicable"
+  }, {
+    "component" : {
+      "shortName" : "MySQL jdbc",
+      "color" : 2
+    },
+    "entry" : {
+      "packageName" : "com.mysql.jdbc",
+      "className" : "ConnectionImpl$12",
+      "methodName" : "run"
+    },
+    "confidence" : "NotApplicable"
+  }, {
+    "component" : {
+      "shortName" : "Java RT",
+      "color" : 3
+    },
+    "entry" : {
+      "packageName" : "java.lang",
+      "className" : "Thread",
+      "methodName" : "run"
+    },
+    "confidence" : "NotApplicable"
+  } ],
+  "searchGroup" : {
+    "_id" : {
+      "userId" : 2,
+      "stackId" : 44086
+    },
+    "firstSeen" : 1459426520591,
+    "lastSeen" : 1459426520591,
+    "numberOfSimilars" : 1,
+    "lastSearchId" : 113913,
+    "lastSearch" : {
+      "type" : "exception",
+      "_id" : 113913,
+      "timestamp" : 1459426520591,
+      "query" : "java.lang.RuntimeException: java.sql.SQLException: Invalid socket timeout value or state\r\n    at com.mysql.jdbc.ConnectionImpl$12.run(ConnectionImpl.java:5568)[mysql.mysql-connector-java-5.1.38.jar]\r\n    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)\r\n    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)\r\n    at java.lang.Thread.run(Thread.java:745)\r\nCaused by: java.sql.SQLException: Invalid socket timeout value or state\r\n    at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:957)[mysql.mysql-connector-java-5.1.38.jar]\r\n    at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:896)[mysql.mysql-connector-java-5.1.38.jar]\r\n    at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:885)[mysql.mysql-connector-java-5.1.38.jar]\r\n    at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:860)[mysql.mysql-connector-java-5.1.38.jar]\r\n    at com.mysql.jdbc.MysqlIO.setSocketTimeout(MysqlIO.java:4881)[mysql.mysql-connector-java-5.1.38.jar]\r\n    at com.mysql.jdbc.ConnectionImpl$12.run(ConnectionImpl.java:5566)[mysql.mysql-connector-java-5.1.38.jar]\r\n    ... 3 more\r\nCaused by: java.net.SocketException: Socket is closed\r\n    at java.net.Socket.setSoTimeout(Socket.java:1137)\r\n    at com.mysql.jdbc.MysqlIO.setSocketTimeout(MysqlIO.java:4879)[mysql.mysql-connector-java-5.1.38.jar]\r\n    ... 4 more",
+      "indexed" : false,
+      "exception" : {
+        "typeName" : "java.lang.RuntimeException",
+        "message" : "java.sql.SQLException: Invalid socket timeout value or state",
+        "cause" : {
+          "typeName" : "java.sql.SQLException",
+          "message" : "Invalid socket timeout value or state",
+          "cause" : {
+            "typeName" : "java.net.SocketException",
+            "message" : "Socket is closed",
+            "frames" : "java.net.Socket.setSoTimeout(Socket.java:1137)\ncom.mysql.jdbc.MysqlIO.setSocketTimeout(MysqlIO.java:4879)[mysql.mysql-connector-java-5.1.38.jar]\ncom.mysql.jdbc.ConnectionImpl$12.run(ConnectionImpl.java:5566)[mysql.mysql-connector-java-5.1.38.jar]\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)\njava.lang.Thread.run(Thread.java:745)"
+          },
+          "common" : 4,
+          "frames" : "com.mysql.jdbc.SQLError.createSQLException(SQLError.java:957)[mysql.mysql-connector-java-5.1.38.jar]\ncom.mysql.jdbc.SQLError.createSQLException(SQLError.java:896)[mysql.mysql-connector-java-5.1.38.jar]\ncom.mysql.jdbc.SQLError.createSQLException(SQLError.java:885)[mysql.mysql-connector-java-5.1.38.jar]\ncom.mysql.jdbc.SQLError.createSQLException(SQLError.java:860)[mysql.mysql-connector-java-5.1.38.jar]\ncom.mysql.jdbc.MysqlIO.setSocketTimeout(MysqlIO.java:4881)[mysql.mysql-connector-java-5.1.38.jar]"
         },
-        {
-          "color": 3,
-          "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
-          "name": "Java Runtime Library",
-          "shortName": "Java RT"
-        },
-        {
-          "color": 6,
-          "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
-          "name": "IntelliJ IDEA",
-          "shortName": "IDEA"
-        }
-      ]
+        "common" : 3,
+        "frames" : "com.mysql.jdbc.ConnectionImpl$12.run(ConnectionImpl.java:5568)[mysql.mysql-connector-java-5.1.38.jar]"
+      },
+      "segments" : [ {
+        "id" : 21239,
+        "frames" : 1,
+        "componentId" : 2674
+      }, {
+        "id" : 44080,
+        "frames" : 2,
+        "componentId" : 4754
+      }, {
+        "id" : 44086,
+        "frames" : 3,
+        "componentId" : 2674
+      } ],
+      "userId" : 2,
+      "searchProtected" : true
     }
   },
-  "tips": [
-    {
-      "solutionId": 324548,
-      "document": {
-        "author": {
-          "name": "poroszdwithlongname",
-          "url": "https://samebug.io/user/1/poroszd",
-          "avatarUrl": "https://samebug.io/avatars/1/3"
-        },
-        "source": {
-          "name": "Samebug",
-          "iconUrl": "https://xxx"
-        },
-        "url": "https://samebug.io/exceptions/324548",
-        "createdAt":1458207553435
+  "tips" : [ {
+    "solutionId" : 734853,
+    "solution" : {
+      "type" : "tip",
+      "author" : {
+        "name" : "rp",
+        "url" : "https://samebug.io/user/2/rp",
+        "avatarUrl" : "https://samebug.io/avatars/777"
       },
-      "numberOfMarks":4,
-      "markedByViewer":false,
-      "exception":{
-        "typeName": "java.lang.NullPointerException",
-        "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
-      },
-      "componentStack": [
-        {
-          "color": 0,
-          "crashDocUrl": null,
-          "name": "com.samebug.swing",
-          "shortName": "com.samebug.swing"
+      "createdAt" : 1459450141303,
+      "tip" : "Another tip from Stack Overflow\r\nhttp://stackoverflow.com/a/30207379",
+      "via" : {
+        "type" : "reference",
+        "source" : {
+          "name" : "Stack Overflow",
+          "iconUrl" : "https://samebug.io/assets/images/sources/stackoverflow.png"
         },
-        {
-          "color": 3,
-          "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
-          "name": "Java Runtime Library",
-          "shortName": "Java RT"
+        "author" : {
+          "name" : "Ronald Randon",
+          "url" : "http://stackoverflow.com/users/1280039"
         },
-        {
-          "color": 6,
-          "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
-          "name": "IntelliJ IDEA",
-          "shortName": "IDEA"
-        }
-      ],
-      "tipText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent non justo at leo convallis viverra. Nunc ultrices enim blandit, egestas sapien et, tincidunt urna. Mauris suscipit felis eget erat blandit, eget pellentesque turpis tincidunt. Quisque at augue lectus. Morbi pharetra, arcu vitae semper imperdiet, velit magna consequat justo, quis vehicula dui ligula quis est. Curabitur sodales nisl vitae sem accumsan, sit amet convallis quam placerat. Aliquam sollicitudin dui a urna venenatis, ut mattis dolor ornare. Nulla facilisi. Pellentesque euismod, dolor et vehicula tristique, metus diam feugiat enim, in porta sapien enim ac odio.\n\nProin imperdiet augue ut semper ornare. Nullam mattis sem ac ligula tempus semper id vitae lorem. Aenean ornare aliquet eros vitae condimentum. Quisque iaculis dictum interdum. Suspendisse sit amet odio a odio commodo gravida eu ut nibh. Mauris vel fermentum velit. Praesent imperdiet id augue ut iaculis. Integer id tortor tortor. Proin sagittis pulvinar massa ac varius. Vivamus eget est laoreet, dapibus tortor eu, tristique dui.\n\nCras molestie nisl id faucibus porttitor. Cras vulputate viverra tellus nec dictum. Mauris nec tempus orci. Vivamus gravida tellus in tristique porttitor. Donec non massa ut metus imperdiet pharetra euismod commodo tellus. Donec fringilla et turpis et bibendum. Cras finibus augue vitae nunc facilisis, et scelerisque nibh facilisis. Aliquam lectus eros, fringilla nec nisl vitae, dictum pulvinar libero. Vivamus consectetur lorem nec odio laoreet semper. Cras quis faucibus lacus, at tempor turpis. Ut in venenatis dui, vitae molestie leo. Ut vitae ultrices elit.\n\nUt mattis mauris vitae metus viverra, quis lobortis magna malesuada. Duis ac lobortis odio. Nunc mattis faucibus pretium. Cras tempus, sem vel euismod tempus, nisi magna consectetur nisi, vel molestie dui nunc et nunc. Donec consequat bibendum bibendum. Vestibulum ultrices at mauris vel ornare. Nunc aliquet aliquam neque, in consectetur justo tristique porta.\n\nMauris dignissim elit nec varius condimentum. Proin in erat nec sem ullamcorper pellentesque ut sit amet augue. Ut leo sem, euismod ac arcu eu, euismod placerat nunc. Maecenas venenatis, dui nec mattis euismod, ante metus lobortis est, quis pretium velit velit vitae nisl. Donec egestas sem quis arcu commodo feugiat. Sed at ligula quis arcu gravida feugiat rhoncus ut magna. Nulla quis velit egestas, finibus metus ac, luctus justo. Curabitur interdum in quam at pretium. Integer ac commodo tortor. Nullam commodo nisi sit amet ipsum varius pretium. Vivamus felis ante, posuere et felis ac, auctor imperdiet odio. Praesent turpis eros, pulvinar non commodo pellentesque, rutrum eu massa. Curabitur interdum nulla venenatis, tempor nunc sed, fringilla neque. Morbi sit amet ex elit.\n\nSed semper aliquet nulla ut sodales. Mauris vulputate pharetra ante, quis consequat est tristique nec. In sagittis enim enim, ac sollicitudin odio ultricies et. Morbi auctor tincidunt ligula, non auctor metus hendrerit non. Proin odio nisi, mattis vel efficitur nec, malesuada vel diam. Duis ac tortor lacinia, iaculis dolor interdum, elementum elit. Suspendisse sit amet venenatis mi.\n\nUt faucibus mollis lorem nec vestibulum. Vivamus ultricies, mauris nec faucibus porttitor, nisi ipsum hendrerit tellus, auctor feugiat nunc orci sed quam. Nam molestie ipsum in aliquam.",
-      "referencedSolution": {
-        "solutionId": 1,
-        "document": {
-          "author": {
-            "name": "ujibang",
-            "url": "https://github.com/ujibang"
-          },
-          "source": {
-            "name": "GitHub",
-            "iconUrl": "https://samebug.io/assets-v/images/sources/github.png"
-          },
-          "url": "https://github.com/SoftInstigate/restheart/issues/21#issuecomment-88624545",
-          "createdAt":1458207553435
-        },
-        "numberOfMarks":4,
-        "markedByViewer":false,
-        "exception":{
-          "typeName": "java.lang.NullPointerException",
-          "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
-        },
-        "componentStack": [
-          {
-            "color": 0,
-            "crashDocUrl": null,
-            "name": "com.samebug.swing",
-            "shortName": "com.samebug.swing"
-          },
-          {
-            "color": 3,
-            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
-            "name": "Java Runtime Library",
-            "shortName": "Java RT"
-          },
-          {
-            "color": 6,
-            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
-            "name": "IntelliJ IDEA",
-            "shortName": "IDEA"
-          }
-        ],
-        "title": "???"
+        "createdAt" : 1431499140000,
+        "title" : "StackOverflow answer #30207379",
+        "url" : "http://stackoverflow.com/a/30207379"
       }
     },
-    {
-      "solutionId": 324548,
-      "document": {
-        "author": {
-          "name": "pd",
-          "url": "https://samebug.io/user/1/poroszd",
-          "avatarUrl": "https://samebug.io/avatars/1/3"
-        },
-        "source": {
-          "name": "Samebug",
-          "iconUrl": "https://xxx"
-        },
-        "url": "https://samebug.io/exceptions/324548",
-        "createdAt":1458207553435
+    "matchLevel" : 3,
+    "score" : 0,
+    "markedByUser" : false
+  }, {
+    "solutionId" : 734812,
+    "solution" : {
+      "type" : "tip",
+      "author" : {
+        "name" : "rp",
+        "url" : "https://samebug.io/user/2/rp",
+        "avatarUrl" : "https://samebug.io/avatars/777"
       },
-      "numberOfMarks":4,
-      "markedByViewer":false,
-      "exception":{
-        "typeName": "java.lang.NullPointerException",
-        "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+      "createdAt" : 1459421609361,
+      "tip" : "Hello, I am a Samebug Tip!"
+    },
+    "matchLevel" : 3,
+    "score" : 0,
+    "markedByUser" : false
+  }, {
+    "solutionId" : 734852,
+    "solution" : {
+      "type" : "tip",
+      "author" : {
+        "name" : "rp",
+        "url" : "https://samebug.io/user/2/rp",
+        "avatarUrl" : "https://samebug.io/avatars/777"
       },
-      "componentStack": [
-        {
-          "color": 0,
-          "crashDocUrl": null,
-          "name": "com.samebug.swing",
-          "shortName": "com.samebug.swing"
+      "createdAt" : 1459448854217,
+      "tip" : "A tip from Stack OVerflow",
+      "via" : {
+        "type" : "reference",
+        "source" : {
+          "name" : "stackoverflow.com",
+          "iconUrl" : "https://samebug.io/assets/images/sources/web.png"
         },
-        {
-          "color": 3,
-          "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
-          "name": "Java Runtime Library",
-          "shortName": "Java RT"
-        },
-        {
-          "color": 6,
-          "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
-          "name": "IntelliJ IDEA",
-          "shortName": "IDEA"
-        }
-      ],
-      "tipText": "Upgrade to RESTHeart 0.10.1 or later.",
-      "referencedSolution": {
-        "solutionId": 1,
-        "document": {
-          "author": {
-            "name": "ujibang",
-            "url": "https://github.com/ujibang"
-          },
-          "source": {
-            "name": "GitHub",
-            "iconUrl": "https://samebug.io/assets-v/images/sources/github.png"
-          },
-          "url": "https://github.com/SoftInstigate/restheart/issues/21#issuecomment-88624545",
-          "createdAt":1458207553435
-        },
-        "numberOfMarks":4,
-        "markedByViewer":false,
-        "exception":{
-          "typeName": "java.lang.NullPointerException",
-          "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
-        },
-        "componentStack": [
-          {
-            "color": 0,
-            "crashDocUrl": null,
-            "name": "com.samebug.swing",
-            "shortName": "com.samebug.swing"
-          },
-          {
-            "color": 3,
-            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
-            "name": "Java Runtime Library",
-            "shortName": "Java RT"
-          },
-          {
-            "color": 6,
-            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
-            "name": "IntelliJ IDEA",
-            "shortName": "IDEA"
-          }
-        ],
-        "title": "???"
+        "createdAt" : 1459448862006,
+        "title" : "grails - How to resolve the error java.net.SocketException: Too many open files - Stack Overflow",
+        "url" : "http://stackoverflow.com/a/30207379"
       }
     },
-    {
-      "solutionId": 324548,
-      "document": {
-        "author": {
-          "name": "poroszd",
-          "url": "https://samebug.io/user/1/poroszd",
-          "avatarUrl": "https://samebug.io/avatars/1/3"
-        },
-        "source": {
-          "name": "Samebug",
-          "iconUrl": "https://xxx"
-        },
-        "url": "https://samebug.io/exceptions/324548",
-        "createdAt":1458207553435
+    "matchLevel" : 3,
+    "score" : 0,
+    "markedByUser" : false
+  }, {
+    "solutionId" : 734851,
+    "solution" : {
+      "type" : "tip",
+      "author" : {
+        "name" : "rp",
+        "url" : "https://samebug.io/user/2/rp",
+        "avatarUrl" : "https://samebug.io/avatars/777"
       },
-      "numberOfMarks":4,
-      "markedByViewer":false,
-      "exception":{
-        "typeName": "java.lang.NullPointerException",
-        "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
-      },
-      "componentStack": [
-        {
-          "color": 0,
-          "crashDocUrl": null,
-          "name": "com.samebug.swing",
-          "shortName": "com.samebug.swing"
+      "createdAt" : 1459427448624,
+      "tip" : "Hello Samebugger!\r\nI am a Samebug Tip with a source.",
+      "via" : {
+        "type" : "reference",
+        "source" : {
+          "name" : "stackoverflow.com",
+          "iconUrl" : "https://samebug.io/assets/images/sources/web.png"
         },
-        {
-          "color": 3,
-          "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
-          "name": "Java Runtime Library",
-          "shortName": "Java RT"
-        },
-        {
-          "color": 6,
-          "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
-          "name": "IntelliJ IDEA",
-          "shortName": "IDEA"
-        }
-      ],
-      "tipText": "Upgrade to RESTHeart 0.10.1 or later.",
-      "referencedSolution": {
-        "solutionId": 1,
-        "document": {
-          "author": {
-            "name": "ujibang",
-            "url": "https://github.com/ujibang"
-          },
-          "source": {
-            "name": "GitHub",
-            "iconUrl": "https://samebug.io/assets-v/images/sources/github.png"
-          },
-          "url": "https://github.com/SoftInstigate/restheart/issues/21#issuecomment-88624545",
-          "createdAt":1458207553435
-        },
-        "numberOfMarks":4,
-        "markedByViewer":false,
-        "exception":{
-          "typeName": "java.lang.NullPointerException",
-          "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
-        },
-        "componentStack": [
-          {
-            "color": 0,
-            "crashDocUrl": null,
-            "name": "com.samebug.swing",
-            "shortName": "com.samebug.swing"
-          },
-          {
-            "color": 3,
-            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
-            "name": "Java Runtime Library",
-            "shortName": "Java RT"
-          },
-          {
-            "color": 6,
-            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
-            "name": "IntelliJ IDEA",
-            "shortName": "IDEA"
-          }
-        ],
-        "title": "???"
+        "createdAt" : 1459427449628,
+        "title" : "grails - How to resolve the error java.net.SocketException: Too many open files - Stack Overflow",
+        "url" : "http://stackoverflow.com/a/30207433"
       }
-    }
-  ],
-  "externalSolutions": [
-    {
-      "solutionId": 1,
-      "document": {
-        "author": {
-          "name": "ujibang",
-          "url": "https://github.com/ujibang"
-        },
-        "source": {
-          "name": "GitHub",
-          "iconUrl": "https://samebug.io/assets-v/images/sources/github.png"
-        },
-        "url": "https://github.com/SoftInstigate/restheart/issues/21#issuecomment-88624545",
-        "createdAt":1458207553435
-      },
-      "numberOfMarks":4,
-      "markedByViewer":false,
-      "exception":{
-        "typeName": "java.lang.NullPointerException",
-        "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
-      },
-      "componentStack": [
-        {
-          "color": 0,
-          "crashDocUrl": null,
-          "name": "com.samebug.swing",
-          "shortName": "com.samebug.swing"
-        },
-        {
-          "color": 3,
-          "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
-          "name": "Java Runtime Library",
-          "shortName": "Java RT"
-        },
-        {
-          "color": 6,
-          "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
-          "name": "IntelliJ IDEA",
-          "shortName": "IDEA"
-        }
-      ],
-      "title": "???"
     },
-    {
-      "solutionId": 1,
-      "document": {
-        "author": {
-          "name": "ujibang",
-          "url": "https://github.com/ujibang"
-        },
-        "source": {
-          "name": "GitHub",
-          "iconUrl": "https://samebug.io/assets-v/images/sources/github.png"
-        },
-        "url": "https://github.com/SoftInstigate/restheart/issues/21#issuecomment-88624545",
-        "createdAt":1458207553435
+    "matchLevel" : 3,
+    "score" : 0,
+    "markedByUser" : false
+  } ],
+  "references" : [ {
+    "solutionId" : 234876,
+    "solution" : {
+      "type" : "reference",
+      "source" : {
+        "name" : "GitHub",
+        "iconUrl" : "https://samebug.io/assets/images/sources/github.png"
       },
-      "numberOfMarks":4,
-      "markedByViewer":false,
-      "exception":{
-        "typeName": "java.lang.NullPointerException",
-        "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+      "author" : {
+        "name" : "redshiftetl",
+        "url" : "https://github.com/redshiftetl",
+        "avatarUrl" : "https://avatars.githubusercontent.com/u/10999482"
       },
-      "componentStack": [
-        {
-          "color": 0,
-          "crashDocUrl": null,
-          "name": "com.samebug.swing",
-          "shortName": "com.samebug.swing"
-        },
-        {
-          "color": 3,
-          "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
-          "name": "Java Runtime Library",
-          "shortName": "Java RT"
-        },
-        {
-          "color": 6,
-          "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
-          "name": "IntelliJ IDEA",
-          "shortName": "IDEA"
-        }
-      ],
-      "title": "???"
+      "createdAt" : 1429255572000,
+      "title" : "Exceptions related to socket timeout with MySQL driver",
+      "url" : "https://github.com/brettwooldridge/HikariCP/issues/310"
     },
-    {
-      "solutionId": 1,
-      "document": {
-        "author": {
-          "name": "ujibang",
-          "url": "https://github.com/ujibang"
-        },
-        "source": {
-          "name": "GitHub",
-          "iconUrl": "https://samebug.io/assets-v/images/sources/github.png"
-        },
-        "url": "https://github.com/SoftInstigate/restheart/issues/21#issuecomment-88624545",
-        "createdAt":1458207553435
+    "matchLevel" : 1,
+    "score" : 0,
+    "markedByUser" : false
+  }, {
+    "solutionId" : 381718,
+    "solution" : {
+      "type" : "reference",
+      "source" : {
+        "name" : "Google Groups",
+        "iconUrl" : "https://samebug.io/assets/images/sources/googlegroups.png"
       },
-      "numberOfMarks":4,
-      "markedByViewer":false,
-      "exception":{
-        "typeName": "java.lang.NullPointerException",
-        "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+      "author" : {
+        "name" : "Jakekeke"
       },
-      "componentStack": [
-        {
-          "color": 0,
-          "crashDocUrl": null,
-          "name": "com.samebug.swing",
-          "shortName": "com.samebug.swing"
-        },
-        {
-          "color": 3,
-          "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
-          "name": "Java Runtime Library",
-          "shortName": "Java RT"
-        },
-        {
-          "color": 6,
-          "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
-          "name": "IntelliJ IDEA",
-          "shortName": "IDEA"
-        }
-      ],
-      "title": "???"
+      "createdAt" : 1105695000000,
+      "title" : "How to accept the Untrusted cert?",
+      "url" : "https://groups.google.com/d/topic/comp.lang.java.programmer/RvPQsSr7MTU"
     },
-    {
-      "solutionId": 1,
-      "document": {
-        "author": {
-          "name": "ujibang",
-          "url": "https://github.com/ujibang"
-        },
-        "source": {
-          "name": "GitHub",
-          "iconUrl": "https://samebug.io/assets-v/images/sources/github.png"
-        },
-        "url": "https://github.com/SoftInstigate/restheart/issues/21#issuecomment-88624545",
-        "createdAt":1458207553435
+    "matchLevel" : 1,
+    "score" : 0,
+    "markedByUser" : false
+  }, {
+    "solutionId" : 596856,
+    "solution" : {
+      "type" : "reference",
+      "source" : {
+        "name" : "Google Groups",
+        "iconUrl" : "https://samebug.io/assets/images/sources/googlegroups.png"
       },
-      "numberOfMarks":4,
-      "markedByViewer":false,
-      "exception":{
-        "typeName": "java.lang.NullPointerException",
-        "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+      "author" : {
+        "name" : "Jakekeke"
       },
-      "componentStack": [
-        {
-          "color": 0,
-          "crashDocUrl": null,
-          "name": "com.samebug.swing",
-          "shortName": "com.samebug.swing"
-        },
-        {
-          "color": 3,
-          "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
-          "name": "Java Runtime Library",
-          "shortName": "Java RT"
-        },
-        {
-          "color": 6,
-          "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
-          "name": "IntelliJ IDEA",
-          "shortName": "IDEA"
-        }
-      ],
-      "title": "???"
-    }
-  ]
+      "createdAt" : 1105695000000,
+      "title" : "How to accept the Untrusted cert?",
+      "url" : "https://groups.google.com/d/topic/comp.lang.java.security/RvPQsSr7MTU"
+    },
+    "matchLevel" : 1,
+    "score" : 0,
+    "markedByUser" : false
+  }, {
+    "solutionId" : 610877,
+    "solution" : {
+      "type" : "reference",
+      "source" : {
+        "name" : "GitHub",
+        "iconUrl" : "https://samebug.io/assets/images/sources/github.png"
+      },
+      "author" : {
+        "name" : "molst",
+        "url" : "https://github.com/molst",
+        "avatarUrl" : "https://avatars.githubusercontent.com/u/1497650"
+      },
+      "createdAt" : 1449234992000,
+      "title" : "Silently ignored exception",
+      "url" : "https://github.com/aws/aws-sdk-java/issues/567"
+    },
+    "matchLevel" : 1,
+    "score" : 0,
+    "markedByUser" : false
+  }, {
+    "solutionId" : 308580,
+    "solution" : {
+      "type" : "reference",
+      "source" : {
+        "name" : "nabble.com",
+        "iconUrl" : "https://samebug.io/assets/images/sources/web.png"
+      },
+      "createdAt" : 1446584000450,
+      "title" : "HttpClient-User - instream.read() ---- In SSL mode",
+      "url" : "http://httpcomponents.10934.n7.nabble.com/instream-read-In-SSL-mode-td11544.html"
+    },
+    "matchLevel" : 1,
+    "score" : 0,
+    "markedByUser" : false
+  }, {
+    "solutionId" : 117859,
+    "solution" : {
+      "type" : "reference",
+      "source" : {
+        "name" : "Stack Overflow",
+        "iconUrl" : "https://samebug.io/assets/images/sources/stackoverflow.png"
+      },
+      "author" : {
+        "name" : "SRobertJames",
+        "url" : "http://stackoverflow.com/users/785494"
+      },
+      "createdAt" : 1411588781000,
+      "title" : "AWS SDK S3 Socket Closed exception",
+      "url" : "http://stackoverflow.com/questions/26025444"
+    },
+    "matchLevel" : 1,
+    "score" : 0,
+    "markedByUser" : false
+  } ]
 }

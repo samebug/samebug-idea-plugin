@@ -8,7 +8,7 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.search.api.entities.Solutions;
+import com.samebug.clients.search.api.entities.legacy.Solutions;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
 import java.util.HashMap;

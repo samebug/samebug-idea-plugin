@@ -1,9 +1,9 @@
-package com.samebug.clients.search.api.entities;
+package com.samebug.clients.search.api.entities.legacy;
 
 import java.net.URL;
 
 /**
- * Created by poroszd on 3/30/16.
+ * Created by poroszd on 4/1/16.
  */
 public class Source {
     public String name;

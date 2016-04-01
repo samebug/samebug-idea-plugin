@@ -1,42 +1,42 @@
 package com.samebug.clients.idea.ui.views;
 
 import com.samebug.clients.idea.ui.ColorUtil;
-import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.ImageUtil;
-import com.samebug.clients.idea.ui.components.BreadcrumbBar;
+import com.samebug.clients.idea.ui.components.LegacyBreadcrumbBar;
 import com.samebug.clients.idea.ui.components.LinkLabel;
-import com.samebug.clients.search.api.entities.Tip;
-import org.ocpsoft.prettytime.PrettyTime;
+import com.samebug.clients.idea.ui.components.TipSourceReferencePanel;
+import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
+import com.samebug.clients.search.api.entities.legacy.RestHit;
+import com.samebug.clients.search.api.entities.legacy.Tip;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
-import java.util.Locale;
 
 /**
  * Created by poroszd on 3/29/16.
  */
 public class SamebugTipView {
-    static final PrettyTime pretty = new PrettyTime(Locale.US);
-
-    final Tip tip;
+    final RestHit<Tip> tip;
+    final java.util.List<BreadCrumb> searchBreadcrumb;
 
     public JPanel controlPanel;
     public ProfilePanel profilePanel;
     public TipLabel tipLabel;
-    public SourceReferencePanel sourceReferencePanel;
+    public TipSourceReferencePanel sourceReferencePanel;
     public JPanel actionPanel;
     public JPanel breadcrumbPanel;
     public TipContentPanel tipContentPanel;
 
-    public SamebugTipView(Tip tip) {
+    public SamebugTipView(RestHit<Tip> tip, java.util.List<BreadCrumb> searchBreadcrumb) {
         this.tip = tip;
+        this.searchBreadcrumb = searchBreadcrumb;
 
         controlPanel = new ControlPanel();
-        breadcrumbPanel = new BreadcrumbBar(tip.componentStack);
+        breadcrumbPanel = new LegacyBreadcrumbBar(searchBreadcrumb.subList(0, tip.matchLevel));
         tipLabel = new TipLabel();
-        sourceReferencePanel = new SourceReferencePanel();
+        sourceReferencePanel = new TipSourceReferencePanel(tip.solution);
         profilePanel = new ProfilePanel();
         actionPanel = new ActionPanel();
         tipContentPanel = new TipContentPanel();
@@ -45,11 +45,13 @@ public class SamebugTipView {
             {
                 setLayout(new BorderLayout(0, 0));
                 setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
+                setOpaque(false);
                 add(breadcrumbPanel, BorderLayout.SOUTH);
                 add(new JPanel() {
                     {
                         setLayout(new BorderLayout(0, 0));
                         setBorder(BorderFactory.createEmptyBorder());
+                        setOpaque(false);
                         add(actionPanel, BorderLayout.SOUTH);
                         add(tipContentPanel, BorderLayout.CENTER);
                     }
@@ -65,6 +67,10 @@ public class SamebugTipView {
             setLayout(new BorderLayout(0, 0));
             setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
         }
+        @Override
+        public Color getBackground() {
+            return ColorUtil.highlightPanel();
+        }
     }
 
     public class TipLabel extends JTextArea {
@@ -77,56 +83,31 @@ public class SamebugTipView {
             setLineWrap(true);
             setWrapStyleWord(true);
             setBackground(null);
+            setOpaque(false);
             setBorder(null);
-            setText(tip.tipText);
+            setText(tip.solution.tip);
             setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 150)));
             setMaximumSize(new Dimension(getMaximumSize().width, 150));
         }
-    }
-
-    public class SourceReferencePanel extends JPanel {
-        {
-            setLayout(new FlowLayout(FlowLayout.RIGHT));
-            setBorder(BorderFactory.createEmptyBorder());
-            add(new JLabel(String.format("%s | ", pretty.format(tip.document.createdAt))) {
-                @Override
-                public Color getForeground() {
-                    return ColorUtil.unemphasized();
-                }
-            });
-            add(new LinkLabel(tip.referencedSolution.document.author.name, tip.referencedSolution.document.author.url) {
-                @Override
-                public Color getForeground() {
-                    return ColorUtil.unemphasized();
-                }
-            });
-            add(new JLabel(" via ") {
-                @Override
-                public Color getForeground() {
-                    return ColorUtil.unemphasized();
-                }
-            });
-            add(new LinkLabel(tip.referencedSolution.document.source.name, tip.referencedSolution.document.url) {
-                @Override
-                public Color getForeground() {
-                    return ColorUtil.unemphasized();
-                }
-            });
+        @Override
+        public Color getForeground() {
+            return ColorUtil.emphasizedText();
         }
-
     }
 
     public class ProfilePanel extends JPanel {
         {
             setLayout(new BorderLayout(0, 0));
             setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+            setOpaque(false);
             setPreferredSize(new Dimension(74, 100));
             // TODO load image asynchronously
             // TODO do not use getScaledInstance; https://community.oracle.com/docs/DOC-983611
-            final Image profile = ImageUtil.getImage(tip.document.author.avatarUrl).getScaledInstance(64, 64, Image.SCALE_FAST);
+            final Image profile = ImageUtil.getImage(tip.solution.author.avatarUrl).getScaledInstance(64, 64, Image.SCALE_FAST);
             add(new JPanel() {
                 {
                     setBorder(BorderFactory.createEmptyBorder());
+                    setOpaque(false);
                     add(new JLabel(new ImageIcon(profile)));
                 }
             }, BorderLayout.NORTH);
@@ -134,7 +115,8 @@ public class SamebugTipView {
                 {
                     setLayout(new BorderLayout(0, 0));
                     setBorder(BorderFactory.createEmptyBorder());
-                    add(new LinkLabel(tip.document.author.name, tip.document.author.url) {
+                    setOpaque(false);
+                    add(new LinkLabel(tip.solution.author.name, tip.solution.author.url) {
                         {
                             HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
                             attributes.put(TextAttribute.SIZE, 10);
@@ -143,7 +125,13 @@ public class SamebugTipView {
                             setHorizontalTextPosition(SwingConstants.CENTER);
                         }
                     }, BorderLayout.NORTH);
-                    add(new JPanel(), BorderLayout.CENTER);
+                    add(new JPanel() {
+                        {
+                            setLayout(new BorderLayout(0, 0));
+                            setBorder(BorderFactory.createEmptyBorder());
+                            setOpaque(false);
+                        }
+                    }, BorderLayout.CENTER);
                 }
             }, BorderLayout.CENTER);
         }
@@ -152,12 +140,7 @@ public class SamebugTipView {
     public class ActionPanel extends JPanel {
         {
             setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
-            add(new JLabel("helped 42 people") {
-                @Override
-                public Color getForeground() {
-                    return ColorUtil.unemphasized();
-                }
-            });
+            setOpaque(false);
         }
     }
 
@@ -165,18 +148,25 @@ public class SamebugTipView {
         {
             setLayout(new BorderLayout(0, 0));
             setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+            setOpaque(false);
             add(profilePanel, BorderLayout.WEST);
             add(new JPanel() {
                 {
                     setLayout(new BorderLayout(0, 0));
                     setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+                    setOpaque(false);
                     add(tipLabel, BorderLayout.NORTH);
                     add(new JPanel(){
                         {
                             setLayout(new BorderLayout(0, 0));
                             setBorder(BorderFactory.createEmptyBorder());
+                            setOpaque(false);
                             add(sourceReferencePanel, BorderLayout.NORTH);
-                            add(new JPanel(), BorderLayout.CENTER);
+                            add(new JPanel(){
+                                {
+                                    setOpaque(false);
+                                }
+                            }, BorderLayout.CENTER);
                         }
                     }, BorderLayout.CENTER);
                 }

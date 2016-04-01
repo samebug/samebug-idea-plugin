@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api.entities;
+package com.samebug.clients.search.api.entities.legacy;
 
 import java.util.List;
 
@@ -21,7 +21,9 @@ import java.util.List;
  * Created by poroszd on 2/24/16.
  */
 public class Solutions {
-    public GroupedExceptionSearch search;
-    public List<Tip> tips;
-    public List<ExternalSolution> externalSolutions;
+    public ExceptionSearch search;
+    public List<BreadCrumb> breadcrumb;
+    public GroupedSearchHistory searchGroup;
+    public List<RestHit<Tip>> tips;
+    public List<RestHit<SolutionReference>> references;
 }

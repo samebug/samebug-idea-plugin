@@ -39,5 +39,4 @@ public class SamebugIcons {
     public final static URL cogwheelTodoUrl = SamebugIcons.class.getClassLoader().getResource("/com/samebug/icons/cogwheel-todo.png");
     public final static URL lightbulbUrl = SamebugIcons.class.getClassLoader().getResource("/com/samebug/icons/filter-unknown.png");
     public final static URL calendarUrl = SamebugIcons.class.getClassLoader().getResource("/com/samebug/icons/filter-old.png");
-
 }

@@ -5,9 +5,10 @@ import com.samebug.clients.idea.ui.views.ExternalSolutionView;
 import com.samebug.clients.idea.ui.views.SamebugTipView;
 import com.samebug.clients.idea.ui.views.SearchGroupCardView;
 import com.samebug.clients.idea.ui.views.SearchTabView;
-import com.samebug.clients.search.api.entities.ExternalSolution;
-import com.samebug.clients.search.api.entities.Solutions;
-import com.samebug.clients.search.api.entities.Tip;
+import com.samebug.clients.search.api.entities.legacy.RestHit;
+import com.samebug.clients.search.api.entities.legacy.SolutionReference;
+import com.samebug.clients.search.api.entities.legacy.Solutions;
+import com.samebug.clients.search.api.entities.legacy.Tip;
 
 import javax.swing.*;
 import java.awt.*;
@@ -104,19 +105,16 @@ public class SearchTabTest extends JDialog {
         Gson gson = builder.create();
         InputStream stream = SearchTabTest.class.getResourceAsStream("/com/samebug/mock/solutions.json");
         Solutions solutions = gson.fromJson(new InputStreamReader(stream), Solutions.class);
-        SearchGroupCardView v = new SearchGroupCardView(solutions.search);
-        dialog.tab.header.add(v.controlPanel, BorderLayout.CENTER);
-        for (final Tip tip : solutions.tips) {
-            dialog.tab.solutionsPanel.add(new SamebugTipView(tip).controlPanel);
+//        SearchGroupCardView v = new SearchGroupCardView(solutions.search);
+//        dialog.tab.header.add(v.controlPanel, BorderLayout.CENTER);
+        for (final RestHit<Tip> tip : solutions.tips) {
+            dialog.tab.solutionsPanel.add(new SamebugTipView(tip, solutions.breadcrumb).controlPanel);
         }
-        for (final ExternalSolution s : solutions.externalSolutions) {
-            dialog.tab.solutionsPanel.add(new ExternalSolutionView(s).controlPanel);
+        for (final RestHit<SolutionReference> s : solutions.references) {
+            dialog.tab.solutionsPanel.add(new ExternalSolutionView(s, solutions.breadcrumb).controlPanel);
         }
         stream.close();
         dialog.pack();
-        System.out.println(v.controlPanel.getSize());
-        System.out.println(dialog.tab.header.getSize());
-        System.out.println(dialog.tab.solutionsPanel.getSize());
         dialog.setVisible(true);
         System.exit(0);
     }

@@ -1,4 +1,4 @@
-package com.samebug.clients.search.api.entities;
+package com.samebug.clients.search.api.entities.legacy;
 
 import java.net.URL;
 
