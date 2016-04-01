@@ -25,8 +25,7 @@ public class ExternalSolutionView {
 
     public JPanel controlPanel;
     public JPanel titlePanel;
-    public JLabel messageLabel;
-    public JLabel titleLabel;
+    public ExceptionPanel exceptionPanel;
     public SourceReferencePanel sourceReferencePanel;
     public JPanel actionPanel;
     public JPanel breadcrumbPanel;
@@ -47,8 +46,7 @@ public class ExternalSolutionView {
         controlPanel = new ControlPanel();
         breadcrumbPanel = new LegacyBreadcrumbBar(searchBreadcrumb.subList(0, solution.matchLevel));
         titlePanel = new TitlePanel();
-        titleLabel = new TitleLabel();
-        messageLabel = new ExceptionMessageLabel(null);
+        exceptionPanel = new ExceptionPanel();
         sourceReferencePanel = new SourceReferencePanel(solution.solution);
         actionPanel = new ActionPanel();
 
@@ -71,8 +69,14 @@ public class ExternalSolutionView {
                                 setBorder(BorderFactory.createEmptyBorder());
                                 setOpaque(false);
                                 add(sourceReferencePanel, BorderLayout.SOUTH);
-                                add(titleLabel, BorderLayout.NORTH);
-                                add(messageLabel, BorderLayout.CENTER);
+                                add(new JPanel(){
+                                    {
+                                        setLayout(new BorderLayout());
+                                        setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+                                        setOpaque(false);
+                                        add(exceptionPanel, BorderLayout.CENTER);
+                                    }
+                                });
 
                             }
                         }, BorderLayout.CENTER);
@@ -99,21 +103,32 @@ public class ExternalSolutionView {
             // TODO load image asynchronously
             final Image sourceIcon = ImageUtil.getImage(solution.solution.source.iconUrl);
             add(new SourceIcon(sourceIcon), BorderLayout.WEST);
-            add(new LinkLabel(solution.solution.title, solution.solution.url) {
+            add(new JPanel() {
                 {
-                    HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
-                    attributes.put(TextAttribute.SIZE, 16);
-                    setFont(getFont().deriveFont(attributes));
-                    setForeground(Colors.samebugOrange);
+                    setLayout(new BorderLayout());
+                    setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+                    setOpaque(false);
+                    add(new LinkLabel(solution.solution.title, solution.solution.url) {
+                        {
+                            HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
+                            attributes.put(TextAttribute.SIZE, 16);
+                            attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
+                            setFont(getFont().deriveFont(attributes));
+                            setForeground(Colors.samebugOrange);
+                        }
+                    }, BorderLayout.CENTER);
                 }
-            }, BorderLayout.CENTER);
+            });
         }
     }
 
-    public class TitleLabel extends JLabel {
-        @Override
-        public String getText() {
-            return String.format("%s", className);
+    public class ExceptionPanel extends JPanel {
+        {
+            setLayout(new BorderLayout());
+            setBorder(BorderFactory.createEmptyBorder());
+            setOpaque(false);
+            add(new JLabel(String.format("%s", className)), BorderLayout.NORTH);
+            add(new ExceptionMessageLabel(null), BorderLayout.CENTER);
         }
     }
 
