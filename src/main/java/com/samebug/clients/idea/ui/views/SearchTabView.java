@@ -22,7 +22,7 @@ public class SearchTabView {
                     }
                     @Override
                     public Dimension getPreferredSize() {
-                        return new Dimension(super.getPreferredSize().width, Math.min(super.getPreferredSize().height, 157));
+                        return new Dimension(super.getPreferredSize().width, Math.min(super.getPreferredSize().height, 162));
                     }
                 };
                 add(header, BorderLayout.NORTH);

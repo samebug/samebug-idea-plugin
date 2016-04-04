@@ -15,11 +15,13 @@
  */
 package com.samebug.clients.idea.ui.views;
 
+import com.intellij.ui.HighlightableComponent;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.components.BreadcrumbBar;
 import com.samebug.clients.idea.ui.components.ExceptionMessageLabel;
+import com.samebug.clients.idea.ui.components.LinkLabel;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -41,15 +43,13 @@ public class SearchGroupCardView {
 
     public JPanel controlPanel;
     public JPanel paddingPanel;
-    public JPanel infoBar;
     public JPanel contentPanel;
     public JPanel breadcrumbPanel;
     public JPanel titlePanel;
     public JPanel messagePanel;
-    public PackageLabel packageLabel;
     public TitleLabel titleLabel;
-    public TimeLabel timeLabel;
-    public HitsLabel hitsLabel;
+    public TopBar topBar;
+    public GroupInfoPanel groupInfoPanel;
 
     public SearchGroupCardView(GroupedExceptionSearch searchGroup) {
         this.searchGroup = searchGroup;
@@ -65,12 +65,10 @@ public class SearchGroupCardView {
         GridBagConstraints gbc;
         controlPanel = new ControlPanel();
         paddingPanel = new JPanel();
-        infoBar = new JPanel();
-        timeLabel = new TimeLabel();
-        hitsLabel = new HitsLabel();
+        topBar = new TopBar();
+        groupInfoPanel = new GroupInfoPanel();
         contentPanel = new JPanel();
         titlePanel = new JPanel();
-        packageLabel = new PackageLabel();
         titleLabel = new TitleLabel();
         messagePanel = new JPanel();
         breadcrumbPanel = new BreadcrumbBar(searchGroup.lastSearch.componentStack);
@@ -81,33 +79,18 @@ public class SearchGroupCardView {
 
         paddingPanel.setLayout(new BorderLayout(0, 0));
         paddingPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
-        paddingPanel.add(infoBar, BorderLayout.NORTH);
+        paddingPanel.add(topBar, BorderLayout.NORTH);
         paddingPanel.add(contentPanel, BorderLayout.CENTER);
         paddingPanel.add(breadcrumbPanel, BorderLayout.SOUTH);
-
-        infoBar.setLayout(new GridBagLayout());
-        infoBar.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 0.5;
-        gbc.anchor = GridBagConstraints.WEST;
-        infoBar.add(timeLabel, gbc);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.weightx = 0.5;
-        gbc.anchor = GridBagConstraints.EAST;
-        infoBar.add(hitsLabel, gbc);
 
         contentPanel.setLayout(new BorderLayout(0, 0));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         contentPanel.add(titlePanel, BorderLayout.NORTH);
         contentPanel.add(messagePanel, BorderLayout.CENTER);
+        contentPanel.add(groupInfoPanel, BorderLayout.SOUTH);
 
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.PAGE_AXIS));
         titlePanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-        titlePanel.add(packageLabel);
         titlePanel.add(titleLabel);
 
         messagePanel.setLayout(new BorderLayout(0, 0));
@@ -136,22 +119,6 @@ public class SearchGroupCardView {
         }
     }
 
-    public class PackageLabel extends JLabel {
-        @Override
-        public String getText() {
-            if (packageName == null) {
-                return String.format("%s", SamebugBundle.message("samebug.exception.noPackage"));
-            } else {
-                return String.format("%s", packageName);
-            }
-        }
-
-        @Override
-        public Color getForeground() {
-            return ColorUtil.unemphasizedText();
-        }
-    }
-
     public class TitleLabel extends JLabel {
         @Override
         public String getText() {
@@ -161,28 +128,6 @@ public class SearchGroupCardView {
         @Override
         public Color getForeground() {
             return Colors.samebugOrange;
-        }
-    }
-
-    public class TimeLabel extends JLabel {
-        @Override
-        public String getText() {
-            return String.format("%s | %d times, first %s", pretty.format(searchGroup.lastSeenSimilar), searchGroup.numberOfSimilars, pretty.format(searchGroup.firstSeenSimilar));
-        }
-
-        @Override
-        public int getHorizontalAlignment() {
-            return SwingConstants.LEFT;
-        }
-
-        @Override
-        public int getHorizontalTextPosition() {
-            return SwingConstants.LEFT;
-        }
-
-        @Override
-        public Color getForeground() {
-            return ColorUtil.unemphasizedText();
         }
     }
 
@@ -199,13 +144,19 @@ public class SearchGroupCardView {
         }
 
         @Override
-        public int getHorizontalAlignment() {
-            return SwingConstants.RIGHT;
+        public Color getForeground() {
+            return ColorUtil.unemphasizedText();
         }
+    }
 
+    public class PackageLabel extends JLabel {
         @Override
-        public int getHorizontalTextPosition() {
-            return SwingConstants.RIGHT;
+        public String getText() {
+            if (packageName == null) {
+                return String.format("%s", SamebugBundle.message("samebug.exception.noPackage"));
+            } else {
+                return String.format("%s", packageName);
+            }
         }
 
         @Override
@@ -213,4 +164,40 @@ public class SearchGroupCardView {
             return ColorUtil.unemphasizedText();
         }
     }
+
+    public class TopBar extends JPanel {
+        {
+            setLayout(new BorderLayout());
+            setBorder(BorderFactory.createEmptyBorder());
+            add(new PackageLabel(), BorderLayout.WEST);
+            add(new HitsLabel(), BorderLayout.EAST);
+        }
+    }
+
+    public class GroupInfoPanel extends JPanel {
+        {
+            setLayout(new FlowLayout(FlowLayout.RIGHT));
+            setBorder(BorderFactory.createEmptyBorder());
+            setOpaque(false);
+            add(new JLabel() {
+                {
+                    String text;
+                    if (searchGroup.numberOfSimilars == 1) {
+                        text = String.format("%s", pretty.format(searchGroup.lastSeenSimilar));
+                    } else {
+                        text = String.format("%s | %d times, first %s", pretty.format(searchGroup.lastSeenSimilar), searchGroup.numberOfSimilars, pretty.format(searchGroup.firstSeenSimilar));
+                    }
+
+                    setText(text);
+                }
+
+                @Override
+                public Color getForeground() {
+                    return ColorUtil.unemphasizedText();
+                }
+            });
+
+        }
+    }
+
 }
