@@ -15,13 +15,11 @@
  */
 package com.samebug.clients.idea.ui.views;
 
-import com.intellij.ui.HighlightableComponent;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.components.BreadcrumbBar;
 import com.samebug.clients.idea.ui.components.ExceptionMessageLabel;
-import com.samebug.clients.idea.ui.components.LinkLabel;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -185,7 +183,8 @@ public class SearchGroupCardView {
                     if (searchGroup.numberOfSimilars == 1) {
                         text = String.format("%s", pretty.format(searchGroup.lastSeenSimilar));
                     } else {
-                        text = String.format("%s | %d times, first %s", pretty.format(searchGroup.lastSeenSimilar), searchGroup.numberOfSimilars, pretty.format(searchGroup.firstSeenSimilar));
+                        text = String.format("%s | %d times, first %s",
+                                pretty.format(searchGroup.lastSeenSimilar), searchGroup.numberOfSimilars, pretty.format(searchGroup.firstSeenSimilar));
                     }
 
                     setText(text);

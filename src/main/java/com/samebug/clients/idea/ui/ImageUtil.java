@@ -71,7 +71,6 @@ public class ImageUtil {
     }
 
 
-
     static final String[] cachedImages = {
             "images/sources/github.png",
             "images/sources/googlegroups.png",

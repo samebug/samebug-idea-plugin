@@ -46,11 +46,11 @@ public class SamebugClient {
     private final String apiKey;
     final static String USER_AGENT = "Samebug-Idea-Client/1.3.0";
     final static String API_VERSION = "0.8";
-//    public final static URI root = URI.create("http://localhost:9000/");
-    public final static URI root = URI.create("http://nightly.samebug.com/");
-//    public final static URI root = URI.create("https://samebug.io/");
-        final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
-//    final static URI trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
+    //    public final static URI root = URI.create("http://localhost:9000/");
+//    public final static URI root = URI.create("http://nightly.samebug.com/");
+    public final static URI root = URI.create("https://samebug.io/");
+    //        final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
+    final static URI trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
     final static URI gateway = root.resolve("rest/").resolve(API_VERSION + "/");
     final static Gson gson;
     final static HttpClient httpClient = HttpClientBuilder.create()

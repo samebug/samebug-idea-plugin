@@ -1,7 +1,20 @@
+/**
+ * Copyright 2016 Samebug, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.samebug.clients.idea.ui.views;
 
-import com.intellij.ide.BrowserUtil;
-import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.ImageUtil;
@@ -12,8 +25,6 @@ import com.samebug.clients.search.api.entities.legacy.SolutionReference;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
@@ -72,7 +83,7 @@ public class ExternalSolutionView {
                                 setBorder(BorderFactory.createEmptyBorder());
                                 setOpaque(false);
                                 add(sourceReferencePanel, BorderLayout.SOUTH);
-                                add(new JPanel(){
+                                add(new JPanel() {
                                     {
                                         setLayout(new BorderLayout());
                                         setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
@@ -90,12 +101,12 @@ public class ExternalSolutionView {
     }
 
 
-
     public class ControlPanel extends JPanel {
         {
             setLayout(new BorderLayout(0, 0));
             setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
         }
+
         @Override
         public Dimension getPreferredSize() {
             Dimension d = super.getPreferredSize();
@@ -140,13 +151,14 @@ public class ExternalSolutionView {
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createEmptyBorder());
             setOpaque(false);
-            add(new JLabel(String.format("%s", className)){
+            add(new JLabel(String.format("%s", className)) {
                 {
                     HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
                     attributes.put(TextAttribute.SIZE, 14);
                     attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
                     setFont(getFont().deriveFont(attributes));
                 }
+
                 @Override
                 public Color getForeground() {
                     return ColorUtil.unemphasizedText();
@@ -155,7 +167,6 @@ public class ExternalSolutionView {
             add(new ExceptionMessageLabel(solution.exception.message), BorderLayout.CENTER);
         }
     }
-
 
 
     public class ActionPanel extends JPanel {

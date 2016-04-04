@@ -32,7 +32,6 @@ import com.samebug.clients.idea.ui.views.SearchGroupCardView;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedHistory;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
