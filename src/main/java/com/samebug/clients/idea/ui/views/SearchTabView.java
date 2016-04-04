@@ -22,7 +22,7 @@ public class SearchTabView {
                     }
                     @Override
                     public Dimension getPreferredSize() {
-                        return new Dimension(super.getPreferredSize().width, Math.min(super.getPreferredSize().height, 160));
+                        return new Dimension(super.getPreferredSize().width, Math.min(super.getPreferredSize().height, 157));
                     }
                 };
                 add(header, BorderLayout.NORTH);
@@ -34,7 +34,7 @@ public class SearchTabView {
                             }
                         };
                         setViewportView(solutionsPanel);
-                        getVerticalScrollBar().setUnitIncrement(50);
+                        getVerticalScrollBar().setUnitIncrement(10);
                     }
                 }, BorderLayout.CENTER);
             }

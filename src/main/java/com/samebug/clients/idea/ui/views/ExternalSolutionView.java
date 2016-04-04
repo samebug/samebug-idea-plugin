@@ -1,5 +1,6 @@
 package com.samebug.clients.idea.ui.views;
 
+import com.intellij.ide.BrowserUtil;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
@@ -11,6 +12,8 @@ import com.samebug.clients.search.api.entities.legacy.SolutionReference;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
@@ -93,6 +96,17 @@ public class ExternalSolutionView {
             setLayout(new BorderLayout(0, 0));
             setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
         }
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension d = super.getPreferredSize();
+            return new Dimension(400, d.height);
+        }
+
+        @Override
+        public Dimension getMaximumSize() {
+            Dimension d = super.getPreferredSize();
+            return new Dimension(Integer.MAX_VALUE, Integer.min(d.height, 250));
+        }
     }
 
     public class TitlePanel extends JPanel {
@@ -126,7 +140,18 @@ public class ExternalSolutionView {
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createEmptyBorder());
             setOpaque(false);
-            add(new JLabel(String.format("%s", className)), BorderLayout.NORTH);
+            add(new JLabel(String.format("%s", className)){
+                {
+                    HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
+                    attributes.put(TextAttribute.SIZE, 14);
+                    attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
+                    setFont(getFont().deriveFont(attributes));
+                }
+                @Override
+                public Color getForeground() {
+                    return ColorUtil.unemphasizedText();
+                }
+            }, BorderLayout.NORTH);
             add(new ExceptionMessageLabel(solution.exception.message), BorderLayout.CENTER);
         }
     }

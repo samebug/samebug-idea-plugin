@@ -49,7 +49,7 @@ public class SearchTabControllers {
 
         } else {
             Content content = toolwindowCM.getContent(tab.getControlPanel());
-            toolwindowCM.requestFocus(content, true);
+            toolwindowCM.setSelectedContent(content);
         }
         final SearchTabController searchTab = tab;
         ApplicationManager.getApplication().invokeLater(new Runnable() {

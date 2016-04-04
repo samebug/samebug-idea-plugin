@@ -91,6 +91,7 @@ public class SearchTabController {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             public void run() {
                 view.solutionsPanel.removeAll();
+                view.header.removeAll();
 
                 if (model != null) {
                     view.header.add(new SearchGroupCardView(search).controlPanel);

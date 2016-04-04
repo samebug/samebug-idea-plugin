@@ -72,6 +72,18 @@ public class SamebugTipView {
         public Color getBackground() {
             return ColorUtil.highlightPanel();
         }
+
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension d = super.getPreferredSize();
+            return new Dimension(400, d.height);
+        }
+
+        @Override
+        public Dimension getMaximumSize() {
+            Dimension d = super.getPreferredSize();
+            return new Dimension(Integer.MAX_VALUE, Integer.min(d.height, 250));
+        }
     }
 
     public class TipLabel extends JTextArea {
@@ -87,8 +99,6 @@ public class SamebugTipView {
             setOpaque(false);
             setBorder(null);
             setText(tip.solution.tip);
-            setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 150)));
-            setMaximumSize(new Dimension(getMaximumSize().width, 150));
         }
         @Override
         public Color getForeground() {
