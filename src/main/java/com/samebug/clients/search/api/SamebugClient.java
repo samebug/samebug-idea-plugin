@@ -44,13 +44,14 @@ import java.util.Date;
 
 public class SamebugClient {
     private final String apiKey;
-    final static String USER_AGENT = "Samebug-Idea-Client/1.2.0";
-    final static String API_VERSION = "2.0";
-    //    public final static URI root = URI.create("http://localhost:9000/");
-    public final static URI root = URI.create("https://samebug.io/");
+    final static String USER_AGENT = "Samebug-Idea-Client/1.3.0";
+    final static String API_VERSION = "0.8";
+//    public final static URI root = URI.create("http://localhost:9000/");
+    public final static URI root = URI.create("http://nightly.samebug.com/");
+//    public final static URI root = URI.create("https://samebug.io/");
         final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
 //    final static URI trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
-    final static URI gateway = root.resolve("sandbox/api/").resolve(API_VERSION + "/");
+    final static URI gateway = root.resolve("rest/").resolve(API_VERSION + "/");
     final static Gson gson;
     final static HttpClient httpClient = HttpClientBuilder.create()
             .setMaxConnTotal(20).setMaxConnPerRoute(20)
@@ -92,15 +93,6 @@ public class SamebugClient {
         }
     }
 
-    public static URL getHistoryCssUrl(String themeId) {
-        String uri = "assets-v/style/" + themeId + ".css";
-        try {
-            return root.resolve(uri).toURL();
-        } catch (MalformedURLException e) {
-            throw new IllegalUriException("Unable to resolve uri " + uri, e);
-        }
-    }
-
     public SearchResults searchSolutions(String stacktrace) throws SamebugClientException {
         URL url = getApiUrl("search");
         HttpPost post = new HttpPost(url.toString());
@@ -128,7 +120,10 @@ public class SamebugClient {
     }
 
     public Solutions getSolutions(int searchId) throws SamebugClientException {
-        return gson.fromJson(new InputStreamReader(getClass().getResourceAsStream("/com/samebug/mock/solutions.json")), Solutions.class);
+        URL url = getApiUrl("search/" + searchId);
+        HttpGet request = new HttpGet(url.toString());
+
+        return requestJson(request, Solutions.class);
     }
 
     public void trace(TrackEvent event) throws SamebugClientException {

@@ -3,7 +3,6 @@ package com.samebug.clients.idea.ui.view.components;
 import com.google.gson.*;
 import com.samebug.clients.idea.ui.views.ExternalSolutionView;
 import com.samebug.clients.idea.ui.views.SamebugTipView;
-import com.samebug.clients.idea.ui.views.SearchGroupCardView;
 import com.samebug.clients.idea.ui.views.SearchTabView;
 import com.samebug.clients.search.api.entities.legacy.RestHit;
 import com.samebug.clients.search.api.entities.legacy.SolutionReference;
@@ -103,7 +102,7 @@ public class SearchTabTest extends JDialog {
                 }
         );
         Gson gson = builder.create();
-        InputStream stream = SearchTabTest.class.getResourceAsStream("/com/samebug/mock/solutions.json");
+        InputStream stream = SearchTabTest.class.getResourceAsStream("/com/samebug/clients/idea/ui/view/solutions.json");
         Solutions solutions = gson.fromJson(new InputStreamReader(stream), Solutions.class);
 //        SearchGroupCardView v = new SearchGroupCardView(solutions.search);
 //        dialog.tab.header.add(v.controlPanel, BorderLayout.CENTER);
