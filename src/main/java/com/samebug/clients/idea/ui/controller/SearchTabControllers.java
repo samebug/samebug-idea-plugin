@@ -1,6 +1,7 @@
 package com.samebug.clients.idea.ui.controller;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
@@ -18,6 +19,7 @@ import java.util.Map;
  * Created by poroszd on 3/29/16.
  */
 public class SearchTabControllers {
+    final static Logger LOGGER = Logger.getInstance(SearchTabController.class);
     final private Project project;
     final private Map<Integer, SearchTabController> activeSearches;
 
@@ -52,14 +54,14 @@ public class SearchTabControllers {
             toolwindowCM.setSelectedContent(content);
         }
         final SearchTabController searchTab = tab;
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
                 try {
                     final Solutions solutions = IdeaSamebugPlugin.getInstance().getClient().getSolutions(searchId);
                     searchTab.update(solutions);
                 } catch (SamebugClientException e) {
-                    // TODO
+                    LOGGER.warn("Failed to download solutions", e);
                 }
 
             }

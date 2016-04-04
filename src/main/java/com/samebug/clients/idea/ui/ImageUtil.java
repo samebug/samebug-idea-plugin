@@ -114,7 +114,7 @@ public class ImageUtil {
         public int height;
         public int width;
 
-        public ScaledKey(URL src, int height, int width) {
+        public ScaledKey(URL src, int width, int height) {
             this.src = src;
             this.height = height;
             this.width = width;
