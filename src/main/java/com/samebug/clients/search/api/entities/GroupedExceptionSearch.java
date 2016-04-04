@@ -23,8 +23,6 @@ import java.util.Date;
 public class GroupedExceptionSearch {
     public Date firstSeenSimilar;
     public Date lastSeenSimilar;
-    public int bestMatchLevel;
-    public int highestVote;
     public int numberOfSimilars;
     public int numberOfSolutions;
     public ExceptionSearch lastSearch;

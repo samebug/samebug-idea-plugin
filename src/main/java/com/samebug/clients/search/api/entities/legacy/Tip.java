@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.layout;
+package com.samebug.clients.search.api.entities.legacy;
 
-import javax.swing.*;
+import java.util.Date;
 
 /**
- * Created by poroszd on 3/10/16.
+ * Created by poroszd on 4/1/16.
  */
-public class DocumentCard {
-    public JPanel controlPanel;
-    public JPanel paddingPanel;
-    public JPanel infoPanel;
-    public JPanel contentPanel;
-    public JPanel breadcrumbPanel;
-    public JEditorPane breadcrumbBar;
+public class Tip extends RestSolution {
+    public Author author;
+    public Date createdAt;
+    public String tip;
+    public SolutionReference via;
 }

@@ -13,23 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.layout;
+package com.samebug.clients.idea.ui.components;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
- * Created by poroszd on 3/4/16.
- * <p/>
- * Manually modified:
- * - contentPanel should have BoxLayout (cannot set it in the designer)
- * - scrollPane.getVerticalScrollBar().setUnitIncrement(50);
+ * z
+ * Created by poroszd on 4/4/16.
  */
-public class HistoryTab {
-    private JPanel controlPanel;
-    private JPanel toolbarPanel;
-    private JScrollPane scrollPane;
-    private JPanel contentPanel;
-    public JLabel actionToolbar;
-    public JLabel statusIcon;
+public class AvatarIcon extends JPanel {
+    final Image iconImage;
+    static final int iconWidth = 64;
+    static final int iconHeight = 64;
+    static final int width = 64;
+    static final int height = 64;
 
+    public AvatarIcon(Image image) {
+        iconImage = image;
+        setPreferredSize(new Dimension(width, height));
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.drawImage(iconImage, 0, 0, null, null);
+    }
 }

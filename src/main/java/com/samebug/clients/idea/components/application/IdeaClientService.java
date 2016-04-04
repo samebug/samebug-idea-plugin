@@ -22,7 +22,7 @@ import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
-import com.samebug.clients.search.api.entities.tracking.Solutions;
+import com.samebug.clients.search.api.entities.legacy.Solutions;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
 
@@ -71,7 +71,7 @@ public class IdeaClientService {
         }.execute();
     }
 
-    public Solutions getSolutions(final String searchId) throws SamebugClientException {
+    public Solutions getSolutions(final int searchId) throws SamebugClientException {
         return new ConnectionAwareHttpRequest<Solutions>() {
             Solutions request() throws SamebugClientException {
                 return client.getSolutions(searchId);

@@ -37,6 +37,8 @@
                     factoryClass="com.samebug.clients.idea.ui.SamebugToolWindowFactory"/>
         <projectService serviceInterface="com.samebug.clients.idea.ui.controller.HistoryTabController"
                         serviceImplementation="com.samebug.clients.idea.ui.controller.HistoryTabController"/>
+        <projectService serviceInterface="com.samebug.clients.idea.ui.controller.SearchTabControllers"
+                        serviceImplementation="com.samebug.clients.idea.ui.controller.SearchTabControllers"/>
     </extensions>
 
     <actions>

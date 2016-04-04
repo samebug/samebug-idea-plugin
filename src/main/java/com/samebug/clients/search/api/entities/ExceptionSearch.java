@@ -15,8 +15,6 @@
  */
 package com.samebug.clients.search.api.entities;
 
-import java.net.URL;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,8 +22,6 @@ import java.util.List;
  */
 public class ExceptionSearch {
     public int searchId;
-    public URL searchUrl;
-    public Date timestamp;
     public Exception exception;
     public List<ComponentStack> componentStack;
 }
