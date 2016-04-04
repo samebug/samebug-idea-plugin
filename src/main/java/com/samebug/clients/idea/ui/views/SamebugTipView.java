@@ -2,6 +2,7 @@ package com.samebug.clients.idea.ui.views;
 
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.ImageUtil;
+import com.samebug.clients.idea.ui.components.AvatarIcon;
 import com.samebug.clients.idea.ui.components.LegacyBreadcrumbBar;
 import com.samebug.clients.idea.ui.components.LinkLabel;
 import com.samebug.clients.idea.ui.components.TipSourceReferencePanel;
@@ -101,16 +102,8 @@ public class SamebugTipView {
             setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
             setOpaque(false);
             setPreferredSize(new Dimension(74, 100));
-            // TODO load image asynchronously
-            // TODO do not use getScaledInstance; https://community.oracle.com/docs/DOC-983611
-            final Image profile = ImageUtil.getImage(tip.solution.author.avatarUrl).getScaledInstance(64, 64, Image.SCALE_FAST);
-            add(new JPanel() {
-                {
-                    setBorder(BorderFactory.createEmptyBorder());
-                    setOpaque(false);
-                    add(new JLabel(new ImageIcon(profile)));
-                }
-            }, BorderLayout.NORTH);
+            final Image profile = ImageUtil.getScaled(tip.solution.author.avatarUrl, 64, 64);
+            add(new AvatarIcon(profile), BorderLayout.NORTH);
             add(new JPanel() {
                 {
                     setLayout(new BorderLayout(0, 0));

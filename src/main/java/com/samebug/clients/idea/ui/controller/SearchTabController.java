@@ -3,6 +3,7 @@ package com.samebug.clients.idea.ui.controller;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.views.ExternalSolutionView;
 import com.samebug.clients.idea.ui.views.SamebugTipView;
 import com.samebug.clients.idea.ui.views.SearchGroupCardView;
@@ -15,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -68,6 +70,21 @@ public class SearchTabController {
             }
         };
         refreshPane();
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                java.util.List<URL> imageUrls = new ArrayList<URL>();
+                for (final RestHit<Tip> tip : model.tips) {
+                    imageUrls.add(tip.solution.author.avatarUrl);
+                }
+                for (final RestHit<SolutionReference> s : model.references) {
+                    imageUrls.add(s.solution.source.iconUrl);
+                }
+
+                ImageUtil.loadImages(imageUrls);
+                refreshPane();
+            }
+        });
     }
 
     public void refreshPane() {

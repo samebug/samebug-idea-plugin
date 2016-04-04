@@ -100,8 +100,7 @@ public class ExternalSolutionView {
             setLayout(new BorderLayout(0, 0));
             setBorder(BorderFactory.createEmptyBorder());
             setOpaque(false);
-            // TODO load image asynchronously
-            final Image sourceIcon = ImageUtil.getImage(solution.solution.source.iconUrl);
+            final Image sourceIcon = ImageUtil.getScaled(solution.solution.source.iconUrl, 32, 32);
             add(new SourceIcon(sourceIcon), BorderLayout.WEST);
             add(new JPanel() {
                 {

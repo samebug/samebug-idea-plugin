@@ -10,15 +10,11 @@ import java.awt.*;
  */
 public class SourceIcon extends JPanel {
     final Image iconImage;
-    static final int iconWidth = 32;
-    static final int iconHeight = 32;
     static final int width = 32;
     static final int height = 32;
 
-    // TODO either make the image size fix, or solve scaling better
-    // TODO do not use getScaledInstance; https://community.oracle.com/docs/DOC-983611
     public SourceIcon(Image image) {
-        iconImage = image.getScaledInstance(iconWidth, iconHeight, Image.SCALE_SMOOTH);
+        iconImage = image;
         setPreferredSize(new Dimension(width, height));
     }
 
@@ -32,6 +28,6 @@ public class SourceIcon extends JPanel {
             g2.setColor(iconBackgroundColor);
             g2.fillOval(0, 0, width, height);
         }
-        g2.drawImage(iconImage, (width - iconWidth) / 2 + 2, (height - iconHeight) / 2, null, null);
+        g2.drawImage(iconImage, 2, 0, null, null);
     }
 }

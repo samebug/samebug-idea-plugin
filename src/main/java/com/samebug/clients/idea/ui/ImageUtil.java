@@ -18,6 +18,7 @@ package com.samebug.clients.idea.ui;
 import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.search.api.SamebugClient;
+import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -25,19 +26,53 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
+import java.util.Hashtable;
 
 /**
  * Created by poroszd on 2/25/16.
  */
 public class ImageUtil {
-    public static final ImageCache imageCache = new ImageCache();
+    static final Hashtable<URL, Image> cache = new Hashtable<URL, Image>();
+    static final Hashtable<ScaledKey, Image> scaledCache = new Hashtable<ScaledKey, Image>();
+    static final Logger LOGGER = Logger.getInstance(ImageUtil.class);
 
-    public static Image getImage(URL url) {
-        return imageCache.get(url);
+    public static Image get(URL url) {
+        return cache.get(url);
     }
 
-    private final static Logger LOGGER = Logger.getInstance(ImageUtil.class);
-    private static final String[] cachedImages = {
+    public static Image getScaled(URL url, int width, int height) {
+        ScaledKey key = new ScaledKey(url, width, height);
+        Image scaledImage = scaledCache.get(key);
+        if (scaledImage == null) {
+            Image nonScaledImage = cache.get(url);
+            if (nonScaledImage == null) {
+                return null;
+            } else {
+                scaledImage = nonScaledImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+                scaledCache.put(key, scaledImage);
+                return scaledImage;
+            }
+        } else {
+            return scaledImage;
+        }
+    }
+
+    public static void loadImages(@NotNull final Collection<URL> sources) {
+        for (final URL url : sources) {
+            if (url == null || cache.get(url) != null) continue;
+            try {
+                Image image = ImageIO.read(url);
+                cache.put(url, image);
+            } catch (IOException e) {
+                LOGGER.warn("Failed to download image " + url);
+            }
+        }
+    }
+
+
+
+    static final String[] cachedImages = {
             "images/sources/github.png",
             "images/sources/googlegroups.png",
             "images/sources/jenkins.png",
@@ -60,7 +95,7 @@ public class ImageUtil {
                 try {
                     URL remoteUrl = samebugImageUrl(imageUri);
                     Image image = ImageIO.read(imageBytes);
-                    imageCache.put(remoteUrl, image);
+                    cache.put(remoteUrl, image);
                 } catch (MalformedURLException e) {
                     LOGGER.warn("Url of image " + imageUri + " could not be resolved!", e);
                 } catch (IOException e) {
@@ -70,8 +105,19 @@ public class ImageUtil {
         }
     }
 
-    private static URL samebugImageUrl(String uri) throws MalformedURLException {
+    static URL samebugImageUrl(String uri) throws MalformedURLException {
         return SamebugClient.root.resolve("assets/").resolve(uri).toURL();
     }
 
+    static class ScaledKey {
+        public URL src;
+        public int height;
+        public int width;
+
+        public ScaledKey(URL src, int height, int width) {
+            this.src = src;
+            this.height = height;
+            this.width = width;
+        }
+    }
 }
