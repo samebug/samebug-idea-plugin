@@ -1,6 +1,7 @@
 package com.samebug.clients.idea.ui.views;
 
 import com.samebug.clients.idea.ui.ColorUtil;
+import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.components.AvatarIcon;
 import com.samebug.clients.idea.ui.components.LegacyBreadcrumbBar;
@@ -45,7 +46,7 @@ public class SamebugTipView {
         controlPanel.add(new JPanel() {
             {
                 setLayout(new BorderLayout(0, 0));
-                setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
+                setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
                 setOpaque(false);
                 add(breadcrumbPanel, BorderLayout.SOUTH);
                 add(new JPanel() {

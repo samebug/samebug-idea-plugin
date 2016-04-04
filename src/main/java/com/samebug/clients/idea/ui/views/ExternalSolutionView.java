@@ -56,7 +56,7 @@ public class ExternalSolutionView {
         controlPanel.add(new JPanel() {
             {
                 setLayout(new BorderLayout(0, 0));
-                setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
+                setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
                 setOpaque(false);
                 add(breadcrumbPanel, BorderLayout.SOUTH);
                 add(titlePanel, BorderLayout.NORTH);

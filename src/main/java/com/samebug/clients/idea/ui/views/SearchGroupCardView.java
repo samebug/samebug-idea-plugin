@@ -74,11 +74,11 @@ public class SearchGroupCardView {
         breadcrumbPanel = new BreadcrumbBar(searchGroup.lastSearch.componentStack);
 
         controlPanel.setLayout(new BorderLayout(0, 0));
-        controlPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        controlPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
         controlPanel.add(paddingPanel, BorderLayout.CENTER);
 
         paddingPanel.setLayout(new BorderLayout(0, 0));
-        paddingPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
+        paddingPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
         paddingPanel.add(topBar, BorderLayout.NORTH);
         paddingPanel.add(contentPanel, BorderLayout.CENTER);
         paddingPanel.add(breadcrumbPanel, BorderLayout.SOUTH);

@@ -34,5 +34,6 @@ public class Colors {
     public static final Color sourceIconBackground = null;
     public static final Color sourceIconBackgroundDarcula = new Color(0xFFFFFF);
 
+    public static final Color cardSeparator = new Color(0xAAAAAA);
 
 }

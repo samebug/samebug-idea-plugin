@@ -107,7 +107,7 @@ public class SearchTabController {
                     searchCard.titleLabel.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
-                            BrowserUtil.browse(SamebugClient.root.resolve("search/" + search.lastSearch.searchId));
+                            BrowserUtil.browse(SamebugClient.getSearchUrl(search.lastSearch.searchId));
                         }
                     });
                     if (model.tips.size() + model.references.size() == 0) {
