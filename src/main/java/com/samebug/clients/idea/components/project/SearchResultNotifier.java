@@ -75,6 +75,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
                 history.put(s.lastSearch.searchId, s);
             }
         } catch (SamebugClientException e1) {
+            myProject.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(null);
         }
 
         boolean isShowRecurringSearches = ServiceManager.getService(myProject, HistoryTabController.class).isShowRecurringSearches();

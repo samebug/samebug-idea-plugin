@@ -60,23 +60,19 @@ public class StackTraceSearch implements ApplicationComponent, StackTraceMatcher
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
+                SearchInfo searchInfo = new SearchInfo(sessionInfo);
+                // TODO I cannot see what stops 'Already disposed' errors here, but the docs say this is the intended usage.
+                project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).searchStart(searchInfo, stackTrace);
                 try {
-                    StackTraceSearchListener listener = project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC);
-                    SearchInfo searchInfo = new SearchInfo(sessionInfo);
-                    listener.searchStart(searchInfo, stackTrace);
-                    try {
-                        SearchResults result = client.searchSolutions(stackTrace);
-                        listener.searchSucceeded(searchInfo, result);
-                        Tracking.projectTracking(project).trace(Events.searchSucceeded(searchInfo, result));
-                    } catch (SamebugTimeout ignored) {
-                        listener.timeout(searchInfo);
-                    } catch (UserUnauthorized ignored) {
-                        listener.unauthorized(searchInfo);
-                    } catch (SamebugClientException e) {
-                        listener.searchFailed(searchInfo, e);
-                    }
-                } catch (Exception e) {
-                    LOGGER.warn("Cannot publish stacktrace event, probably the project is already disposed", e);
+                    SearchResults result = client.searchSolutions(stackTrace);
+                    project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).searchSucceeded(searchInfo, result);
+                    Tracking.projectTracking(project).trace(Events.searchSucceeded(searchInfo, result));
+                } catch (SamebugTimeout ignored) {
+                    project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).timeout(searchInfo);
+                } catch (UserUnauthorized ignored) {
+                    project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).unauthorized(searchInfo);
+                } catch (SamebugClientException e) {
+                    project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).searchFailed(searchInfo, e);
                 }
             }
         });
