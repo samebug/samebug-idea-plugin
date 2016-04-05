@@ -16,6 +16,7 @@
 package com.samebug.clients.search.api;
 
 import com.google.gson.*;
+import com.intellij.util.net.IdeHttpClientHelpers;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
@@ -23,6 +24,7 @@ import com.samebug.clients.search.api.entities.legacy.Solutions;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
 import org.apache.http.*;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -31,14 +33,18 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 
@@ -46,29 +52,49 @@ public class SamebugClient {
     private final String apiKey;
     final static String USER_AGENT = "Samebug-Idea-Client/1.3.0";
     final static String API_VERSION = "0.8";
-    //    public final static URI root = URI.create("http://localhost:9000/");
+//    public final static URI root = URI.create("http://localhost:9000/");
 //    public final static URI root = URI.create("http://nightly.samebug.com/");
     public final static URI root = URI.create("https://samebug.io/");
     //        final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
     final static URI trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
     final static URI gateway = root.resolve("rest/").resolve(API_VERSION + "/");
-    final static Gson gson;
-    final static HttpClient httpClient = HttpClientBuilder.create()
-            .setMaxConnTotal(20).setMaxConnPerRoute(20)
-//            .setDefaultHeaders(Arrays.asList(new BasicHeader("User-Agent", USER_AGENT)))
-            .build();
 
-    // TODO is this a fine way of serialization of Date?
+    final static Gson gson;
+    final static HttpClient httpClient;
+    final static RequestConfig requestConfig;
+    final static RequestConfig trackingConfig;
+
+
     static {
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+        // Build gson
+        // TODO is this a fine way of serialization of Date?
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
                     @Override
                     public Date deserialize(JsonElement json, java.lang.reflect.Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
                         return new Date(json.getAsJsonPrimitive().getAsLong());
                     }
                 }
         );
-        gson = builder.create();
+        gson = gsonBuilder.create();
+
+        // Build http client
+        HttpClientBuilder httpBuilder = HttpClientBuilder.create();
+        RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
+        CredentialsProvider provider = new BasicCredentialsProvider();
+
+        requestConfigBuilder.setConnectTimeout(3000).setSocketTimeout(7000).setConnectionRequestTimeout(500);
+        IdeHttpClientHelpers.ApacheHttpClient4.setProxyForUrlIfEnabled(requestConfigBuilder, root.toString());
+        IdeHttpClientHelpers.ApacheHttpClient4.setProxyCredentialsForUrlIfEnabled(provider, root.toString());
+
+        requestConfig = requestConfigBuilder.build();
+        trackingConfig = requestConfigBuilder.setSocketTimeout(3000).build();
+        httpClient = httpBuilder.setDefaultRequestConfig(requestConfig)
+                .setMaxConnTotal(20).setMaxConnPerRoute(20)
+                .setDefaultCredentialsProvider(provider)
+                .setDefaultHeaders(Arrays.asList(new BasicHeader("User-Agent", USER_AGENT)))
+                .build();
+
     }
 
     public SamebugClient(final String apiKey) {
@@ -162,19 +188,17 @@ public class SamebugClient {
 
     private HttpResponse executeFailFast(HttpRequestBase request)
             throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
-        return execute(request, 3000, 3000);
+        return execute(request, trackingConfig);
     }
 
     private HttpResponse executePatient(HttpRequestBase request)
             throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
-        return execute(request, 3000, 7000);
+        return execute(request, null);
     }
 
 
     /**
      * @param request              the http request
-     * @param connectTimeoutMillis max milliseconds to wait to connect before failure
-     * @param socketTimeoutMillis  max milliseconds to wait during I/O between packets before failure
      * @return the http response
      * @throws SamebugTimeout             if the server exceeded the timeout during connection or execute
      * @throws HttpError                  in case of a problem or the connection was aborted or   if the response is not readable
@@ -183,10 +207,10 @@ public class SamebugClient {
      * @throws UserUnauthenticated        if the user was not authenticated (401)
      * @throws UserUnauthorized           if the user was not authorized (403)
      */
-    private HttpResponse execute(HttpRequestBase request, int connectTimeoutMillis, int socketTimeoutMillis)
+    private HttpResponse execute(HttpRequestBase request, @Nullable RequestConfig config)
             throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
         addDefaultHeaders(request);
-        request.setConfig(RequestConfig.custom().setConnectTimeout(connectTimeoutMillis).setSocketTimeout(socketTimeoutMillis).setConnectionRequestTimeout(500).build());
+        if (config != null) request.setConfig(config);
 
         HttpResponse httpResponse;
         try {
@@ -225,7 +249,6 @@ public class SamebugClient {
 
     private void addDefaultHeaders(HttpRequest request) {
         if (apiKey != null) request.addHeader("X-Samebug-ApiKey", apiKey);
-        request.addHeader("User-Agent", USER_AGENT);
     }
 }
 
