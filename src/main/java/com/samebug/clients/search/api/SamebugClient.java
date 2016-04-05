@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,6 +23,7 @@ import com.samebug.clients.search.api.entities.UserInfo;
 import com.samebug.clients.search.api.entities.legacy.Solutions;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
+import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.http.*;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
@@ -34,16 +35,16 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.execchain.RequestAbortedException;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.jetbrains.annotations.Nullable;
 
+import javax.net.ssl.SSLException;
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.net.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -52,7 +53,7 @@ public class SamebugClient {
     private final String apiKey;
     final static String USER_AGENT = "Samebug-Idea-Client/1.3.0";
     final static String API_VERSION = "0.8";
-//    public final static URI root = URI.create("http://localhost:9000/");
+    //    public final static URI root = URI.create("http://localhost:9000/");
 //    public final static URI root = URI.create("http://nightly.samebug.com/");
     public final static URI root = URI.create("https://samebug.io/");
     //        final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
@@ -92,6 +93,7 @@ public class SamebugClient {
         httpClient = httpBuilder.setDefaultRequestConfig(requestConfig)
                 .setMaxConnTotal(20).setMaxConnPerRoute(20)
                 .setDefaultCredentialsProvider(provider)
+                .setRetryHandler(new AggresiveRetryHandler())
                 .setDefaultHeaders(Arrays.asList(new BasicHeader("User-Agent", USER_AGENT)))
                 .build();
 
@@ -278,5 +280,11 @@ abstract class HandleResponse<T> {
             } catch (IOException ignored) {
             }
         }
+    }
+}
+
+class AggresiveRetryHandler extends DefaultHttpRequestRetryHandler {
+    public AggresiveRetryHandler() {
+        super(3, false, Arrays.asList(ConnectTimeoutException.class, SocketTimeoutException.class, RequestAbortedException.class, UnknownHostException.class, ConnectException.class, SSLException.class));
     }
 }
