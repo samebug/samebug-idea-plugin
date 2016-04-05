@@ -53,6 +53,7 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
 
         project.getMessageBus().connect(project).subscribe(HistoryListener.UPDATE_HISTORY_TOPIC, historyTab.getHistoryUpdater());
 
+        // TODO this logic is duplicated in ReloadHistoryAction
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
@@ -61,7 +62,7 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
                     GroupedHistory history = client.getSearchHistory();
                     project.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(history);
                 } catch (SamebugClientException e1) {
-                    // FIXME if the load failed, the tab will display the connection error message.
+                    project.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(null);
                 }
             }
         });
