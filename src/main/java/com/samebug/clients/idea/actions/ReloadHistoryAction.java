@@ -39,9 +39,11 @@ public class ReloadHistoryAction extends RefreshAction implements DumbAware {
                     try {
                         GroupedHistory history = client.getSearchHistory();
                         e.getProject().getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(history);
-                        e.getPresentation().setEnabled(true);
                     } catch (SamebugClientException e1) {
+                        e.getProject().getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(null);
                         LOGGER.warn("Failed to retrieve history", e1);
+                    } finally {
+                        e.getPresentation().setEnabled(true);
                     }
                 }
             });
