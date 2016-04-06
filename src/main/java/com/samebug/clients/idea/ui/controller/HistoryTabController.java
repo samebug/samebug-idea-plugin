@@ -67,11 +67,8 @@ public class HistoryTabController {
         this.project = project;
         view = new HistoryTabView();
         searchGroups = new ArrayList<SearchGroupCardView>();
-        ApplicationSettings applicationSettings = IdeaSamebugPlugin.getInstance().getState();
-        if (applicationSettings != null) {
-            showZeroSolutionSearches = applicationSettings.isTutorialShowZeroSolutionSearches();
-            showRecurringSearches = applicationSettings.isTutorialShowZeroSolutionSearches();
-        }
+        showZeroSolutionSearches = false;
+        showRecurringSearches = false;
         statusUpdater = new ConnectionStatusUpdater();
         historyUpdater = new HistoryUpdater();
     }

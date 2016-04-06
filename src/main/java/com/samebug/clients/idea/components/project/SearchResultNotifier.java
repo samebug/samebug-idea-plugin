@@ -108,7 +108,6 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
             // all searches filtered out, show no notification
         } else {
             // there are searches to report about
-            TutorialComponent.SearchNotificationTutorialCase tutorial = null;
             String message;
             if (zeroSolutions == 0 && recurrings == 0) {
                 // new exceptions with solutions
@@ -118,23 +117,17 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
                     message = SamebugBundle.message("samebug.notification.searchresults.multiple", searchIds.size());
                 }
             } else if (zeroSolutions == 0 && recurrings > 0) {
-                tutorial = TutorialComponent.SearchNotificationTutorialCase.RECURRING_EXCEPTIONS;
                 if (searchIds.size() == 1) {
                     message = SamebugBundle.message("samebug.notification.searchresults.oneRecurring", searchIds.get(0));
                 } else {
                     message = SamebugBundle.message("samebug.notification.searchresults.multipleRecurring", searchIds.size());
                 }
             } else if (zeroSolutions > 0 && recurrings == 0) {
-                tutorial = TutorialComponent.SearchNotificationTutorialCase.ZERO_SOLUTION_EXCEPTIONS;
                 message = SamebugBundle.message("samebug.notification.searchresults.noSolutions", searchIds.size());
             } else {
-                tutorial = TutorialComponent.SearchNotificationTutorialCase.MIXED_EXCEPTIONS;
                 message = SamebugBundle.message("samebug.notification.searchresults.mixed", searchIds.size());
             }
-            TutorialComponent tutorialComponent = myProject.getComponent(TutorialComponent.class);
-            if (!tutorialComponent.offerSearchNotification(message, tutorial)) {
-                showNotification(message);
-            }
+            showNotification(message);
         }
     }
 
