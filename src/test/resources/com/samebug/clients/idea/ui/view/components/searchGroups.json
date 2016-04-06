@@ -1,0 +1,2622 @@
+{
+  "searchGroups": [
+    {
+      "firstSeenSimilar": 1456835783000,
+      "lastSeenSimilar": 1458207553435,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 3,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 431629,
+        "searchUrl": "https://samebug.io/search/431629/java.lang.NullPointerException",
+        "timestamp": 1458207553435,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": "This message is long.\n\nAlso, there are line breaks in it.\nIt contains html, which might be also problematic.<br><i>Hello world!</i>\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.swing",
+            "shortName": "com.samebug.swing"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457449505000,
+      "lastSeenSimilar": 1458206068747,
+      "bestMatchLevel": 1,
+      "highestVote": 0,
+      "numberOfSimilars": 2,
+      "numberOfSolutions": 93,
+      "lastSearch": {
+        "searchId": 431274,
+        "searchUrl": "https://samebug.io/search/431274/java.lang.NullPointerException",
+        "timestamp": 1458206068747,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec accumsan leo nec purus placerat pellentesque. In massa tellus, posuere a tempor sed, dignissim fringilla leo. In aliquam id nibh pellentesque dignissim. Aliquam eget purus nec mauris tempus tempus. Ut et erat ut sapien tincidunt commodo. Vivamus condimentum efficitur imperdiet. Phasellus imperdiet hendrerit lorem quis commodo. Proin vitae interdum diam, et aliquet augue. Cras ut felis lectus. Vestibulum semper arcu id sollicitudin lacinia. Vestibulum suscipit metus rutrum neque volutpat, aliquet convallis leo faucibus. Fusce posuere dui nulla. Maecenas eget enim eu quam porta viverra. Cras id volutpat sapien, eget dapibus magna. Donec et risus hendrerit, volutpat ipsum nec, euismod lorem. Morbi pretium posuere fringilla. Integer blandit felis at vestibulum facilisis. Sed erat magna, euismod sed tincidunt a, pellentesque eget enim. Curabitur sollicitudin massa enim, et egestas elit aliquet eget. Pellentesque finibus ultricies lectus, in ultricies leo luctus eu. Praesent vel ligula hendrerit, pulvinar justo nec, convallis enim. Quisque malesuada leo neque, vel congue nisl pulvinar at. Cras iaculis vel diam et commodo. Phasellus rhoncus lectus non ornare feugiat. Donec vehicula pellentesque augue eget fringilla. Donec eu sapien justo. Ut non consequat quam. Nunc ante nibh, cursus a elit sit amet, pharetra aliquam nunc. Aenean pulvinar odio eros, a pharetra nisl vestibulum at. Morbi facilisis purus ac ex faucibus metus."
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/Container/add/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.swing",
+            "shortName": "com.samebug.swing"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1458140344131,
+      "lastSeenSimilar": 1458140344131,
+      "bestMatchLevel": 4,
+      "highestVote": 5,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 70,
+      "lastSearch": {
+        "searchId": 424550,
+        "searchUrl": "https://samebug.io/search/424550/com.samebug.jira.JiraClient$JiraConnectionException",
+        "timestamp": 1458140344131,
+        "exception": {
+          "typeName": "com.samebug.jira.JiraClient$JiraConnectionException",
+          "message": "Failed to send request to http://www.mulesoft.org/jira/rest/api/2/search"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/sun.security.util/HostnameChecker/match/java.security.cert.CertificateException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 12,
+            "crashDocUrl": "https://samebug.io/crashdocs/sun.security.ssl/Handshaker$1/run/javax.net.ssl.SSLHandshakeException?pt=true",
+            "name": "Java JSSE",
+            "shortName": "Java JSSE"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.security/AccessController/doPrivileged/javax.net.ssl.SSLHandshakeException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 12,
+            "crashDocUrl": "https://samebug.io/crashdocs/sun.security.ssl/Handshaker$DelegatedTask/run/javax.net.ssl.SSLHandshakeException?pt=true",
+            "name": "Java JSSE",
+            "shortName": "Java JSSE"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.jboss.netty.util.internal/DeadLockProofWorker$1/run/java.util.concurrent.ExecutionException?pt=true",
+            "name": "Netty",
+            "shortName": "Netty"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang/Thread/run/java.util.concurrent.ExecutionException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457614057470,
+      "lastSeenSimilar": 1457942112135,
+      "bestMatchLevel": 1,
+      "highestVote": 0,
+      "numberOfSimilars": 6,
+      "numberOfSolutions": 12,
+      "lastSearch": {
+        "searchId": 414183,
+        "searchUrl": "https://samebug.io/search/414183/java.lang.Error",
+        "timestamp": 1457942112135,
+        "exception": {
+          "typeName": "java.lang.Error",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "Unknown Component",
+            "shortName": "Unknown"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.Error?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.Error?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457625231794,
+      "lastSeenSimilar": 1457625231794,
+      "bestMatchLevel": 1,
+      "highestVote": 2,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 101,
+      "lastSearch": {
+        "searchId": 196221,
+        "searchUrl": "https://samebug.io/search/196221/java.lang.Throwable",
+        "timestamp": 1457625231794,
+        "exception": {
+          "typeName": "java.lang.Throwable",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.diagnostic/Logger/error/java.lang.Throwable?pt=true",
+            "name": "Jetbrains OpenAPI",
+            "shortName": "Openapi"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.testFramework/EdtTestUtilKt$sam$Runnable$a15fd9f8/run/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.Throwable?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.Throwable?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457617424924,
+      "lastSeenSimilar": 1457617424924,
+      "bestMatchLevel": 1,
+      "highestVote": 0,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 12,
+      "lastSearch": {
+        "searchId": 196128,
+        "searchUrl": "https://samebug.io/search/196128/java.lang.Error",
+        "timestamp": 1457617424924,
+        "exception": {
+          "typeName": "java.lang.Error",
+          "message": "bang!\n"
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "Unknown Component",
+            "shortName": "Unknown"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1455870771000,
+      "lastSeenSimilar": 1457596825857,
+      "bestMatchLevel": 1,
+      "highestVote": 4,
+      "numberOfSimilars": 66,
+      "numberOfSolutions": 16,
+      "lastSearch": {
+        "searchId": 194937,
+        "searchUrl": "https://samebug.io/search/194937/com.samebug.clients.search.api.exceptions.HttpError",
+        "timestamp": 1457596825857,
+        "exception": {
+          "typeName": "com.samebug.clients.search.api.exceptions.HttpError",
+          "message": "org.apache.http.conn.HttpHostConnectException: Connect to localhost:9000 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused"
+        },
+        "componentStack": [
+          {
+            "color": 4,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.apache.http.impl.client/CloseableHttpClient/execute/org.apache.http.conn.HttpHostConnectException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 15,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.apache.http.client.fluent/Request/execute/org.apache.http.conn.HttpHostConnectException?pt=true",
+            "name": "Apache HttpClient Fluent API",
+            "shortName": "Apache HttpClient Fluent API"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457564008000,
+      "lastSeenSimilar": 1457564008000,
+      "bestMatchLevel": 36,
+      "highestVote": 1,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 2,
+      "lastSearch": {
+        "searchId": 193478,
+        "searchUrl": "https://samebug.io/search/193478/javax.servlet.ServletException",
+        "timestamp": 1457564008845,
+        "exception": {
+          "typeName": "javax.servlet.ServletException",
+          "message": "java.lang.ClassCastException: net.sf.json.JSONNull cannot be cast to net.sf.json.JSONObject"
+        },
+        "componentStack": [
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/hudson.model/ParametersDefinitionProperty/_doBuild/java.lang.ClassCastException?pt=true",
+            "name": "Hudson Core",
+            "shortName": "Hudson"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "jenkins.model",
+            "shortName": "jenkins.model"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/hudson.model/AbstractProject/doBuild/java.lang.ClassCastException?pt=true",
+            "name": "Hudson Core",
+            "shortName": "Hudson"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.ClassCastException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 7,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.kohsuke.stapler/Stapler/service/javax.servlet.ServletException?pt=true",
+            "name": "Stapler",
+            "shortName": "Stapler"
+          },
+          {
+            "color": 15,
+            "crashDocUrl": "https://samebug.io/crashdocs/javax.servlet.http/HttpServlet/service/javax.servlet.ServletException?pt=true",
+            "name": "JavaServlet API",
+            "shortName": "JavaServlet"
+          },
+          {
+            "color": 7,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.eclipse.jetty.servlet/ServletHandler$CachedChain/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Jetty Bundle",
+            "shortName": "Jetty"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/hudson.util/PluginServletFilter$1/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Hudson Core",
+            "shortName": "Hudson"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "hudson.plugins.greenballs",
+            "shortName": "hudson.plugins.greenballs"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/hudson.util/PluginServletFilter/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Hudson Core",
+            "shortName": "Hudson"
+          },
+          {
+            "color": 7,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.eclipse.jetty.servlet/ServletHandler$CachedChain/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Jetty Bundle",
+            "shortName": "Jetty"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/hudson.security.csrf/CrumbFilter/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Hudson Core",
+            "shortName": "Hudson"
+          },
+          {
+            "color": 7,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.eclipse.jetty.servlet/ServletHandler$CachedChain/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Jetty Bundle",
+            "shortName": "Jetty"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/hudson.security/ChainedServletFilter$1/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Hudson Core",
+            "shortName": "Hudson"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "jenkins.security",
+            "shortName": "jenkins.security"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/hudson.security/ChainedServletFilter$1/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Hudson Core",
+            "shortName": "Hudson"
+          },
+          {
+            "color": 13,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.acegisecurity.providers.anonymous/AnonymousProcessingFilter/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Acegi Security Core",
+            "shortName": "Acegi Security Core"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/hudson.security/ChainedServletFilter$1/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Hudson Core",
+            "shortName": "Hudson"
+          },
+          {
+            "color": 13,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.acegisecurity.ui.rememberme/RememberMeProcessingFilter/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Acegi Security Core",
+            "shortName": "Acegi Security Core"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/hudson.security/ChainedServletFilter$1/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Hudson Core",
+            "shortName": "Hudson"
+          },
+          {
+            "color": 13,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.acegisecurity.ui/AbstractProcessingFilter/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Acegi Security Core",
+            "shortName": "Acegi Security Core"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/hudson.security/ChainedServletFilter$1/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Hudson Core",
+            "shortName": "Hudson"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "jenkins.security",
+            "shortName": "jenkins.security"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/hudson.security/ChainedServletFilter$1/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Hudson Core",
+            "shortName": "Hudson"
+          },
+          {
+            "color": 13,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.acegisecurity.context/HttpSessionContextIntegrationFilter/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Acegi Security Core",
+            "shortName": "Acegi Security Core"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/hudson.security/HudsonFilter/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Hudson Core",
+            "shortName": "Hudson"
+          },
+          {
+            "color": 7,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.eclipse.jetty.servlet/ServletHandler$CachedChain/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Jetty Bundle",
+            "shortName": "Jetty"
+          },
+          {
+            "color": 7,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.kohsuke.stapler.compression/CompressionFilter/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Stapler",
+            "shortName": "Stapler"
+          },
+          {
+            "color": 7,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.eclipse.jetty.servlet/ServletHandler$CachedChain/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Jetty Bundle",
+            "shortName": "Jetty"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/hudson.util/CharacterEncodingFilter/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Hudson Core",
+            "shortName": "Hudson"
+          },
+          {
+            "color": 7,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.eclipse.jetty.servlet/ServletHandler$CachedChain/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Jetty Bundle",
+            "shortName": "Jetty"
+          },
+          {
+            "color": 7,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.kohsuke.stapler/DiagnosticThreadNameFilter/doFilter/javax.servlet.ServletException?pt=true",
+            "name": "Stapler",
+            "shortName": "Stapler"
+          },
+          {
+            "color": 7,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.eclipse.jetty.server/AsyncHttpConnection/handle/javax.servlet.ServletException?pt=true",
+            "name": "Jetty Bundle",
+            "shortName": "Jetty"
+          },
+          {
+            "color": 2,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.eclipse.jetty.io.nio/SelectChannelEndPoint$1/run/javax.servlet.ServletException?pt=true",
+            "name": "Google GWT dev",
+            "shortName": "GWT dev"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "winstone",
+            "shortName": "winstone"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang/Thread/run/javax.servlet.ServletException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457544003000,
+      "lastSeenSimilar": 1457544003000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 191841,
+        "searchUrl": "https://samebug.io/search/191841/org.scalatest.exceptions.TestFailedException",
+        "timestamp": 1457544003237,
+        "exception": {
+          "typeName": "org.scalatest.exceptions.TestFailedException",
+          "message": "The future returned an exception of type: com.samebug.crashstore.impl.searchstore.mysql.CachedSearchIndex$SearchIndexException, with message: Cannot index search 5633."
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.mysql.jdbc/StatementImpl/executeBatch/java.sql.BatchUpdateException?pt=true",
+            "name": "MySQL Java connector",
+            "shortName": "MySQL jdbc"
+          },
+          {
+            "color": 13,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.zaxxer.hikari.pool/HikariProxyPreparedStatement/executeBatch/java.sql.BatchUpdateException?pt=true",
+            "name": "HikariCP-java6",
+            "shortName": "HikariCP-java6"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "slick.driver",
+            "shortName": "slick.driver"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "slick.jdbc",
+            "shortName": "slick.jdbc"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "slick.driver",
+            "shortName": "slick.driver"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "slick.backend",
+            "shortName": "slick.backend"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang/Thread/run/java.sql.BatchUpdateException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1450098124000,
+      "lastSeenSimilar": 1457520238000,
+      "bestMatchLevel": 2,
+      "highestVote": 1,
+      "numberOfSimilars": 32,
+      "numberOfSolutions": 4,
+      "lastSearch": {
+        "searchId": 175233,
+        "searchUrl": "https://samebug.io/search/175233/java.lang.NullPointerException",
+        "timestamp": 1457520238591,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.mysql.jdbc/ConnectionImpl$12/run/java.lang.NullPointerException?pt=true",
+            "name": "MySQL Java connector",
+            "shortName": "MySQL jdbc"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang/Thread/run/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457520058000,
+      "lastSeenSimilar": 1457520058000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 175202,
+        "searchUrl": "https://samebug.io/search/175202/java.lang.RuntimeException",
+        "timestamp": 1457520058188,
+        "exception": {
+          "typeName": "java.lang.RuntimeException",
+          "message": "java.sql.SQLException: Invalid socket timeout value or state"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.mysql.jdbc/ConnectionImpl$12/run/java.lang.RuntimeException?pt=true",
+            "name": "MySQL Java connector",
+            "shortName": "MySQL jdbc"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457519938000,
+      "lastSeenSimilar": 1457520037000,
+      "bestMatchLevel": 7,
+      "highestVote": 5,
+      "numberOfSimilars": 2,
+      "numberOfSolutions": 101,
+      "lastSearch": {
+        "searchId": 175188,
+        "searchUrl": "https://samebug.io/search/175188/com.samebug.clients.search.api.exceptions.HttpError",
+        "timestamp": 1457520037030,
+        "exception": {
+          "typeName": "com.samebug.clients.search.api.exceptions.HttpError",
+          "message": "java.net.SocketTimeoutException: Read timed out"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.net/SocketInputStream/read/java.net.SocketTimeoutException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.apache.http.impl.io/SessionInputBufferImpl/readLine/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.apache.http.impl.conn/DefaultHttpResponseParser/parseHead/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.apache.http.impl/DefaultBHttpClientConnection/receiveResponseHeader/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.apache.http.impl.conn/CPoolProxy/receiveResponseHeader/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.apache.http.protocol/HttpRequestExecutor/execute/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.apache.http.impl.client/CloseableHttpClient/execute/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 15,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.apache.http.client.fluent/Request/execute/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpClient Fluent API",
+            "shortName": "Apache HttpClient Fluent API"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1454668632000,
+      "lastSeenSimilar": 1457511208000,
+      "bestMatchLevel": 5,
+      "highestVote": 4,
+      "numberOfSimilars": 8,
+      "numberOfSolutions": 101,
+      "lastSearch": {
+        "searchId": 174907,
+        "searchUrl": "https://samebug.io/search/174907/java.net.ConnectException",
+        "timestamp": 1457511208624,
+        "exception": {
+          "typeName": "java.net.ConnectException",
+          "message": "Connection refused"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.net/Socket/%3Cinit%3E/java.net.ConnectException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.idea/MainImpl/start/java.net.ConnectException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.net.ConnectException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide.plugins/PluginManager$2/run/java.net.ConnectException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang/Thread/run/java.net.ConnectException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457434497000,
+      "lastSeenSimilar": 1457436189000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 10776,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 173158,
+        "searchUrl": "https://samebug.io/search/173158/com.samebug.clients.search.api.exceptions.UserUnauthenticated",
+        "timestamp": 1457436189439,
+        "exception": {
+          "typeName": "com.samebug.clients.search.api.exceptions.UserUnauthenticated",
+          "message": "User is unauthenticated"
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.application.impl/ApplicationImpl$8/run/com.samebug.clients.search.api.exceptions.UserUnauthenticated?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang/Thread/run/com.samebug.clients.search.api.exceptions.UserUnauthenticated?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.jetbrains.ide/PooledThreadExecutor$1$1/run/com.samebug.clients.search.api.exceptions.UserUnauthenticated?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457435895000,
+      "lastSeenSimilar": 1457435895000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 173116,
+        "searchUrl": "https://samebug.io/search/173116/java.lang.NullPointerException",
+        "timestamp": 1457435895462,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Constructor/newInstance/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "org.picocontainer.defaults",
+            "shortName": "org.picocontainer.defaults"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.util.pico/ConstructorInjectionComponentAdapter/getComponentInstance/java.lang.NullPointerException?pt=true",
+            "name": "Jetbrains OpenAPI",
+            "shortName": "Openapi"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.components.impl/ComponentManagerImpl$ComponentConfigComponentAdapter/getComponentInstance/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.util.pico/DefaultPicoContainer/getComponentInstance/java.lang.NullPointerException?pt=true",
+            "name": "Jetbrains OpenAPI",
+            "shortName": "Openapi"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.idea/MainImpl$1$1$1/run/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457012232000,
+      "lastSeenSimilar": 1457435866000,
+      "bestMatchLevel": 2,
+      "highestVote": 0,
+      "numberOfSimilars": 3,
+      "numberOfSolutions": 1,
+      "lastSearch": {
+        "searchId": 172978,
+        "searchUrl": "https://samebug.io/search/172978/java.lang.RuntimeException",
+        "timestamp": 1457435866751,
+        "exception": {
+          "typeName": "java.lang.RuntimeException",
+          "message": "Memory leak detected: com.intellij.refactoring.changeSignature.ChangeSignatureGestureDetector@d42fa96 of class class com.intellij.refactoring.changeSignature.ChangeSignatureGestureDetector\nSee the cause for the corresponding Disposer.register() stacktrace:"
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.refactoring.changeSignature/ChangeSignatureGestureDetector/%3Cinit%3E/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Constructor/newInstance/java.lang.Throwable?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "org.picocontainer.defaults",
+            "shortName": "org.picocontainer.defaults"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.util.pico/ConstructorInjectionComponentAdapter/getComponentInstance/java.lang.Throwable?pt=true",
+            "name": "Jetbrains OpenAPI",
+            "shortName": "Openapi"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.components.impl/ComponentManagerImpl$ComponentConfigComponentAdapter/getComponentInstance/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.util.pico/DefaultPicoContainer/getComponentInstance/java.lang.Throwable?pt=true",
+            "name": "Jetbrains OpenAPI",
+            "shortName": "Openapi"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.application.impl/ApplicationImpl$8/run/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang/Thread/run/java.lang.Throwable?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.jetbrains.ide/PooledThreadExecutor$1$1/run/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457012232000,
+      "lastSeenSimilar": 1457435866000,
+      "bestMatchLevel": 2,
+      "highestVote": 0,
+      "numberOfSimilars": 3,
+      "numberOfSolutions": 1,
+      "lastSearch": {
+        "searchId": 172984,
+        "searchUrl": "https://samebug.io/search/172984/java.lang.RuntimeException",
+        "timestamp": 1457435866758,
+        "exception": {
+          "typeName": "java.lang.RuntimeException",
+          "message": "Memory leak detected: com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl@3445acce of class class com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl\nSee the cause for the corresponding Disposer.register() stacktrace:"
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.codeInsight.daemon.impl/DaemonCodeAnalyzerImpl/%3Cinit%3E/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Constructor/newInstance/java.lang.Throwable?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "org.picocontainer.defaults",
+            "shortName": "org.picocontainer.defaults"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.util.pico/ConstructorInjectionComponentAdapter/getComponentInstance/java.lang.Throwable?pt=true",
+            "name": "Jetbrains OpenAPI",
+            "shortName": "Openapi"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.components.impl/ComponentManagerImpl$ComponentConfigComponentAdapter/getComponentInstance/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.util.pico/DefaultPicoContainer/getComponentInstance/java.lang.Throwable?pt=true",
+            "name": "Jetbrains OpenAPI",
+            "shortName": "Openapi"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.application.impl/ApplicationImpl$8/run/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang/Thread/run/java.lang.Throwable?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.jetbrains.ide/PooledThreadExecutor$1$1/run/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457435852000,
+      "lastSeenSimilar": 1457435852000,
+      "bestMatchLevel": 2,
+      "highestVote": 0,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 5,
+      "lastSearch": {
+        "searchId": 172952,
+        "searchUrl": "https://samebug.io/search/172952/java.lang.RuntimeException",
+        "timestamp": 1457435852689,
+        "exception": {
+          "typeName": "java.lang.RuntimeException",
+          "message": "com.intellij.ide.plugins.PluginManager$StartupAbortedException: com.intellij.diagnostic.PluginException:  [Plugin: Samebug]"
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.components.impl/ComponentManagerImpl$ComponentConfigComponentAdapter/getComponentInstance/com.intellij.ide.plugins.PluginManager$StartupAbortedException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.util.pico/DefaultPicoContainer/getComponentInstance/com.intellij.ide.plugins.PluginManager$StartupAbortedException?pt=true",
+            "name": "Jetbrains OpenAPI",
+            "shortName": "Openapi"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.idea/IdeaApplication/run/java.lang.RuntimeException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457435524000,
+      "lastSeenSimilar": 1457435524000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 171036,
+        "searchUrl": "https://samebug.io/search/171036/com.samebug.clients.search.api.exceptions.UserUnauthenticated",
+        "timestamp": 1457435524881,
+        "exception": {
+          "typeName": "com.samebug.clients.search.api.exceptions.UserUnauthenticated",
+          "message": "User is unauthenticated"
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.application.impl/ApplicationImpl$8/run/com.samebug.clients.search.api.exceptions.UserUnauthenticated?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.util.concurrent/ThreadPoolExecutor/runWorker/com.samebug.clients.search.api.exceptions.UserUnauthenticated?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1453985913000,
+      "lastSeenSimilar": 1457393214000,
+      "bestMatchLevel": 1,
+      "highestVote": 0,
+      "numberOfSimilars": 7,
+      "numberOfSolutions": 6,
+      "lastSearch": {
+        "searchId": 160561,
+        "searchUrl": "https://samebug.io/search/160561/java.lang.InterruptedException",
+        "timestamp": 1457393214347,
+        "exception": {
+          "typeName": "java.lang.InterruptedException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/javax.swing/SwingUtilities/invokeAndWait/java.lang.InterruptedException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.application.impl/ApplicationImpl$8/run/java.lang.InterruptedException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang/Thread/run/java.lang.InterruptedException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.jetbrains.ide/PooledThreadExecutor$1$1/run/java.lang.InterruptedException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1455891491000,
+      "lastSeenSimilar": 1457393214000,
+      "bestMatchLevel": 1,
+      "highestVote": 0,
+      "numberOfSimilars": 6,
+      "numberOfSolutions": 6,
+      "lastSearch": {
+        "searchId": 160560,
+        "searchUrl": "https://samebug.io/search/160560/java.lang.AssertionError",
+        "timestamp": 1457393214347,
+        "exception": {
+          "typeName": "java.lang.AssertionError",
+          "message": "null"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/javax.swing/SwingUtilities/invokeAndWait/java.lang.InterruptedException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.util.ui/UIUtil/invokeAndWaitIfNeeded/java.lang.InterruptedException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457390703000,
+      "lastSeenSimilar": 1457390718000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 10,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 160551,
+        "searchUrl": "https://samebug.io/search/160551/java.lang.NoClassDefFoundError",
+        "timestamp": 1457390718415,
+        "exception": {
+          "typeName": "java.lang.NoClassDefFoundError",
+          "message": "Could not initialize class com.samebug.clients.idea.resources.SamebugIcons"
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.actionSystem.impl/ActionManagerImpl$MyTimer/actionPerformed/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457390700000,
+      "lastSeenSimilar": 1457390706000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 3,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 160545,
+        "searchUrl": "https://samebug.io/search/160545/java.lang.NoClassDefFoundError",
+        "timestamp": 1457390706420,
+        "exception": {
+          "typeName": "java.lang.NoClassDefFoundError",
+          "message": "Could not initialize class com.samebug.clients.idea.resources.SamebugIcons"
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.actionSystem.impl/ActionButton/addNotify/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/Container/add/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.actionSystem.impl/ActionManagerImpl$MyTimer/actionPerformed/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457390703000,
+      "lastSeenSimilar": 1457390703000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 160541,
+        "searchUrl": "https://samebug.io/search/160541/java.lang.RuntimeException",
+        "timestamp": 1457390703768,
+        "exception": {
+          "typeName": "java.lang.RuntimeException",
+          "message": "Can't find icon in '/com/samebug/icons/lightbulb.png' near class com.samebug.clients.idea.actions.ShowZeroSolution"
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.actionSystem.impl/ActionButton/addNotify/java.lang.RuntimeException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/Container/add/java.lang.RuntimeException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.actionSystem.impl/ActionManagerImpl$MyTimer/actionPerformed/java.lang.RuntimeException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.RuntimeException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.RuntimeException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.RuntimeException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457390700000,
+      "lastSeenSimilar": 1457390700000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 160537,
+        "searchUrl": "https://samebug.io/search/160537/java.lang.NoClassDefFoundError",
+        "timestamp": 1457390700021,
+        "exception": {
+          "typeName": "java.lang.NoClassDefFoundError",
+          "message": "Could not initialize class com.samebug.clients.idea.resources.SamebugIcons"
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.actionSystem.impl/ActionManagerImpl/createActionToolbar/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.application.impl/LaterInvocator$FlushQueue/run/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457390700000,
+      "lastSeenSimilar": 1457390700000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 160538,
+        "searchUrl": "https://samebug.io/search/160538/java.lang.RuntimeException",
+        "timestamp": 1457390700022,
+        "exception": {
+          "typeName": "java.lang.RuntimeException",
+          "message": "Can't find icon in '/com/samebug/icons/calendar.png' near class com.samebug.clients.idea.actions.ShowOld"
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.actionSystem.impl/ActionButton/addNotify/java.lang.RuntimeException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/javax.swing/JComponent/addNotify/java.lang.RuntimeException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.actionSystem.impl/ActionToolbarImpl/addNotify/java.lang.RuntimeException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/Container/add/java.lang.RuntimeException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.wm.impl.content/ToolWindowContentUi$1/selectionChanged/java.lang.RuntimeException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.RuntimeException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.util/EventDispatcher$1/invoke/java.lang.RuntimeException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.sun.proxy",
+            "shortName": "com.sun.proxy"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ui.content.impl/ContentManagerImpl/addContent/java.lang.RuntimeException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.application.impl/LaterInvocator$FlushQueue/run/java.lang.RuntimeException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.RuntimeException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.RuntimeException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.RuntimeException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1456231330000,
+      "lastSeenSimilar": 1457390699000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 4,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 160536,
+        "searchUrl": "https://samebug.io/search/160536/java.lang.ExceptionInInitializerError",
+        "timestamp": 1457390699988,
+        "exception": {
+          "typeName": "java.lang.ExceptionInInitializerError",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.util/IconLoader/getIcon/java.lang.RuntimeException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1454671752000,
+      "lastSeenSimilar": 1457364159000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 9,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 160115,
+        "searchUrl": "https://samebug.io/search/160115/java.lang.RuntimeException",
+        "timestamp": 1457364159398,
+        "exception": {
+          "typeName": "java.lang.RuntimeException",
+          "message": "Memory leak detected: com.intellij.ui.BalloonImpl@18c77b92 of class class com.intellij.ui.BalloonImpl\nSee the cause for the corresponding Disposer.register() stacktrace:"
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.diagnostic/IdeMessagePanel$5/run/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457364156000,
+      "lastSeenSimilar": 1457364156000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 160114,
+        "searchUrl": "https://samebug.io/search/160114/java.lang.NullPointerException",
+        "timestamp": 1457364156115,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.application.impl/LaterInvocator$FlushQueue/run/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1456406177000,
+      "lastSeenSimilar": 1457360146000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 2,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 159358,
+        "searchUrl": "https://samebug.io/search/159358/java.lang.RuntimeException",
+        "timestamp": 1457360146399,
+        "exception": {
+          "typeName": "java.lang.RuntimeException",
+          "message": "Can't find icon in '/com/samebug/icons/samebug-r270.png' near class com.samebug.clients.idea.ui.SamebugToolWindowFactory"
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.project.impl/ProjectManagerImpl$8$2/run/java.lang.RuntimeException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.RuntimeException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.RuntimeException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.RuntimeException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457345122000,
+      "lastSeenSimilar": 1457345122000,
+      "bestMatchLevel": 1,
+      "highestVote": 1,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 2,
+      "lastSearch": {
+        "searchId": 157431,
+        "searchUrl": "https://samebug.io/search/157431/com.google.gson.JsonSyntaxException",
+        "timestamp": 1457345122086,
+        "exception": {
+          "typeName": "com.google.gson.JsonSyntaxException",
+          "message": "java.lang.IllegalStateException: Expected BEGIN_OBJECT but was BEGIN_ARRAY at line 1 column 90690 path $.searchGroups[0].componentStack"
+        },
+        "componentStack": [
+          {
+            "color": 10,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.google.gson.internal.bind/ReflectiveTypeAdapterFactory$Adapter/read/com.google.gson.JsonSyntaxException?pt=true",
+            "name": "Gson",
+            "shortName": "Gson"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1455187111000,
+      "lastSeenSimilar": 1457344546000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 19,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 157362,
+        "searchUrl": "https://samebug.io/search/157362/com.google.gson.JsonSyntaxException",
+        "timestamp": 1457344546324,
+        "exception": {
+          "typeName": "com.google.gson.JsonSyntaxException",
+          "message": "1454075221000"
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.google.gson",
+            "shortName": "com.google.gson"
+          },
+          {
+            "color": 10,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.google.gson.internal.bind/DateTypeAdapter/deserializeToDate/com.google.gson.JsonSyntaxException?pt=true",
+            "name": "Gson",
+            "shortName": "Gson"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1456585528000,
+      "lastSeenSimilar": 1457084963000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 2,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 147421,
+        "searchUrl": "https://samebug.io/search/147421/java.lang.ClassCastException",
+        "timestamp": 1457084963343,
+        "exception": {
+          "typeName": "java.lang.ClassCastException",
+          "message": "layout of JScrollPane must be a ScrollPaneLayout"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/javax.swing/JScrollPane/setLayout/java.lang.ClassCastException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.application.impl/LaterInvocator$FlushQueue/run/java.lang.ClassCastException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.ClassCastException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.ClassCastException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.ClassCastException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1456492649000,
+      "lastSeenSimilar": 1457019485000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 6,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 143707,
+        "searchUrl": "https://samebug.io/search/143707/java.lang.NullPointerException",
+        "timestamp": 1457019485370,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.application.impl/LaterInvocator$FlushQueue/run/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457018776000,
+      "lastSeenSimilar": 1457018776000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 143276,
+        "searchUrl": "https://samebug.io/search/143276/java.lang.NullPointerException",
+        "timestamp": 1457018776616,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.application.impl/LaterInvocator$FlushQueue/run/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457012905000,
+      "lastSeenSimilar": 1457013810000,
+      "bestMatchLevel": 1,
+      "highestVote": 3,
+      "numberOfSimilars": 3,
+      "numberOfSolutions": 81,
+      "lastSearch": {
+        "searchId": 143064,
+        "searchUrl": "https://samebug.io/search/143064/java.lang.NoSuchFieldException",
+        "timestamp": 1457013810685,
+        "exception": {
+          "typeName": "java.lang.NoSuchFieldException",
+          "message": "defaultFont"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang/Class/getField/java.lang.NoSuchFieldException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.components.impl/ComponentManagerImpl$ComponentConfigComponentAdapter/getComponentInstance/java.lang.NoSuchFieldException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.util.pico/DefaultPicoContainer/getComponentInstance/java.lang.NoSuchFieldException?pt=true",
+            "name": "Jetbrains OpenAPI",
+            "shortName": "Openapi"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.idea/MainImpl$1$1$1/run/java.lang.NoSuchFieldException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.NoSuchFieldException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.NoSuchFieldException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.NoSuchFieldException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1455898080000,
+      "lastSeenSimilar": 1457012670000,
+      "bestMatchLevel": 1,
+      "highestVote": 0,
+      "numberOfSimilars": 2,
+      "numberOfSolutions": 4,
+      "lastSearch": {
+        "searchId": 143019,
+        "searchUrl": "https://samebug.io/search/143019/com.intellij.openapi.application.RuntimeInterruptedException",
+        "timestamp": 1457012670415,
+        "exception": {
+          "typeName": "com.intellij.openapi.application.RuntimeInterruptedException",
+          "message": "java.lang.InterruptedException"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.util.concurrent.locks/ReentrantReadWriteLock$ReadLock/lockInterruptibly/java.lang.InterruptedException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.application.impl/ApplicationImpl/startRead/com.intellij.openapi.application.RuntimeInterruptedException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457010133000,
+      "lastSeenSimilar": 1457010133000,
+      "bestMatchLevel": 2,
+      "highestVote": 6,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 101,
+      "lastSearch": {
+        "searchId": 142946,
+        "searchUrl": "https://samebug.io/search/142946/com.samebug.clients.search.api.exceptions.HttpError",
+        "timestamp": 1457010133382,
+        "exception": {
+          "typeName": "com.samebug.clients.search.api.exceptions.HttpError",
+          "message": "javax.net.ssl.SSLHandshakeException: Remote host closed connection during handshake"
+        },
+        "componentStack": [
+          {
+            "color": 12,
+            "crashDocUrl": "https://samebug.io/crashdocs/sun.security.ssl/SSLSocketImpl/startHandshake/javax.net.ssl.SSLHandshakeException?pt=true",
+            "name": "Java JSSE",
+            "shortName": "Java JSSE"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.apache.http.impl.client/CloseableHttpClient/execute/javax.net.ssl.SSLHandshakeException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 15,
+            "crashDocUrl": "https://samebug.io/crashdocs/org.apache.http.client.fluent/Request/execute/javax.net.ssl.SSLHandshakeException?pt=true",
+            "name": "Apache HttpClient Fluent API",
+            "shortName": "Apache HttpClient Fluent API"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1456231349000,
+      "lastSeenSimilar": 1456996974000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 72,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 141730,
+        "searchUrl": "https://samebug.io/search/141730/java.lang.NoClassDefFoundError",
+        "timestamp": 1456996974071,
+        "exception": {
+          "typeName": "java.lang.NoClassDefFoundError",
+          "message": "Could not initialize class com.samebug.clients.idea.resources.SamebugIcons"
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.actionSystem.impl/ActionManagerImpl$MyTimer/actionPerformed/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1456231343000,
+      "lastSeenSimilar": 1456996973000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 20,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 141729,
+        "searchUrl": "https://samebug.io/search/141729/java.lang.NoClassDefFoundError",
+        "timestamp": 1456996973117,
+        "exception": {
+          "typeName": "java.lang.NoClassDefFoundError",
+          "message": "Could not initialize class com.samebug.clients.idea.resources.SamebugIcons"
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.actionSystem.impl/ActionButton/addNotify/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/Container/add/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.actionSystem.impl/ActionManagerImpl$MyTimer/actionPerformed/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1456994593000,
+      "lastSeenSimilar": 1456994593000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 141596,
+        "searchUrl": "https://samebug.io/search/141596/java.lang.NoClassDefFoundError",
+        "timestamp": 1456994593823,
+        "exception": {
+          "typeName": "java.lang.NoClassDefFoundError",
+          "message": "Could not initialize class com.samebug.clients.idea.resources.SamebugIcons"
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.actionSystem.impl/ActionToolbarImpl/addNotify/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/Container/add/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.wm.impl.content/ToolWindowContentUi$1/selectionChanged/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.util/EventDispatcher$1/invoke/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.sun.proxy",
+            "shortName": "com.sun.proxy"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.wm.impl/FocusManagerImpl$7/run/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1456231330000,
+      "lastSeenSimilar": 1456994587000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 4,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 141581,
+        "searchUrl": "https://samebug.io/search/141581/java.lang.NoClassDefFoundError",
+        "timestamp": 1456994587033,
+        "exception": {
+          "typeName": "java.lang.NoClassDefFoundError",
+          "message": "Could not initialize class com.samebug.clients.idea.resources.SamebugIcons"
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.actionSystem.impl/ActionManagerImpl/createActionToolbar/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.application.impl/LaterInvocator$FlushQueue/run/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1456994587000,
+      "lastSeenSimilar": 1456994587000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 141582,
+        "searchUrl": "https://samebug.io/search/141582/java.lang.NoClassDefFoundError",
+        "timestamp": 1456994587136,
+        "exception": {
+          "typeName": "java.lang.NoClassDefFoundError",
+          "message": "Could not initialize class com.samebug.clients.idea.resources.SamebugIcons"
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.actionSystem.impl/ActionToolbarImpl/addNotify/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/Container/add/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.wm.impl.content/ToolWindowContentUi$1/selectionChanged/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.util/EventDispatcher$1/invoke/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.sun.proxy",
+            "shortName": "com.sun.proxy"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ui.content.impl/ContentManagerImpl/addContent/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.openapi.application.impl/LaterInvocator$FlushQueue/run/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.NoClassDefFoundError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.NoClassDefFoundError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1456932215000,
+      "lastSeenSimilar": 1456932215000,
+      "bestMatchLevel": 1,
+      "highestVote": 5,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 28,
+      "lastSearch": {
+        "searchId": 140175,
+        "searchUrl": "https://samebug.io/search/140175/java.lang.ClassCastException",
+        "timestamp": 1456932215877,
+        "exception": {
+          "typeName": "java.lang.ClassCastException",
+          "message": "sun.awt.image.BufImgSurfaceData cannot be cast to sun.java2d.xr.XRSurfaceData"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.ClassCastException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1456927347000,
+      "lastSeenSimilar": 1456927347000,
+      "bestMatchLevel": 1,
+      "highestVote": 2,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 8,
+      "lastSearch": {
+        "searchId": 140098,
+        "searchUrl": "https://samebug.io/search/140098/java.awt.AWTError",
+        "timestamp": 1456927347850,
+        "exception": {
+          "typeName": "java.awt.AWTError",
+          "message": "BoxLayout can't be shared"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/Container/add/java.awt.AWTError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.swing",
+            "shortName": "com.samebug.swing"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.awt.AWTError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.awt.AWTError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1456926724000,
+      "lastSeenSimilar": 1456926761000,
+      "bestMatchLevel": 2,
+      "highestVote": 6,
+      "numberOfSimilars": 2,
+      "numberOfSolutions": 101,
+      "lastSearch": {
+        "searchId": 140061,
+        "searchUrl": "https://samebug.io/search/140061/java.lang.NoSuchMethodException",
+        "timestamp": 1456926761578,
+        "exception": {
+          "typeName": "java.lang.NoSuchMethodException",
+          "message": "com.samebug.swing.borderlayout.Test.main([Ljava.lang.String;)\n"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang/Class/getMethod/java.lang.NoSuchMethodException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NoSuchMethodException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1456912193000,
+      "lastSeenSimilar": 1456912260000,
+      "bestMatchLevel": -1,
+      "highestVote": 0,
+      "numberOfSimilars": 2,
+      "numberOfSolutions": 0,
+      "lastSearch": {
+        "searchId": 138438,
+        "searchUrl": "https://samebug.io/search/138438/java.lang.NullPointerException",
+        "timestamp": 1456912260313,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.swing",
+            "shortName": "com.samebug.swing"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1456841644000,
+      "lastSeenSimilar": 1456841663000,
+      "bestMatchLevel": 2,
+      "highestVote": 0,
+      "numberOfSimilars": 3,
+      "numberOfSolutions": 1,
+      "lastSearch": {
+        "searchId": 136231,
+        "searchUrl": "https://samebug.io/search/136231/java.lang.NullPointerException",
+        "timestamp": 1456841663064,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 15,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.uiDesigner.core/GridLayoutManager/addLayoutComponent/java.lang.NullPointerException?pt=true",
+            "name": "Jetbrains uiDesigner",
+            "shortName": "Jetbrains uiDesigner"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/Container/add/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.swing",
+            "shortName": "com.samebug.swing"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/EventDispatchThread/run/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1456841503000,
+      "lastSeenSimilar": 1456841503000,
+      "bestMatchLevel": 2,
+      "highestVote": 0,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 1,
+      "lastSearch": {
+        "searchId": 136217,
+        "searchUrl": "https://samebug.io/search/136217/java.lang.NullPointerException",
+        "timestamp": 1456841503135,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 15,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.uiDesigner.core/GridLayoutManager/addLayoutComponent/java.lang.NullPointerException?pt=true",
+            "name": "Jetbrains uiDesigner",
+            "shortName": "Jetbrains uiDesigner"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.awt/Container/add/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.swing",
+            "shortName": "com.samebug.swing"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://samebug.io/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1456839936000,
+      "lastSeenSimilar": 1456839936000,
+      "bestMatchLevel": 1,
+      "highestVote": 3,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 101,
+      "lastSearch": {
+        "searchId": 136182,
+        "searchUrl": "https://samebug.io/search/136182/java.lang.NullPointerException",
+        "timestamp": 1456839936630,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.io/InputStreamReader/%3Cinit%3E/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.swing",
+            "shortName": "com.samebug.swing"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://samebug.io/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    }
+  ]
+}

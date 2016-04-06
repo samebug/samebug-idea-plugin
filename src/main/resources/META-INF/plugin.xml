@@ -14,12 +14,12 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>Use native components instead of html</li>
-        <li>Filtering search groups</li>
-        <li>Improved performance</li>
+        <li>Integrate solutions and tips for searches</li>
+        <li>Search notifications are filter aware</li>
+        <li>Use Idea proxy settings</li>
       </ul>
 
-      Check it at <a href="https://medium.com/@samebug/samebug-integration-0-8-0-update-is-available-d591edaac6e8">our blog</a>
+      Check it at <a href="https://medium.com/@samebug/samebug-integration-0-9-8c6501ea19f7">our blog</a>
     ]]>
     </change-notes>
 
@@ -35,6 +35,10 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Samebug" icon="/com/samebug/samebug-r270.png" anchor="right"
                     factoryClass="com.samebug.clients.idea.ui.SamebugToolWindowFactory"/>
+        <projectService serviceInterface="com.samebug.clients.idea.ui.controller.HistoryTabController"
+                        serviceImplementation="com.samebug.clients.idea.ui.controller.HistoryTabController"/>
+        <projectService serviceInterface="com.samebug.clients.idea.ui.controller.SearchTabControllers"
+                        serviceImplementation="com.samebug.clients.idea.ui.controller.SearchTabControllers"/>
     </extensions>
 
     <actions>
@@ -44,9 +48,9 @@
                     icon="/com/samebug/icons/cogwheel.png" text="Configure Samebug" description="Set Samebug API key"/>
             <action id="Samebug.History" class="com.samebug.clients.idea.actions.ReloadHistoryAction"
                     icon="/com/samebug/icons/reload.png" text="Reload history" description="Reload crash history"/>
-            <action id="Samebug.ShowOld" class="com.samebug.clients.idea.actions.ShowOld"
-                    icon="/com/samebug/icons/filter-old.png" text="Show old" description="Show older searches"/>
-            <action id="Samebug.ShowZeroSolution" class="com.samebug.clients.idea.actions.ShowZeroSolution"
+            <action id="Samebug.ShowRecurringSearches" class="com.samebug.clients.idea.actions.ShowRecurringSearches"
+                    icon="/com/samebug/icons/filter-old.png" text="Show recurring" description="Show recurring searches"/>
+            <action id="Samebug.ShowZeroSolutionSearches" class="com.samebug.clients.idea.actions.ShowZeroSolutionSearches"
                     icon="/com/samebug/icons/filter-unknown.png" text="Show unsolved" description="Show searches with zero solutions"/>
         </group>
     </actions>
@@ -76,7 +80,7 @@
             <implementation-class>com.samebug.clients.idea.components.project.BatchStackTraceSearchNotifier</implementation-class>
         </component>
         <component>
-            <implementation-class>com.samebug.clients.idea.components.project.HelpComponent</implementation-class>
+            <implementation-class>com.samebug.clients.idea.components.project.TutorialComponent</implementation-class>
         </component>
     </project-components>
 </idea-plugin>

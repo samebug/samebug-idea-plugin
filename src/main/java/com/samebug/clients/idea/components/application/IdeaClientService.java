@@ -22,7 +22,7 @@ import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
-import com.samebug.clients.search.api.entities.tracking.Solutions;
+import com.samebug.clients.search.api.entities.legacy.Solutions;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
 
@@ -39,11 +39,11 @@ public class IdeaClientService {
     private AtomicBoolean authenticated;
     private AtomicInteger nRequests;
 
-    public IdeaClientService(final String apiKey, boolean authenticated) {
+    public IdeaClientService(final String apiKey) {
         this.client = new SamebugClient(apiKey);
         // Optimist initialization. If incorrect, that'll turn out soon
         this.connected = new AtomicBoolean(true);
-        this.authenticated = new AtomicBoolean(authenticated);
+        this.authenticated = new AtomicBoolean(true);
         this.nRequests = new AtomicInteger(0);
     }
 
@@ -56,17 +56,11 @@ public class IdeaClientService {
     }
 
     public UserInfo getUserInfo(final String apiKey) throws SamebugClientException {
-        UserInfo userInfo = new ConnectionAwareHttpRequest<UserInfo>() {
+        return new ConnectionAwareHttpRequest<UserInfo>() {
             UserInfo request() throws SamebugClientException {
                 return client.getUserInfo(apiKey);
             }
-        }.execute();
-
-        // TODO it smells bad. Successful authentication can happen at any request.
-        if (authenticated.getAndSet(userInfo.isUserExist) != userInfo.isUserExist) {
-            messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authenticationChange(authenticated.get());
-        }
-        return userInfo;
+        }.executeUnauthenticated();
     }
 
     public GroupedHistory getSearchHistory() throws SamebugClientException {
@@ -77,7 +71,7 @@ public class IdeaClientService {
         }.execute();
     }
 
-    public Solutions getSolutions(final String searchId) throws SamebugClientException {
+    public Solutions getSolutions(final int searchId) throws SamebugClientException {
         return new ConnectionAwareHttpRequest<Solutions>() {
             Solutions request() throws SamebugClientException {
                 return client.getSolutions(searchId);
@@ -106,12 +100,20 @@ public class IdeaClientService {
         abstract T request() throws SamebugClientException;
 
         public T execute() throws SamebugClientException {
+            return execute(true);
+        }
+
+        public T executeUnauthenticated() throws SamebugClientException {
+            return execute(false);
+        }
+
+        private T execute(boolean isAuthenticationRequired) throws SamebugClientException {
             try {
                 nRequests.incrementAndGet();
                 messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).startRequest();
                 T result = request();
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(true);
                 connected.set(true);
+                if (isAuthenticationRequired) authenticated.set(true);
                 return result;
             } catch (SamebugTimeout e) {
                 connected.set(false);
@@ -127,15 +129,11 @@ public class IdeaClientService {
                 throw e;
             } catch (UserUnauthenticated e) {
                 connected.set(true);
-                if (authenticated.getAndSet(false)) {
-                    messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authenticationChange(authenticated.get());
-                }
+                authenticated.set(false);
                 throw e;
             } catch (UserUnauthorized e) {
                 connected.set(true);
-                if (!authenticated.getAndSet(true)) {
-                    messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).authenticationChange(authenticated.get());
-                }
+                authenticated.set(false);
                 throw e;
             } finally {
                 nRequests.decrementAndGet();

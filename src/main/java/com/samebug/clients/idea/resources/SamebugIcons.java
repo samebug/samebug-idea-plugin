@@ -22,6 +22,9 @@ import java.net.URL;
 
 public class SamebugIcons {
     public final static Icon notification = IconLoader.getIcon("/com/samebug/icons/samebug-notification.png");
+    public final static Icon tutorial = IconLoader.getIcon("/com/samebug/icons/tutorial.png");
+
+
     public final static Icon cogwheel = IconLoader.getIcon("/com/samebug/icons/cogwheel.png");
     public final static Icon cogwheelTodo = IconLoader.getIcon("/com/samebug/icons/cogwheel-todo.png");
     public final static Icon linkError = IconLoader.getIcon("/com/samebug/icons/link-error.png");
@@ -30,8 +33,10 @@ public class SamebugIcons {
     public final static Icon lightbulb = IconLoader.getIcon("/com/samebug/icons/filter-unknown.png");
     public final static Icon calendar = IconLoader.getIcon("/com/samebug/icons/filter-old.png");
 
+    public final static Icon breadcrumbEnd = IconLoader.getIcon("/com/samebug/icons/bolt.png");
+    public final static Icon breadcrumbDelimeter = IconLoader.getIcon("/com/samebug/icons/prev.png");
+
     public final static URL cogwheelTodoUrl = SamebugIcons.class.getClassLoader().getResource("/com/samebug/icons/cogwheel-todo.png");
     public final static URL lightbulbUrl = SamebugIcons.class.getClassLoader().getResource("/com/samebug/icons/filter-unknown.png");
     public final static URL calendarUrl = SamebugIcons.class.getClassLoader().getResource("/com/samebug/icons/filter-old.png");
-
 }

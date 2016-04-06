@@ -16,6 +16,7 @@
 package com.samebug.clients.idea.messages;
 
 import com.intellij.util.messages.Topic;
+import com.samebug.clients.search.api.entities.GroupedHistory;
 
 /**
  * Created by poroszd on 3/7/16.
@@ -23,7 +24,9 @@ import com.intellij.util.messages.Topic;
 public interface HistoryListener {
     Topic<HistoryListener> UPDATE_HISTORY_TOPIC = Topic.create("update samebug history", HistoryListener.class);
 
-    void reload();
+    void startLoading();
+
+    void update(GroupedHistory history);
 
     void toggleShowSearchedWithZeroSolution(boolean enabled);
 

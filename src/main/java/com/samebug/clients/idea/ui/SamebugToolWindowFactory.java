@@ -16,6 +16,7 @@
 package com.samebug.clients.idea.ui;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -23,11 +24,14 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
+import com.samebug.clients.idea.components.application.IdeaClientService;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.controller.HistoryTabController;
+import com.samebug.clients.search.api.entities.GroupedHistory;
+import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -41,17 +45,27 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
         toolWindow.getContentManager().addContent(content);
     }
 
-    private HistoryTabController initializeHistoryTab(Project project) {
-        HistoryTabController historyTab = new HistoryTabController(project);
-        historyTab.loadHistory();
+    private HistoryTabController initializeHistoryTab(final Project project) {
+        HistoryTabController historyTab = ServiceManager.getService(project, HistoryTabController.class);
 
         MessageBusConnection appMessageBus = ApplicationManager.getApplication().getMessageBus().connect(project);
         appMessageBus.subscribe(ConnectionStatusListener.CONNECTION_STATUS_TOPIC, historyTab.getStatusUpdater());
 
-        MessageBusConnection projectMessageBus = project.getMessageBus().connect(project);
-        projectMessageBus.subscribe(BatchStackTraceSearchListener.BATCH_SEARCH_TOPIC, historyTab.getHistoryReloader());
-
         project.getMessageBus().connect(project).subscribe(HistoryListener.UPDATE_HISTORY_TOPIC, historyTab.getHistoryUpdater());
+
+        // TODO this logic is duplicated in ReloadHistoryAction
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
+                try {
+                    GroupedHistory history = client.getSearchHistory();
+                    project.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(history);
+                } catch (SamebugClientException e1) {
+                    project.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(null);
+                }
+            }
+        });
 
         return historyTab;
     }

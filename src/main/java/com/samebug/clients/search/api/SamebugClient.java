@@ -16,52 +16,105 @@
 package com.samebug.clients.search.api;
 
 import com.google.gson.*;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.net.HttpConfigurable;
+import com.intellij.util.net.IdeHttpClientHelpers;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
-import com.samebug.clients.search.api.entities.tracking.Solutions;
+import com.samebug.clients.search.api.entities.legacy.Solutions;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
+import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.http.*;
-import org.apache.http.client.fluent.Form;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.execchain.RequestAbortedException;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
+import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLEncoder;
+import javax.net.ssl.SSLException;
+import java.io.*;
+import java.net.*;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 public class SamebugClient {
     private final String apiKey;
-    private static final String USER_AGENT = "Samebug-Idea-Client/1.2.0";
-    private static final String API_VERSION = "2.0";
-    // public final static URI root = URI.create("http://localhost:9000/");
+    final static String USER_AGENT = "Samebug-Idea-Client/1.3.0";
+    final static String API_VERSION = "0.8";
+    //    public final static URI root = URI.create("http://localhost:9000/");
+//    public final static URI root = URI.create("http://nightly.samebug.com/");
     public final static URI root = URI.create("https://samebug.io/");
-    // private final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
-    private final static URI trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
-    private final static URI gateway = root.resolve("sandbox/api/").resolve(API_VERSION + "/");
-    private static final Gson gson;
+    //    final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
+    final static URI trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
+    final static URI gateway = root.resolve("rest/").resolve(API_VERSION + "/");
 
-    // TODO is this a fine way of serialization of Date?
+    final static Gson gson;
+    final static HttpClient httpClient;
+    final static RequestConfig requestConfig;
+    final static RequestConfig trackingConfig;
+
+
     static {
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+        // Build gson
+        // TODO is this a fine way of serialization of Date?
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
                     @Override
                     public Date deserialize(JsonElement json, java.lang.reflect.Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
                         return new Date(json.getAsJsonPrimitive().getAsLong());
                     }
                 }
         );
-        gson = builder.create();
+        gson = gsonBuilder.create();
+
+        // Build http client
+        HttpClientBuilder httpBuilder = HttpClientBuilder.create();
+        RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
+        CredentialsProvider provider = new BasicCredentialsProvider();
+
+        requestConfigBuilder.setConnectTimeout(3000).setSocketTimeout(7000).setConnectionRequestTimeout(500);
+        try {
+            IdeHttpClientHelpers.ApacheHttpClient4.setProxyForUrlIfEnabled(requestConfigBuilder, root.toString());
+            IdeHttpClientHelpers.ApacheHttpClient4.setProxyCredentialsForUrlIfEnabled(provider, root.toString());
+        } catch (Throwable e) {
+            // fallback to traditional proxy config for backward compatiblity
+            try {
+                final HttpConfigurable proxySettings = HttpConfigurable.getInstance();
+                if (proxySettings != null && proxySettings.USE_HTTP_PROXY && !StringUtil.isEmptyOrSpaces(proxySettings.PROXY_HOST)) {
+                    requestConfigBuilder.setProxy(new HttpHost(proxySettings.PROXY_HOST, proxySettings.PROXY_PORT));
+                    if (proxySettings.PROXY_AUTHENTICATION) {
+                        provider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(proxySettings.PROXY_LOGIN, proxySettings.getPlainProxyPassword()));
+                    }
+                }
+            } catch (Throwable e1) {
+                // if even that fails, we cannot do more
+            }
+        }
+        requestConfig = requestConfigBuilder.build();
+        trackingConfig = requestConfigBuilder.setSocketTimeout(3000).build();
+        httpClient = httpBuilder.setDefaultRequestConfig(requestConfig)
+                .setMaxConnTotal(20).setMaxConnPerRoute(20)
+                .setDefaultCredentialsProvider(provider)
+                .setRetryHandler(new AggresiveRetryHandler())
+                .setDefaultHeaders(Arrays.asList(new BasicHeader("User-Agent", USER_AGENT)))
+                .build();
+
     }
 
     public SamebugClient(final String apiKey) {
@@ -86,22 +139,11 @@ public class SamebugClient {
         }
     }
 
-    public static URL getHistoryCssUrl(String themeId) {
-        String uri = "assets-v/style/" + themeId + ".css";
-        try {
-            return root.resolve(uri).toURL();
-        } catch (MalformedURLException e) {
-            throw new IllegalUriException("Unable to resolve uri " + uri, e);
-        }
-    }
-
     public SearchResults searchSolutions(String stacktrace) throws SamebugClientException {
-        List<NameValuePair> form = Form.form().add("exception", stacktrace).build();
         URL url = getApiUrl("search");
-        Request post = Request.Post(url.toString());
-        Request request = post.bodyForm(form, Consts.UTF_8);
-
-        return requestJson(request, SearchResults.class);
+        HttpPost post = new HttpPost(url.toString());
+        post.setEntity(new UrlEncodedFormEntity(Collections.singletonList(new BasicNameValuePair("exception", stacktrace)), Consts.UTF_8));
+        return requestJson(post, SearchResults.class);
     }
 
     public UserInfo getUserInfo(String apiKey) throws SamebugClientException {
@@ -111,76 +153,72 @@ public class SamebugClient {
         } catch (UnsupportedEncodingException e) {
             throw new UnableToPrepareUrl("Unable to resolve uri with apiKey " + apiKey, e);
         }
-        Request request = Request.Get(url);
+        HttpGet request = new HttpGet(url);
 
         return requestJson(request, UserInfo.class);
     }
 
     public GroupedHistory getSearchHistory() throws SamebugClientException {
         URL url = getApiUrl("history");
-        Request request = Request.Get(url.toString());
+        HttpGet request = new HttpGet(url.toString());
 
         return requestJson(request, GroupedHistory.class);
     }
 
-    public Solutions getSolutions(String searchId) throws SamebugClientException {
+    public Solutions getSolutions(int searchId) throws SamebugClientException {
         URL url = getApiUrl("search/" + searchId);
-        Request request = Request.Get(url.toString());
+        HttpGet request = new HttpGet(url.toString());
 
         return requestJson(request, Solutions.class);
     }
 
     public void trace(TrackEvent event) throws SamebugClientException {
-        Request post = Request.Post(trackingGateway);
+        HttpPost post = new HttpPost(trackingGateway);
         postJson(post, event.fields);
     }
 
     // implementation
-    private <T> T requestJson(Request request, Class<T> classOfT)
+    private <T> T requestJson(HttpRequestBase request, final Class<T> classOfT)
             throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
-        final HttpResponse httpResponse;
-        httpResponse = executePatient(request.setHeader("Accept", "application/json"));
-
-        Reader reader;
-        try {
-            reader = new InputStreamReader(httpResponse.getEntity().getContent());
-        } catch (IOException e) {
-            throw new HttpError(e);
-        }
-        try {
-            return gson.fromJson(reader, classOfT);
-        } finally {
-            try {
-                reader.close();
-            } catch (IOException ignored) {
+        request.setHeader("Accept", "application/json");
+        final HttpResponse httpResponse = executePatient(request);
+        return new HandleResponse<T>(httpResponse) {
+            @Override
+            T process(Reader reader) {
+                return gson.fromJson(reader, classOfT);
             }
-        }
+        }.handle();
     }
 
-    private void postJson(Request post, Object data)
+    private void postJson(HttpPost post, Object data)
             throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
         String json = gson.toJson(data);
         post.addHeader("Content-Type", "application/json");
-        post.body(new StringEntity(json, ContentType.APPLICATION_JSON));
-        executeFailFast(post);
+        post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
+        HttpResponse httpResponse = executeFailFast(post);
+
+        new HandleResponse<Void>(httpResponse) {
+            @Override
+            Void process(Reader reader) {
+                return null;
+            }
+        }.handle();
     }
 
 
-    private HttpResponse executeFailFast(Request request)
+    private HttpResponse executeFailFast(HttpRequestBase request)
             throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
-        return execute(request, 3000, 3000);
+        return execute(request, trackingConfig);
     }
 
-    private HttpResponse executePatient(Request request)
+    private HttpResponse executePatient(HttpRequestBase request)
             throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
-        return execute(request, 10000, 30000);
+        return execute(request, null);
     }
 
 
     /**
-     * @param request              the http request
-     * @param connectTimeoutMillis max milliseconds to wait to connect before failure
-     * @param socketTimeoutMillis  max milliseconds to wait during I/O between packets before failure
+     * @param request the http request
      * @return the http response
      * @throws SamebugTimeout             if the server exceeded the timeout during connection or execute
      * @throws HttpError                  in case of a problem or the connection was aborted or   if the response is not readable
@@ -189,25 +227,18 @@ public class SamebugClient {
      * @throws UserUnauthenticated        if the user was not authenticated (401)
      * @throws UserUnauthorized           if the user was not authorized (403)
      */
-    private HttpResponse execute(Request request, int connectTimeoutMillis, int socketTimeoutMillis)
+    private HttpResponse execute(HttpRequestBase request, @Nullable RequestConfig config)
             throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
         addDefaultHeaders(request);
-        request.connectTimeout(connectTimeoutMillis);
-        request.socketTimeout(socketTimeoutMillis);
+        if (config != null) request.setConfig(config);
 
-        Response response;
+        HttpResponse httpResponse;
         try {
-            response = request.execute();
+            httpResponse = httpClient.execute(request);
         } catch (IOException e) {
             throw new HttpError(e);
         }
 
-        final HttpResponse httpResponse;
-        try {
-            httpResponse = response.returnResponse();
-        } catch (IOException e) {
-            throw new HttpError(e);
-        }
         int statusCode = httpResponse.getStatusLine().getStatusCode();
 
         switch (statusCode) {
@@ -236,8 +267,43 @@ public class SamebugClient {
         return url;
     }
 
-    private void addDefaultHeaders(Request request) {
+    private void addDefaultHeaders(HttpRequest request) {
         if (apiKey != null) request.addHeader("X-Samebug-ApiKey", apiKey);
-        request.addHeader("User-Agent", USER_AGENT);
+    }
+}
+
+
+abstract class HandleResponse<T> {
+    final HttpResponse response;
+
+    HandleResponse(HttpResponse response) {
+        this.response = response;
+    }
+
+    abstract T process(Reader reader);
+
+    public T handle() throws HttpError {
+        InputStream content = null;
+        Reader reader = null;
+        try {
+            content = response.getEntity().getContent();
+            reader = new InputStreamReader(content);
+            return process(reader);
+        } catch (IOException e) {
+            throw new HttpError(e);
+        } finally {
+            try {
+                if (content != null) content.close();
+                if (reader != null) reader.close();
+            } catch (IOException ignored) {
+            }
+        }
+    }
+}
+
+class AggresiveRetryHandler extends DefaultHttpRequestRetryHandler {
+    public AggresiveRetryHandler() {
+        super(3, false, Arrays.asList(ConnectTimeoutException.class, SocketTimeoutException.class, RequestAbortedException.class,
+                UnknownHostException.class, ConnectException.class, SSLException.class));
     }
 }

@@ -20,10 +20,12 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationsConfiguration;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindowManager;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.idea.ui.controller.HistoryTabController;
+import com.samebug.clients.idea.ui.controller.SearchTabControllers;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.HyperlinkEvent;
@@ -34,15 +36,16 @@ import javax.swing.event.HyperlinkListener;
  */
 public class SamebugNotifications {
     public static final String SAMEBUG_SEARCH_NOTIFICATIONS = "Samebug Search Notifications";
-    public static final String SAMEBUG_HELP_NOTIFICATIONS = "Samebug Help Notifications";
+    public static final String SAMEBUG_TUTORIAL_NOTIFICATIONS = "Samebug Tutorial Notifications";
 
     public static void registerNotificationGroups() {
         NotificationsConfiguration.getNotificationsConfiguration().register(SAMEBUG_SEARCH_NOTIFICATIONS, NotificationDisplayType.BALLOON, false);
-        NotificationsConfiguration.getNotificationsConfiguration().register(SAMEBUG_HELP_NOTIFICATIONS, NotificationDisplayType.STICKY_BALLOON, true);
+        NotificationsConfiguration.getNotificationsConfiguration().register(SAMEBUG_TUTORIAL_NOTIFICATIONS, NotificationDisplayType.STICKY_BALLOON, true);
     }
 
 
-    public final static String SHOW = "#showToolWindow";
+    public final static String HISTORY = "#history";
+    public final static String SEARCH = "#search-";
 
     public static NotificationListener basicNotificationListener(final Project project, final String categoryForTracking) {
         return new NotificationListener() {
@@ -53,8 +56,13 @@ public class SamebugNotifications {
                 if (eventType == HyperlinkEvent.EventType.ACTIVATED && hyperlinkEvent.getURL() != null) {
                     BrowserUtil.browse(hyperlinkEvent.getURL());
                     Tracking.projectTracking(project).trace(Events.linkClick(project, hyperlinkEvent.getURL()));
-                } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && SHOW.equals(action)) {
-                    ToolWindowManager.getInstance(project).getToolWindow("Samebug").show(null);
+                } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && HISTORY.equals(action)) {
+                    ServiceManager.getService(project, HistoryTabController.class).focus();
+                    notification.expire();
+                    Tracking.projectTracking(project).trace(Events.toolWindowOpen(project, categoryForTracking));
+                } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && action.startsWith(SEARCH)) {
+                    int searchId = Integer.parseInt(action.substring(SEARCH.length()));
+                    ServiceManager.getService(project, SearchTabControllers.class).openSearchTab(searchId);
                     notification.expire();
                     Tracking.projectTracking(project).trace(Events.toolWindowOpen(project, categoryForTracking));
                 }
@@ -71,27 +79,15 @@ public class SamebugNotifications {
                 if (eventType == HyperlinkEvent.EventType.ACTIVATED && hyperlinkEvent.getURL() != null) {
                     BrowserUtil.browse(hyperlinkEvent.getURL());
                     Tracking.projectTracking(project).trace(Events.linkClick(project, hyperlinkEvent.getURL()));
-                } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && SHOW.equals(action)) {
-                    ToolWindowManager.getInstance(project).getToolWindow("Samebug").show(null);
+                } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && HISTORY.equals(action)) {
+                    ServiceManager.getService(project, HistoryTabController.class).focus();
+                    Tracking.projectTracking(project).trace(Events.toolWindowOpen(project, categoryForTracking));
+                } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && action.startsWith(SEARCH)) {
+                    int searchId = Integer.parseInt(action.substring(SEARCH.length()));
+                    ServiceManager.getService(project, SearchTabControllers.class).openSearchTab(searchId);
                     Tracking.projectTracking(project).trace(Events.toolWindowOpen(project, categoryForTracking));
                 }
             }
         };
     }
-
-    public static HyperlinkListener basicHyperlinkListener(final Project project) {
-        return new HyperlinkListener() {
-            @Override
-            public void hyperlinkUpdate(HyperlinkEvent hyperlinkEvent) {
-                HyperlinkEvent.EventType eventType = hyperlinkEvent.getEventType();
-                String action = hyperlinkEvent.getDescription();
-                if (eventType == HyperlinkEvent.EventType.ACTIVATED && hyperlinkEvent.getURL() != null) {
-                    BrowserUtil.browse(hyperlinkEvent.getURL());
-                } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && SHOW.equals(action)) {
-                    ToolWindowManager.getInstance(project).getToolWindow("Samebug").show(null);
-                }
-            }
-        };
-    }
-
 }
