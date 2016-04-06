@@ -96,7 +96,8 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
                     ++zeroSolutions;
                     searchIds.add(result.searchId);
                 }
-            } else if (historyResult != null && historyResult.numberOfSimilars > 1 && historyResult.firstSeenSimilar != null && historyResult.firstSeenSimilar.getTime() < timelimitForFreshSearch) {
+            } else if (historyResult != null && historyResult.numberOfSimilars > 1
+                    && historyResult.firstSeenSimilar != null && historyResult.firstSeenSimilar.getTime() < timelimitForFreshSearch) {
                 if (isShowRecurringSearches) {
                     ++recurrings;
                     searchIds.add(result.searchId);
