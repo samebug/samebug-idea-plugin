@@ -16,6 +16,8 @@
 package com.samebug.clients.search.api;
 
 import com.google.gson.*;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.net.IdeHttpClientHelpers;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
@@ -25,6 +27,8 @@ import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.http.*;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -88,8 +92,16 @@ public class SamebugClient {
         try {
             IdeHttpClientHelpers.ApacheHttpClient4.setProxyForUrlIfEnabled(requestConfigBuilder, root.toString());
             IdeHttpClientHelpers.ApacheHttpClient4.setProxyCredentialsForUrlIfEnabled(provider, root.toString());
-        } catch (Exception e) {
-            // do not bother if proxy configuration fails
+        } catch (Throwable e) {
+            // fallback to traditional proxy config for backward compatiblity
+            e.printStackTrace();
+            final HttpConfigurable proxySettings = HttpConfigurable.getInstance();
+            if (proxySettings != null && proxySettings.USE_HTTP_PROXY && !StringUtil.isEmptyOrSpaces(proxySettings.PROXY_HOST)) {
+                requestConfigBuilder.setProxy(new HttpHost(proxySettings.PROXY_HOST, proxySettings.PROXY_PORT));
+                if (proxySettings.PROXY_AUTHENTICATION) {
+                    provider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(proxySettings.PROXY_LOGIN, proxySettings.getPlainProxyPassword()));
+                }
+            }
         }
         requestConfig = requestConfigBuilder.build();
         trackingConfig = requestConfigBuilder.setSocketTimeout(3000).build();
