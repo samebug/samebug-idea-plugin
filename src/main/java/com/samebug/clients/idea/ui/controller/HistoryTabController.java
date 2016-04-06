@@ -19,6 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
@@ -167,10 +168,11 @@ public class HistoryTabController {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
-
-                final ContentManager toolwindowCM = ToolWindowManager.getInstance(project).getToolWindow("Samebug").getContentManager();
-                Content content = toolwindowCM.getContent(getControlPanel());
+                final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
+                final ContentManager toolwindowCM = toolWindow.getContentManager();
+                final Content content = toolwindowCM.getContent(getControlPanel());
                 toolwindowCM.setSelectedContent(content);
+                toolWindow.show(null);
             }
         });
     }

@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.ui.components;
 
+import com.samebug.clients.idea.resources.SamebugBundle;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +29,7 @@ public class ExceptionMessageLabel extends JLabel {
         {
             final String escapedText;
             if (message == null) {
-                escapedText = String.format("<html><i>No message provided</i></html>");
+                escapedText = String.format("<html><i>%s</i></html>", SamebugBundle.message("samebug.exception.noMessage"));
             } else {
                 // Escape html, but keep line breaks
                 String broken = StringEscapeUtils.escapeHtml(message).replaceAll("\\n", "<br>");

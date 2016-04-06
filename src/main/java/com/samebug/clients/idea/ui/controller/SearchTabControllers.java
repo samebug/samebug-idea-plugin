@@ -18,6 +18,7 @@ package com.samebug.clients.idea.ui.controller;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
@@ -44,7 +45,8 @@ public class SearchTabControllers {
     }
 
     public SearchTabController openSearchTab(final int searchId) {
-        final ContentManager toolwindowCM = ToolWindowManager.getInstance(project).getToolWindow("Samebug").getContentManager();
+        final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
+        final ContentManager toolwindowCM = toolWindow.getContentManager();
         SearchTabController tab = activeSearches.get(searchId);
         // FIXME: for now, we let at most one search tab
         for (Map.Entry<Integer, SearchTabController> opened : activeSearches.entrySet()) {
@@ -81,6 +83,7 @@ public class SearchTabControllers {
 
             }
         });
+        toolWindow.show(null);
         return tab;
     }
 
