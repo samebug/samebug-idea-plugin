@@ -22,7 +22,6 @@ import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationsConfiguration;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindowManager;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.HistoryTabController;

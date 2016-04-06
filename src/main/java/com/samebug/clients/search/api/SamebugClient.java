@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- * <p/>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -85,9 +85,12 @@ public class SamebugClient {
         CredentialsProvider provider = new BasicCredentialsProvider();
 
         requestConfigBuilder.setConnectTimeout(3000).setSocketTimeout(7000).setConnectionRequestTimeout(500);
-        IdeHttpClientHelpers.ApacheHttpClient4.setProxyForUrlIfEnabled(requestConfigBuilder, root.toString());
-        IdeHttpClientHelpers.ApacheHttpClient4.setProxyCredentialsForUrlIfEnabled(provider, root.toString());
-
+        try {
+            IdeHttpClientHelpers.ApacheHttpClient4.setProxyForUrlIfEnabled(requestConfigBuilder, root.toString());
+            IdeHttpClientHelpers.ApacheHttpClient4.setProxyCredentialsForUrlIfEnabled(provider, root.toString());
+        } catch (Exception e) {
+            // do not bother if proxy configuration fails
+        }
         requestConfig = requestConfigBuilder.build();
         trackingConfig = requestConfigBuilder.setSocketTimeout(3000).build();
         httpClient = httpBuilder.setDefaultRequestConfig(requestConfig)
@@ -200,7 +203,7 @@ public class SamebugClient {
 
 
     /**
-     * @param request              the http request
+     * @param request the http request
      * @return the http response
      * @throws SamebugTimeout             if the server exceeded the timeout during connection or execute
      * @throws HttpError                  in case of a problem or the connection was aborted or   if the response is not readable
@@ -285,6 +288,7 @@ abstract class HandleResponse<T> {
 
 class AggresiveRetryHandler extends DefaultHttpRequestRetryHandler {
     public AggresiveRetryHandler() {
-        super(3, false, Arrays.asList(ConnectTimeoutException.class, SocketTimeoutException.class, RequestAbortedException.class, UnknownHostException.class, ConnectException.class, SSLException.class));
+        super(3, false, Arrays.asList(ConnectTimeoutException.class, SocketTimeoutException.class, RequestAbortedException.class,
+                UnknownHostException.class, ConnectException.class, SSLException.class));
     }
 }
