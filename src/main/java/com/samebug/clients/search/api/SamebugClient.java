@@ -60,7 +60,7 @@ public class SamebugClient {
     //    public final static URI root = URI.create("http://localhost:9000/");
 //    public final static URI root = URI.create("http://nightly.samebug.com/");
     public final static URI root = URI.create("https://samebug.io/");
-    //        final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
+    //    final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
     final static URI trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
     final static URI gateway = root.resolve("rest/").resolve(API_VERSION + "/");
 
@@ -94,13 +94,16 @@ public class SamebugClient {
             IdeHttpClientHelpers.ApacheHttpClient4.setProxyCredentialsForUrlIfEnabled(provider, root.toString());
         } catch (Throwable e) {
             // fallback to traditional proxy config for backward compatiblity
-            e.printStackTrace();
-            final HttpConfigurable proxySettings = HttpConfigurable.getInstance();
-            if (proxySettings != null && proxySettings.USE_HTTP_PROXY && !StringUtil.isEmptyOrSpaces(proxySettings.PROXY_HOST)) {
-                requestConfigBuilder.setProxy(new HttpHost(proxySettings.PROXY_HOST, proxySettings.PROXY_PORT));
-                if (proxySettings.PROXY_AUTHENTICATION) {
-                    provider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(proxySettings.PROXY_LOGIN, proxySettings.getPlainProxyPassword()));
+            try {
+                final HttpConfigurable proxySettings = HttpConfigurable.getInstance();
+                if (proxySettings != null && proxySettings.USE_HTTP_PROXY && !StringUtil.isEmptyOrSpaces(proxySettings.PROXY_HOST)) {
+                    requestConfigBuilder.setProxy(new HttpHost(proxySettings.PROXY_HOST, proxySettings.PROXY_PORT));
+                    if (proxySettings.PROXY_AUTHENTICATION) {
+                        provider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(proxySettings.PROXY_LOGIN, proxySettings.getPlainProxyPassword()));
+                    }
                 }
+            } catch (Throwable e1) {
+                // if even that fails, we cannot do more
             }
         }
         requestConfig = requestConfigBuilder.build();
