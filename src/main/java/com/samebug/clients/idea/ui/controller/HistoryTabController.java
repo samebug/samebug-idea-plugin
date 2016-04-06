@@ -19,6 +19,9 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.ui.content.Content;
+import com.intellij.ui.content.ContentManager;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
@@ -161,6 +164,18 @@ public class HistoryTabController {
 
     public void setShowRecurringSearches(boolean showRecurringSearches) {
         this.showRecurringSearches = showRecurringSearches;
+    }
+
+    public void focus() {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+
+                final ContentManager toolwindowCM = ToolWindowManager.getInstance(project).getToolWindow("Samebug").getContentManager();
+                Content content = toolwindowCM.getContent(getControlPanel());
+                toolwindowCM.setSelectedContent(content);
+            }
+        });
     }
 
     class ConnectionStatusUpdater implements ConnectionStatusListener {

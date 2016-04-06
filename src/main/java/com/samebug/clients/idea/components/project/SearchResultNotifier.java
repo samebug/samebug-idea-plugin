@@ -92,11 +92,15 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
             int searchId = Integer.parseInt(result.searchId);
             GroupedExceptionSearch historyResult = history.get(searchId);
             if (historyResult != null && historyResult.numberOfSolutions == 0) {
-                if (isShowZeroSolutionSearches) ++zeroSolutions;
-                searchIds.add(result.searchId);
+                if (isShowZeroSolutionSearches) {
+                    ++zeroSolutions;
+                    searchIds.add(result.searchId);
+                }
             } else if (result.firstSeenTime == null || result.firstSeenTime < timelimitForFreshSearch) {
-                if (isShowRecurringSearches) ++recurrings;
-                searchIds.add(result.searchId);
+                if (isShowRecurringSearches) {
+                    ++recurrings;
+                    searchIds.add(result.searchId);
+                }
             }
         }
 
