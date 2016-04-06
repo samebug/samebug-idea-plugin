@@ -14,12 +14,12 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>Use native components instead of html</li>
-        <li>Filtering search groups</li>
-        <li>Improved performance</li>
+        <li>Integrate solutions and tips for searches</li>
+        <li>Search notifications are filter aware</li>
+        <li>Use Idea proxy settings</li>
       </ul>
 
-      Check it at <a href="https://medium.com/@samebug/samebug-integration-0-8-0-update-is-available-d591edaac6e8">our blog</a>
+      Check it at <a href="https://medium.com/@samebug/samebug-integration-0-9-8c6501ea19f7">our blog</a>
     ]]>
     </change-notes>
 
