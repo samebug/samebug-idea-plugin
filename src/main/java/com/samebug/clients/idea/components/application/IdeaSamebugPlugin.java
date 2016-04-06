@@ -88,7 +88,8 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
                     SettingsDialog.setup(state.getApiKey());
                 } else {
                     try {
-                        client.getUserInfo(state.getApiKey());
+                        UserInfo userInfo = client.getUserInfo(state.getApiKey());
+                        if (userInfo.isUserExist) state.setUserId(userInfo.userId);
                     } catch (SamebugClientException e) {
                         LOGGER.warn("Failed to get user info", e);
                     }
