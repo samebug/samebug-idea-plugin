@@ -16,6 +16,8 @@
 package com.samebug.clients.idea.ui.components;
 
 import com.intellij.ide.BrowserUtil;
+import com.samebug.clients.idea.components.application.Tracking;
+import com.samebug.clients.idea.tracking.Events;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,6 +43,8 @@ public class LinkLabel extends JLabel {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     BrowserUtil.browse(link);
+                    // TODO get project from data context?
+                    Tracking.appTracking().trace(Events.linkClick(null, link));
                 }
             });
             setCursor(new Cursor(Cursor.HAND_CURSOR));

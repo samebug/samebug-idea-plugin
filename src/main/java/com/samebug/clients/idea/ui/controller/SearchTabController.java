@@ -19,7 +19,9 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.views.ExternalSolutionView;
@@ -120,7 +122,9 @@ public class SearchTabController {
                     searchCard.titleLabel.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
-                            BrowserUtil.browse(SamebugClient.getSearchUrl(search.lastSearch.searchId));
+                            URL url = SamebugClient.getSearchUrl(search.lastSearch.searchId);
+                            BrowserUtil.browse(url);
+                            Tracking.projectTracking(project).trace(Events.linkClick(project, url));
                         }
                     });
                     if (model.tips.size() + model.references.size() == 0) {

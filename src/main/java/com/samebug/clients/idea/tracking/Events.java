@@ -119,6 +119,15 @@ public class Events {
         }.getEvent();
     }
 
+    public static TrackEvent searchClick(final Project project, final int searchId) {
+        return new TrackBuilder("Search", "Click", project) {
+            @Override
+            protected void initFields() {
+                fields.put("searchId", searchId);
+            }
+        }.getEvent();
+    }
+
     private final static Logger LOGGER = Logger.getInstance(Events.class);
 
     private static abstract class TrackBuilder {

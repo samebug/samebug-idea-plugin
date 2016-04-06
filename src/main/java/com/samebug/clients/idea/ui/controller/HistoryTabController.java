@@ -25,10 +25,12 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.views.HistoryTabView;
 import com.samebug.clients.idea.ui.views.SearchGroupCardView;
@@ -126,6 +128,7 @@ public class HistoryTabController {
                                 public void mouseClicked(MouseEvent e) {
                                     super.mouseClicked(e);
                                     ServiceManager.getService(project, SearchTabControllers.class).openSearchTab(group.lastSearch.searchId);
+                                    Tracking.projectTracking(project).trace(Events.searchClick(project, group.lastSearch.searchId));
                                 }
                             });
                             view.contentPanel.add(searchGroupCard.controlPanel);
