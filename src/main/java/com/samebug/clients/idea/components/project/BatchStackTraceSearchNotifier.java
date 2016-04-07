@@ -66,26 +66,34 @@ public class BatchStackTraceSearchNotifier extends AbstractProjectComponent impl
 
     @Override
     synchronized public void searchSucceeded(SearchInfo searchInfo, SearchResults results) {
-        searches.add(results);
-        timer.restart();
+        if (timer != null) {
+            searches.add(results);
+            timer.restart();
+        }
     }
 
     @Override
     synchronized public void timeout(SearchInfo searchInfo) {
-        failed++;
-        timer.restart();
+        if (timer != null) {
+            failed++;
+            timer.restart();
+        }
     }
 
     @Override
     synchronized public void unauthorized(SearchInfo searchInfo) {
-        failed++;
-        timer.restart();
+        if (timer != null) {
+            failed++;
+            timer.restart();
+        }
     }
 
     @Override
     synchronized public void searchFailed(SearchInfo searchInfo, SamebugClientException error) {
-        failed++;
-        timer.restart();
+        if (timer != null) {
+            failed++;
+            timer.restart();
+        }
     }
 
     private void batchFinished() {
@@ -96,11 +104,13 @@ public class BatchStackTraceSearchNotifier extends AbstractProjectComponent impl
     }
 
     private void reset() {
-        started = 0;
-        failed = 0;
-        searches.clear();
-        timer.stop();
-        timer = null;
+        if (timer != null) {
+            started = 0;
+            failed = 0;
+            searches.clear();
+            timer.stop();
+            timer = null;
+        }
     }
 
     private MessageBusConnection messageBusConnection;

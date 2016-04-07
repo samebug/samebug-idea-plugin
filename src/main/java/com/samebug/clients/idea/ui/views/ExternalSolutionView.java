@@ -116,7 +116,7 @@ public class ExternalSolutionView {
         @Override
         public Dimension getMaximumSize() {
             Dimension d = super.getPreferredSize();
-            return new Dimension(Integer.MAX_VALUE, Integer.min(d.height, 250));
+            return new Dimension(Integer.MAX_VALUE, Math.min(d.height, 250));
         }
     }
 
