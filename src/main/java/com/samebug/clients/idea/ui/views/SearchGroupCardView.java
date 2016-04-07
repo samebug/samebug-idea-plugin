@@ -15,164 +15,143 @@
  */
 package com.samebug.clients.idea.ui.views;
 
+import com.samebug.clients.common.entities.ExceptionType;
+import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.components.BreadcrumbBar;
 import com.samebug.clients.idea.ui.components.ExceptionMessageLabel;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
-import org.ocpsoft.prettytime.PrettyTime;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
-import java.util.Locale;
 
 /**
  * Created by poroszd on 3/3/16.
  */
 public class SearchGroupCardView {
-    static final PrettyTime pretty = new PrettyTime(Locale.US);
-
     final GroupedExceptionSearch searchGroup;
-    final String packageName;
-    final String className;
+    final ExceptionType exceptionType;
 
     public JPanel controlPanel;
-    public JPanel paddingPanel;
-    public JPanel contentPanel;
-    public JPanel breadcrumbPanel;
-    public JPanel titlePanel;
-    public JPanel messagePanel;
-    public TitleLabel titleLabel;
-    public TopBar topBar;
-    public GroupInfoPanel groupInfoPanel;
 
-    public SearchGroupCardView(GroupedExceptionSearch searchGroup) {
+    public SearchGroupCardView(final GroupedExceptionSearch searchGroup, final ActionHandler actionHandler) {
         this.searchGroup = searchGroup;
-        int dotIndex = searchGroup.lastSearch.exception.typeName.lastIndexOf('.');
-        if (dotIndex < 0) {
-            this.packageName = null;
-            this.className = searchGroup.lastSearch.exception.typeName;
-        } else {
-            this.packageName = searchGroup.lastSearch.exception.typeName.substring(0, dotIndex);
-            this.className = searchGroup.lastSearch.exception.typeName.substring(dotIndex + 1);
-        }
+        exceptionType = new ExceptionType(searchGroup.lastSearch.exception.typeName);
 
-        GridBagConstraints gbc;
-        controlPanel = new ControlPanel();
-        paddingPanel = new JPanel();
-        topBar = new TopBar();
-        groupInfoPanel = new GroupInfoPanel();
-        contentPanel = new JPanel();
-        titlePanel = new JPanel();
-        titleLabel = new TitleLabel();
-        messagePanel = new JPanel();
-        breadcrumbPanel = new BreadcrumbBar(searchGroup.lastSearch.componentStack);
+        final JLabel packageLabel = new PackageLabel();
+        final JLabel hitsLabel = new HitsLabel();
+        final JLabel titleLabel = new TitleLabel();
+        final JLabel exceptionMessageLabel = new ExceptionMessageLabel(searchGroup.lastSearch.exception.message);
+        final JPanel groupInfoPanel = new GroupInfoPanel();
+        final JPanel breadcrumbPanel = new BreadcrumbBar(searchGroup.lastSearch.componentStack);
 
-        controlPanel.setLayout(new BorderLayout(0, 0));
-        controlPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
-        controlPanel.add(paddingPanel, BorderLayout.CENTER);
+        controlPanel = new JPanel() {
+            {
+                setLayout(new BorderLayout());
+                setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
+                add(new JPanel() {
+                    {
+                        setLayout(new BorderLayout());
+                        setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
+                        add(new JPanel() {
+                            {
+                                setLayout(new BorderLayout());
+                                setBorder(BorderFactory.createEmptyBorder());
+                                add(packageLabel, BorderLayout.WEST);
+                                add(hitsLabel, BorderLayout.EAST);
+                            }
+                        }, BorderLayout.NORTH);
+                        add(breadcrumbPanel, BorderLayout.SOUTH);
+                        add(new JPanel() {
+                            {
+                                setLayout(new BorderLayout());
+                                setBorder(BorderFactory.createEmptyBorder());
+                                add(groupInfoPanel, BorderLayout.SOUTH);
+                                add(new JPanel() {
+                                    {
+                                        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+                                        setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+                                        add(titleLabel);
+                                    }
+                                }, BorderLayout.NORTH);
+                                add(new JPanel() {
+                                    {
+                                        setLayout(new BorderLayout());
+                                        setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
+                                        add(exceptionMessageLabel, BorderLayout.CENTER);
+                                    }
+                                }, BorderLayout.CENTER);
+                            }
+                        }, BorderLayout.CENTER);
+                    }
+                }, BorderLayout.CENTER);
 
-        paddingPanel.setLayout(new BorderLayout(0, 0));
-        paddingPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
-        paddingPanel.add(topBar, BorderLayout.NORTH);
-        paddingPanel.add(contentPanel, BorderLayout.CENTER);
-        paddingPanel.add(breadcrumbPanel, BorderLayout.SOUTH);
+                setPreferredSize(new Dimension(400, getPreferredSize().height));
+                setMaximumSize(new Dimension(Integer.MAX_VALUE, Math.min(getPreferredSize().height, 250)));
+            }
+        };
 
-        contentPanel.setLayout(new BorderLayout(0, 0));
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        contentPanel.add(titlePanel, BorderLayout.NORTH);
-        contentPanel.add(messagePanel, BorderLayout.CENTER);
-        contentPanel.add(groupInfoPanel, BorderLayout.SOUTH);
-
-        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.PAGE_AXIS));
-        titlePanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-        titlePanel.add(titleLabel);
-
-        messagePanel.setLayout(new BorderLayout(0, 0));
-        messagePanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
-        messagePanel.add(new ExceptionMessageLabel(searchGroup.lastSearch.exception.message));
-
-        titleLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
-        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-        attributes.put(TextAttribute.SIZE, 16);
-        attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
-        titleLabel.setFont(titleLabel.getFont().deriveFont(attributes));
+        titleLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                actionHandler.onTitleClick();
+            }
+        });
     }
 
-    public class ControlPanel extends JPanel {
-        @Override
-        public Dimension getPreferredSize() {
-            Dimension d = super.getPreferredSize();
-            return new Dimension(400, d.height);
-        }
-
-        @Override
-        public Dimension getMaximumSize() {
-            Dimension d = super.getPreferredSize();
-            return new Dimension(Integer.MAX_VALUE, Math.min(d.height, 250));
-        }
-    }
-
-    public class TitleLabel extends JLabel {
-        @Override
-        public String getText() {
-            return String.format("%s", className);
-        }
-
-        @Override
-        public Color getForeground() {
-            return Colors.samebugOrange;
+    class TitleLabel extends JLabel {
+        {
+            setText(exceptionType.className);
+            setForeground(Colors.samebugOrange);
+            setCursor(new Cursor(Cursor.HAND_CURSOR));
+            final HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
+            attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+            attributes.put(TextAttribute.SIZE, 16);
+            attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
+            setFont(getFont().deriveFont(attributes));
         }
     }
 
-    public class HitsLabel extends JLabel {
+    class HitsLabel extends JLabel {
         static final int LIMIT = 100;
 
-        @Override
-        public String getText() {
-            if (searchGroup.numberOfSolutions > LIMIT) {
-                return String.format("%d+ hits", LIMIT);
-            } else {
-                return String.format("%d hits", searchGroup.numberOfSolutions);
-            }
-        }
-
-        @Override
-        public Color getForeground() {
-            return ColorUtil.unemphasizedText();
-        }
-    }
-
-    public class PackageLabel extends JLabel {
-        @Override
-        public String getText() {
-            if (packageName == null) {
-                return String.format("%s", SamebugBundle.message("samebug.exception.noPackage"));
-            } else {
-                return String.format("%s", packageName);
-            }
-        }
-
-        @Override
-        public Color getForeground() {
-            return ColorUtil.unemphasizedText();
-        }
-    }
-
-    public class TopBar extends JPanel {
         {
-            setLayout(new BorderLayout());
-            setBorder(BorderFactory.createEmptyBorder());
-            add(new PackageLabel(), BorderLayout.WEST);
-            add(new HitsLabel(), BorderLayout.EAST);
+            if (searchGroup.numberOfSolutions > LIMIT) {
+                setText(String.format("%d+ hits", LIMIT));
+            } else {
+                setText(String.format("%d hits", searchGroup.numberOfSolutions));
+            }
+        }
+
+        @Override
+        public Color getForeground() {
+            return ColorUtil.unemphasizedText();
         }
     }
 
-    public class GroupInfoPanel extends JPanel {
+    class PackageLabel extends JLabel {
+        {
+            if (exceptionType.packageName == null) {
+                setText(String.format("%s", SamebugBundle.message("samebug.exception.noPackage")));
+            } else {
+                setText(String.format("%s", exceptionType.packageName));
+            }
+        }
+
+        @Override
+        public Color getForeground() {
+            return ColorUtil.unemphasizedText();
+        }
+    }
+
+    class GroupInfoPanel extends JPanel {
         {
             setLayout(new FlowLayout(FlowLayout.RIGHT));
             setBorder(BorderFactory.createEmptyBorder());
@@ -181,10 +160,10 @@ public class SearchGroupCardView {
                 {
                     String text;
                     if (searchGroup.numberOfSimilars == 1) {
-                        text = String.format("%s", pretty.format(searchGroup.lastSeenSimilar));
+                        text = String.format("%s", TextUtil.prettyTime(searchGroup.lastSeenSimilar));
                     } else {
                         text = String.format("%s | %d times, first %s",
-                                pretty.format(searchGroup.lastSeenSimilar), searchGroup.numberOfSimilars, pretty.format(searchGroup.firstSeenSimilar));
+                                TextUtil.prettyTime(searchGroup.lastSeenSimilar), searchGroup.numberOfSimilars, TextUtil.prettyTime(searchGroup.firstSeenSimilar));
                     }
 
                     setText(text);
@@ -199,4 +178,7 @@ public class SearchGroupCardView {
         }
     }
 
+    public interface ActionHandler {
+        void onTitleClick();
+    }
 }

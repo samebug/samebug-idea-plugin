@@ -40,8 +40,6 @@ import com.samebug.clients.search.api.entities.GroupedHistory;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -121,16 +119,14 @@ public class HistoryTabController {
                         } else if (!isShowRecurringSearches() && group.firstSeenSimilar.before(oneDayBefore)) {
                             // filtered because it is old
                         } else {
-                            SearchGroupCardView searchGroupCard = new SearchGroupCardView(group);
-                            searchGroups.add(searchGroupCard);
-                            searchGroupCard.titleLabel.addMouseListener(new MouseAdapter() {
+                            SearchGroupCardView searchGroupCard = new SearchGroupCardView(group, new SearchGroupCardView.ActionHandler() {
                                 @Override
-                                public void mouseClicked(MouseEvent e) {
-                                    super.mouseClicked(e);
+                                public void onTitleClick() {
                                     ServiceManager.getService(project, SearchTabControllers.class).openSearchTab(group.lastSearch.searchId);
                                     Tracking.projectTracking(project).trace(Events.searchClick(project, group.lastSearch.searchId));
                                 }
                             });
+                            searchGroups.add(searchGroupCard);
                             view.contentPanel.add(searchGroupCard.controlPanel);
                         }
                     }
