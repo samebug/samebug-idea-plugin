@@ -36,4 +36,15 @@ public class Colors {
 
     public static final Color cardSeparator = new Color(0xAAAAAA);
 
+    public static final Color[] componentColors = {new Color(0x9A9A9A), new Color(0x14E3CF), new Color(0x8BC349), new Color(0x00384F),
+            new Color(0x9C27B0), new Color(0xFF00EB), new Color(0x03B8D4), new Color(0x79141D),
+            new Color(0xFFB600), new Color(0x3000E7), new Color(0x3EABFF), new Color(0xD50000),
+            new Color(0x443328), new Color(0xE91D63), new Color(0x029688), new Color(0xB0BF16), new Color(0xFF5621)};
+
+    public static final Color[] componentColorsDarcula = {new Color(0x9A9A9A), new Color(0x14E3CF), new Color(0x8BC349), new Color(0x0080B5),
+            new Color(0xBC37D3), new Color(0xFF00EB), new Color(0x03B8D4), new Color(0xD12232),
+            new Color(0xFFB600), new Color(0x9B81FF), new Color(0x3EABFF), new Color(0xD50000),
+            new Color(0xA37C62), new Color(0xE91D63), new Color(0x029688), new Color(0xB0BF16), new Color(0xFF5621)};
+
+
 }

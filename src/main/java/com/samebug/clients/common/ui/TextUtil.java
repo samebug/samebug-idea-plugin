@@ -13,27 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.components;
+package com.samebug.clients.common.ui;
 
-import javax.swing.*;
-import java.awt.*;
+import org.ocpsoft.prettytime.PrettyTime;
+
+import java.util.Date;
+import java.util.Locale;
 
 /**
- * Created by poroszd on 3/30/16.
+ * Created by poroszd on 4/6/16.
  */
-public class ImagePanel extends JPanel {
+public class TextUtil {
+    static final PrettyTime pretty = new PrettyTime(Locale.US);
 
-    private Image image;
-
-    public ImagePanel(Image image) {
-        this.image = image;
-        setOpaque(false);
+    public static String prettyTime(final Date date) {
+        return pretty.format(date);
     }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(image, 0, 0, null);
-    }
-
 }

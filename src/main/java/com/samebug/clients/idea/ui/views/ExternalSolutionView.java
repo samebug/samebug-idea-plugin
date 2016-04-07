@@ -15,13 +15,19 @@
  */
 package com.samebug.clients.idea.ui.views;
 
+import com.samebug.clients.common.entities.ExceptionType;
+import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.ImageUtil;
-import com.samebug.clients.idea.ui.components.*;
+import com.samebug.clients.idea.ui.components.ExceptionMessageLabel;
+import com.samebug.clients.idea.ui.components.LegacyBreadcrumbBar;
+import com.samebug.clients.idea.ui.components.LinkLabel;
+import com.samebug.clients.idea.ui.components.SourceIcon;
 import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
 import com.samebug.clients.search.api.entities.legacy.RestHit;
 import com.samebug.clients.search.api.entities.legacy.SolutionReference;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,95 +40,71 @@ import java.util.HashMap;
 public class ExternalSolutionView {
     final RestHit<SolutionReference> solution;
     final java.util.List<BreadCrumb> searchBreadcrumb;
-    final String packageName;
-    final String className;
+    final ExceptionType exceptionType;
 
-    public JPanel controlPanel;
-    public JPanel titlePanel;
-    public ExceptionPanel exceptionPanel;
-    public SourceReferencePanel sourceReferencePanel;
-    public JPanel actionPanel;
-    public JPanel breadcrumbPanel;
+    public final JPanel controlPanel;
 
     public ExternalSolutionView(RestHit<SolutionReference> solution, java.util.List<BreadCrumb> searchBreadcrumb) {
         this.solution = solution;
         this.searchBreadcrumb = searchBreadcrumb;
+        exceptionType = new ExceptionType(solution.exception.typeName);
 
-        int dotIndex = solution.exception.typeName.lastIndexOf('.');
-        if (dotIndex < 0) {
-            this.packageName = null;
-            this.className = solution.exception.typeName;
-        } else {
-            this.packageName = solution.exception.typeName.substring(0, dotIndex);
-            this.className = solution.exception.typeName.substring(dotIndex + 1);
-        }
+        final JPanel breadcrumbPanel = new LegacyBreadcrumbBar(searchBreadcrumb.subList(0, solution.matchLevel));
+        final JPanel titlePanel = new SolutionTitlePanel();
+        final JLabel exceptionMessageLabel = new ExceptionMessageLabel(solution.exception.message);
+        final JPanel exceptionTypePanel = new ExceptionTypePanel();
+        final JPanel sourceReferencePanel = new SourceReferencePanel(solution.solution);
+        final JPanel actionPanel = new ActionPanel();
 
-        controlPanel = new ControlPanel();
-        breadcrumbPanel = new LegacyBreadcrumbBar(searchBreadcrumb.subList(0, solution.matchLevel));
-        titlePanel = new TitlePanel();
-        exceptionPanel = new ExceptionPanel();
-        sourceReferencePanel = new SourceReferencePanel(solution.solution);
-        actionPanel = new ActionPanel();
-
-        controlPanel.add(new JPanel() {
+        controlPanel = new JPanel() {
             {
-                setLayout(new BorderLayout(0, 0));
-                setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
-                setOpaque(false);
-                add(breadcrumbPanel, BorderLayout.SOUTH);
-                add(titlePanel, BorderLayout.NORTH);
+                setLayout(new BorderLayout());
+                setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
                 add(new JPanel() {
                     {
-                        setLayout(new BorderLayout(0, 0));
-                        setBorder(BorderFactory.createEmptyBorder());
+                        setLayout(new BorderLayout());
+                        setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
                         setOpaque(false);
-                        add(actionPanel, BorderLayout.SOUTH);
+                        add(titlePanel, BorderLayout.NORTH);
+                        add(breadcrumbPanel, BorderLayout.SOUTH);
                         add(new JPanel() {
                             {
-                                setLayout(new BorderLayout(0, 0));
+                                setLayout(new BorderLayout());
                                 setBorder(BorderFactory.createEmptyBorder());
                                 setOpaque(false);
-                                add(sourceReferencePanel, BorderLayout.SOUTH);
+                                add(exceptionTypePanel, BorderLayout.NORTH);
+                                add(actionPanel, BorderLayout.SOUTH);
                                 add(new JPanel() {
                                     {
                                         setLayout(new BorderLayout());
-                                        setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+                                        setBorder(BorderFactory.createEmptyBorder());
                                         setOpaque(false);
-                                        add(exceptionPanel, BorderLayout.CENTER);
-                                    }
-                                });
+                                        add(sourceReferencePanel, BorderLayout.SOUTH);
+                                        add(new JPanel() {
+                                            {
+                                                setLayout(new BorderLayout());
+                                                setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+                                                setOpaque(false);
+                                                add(exceptionMessageLabel, BorderLayout.CENTER);
+                                            }
+                                        }, BorderLayout.CENTER);
 
+                                    }
+                                }, BorderLayout.CENTER);
                             }
                         }, BorderLayout.CENTER);
                     }
                 }, BorderLayout.CENTER);
+
+                setPreferredSize(new Dimension(400, getPreferredSize().height));
+                setMaximumSize(new Dimension(Integer.MAX_VALUE, Math.min(getPreferredSize().height, 250)));
             }
-        }, BorderLayout.CENTER);
+        };
     }
 
-
-    public class ControlPanel extends JPanel {
+    public class SolutionTitlePanel extends JPanel {
         {
-            setLayout(new BorderLayout(0, 0));
-            setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
-        }
-
-        @Override
-        public Dimension getPreferredSize() {
-            Dimension d = super.getPreferredSize();
-            return new Dimension(400, d.height);
-        }
-
-        @Override
-        public Dimension getMaximumSize() {
-            Dimension d = super.getPreferredSize();
-            return new Dimension(Integer.MAX_VALUE, Math.min(d.height, 250));
-        }
-    }
-
-    public class TitlePanel extends JPanel {
-        {
-            setLayout(new BorderLayout(0, 0));
+            setLayout(new BorderLayout());
             setBorder(BorderFactory.createEmptyBorder());
             setOpaque(false);
             final Image sourceIcon = ImageUtil.getScaled(solution.solution.source.iconUrl, 32, 32);
@@ -146,13 +128,14 @@ public class ExternalSolutionView {
         }
     }
 
-    public class ExceptionPanel extends JPanel {
+    class ExceptionTypePanel extends JPanel {
         {
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createEmptyBorder());
             setOpaque(false);
-            add(new JLabel(String.format("%s", className)) {
+            add(new JLabel() {
                 {
+                    setText((String.format("%s", exceptionType.className)));
                     HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
                     attributes.put(TextAttribute.SIZE, 14);
                     attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
@@ -163,11 +146,39 @@ public class ExternalSolutionView {
                 public Color getForeground() {
                     return ColorUtil.unemphasizedText();
                 }
-            }, BorderLayout.NORTH);
-            add(new ExceptionMessageLabel(solution.exception.message), BorderLayout.CENTER);
+            }, BorderLayout.CENTER);
         }
     }
 
+    public class SourceReferencePanel extends JPanel {
+        public SourceReferencePanel(@NotNull SolutionReference solutionReference) {
+            setLayout(new FlowLayout(FlowLayout.RIGHT));
+            setBorder(BorderFactory.createEmptyBorder());
+            setOpaque(false);
+            if (solutionReference.author == null) {
+                add(new JLabel(String.format("%s", TextUtil.prettyTime(solutionReference.createdAt))) {
+                    @Override
+                    public Color getForeground() {
+                        return ColorUtil.unemphasizedText();
+                    }
+                });
+            } else {
+                add(new JLabel(String.format("%s | by ", TextUtil.prettyTime(solutionReference.createdAt))) {
+                    @Override
+                    public Color getForeground() {
+                        return ColorUtil.unemphasizedText();
+                    }
+                });
+                add(new LinkLabel(solutionReference.author.name, solutionReference.author.url) {
+                    @Override
+                    public Color getForeground() {
+                        return ColorUtil.unemphasizedText();
+                    }
+                });
+            }
+        }
+
+    }
 
     public class ActionPanel extends JPanel {
         {

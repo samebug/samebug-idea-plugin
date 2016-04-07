@@ -34,24 +34,42 @@ public class HistoryTabView {
     public JPanel contentPanel;
 
     public HistoryTabView() {
-        controlPanel = new JPanel();
-        controlPanel.setLayout(new BorderLayout(0, 0));
-        toolbarPanel = new JPanel();
-        toolbarPanel.setLayout(new BorderLayout(0, 0));
-        controlPanel.add(toolbarPanel, BorderLayout.NORTH);
         scrollPane = new JScrollPane();
-        controlPanel.add(scrollPane, BorderLayout.CENTER);
-        contentPanel = new JPanel();
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.PAGE_AXIS));
-        scrollPane.setViewportView(contentPanel);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
+        contentPanel = new ContentPanel();
         statusIcon = new JLabel();
+        toolbarPanel = new ToolBarPanel();
+
+        controlPanel = new JPanel() {
+            {
+                setLayout(new BorderLayout());
+
+                add(toolbarPanel, BorderLayout.NORTH);
+                add(scrollPane, BorderLayout.CENTER);
+            }
+        };
+
         statusIcon.setText(null);
         statusIcon.setIcon(null);
-
-        final DefaultActionGroup group = (DefaultActionGroup) ActionManager.getInstance().getAction("Samebug.ToolWindowMenu");
-        final ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
-        toolbarPanel.add(actionToolBar.getComponent(), BorderLayout.WEST);
         toolbarPanel.add(statusIcon, BorderLayout.EAST);
+
+        scrollPane.setViewportView(contentPanel);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+    }
+
+    class ToolBarPanel extends JPanel {
+        {
+            setLayout(new BorderLayout());
+
+            final DefaultActionGroup group = (DefaultActionGroup) ActionManager.getInstance().getAction("Samebug.ToolWindowMenu");
+            final ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+            add(actionToolBar.getComponent(), BorderLayout.WEST);
+        }
+    }
+
+    class ContentPanel extends JPanel {
+        {
+            setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        }
     }
 }
