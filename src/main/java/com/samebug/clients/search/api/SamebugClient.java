@@ -88,7 +88,7 @@ public class SamebugClient {
         RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
         CredentialsProvider provider = new BasicCredentialsProvider();
 
-        requestConfigBuilder.setConnectTimeout(3000).setSocketTimeout(7000).setConnectionRequestTimeout(500);
+        requestConfigBuilder.setConnectTimeout(15000).setSocketTimeout(15000).setConnectionRequestTimeout(500);
         try {
             IdeHttpClientHelpers.ApacheHttpClient4.setProxyForUrlIfEnabled(requestConfigBuilder, root.toString());
             IdeHttpClientHelpers.ApacheHttpClient4.setProxyCredentialsForUrlIfEnabled(provider, root.toString());
