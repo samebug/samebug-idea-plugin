@@ -24,36 +24,42 @@ import java.awt.*;
 public class SearchTabView {
     public JPanel controlPanel;
     public JPanel header;
+    public JScrollPane scrollPane;
     public JPanel solutionsPanel;
 
     public SearchTabView() {
 
+        header = new HeaderPanel();
+        scrollPane = new JScrollPane();
+        solutionsPanel = new SolutionsPanel();
         controlPanel = new JPanel() {
             {
-                setLayout(new BorderLayout(0, 0));
-                header = new JPanel() {
-                    {
-                        setLayout(new BorderLayout());
-                    }
+                setLayout(new BorderLayout());
 
-                    @Override
-                    public Dimension getPreferredSize() {
-                        return new Dimension(super.getPreferredSize().width, Math.min(super.getPreferredSize().height, 167));
-                    }
-                };
                 add(header, BorderLayout.NORTH);
-                add(new JScrollPane() {
-                    {
-                        solutionsPanel = new JPanel() {
-                            {
-                                setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-                            }
-                        };
-                        setViewportView(solutionsPanel);
-                        getVerticalScrollBar().setUnitIncrement(10);
-                    }
-                }, BorderLayout.CENTER);
+                add(scrollPane, BorderLayout.CENTER);
             }
         };
+
+        scrollPane.setViewportView(solutionsPanel);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+    }
+
+    class HeaderPanel extends JPanel {
+        {
+            setLayout(new BorderLayout());
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            return new Dimension(super.getPreferredSize().width, Math.min(super.getPreferredSize().height, 167));
+        }
+    }
+
+    class SolutionsPanel extends JPanel {
+        {
+            setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        }
     }
 }

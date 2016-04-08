@@ -37,8 +37,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -116,17 +114,16 @@ public class SearchTabController {
                 view.solutionsPanel.removeAll();
                 view.header.removeAll();
 
-                if (model != null) {
-                    SearchGroupCardView searchCard = new SearchGroupCardView(search);
-                    view.header.add(searchCard.controlPanel);
-                    searchCard.titleLabel.addMouseListener(new MouseAdapter() {
+                if (model != null && search != null) {
+                    SearchGroupCardView searchCard = new SearchGroupCardView(search, new SearchGroupCardView.ActionHandler() {
                         @Override
-                        public void mouseClicked(MouseEvent e) {
+                        public void onTitleClick() {
                             URL url = SamebugClient.getSearchUrl(search.lastSearch.searchId);
                             BrowserUtil.browse(url);
                             Tracking.projectTracking(project).trace(Events.linkClick(project, url));
                         }
                     });
+                    view.header.add(searchCard.controlPanel);
                     if (model.tips.size() + model.references.size() == 0) {
                         EmptyWarningPanel panel = new EmptyWarningPanel();
                         panel.label.setText(SamebugBundle.message("samebug.toolwindow.search.content.empty"));

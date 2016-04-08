@@ -39,6 +39,9 @@ public class ColorUtil {
         return normalOrDarcula(Colors.sourceIconBackground, Colors.sourceIconBackgroundDarcula);
     }
 
+    public static Color componentColors(int color) {
+        return normalOrDarcula(Colors.componentColors[color], Colors.componentColorsDarcula[color]);
+    }
 
     static Color normalOrDarcula(Color normal, Color darcula) {
         if (UIUtil.isUnderDarcula()) {
