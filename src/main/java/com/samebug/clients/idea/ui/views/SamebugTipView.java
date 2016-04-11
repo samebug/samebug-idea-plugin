@@ -19,6 +19,7 @@ import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.views.components.*;
+import com.samebug.clients.idea.ui.views.components.MarkPanel;
 import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
 import com.samebug.clients.search.api.entities.legacy.RestHit;
 import com.samebug.clients.search.api.entities.legacy.Tip;
@@ -155,8 +156,13 @@ public class SamebugTipView extends JPanel {
 
     class ActionPanel extends JPanel {
         {
-            setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+            setLayout(new GridBagLayout());
             setOpaque(false);
+            GridBagConstraints gbc = new GridBagConstraints();
+            add(new MarkPanel(tip.score, tip.markedByUser), gbc);
+            gbc.gridx = 2;
+            gbc.weightx = 1;
+            add(new JPanel(), gbc);
         }
     }
 }
