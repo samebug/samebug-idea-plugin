@@ -25,7 +25,6 @@ import com.samebug.clients.search.api.entities.UserInfo;
 import com.samebug.clients.search.api.entities.legacy.Solutions;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
-import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -39,16 +38,16 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.execchain.RequestAbortedException;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.jetbrains.annotations.Nullable;
 
-import javax.net.ssl.SSLException;
 import java.io.*;
-import java.net.*;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -88,7 +87,7 @@ public class SamebugClient {
         RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
         CredentialsProvider provider = new BasicCredentialsProvider();
 
-        requestConfigBuilder.setConnectTimeout(15000).setSocketTimeout(15000).setConnectionRequestTimeout(500);
+        requestConfigBuilder.setConnectTimeout(5000).setSocketTimeout(7000).setConnectionRequestTimeout(500);
         try {
             IdeHttpClientHelpers.ApacheHttpClient4.setProxyForUrlIfEnabled(requestConfigBuilder, root.toString());
             IdeHttpClientHelpers.ApacheHttpClient4.setProxyCredentialsForUrlIfEnabled(provider, root.toString());
@@ -111,7 +110,6 @@ public class SamebugClient {
         httpClient = httpBuilder.setDefaultRequestConfig(requestConfig)
                 .setMaxConnTotal(20).setMaxConnPerRoute(20)
                 .setDefaultCredentialsProvider(provider)
-                .setRetryHandler(new AggresiveRetryHandler())
                 .setDefaultHeaders(Arrays.asList(new BasicHeader("User-Agent", USER_AGENT)))
                 .build();
 
@@ -298,12 +296,5 @@ abstract class HandleResponse<T> {
             } catch (IOException ignored) {
             }
         }
-    }
-}
-
-class AggresiveRetryHandler extends DefaultHttpRequestRetryHandler {
-    public AggresiveRetryHandler() {
-        super(3, false, Arrays.asList(ConnectTimeoutException.class, SocketTimeoutException.class, RequestAbortedException.class,
-                UnknownHostException.class, ConnectException.class, SSLException.class));
     }
 }
