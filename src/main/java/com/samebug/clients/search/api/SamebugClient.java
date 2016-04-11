@@ -26,7 +26,6 @@ import com.samebug.clients.search.api.entities.UserInfo;
 import com.samebug.clients.search.api.entities.legacy.Solutions;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
