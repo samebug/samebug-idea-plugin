@@ -35,6 +35,10 @@ public class ColorUtil {
         return normalOrDarcula(Colors.highlightPanel, Colors.highlightPanelDarcula);
     }
 
+    public static Color writeTipPanel() {
+        return normalOrDarcula(Colors.writeTipPanel, Colors.writeTipPanelDarcula);
+    }
+
     public static Color sourceIconBackground() {
         return normalOrDarcula(Colors.sourceIconBackground, Colors.sourceIconBackgroundDarcula);
     }

@@ -34,11 +34,9 @@ import java.util.HashMap;
 /**
  * Created by poroszd on 3/3/16.
  */
-public class SearchGroupCardView {
+public class SearchGroupCardView extends JPanel {
     final GroupedExceptionSearch searchGroup;
     final ExceptionType exceptionType;
-
-    public JPanel controlPanel;
 
     public SearchGroupCardView(final GroupedExceptionSearch searchGroup, final ActionHandler actionHandler) {
         this.searchGroup = searchGroup;
@@ -51,51 +49,47 @@ public class SearchGroupCardView {
         final JPanel groupInfoPanel = new GroupInfoPanel();
         final JPanel breadcrumbPanel = new BreadcrumbBar(searchGroup.lastSearch.componentStack);
 
-        controlPanel = new JPanel() {
+        setLayout(new BorderLayout());
+        setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
+        add(new JPanel() {
             {
                 setLayout(new BorderLayout());
-                setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
+                setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
                 add(new JPanel() {
                     {
                         setLayout(new BorderLayout());
-                        setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
+                        setBorder(BorderFactory.createEmptyBorder());
+                        add(packageLabel, BorderLayout.WEST);
+                        add(hitsLabel, BorderLayout.EAST);
+                    }
+                }, BorderLayout.NORTH);
+                add(breadcrumbPanel, BorderLayout.SOUTH);
+                add(new JPanel() {
+                    {
+                        setLayout(new BorderLayout());
+                        setBorder(BorderFactory.createEmptyBorder());
+                        add(groupInfoPanel, BorderLayout.SOUTH);
                         add(new JPanel() {
                             {
-                                setLayout(new BorderLayout());
-                                setBorder(BorderFactory.createEmptyBorder());
-                                add(packageLabel, BorderLayout.WEST);
-                                add(hitsLabel, BorderLayout.EAST);
+                                setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+                                setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+                                add(titleLabel);
                             }
                         }, BorderLayout.NORTH);
-                        add(breadcrumbPanel, BorderLayout.SOUTH);
                         add(new JPanel() {
                             {
                                 setLayout(new BorderLayout());
-                                setBorder(BorderFactory.createEmptyBorder());
-                                add(groupInfoPanel, BorderLayout.SOUTH);
-                                add(new JPanel() {
-                                    {
-                                        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-                                        setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-                                        add(titleLabel);
-                                    }
-                                }, BorderLayout.NORTH);
-                                add(new JPanel() {
-                                    {
-                                        setLayout(new BorderLayout());
-                                        setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
-                                        add(exceptionMessageLabel, BorderLayout.CENTER);
-                                    }
-                                }, BorderLayout.CENTER);
+                                setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
+                                add(exceptionMessageLabel, BorderLayout.CENTER);
                             }
                         }, BorderLayout.CENTER);
                     }
                 }, BorderLayout.CENTER);
-
-                setPreferredSize(new Dimension(400, getPreferredSize().height));
-                setMaximumSize(new Dimension(Integer.MAX_VALUE, Math.min(getPreferredSize().height, 250)));
             }
-        };
+        }, BorderLayout.CENTER);
+
+        setPreferredSize(new Dimension(400, getPreferredSize().height));
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, Math.min(getPreferredSize().height, 250)));
 
         titleLabel.addMouseListener(new MouseAdapter() {
             @Override

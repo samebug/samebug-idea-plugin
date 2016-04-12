@@ -127,7 +127,7 @@ public class HistoryTabController {
                                 }
                             });
                             searchGroups.add(searchGroupCard);
-                            view.contentPanel.add(searchGroupCard.controlPanel);
+                            view.contentPanel.add(searchGroupCard);
                         }
                     }
                     if (searchGroups.isEmpty()) {

@@ -19,15 +19,13 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
-import com.samebug.clients.idea.ui.views.ExternalSolutionView;
-import com.samebug.clients.idea.ui.views.SamebugTipView;
-import com.samebug.clients.idea.ui.views.SearchGroupCardView;
-import com.samebug.clients.idea.ui.views.SearchTabView;
+import com.samebug.clients.idea.ui.views.*;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.ComponentStack;
 import com.samebug.clients.search.api.entities.ExceptionSearch;
@@ -37,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -123,17 +122,25 @@ public class SearchTabController {
                             Tracking.projectTracking(project).trace(Events.linkClick(project, url));
                         }
                     });
-                    view.header.add(searchCard.controlPanel);
+                    view.header.add(searchCard, BorderLayout.CENTER);
+                    if (model.tips.size() == 0) {
+                        view.header.add(new WriteTipHintView(new WriteTipHintView.ActionHandler() {
+                            @Override
+                            public void onCTAClick() {
+                                LOGGER.warn("zoink");
+                            }
+                        }), BorderLayout.SOUTH);
+                    }
                     if (model.tips.size() + model.references.size() == 0) {
                         EmptyWarningPanel panel = new EmptyWarningPanel();
                         panel.label.setText(SamebugBundle.message("samebug.toolwindow.search.content.empty"));
                         view.solutionsPanel.add(panel.controlPanel);
                     } else {
                         for (final RestHit<Tip> tip : model.tips) {
-                            view.solutionsPanel.add(new SamebugTipView(tip, model.breadcrumb).controlPanel);
+                            view.solutionsPanel.add(new SamebugTipView(tip, model.breadcrumb));
                         }
                         for (final RestHit<SolutionReference> s : model.references) {
-                            view.solutionsPanel.add(new ExternalSolutionView(s, model.breadcrumb).controlPanel);
+                            view.solutionsPanel.add(new ExternalSolutionView(s, model.breadcrumb));
                         }
                     }
 
