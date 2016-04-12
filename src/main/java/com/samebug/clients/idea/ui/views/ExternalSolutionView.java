@@ -172,7 +172,7 @@ public class ExternalSolutionView {
                 add(new LinkLabel(solutionReference.author.name, solutionReference.author.url) {
                     @Override
                     public Color getForeground() {
-                        return ColorUtil.unemphasizedText();
+                        return ColorUtil.emphasizedText();
                     }
                 });
             }

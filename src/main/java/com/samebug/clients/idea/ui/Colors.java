@@ -23,13 +23,13 @@ import java.awt.*;
 public class Colors {
     public static final Color samebugOrange = new Color(0xFF7800);
 
-    public static final Color unemphasizedText = new Color(0xAAAAAA);
-    public static final Color unemphasizedTextDarcula = new Color(0xE2E2E2);
+    public static final Color unemphasizedText = new Color(0x67746E);
+    public static final Color unemphasizedTextDarcula = new Color(0xAAAAAA);
     public static final Color emphasizedText = new Color(0x00000);
     public static final Color emphasizedTextDarcula = new Color(0xFFFFFF);
 
     public static final Color highlightPanel = new Color(0xFFFFFF);
-    public static final Color highlightPanelDarcula = new Color(0x222222);
+    public static final Color highlightPanelDarcula = new Color(0x2D2F30);
 
     public static final Color sourceIconBackground = null;
     public static final Color sourceIconBackgroundDarcula = new Color(0xFFFFFF);
