@@ -25,6 +25,8 @@ import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.views.*;
+import com.samebug.clients.idea.ui.views.components.tip.WriteTipHint;
+import com.samebug.clients.idea.ui.views.components.tip.WriteTip;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.ComponentStack;
 import com.samebug.clients.search.api.entities.ExceptionSearch;
@@ -121,10 +123,7 @@ public class SearchTabController {
                         }
                     });
                     if (model.tips.size() == 0) {
-                        final WriteTipHintView writeTipHint = new WriteTipHintView(hintActionHandler(searchCard));
-                        view.makeHeader(searchCard, writeTipHint);
-                        view.header.revalidate();
-                        view.header.repaint();
+                        repaintHeaderWithTipHint(searchCard);
                     } else {
                         view.makeHeader(searchCard);
                         view.header.revalidate();
@@ -157,11 +156,19 @@ public class SearchTabController {
         });
     }
 
-    WriteTipHintView.ActionHandler hintActionHandler(final SearchGroupCardView searchCard) {
-        return new WriteTipHintView.ActionHandler() {
+    void repaintHeaderWithTipHint(final SearchGroupCardView searchCard) {
+        final WriteTipHint writeTipHint = new WriteTipHint();
+        writeTipHint.setActionHandler(hintActionHandler(searchCard, writeTipHint));
+        view.makeHeader(searchCard, writeTipHint);
+        view.header.revalidate();
+        view.header.repaint();
+    }
+
+    WriteTipHint.ActionHandler hintActionHandler(final SearchGroupCardView searchCard, final WriteTipHint writeTipHint) {
+        return writeTipHint.new ActionHandler() {
             @Override
             public void onCTAClick() {
-                final WriteTipView writeTip = new WriteTipView();
+                final WriteTip writeTip = new WriteTip();
                 writeTip.setActionHandler(tipActionHandler(searchCard, writeTip));
                 view.makeHeader(searchCard, writeTip);
                 view.header.revalidate();
@@ -170,13 +177,10 @@ public class SearchTabController {
         };
     }
 
-    WriteTipView.ActionHandler tipActionHandler(final SearchGroupCardView searchCard, final WriteTipView writeTip) {
+    WriteTip.ActionHandler tipActionHandler(final SearchGroupCardView searchCard, final WriteTip writeTip) {
         return writeTip.new ActionHandler() {
             public void onCancel() {
-                final WriteTipHintView writeTipHint = new WriteTipHintView(hintActionHandler(searchCard));
-                view.makeHeader(searchCard, writeTipHint);
-                view.header.revalidate();
-                view.header.repaint();
+                repaintHeaderWithTipHint(searchCard);
             }
 
             public void onSubmit() {

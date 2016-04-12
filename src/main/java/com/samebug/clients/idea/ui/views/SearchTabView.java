@@ -15,6 +15,9 @@
  */
 package com.samebug.clients.idea.ui.views;
 
+import com.samebug.clients.idea.ui.views.components.tip.WriteTipHint;
+import com.samebug.clients.idea.ui.views.components.tip.WriteTip;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -62,7 +65,7 @@ public class SearchTabView {
         });
     }
 
-    public void makeHeader(final SearchGroupCardView search, final WriteTipHintView writeTipHint) {
+    public void makeHeader(final SearchGroupCardView search, final WriteTipHint writeTipHint) {
         header.removeAll();
         header.add(new JPanel() {
             {
@@ -75,7 +78,7 @@ public class SearchTabView {
         });
     }
 
-    public void makeHeader(final SearchGroupCardView search, final WriteTipView writeTip) {
+    public void makeHeader(final SearchGroupCardView search, final WriteTip writeTip) {
         header.removeAll();
         header.add(new JPanel() {
             {

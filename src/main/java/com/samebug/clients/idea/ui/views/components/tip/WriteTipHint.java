@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.views;
+package com.samebug.clients.idea.ui.views.components.tip;
 
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
@@ -28,11 +28,13 @@ import java.util.HashMap;
 /**
  * Created by poroszd on 4/12/16.
  */
-public class WriteTipHintView extends JPanel {
-    public WriteTipHintView(final ActionHandler actionHandler) {
+public class WriteTipHint extends JPanel {
+    final CTALabel ctaLabel;
+    final CTAExplainLabel ctaExplainLabel;
 
-        final CTALabel ctaLabel = new CTALabel();
-        final CTAExplainLabel ctaExplainLabel = new CTAExplainLabel();
+    public WriteTipHint() {
+        ctaLabel = new CTALabel();
+        ctaExplainLabel = new CTAExplainLabel();
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -44,14 +46,6 @@ public class WriteTipHintView extends JPanel {
                 setOpaque(false);
                 add(ctaLabel);
                 add(ctaExplainLabel);
-            }
-        });
-
-        ctaLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                actionHandler.onCTAClick();
             }
         });
     }
@@ -94,7 +88,17 @@ public class WriteTipHintView extends JPanel {
         }
     }
 
-    public interface ActionHandler {
-        void onCTAClick();
+    public void setActionHandler(final ActionHandler actionHandler) {
+        ctaLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                actionHandler.onCTAClick();
+            }
+        });
+    }
+
+    public abstract class ActionHandler {
+        protected abstract void onCTAClick();
     }
 }

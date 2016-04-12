@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.views;
+package com.samebug.clients.idea.ui.views.components.tip;
 
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
@@ -36,22 +36,32 @@ import java.util.HashMap;
 /**
  * Created by poroszd on 4/12/16.
  */
-public class WriteTipView extends JPanel {
+public class WriteTip extends JPanel {
     public static final int maxCharacters = 140;
     public static final int minCharacters = 5;
     public static final int maxLines = 7;
 
-    public final JLabel tipTitle = new TipTitle();
-    final JLabel tipDescription = new DescriptionLabel(SamebugBundle.message("samebug.tip.write.tip.description"));
-    final TipBody tipBody = new TipBody();
-    final LengthCounter lengthCounter = new LengthCounter();
-    final JLabel sourceTitle = new SourceTitle();
-    final JLabel sourceDescription = new DescriptionLabel(SamebugBundle.message("samebug.tip.write.source.description"));
-    final SourceLink sourceLink = new SourceLink();
-    final JButton cancel = new CancelButton();
-    final JButton submit = new SubmitButton();
+    final JLabel tipTitle;
+    final JLabel tipDescription;
+    final TipBody tipBody;
+    final LengthCounter lengthCounter;
+    final JLabel sourceTitle;
+    final JLabel sourceDescription;
+    final SourceLink sourceLink;
+    final JButton cancel;
+    final JButton submit;
 
-    public WriteTipView() {
+    public WriteTip() {
+        tipTitle = new TipTitle();
+        tipDescription = new DescriptionLabel(SamebugBundle.message("samebug.tip.write.tip.description"));
+        tipBody = new TipBody();
+        lengthCounter = new LengthCounter();
+        sourceTitle = new SourceTitle();
+        sourceDescription = new DescriptionLabel(SamebugBundle.message("samebug.tip.write.source.description"));
+        sourceLink = new SourceLink();
+        cancel = new CancelButton();
+        submit = new SubmitButton();
+
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -111,43 +121,11 @@ public class WriteTipView extends JPanel {
             }
         });
 
-        ((AbstractDocument) tipBody.getDocument()).setDocumentFilter(new TipContraints());
         PromptSupport.setPrompt(SamebugBundle.message("samebug.tip.write.tip.placeholder"), tipBody);
         PromptSupport.setPrompt(SamebugBundle.message("samebug.tip.write.source.placeholder"), sourceLink);
-        tipBody.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                lengthCounter.updateLength(e.getDocument().getLength());
-                lengthCounter.repaint();
-            }
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                lengthCounter.updateLength(e.getDocument().getLength());
-                lengthCounter.repaint();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                lengthCounter.updateLength(e.getDocument().getLength());
-                lengthCounter.repaint();
-            }
-        });
-    }
-
-    public void setActionHandler(final ActionHandler actionHandler) {
-        cancel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionHandler.onCancel();
-            }
-        });
-        submit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionHandler.onSubmit();
-            }
-        });
+        ((AbstractDocument) tipBody.getDocument()).setDocumentFilter(new TipContraints());
+        tipBody.getDocument().addDocumentListener(new TipEditorListener());
     }
 
     @Override
@@ -265,6 +243,41 @@ public class WriteTipView extends JPanel {
             }
 
         }
+    }
+
+    class TipEditorListener implements DocumentListener {
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            lengthCounter.updateLength(e.getDocument().getLength());
+            lengthCounter.repaint();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            lengthCounter.updateLength(e.getDocument().getLength());
+            lengthCounter.repaint();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            lengthCounter.updateLength(e.getDocument().getLength());
+            lengthCounter.repaint();
+        }
+    }
+
+    public void setActionHandler(final ActionHandler actionHandler) {
+        cancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionHandler.onCancel();
+            }
+        });
+        submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionHandler.onSubmit();
+            }
+        });
     }
 
     public abstract class ActionHandler {

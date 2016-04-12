@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.components;
+package com.samebug.clients.idea.ui.views.components;
 
 import com.intellij.ide.BrowserUtil;
 import com.samebug.clients.idea.resources.SamebugIcons;
