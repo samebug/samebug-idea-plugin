@@ -31,6 +31,10 @@ public class ColorUtil {
         return normalOrDarcula(Colors.emphasizedText, Colors.emphasizedTextDarcula);
     }
 
+    public static Color alertText() {
+        return normalOrDarcula(Colors.alertText, Colors.alertTextDarcula);
+    }
+
     public static Color highlightPanel() {
         return normalOrDarcula(Colors.highlightPanel, Colors.highlightPanelDarcula);
     }

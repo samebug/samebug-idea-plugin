@@ -29,13 +29,17 @@ public class SearchTabView {
 
     public SearchTabView() {
 
-        header = new HeaderPanel();
+        header = new JPanel() {
+            {
+                setLayout(new BorderLayout());
+                setBorder(BorderFactory.createEmptyBorder());
+            }
+        };
         scrollPane = new JScrollPane();
         solutionsPanel = new SolutionsPanel();
         controlPanel = new JPanel() {
             {
                 setLayout(new BorderLayout());
-
                 add(header, BorderLayout.NORTH);
                 add(scrollPane, BorderLayout.CENTER);
             }
@@ -46,15 +50,42 @@ public class SearchTabView {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
     }
 
-    class HeaderPanel extends JPanel {
-        {
-            setLayout(new BorderLayout());
-        }
+    public void makeHeader(final SearchGroupCardView search) {
+        header.removeAll();
+        header.add(new JPanel() {
+            {
+                setLayout(new BorderLayout());
+                setBorder(BorderFactory.createEmptyBorder());
+                add(search, BorderLayout.CENTER);
+                setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167)));
+            }
+        });
+    }
 
-        @Override
-        public Dimension getPreferredSize() {
-            return new Dimension(super.getPreferredSize().width, Math.min(super.getPreferredSize().height, 167));
-        }
+    public void makeHeader(final SearchGroupCardView search, final WriteTipHintView writeTipHint) {
+        header.removeAll();
+        header.add(new JPanel() {
+            {
+                setLayout(new BorderLayout());
+                setBorder(BorderFactory.createEmptyBorder());
+                add(search, BorderLayout.CENTER);
+                add(writeTipHint, BorderLayout.SOUTH);
+                setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167 + 50)));
+            }
+        });
+    }
+
+    public void makeHeader(final SearchGroupCardView search, final WriteTipView writeTip) {
+        header.removeAll();
+        header.add(new JPanel() {
+            {
+                setLayout(new BorderLayout());
+                setBorder(BorderFactory.createEmptyBorder());
+                add(search, BorderLayout.CENTER);
+                add(writeTip, BorderLayout.SOUTH);
+                setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167 + 350)));
+            }
+        });
     }
 
     class SolutionsPanel extends JPanel {

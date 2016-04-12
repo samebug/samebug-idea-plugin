@@ -27,6 +27,8 @@ public class Colors {
     public static final Color unemphasizedTextDarcula = new Color(0xAAAAAA);
     public static final Color emphasizedText = new Color(0x00000);
     public static final Color emphasizedTextDarcula = new Color(0xFFFFFF);
+    public static final Color alertText = new Color(0xFF0000);
+    public static final Color alertTextDarcula = new Color(0xFF0000);
 
     public static final Color highlightPanel = new Color(0xFFFFFF);
     public static final Color highlightPanelDarcula = new Color(0x2D2F30);

@@ -19,7 +19,6 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.tracking.Events;
@@ -35,7 +34,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -114,7 +112,7 @@ public class SearchTabController {
                 view.header.removeAll();
 
                 if (model != null && search != null) {
-                    SearchGroupCardView searchCard = new SearchGroupCardView(search, new SearchGroupCardView.ActionHandler() {
+                    final SearchGroupCardView searchCard = new SearchGroupCardView(search, new SearchGroupCardView.ActionHandler() {
                         @Override
                         public void onTitleClick() {
                             URL url = SamebugClient.getSearchUrl(search.lastSearch.searchId);
@@ -122,15 +120,17 @@ public class SearchTabController {
                             Tracking.projectTracking(project).trace(Events.linkClick(project, url));
                         }
                     });
-                    view.header.add(searchCard, BorderLayout.CENTER);
                     if (model.tips.size() == 0) {
-                        view.header.add(new WriteTipHintView(new WriteTipHintView.ActionHandler() {
-                            @Override
-                            public void onCTAClick() {
-                                LOGGER.warn("zoink");
-                            }
-                        }), BorderLayout.SOUTH);
+                        final WriteTipHintView writeTipHint = new WriteTipHintView(hintActionHandler(searchCard));
+                        view.makeHeader(searchCard, writeTipHint);
+                        view.header.revalidate();
+                        view.header.repaint();
+                    } else {
+                        view.makeHeader(searchCard);
+                        view.header.revalidate();
+                        view.header.repaint();
                     }
+
                     if (model.tips.size() + model.references.size() == 0) {
                         EmptyWarningPanel panel = new EmptyWarningPanel();
                         panel.label.setText(SamebugBundle.message("samebug.toolwindow.search.content.empty"));
@@ -155,5 +155,33 @@ public class SearchTabController {
                 view.controlPanel.repaint();
             }
         });
+    }
+
+    WriteTipHintView.ActionHandler hintActionHandler(final SearchGroupCardView searchCard) {
+        return new WriteTipHintView.ActionHandler() {
+            @Override
+            public void onCTAClick() {
+                final WriteTipView writeTip = new WriteTipView();
+                writeTip.setActionHandler(tipActionHandler(searchCard, writeTip));
+                view.makeHeader(searchCard, writeTip);
+                view.header.revalidate();
+                view.header.repaint();
+            }
+        };
+    }
+
+    WriteTipView.ActionHandler tipActionHandler(final SearchGroupCardView searchCard, final WriteTipView writeTip) {
+        return writeTip.new ActionHandler() {
+            public void onCancel() {
+                final WriteTipHintView writeTipHint = new WriteTipHintView(hintActionHandler(searchCard));
+                view.makeHeader(searchCard, writeTipHint);
+                view.header.revalidate();
+                view.header.repaint();
+            }
+
+            public void onSubmit() {
+
+            }
+        };
     }
 }
