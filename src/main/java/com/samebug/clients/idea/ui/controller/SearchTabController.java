@@ -19,6 +19,7 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.tracking.Events;
@@ -33,12 +34,14 @@ import com.samebug.clients.search.api.entities.ComponentStack;
 import com.samebug.clients.search.api.entities.ExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import com.samebug.clients.search.api.entities.legacy.*;
+import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.RunnableFuture;
 
 /**
  * Created by poroszd on 3/29/16.
@@ -152,7 +155,8 @@ public class SearchTabController {
                 Tracking.projectTracking(project).trace(Events.linkClick(project, url));
             }
         });
-        if (model.tips.size() == 0) {
+        // TODO write tip feature disabled
+        if (false && model.tips.size() == 0) {
             final WriteTipHint writeTipHint = new WriteTipHint();
             writeTipHint.setActionHandler(CTAHandler(searchCard, writeTipHint));
             view.makeHeader(searchCard, writeTipHint);
@@ -179,13 +183,32 @@ public class SearchTabController {
     }
 
     WriteTip.ActionHandler tipActionHandler(final WriteTip writeTip) {
+        assert(search != null);
+        assert(model != null);
+
         return writeTip.new ActionHandler() {
+            @Override
             public void onCancel() {
                 repaintHeader();
             }
 
-            public void onSubmit() {
-
+            @Override
+            public void onSubmit(final String tip, final URL sourceUrl) {
+                ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            final RestHit<Tip> newTip = IdeaSamebugPlugin.getInstance().getClient().postTip(search.lastSearch.searchId, tip, sourceUrl);
+                            success();
+                            model.tips.add(newTip);
+                            refreshPane();
+                        } catch (SamebugClientException e) {
+                            error(e.getMessage());
+                        } finally {
+                            ready();
+                        }
+                    }
+                });
             }
         };
     }

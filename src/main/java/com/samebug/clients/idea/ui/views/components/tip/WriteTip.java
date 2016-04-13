@@ -31,6 +31,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.font.TextAttribute;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 
 /**
@@ -48,8 +50,9 @@ public class WriteTip extends JPanel {
     final JLabel sourceTitle;
     final JLabel sourceDescription;
     final SourceLink sourceLink;
+    final ErrorPanel errorPanel;
     final JButton cancel;
-    final JButton submit;
+    final SubmitButton submit;
 
     public WriteTip() {
         tipTitle = new TipTitle();
@@ -59,6 +62,7 @@ public class WriteTip extends JPanel {
         sourceTitle = new SourceTitle();
         sourceDescription = new DescriptionLabel(SamebugBundle.message("samebug.tip.write.source.description"));
         sourceLink = new SourceLink();
+        errorPanel = new ErrorPanel();
         cancel = new CancelButton();
         submit = new SubmitButton();
 
@@ -111,6 +115,7 @@ public class WriteTip extends JPanel {
                 add(sourceLink);
             }
         });
+        add(errorPanel);
         add(new JPanel() {
             {
                 setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 0));
@@ -208,6 +213,24 @@ public class WriteTip extends JPanel {
         }
     }
 
+    class ErrorPanel extends JPanel {
+        final JPanel messagePanel;
+        {
+            setLayout(new BorderLayout());
+            setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+            setOpaque(false);
+            messagePanel = new JPanel();
+            messagePanel.setLayout(new BorderLayout());
+            messagePanel.setBackground(Color.red);
+            add(messagePanel);
+        }
+
+        public void displayError(final String msg) {
+            messagePanel.removeAll();
+            messagePanel.add(new JLabel(msg));
+        }
+    }
+
     class CancelButton extends JButton {
         {
             setText(SamebugBundle.message("samebug.tip.write.cancel"));
@@ -221,12 +244,22 @@ public class WriteTip extends JPanel {
 
     class SubmitButton extends JButton {
         {
-            setText(SamebugBundle.message("samebug.tip.write.submit"));
+            updateState(false);
         }
 
         @Override
         public Color getBackground() {
             return ColorUtil.writeTipPanel();
+        }
+
+        public void updateState(boolean working) {
+            if (working) {
+                setText("work in progress");
+                setEnabled(false);
+            } else {
+                setText(SamebugBundle.message("samebug.tip.write.submit"));
+                setEnabled(true);
+            }
         }
     }
 
@@ -275,7 +308,37 @@ public class WriteTip extends JPanel {
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                actionHandler.onSubmit();
+                submit.updateState(true);
+                final String tip = tipBody.getText();
+                final String rawSourceUrl = sourceLink.getText();
+
+                if (tip.length() < minCharacters) {
+                    errorPanel.displayError(SamebugBundle.message("samebug.tip.write.error.tip.short"));
+                    actionHandler.ready();
+                    return;
+                } else if (tip.length() > maxCharacters) {
+                    errorPanel.displayError(SamebugBundle.message("samebug.tip.write.error.tip.long"));
+                    actionHandler.ready();
+                    return;
+                } else if (StringUtils.countMatches(tip, System.lineSeparator()) >= maxLines) {
+                    errorPanel.displayError(SamebugBundle.message("samebug.tip.write.error.tip.tooManyLines"));
+                    actionHandler.ready();
+                    return;
+                }
+
+                final URL sourceUrl;
+                if (rawSourceUrl == null || rawSourceUrl.trim().isEmpty()) {
+                    sourceUrl = null;
+                } else {
+                    try {
+                        sourceUrl = new URL(rawSourceUrl);
+                    } catch (MalformedURLException e1) {
+                        errorPanel.displayError(SamebugBundle.message("samebug.tip.write.error.source.malformed"));
+                        actionHandler.ready();
+                        return;
+                    }
+                }
+                actionHandler.onSubmit(tip, sourceUrl);
             }
         });
     }
@@ -283,7 +346,18 @@ public class WriteTip extends JPanel {
     public abstract class ActionHandler {
         protected abstract void onCancel();
 
-        protected abstract void onSubmit();
+        protected abstract void onSubmit(final String tip, final URL sourceUrl);
 
+        protected final void error(final String errorMessage) {
+            errorPanel.displayError(errorMessage);
+        }
+
+        protected final void success() {
+
+        }
+
+        protected final void ready() {
+            submit.updateState(false);
+        }
     }
 }
