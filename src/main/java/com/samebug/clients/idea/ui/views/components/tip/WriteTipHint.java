@@ -20,20 +20,17 @@ import com.samebug.clients.idea.ui.ColorUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
 /**
  * Created by poroszd on 4/12/16.
  */
-public class WriteTipHint extends JPanel {
-    final CTALabel ctaLabel;
+public class WriteTipHint extends WriteTipCTA {
     final CTAExplainLabel ctaExplainLabel;
 
     public WriteTipHint() {
-        ctaLabel = new CTALabel();
+        ctaButton = new CTALabel();
         ctaExplainLabel = new CTAExplainLabel();
 
         setLayout(new BorderLayout());
@@ -44,7 +41,7 @@ public class WriteTipHint extends JPanel {
                 setLayout(new FlowLayout());
                 setBorder(BorderFactory.createEmptyBorder());
                 setOpaque(false);
-                add(ctaLabel);
+                add(ctaButton);
                 add(ctaExplainLabel);
             }
         });
@@ -86,19 +83,5 @@ public class WriteTipHint extends JPanel {
         public Color getForeground() {
             return ColorUtil.unemphasizedText();
         }
-    }
-
-    public void setActionHandler(final ActionHandler actionHandler) {
-        ctaLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                actionHandler.onCTAClick();
-            }
-        });
-    }
-
-    public abstract class ActionHandler {
-        protected abstract void onCTAClick();
     }
 }

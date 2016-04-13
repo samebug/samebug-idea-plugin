@@ -25,6 +25,7 @@ import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.views.*;
+import com.samebug.clients.idea.ui.views.components.tip.WriteTipCTA;
 import com.samebug.clients.idea.ui.views.components.tip.WriteTipHint;
 import com.samebug.clients.idea.ui.views.components.tip.WriteTip;
 import com.samebug.clients.search.api.SamebugClient;
@@ -114,21 +115,7 @@ public class SearchTabController {
                 view.header.removeAll();
 
                 if (model != null && search != null) {
-                    final SearchGroupCardView searchCard = new SearchGroupCardView(search, new SearchGroupCardView.ActionHandler() {
-                        @Override
-                        public void onTitleClick() {
-                            URL url = SamebugClient.getSearchUrl(search.lastSearch.searchId);
-                            BrowserUtil.browse(url);
-                            Tracking.projectTracking(project).trace(Events.linkClick(project, url));
-                        }
-                    });
-                    if (model.tips.size() == 0) {
-                        repaintHeaderWithTipHint(searchCard);
-                    } else {
-                        view.makeHeader(searchCard);
-                        view.header.revalidate();
-                        view.header.repaint();
-                    }
+                    repaintHeader();
 
                     if (model.tips.size() + model.references.size() == 0) {
                         EmptyWarningPanel panel = new EmptyWarningPanel();
@@ -156,20 +143,34 @@ public class SearchTabController {
         });
     }
 
-    void repaintHeaderWithTipHint(final SearchGroupCardView searchCard) {
-        final WriteTipHint writeTipHint = new WriteTipHint();
-        writeTipHint.setActionHandler(hintActionHandler(searchCard, writeTipHint));
-        view.makeHeader(searchCard, writeTipHint);
+    void repaintHeader() {
+        final SearchGroupCardView searchCard = new SearchGroupCardView(search, new SearchGroupCardView.ActionHandler() {
+            @Override
+            public void onTitleClick() {
+                URL url = SamebugClient.getSearchUrl(search.lastSearch.searchId);
+                BrowserUtil.browse(url);
+                Tracking.projectTracking(project).trace(Events.linkClick(project, url));
+            }
+        });
+        if (model.tips.size() == 0) {
+            final WriteTipHint writeTipHint = new WriteTipHint();
+            writeTipHint.setActionHandler(CTAHandler(searchCard, writeTipHint));
+            view.makeHeader(searchCard, writeTipHint);
+            // TODO add third case for preview
+        } else {
+            view.makeHeader(searchCard, null);
+        }
         view.header.revalidate();
         view.header.repaint();
     }
 
-    WriteTipHint.ActionHandler hintActionHandler(final SearchGroupCardView searchCard, final WriteTipHint writeTipHint) {
-        return writeTipHint.new ActionHandler() {
+
+    WriteTipCTA.ActionHandler CTAHandler(final SearchGroupCardView searchCard, final WriteTipCTA writeTipCTA) {
+        return writeTipCTA.new ActionHandler() {
             @Override
             public void onCTAClick() {
                 final WriteTip writeTip = new WriteTip();
-                writeTip.setActionHandler(tipActionHandler(searchCard, writeTip));
+                writeTip.setActionHandler(tipActionHandler(writeTip));
                 view.makeHeader(searchCard, writeTip);
                 view.header.revalidate();
                 view.header.repaint();
@@ -177,10 +178,10 @@ public class SearchTabController {
         };
     }
 
-    WriteTip.ActionHandler tipActionHandler(final SearchGroupCardView searchCard, final WriteTip writeTip) {
+    WriteTip.ActionHandler tipActionHandler(final WriteTip writeTip) {
         return writeTip.new ActionHandler() {
             public void onCancel() {
-                repaintHeaderWithTipHint(searchCard);
+                repaintHeader();
             }
 
             public void onSubmit() {

@@ -35,7 +35,7 @@ import java.util.HashMap;
  * Created by poroszd on 3/3/16.
  */
 public class SearchGroupCardView extends JPanel {
-    final GroupedExceptionSearch searchGroup;
+    public final GroupedExceptionSearch searchGroup;
     final ExceptionType exceptionType;
 
     public SearchGroupCardView(final GroupedExceptionSearch searchGroup, final ActionHandler actionHandler) {

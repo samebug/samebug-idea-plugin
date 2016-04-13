@@ -15,9 +15,6 @@
  */
 package com.samebug.clients.idea.ui.views;
 
-import com.samebug.clients.idea.ui.views.components.tip.WriteTipHint;
-import com.samebug.clients.idea.ui.views.components.tip.WriteTip;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -53,40 +50,19 @@ public class SearchTabView {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
     }
 
-    public void makeHeader(final SearchGroupCardView search) {
+    public void makeHeader(final SearchGroupCardView search, final JComponent extension) {
         header.removeAll();
         header.add(new JPanel() {
             {
                 setLayout(new BorderLayout());
                 setBorder(BorderFactory.createEmptyBorder());
                 add(search, BorderLayout.CENTER);
-                setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167)));
-            }
-        });
-    }
-
-    public void makeHeader(final SearchGroupCardView search, final WriteTipHint writeTipHint) {
-        header.removeAll();
-        header.add(new JPanel() {
-            {
-                setLayout(new BorderLayout());
-                setBorder(BorderFactory.createEmptyBorder());
-                add(search, BorderLayout.CENTER);
-                add(writeTipHint, BorderLayout.SOUTH);
-                setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167 + 50)));
-            }
-        });
-    }
-
-    public void makeHeader(final SearchGroupCardView search, final WriteTip writeTip) {
-        header.removeAll();
-        header.add(new JPanel() {
-            {
-                setLayout(new BorderLayout());
-                setBorder(BorderFactory.createEmptyBorder());
-                add(search, BorderLayout.CENTER);
-                add(writeTip, BorderLayout.SOUTH);
-                setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167 + 350)));
+                if (extension != null) {
+                    add(extension, BorderLayout.SOUTH);
+                    setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167 + extension.getPreferredSize().height)));
+                } else {
+                    setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167)));
+                }
             }
         });
     }
