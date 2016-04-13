@@ -22,10 +22,13 @@ import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
+import com.samebug.clients.search.api.entities.legacy.RestHit;
 import com.samebug.clients.search.api.entities.legacy.Solutions;
+import com.samebug.clients.search.api.entities.legacy.Tip;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
 
+import java.net.URL;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -75,6 +78,14 @@ public class IdeaClientService {
         return new ConnectionAwareHttpRequest<Solutions>() {
             Solutions request() throws SamebugClientException {
                 return client.getSolutions(searchId);
+            }
+        }.execute();
+    }
+
+    public RestHit<Tip> postTip(final int searchId, final String tip, final URL sourceUrl) throws SamebugClientException {
+        return new ConnectionAwareHttpRequest<RestHit<Tip>>() {
+            RestHit<Tip> request() throws SamebugClientException {
+                return client.postTip(searchId, tip, sourceUrl);
             }
         }.execute();
     }

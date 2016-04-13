@@ -19,26 +19,29 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
-import com.samebug.clients.idea.ui.views.ExternalSolutionView;
-import com.samebug.clients.idea.ui.views.SamebugTipView;
-import com.samebug.clients.idea.ui.views.SearchGroupCardView;
-import com.samebug.clients.idea.ui.views.SearchTabView;
+import com.samebug.clients.idea.ui.views.*;
+import com.samebug.clients.idea.ui.views.components.tip.WriteTipCTA;
+import com.samebug.clients.idea.ui.views.components.tip.WriteTipHint;
+import com.samebug.clients.idea.ui.views.components.tip.WriteTip;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.ComponentStack;
 import com.samebug.clients.search.api.entities.ExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import com.samebug.clients.search.api.entities.legacy.*;
+import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.RunnableFuture;
 
 /**
  * Created by poroszd on 3/29/16.
@@ -115,25 +118,18 @@ public class SearchTabController {
                 view.header.removeAll();
 
                 if (model != null && search != null) {
-                    SearchGroupCardView searchCard = new SearchGroupCardView(search, new SearchGroupCardView.ActionHandler() {
-                        @Override
-                        public void onTitleClick() {
-                            URL url = SamebugClient.getSearchUrl(search.lastSearch.searchId);
-                            BrowserUtil.browse(url);
-                            Tracking.projectTracking(project).trace(Events.linkClick(project, url));
-                        }
-                    });
-                    view.header.add(searchCard.controlPanel);
+                    repaintHeader();
+
                     if (model.tips.size() + model.references.size() == 0) {
                         EmptyWarningPanel panel = new EmptyWarningPanel();
                         panel.label.setText(SamebugBundle.message("samebug.toolwindow.search.content.empty"));
                         view.solutionsPanel.add(panel.controlPanel);
                     } else {
                         for (final RestHit<Tip> tip : model.tips) {
-                            view.solutionsPanel.add(new SamebugTipView(tip, model.breadcrumb).controlPanel);
+                            view.solutionsPanel.add(new SamebugTipView(tip, model.breadcrumb));
                         }
                         for (final RestHit<SolutionReference> s : model.references) {
-                            view.solutionsPanel.add(new ExternalSolutionView(s, model.breadcrumb).controlPanel);
+                            view.solutionsPanel.add(new ExternalSolutionView(s, model.breadcrumb));
                         }
                     }
 
@@ -148,5 +144,72 @@ public class SearchTabController {
                 view.controlPanel.repaint();
             }
         });
+    }
+
+    void repaintHeader() {
+        final SearchGroupCardView searchCard = new SearchGroupCardView(search, new SearchGroupCardView.ActionHandler() {
+            @Override
+            public void onTitleClick() {
+                URL url = SamebugClient.getSearchUrl(search.lastSearch.searchId);
+                BrowserUtil.browse(url);
+                Tracking.projectTracking(project).trace(Events.linkClick(project, url));
+            }
+        });
+        // TODO write tip feature disabled
+        if (false && model.tips.size() == 0) {
+            final WriteTipHint writeTipHint = new WriteTipHint();
+            writeTipHint.setActionHandler(CTAHandler(searchCard, writeTipHint));
+            view.makeHeader(searchCard, writeTipHint);
+            // TODO add third case for preview
+        } else {
+            view.makeHeader(searchCard, null);
+        }
+        view.header.revalidate();
+        view.header.repaint();
+    }
+
+
+    WriteTipCTA.ActionHandler CTAHandler(final SearchGroupCardView searchCard, final WriteTipCTA writeTipCTA) {
+        return writeTipCTA.new ActionHandler() {
+            @Override
+            public void onCTAClick() {
+                final WriteTip writeTip = new WriteTip();
+                writeTip.setActionHandler(tipActionHandler(writeTip));
+                view.makeHeader(searchCard, writeTip);
+                view.header.revalidate();
+                view.header.repaint();
+            }
+        };
+    }
+
+    WriteTip.ActionHandler tipActionHandler(final WriteTip writeTip) {
+        assert(search != null);
+        assert(model != null);
+
+        return writeTip.new ActionHandler() {
+            @Override
+            public void onCancel() {
+                repaintHeader();
+            }
+
+            @Override
+            public void onSubmit(final String tip, final URL sourceUrl) {
+                ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            final RestHit<Tip> newTip = IdeaSamebugPlugin.getInstance().getClient().postTip(search.lastSearch.searchId, tip, sourceUrl);
+                            success();
+                            model.tips.add(newTip);
+                            refreshPane();
+                        } catch (SamebugClientException e) {
+                            error(e.getMessage());
+                        } finally {
+                            ready();
+                        }
+                    }
+                });
+            }
+        };
     }
 }

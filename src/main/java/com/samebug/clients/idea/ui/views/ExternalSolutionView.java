@@ -20,10 +20,10 @@ import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.ImageUtil;
-import com.samebug.clients.idea.ui.components.ExceptionMessageLabel;
-import com.samebug.clients.idea.ui.components.LegacyBreadcrumbBar;
-import com.samebug.clients.idea.ui.components.LinkLabel;
-import com.samebug.clients.idea.ui.components.SourceIcon;
+import com.samebug.clients.idea.ui.views.components.ExceptionMessageLabel;
+import com.samebug.clients.idea.ui.views.components.LegacyBreadcrumbBar;
+import com.samebug.clients.idea.ui.views.components.LinkLabel;
+import com.samebug.clients.idea.ui.views.components.SourceIcon;
 import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
 import com.samebug.clients.search.api.entities.legacy.RestHit;
 import com.samebug.clients.search.api.entities.legacy.SolutionReference;
@@ -37,12 +37,10 @@ import java.util.HashMap;
 /**
  * Created by poroszd on 3/29/16.
  */
-public class ExternalSolutionView {
+public class ExternalSolutionView extends JPanel {
     final RestHit<SolutionReference> solution;
     final java.util.List<BreadCrumb> searchBreadcrumb;
     final ExceptionType exceptionType;
-
-    public final JPanel controlPanel;
 
     public ExternalSolutionView(RestHit<SolutionReference> solution, java.util.List<BreadCrumb> searchBreadcrumb) {
         this.solution = solution;
@@ -56,50 +54,46 @@ public class ExternalSolutionView {
         final JPanel sourceReferencePanel = new SourceReferencePanel(solution.solution);
         final JPanel actionPanel = new ActionPanel();
 
-        controlPanel = new JPanel() {
+        setLayout(new BorderLayout());
+        setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
+        add(new JPanel() {
             {
                 setLayout(new BorderLayout());
-                setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
+                setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
+                setOpaque(false);
+                add(titlePanel, BorderLayout.NORTH);
+                add(breadcrumbPanel, BorderLayout.SOUTH);
                 add(new JPanel() {
                     {
                         setLayout(new BorderLayout());
-                        setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
+                        setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
                         setOpaque(false);
-                        add(titlePanel, BorderLayout.NORTH);
-                        add(breadcrumbPanel, BorderLayout.SOUTH);
+                        add(exceptionTypePanel, BorderLayout.NORTH);
+                        add(actionPanel, BorderLayout.SOUTH);
                         add(new JPanel() {
                             {
                                 setLayout(new BorderLayout());
-                                setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+                                setBorder(BorderFactory.createEmptyBorder());
                                 setOpaque(false);
-                                add(exceptionTypePanel, BorderLayout.NORTH);
-                                add(actionPanel, BorderLayout.SOUTH);
+                                add(sourceReferencePanel, BorderLayout.SOUTH);
                                 add(new JPanel() {
                                     {
                                         setLayout(new BorderLayout());
-                                        setBorder(BorderFactory.createEmptyBorder());
+                                        setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
                                         setOpaque(false);
-                                        add(sourceReferencePanel, BorderLayout.SOUTH);
-                                        add(new JPanel() {
-                                            {
-                                                setLayout(new BorderLayout());
-                                                setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-                                                setOpaque(false);
-                                                add(exceptionMessageLabel, BorderLayout.CENTER);
-                                            }
-                                        }, BorderLayout.CENTER);
-
+                                        add(exceptionMessageLabel, BorderLayout.CENTER);
                                     }
                                 }, BorderLayout.CENTER);
+
                             }
                         }, BorderLayout.CENTER);
                     }
                 }, BorderLayout.CENTER);
-
-                setPreferredSize(new Dimension(400, getPreferredSize().height));
-                setMaximumSize(new Dimension(Integer.MAX_VALUE, Math.min(getPreferredSize().height, 250)));
             }
-        };
+        }, BorderLayout.CENTER);
+
+        setPreferredSize(new Dimension(400, getPreferredSize().height));
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, Math.min(getPreferredSize().height, 250)));
     }
 
     public class SolutionTitlePanel extends JPanel {
