@@ -73,7 +73,7 @@ public class ExternalSolutionView extends JPanel {
                         setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
                         setOpaque(false);
                         add(exceptionTypePanel, BorderLayout.NORTH);
-                        add(new JPanel() {
+                        if (false) add(new JPanel() {
                             {
                                 setLayout(new GridBagLayout());
                                 setOpaque(false);

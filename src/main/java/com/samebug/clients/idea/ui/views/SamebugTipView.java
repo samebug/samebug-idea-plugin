@@ -64,7 +64,7 @@ public class SamebugTipView extends JPanel {
                         setLayout(new BorderLayout());
                         setBorder(BorderFactory.createEmptyBorder());
                         setOpaque(false);
-                        add(new JPanel() {
+                        if (false) add(new JPanel() {
                             {
                                 setLayout(new GridBagLayout());
                                 setOpaque(false);
