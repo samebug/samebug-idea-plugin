@@ -34,15 +34,21 @@ public class SamebugTipView extends JPanel {
     final RestHit<Tip> tip;
     final java.util.List<BreadCrumb> searchBreadcrumb;
 
+    public final LegacyBreadcrumbBar breadcrumbPanel;
+    public final TipText tipLabel;
+    public final JPanel sourceReferencePanel;
+    public final AvatarPanel avatarPanel;
+    public final MarkPanel markPanel;
+
     public SamebugTipView(RestHit<Tip> tip, java.util.List<BreadCrumb> searchBreadcrumb) {
         this.tip = tip;
         this.searchBreadcrumb = searchBreadcrumb;
 
-        final JPanel breadcrumbPanel = new LegacyBreadcrumbBar(searchBreadcrumb.subList(0, tip.matchLevel));
-        final JTextArea tipLabel = new TipText(tip.solution.tip);
-        final JPanel sourceReferencePanel = new TipSourceReferencePanel(tip.solution);
-        final JPanel profilePanel = new AvatarPanel(tip.solution.author);
-        final JPanel actionPanel = new ActionPanel();
+        breadcrumbPanel = new LegacyBreadcrumbBar(searchBreadcrumb.subList(0, tip.matchLevel));
+        tipLabel = new TipText(tip.solution.tip);
+        sourceReferencePanel = new TipSourceReferencePanel(tip.solution);
+        avatarPanel = new AvatarPanel(tip.solution.author);
+        markPanel = new MarkPanel(tip.score, tip.userVoteId != null);
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
@@ -57,7 +63,17 @@ public class SamebugTipView extends JPanel {
                         setLayout(new BorderLayout());
                         setBorder(BorderFactory.createEmptyBorder());
                         setOpaque(false);
-                        add(actionPanel, BorderLayout.SOUTH);
+                        if (false) add(new JPanel() {
+                            {
+                                setLayout(new GridBagLayout());
+                                setOpaque(false);
+                                GridBagConstraints gbc = new GridBagConstraints();
+                                add(markPanel, gbc);
+                                gbc.gridx = 2;
+                                gbc.weightx = 1;
+                                add(new JPanel(), gbc);
+                            }
+                        }, BorderLayout.SOUTH);
                         add(new JPanel() {
                             {
                                 setLayout(new BorderLayout());
@@ -69,7 +85,7 @@ public class SamebugTipView extends JPanel {
                                         setLayout(new BorderLayout());
                                         setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
                                         setOpaque(false);
-                                        add(profilePanel, BorderLayout.WEST);
+                                        add(avatarPanel, BorderLayout.WEST);
                                         add(new JPanel() {
                                             {
                                                 setLayout(new BorderLayout());
@@ -150,13 +166,6 @@ public class SamebugTipView extends JPanel {
                     }
                 });
             }
-        }
-    }
-
-    class ActionPanel extends JPanel {
-        {
-            setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
-            setOpaque(false);
         }
     }
 }

@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- * <p/>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,6 +22,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.net.IdeHttpClientHelpers;
 import com.samebug.clients.search.api.entities.GroupedHistory;
+import com.samebug.clients.search.api.entities.MarkResponse;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
 import com.samebug.clients.search.api.entities.legacy.RestHit;
@@ -209,7 +210,36 @@ public class SamebugClient {
         try {
             Thread.sleep(3000);
             if (Math.random() > 0.5) {
-                return gson.fromJson(new InputStreamReader(getClass().getResourceAsStream("/com/samebug/mock/tip.json")), new TypeToken<RestHit<Tip>>() { }.getType());
+                return gson.fromJson(new InputStreamReader(getClass().getResourceAsStream("/com/samebug/mock/tip.json")), new TypeToken<RestHit<Tip>>() {
+                }.getType());
+            } else {
+                throw new SamebugClientException("Server is down");
+            }
+        } catch (InterruptedException e) {
+            return null;
+        }
+    }
+
+    public MarkResponse postMark(int searchId, int solutionId) throws SamebugClientException {
+        // TODO implement
+        try {
+            Thread.sleep(3000);
+            if (Math.random() > 0.5) {
+                return gson.fromJson(new InputStreamReader(getClass().getResourceAsStream("/com/samebug/mock/markResponse.json")), MarkResponse.class);
+            } else {
+                throw new SamebugClientException("Server is down");
+            }
+        } catch (InterruptedException e) {
+            return null;
+        }
+    }
+
+    public MarkResponse retractMark(int voteId) throws SamebugClientException {
+        // TODO implement
+        try {
+            Thread.sleep(3000);
+            if (Math.random() > 0.5) {
+                return gson.fromJson(new InputStreamReader(getClass().getResourceAsStream("/com/samebug/mock/markResponse.json")), MarkResponse.class);
             } else {
                 throw new SamebugClientException("Server is down");
             }

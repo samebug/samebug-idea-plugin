@@ -38,7 +38,7 @@ public class WriteTipPreview extends WriteTipCTA {
         tipLabel = new TipText(SamebugBundle.message("samebug.tip.write.preview.tip"));
         profilePanel = new AvatarPanel(author);
         ctaButton = new WriteTipButton();
-        breadcrumbPanel= new BreadcrumbBar(search.componentStack);
+        breadcrumbPanel = new BreadcrumbBar(search.componentStack);
 
 
         setLayout(new BorderLayout());

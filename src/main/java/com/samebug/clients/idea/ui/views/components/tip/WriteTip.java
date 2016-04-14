@@ -215,6 +215,7 @@ public class WriteTip extends JPanel {
 
     class ErrorPanel extends JPanel {
         final JPanel messagePanel;
+
         {
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));

@@ -20,10 +20,7 @@ import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.ImageUtil;
-import com.samebug.clients.idea.ui.views.components.ExceptionMessageLabel;
-import com.samebug.clients.idea.ui.views.components.LegacyBreadcrumbBar;
-import com.samebug.clients.idea.ui.views.components.LinkLabel;
-import com.samebug.clients.idea.ui.views.components.SourceIcon;
+import com.samebug.clients.idea.ui.views.components.*;
 import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
 import com.samebug.clients.search.api.entities.legacy.RestHit;
 import com.samebug.clients.search.api.entities.legacy.SolutionReference;
@@ -42,17 +39,24 @@ public class ExternalSolutionView extends JPanel {
     final java.util.List<BreadCrumb> searchBreadcrumb;
     final ExceptionType exceptionType;
 
+    public final LegacyBreadcrumbBar breadcrumbPanel;
+    public final JPanel titlePanel;
+    public final ExceptionMessageLabel exceptionMessageLabel;
+    public final JPanel exceptionTypePanel;
+    public final JPanel sourceReferencePanel;
+    public final MarkPanel markPanel;
+
     public ExternalSolutionView(RestHit<SolutionReference> solution, java.util.List<BreadCrumb> searchBreadcrumb) {
         this.solution = solution;
         this.searchBreadcrumb = searchBreadcrumb;
         exceptionType = new ExceptionType(solution.exception.typeName);
 
-        final JPanel breadcrumbPanel = new LegacyBreadcrumbBar(searchBreadcrumb.subList(0, solution.matchLevel));
-        final JPanel titlePanel = new SolutionTitlePanel();
-        final JLabel exceptionMessageLabel = new ExceptionMessageLabel(solution.exception.message);
-        final JPanel exceptionTypePanel = new ExceptionTypePanel();
-        final JPanel sourceReferencePanel = new SourceReferencePanel(solution.solution);
-        final JPanel actionPanel = new ActionPanel();
+        breadcrumbPanel = new LegacyBreadcrumbBar(searchBreadcrumb.subList(0, solution.matchLevel));
+        titlePanel = new SolutionTitlePanel();
+        exceptionMessageLabel = new ExceptionMessageLabel(solution.exception.message);
+        exceptionTypePanel = new ExceptionTypePanel();
+        sourceReferencePanel = new SourceReferencePanel(solution.solution);
+        markPanel = new MarkPanel(solution.score, solution.userVoteId != null);
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
@@ -69,7 +73,17 @@ public class ExternalSolutionView extends JPanel {
                         setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
                         setOpaque(false);
                         add(exceptionTypePanel, BorderLayout.NORTH);
-                        add(actionPanel, BorderLayout.SOUTH);
+                        if (false) add(new JPanel() {
+                            {
+                                setLayout(new GridBagLayout());
+                                setOpaque(false);
+                                GridBagConstraints gbc = new GridBagConstraints();
+                                add(markPanel, gbc);
+                                gbc.gridx = 2;
+                                gbc.weightx = 1;
+                                add(new JPanel(), gbc);
+                            }
+                        }, BorderLayout.SOUTH);
                         add(new JPanel() {
                             {
                                 setLayout(new BorderLayout());
@@ -96,7 +110,7 @@ public class ExternalSolutionView extends JPanel {
         setMaximumSize(new Dimension(Integer.MAX_VALUE, Math.min(getPreferredSize().height, 250)));
     }
 
-    public class SolutionTitlePanel extends JPanel {
+    class SolutionTitlePanel extends JPanel {
         {
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createEmptyBorder());
@@ -144,7 +158,7 @@ public class ExternalSolutionView extends JPanel {
         }
     }
 
-    public class SourceReferencePanel extends JPanel {
+    class SourceReferencePanel extends JPanel {
         public SourceReferencePanel(@NotNull SolutionReference solutionReference) {
             setLayout(new FlowLayout(FlowLayout.RIGHT));
             setBorder(BorderFactory.createEmptyBorder());
@@ -172,12 +186,5 @@ public class ExternalSolutionView extends JPanel {
             }
         }
 
-    }
-
-    public class ActionPanel extends JPanel {
-        {
-            setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
-            setOpaque(false);
-        }
     }
 }
