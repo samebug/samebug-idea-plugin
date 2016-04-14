@@ -26,11 +26,14 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
-import com.samebug.clients.idea.ui.views.*;
+import com.samebug.clients.idea.ui.views.ExternalSolutionView;
+import com.samebug.clients.idea.ui.views.SamebugTipView;
+import com.samebug.clients.idea.ui.views.SearchGroupCardView;
+import com.samebug.clients.idea.ui.views.SearchTabView;
 import com.samebug.clients.idea.ui.views.components.MarkPanel;
+import com.samebug.clients.idea.ui.views.components.tip.WriteTip;
 import com.samebug.clients.idea.ui.views.components.tip.WriteTipCTA;
 import com.samebug.clients.idea.ui.views.components.tip.WriteTipHint;
-import com.samebug.clients.idea.ui.views.components.tip.WriteTip;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.ComponentStack;
 import com.samebug.clients.search.api.entities.ExceptionSearch;
@@ -46,7 +49,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.concurrent.RunnableFuture;
 
 /**
  * Created by poroszd on 3/29/16.
@@ -193,8 +195,8 @@ public class SearchTabController {
     }
 
     WriteTip.ActionHandler tipActionHandler(final WriteTip writeTip) {
-        assert(search != null);
-        assert(model != null);
+        assert (search != null);
+        assert (model != null);
 
         return writeTip.new ActionHandler() {
             @Override
