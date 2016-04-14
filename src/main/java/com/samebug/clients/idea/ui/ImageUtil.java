@@ -63,7 +63,7 @@ public class ImageUtil {
             if (url == null || cache.get(url) != null) continue;
             try {
                 Image image = ImageIO.read(url);
-                cache.put(url, image);
+                if (image != null) cache.put(url, image);
             } catch (IOException e) {
                 LOGGER.warn("Failed to download image " + url);
             }

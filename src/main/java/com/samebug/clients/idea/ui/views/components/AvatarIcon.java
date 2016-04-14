@@ -37,6 +37,6 @@ public class AvatarIcon extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.drawImage(avatar, 0, 0, null, null);
+        g2.drawImage(avatar, 5, 0, null, null);
     }
 }

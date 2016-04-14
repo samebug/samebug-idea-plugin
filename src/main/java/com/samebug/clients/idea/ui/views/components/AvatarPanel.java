@@ -18,15 +18,29 @@ package com.samebug.clients.idea.ui.views.components;
 import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.search.api.entities.legacy.Author;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.TextAttribute;
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
  * Created by poroszd on 4/12/16.
  */
 public class AvatarPanel extends JPanel {
+    final static Image avatarPlaceholder;
+
+    static {
+        Image tmpImage;
+        try {
+            tmpImage = ImageIO.read(AvatarPanel.class.getClassLoader().getResource("/com/samebug/avatar-placeholder.png"));
+        } catch (IOException e) {
+            tmpImage = null;
+        }
+        avatarPlaceholder = tmpImage;
+    }
+
     public AvatarPanel(final Author author) {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder());
@@ -34,7 +48,7 @@ public class AvatarPanel extends JPanel {
         // TODO 74 width comes by 5 + 64 + 5 from AvatarIcon's border
         setPreferredSize(new Dimension(74, 100));
         final Image profile = ImageUtil.getScaled(author.avatarUrl, 64, 64);
-        add(new AvatarIcon(profile), BorderLayout.NORTH);
+        add(new AvatarIcon(profile != null ? profile : avatarPlaceholder), BorderLayout.NORTH);
         add(new LinkLabel(author.name, author.url) {
             {
                 HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
