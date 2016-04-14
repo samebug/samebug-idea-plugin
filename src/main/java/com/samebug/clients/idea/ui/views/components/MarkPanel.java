@@ -1,5 +1,9 @@
 package com.samebug.clients.idea.ui.views.components;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.ui.popup.Balloon;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.ui.awt.RelativePoint;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 
@@ -10,26 +14,46 @@ import java.awt.*;
  * Created by poroszd on 4/8/16.
  */
 public class MarkPanel extends JPanel {
-    public MarkPanel(int score, boolean marked) {
-        setLayout(new FlowLayout(FlowLayout.LEFT));
-        setBorder(BorderFactory.createEmptyBorder());
-        add(new JButton() {
-            {
-                setText("Mark");
-            }
-        });
-        add(new JPanel(){
-            {
-                setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-            }
-        });
-        add(new VoteIcon());
-        if (score == 0) {
-            add(new JLabel(SamebugBundle.message("samebug.solutions.marked.noone")));
-        } else {
-            add(new JLabel(SamebugBundle.message("samebug.solutions.marked.anyone", score)));
-        }
 
+    public final JButton markButton;
+    public final JPanel voteIcon;
+    public final JLabel helpedLabel;
+
+    public MarkPanel(int score, boolean marked) {
+        markButton = new MarkButton();
+        voteIcon = new VoteIcon();
+        helpedLabel = new HelpedLabel();
+
+        setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        setBorder(BorderFactory.createEmptyBorder());
+        add(markButton);
+        add(voteIcon);
+        add(helpedLabel);
+        updateState(score, marked);
+    }
+
+    public void beginPostMark() {
+        ApplicationManager.getApplication().assertIsDispatchThread();
+        markButton.setEnabled(false);
+    }
+
+    public void finishPostMarkWithError(final String errorMessage) {
+        ApplicationManager.getApplication().assertIsDispatchThread();
+        markButton.setEnabled(true);
+        JBPopupFactory.getInstance().createBalloonBuilder(new JLabel(errorMessage))
+                .setFillColor(Color.red).createBalloon().show(RelativePoint.getCenterOf(markButton), Balloon.Position.above);
+    }
+
+    public void finishPostMarkWithSuccess(final int score, final boolean marked) {
+        ApplicationManager.getApplication().assertIsDispatchThread();
+        markButton.setEnabled(true);
+        updateState(score, marked);
+    }
+
+    class MarkButton extends JButton {
+        {
+            setOpaque(false);
+        }
     }
 
     class VoteIcon extends JPanel {
@@ -46,6 +70,21 @@ public class MarkPanel extends JPanel {
             super.paintComponent(g);
             tickMark.paintIcon(MarkPanel.this, g, 0, 0);
         }
+    }
 
+    class HelpedLabel extends JLabel {
+    }
+
+    void updateState(final int score, final boolean marked) {
+        if (score == 0) {
+            helpedLabel.setText(SamebugBundle.message("samebug.solutions.marked.noone"));
+        } else {
+            helpedLabel.setText(SamebugBundle.message("samebug.solutions.marked.anyone", score));
+        }
+        if (marked) {
+            markButton.setText("unmark");
+        } else {
+            markButton.setText("mark");
+        }
     }
 }

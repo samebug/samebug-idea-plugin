@@ -20,6 +20,7 @@ import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.GroupedHistory;
+import com.samebug.clients.search.api.entities.MarkResponse;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
 import com.samebug.clients.search.api.entities.legacy.RestHit;
@@ -86,6 +87,22 @@ public class IdeaClientService {
         return new ConnectionAwareHttpRequest<RestHit<Tip>>() {
             RestHit<Tip> request() throws SamebugClientException {
                 return client.postTip(searchId, tip, sourceUrl);
+            }
+        }.execute();
+    }
+
+    public MarkResponse postMark(final int searchId, final int solutionId) throws SamebugClientException {
+        return new ConnectionAwareHttpRequest<MarkResponse>() {
+            MarkResponse request() throws SamebugClientException {
+                return client.postMark(searchId, solutionId);
+            }
+        }.execute();
+    }
+
+    public MarkResponse retractMark(final int voteId) throws SamebugClientException {
+        return new ConnectionAwareHttpRequest<MarkResponse>() {
+            MarkResponse request() throws SamebugClientException {
+                return client.retractMark(voteId);
             }
         }.execute();
     }

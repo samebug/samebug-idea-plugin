@@ -19,6 +19,7 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.resources.SamebugBundle;
@@ -26,6 +27,7 @@ import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.views.*;
+import com.samebug.clients.idea.ui.views.components.MarkPanel;
 import com.samebug.clients.idea.ui.views.components.tip.WriteTipCTA;
 import com.samebug.clients.idea.ui.views.components.tip.WriteTipHint;
 import com.samebug.clients.idea.ui.views.components.tip.WriteTip;
@@ -33,12 +35,15 @@ import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.ComponentStack;
 import com.samebug.clients.search.api.entities.ExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
+import com.samebug.clients.search.api.entities.MarkResponse;
 import com.samebug.clients.search.api.entities.legacy.*;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.RunnableFuture;
@@ -119,17 +124,22 @@ public class SearchTabController {
 
                 if (model != null && search != null) {
                     repaintHeader();
-
                     if (model.tips.size() + model.references.size() == 0) {
                         EmptyWarningPanel panel = new EmptyWarningPanel();
                         panel.label.setText(SamebugBundle.message("samebug.toolwindow.search.content.empty"));
                         view.solutionsPanel.add(panel.controlPanel);
                     } else {
                         for (final RestHit<Tip> tip : model.tips) {
-                            view.solutionsPanel.add(new SamebugTipView(tip, model.breadcrumb));
+                            SamebugTipView tipView = new SamebugTipView(tip, model.breadcrumb);
+                            view.solutionsPanel.add(tipView);
+                            final MarkHandler markHandler = new MarkHandler(search.lastSearch.searchId, tip, tipView.markPanel);
+                            tipView.markPanel.markButton.addActionListener(markHandler);
                         }
                         for (final RestHit<SolutionReference> s : model.references) {
-                            view.solutionsPanel.add(new ExternalSolutionView(s, model.breadcrumb));
+                            final ExternalSolutionView sv = new ExternalSolutionView(s, model.breadcrumb);
+                            view.solutionsPanel.add(sv);
+                            final MarkHandler markHandler = new MarkHandler(search.lastSearch.searchId, s, sv.markPanel);
+                            sv.markPanel.markButton.addActionListener(markHandler);
                         }
                     }
 
@@ -212,4 +222,53 @@ public class SearchTabController {
             }
         };
     }
+
+    class MarkHandler implements ActionListener {
+        final int searchId;
+        final RestHit hit;
+        final MarkPanel markPanel;
+
+        public MarkHandler(final int searchId, RestHit hit, final MarkPanel markPanel) {
+            this.searchId = searchId;
+            this.hit = hit;
+            this.markPanel = markPanel;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            markPanel.beginPostMark();
+            ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
+                        if (hit.userVoteId == null) {
+                            final MarkResponse mark = client.postMark(search.lastSearch.searchId, hit.solutionId);
+                            hit.userVoteId = mark.markId;
+                            hit.score += 1;
+                        } else {
+                            client.retractMark(hit.userVoteId);
+                            hit.userVoteId = null;
+                            hit.score -= 1;
+                        }
+                        ApplicationManager.getApplication().invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                markPanel.finishPostMarkWithSuccess(hit.score, hit.userVoteId != null);
+                            }
+                        });
+                    } catch (final SamebugClientException e) {
+                        ApplicationManager.getApplication().invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                markPanel.finishPostMarkWithError(e.getMessage());
+                            }
+                        });
+                    }
+                }
+            });
+
+        }
+    }
 }
+
