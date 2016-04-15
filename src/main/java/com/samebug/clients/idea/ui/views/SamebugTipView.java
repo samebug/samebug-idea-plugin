@@ -53,45 +53,33 @@ public class SamebugTipView extends JPanel {
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
-        add(new JPanel() {
+        add(new TransparentPanel() {
             {
-                setLayout(new BorderLayout());
                 setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
-                setOpaque(false);
                 add(breadcrumbPanel, BorderLayout.SOUTH);
-                add(new JPanel() {
+                add(new TransparentPanel() {
                     {
-                        setLayout(new BorderLayout());
-                        setBorder(BorderFactory.createEmptyBorder());
-                        setOpaque(false);
-                        if (IdeaSamebugPlugin.getInstance().getState().isMarkSolutionsEnabled) add(new JPanel() {
+                        if (IdeaSamebugPlugin.getInstance().getState().isMarkSolutionsEnabled) add(new TransparentPanel() {
                             {
                                 setLayout(new GridBagLayout());
-                                setOpaque(false);
                                 GridBagConstraints gbc = new GridBagConstraints();
                                 add(markPanel, gbc);
                                 gbc.gridx = 2;
                                 gbc.weightx = 1;
-                                add(new JPanel(), gbc);
+                                add(new TransparentPanel(), gbc);
                             }
                         }, BorderLayout.SOUTH);
-                        add(new JPanel() {
+                        add(new TransparentPanel() {
                             {
-                                setLayout(new BorderLayout());
                                 setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-                                setOpaque(false);
                                 add(sourceReferencePanel, BorderLayout.SOUTH);
-                                add(new JPanel() {
+                                add(new TransparentPanel() {
                                     {
-                                        setLayout(new BorderLayout());
                                         setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
-                                        setOpaque(false);
                                         add(avatarPanel, BorderLayout.WEST);
-                                        add(new JPanel() {
+                                        add(new TransparentPanel() {
                                             {
-                                                setLayout(new BorderLayout());
                                                 setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-                                                setOpaque(false);
                                                 add(tipLabel, BorderLayout.CENTER);
                                             }
                                         }, BorderLayout.CENTER);
@@ -113,11 +101,9 @@ public class SamebugTipView extends JPanel {
         return ColorUtil.highlightPanel();
     }
 
-    class TipSourceReferencePanel extends JPanel {
+    class TipSourceReferencePanel extends TransparentPanel {
         public TipSourceReferencePanel(@NotNull Tip tip) {
             setLayout(new FlowLayout(FlowLayout.RIGHT));
-            setBorder(BorderFactory.createEmptyBorder());
-            setOpaque(false);
             if (tip.via == null) {
                 // no source, show only tip timestamp
                 add(new JLabel(String.format("%s", TextUtil.prettyTime(tip.createdAt))) {

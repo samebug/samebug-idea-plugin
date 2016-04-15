@@ -22,6 +22,7 @@ import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.views.components.BreadcrumbBar;
 import com.samebug.clients.idea.ui.views.components.ExceptionMessageLabel;
+import com.samebug.clients.idea.ui.views.components.TransparentPanel;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 
 import javax.swing.*;
@@ -51,34 +52,28 @@ public class SearchGroupCardView extends JPanel {
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
-        add(new JPanel() {
+        add(new TransparentPanel() {
             {
-                setLayout(new BorderLayout());
                 setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
-                add(new JPanel() {
+                add(new TransparentPanel() {
                     {
-                        setLayout(new BorderLayout());
-                        setBorder(BorderFactory.createEmptyBorder());
                         add(packageLabel, BorderLayout.WEST);
                         add(hitsLabel, BorderLayout.EAST);
                     }
                 }, BorderLayout.NORTH);
                 add(breadcrumbPanel, BorderLayout.SOUTH);
-                add(new JPanel() {
+                add(new TransparentPanel() {
                     {
-                        setLayout(new BorderLayout());
-                        setBorder(BorderFactory.createEmptyBorder());
                         add(groupInfoPanel, BorderLayout.SOUTH);
-                        add(new JPanel() {
+                        add(new TransparentPanel() {
                             {
                                 setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
                                 setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
                                 add(titleLabel);
                             }
                         }, BorderLayout.NORTH);
-                        add(new JPanel() {
+                        add(new TransparentPanel() {
                             {
-                                setLayout(new BorderLayout());
                                 setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
                                 add(exceptionMessageLabel, BorderLayout.CENTER);
                             }
@@ -145,11 +140,9 @@ public class SearchGroupCardView extends JPanel {
         }
     }
 
-    class GroupInfoPanel extends JPanel {
+    class GroupInfoPanel extends TransparentPanel {
         {
             setLayout(new FlowLayout(FlowLayout.RIGHT));
-            setBorder(BorderFactory.createEmptyBorder());
-            setOpaque(false);
             add(new JLabel() {
                 {
                     String text;

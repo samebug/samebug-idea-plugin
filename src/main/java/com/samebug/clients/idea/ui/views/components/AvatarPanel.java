@@ -28,7 +28,7 @@ import java.util.HashMap;
 /**
  * Created by poroszd on 4/12/16.
  */
-public class AvatarPanel extends JPanel {
+public class AvatarPanel extends TransparentPanel {
     final static Image avatarPlaceholder;
 
     static {
@@ -42,10 +42,8 @@ public class AvatarPanel extends JPanel {
     }
 
     public AvatarPanel(final Author author) {
-        setLayout(new BorderLayout());
-        setBorder(BorderFactory.createEmptyBorder());
-        setOpaque(false);
-        // TODO 74 width comes by 5 + 64 + 5 from AvatarIcon's border
+        // 74 width comes by 5 + 64 + 5 from the border
+        setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
         setPreferredSize(new Dimension(74, 100));
         final Image profile = ImageUtil.getScaled(author.avatarUrl, 64, 64);
         add(new AvatarIcon(profile != null ? profile : avatarPlaceholder), BorderLayout.NORTH);

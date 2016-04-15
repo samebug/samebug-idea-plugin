@@ -28,12 +28,11 @@ import java.awt.event.MouseEvent;
 /**
  * Created by poroszd on 4/1/16.
  */
-public class LegacyBreadcrumbBar extends JPanel {
+public class LegacyBreadcrumbBar extends TransparentPanel {
     public LegacyBreadcrumbBar(java.util.List<BreadCrumb> breadcrumbs) {
         assert (breadcrumbs.size() > 0);
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-        setOpaque(false);
         add(new BreadcrumbEndLabel());
         add(new BreadcrumbLabel(breadcrumbs.get(0)));
         for (int i = 1; i < breadcrumbs.size(); ++i) {

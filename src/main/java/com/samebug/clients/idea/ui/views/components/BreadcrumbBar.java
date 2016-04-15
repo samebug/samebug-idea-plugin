@@ -28,12 +28,11 @@ import java.awt.event.MouseEvent;
 /**
  * Created by poroszd on 3/17/16.
  */
-public class BreadcrumbBar extends JPanel {
+public class BreadcrumbBar extends TransparentPanel {
     public BreadcrumbBar(java.util.List<ComponentStack> stacks) {
         assert (stacks.size() > 0);
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-        setOpaque(false);
         add(new BreadcrumbEndLabel());
         add(new BreadcrumbLabel(stacks.get(0)));
         for (int i = 1; i < stacks.size(); ++i) {

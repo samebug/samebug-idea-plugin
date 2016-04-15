@@ -15,6 +15,8 @@
  */
 package com.samebug.clients.idea.ui.views;
 
+import com.samebug.clients.idea.ui.views.components.TransparentPanel;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -52,10 +54,8 @@ public class SearchTabView {
 
     public void makeHeader(final SearchGroupCardView search, final JComponent extension) {
         header.removeAll();
-        header.add(new JPanel() {
+        header.add(new TransparentPanel() {
             {
-                setLayout(new BorderLayout());
-                setBorder(BorderFactory.createEmptyBorder());
                 add(search, BorderLayout.CENTER);
                 if (extension != null) {
                     add(extension, BorderLayout.SOUTH);

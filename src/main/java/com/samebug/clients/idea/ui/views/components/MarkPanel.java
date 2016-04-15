@@ -28,7 +28,7 @@ import java.awt.*;
 /**
  * Created by poroszd on 4/8/16.
  */
-public class MarkPanel extends JPanel {
+public class MarkPanel extends TransparentPanel {
 
     public final JButton markButton;
     public final JPanel voteIcon;
@@ -40,7 +40,6 @@ public class MarkPanel extends JPanel {
         helpedLabel = new HelpedLabel();
 
         setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
-        setBorder(BorderFactory.createEmptyBorder());
         add(markButton);
         add(voteIcon);
         add(helpedLabel);
@@ -73,7 +72,7 @@ public class MarkPanel extends JPanel {
         }
     }
 
-    class VoteIcon extends JPanel {
+    class VoteIcon extends TransparentPanel {
         static final int width = 16;
         static final int height = 16;
 

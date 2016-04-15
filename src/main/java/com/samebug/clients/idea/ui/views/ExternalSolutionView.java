@@ -62,41 +62,31 @@ public class ExternalSolutionView extends JPanel {
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
-        add(new JPanel() {
+        add(new TransparentPanel() {
             {
-                setLayout(new BorderLayout());
                 setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
-                setOpaque(false);
                 add(titlePanel, BorderLayout.NORTH);
                 add(breadcrumbPanel, BorderLayout.SOUTH);
-                add(new JPanel() {
+                add(new TransparentPanel() {
                     {
-                        setLayout(new BorderLayout());
                         setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-                        setOpaque(false);
                         add(exceptionTypePanel, BorderLayout.NORTH);
-                        if (IdeaSamebugPlugin.getInstance().getState().isMarkSolutionsEnabled) add(new JPanel() {
+                        if (IdeaSamebugPlugin.getInstance().getState().isMarkSolutionsEnabled) add(new TransparentPanel() {
                             {
                                 setLayout(new GridBagLayout());
-                                setOpaque(false);
                                 GridBagConstraints gbc = new GridBagConstraints();
                                 add(markPanel, gbc);
                                 gbc.gridx = 2;
                                 gbc.weightx = 1;
-                                add(new JPanel(), gbc);
+                                add(new TransparentPanel(), gbc);
                             }
                         }, BorderLayout.SOUTH);
-                        add(new JPanel() {
+                        add(new TransparentPanel() {
                             {
-                                setLayout(new BorderLayout());
-                                setBorder(BorderFactory.createEmptyBorder());
-                                setOpaque(false);
                                 add(sourceReferencePanel, BorderLayout.SOUTH);
-                                add(new JPanel() {
+                                add(new TransparentPanel() {
                                     {
-                                        setLayout(new BorderLayout());
                                         setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-                                        setOpaque(false);
                                         add(exceptionMessageLabel, BorderLayout.CENTER);
                                     }
                                 }, BorderLayout.CENTER);
@@ -112,18 +102,13 @@ public class ExternalSolutionView extends JPanel {
         setMaximumSize(new Dimension(Integer.MAX_VALUE, Math.min(getPreferredSize().height, 250)));
     }
 
-    class SolutionTitlePanel extends JPanel {
+    class SolutionTitlePanel extends TransparentPanel {
         {
-            setLayout(new BorderLayout());
-            setBorder(BorderFactory.createEmptyBorder());
-            setOpaque(false);
             final Image sourceIcon = ImageUtil.getScaled(UrlUtil.getSourceIconUrl(solution.solution.source.icon), 32, 32);
             add(new SourceIcon(sourceIcon), BorderLayout.WEST);
-            add(new JPanel() {
+            add(new TransparentPanel() {
                 {
-                    setLayout(new BorderLayout());
                     setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-                    setOpaque(false);
                     add(new LinkLabel(solution.solution.title, solution.solution.url) {
                         {
                             HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
@@ -138,11 +123,8 @@ public class ExternalSolutionView extends JPanel {
         }
     }
 
-    class ExceptionTypePanel extends JPanel {
+    class ExceptionTypePanel extends TransparentPanel {
         {
-            setLayout(new BorderLayout());
-            setBorder(BorderFactory.createEmptyBorder());
-            setOpaque(false);
             add(new JLabel() {
                 {
                     setText((String.format("%s", exceptionType.className)));
@@ -160,11 +142,9 @@ public class ExternalSolutionView extends JPanel {
         }
     }
 
-    class SourceReferencePanel extends JPanel {
+    class SourceReferencePanel extends TransparentPanel {
         public SourceReferencePanel(@NotNull SolutionReference solutionReference) {
             setLayout(new FlowLayout(FlowLayout.RIGHT));
-            setBorder(BorderFactory.createEmptyBorder());
-            setOpaque(false);
             if (solutionReference.author == null) {
                 add(new JLabel(String.format("%s", TextUtil.prettyTime(solutionReference.createdAt))) {
                     @Override

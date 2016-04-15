@@ -23,7 +23,7 @@ import java.awt.*;
 /**
  * Created by poroszd on 4/1/16.
  */
-public class SourceIcon extends JPanel {
+public class SourceIcon extends TransparentPanel {
     final Image iconImage;
     static final int width = 32;
     static final int height = 32;

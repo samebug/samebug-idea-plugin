@@ -17,6 +17,7 @@ package com.samebug.clients.idea.ui.views.components.tip;
 
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
+import com.samebug.clients.idea.ui.views.components.TransparentPanel;
 import org.apache.commons.lang.StringUtils;
 import org.jdesktop.swingx.prompt.PromptSupport;
 
@@ -69,58 +70,44 @@ public class WriteTip extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        add(new JPanel() {
+        add(new TransparentPanel() {
             {
-                setLayout(new BorderLayout());
-                setOpaque(false);
                 add(tipTitle);
             }
         });
-        add(new JPanel() {
+        add(new TransparentPanel() {
             {
-                setLayout(new BorderLayout());
                 setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-                setOpaque(false);
                 add(tipDescription);
             }
         });
         add(new JScrollPane(tipBody));
-        add(new JPanel() {
+        add(new TransparentPanel() {
             {
                 setLayout(new FlowLayout(FlowLayout.RIGHT));
-                setBorder(BorderFactory.createEmptyBorder());
-                setOpaque(false);
                 add(lengthCounter);
             }
         });
-        add(new JPanel() {
+        add(new TransparentPanel() {
             {
-                setLayout(new BorderLayout());
-                setOpaque(false);
                 add(sourceTitle);
             }
         });
-        add(new JPanel() {
+        add(new TransparentPanel() {
             {
-                setLayout(new BorderLayout());
                 setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-                setOpaque(false);
                 add(sourceDescription);
             }
         });
-        add(new JPanel() {
+        add(new TransparentPanel() {
             {
-                setLayout(new BorderLayout());
-                setOpaque(false);
                 add(sourceLink);
             }
         });
         add(errorPanel);
-        add(new JPanel() {
+        add(new TransparentPanel() {
             {
                 setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 0));
-                setBorder(BorderFactory.createEmptyBorder());
-                setOpaque(false);
                 add(cancel);
                 add(submit);
             }
@@ -213,13 +200,11 @@ public class WriteTip extends JPanel {
         }
     }
 
-    class ErrorPanel extends JPanel {
+    class ErrorPanel extends TransparentPanel {
         final JPanel messagePanel;
 
         {
-            setLayout(new BorderLayout());
             setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-            setOpaque(false);
             messagePanel = new JPanel();
             messagePanel.setLayout(new BorderLayout());
             messagePanel.setBackground(Color.red);
