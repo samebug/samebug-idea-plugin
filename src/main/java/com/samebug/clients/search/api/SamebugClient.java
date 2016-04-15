@@ -175,18 +175,12 @@ public class SamebugClient {
         return requestJson(post, MarkResponse.class);
     }
 
-    public MarkResponse retractMark(int voteId) throws SamebugClientException {
-        // TODO implement
-        try {
-            Thread.sleep(3000);
-            if (Math.random() > 0.5) {
-                return gson.fromJson(new InputStreamReader(getClass().getResourceAsStream("/com/samebug/mock/markResponse.json")), MarkResponse.class);
-            } else {
-                throw new SamebugClientException("Server is down");
-            }
-        } catch (InterruptedException e) {
-            return null;
-        }
+    public MarkResponse retractMark(Integer voteId) throws SamebugClientException {
+        HttpPost post = new HttpPost(getApiUrl("mark/cancel").toString());
+        List<BasicNameValuePair> form = Collections.singletonList(new BasicNameValuePair("mark", voteId.toString()));
+        post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
+
+        return requestJson(post, MarkResponse.class);
     }
 
     public void trace(TrackEvent event) throws SamebugClientException {

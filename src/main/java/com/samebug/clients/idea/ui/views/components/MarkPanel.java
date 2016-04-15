@@ -63,6 +63,8 @@ public class MarkPanel extends JPanel {
         ApplicationManager.getApplication().assertIsDispatchThread();
         markButton.setEnabled(true);
         updateState(score, marked);
+        revalidate();
+        repaint();
     }
 
     class MarkButton extends JButton {
