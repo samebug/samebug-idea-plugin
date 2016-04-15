@@ -27,8 +27,8 @@ public class ApplicationSettings {
     public String apiKey;
     public String instanceId = UUID.randomUUID().toString();
     public int userId;
-    public URI serverRoot = defaultServerRoot;
-    public URI trackingRoot = defaultTrackingRoot;
+    public String serverRoot = defaultServerRoot;
+    public String trackingRoot = defaultTrackingRoot;
     public boolean isTrackingEnabled = defaultIsTrackingEnabled;
     public int connectTimeout = defaultConnectTimeout;
     public int requestTimeout = defaultRequestTimeout;
@@ -38,8 +38,8 @@ public class ApplicationSettings {
     public boolean isMarkSolutionsEnabled = defaultIsMarkSolutionsEnabled;
     public boolean tutorialFirstRun = true;
 
-    public static final URI defaultServerRoot = URI.create("https://samebug.io/");
-    public static final URI defaultTrackingRoot = defaultServerRoot.resolve("track/trace");
+    public static final String defaultServerRoot = "https://samebug.io/";
+    public static final String defaultTrackingRoot = defaultServerRoot + "track/trace";
     public static final boolean defaultIsTrackingEnabled = true;
     public static final int defaultConnectTimeout = 5000;
     public static final int defaultRequestTimeout = 10000;

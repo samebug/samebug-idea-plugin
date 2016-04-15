@@ -27,7 +27,7 @@ import java.net.URL;
  */
 public class UrlUtil {
     public static URI getServerRoot() {
-        return IdeaSamebugPlugin.getInstance().getState().serverRoot;
+        return URI.create(IdeaSamebugPlugin.getInstance().getState().serverRoot);
     }
 
     public static URL getSearchUrl(int searchId) {

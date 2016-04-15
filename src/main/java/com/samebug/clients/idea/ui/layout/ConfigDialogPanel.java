@@ -42,8 +42,8 @@ public class ConfigDialogPanel {
     // TODO too much boilerplate
     public ConfigDialogPanel() {
         settings = new ApplicationSettings(IdeaSamebugPlugin.getInstance().getState());
-        serverRoot.setText(settings.serverRoot.toString());
-        trackingRoot.setText(settings.trackingRoot.toString());
+        serverRoot.setText(settings.serverRoot);
+        trackingRoot.setText(settings.trackingRoot);
         connectTimeout.setValue(settings.connectTimeout);
         requestTimeout.setValue(settings.requestTimeout);
         apacheLogging.setSelected(settings.isApacheLoggingEnabled);
@@ -54,8 +54,8 @@ public class ConfigDialogPanel {
 
     public boolean isModified() {
         return !(settings.apiKey.equals(apiKey.getText())
-                && settings.serverRoot.equals(URI.create(serverRoot.getText()))
-                && settings.trackingRoot.equals(URI.create(trackingRoot.getText()))
+                && settings.serverRoot.equals(serverRoot.getText())
+                && settings.trackingRoot.equals(trackingRoot.getText())
                 && settings.connectTimeout == (Integer) connectTimeout.getValue()
                 && settings.requestTimeout == (Integer) requestTimeout.getValue()
                 && settings.isApacheLoggingEnabled == apacheLogging.isSelected()
@@ -66,8 +66,8 @@ public class ConfigDialogPanel {
 
     public void apply() {
         settings.apiKey = apiKey.getText();
-        settings.serverRoot = URI.create(serverRoot.getText());
-        settings.trackingRoot = URI.create(trackingRoot.getText());
+        settings.serverRoot = serverRoot.getText();
+        settings.trackingRoot = trackingRoot.getText();
         settings.connectTimeout = (Integer) connectTimeout.getValue();
         settings.requestTimeout = (Integer) requestTimeout.getValue();
         settings.isApacheLoggingEnabled = apacheLogging.isSelected();

@@ -80,7 +80,7 @@ public class SamebugClient {
 
     public SamebugClient(final Config config) {
         this.config = new Config(config);
-        this.gateway = config.serverRoot.resolve("rest/").resolve(API_VERSION + "/");
+        this.gateway = URI.create(config.serverRoot).resolve("rest/").resolve(API_VERSION + "/");
         HttpClientBuilder httpBuilder = HttpClientBuilder.create();
         RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
         CredentialsProvider provider = new BasicCredentialsProvider();
@@ -296,8 +296,8 @@ public class SamebugClient {
 
     public static class Config {
         public String apiKey;
-        public URI serverRoot;
-        public URI trackingRoot;
+        public String serverRoot;
+        public String trackingRoot;
         public boolean isTrackingEnabled;
         public int connectTimeout;
         public int requestTimeout;
