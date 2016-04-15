@@ -51,7 +51,7 @@ public class TutorialComponent extends AbstractProjectComponent {
     public void projectOpened() {
         super.projectOpened();
         final ApplicationSettings pluginState = IdeaSamebugPlugin.getInstance().getState();
-        if (pluginState != null && pluginState.isTutorialFirstRun()) {
+        if (pluginState != null && pluginState.tutorialFirstRun) {
             // At this point, the Samebug toolwindow is likely not initialized, so we delay the notification
             final int DELAY_MS = 15 * 1000;
             final Timer timer = new Timer(DELAY_MS, new ActionListener() {
@@ -66,7 +66,7 @@ public class TutorialComponent extends AbstractProjectComponent {
                                         SamebugIcons.notification,
                                         SamebugNotifications.basicHyperlinkListener(myProject, "help"));
                                 Tracking.projectTracking(myProject).trace(Events.pluginInstall());
-                                pluginState.setTutorialFirstRun(false);
+                                pluginState.tutorialFirstRun = false;
                             } catch (IllegalStateException e1) {
                                 LOGGER.warn("Samebug tool window was not initialized after "
                                         + DELAY_MS + " millis, welcome message could not be displayed", e1);

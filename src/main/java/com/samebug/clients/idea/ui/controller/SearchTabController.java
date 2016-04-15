@@ -25,6 +25,7 @@ import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.ImageUtil;
+import com.samebug.clients.idea.ui.UrlUtil;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.views.ExternalSolutionView;
 import com.samebug.clients.idea.ui.views.SamebugTipView;
@@ -34,7 +35,6 @@ import com.samebug.clients.idea.ui.views.components.MarkPanel;
 import com.samebug.clients.idea.ui.views.components.tip.WriteTip;
 import com.samebug.clients.idea.ui.views.components.tip.WriteTipCTA;
 import com.samebug.clients.idea.ui.views.components.tip.WriteTipHint;
-import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.ComponentStack;
 import com.samebug.clients.search.api.entities.ExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
@@ -149,7 +149,7 @@ public class SearchTabController {
                     view.controlPanel.repaint();
                 } else {
                     EmptyWarningPanel panel = new EmptyWarningPanel();
-                    panel.label.setText(SamebugBundle.message("samebug.toolwindow.search.content.notConnected", SamebugClient.root));
+                    panel.label.setText(SamebugBundle.message("samebug.toolwindow.search.content.notConnected", UrlUtil.getServerRoot()));
                     view.solutionsPanel.add(panel.controlPanel);
                 }
                 view.controlPanel.revalidate();
@@ -162,15 +162,15 @@ public class SearchTabController {
         final SearchGroupCardView searchCard = new SearchGroupCardView(search, new SearchGroupCardView.ActionHandler() {
             @Override
             public void onTitleClick() {
-                URL url = SamebugClient.getSearchUrl(search.lastSearch.searchId);
+                URL url = UrlUtil.getSearchUrl(search.lastSearch.searchId);
                 BrowserUtil.browse(url);
                 Tracking.projectTracking(project).trace(Events.linkClick(project, url));
             }
         });
         // TODO write tip feature disabled
-        if (false && model.tips.size() == 0) {
+        if (IdeaSamebugPlugin.getInstance().getState().isWriteTipsEnabled && model.tips.size() == 0) {
             final WriteTipHint writeTipHint = new WriteTipHint();
-            writeTipHint.setActionHandler(CTAHandler(searchCard, writeTipHint));
+            writeTipHint.setActionHandler(makeCTAHandler(searchCard, writeTipHint));
             view.makeHeader(searchCard, writeTipHint);
             // TODO add third case for preview
         } else {
@@ -181,7 +181,7 @@ public class SearchTabController {
     }
 
 
-    WriteTipCTA.ActionHandler CTAHandler(final SearchGroupCardView searchCard, final WriteTipCTA writeTipCTA) {
+    WriteTipCTA.ActionHandler makeCTAHandler(final SearchGroupCardView searchCard, final WriteTipCTA writeTipCTA) {
         return writeTipCTA.new ActionHandler() {
             @Override
             public void onCTAClick() {

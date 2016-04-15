@@ -54,29 +54,24 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 public class SamebugClient {
-    private final String apiKey;
     final static String USER_AGENT = "Samebug-Idea-Client/1.3.0";
     final static String API_VERSION = "0.8";
-    //    public final static URI root = URI.create("http://localhost:9000/");
-//    public final static URI root = URI.create("http://nightly.samebug.com/");
-    public final static URI root = URI.create("https://samebug.io/");
-    //    final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
-    final static URI trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
-    final static URI gateway = root.resolve("rest/").resolve(API_VERSION + "/");
-
     final static Gson gson;
-    final static HttpClient httpClient;
-    final static RequestConfig requestConfig;
-    final static RequestConfig trackingConfig;
+
+    final Config config;
+    final URI gateway;
+    final HttpClient httpClient;
+    final RequestConfig requestConfig;
+    final RequestConfig trackingConfig;
 
 
     static {
-        // Build gson
         // TODO is this a fine way of serialization of Date?
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
@@ -87,45 +82,19 @@ public class SamebugClient {
                 }
         );
         gson = gsonBuilder.create();
+    }
 
-        // logging
-        java.util.logging.Logger.getLogger("org.apache.http.wire").setLevel(java.util.logging.Level.FINER);
-        java.util.logging.Logger.getLogger("org.apache.http.headers").setLevel(java.util.logging.Level.FINER);
-        Logger.getInstance("org.apache.http.conn.ssl.StrictHostnameVerifier").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.conn.DefaultManagedHttpClientConnection").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.conn.ssl.SSLConnectionSocketFactory").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.client.ProxyAuthenticationStrategy").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.client.DefaultRedirectStrategy").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.execchain.RetryExec").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.conn.DefaultHttpClientConnectionOperator").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.execchain.ProtocolExec").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.conn.ssl.DefaultHostnameVerifier").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.client.TargetAuthenticationStrategy").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.conn.DefaultHttpResponseParser").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.client.protocol.RequestAddCookies").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.conn.PoolingHttpClientConnectionManager").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.headers").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.auth.HttpAuthenticator").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.conn.ssl.BrowserCompatHostnameVerifier").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.execchain.MainClientExec").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.client.protocol.RequestAuthCache").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.wire").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.conn.CPool").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.conn.ssl.AllowAllHostnameVerifier").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.execchain.RedirectExec").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.client.protocol.ResponseProcessCookies").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.client.InternalHttpClient").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.client.protocol.RequestClientConnControl").setLevel(Level.DEBUG);
-
-        // Build http client
+    public SamebugClient(final Config config) {
+        this.config = new Config(config);
+        this.gateway = config.serverRoot.resolve("rest/").resolve(API_VERSION + "/");
         HttpClientBuilder httpBuilder = HttpClientBuilder.create();
         RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
         CredentialsProvider provider = new BasicCredentialsProvider();
 
-        requestConfigBuilder.setConnectTimeout(5000).setSocketTimeout(7000).setConnectionRequestTimeout(500);
+        requestConfigBuilder.setConnectTimeout(config.connectTimeout).setSocketTimeout(config.requestTimeout).setConnectionRequestTimeout(500);
         try {
-            IdeHttpClientHelpers.ApacheHttpClient4.setProxyForUrlIfEnabled(requestConfigBuilder, root.toString());
-            IdeHttpClientHelpers.ApacheHttpClient4.setProxyCredentialsForUrlIfEnabled(provider, root.toString());
+            IdeHttpClientHelpers.ApacheHttpClient4.setProxyForUrlIfEnabled(requestConfigBuilder, config.serverRoot.toString());
+            IdeHttpClientHelpers.ApacheHttpClient4.setProxyCredentialsForUrlIfEnabled(provider, config.serverRoot.toString());
         } catch (Throwable e) {
             // fallback to traditional proxy config for backward compatiblity
             try {
@@ -142,34 +111,17 @@ public class SamebugClient {
         }
         requestConfig = requestConfigBuilder.build();
         trackingConfig = requestConfigBuilder.setSocketTimeout(3000).build();
+        List<BasicHeader> defaultHeaders = new ArrayList<BasicHeader>();
+        defaultHeaders.add(new BasicHeader("User-Agent", USER_AGENT));
+        if (config.apiKey != null) defaultHeaders.add(new BasicHeader("X-Samebug-ApiKey", config.apiKey));
+
         httpClient = httpBuilder.setDefaultRequestConfig(requestConfig)
                 .setMaxConnTotal(20).setMaxConnPerRoute(20)
                 .setDefaultCredentialsProvider(provider)
-                .setDefaultHeaders(Arrays.asList(new BasicHeader("User-Agent", USER_AGENT)))
+                .setDefaultHeaders(defaultHeaders)
                 .build();
 
-    }
-
-    public SamebugClient(final String apiKey) {
-        this.apiKey = apiKey;
-    }
-
-    public static URL getSearchUrl(int searchId) {
-        String uri = "search/" + searchId;
-        try {
-            return root.resolve(uri).toURL();
-        } catch (MalformedURLException e) {
-            throw new IllegalUriException("Unable to resolve uri " + uri, e);
-        }
-    }
-
-    public static URL getUserProfileUrl(Integer userId) {
-        String uri = "user/" + userId;
-        try {
-            return root.resolve(uri).toURL();
-        } catch (MalformedURLException e) {
-            throw new IllegalUriException("Unable to resolve uri " + uri, e);
-        }
+        if (config.isApacheLoggingEnabled) enableApacheLogging();
     }
 
     public SearchResults searchSolutions(String stacktrace) throws SamebugClientException {
@@ -249,8 +201,10 @@ public class SamebugClient {
     }
 
     public void trace(TrackEvent event) throws SamebugClientException {
-        HttpPost post = new HttpPost(trackingGateway);
-        postJson(post, event.fields);
+        if (config.isTrackingEnabled) {
+            HttpPost post = new HttpPost(config.trackingRoot);
+            postJson(post, event.fields);
+        }
     }
 
     // implementation
@@ -305,7 +259,6 @@ public class SamebugClient {
      */
     private HttpResponse execute(HttpRequestBase request, @Nullable RequestConfig config)
             throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
-        addDefaultHeaders(request);
         if (config != null) request.setConfig(config);
 
         HttpResponse httpResponse;
@@ -343,8 +296,57 @@ public class SamebugClient {
         return url;
     }
 
-    private void addDefaultHeaders(HttpRequest request) {
-        if (apiKey != null) request.addHeader("X-Samebug-ApiKey", apiKey);
+    public static class Config {
+        public String apiKey;
+        public URI serverRoot;
+        public URI trackingRoot;
+        public boolean isTrackingEnabled;
+        public int connectTimeout;
+        public int requestTimeout;
+        public boolean isApacheLoggingEnabled;
+
+        public Config() {
+        }
+
+        public Config(final Config rhs) {
+            this.apiKey = rhs.apiKey;
+            this.serverRoot = rhs.serverRoot;
+            this.trackingRoot = rhs.trackingRoot;
+            this.isTrackingEnabled = rhs.isTrackingEnabled;
+            this.connectTimeout = rhs.connectTimeout;
+            this.requestTimeout = rhs.requestTimeout;
+            this.isApacheLoggingEnabled = rhs.isApacheLoggingEnabled;
+        }
+    }
+
+    static void enableApacheLogging() {
+        java.util.logging.Logger.getLogger("org.apache.http.wire").setLevel(java.util.logging.Level.FINER);
+        java.util.logging.Logger.getLogger("org.apache.http.headers").setLevel(java.util.logging.Level.FINER);
+        Logger.getInstance("org.apache.http.conn.ssl.StrictHostnameVerifier").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.conn.DefaultManagedHttpClientConnection").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.conn.ssl.SSLConnectionSocketFactory").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.client.ProxyAuthenticationStrategy").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.client.DefaultRedirectStrategy").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.execchain.RetryExec").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.conn.DefaultHttpClientConnectionOperator").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.execchain.ProtocolExec").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.conn.ssl.DefaultHostnameVerifier").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.client.TargetAuthenticationStrategy").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.conn.DefaultHttpResponseParser").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.client.protocol.RequestAddCookies").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.conn.PoolingHttpClientConnectionManager").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.headers").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.auth.HttpAuthenticator").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.conn.ssl.BrowserCompatHostnameVerifier").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.execchain.MainClientExec").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.client.protocol.RequestAuthCache").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.wire").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.conn.CPool").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.conn.ssl.AllowAllHostnameVerifier").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.execchain.RedirectExec").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.client.protocol.ResponseProcessCookies").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.client.InternalHttpClient").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.client.protocol.RequestClientConnControl").setLevel(Level.DEBUG);
     }
 }
 

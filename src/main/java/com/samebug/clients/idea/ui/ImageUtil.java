@@ -17,7 +17,6 @@ package com.samebug.clients.idea.ui;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.search.api.SamebugClient;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
@@ -137,7 +136,7 @@ public class ImageUtil {
                 LOGGER.warn("Image " + imageUri + " was not found!");
             } else {
                 try {
-                    URL remoteUrl = samebugImageUrl(imageUri);
+                    URL remoteUrl = UrlUtil.getAssetUrl(imageUri);
                     Image image = ImageIO.read(imageBytes);
                     cache.put(remoteUrl, image);
                 } catch (MalformedURLException e) {
@@ -147,10 +146,6 @@ public class ImageUtil {
                 }
             }
         }
-    }
-
-    static URL samebugImageUrl(String uri) throws MalformedURLException {
-        return SamebugClient.root.resolve("assets/").resolve(uri).toURL();
     }
 
     static class ScaledKey {

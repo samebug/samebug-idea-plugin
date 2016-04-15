@@ -27,8 +27,7 @@ import com.samebug.clients.idea.ui.SettingsDialog;
 public class ConfigureAction extends AnAction implements DumbAware {
     @Override
     public void actionPerformed(AnActionEvent e) {
-        IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-        SettingsDialog.setup(plugin.getApiKey());
+        SettingsDialog.setup(IdeaSamebugPlugin.getInstance().getState().apiKey);
     }
 
     @Override
