@@ -17,7 +17,6 @@ package com.samebug.clients.idea.ui;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.search.api.SamebugClient;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;

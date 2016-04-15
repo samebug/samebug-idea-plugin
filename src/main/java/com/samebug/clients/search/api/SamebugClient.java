@@ -54,7 +54,10 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 public class SamebugClient {
     final static String USER_AGENT = "Samebug-Idea-Client/1.3.0";
@@ -302,7 +305,9 @@ public class SamebugClient {
         public int requestTimeout;
         public boolean isApacheLoggingEnabled;
 
-        public Config() {}
+        public Config() {
+        }
+
         public Config(final Config rhs) {
             this.apiKey = rhs.apiKey;
             this.serverRoot = rhs.serverRoot;

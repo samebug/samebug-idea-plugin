@@ -35,7 +35,6 @@ import com.samebug.clients.idea.ui.UrlUtil;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.views.HistoryTabView;
 import com.samebug.clients.idea.ui.views.SearchGroupCardView;
-import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import org.jetbrains.annotations.Nullable;
