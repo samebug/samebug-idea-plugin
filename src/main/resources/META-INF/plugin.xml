@@ -35,6 +35,8 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Samebug" icon="/com/samebug/samebug-r270.png" anchor="right"
                     factoryClass="com.samebug.clients.idea.ui.SamebugToolWindowFactory"/>
+        <applicationConfigurable groupId="tools" id="Settings.Samebug" displayName="Samebug"
+                                 instance="com.samebug.clients.idea.ui.controller.ConfigDialog"/>
         <projectService serviceInterface="com.samebug.clients.idea.ui.controller.HistoryTabController"
                         serviceImplementation="com.samebug.clients.idea.ui.controller.HistoryTabController"/>
         <projectService serviceInterface="com.samebug.clients.idea.ui.controller.SearchTabControllers"

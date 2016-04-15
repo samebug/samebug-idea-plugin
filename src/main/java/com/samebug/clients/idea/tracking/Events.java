@@ -149,13 +149,13 @@ public class Events {
             fields.put("category", category);
             fields.put("action", action);
             try {
-                Integer userId = IdeaSamebugPlugin.getInstance().getState().getUserId();
+                Integer userId = IdeaSamebugPlugin.getInstance().getState().userId;
                 if (userId != null) fields.put("userId", userId);
             } catch (Exception e) {
                 LOGGER.debug("failed to write userId to tracking event", e);
             }
             try {
-                String instanceId = IdeaSamebugPlugin.getInstance().getState().getInstanceId();
+                String instanceId = IdeaSamebugPlugin.getInstance().getState().instanceId;
                 if (instanceId != null) fields.put("instanceId", instanceId);
             } catch (Exception e) {
                 LOGGER.debug("failed to write instanceId to tracking event", e);

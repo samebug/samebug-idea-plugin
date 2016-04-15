@@ -137,7 +137,7 @@ public class ImageUtil {
                 LOGGER.warn("Image " + imageUri + " was not found!");
             } else {
                 try {
-                    URL remoteUrl = samebugImageUrl(imageUri);
+                    URL remoteUrl = UrlUtil.getAssetUrl(imageUri);
                     Image image = ImageIO.read(imageBytes);
                     cache.put(remoteUrl, image);
                 } catch (MalformedURLException e) {
@@ -147,10 +147,6 @@ public class ImageUtil {
                 }
             }
         }
-    }
-
-    static URL samebugImageUrl(String uri) throws MalformedURLException {
-        return SamebugClient.root.resolve("assets/").resolve(uri).toURL();
     }
 
     static class ScaledKey {

@@ -25,6 +25,7 @@ import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.ImageUtil;
+import com.samebug.clients.idea.ui.UrlUtil;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.views.ExternalSolutionView;
 import com.samebug.clients.idea.ui.views.SamebugTipView;
@@ -149,7 +150,7 @@ public class SearchTabController {
                     view.controlPanel.repaint();
                 } else {
                     EmptyWarningPanel panel = new EmptyWarningPanel();
-                    panel.label.setText(SamebugBundle.message("samebug.toolwindow.search.content.notConnected", SamebugClient.root));
+                    panel.label.setText(SamebugBundle.message("samebug.toolwindow.search.content.notConnected", UrlUtil.getServerRoot()));
                     view.solutionsPanel.add(panel.controlPanel);
                 }
                 view.controlPanel.revalidate();
@@ -162,13 +163,13 @@ public class SearchTabController {
         final SearchGroupCardView searchCard = new SearchGroupCardView(search, new SearchGroupCardView.ActionHandler() {
             @Override
             public void onTitleClick() {
-                URL url = SamebugClient.getSearchUrl(search.lastSearch.searchId);
+                URL url = UrlUtil.getSearchUrl(search.lastSearch.searchId);
                 BrowserUtil.browse(url);
                 Tracking.projectTracking(project).trace(Events.linkClick(project, url));
             }
         });
         // TODO write tip feature disabled
-        if (false && model.tips.size() == 0) {
+        if (IdeaSamebugPlugin.getInstance().getState().isWriteTipsEnabled && model.tips.size() == 0) {
             final WriteTipHint writeTipHint = new WriteTipHint();
             writeTipHint.setActionHandler(CTAHandler(searchCard, writeTipHint));
             view.makeHeader(searchCard, writeTipHint);

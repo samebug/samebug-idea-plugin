@@ -16,6 +16,8 @@
 package com.samebug.clients.idea.ui.views;
 
 import com.samebug.clients.common.ui.TextUtil;
+import com.samebug.clients.idea.components.application.ApplicationSettings;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.views.components.*;
@@ -63,7 +65,7 @@ public class SamebugTipView extends JPanel {
                         setLayout(new BorderLayout());
                         setBorder(BorderFactory.createEmptyBorder());
                         setOpaque(false);
-                        if (false) add(new JPanel() {
+                        if (IdeaSamebugPlugin.getInstance().getState().isMarkSolutionsEnabled) add(new JPanel() {
                             {
                                 setLayout(new GridBagLayout());
                                 setOpaque(false);

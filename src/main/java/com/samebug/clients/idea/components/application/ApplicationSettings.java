@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,46 +15,63 @@
  */
 package com.samebug.clients.idea.components.application;
 
+import com.samebug.clients.search.api.SamebugClient;
+
+import java.net.URI;
 import java.util.UUID;
 
 /**
  * Created by poroszd on 2/12/16.
  */
 public class ApplicationSettings {
-    private String apiKey;
-    private String instanceId = UUID.randomUUID().toString();
-    private int userId;
-    private boolean tutorialFirstRun = true;
+    public String apiKey;
+    public String instanceId = UUID.randomUUID().toString();
+    public int userId;
+    public URI serverRoot = defaultServerRoot;
+    public URI trackingRoot = defaultTrackingRoot;
+    public boolean isTrackingEnabled = defaultIsTrackingEnabled;
+    public int connectTimeout = defaultConnectTimeout;
+    public int requestTimeout = defaultRequestTimeout;
 
-    public String getApiKey() {
-        return apiKey;
+    public boolean isApacheLoggingEnabled = defaultIsApacheLoggingEnabled;
+    public boolean isWriteTipsEnabled = defaultIsWriteTipsEnabled;
+    public boolean isMarkSolutionsEnabled = defaultIsMarkSolutionsEnabled;
+    public boolean tutorialFirstRun = true;
+
+    public static final URI defaultServerRoot = URI.create("https://samebug.io/");
+    public static final URI defaultTrackingRoot = defaultServerRoot.resolve("track/trace");
+    public static final boolean defaultIsTrackingEnabled = true;
+    public static final int defaultConnectTimeout = 5000;
+    public static final int defaultRequestTimeout = 10000;
+    public static final boolean defaultIsApacheLoggingEnabled = false;
+    public static final boolean defaultIsWriteTipsEnabled = false;
+    public static final boolean defaultIsMarkSolutionsEnabled = false;
+
+    public ApplicationSettings() {}
+    public ApplicationSettings(final ApplicationSettings rhs) {
+        this.apiKey = rhs.apiKey;
+        this.serverRoot = rhs.serverRoot;
+        this.trackingRoot = rhs.trackingRoot;
+        this.isTrackingEnabled = rhs.isTrackingEnabled;
+        this.connectTimeout = rhs.connectTimeout;
+        this.requestTimeout = rhs.requestTimeout;
+        this.isApacheLoggingEnabled = rhs.isApacheLoggingEnabled;
+        this.isWriteTipsEnabled = rhs.isWriteTipsEnabled;
+        this.isMarkSolutionsEnabled = rhs.isMarkSolutionsEnabled;
+        this.instanceId = rhs.instanceId;
+        this.userId = rhs.userId;
+        this.tutorialFirstRun = rhs.tutorialFirstRun;
     }
 
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
-    }
-
-    public String getInstanceId() {
-        return instanceId;
-    }
-
-    public void setInstanceId(String instanceId) {
-        this.instanceId = instanceId;
-    }
-
-    public boolean isTutorialFirstRun() {
-        return tutorialFirstRun;
-    }
-
-    public void setTutorialFirstRun(boolean tutorialFirstRun) {
-        this.tutorialFirstRun = tutorialFirstRun;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public SamebugClient.Config getNetworkConfig() {
+        final SamebugClient.Config config = new SamebugClient.Config();
+        config.apiKey = apiKey;
+        config.serverRoot = serverRoot;
+        config.trackingRoot = trackingRoot;
+        config.isTrackingEnabled = isTrackingEnabled;
+        config.connectTimeout = connectTimeout;
+        config.requestTimeout = requestTimeout;
+        config.isApacheLoggingEnabled = isApacheLoggingEnabled;
+        return config;
     }
 }

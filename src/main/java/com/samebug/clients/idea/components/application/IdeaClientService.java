@@ -43,8 +43,8 @@ public class IdeaClientService {
     private AtomicBoolean authenticated;
     private AtomicInteger nRequests;
 
-    public IdeaClientService(final String apiKey) {
-        this.client = new SamebugClient(apiKey);
+    public IdeaClientService(final SamebugClient.Config config) {
+        this.client = new SamebugClient(config);
         // Optimist initialization. If incorrect, that'll turn out soon
         this.connected = new AtomicBoolean(true);
         this.authenticated = new AtomicBoolean(true);
