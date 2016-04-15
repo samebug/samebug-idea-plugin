@@ -22,5 +22,5 @@ import java.net.URL;
  */
 public class Source {
     public String name;
-    public URL iconUrl;
+    public String icon;
 }

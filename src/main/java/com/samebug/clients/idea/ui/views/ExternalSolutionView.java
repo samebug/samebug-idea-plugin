@@ -21,6 +21,7 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.ImageUtil;
+import com.samebug.clients.idea.ui.UrlUtil;
 import com.samebug.clients.idea.ui.views.components.*;
 import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
 import com.samebug.clients.search.api.entities.legacy.RestHit;
@@ -116,7 +117,7 @@ public class ExternalSolutionView extends JPanel {
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createEmptyBorder());
             setOpaque(false);
-            final Image sourceIcon = ImageUtil.getScaled(solution.solution.source.iconUrl, 32, 32);
+            final Image sourceIcon = ImageUtil.getScaled(UrlUtil.getSourceIconUrl(solution.solution.source.icon), 32, 32);
             add(new SourceIcon(sourceIcon), BorderLayout.WEST);
             add(new JPanel() {
                 {

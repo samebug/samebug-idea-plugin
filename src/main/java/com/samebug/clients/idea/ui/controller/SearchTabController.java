@@ -110,7 +110,7 @@ public class SearchTabController {
                     imageUrls.add(tip.solution.author.avatarUrl);
                 }
                 for (final RestHit<SolutionReference> s : model.references) {
-                    imageUrls.add(s.solution.source.iconUrl);
+                    imageUrls.add(UrlUtil.getSourceIconUrl(s.solution.source.icon));
                 }
 
                 ImageUtil.loadImages(imageUrls);

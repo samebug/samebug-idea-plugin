@@ -47,5 +47,13 @@ public class UrlUtil {
         }
     }
 
+    public static URL getSourceIconUrl(final String iconId) {
+        try {
+            return getServerRoot().resolve("assets/images/sources/").resolve(iconId).resolve(".png").toURL();
+        } catch (MalformedURLException e) {
+            throw new IllegalUriException("Unable to resolve uri for icon " + iconId, e);
+        }
+    }
+
 
 }
