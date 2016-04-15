@@ -15,8 +15,6 @@
  */
 package com.samebug.clients.search.api.entities.legacy;
 
-import java.net.URL;
-
 /**
  * Created by poroszd on 4/1/16.
  */

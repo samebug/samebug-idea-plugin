@@ -169,7 +169,7 @@ public class SamebugClient {
     public MarkResponse postMark(Integer searchId, Integer solutionId) throws SamebugClientException {
         HttpPost post = new HttpPost(getApiUrl("mark").toString());
         List<BasicNameValuePair> form = Arrays.asList(new BasicNameValuePair("solution", solutionId.toString()),
-                new BasicNameValuePair("search", searchId.toString()) );
+                new BasicNameValuePair("search", searchId.toString()));
         post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
 
         return requestJson(post, MarkResponse.class);
@@ -262,13 +262,13 @@ public class SamebugClient {
                 }
                 return httpResponse;
             case HttpStatus.SC_BAD_REQUEST:
-                RestError restError =  new HandleResponse<RestError>(httpResponse) {
+                RestError restError = new HandleResponse<RestError>(httpResponse) {
                     @Override
                     RestError process(Reader reader) {
                         return gson.fromJson(reader, RestError.class);
                     }
                 }.handle();
-            throw new BadRequest(restError);
+                throw new BadRequest(restError);
             case HttpStatus.SC_UNAUTHORIZED:
                 throw new UserUnauthenticated();
             case HttpStatus.SC_FORBIDDEN:

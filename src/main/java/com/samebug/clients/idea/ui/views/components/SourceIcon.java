@@ -17,7 +17,6 @@ package com.samebug.clients.idea.ui.views.components;
 
 import com.samebug.clients.idea.ui.ColorUtil;
 
-import javax.swing.*;
 import java.awt.*;
 
 /**

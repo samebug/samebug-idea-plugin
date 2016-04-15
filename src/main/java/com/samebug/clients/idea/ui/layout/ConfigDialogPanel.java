@@ -57,7 +57,7 @@ public class ConfigDialogPanel {
                 throw new ConfigurationException(settings.serverRoot + " is not a valid URI");
             }
             try {
-            URI.create(settings.trackingRoot);
+                URI.create(settings.trackingRoot);
             } catch (Exception e) {
                 throw new ConfigurationException(settings.trackingRoot + " is not a valid URI");
             }
