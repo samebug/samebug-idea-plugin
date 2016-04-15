@@ -158,5 +158,22 @@ public class ImageUtil {
             this.height = height;
             this.width = width;
         }
+
+        @Override
+        public int hashCode() {
+            return ((31 + src.hashCode()) * 31 + height) * 31 + width;
+        }
+
+        @Override
+        public boolean equals(Object that) {
+            if (that == this) return true;
+            else if (!(that instanceof ScaledKey)) return false;
+            else {
+                final ScaledKey rhs = (ScaledKey) that;
+                return rhs.src.equals(src)
+                        && rhs.width == width
+                        && rhs.height == height;
+            }
+        }
     }
 }
