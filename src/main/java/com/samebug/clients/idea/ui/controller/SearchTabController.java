@@ -40,6 +40,7 @@ import com.samebug.clients.search.api.entities.ExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import com.samebug.clients.search.api.entities.MarkResponse;
 import com.samebug.clients.search.api.entities.legacy.*;
+import com.samebug.clients.search.api.exceptions.BadRequest;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -244,26 +245,41 @@ public class SearchTabController {
                 public void run() {
                     try {
                         IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
-                        if (hit.userVoteId == null) {
+                        if (hit.markId == null) {
                             final MarkResponse mark = client.postMark(search.lastSearch.searchId, hit.solutionId);
-                            hit.userVoteId = mark.markId;
-                            hit.score += 1;
+                            hit.markId = mark.id;
+                            hit.score = mark.marks;
                         } else {
-                            client.retractMark(hit.userVoteId);
-                            hit.userVoteId = null;
-                            hit.score -= 1;
+                            final MarkResponse mark = client.retractMark(hit.markId);
+                            hit.markId = null;
+                            hit.score = mark.marks;
                         }
                         ApplicationManager.getApplication().invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                markPanel.finishPostMarkWithSuccess(hit.score, hit.userVoteId != null);
+                                markPanel.finishPostMarkWithSuccess(hit.score, hit.markId != null);
                             }
                         });
+                    } catch (final BadRequest e) {
+                        final String errorMessageKey;
+                        final String markErrorCode = e.getRestError().code;
+                        if ("ALREADY_MARKED".equals(markErrorCode)) errorMessageKey = "samebug.mark.error.alreadyMarked";
+                        else if ("NOT_YOUR_SEARCH".equals(markErrorCode)) errorMessageKey = "samebug.mark.error.notYourSearch";
+                        else if ("NOT_YOUR_MARK".equals(markErrorCode)) errorMessageKey = "samebug.mark.error.notYourMark";
+                        else if ("ALREADY_CANCELLED".equals(markErrorCode)) errorMessageKey = "samebug.mark.error.alreadyCancelled";
+                        else errorMessageKey = "samebug.mark.error.unhandledBadRequest";
+                        ApplicationManager.getApplication().invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                markPanel.finishPostMarkWithError(SamebugBundle.message(errorMessageKey));
+                            }
+                        });
+
                     } catch (final SamebugClientException e) {
                         ApplicationManager.getApplication().invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                markPanel.finishPostMarkWithError(e.getMessage());
+                                markPanel.finishPostMarkWithError(SamebugBundle.message("samebug.mark.error.unhandled"));
                             }
                         });
                     }

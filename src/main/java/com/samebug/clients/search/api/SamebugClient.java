@@ -21,10 +21,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.net.IdeHttpClientHelpers;
-import com.samebug.clients.search.api.entities.GroupedHistory;
-import com.samebug.clients.search.api.entities.MarkResponse;
-import com.samebug.clients.search.api.entities.SearchResults;
-import com.samebug.clients.search.api.entities.UserInfo;
+import com.samebug.clients.search.api.entities.*;
 import com.samebug.clients.search.api.entities.legacy.RestHit;
 import com.samebug.clients.search.api.entities.legacy.Solutions;
 import com.samebug.clients.search.api.entities.legacy.Tip;
@@ -54,10 +51,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class SamebugClient {
     final static String USER_AGENT = "Samebug-Idea-Client/1.3.0";
@@ -172,18 +166,13 @@ public class SamebugClient {
         }
     }
 
-    public MarkResponse postMark(int searchId, int solutionId) throws SamebugClientException {
-        // TODO implement
-        try {
-            Thread.sleep(3000);
-            if (Math.random() > 0.5) {
-                return gson.fromJson(new InputStreamReader(getClass().getResourceAsStream("/com/samebug/mock/markResponse.json")), MarkResponse.class);
-            } else {
-                throw new SamebugClientException("Server is down");
-            }
-        } catch (InterruptedException e) {
-            return null;
-        }
+    public MarkResponse postMark(Integer searchId, Integer solutionId) throws SamebugClientException {
+        HttpPost post = new HttpPost(getApiUrl("mark").toString());
+        List<BasicNameValuePair> form = Arrays.asList(new BasicNameValuePair("solution", solutionId.toString()),
+                new BasicNameValuePair("search", searchId.toString()) );
+        post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
+
+        return requestJson(post, MarkResponse.class);
     }
 
     public MarkResponse retractMark(int voteId) throws SamebugClientException {
@@ -209,7 +198,7 @@ public class SamebugClient {
 
     // implementation
     private <T> T requestJson(HttpRequestBase request, final Class<T> classOfT)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
         request.setHeader("Accept", "application/json");
         final HttpResponse httpResponse = executePatient(request);
         return new HandleResponse<T>(httpResponse) {
@@ -221,7 +210,7 @@ public class SamebugClient {
     }
 
     private void postJson(HttpPost post, Object data)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
         String json = gson.toJson(data);
         post.addHeader("Content-Type", "application/json");
         post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
@@ -237,12 +226,12 @@ public class SamebugClient {
 
 
     private HttpResponse executeFailFast(HttpRequestBase request)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
         return execute(request, trackingConfig);
     }
 
     private HttpResponse executePatient(HttpRequestBase request)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
         return execute(request, null);
     }
 
@@ -254,11 +243,12 @@ public class SamebugClient {
      * @throws HttpError                  in case of a problem or the connection was aborted or   if the response is not readable
      * @throws UnsuccessfulResponseStatus if the response status is not 200
      * @throws RemoteError                if the server returned error in the X-Samebug-Errors header
+     * @throws BadRequest                 if the client state is inconsistent with the server (400)
      * @throws UserUnauthenticated        if the user was not authenticated (401)
      * @throws UserUnauthorized           if the user was not authorized (403)
      */
     private HttpResponse execute(HttpRequestBase request, @Nullable RequestConfig config)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
         if (config != null) request.setConfig(config);
 
         HttpResponse httpResponse;
@@ -277,6 +267,14 @@ public class SamebugClient {
                     throw new RemoteError(errors.getValue());
                 }
                 return httpResponse;
+            case HttpStatus.SC_BAD_REQUEST:
+                RestError restError =  new HandleResponse<RestError>(httpResponse) {
+                    @Override
+                    RestError process(Reader reader) {
+                        return gson.fromJson(reader, RestError.class);
+                    }
+                }.handle();
+            throw new BadRequest(restError);
             case HttpStatus.SC_UNAUTHORIZED:
                 throw new UserUnauthenticated();
             case HttpStatus.SC_FORBIDDEN:

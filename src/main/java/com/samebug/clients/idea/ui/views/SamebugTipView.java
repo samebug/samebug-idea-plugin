@@ -49,7 +49,7 @@ public class SamebugTipView extends JPanel {
         tipLabel = new TipText(tip.solution.tip);
         sourceReferencePanel = new TipSourceReferencePanel(tip.solution);
         avatarPanel = new AvatarPanel(tip.solution.author);
-        markPanel = new MarkPanel(tip.score, tip.userVoteId != null);
+        markPanel = new MarkPanel(tip.score, tip.markId != null);
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));

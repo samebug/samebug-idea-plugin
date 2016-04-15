@@ -25,6 +25,6 @@ public class RestHit<T extends RestSolution> {
     public T solution;
     public int matchLevel;
     public int score;
-    public Integer userVoteId;
+    public Integer markId;
     public Exception exception;
 }

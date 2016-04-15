@@ -92,9 +92,9 @@ public class MarkPanel extends JPanel {
 
     void updateState(final int score, final boolean marked) {
         if (score == 0) {
-            helpedLabel.setText(SamebugBundle.message("samebug.solutions.marked.noone"));
+            helpedLabel.setText(SamebugBundle.message("samebug.mark.marked.noone"));
         } else {
-            helpedLabel.setText(SamebugBundle.message("samebug.solutions.marked.anyone", score));
+            helpedLabel.setText(SamebugBundle.message("samebug.mark.marked.anyone", score));
         }
         if (marked) {
             markButton.setText("unmark");
