@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.ui.layout;
 
+import com.intellij.openapi.options.ConfigurationException;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 
@@ -25,7 +26,8 @@ import java.net.URI;
  * Created by poroszd on 4/8/16.
  */
 public class ConfigDialogPanel {
-    final ApplicationSettings settings;
+    ApplicationSettings currentConfig;
+    public JPanel controlPanel;
 
     public JTextField serverRoot;
     public JTextField trackingRoot;
@@ -33,38 +35,59 @@ public class ConfigDialogPanel {
     public JSpinner connectTimeout;
     public JSpinner requestTimeout;
     public JTextField apiKey;
-    public JPanel controlPanel;
     public JCheckBox writeTips;
     public JCheckBox markSolutions;
     public JCheckBox apacheLogging;
 
 
-    // TODO too much boilerplate
     public ConfigDialogPanel() {
-        settings = new ApplicationSettings(IdeaSamebugPlugin.getInstance().getState());
-        serverRoot.setText(settings.serverRoot);
-        trackingRoot.setText(settings.trackingRoot);
-        connectTimeout.setValue(settings.connectTimeout);
-        requestTimeout.setValue(settings.requestTimeout);
-        apacheLogging.setSelected(settings.isApacheLoggingEnabled);
-        writeTips.setSelected(settings.isWriteTipsEnabled);
-        markSolutions.setSelected(settings.isMarkSolutionsEnabled);
-        tracking.setSelected(settings.isTrackingEnabled);
+        currentConfig = new ApplicationSettings(IdeaSamebugPlugin.getInstance().getState());
     }
 
     public boolean isModified() {
-        return !(settings.apiKey.equals(apiKey.getText())
-                && settings.serverRoot.equals(serverRoot.getText())
-                && settings.trackingRoot.equals(trackingRoot.getText())
-                && settings.connectTimeout == (Integer) connectTimeout.getValue()
-                && settings.requestTimeout == (Integer) requestTimeout.getValue()
-                && settings.isApacheLoggingEnabled == apacheLogging.isSelected()
-                && settings.isWriteTipsEnabled == writeTips.isSelected()
-                && settings.isMarkSolutionsEnabled == markSolutions.isSelected()
-                && settings.isTrackingEnabled == tracking.isSelected());
+        return !currentConfig.equals(fromUI());
     }
 
-    public void apply() {
+    public void apply() throws ConfigurationException {
+        final ApplicationSettings settings = fromUI();
+        try {
+            try {
+                URI.create(settings.serverRoot);
+            } catch (Exception e) {
+                throw new ConfigurationException(settings.serverRoot + " is not a valid URI");
+            }
+            try {
+            URI.create(settings.trackingRoot);
+            } catch (Exception e) {
+                throw new ConfigurationException(settings.trackingRoot + " is not a valid URI");
+            }
+            IdeaSamebugPlugin.getInstance().saveSettings(settings);
+            currentConfig = settings;
+        } catch (Exception e) {
+            throw new ConfigurationException("Failed to save configuration: " + e.getMessage());
+        }
+    }
+
+    public void reset() {
+        toUI(currentConfig);
+    }
+
+    // Apparently, IntelliJ's way to reset to defaults seems to be simply deleting the config files.
+    public void resetToDefaults() {
+        final ApplicationSettings settings = currentConfig;
+        settings.serverRoot = ApplicationSettings.defaultServerRoot;
+        settings.trackingRoot = ApplicationSettings.defaultTrackingRoot;
+        settings.isTrackingEnabled = ApplicationSettings.defaultIsTrackingEnabled;
+        settings.connectTimeout = ApplicationSettings.defaultConnectTimeout;
+        settings.requestTimeout = ApplicationSettings.defaultRequestTimeout;
+        settings.isApacheLoggingEnabled = ApplicationSettings.defaultIsApacheLoggingEnabled;
+        settings.isWriteTipsEnabled = ApplicationSettings.defaultIsWriteTipsEnabled;
+        settings.isMarkSolutionsEnabled = ApplicationSettings.defaultIsMarkSolutionsEnabled;
+        toUI(settings);
+    }
+
+    ApplicationSettings fromUI() {
+        final ApplicationSettings settings = new ApplicationSettings(currentConfig);
         settings.apiKey = apiKey.getText();
         settings.serverRoot = serverRoot.getText();
         settings.trackingRoot = trackingRoot.getText();
@@ -74,11 +97,18 @@ public class ConfigDialogPanel {
         settings.isWriteTipsEnabled = writeTips.isSelected();
         settings.isMarkSolutionsEnabled = markSolutions.isSelected();
         settings.isTrackingEnabled = tracking.isSelected();
-        IdeaSamebugPlugin.getInstance().saveSettings(settings);
+        return settings;
     }
 
-    public void reset() {
-        // TODO reset to default values
+    void toUI(final ApplicationSettings settings) {
         apiKey.setText(settings.apiKey);
+        serverRoot.setText(settings.serverRoot);
+        trackingRoot.setText(settings.trackingRoot);
+        connectTimeout.setValue(settings.connectTimeout);
+        requestTimeout.setValue(settings.requestTimeout);
+        apacheLogging.setSelected(settings.isApacheLoggingEnabled);
+        writeTips.setSelected(settings.isWriteTipsEnabled);
+        markSolutions.setSelected(settings.isMarkSolutionsEnabled);
+        tracking.setSelected(settings.isTrackingEnabled);
     }
 }

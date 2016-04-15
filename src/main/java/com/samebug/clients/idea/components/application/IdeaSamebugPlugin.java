@@ -60,19 +60,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     }
 
     public void saveSettings(final ApplicationSettings settings) {
-        // TODO guarantee all fields are copied
-        state.apiKey = settings.apiKey;
-        state.serverRoot = settings.serverRoot;
-        state.trackingRoot = settings.trackingRoot;
-        state.isTrackingEnabled = settings.isTrackingEnabled;
-        state.connectTimeout = settings.connectTimeout;
-        state.requestTimeout = settings.requestTimeout;
-        state.isApacheLoggingEnabled = settings.isApacheLoggingEnabled;
-        state.isWriteTipsEnabled = settings.isWriteTipsEnabled;
-        state.isMarkSolutionsEnabled = settings.isMarkSolutionsEnabled;
-        state.instanceId = settings.instanceId;
-        state.userId = settings.userId;
-        state.tutorialFirstRun = settings.tutorialFirstRun;
+        state = new ApplicationSettings(settings);
         try {
             client = new IdeaClientService(state.getNetworkConfig());
         } finally {
@@ -103,7 +91,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
             @Override
             public void run() {
                 if (state.apiKey == null) {
-                    SettingsDialog.setup(state.apiKey);
+                    SettingsDialog.setup(null);
                 } else {
                     try {
                         UserInfo userInfo = client.getUserInfo(state.apiKey);

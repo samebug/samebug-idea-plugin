@@ -31,7 +31,7 @@ public class UrlUtil {
     }
 
     public static URL getSearchUrl(int searchId) {
-        String uri = "search/" + searchId;
+        String uri = "/search/" + searchId;
         try {
             return getServerRoot().resolve(uri).toURL();
         } catch (MalformedURLException e) {
@@ -41,7 +41,7 @@ public class UrlUtil {
 
     public static URL getAssetUrl(final String assetUri) {
         try {
-            return getServerRoot().resolve("assets/").resolve(assetUri).toURL();
+            return getServerRoot().resolve("/assets/").resolve(assetUri).toURL();
         } catch (MalformedURLException e) {
             throw new IllegalUriException("Unable to resolve uri assets/" + assetUri, e);
         }
@@ -49,7 +49,7 @@ public class UrlUtil {
 
     public static URL getSourceIconUrl(final String iconId) {
         try {
-            return getServerRoot().resolve("assets/images/sources/").resolve(iconId + ".png").toURL();
+            return getServerRoot().resolve("/assets/images/sources/").resolve(iconId + ".png").toURL();
         } catch (MalformedURLException e) {
             throw new IllegalUriException("Unable to resolve uri for icon " + iconId, e);
         }

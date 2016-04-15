@@ -80,15 +80,15 @@ public class SamebugClient {
 
     public SamebugClient(final Config config) {
         this.config = new Config(config);
-        this.gateway = URI.create(config.serverRoot).resolve("rest/").resolve(API_VERSION + "/");
+        this.gateway = URI.create(config.serverRoot).resolve("/rest/").resolve(API_VERSION + "/");
         HttpClientBuilder httpBuilder = HttpClientBuilder.create();
         RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
         CredentialsProvider provider = new BasicCredentialsProvider();
 
         requestConfigBuilder.setConnectTimeout(config.connectTimeout).setSocketTimeout(config.requestTimeout).setConnectionRequestTimeout(500);
         try {
-            IdeHttpClientHelpers.ApacheHttpClient4.setProxyForUrlIfEnabled(requestConfigBuilder, config.serverRoot.toString());
-            IdeHttpClientHelpers.ApacheHttpClient4.setProxyCredentialsForUrlIfEnabled(provider, config.serverRoot.toString());
+            IdeHttpClientHelpers.ApacheHttpClient4.setProxyForUrlIfEnabled(requestConfigBuilder, config.serverRoot);
+            IdeHttpClientHelpers.ApacheHttpClient4.setProxyCredentialsForUrlIfEnabled(provider, config.serverRoot);
         } catch (Throwable e) {
             // fallback to traditional proxy config for backward compatiblity
             try {
