@@ -22,7 +22,9 @@ import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
+import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.UrlUtil;
@@ -61,6 +63,7 @@ public class SearchTabController {
     final Project project;
     final static Logger LOGGER = Logger.getInstance(SearchTabController.class);
     final SearchTabView view;
+    final ConnectionStatusUpdater connectionStatusUpdater;
 
     @Nullable
     Solutions model;
@@ -70,6 +73,11 @@ public class SearchTabController {
     public SearchTabController(Project project) {
         this.project = project;
         view = new SearchTabView();
+        connectionStatusUpdater = new ConnectionStatusUpdater();
+    }
+
+    public ConnectionStatusUpdater getStatusUpdater() {
+        return connectionStatusUpdater;
     }
 
     public JPanel getControlPanel() {
@@ -349,6 +357,39 @@ public class SearchTabController {
                 }
             });
 
+        }
+    }
+
+    class ConnectionStatusUpdater implements ConnectionStatusListener {
+        @Override
+        public void startRequest() {
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    view.statusIcon.setIcon(SamebugIcons.linkActive);
+                    view.statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.loading"));
+                    view.statusIcon.repaint();
+                }
+            });
+        }
+
+        @Override
+        public void finishRequest(final boolean isConnected) {
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    if (IdeaSamebugPlugin.getInstance().getClient().getNumberOfActiveRequests() == 0) {
+                        if (isConnected) {
+                            view.statusIcon.setIcon(null);
+                            view.statusIcon.setToolTipText(null);
+                        } else {
+                            view.statusIcon.setIcon(SamebugIcons.linkError);
+                            view.statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.notConnected", UrlUtil.getServerRoot()));
+                        }
+                        view.statusIcon.repaint();
+                    }
+                }
+            });
         }
     }
 }

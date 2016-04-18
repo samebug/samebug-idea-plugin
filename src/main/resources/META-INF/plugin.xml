@@ -49,11 +49,17 @@
             <action id="Samebug.Configure" class="com.samebug.clients.idea.actions.ConfigureAction"
                     icon="/com/samebug/icons/cogwheel.png" text="Configure Samebug" description="Set Samebug API key"/>
             <action id="Samebug.History" class="com.samebug.clients.idea.actions.ReloadHistoryAction"
-                    icon="/com/samebug/icons/reload.png" text="Reload history" description="Reload crash history"/>
+                    icon="/com/samebug/icons/reload.png" text="Reload history" description="Reload exception history"/>
             <action id="Samebug.ShowRecurringSearches" class="com.samebug.clients.idea.actions.ShowRecurringSearches"
                     icon="/com/samebug/icons/filter-old.png" text="Show recurring" description="Show recurring searches"/>
             <action id="Samebug.ShowZeroSolutionSearches" class="com.samebug.clients.idea.actions.ShowZeroSolutionSearches"
                     icon="/com/samebug/icons/filter-unknown.png" text="Show unsolved" description="Show searches with zero solutions"/>
+        </group>
+        <group id="Samebug.SearchTabMenu" text="Samebug search tab menu" description="Search tab menu">
+            <action id="Samebug.BackToHistory" class="com.samebug.clients.idea.actions.ShowHistoryAction"
+                    icon="/com/samebug/icons/prev.png" text="Show history" description="Show exception history"/>
+            <action id="Samebug.ReloadSearch" class="com.samebug.clients.idea.actions.ReloadSearchAction"
+                    icon="/com/samebug/icons/reload.png" text="Reload solutions" description="Reload solutions"/>
         </group>
     </actions>
 

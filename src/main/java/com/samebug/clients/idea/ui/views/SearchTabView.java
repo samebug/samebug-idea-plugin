@@ -15,6 +15,10 @@
  */
 package com.samebug.clients.idea.ui.views;
 
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.samebug.clients.idea.ui.views.components.TransparentPanel;
 
 import javax.swing.*;
@@ -28,6 +32,8 @@ public class SearchTabView {
     public JPanel header;
     public JScrollPane scrollPane;
     public JPanel solutionsPanel;
+    public JPanel toolbarPanel;
+    public JLabel statusIcon;
 
     public SearchTabView() {
 
@@ -50,12 +56,19 @@ public class SearchTabView {
         scrollPane.setViewportView(solutionsPanel);
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        statusIcon = new JLabel();
+        statusIcon.setText(null);
+        statusIcon.setIcon(null);
+        toolbarPanel = new ToolBarPanel();
+        toolbarPanel.add(statusIcon, BorderLayout.EAST);
     }
 
     public void makeHeader(final SearchGroupCardView search, final JComponent extension) {
         header.removeAll();
         header.add(new TransparentPanel() {
             {
+                add(toolbarPanel, BorderLayout.NORTH);
                 add(search, BorderLayout.CENTER);
                 if (extension != null) {
                     add(extension, BorderLayout.SOUTH);
@@ -65,6 +78,17 @@ public class SearchTabView {
                 }
             }
         });
+    }
+
+    class ToolBarPanel extends JPanel {
+        {
+            setLayout(new BorderLayout());
+            setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
+
+            final DefaultActionGroup group = (DefaultActionGroup) ActionManager.getInstance().getAction("Samebug.SearchTabMenu");
+            final ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+            add(actionToolBar.getComponent(), BorderLayout.WEST);
+        }
     }
 
     class SolutionsPanel extends JPanel {

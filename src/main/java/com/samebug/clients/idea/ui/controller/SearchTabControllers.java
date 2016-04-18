@@ -23,7 +23,9 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
+import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.search.api.entities.legacy.Solutions;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
@@ -38,6 +40,7 @@ public class SearchTabControllers {
     final static Logger LOGGER = Logger.getInstance(SearchTabController.class);
     final private Project project;
     final private Map<Integer, SearchTabController> activeSearches;
+    Integer focusedSearch = null;
 
     public SearchTabControllers(Project project) {
         this.project = project;
@@ -64,8 +67,10 @@ public class SearchTabControllers {
             Content content = contentFactory.createContent(tab.getControlPanel(), SamebugBundle.message("samebug.toolwindow.search.tabName", searchId), false);
             toolwindowCM.addContent(content);
             activeSearches.put(searchId, tab);
+            focusedSearch = searchId;
+            MessageBusConnection appMessageBus = ApplicationManager.getApplication().getMessageBus().connect(project);
+            appMessageBus.subscribe(ConnectionStatusListener.CONNECTION_STATUS_TOPIC, tab.getStatusUpdater());
             toolwindowCM.setSelectedContent(content);
-
         } else {
             Content content = toolwindowCM.getContent(tab.getControlPanel());
             toolwindowCM.setSelectedContent(content);
@@ -99,5 +104,9 @@ public class SearchTabControllers {
             toolwindowCM.removeContent(content, true);
             activeSearches.remove(searchId);
         }
+    }
+
+    public void reloadFocusedSearch() {
+        if (focusedSearch != null) openSearchTab(focusedSearch);
     }
 }
