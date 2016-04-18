@@ -38,17 +38,23 @@ import java.util.HashMap;
 public class SearchGroupCardView extends JPanel {
     public final GroupedExceptionSearch searchGroup;
     final ExceptionType exceptionType;
+    public final JLabel packageLabel;
+    public final JLabel hitsLabel;
+    public final JLabel titleLabel;
+    public final JLabel exceptionMessageLabel;
+    public final JPanel groupInfoPanel;
+    public final JPanel breadcrumbPanel;
 
-    public SearchGroupCardView(final GroupedExceptionSearch searchGroup, final ActionHandler actionHandler) {
+    public SearchGroupCardView(final GroupedExceptionSearch searchGroup) {
         this.searchGroup = searchGroup;
         exceptionType = new ExceptionType(searchGroup.lastSearch.exception.typeName);
 
-        final JLabel packageLabel = new PackageLabel();
-        final JLabel hitsLabel = new HitsLabel();
-        final JLabel titleLabel = new TitleLabel();
-        final JLabel exceptionMessageLabel = new ExceptionMessageLabel(searchGroup.lastSearch.exception.message);
-        final JPanel groupInfoPanel = new GroupInfoPanel();
-        final JPanel breadcrumbPanel = new BreadcrumbBar(searchGroup.lastSearch.componentStack);
+        packageLabel = new PackageLabel();
+        hitsLabel = new HitsLabel();
+        titleLabel = new TitleLabel();
+        exceptionMessageLabel = new ExceptionMessageLabel(searchGroup.lastSearch.exception.message);
+        groupInfoPanel = new GroupInfoPanel();
+        breadcrumbPanel = new BreadcrumbBar(searchGroup.lastSearch.componentStack);
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
@@ -86,13 +92,6 @@ public class SearchGroupCardView extends JPanel {
         setPreferredSize(new Dimension(400, getPreferredSize().height));
         setMaximumSize(new Dimension(Integer.MAX_VALUE, Math.min(getPreferredSize().height, 250)));
 
-        titleLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                actionHandler.onTitleClick();
-            }
-        });
     }
 
     class TitleLabel extends JLabel {
