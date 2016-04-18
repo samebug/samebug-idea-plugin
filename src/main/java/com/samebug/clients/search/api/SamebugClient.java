@@ -47,6 +47,7 @@ import org.apache.log4j.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -55,7 +56,7 @@ import java.util.*;
 
 public class SamebugClient {
     final static String USER_AGENT = "Samebug-Idea-Client/1.3.0";
-    final static String API_VERSION = "0.8";
+    final static String API_VERSION = "0.9";
     final static Gson gson;
 
     final Config config;
@@ -151,19 +152,15 @@ public class SamebugClient {
         return requestJson(request, Solutions.class);
     }
 
-    public RestHit<Tip> postTip(int searchId, String tip, URL source) throws SamebugClientException {
-        // TODO implement
-        try {
-            Thread.sleep(3000);
-            if (Math.random() > 0.5) {
-                return gson.fromJson(new InputStreamReader(getClass().getResourceAsStream("/com/samebug/mock/tip.json")), new TypeToken<RestHit<Tip>>() {
-                }.getType());
-            } else {
-                throw new SamebugClientException("Server is down");
-            }
-        } catch (InterruptedException e) {
-            return null;
-        }
+    public RestHit<Tip> postTip(Integer searchId, String tip, URL source) throws SamebugClientException {
+        HttpPost post = new HttpPost(getApiUrl("tip").toString());
+        List<BasicNameValuePair> form = new ArrayList<BasicNameValuePair>();
+        form.add(new BasicNameValuePair("message", tip));
+        form.add(new BasicNameValuePair("searchId", searchId.toString()));
+        if (source != null) form.add(new BasicNameValuePair("search", searchId.toString()));
+        post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
+
+        return requestJson(post, new TypeToken<RestHit<Tip>>() { }.getType());
     }
 
     public MarkResponse postMark(Integer searchId, Integer solutionId) throws SamebugClientException {
@@ -193,12 +190,17 @@ public class SamebugClient {
     // implementation
     private <T> T requestJson(HttpRequestBase request, final Class<T> classOfT)
             throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
+        return requestJson(request, (Type) classOfT);
+    }
+
+    private <T> T requestJson(HttpRequestBase request, final Type typeOfT)
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
         request.setHeader("Accept", "application/json");
         final HttpResponse httpResponse = executePatient(request);
         return new HandleResponse<T>(httpResponse) {
             @Override
             T process(Reader reader) {
-                return gson.fromJson(reader, classOfT);
+                return gson.fromJson(reader, typeOfT);
             }
         }.handle();
     }

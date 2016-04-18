@@ -42,12 +42,14 @@ import com.samebug.clients.search.api.entities.MarkResponse;
 import com.samebug.clients.search.api.entities.legacy.*;
 import com.samebug.clients.search.api.exceptions.BadRequest;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -187,7 +189,8 @@ public class SearchTabController {
             @Override
             public void onCTAClick() {
                 final WriteTip writeTip = new WriteTip();
-                writeTip.setActionHandler(tipActionHandler(writeTip));
+                writeTip.cancel.addActionListener(new TipCancelHandler());
+                writeTip.submit.addActionListener(new TipSubmitHandler(search.lastSearch.searchId, writeTip));
                 view.makeHeader(searchCard, writeTip);
                 view.header.revalidate();
                 view.header.repaint();
@@ -195,35 +198,89 @@ public class SearchTabController {
         };
     }
 
-    WriteTip.ActionHandler tipActionHandler(final WriteTip writeTip) {
-        assert (search != null);
-        assert (model != null);
+    class TipCancelHandler implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            repaintHeader();
+        }
+    }
 
-        return writeTip.new ActionHandler() {
-            @Override
-            public void onCancel() {
-                repaintHeader();
-            }
+    class TipSubmitHandler implements ActionListener {
+        final int searchId;
+        final WriteTip tipPanel;
 
-            @Override
-            public void onSubmit(final String tip, final URL sourceUrl) {
-                ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            final RestHit<Tip> newTip = IdeaSamebugPlugin.getInstance().getClient().postTip(search.lastSearch.searchId, tip, sourceUrl);
-                            success();
-                            model.tips.add(newTip);
-                            refreshPane();
-                        } catch (SamebugClientException e) {
-                            error(e.getMessage());
-                        } finally {
-                            ready();
+        public TipSubmitHandler(final int searchId, final WriteTip tipPanel) {
+            this.searchId = searchId;
+            this.tipPanel = tipPanel;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            tipPanel.beginPostTip();
+            ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+                @Override
+                public void run() {
+                    Runnable result = null;
+                        final String tip = tipPanel.tipBody.getText();
+                        final String rawSourceUrl = tipPanel.sourceLink.getText();
+
+                        if (tip.length() < WriteTip.minCharacters) {
+                            result = showError(SamebugBundle.message("samebug.tip.write.error.tip.short"));
+                        } else if (tip.length() > WriteTip.maxCharacters) {
+                            result = showError(SamebugBundle.message("samebug.tip.write.error.tip.long"));
+                        } else if (StringUtils.countMatches(tip, System.lineSeparator()) >= WriteTip.maxLines) {
+                            result = showError(SamebugBundle.message("samebug.tip.write.error.tip.tooManyLines"));
+                        } else {
+                            URL sourceUrl = null;
+                            if (rawSourceUrl != null && !rawSourceUrl.trim().isEmpty()) {
+                                try {
+                                    sourceUrl = new URL(rawSourceUrl);
+                                } catch (MalformedURLException e1) {
+                                    result = showError(SamebugBundle.message("samebug.tip.write.error.source.malformed"));
+                                }
+                            }
+
+                            if (result == null) {
+                                IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
+                                try {
+                                    final RestHit<Tip> newTip = client.postTip(searchId, tip, sourceUrl);
+                                    model.tips.add(newTip);
+                                    refreshPane();
+                                    result = success();
+                                } catch (final BadRequest e) {
+                                    final String errorMessageKey;
+                                    final String markErrorCode = e.getRestError().code;
+                                    if ("XXX".equals(markErrorCode)) errorMessageKey = "samebug.tip.write.error.source.handledBadRequest";
+                                    else errorMessageKey = "samebug.tip.write.error.source.unhandledBadRequest";
+                                    result = showError(SamebugBundle.message(errorMessageKey));
+                                } catch (final SamebugClientException e) {
+                                    result = showError(SamebugBundle.message("samebug.tip.write.error.source.unhandled"));
+                                }
+                            }
                         }
-                    }
-                });
-            }
-        };
+                    ApplicationManager.getApplication().invokeLater(result);
+                }
+            });
+
+        }
+
+        Runnable showError(final String message) {
+            return new Runnable() {
+                @Override
+                public void run() {
+                    tipPanel.finishPostTipWithError(message);
+                }
+            };
+        }
+
+        Runnable success() {
+            return new Runnable() {
+                @Override
+                public void run() {
+                    tipPanel.finishPostTipWithSuccess();
+                }
+            };
+        }
     }
 
     class MarkHandler implements ActionListener {
@@ -246,7 +303,7 @@ public class SearchTabController {
                     try {
                         IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
                         if (hit.markId == null) {
-                            final MarkResponse mark = client.postMark(search.lastSearch.searchId, hit.solutionId);
+                            final MarkResponse mark = client.postMark(searchId, hit.solutionId);
                             hit.markId = mark.id;
                             hit.score = mark.marks;
                         } else {
