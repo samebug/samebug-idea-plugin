@@ -158,7 +158,7 @@ public class SamebugClient {
         // TODO checkstyle fails if there are only spaces before the next two lines
         /**/ form.add(new BasicNameValuePair("message", tip));
         /**/ form.add(new BasicNameValuePair("searchId", searchId.toString()));
-        if (source != null) form.add(new BasicNameValuePair("search", searchId.toString()));
+        if (source != null) form.add(new BasicNameValuePair("sourceUrl", source.toString()));
         post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
 
         return requestJson(post, new TypeToken<RestHit<Tip>>() {
