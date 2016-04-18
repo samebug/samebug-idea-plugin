@@ -40,6 +40,8 @@ import com.samebug.clients.search.api.entities.GroupedHistory;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -119,13 +121,8 @@ public class HistoryTabController {
                         } else if (!isShowRecurringSearches() && group.firstSeenSimilar.before(oneDayBefore)) {
                             // filtered because it is old
                         } else {
-                            SearchGroupCardView searchGroupCard = new SearchGroupCardView(group, new SearchGroupCardView.ActionHandler() {
-                                @Override
-                                public void onTitleClick() {
-                                    ServiceManager.getService(project, SearchTabControllers.class).openSearchTab(group.lastSearch.searchId);
-                                    Tracking.projectTracking(project).trace(Events.searchClick(project, group.lastSearch.searchId));
-                                }
-                            });
+                            SearchGroupCardView searchGroupCard = new SearchGroupCardView(group);
+                            searchGroupCard.titleLabel.addMouseListener(new OpenSearchHandler(group.lastSearch.searchId));
                             searchGroups.add(searchGroupCard);
                             view.contentPanel.add(searchGroupCard);
                         }
@@ -173,6 +170,19 @@ public class HistoryTabController {
                 toolWindow.show(null);
             }
         });
+    }
+
+    class OpenSearchHandler extends MouseAdapter {
+        final int searchId;
+
+        public OpenSearchHandler(final int searchId) {
+            this.searchId = searchId;
+        }
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            ServiceManager.getService(project, SearchTabControllers.class).openSearchTab(searchId);
+            Tracking.projectTracking(project).trace(Events.searchClick(project, searchId));
+        }
     }
 
     class ConnectionStatusUpdater implements ConnectionStatusListener {

@@ -49,6 +49,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -139,6 +141,7 @@ public class SearchTabController {
                             view.solutionsPanel.add(tipView);
                             final MarkHandler markHandler = new MarkHandler(search.lastSearch.searchId, tip, tipView.markPanel);
                             tipView.markPanel.markButton.addActionListener(markHandler);
+                            tipView.writeBetter.addMouseListener(new WriteTipHandler());
                         }
                         for (final RestHit<SolutionReference> s : model.references) {
                             final ExternalSolutionView sv = new ExternalSolutionView(s, model.breadcrumb);
@@ -162,18 +165,12 @@ public class SearchTabController {
     }
 
     void repaintHeader() {
-        final SearchGroupCardView searchCard = new SearchGroupCardView(search, new SearchGroupCardView.ActionHandler() {
-            @Override
-            public void onTitleClick() {
-                URL url = UrlUtil.getSearchUrl(search.lastSearch.searchId);
-                BrowserUtil.browse(url);
-                Tracking.projectTracking(project).trace(Events.linkClick(project, url));
-            }
-        });
-        // TODO write tip feature disabled
+        final SearchGroupCardView searchCard = new SearchGroupCardView(search);
+        searchCard.titleLabel.addMouseListener(new OpenSearchHandler());
+
         if (IdeaSamebugPlugin.getInstance().getState().isWriteTipsEnabled && model.tips.size() == 0) {
             final WriteTipHint writeTipHint = new WriteTipHint();
-            writeTipHint.setActionHandler(makeCTAHandler(searchCard, writeTipHint));
+            writeTipHint.ctaButton.addMouseListener(new WriteTipHandler());
             view.makeHeader(searchCard, writeTipHint);
             // TODO add third case for preview
         } else {
@@ -183,19 +180,28 @@ public class SearchTabController {
         view.header.repaint();
     }
 
+    class OpenSearchHandler extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            URL url = UrlUtil.getSearchUrl(search.lastSearch.searchId);
+            BrowserUtil.browse(url);
+            Tracking.projectTracking(project).trace(Events.linkClick(project, url));
+        }
+    }
 
-    WriteTipCTA.ActionHandler makeCTAHandler(final SearchGroupCardView searchCard, final WriteTipCTA writeTipCTA) {
-        return writeTipCTA.new ActionHandler() {
-            @Override
-            public void onCTAClick() {
-                final WriteTip writeTip = new WriteTip();
-                writeTip.cancel.addActionListener(new TipCancelHandler());
-                writeTip.submit.addActionListener(new TipSubmitHandler(search.lastSearch.searchId, writeTip));
-                view.makeHeader(searchCard, writeTip);
-                view.header.revalidate();
-                view.header.repaint();
-            }
-        };
+    class WriteTipHandler extends MouseAdapter {
+        public WriteTipHandler() {
+        }
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            final WriteTip writeTip = new WriteTip();
+            final SearchGroupCardView searchCard = new SearchGroupCardView(search);
+            writeTip.cancel.addActionListener(new TipCancelHandler());
+            writeTip.submit.addActionListener(new TipSubmitHandler(search.lastSearch.searchId, writeTip));
+            view.makeHeader(searchCard, writeTip);
+            view.header.revalidate();
+            view.header.repaint();
+        }
     }
 
     class TipCancelHandler implements ActionListener {
