@@ -60,9 +60,9 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
                 IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
                 try {
                     GroupedHistory history = client.getSearchHistory();
-                    project.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(history);
+                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(history);
                 } catch (SamebugClientException e1) {
-                    project.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(null);
+                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(null);
                 }
             }
         });

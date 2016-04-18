@@ -62,17 +62,17 @@ public class StackTraceSearch implements ApplicationComponent, StackTraceMatcher
             public void run() {
                 SearchInfo searchInfo = new SearchInfo(sessionInfo);
                 // TODO I cannot see what stops 'Already disposed' errors here, but the docs say this is the intended usage.
-                project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).searchStart(searchInfo, stackTrace);
+                if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).searchStart(searchInfo, stackTrace);
                 try {
                     SearchResults result = client.searchSolutions(stackTrace);
-                    project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).searchSucceeded(searchInfo, result);
+                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).searchSucceeded(searchInfo, result);
                     Tracking.projectTracking(project).trace(Events.searchSucceeded(searchInfo, result));
                 } catch (SamebugTimeout ignored) {
-                    project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).timeout(searchInfo);
+                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).timeout(searchInfo);
                 } catch (UserUnauthorized ignored) {
-                    project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).unauthorized(searchInfo);
+                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).unauthorized(searchInfo);
                 } catch (SamebugClientException e) {
-                    project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).searchFailed(searchInfo, e);
+                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).searchFailed(searchInfo, e);
                 }
             }
         });

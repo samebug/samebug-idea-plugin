@@ -45,7 +45,7 @@ public class StackTraceMatcherFactory implements LogScannerFactory {
 
         @Override
         public void stacktraceFound(DebugSessionInfo sessionInfo, String stacktrace) {
-            project.getMessageBus().syncPublisher(StackTraceMatcherListener.FOUND_TOPIC).stackTraceFound(project, sessionInfo, stacktrace);
+            if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceMatcherListener.FOUND_TOPIC).stackTraceFound(project, sessionInfo, stacktrace);
         }
     }
 
