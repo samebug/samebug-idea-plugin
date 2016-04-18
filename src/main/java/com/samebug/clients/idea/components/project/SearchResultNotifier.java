@@ -70,12 +70,12 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
         try {
             final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
             GroupedHistory h = plugin.getClient().getSearchHistory();
-            myProject.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(h);
+            if (!myProject.isDisposed()) myProject.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(h);
             for (GroupedExceptionSearch s : h.searchGroups) {
                 history.put(s.lastSearch.searchId, s);
             }
         } catch (SamebugClientException e1) {
-            myProject.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(null);
+            if (!myProject.isDisposed()) myProject.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(null);
         }
 
         boolean isShowRecurringSearches = ServiceManager.getService(myProject, HistoryTabController.class).isShowRecurringSearches();
