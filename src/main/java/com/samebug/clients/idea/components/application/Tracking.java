@@ -49,7 +49,7 @@ public class Tracking implements ApplicationComponent, TrackingListener {
     public static TrackingListener appTracking() {
         try {
             return ApplicationManager.getApplication().getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             // Likely we were called asynchronously, and the message bus is already closed. Np, it's just tracking.
             LOGGER.warn("Failed to get tracking listener, track event will be lost", e);
             return new NopTracking();
@@ -59,7 +59,7 @@ public class Tracking implements ApplicationComponent, TrackingListener {
     public static TrackingListener projectTracking(Project project) {
         try {
             return project.getMessageBus().syncPublisher(TrackingListener.TRACK_TOPIC);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             LOGGER.warn("Failed to get tracking listener, track event will be lost", e);
             return new NopTracking();
         }
