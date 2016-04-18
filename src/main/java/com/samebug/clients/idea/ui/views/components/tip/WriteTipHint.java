@@ -54,7 +54,7 @@ public class WriteTipHint extends WriteTipCTA {
 
     class CTALabel extends JLabel {
         {
-            setText(SamebugBundle.message("samebug.tip.write.hint.cta"));
+            setText(SamebugBundle.message("samebug.tip.cta.small"));
             setCursor(new Cursor(Cursor.HAND_CURSOR));
             final HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
             attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
@@ -71,7 +71,7 @@ public class WriteTipHint extends WriteTipCTA {
 
     class CTAExplainLabel extends JLabel {
         {
-            setText(SamebugBundle.message("samebug.tip.write.hint.ctaExplain"));
+            setText(SamebugBundle.message("samebug.tip.cta.mock.explain"));
             setCursor(new Cursor(Cursor.HAND_CURSOR));
             final HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
             attributes.put(TextAttribute.SIZE, 16);

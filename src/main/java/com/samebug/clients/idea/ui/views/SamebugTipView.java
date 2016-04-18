@@ -17,6 +17,7 @@ package com.samebug.clients.idea.ui.views;
 
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.views.components.*;
@@ -40,6 +41,7 @@ public class SamebugTipView extends JPanel {
     public final JPanel sourceReferencePanel;
     public final AvatarPanel avatarPanel;
     public final MarkPanel markPanel;
+    public final JButton writeBetter;
 
     public SamebugTipView(RestHit<Tip> tip, java.util.List<BreadCrumb> searchBreadcrumb) {
         this.tip = tip;
@@ -50,6 +52,7 @@ public class SamebugTipView extends JPanel {
         sourceReferencePanel = new TipSourceReferencePanel(tip.solution);
         avatarPanel = new AvatarPanel(tip.solution.author);
         markPanel = new MarkPanel(tip.score, tip.markId != null);
+        writeBetter = new WriteBetterButton();
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
@@ -67,6 +70,9 @@ public class SamebugTipView extends JPanel {
                                 gbc.gridx = 2;
                                 gbc.weightx = 1;
                                 add(new TransparentPanel(), gbc);
+                                gbc.gridx = 3;
+                                gbc.weightx = 0;
+                                add(writeBetter, gbc);
                             }
                         }, BorderLayout.SOUTH);
                         add(new TransparentPanel() {
@@ -153,6 +159,13 @@ public class SamebugTipView extends JPanel {
                     }
                 });
             }
+        }
+    }
+
+    class WriteBetterButton extends JButton {
+        {
+            setOpaque(false);
+            setText(SamebugBundle.message("samebug.tip.cta.better"));
         }
     }
 }
