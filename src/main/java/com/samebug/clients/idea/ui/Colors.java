@@ -38,7 +38,7 @@ public class Colors {
     public static final Color sourceIconBackground = null;
     public static final Color sourceIconBackgroundDarcula = new Color(0xFFFFFF);
 
-    public static final Color cardSeparator = new Color(0xAAAAAA);
+    public static final Color cardSeparator = new Color(0x54615C);
 
     public static final Color[] componentColors = {new Color(0x9A9A9A), new Color(0x14E3CF), new Color(0x8BC349), new Color(0x00384F),
             new Color(0x9C27B0), new Color(0xFF00EB), new Color(0x03B8D4), new Color(0x79141D),

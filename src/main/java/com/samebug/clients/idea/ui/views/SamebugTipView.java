@@ -55,10 +55,10 @@ public class SamebugTipView extends JPanel {
         writeBetter = new WriteBetterButton();
 
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
+        setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
         add(new TransparentPanel() {
             {
-                setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
+                setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
                 add(breadcrumbPanel, BorderLayout.SOUTH);
                 add(new TransparentPanel() {
                     {

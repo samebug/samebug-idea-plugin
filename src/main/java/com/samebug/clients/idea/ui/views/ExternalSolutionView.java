@@ -61,10 +61,10 @@ public class ExternalSolutionView extends JPanel {
         markPanel = new MarkPanel(solution.score, solution.markId != null);
 
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
+        setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
         add(new TransparentPanel() {
             {
-                setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
+                setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
                 add(titlePanel, BorderLayout.NORTH);
                 add(breadcrumbPanel, BorderLayout.SOUTH);
                 add(new TransparentPanel() {
