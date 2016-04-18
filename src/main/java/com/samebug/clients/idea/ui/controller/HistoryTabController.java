@@ -178,6 +178,7 @@ public class HistoryTabController {
         public OpenSearchHandler(final int searchId) {
             this.searchId = searchId;
         }
+
         @Override
         public void mouseClicked(MouseEvent e) {
             ServiceManager.getService(project, SearchTabControllers.class).openSearchTab(searchId);

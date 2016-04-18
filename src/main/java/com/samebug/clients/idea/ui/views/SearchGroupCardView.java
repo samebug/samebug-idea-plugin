@@ -27,8 +27,6 @@ import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 

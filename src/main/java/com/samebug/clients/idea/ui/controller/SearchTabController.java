@@ -33,7 +33,6 @@ import com.samebug.clients.idea.ui.views.SearchGroupCardView;
 import com.samebug.clients.idea.ui.views.SearchTabView;
 import com.samebug.clients.idea.ui.views.components.MarkPanel;
 import com.samebug.clients.idea.ui.views.components.tip.WriteTip;
-import com.samebug.clients.idea.ui.views.components.tip.WriteTipCTA;
 import com.samebug.clients.idea.ui.views.components.tip.WriteTipHint;
 import com.samebug.clients.search.api.entities.ComponentStack;
 import com.samebug.clients.search.api.entities.ExceptionSearch;
@@ -192,6 +191,7 @@ public class SearchTabController {
     class WriteTipHandler extends MouseAdapter {
         public WriteTipHandler() {
         }
+
         @Override
         public void mouseClicked(MouseEvent e) {
             final WriteTip writeTip = new WriteTip();
@@ -227,43 +227,43 @@ public class SearchTabController {
                 @Override
                 public void run() {
                     Runnable result = null;
-                        final String tip = tipPanel.tipBody.getText();
-                        final String rawSourceUrl = tipPanel.sourceLink.getText();
+                    final String tip = tipPanel.tipBody.getText();
+                    final String rawSourceUrl = tipPanel.sourceLink.getText();
 
-                        if (tip.length() < WriteTip.minCharacters) {
-                            result = showError(SamebugBundle.message("samebug.tip.write.error.tip.short"));
-                        } else if (tip.length() > WriteTip.maxCharacters) {
-                            result = showError(SamebugBundle.message("samebug.tip.write.error.tip.long"));
-                        } else if (StringUtils.countMatches(tip, System.lineSeparator()) >= WriteTip.maxLines) {
-                            result = showError(SamebugBundle.message("samebug.tip.write.error.tip.tooManyLines"));
-                        } else {
-                            URL sourceUrl = null;
-                            if (rawSourceUrl != null && !rawSourceUrl.trim().isEmpty()) {
-                                try {
-                                    sourceUrl = new URL(rawSourceUrl);
-                                } catch (MalformedURLException e1) {
-                                    result = showError(SamebugBundle.message("samebug.tip.write.error.source.malformed"));
-                                }
-                            }
-
-                            if (result == null) {
-                                IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
-                                try {
-                                    final RestHit<Tip> newTip = client.postTip(searchId, tip, sourceUrl);
-                                    model.tips.add(newTip);
-                                    refreshPane();
-                                    result = success();
-                                } catch (final BadRequest e) {
-                                    final String errorMessageKey;
-                                    final String markErrorCode = e.getRestError().code;
-                                    if ("XXX".equals(markErrorCode)) errorMessageKey = "samebug.tip.write.error.source.handledBadRequest";
-                                    else errorMessageKey = "samebug.tip.write.error.source.unhandledBadRequest";
-                                    result = showError(SamebugBundle.message(errorMessageKey));
-                                } catch (final SamebugClientException e) {
-                                    result = showError(SamebugBundle.message("samebug.tip.write.error.source.unhandled"));
-                                }
+                    if (tip.length() < WriteTip.minCharacters) {
+                        result = showError(SamebugBundle.message("samebug.tip.write.error.tip.short"));
+                    } else if (tip.length() > WriteTip.maxCharacters) {
+                        result = showError(SamebugBundle.message("samebug.tip.write.error.tip.long"));
+                    } else if (StringUtils.countMatches(tip, System.lineSeparator()) >= WriteTip.maxLines) {
+                        result = showError(SamebugBundle.message("samebug.tip.write.error.tip.tooManyLines"));
+                    } else {
+                        URL sourceUrl = null;
+                        if (rawSourceUrl != null && !rawSourceUrl.trim().isEmpty()) {
+                            try {
+                                sourceUrl = new URL(rawSourceUrl);
+                            } catch (MalformedURLException e1) {
+                                result = showError(SamebugBundle.message("samebug.tip.write.error.source.malformed"));
                             }
                         }
+
+                        if (result == null) {
+                            IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
+                            try {
+                                final RestHit<Tip> newTip = client.postTip(searchId, tip, sourceUrl);
+                                model.tips.add(newTip);
+                                refreshPane();
+                                result = success();
+                            } catch (final BadRequest e) {
+                                final String errorMessageKey;
+                                final String markErrorCode = e.getRestError().code;
+                                if ("XXX".equals(markErrorCode)) errorMessageKey = "samebug.tip.write.error.source.handledBadRequest";
+                                else errorMessageKey = "samebug.tip.write.error.source.unhandledBadRequest";
+                                result = showError(SamebugBundle.message(errorMessageKey));
+                            } catch (final SamebugClientException e) {
+                                result = showError(SamebugBundle.message("samebug.tip.write.error.source.unhandled"));
+                            }
+                        }
+                    }
                     ApplicationManager.getApplication().invokeLater(result);
                 }
             });
