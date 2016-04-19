@@ -64,7 +64,7 @@ public class SearchTabControllers {
         if (tab == null) {
             tab = new SearchTabController(project);
             ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-            Content content = contentFactory.createContent(tab.getControlPanel(), SamebugBundle.message("samebug.toolwindow.search.tabName", searchId), false);
+            Content content = contentFactory.createContent(tab.getControlPanel(), SamebugBundle.message("samebug.toolwindow.search.tabName"), false);
             toolwindowCM.addContent(content);
             activeSearches.put(searchId, tab);
             focusedSearch = searchId;
