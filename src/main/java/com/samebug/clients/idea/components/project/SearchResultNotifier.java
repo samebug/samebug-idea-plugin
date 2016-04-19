@@ -19,13 +19,16 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.notification.SearchResultsNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.controller.HistoryTabController;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedHistory;
@@ -109,26 +112,52 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
             // all searches filtered out, show no notification
         } else {
             // there are searches to report about
-            String message;
+            final ApplicationSettings settings = IdeaSamebugPlugin.getInstance().getState();
+            TutorialComponent tutorialComponent = myProject.getComponent(TutorialComponent.class);
+            assert settings != null;
+            assert tutorialComponent != null;
+
             if (zeroSolutions == 0 && recurrings == 0) {
                 // new exceptions with solutions
                 if (searchIds.size() == 1) {
-                    message = SamebugBundle.message("samebug.notification.searchresults.one", searchIds.get(0));
+                    showNotification(SamebugBundle.message("samebug.notification.searchresults.one", searchIds.get(0)));
                 } else {
-                    message = SamebugBundle.message("samebug.notification.searchresults.multiple", searchIds.size());
+                    showNotification(SamebugBundle.message("samebug.notification.searchresults.multiple", searchIds.size()));
                 }
             } else if (zeroSolutions == 0 && recurrings > 0) {
                 if (searchIds.size() == 1) {
-                    message = SamebugBundle.message("samebug.notification.searchresults.oneRecurring", searchIds.get(0));
+                    if (settings.tutorialSearchResultsRecurring) {
+                        settings.tutorialSearchResultsRecurring = false;
+                        settings.tutorialSearchResultsMixed = false;
+                        tutorialComponent.showTutorialNotification(SamebugBundle.message("samebug.notification.tutorial.searchResults.oneRecurring", searchIds.get(0), SamebugIcons.calendarUrl));
+                    } else {
+                        showNotification(SamebugBundle.message("samebug.notification.searchresults.oneRecurring", searchIds.get(0)));
+                    }
                 } else {
-                    message = SamebugBundle.message("samebug.notification.searchresults.multipleRecurring", searchIds.size());
+                    if (settings.tutorialSearchResultsRecurring) {
+                        settings.tutorialSearchResultsRecurring = false;
+                        settings.tutorialSearchResultsMixed = false;
+                        tutorialComponent.showTutorialNotification(SamebugBundle.message("samebug.notification.tutorial.searchResults.multipleRecurring", searchIds.size(), SamebugIcons.calendarUrl));
+                    } else {
+                        showNotification(SamebugBundle.message("samebug.notification.searchresults.multipleRecurring", searchIds.size()));
+                    }
                 }
             } else if (zeroSolutions > 0 && recurrings == 0) {
-                message = SamebugBundle.message("samebug.notification.searchresults.noSolutions", searchIds.size());
+                if (settings.tutorialSearchResultsZeroSolution) {
+                    settings.tutorialSearchResultsZeroSolution = false;
+                    settings.tutorialSearchResultsMixed = false;
+                    tutorialComponent.showTutorialNotification(SamebugBundle.message("samebug.notification.tutorial.searchResults.zeroSolutions", searchIds.size(), SamebugIcons.lightbulbUrl));
+                } else {
+                    showNotification(SamebugBundle.message("samebug.notification.searchresults.zeroSolutions", searchIds.size()));
+                }
             } else {
-                message = SamebugBundle.message("samebug.notification.searchresults.mixed", searchIds.size());
+                if (settings.tutorialSearchResultsMixed) {
+                    settings.tutorialSearchResultsMixed = false;
+                    tutorialComponent.showTutorialNotification(SamebugBundle.message("samebug.notification.tutorial.searchResults.mixed", searchIds.size(), SamebugIcons.calendarUrl, SamebugIcons.lightbulbUrl));
+                } else {
+                    showNotification(SamebugBundle.message("samebug.notification.searchresults.mixed", searchIds.size()));
+                }
             }
-            showNotification(message);
         }
     }
 

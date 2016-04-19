@@ -25,6 +25,7 @@ import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.notification.SamebugNotifications;
+import com.samebug.clients.idea.notification.TutorialNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
@@ -62,9 +63,9 @@ public class TutorialComponent extends AbstractProjectComponent {
                             try {
                                 ToolWindowManager.getInstance(myProject).notifyByBalloon(
                                         "Samebug",
-                                        MessageType.INFO, SamebugBundle.message("samebug.notification.help.welcome.message"),
+                                        MessageType.INFO, SamebugBundle.message("samebug.notification.tutorial.welcome.message"),
                                         SamebugIcons.notification,
-                                        SamebugNotifications.basicHyperlinkListener(myProject, "help"));
+                                        SamebugNotifications.basicHyperlinkListener(myProject, "tutorial"));
                                 Tracking.projectTracking(myProject).trace(Events.pluginInstall());
                                 pluginState.tutorialFirstRun = false;
                             } catch (IllegalStateException e1) {
@@ -88,6 +89,16 @@ public class TutorialComponent extends AbstractProjectComponent {
     @Override
     public void projectClosed() {
         Tracking.projectTracking(myProject).trace(Events.projectClose(myProject));
+    }
+
+    public void showTutorialNotification(final String message) {
+        final TutorialNotification notification = new TutorialNotification(myProject, "", message);
+
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            public void run() {
+                notification.notify(myProject);
+            }
+        });
     }
 
     private final static Logger LOGGER = Logger.getInstance(TutorialComponent.class);

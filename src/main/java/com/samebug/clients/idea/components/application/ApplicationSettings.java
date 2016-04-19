@@ -38,6 +38,9 @@ public class ApplicationSettings {
     public boolean isMarkSolutionsEnabled = defaultIsMarkSolutionsEnabled;
 
     public boolean tutorialFirstRun = true;
+    public boolean tutorialSearchResultsZeroSolution = true;
+    public boolean tutorialSearchResultsRecurring = true;
+    public boolean tutorialSearchResultsMixed = true;
     //=========================================================================
 
     public static final String defaultServerRoot = "https://samebug.io";
@@ -65,6 +68,9 @@ public class ApplicationSettings {
         this.isWriteTipsEnabled = rhs.isWriteTipsEnabled;
         this.isMarkSolutionsEnabled = rhs.isMarkSolutionsEnabled;
         this.tutorialFirstRun = rhs.tutorialFirstRun;
+        this.tutorialSearchResultsZeroSolution = rhs.tutorialSearchResultsZeroSolution;
+        this.tutorialSearchResultsRecurring = rhs.tutorialSearchResultsRecurring;
+        this.tutorialSearchResultsMixed = rhs.tutorialSearchResultsMixed;
     }
 
     @Override
@@ -89,6 +95,9 @@ public class ApplicationSettings {
                     && rhs.isApacheLoggingEnabled == isApacheLoggingEnabled
                     && rhs.isWriteTipsEnabled == isWriteTipsEnabled
                     && rhs.isMarkSolutionsEnabled == isMarkSolutionsEnabled
+                    && rhs.tutorialSearchResultsZeroSolution == tutorialSearchResultsZeroSolution
+                    && rhs.tutorialSearchResultsRecurring == tutorialSearchResultsRecurring
+                    && rhs.tutorialSearchResultsMixed == tutorialSearchResultsMixed
                     && rhs.tutorialFirstRun == tutorialFirstRun;
         }
     }
