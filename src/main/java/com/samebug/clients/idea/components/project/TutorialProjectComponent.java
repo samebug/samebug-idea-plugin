@@ -21,9 +21,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.samebug.clients.idea.components.application.ApplicationSettings;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.components.application.Tracking;
+import com.samebug.clients.idea.components.application.*;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.notification.TutorialNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
@@ -40,19 +38,17 @@ import java.awt.event.ActionListener;
  * I found no reasonable place for the one-time welcome message.
  * IdeaSamebugPlugin would be a better place, but I wanted to make sure there is an opened
  * project in scope, so clicking on the notification can open the samebug toolbar.
- * <p/>
- * Renaming this class or moving this functionality is welcomed.
  */
-public class TutorialComponent extends AbstractProjectComponent {
-    protected TutorialComponent(Project project) {
+public class TutorialProjectComponent extends AbstractProjectComponent {
+    protected TutorialProjectComponent(Project project) {
         super(project);
     }
 
     @Override
     public void projectOpened() {
         super.projectOpened();
-        final ApplicationSettings pluginState = IdeaSamebugPlugin.getInstance().getState();
-        if (pluginState != null && pluginState.tutorialFirstRun) {
+        final TutorialSettings pluginState = ApplicationManager.getApplication().getComponent(TutorialApplicationComponent.class).getState();
+        if (pluginState != null && pluginState.firstRun) {
             // At this point, the Samebug toolwindow is likely not initialized, so we delay the notification
             final int DELAY_MS = 15 * 1000;
             final Timer timer = new Timer(DELAY_MS, new ActionListener() {
@@ -67,7 +63,7 @@ public class TutorialComponent extends AbstractProjectComponent {
                                         SamebugIcons.notification,
                                         SamebugNotifications.basicHyperlinkListener(myProject, "tutorial"));
                                 Tracking.projectTracking(myProject).trace(Events.pluginInstall());
-                                pluginState.tutorialFirstRun = false;
+                                pluginState.firstRun = false;
                             } catch (IllegalStateException e1) {
                                 LOGGER.warn("Samebug tool window was not initialized after "
                                         + DELAY_MS + " millis, welcome message could not be displayed", e1);
@@ -101,5 +97,5 @@ public class TutorialComponent extends AbstractProjectComponent {
         });
     }
 
-    private final static Logger LOGGER = Logger.getInstance(TutorialComponent.class);
+    private final static Logger LOGGER = Logger.getInstance(TutorialProjectComponent.class);
 }
