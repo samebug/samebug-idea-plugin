@@ -57,7 +57,7 @@ public class ShowRecurringSearches extends ToggleAction implements DumbAware {
                         settings.recurringExceptionsFilter = false;
                         final JPanel tutorialPanel = new TutorialPanel(SamebugBundle.message("samebug.tutorial.recurringExceptionsFilter.title"),
                                 SamebugBundle.message("samebug.tutorial.recurringExceptionsFilter.message"));
-                        Balloon balloon = TutorialProjectComponent.createTutorialBalloon(tutorialPanel);
+                        Balloon balloon = TutorialProjectComponent.createTutorialBalloon(project, tutorialPanel);
                         balloon.show(RelativePoint.getNorthWestOf(historyTab.view.toolbarPanel), Balloon.Position.above);
                     }
                     return null;

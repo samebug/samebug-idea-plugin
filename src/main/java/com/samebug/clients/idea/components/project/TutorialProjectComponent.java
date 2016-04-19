@@ -104,10 +104,11 @@ public class TutorialProjectComponent extends AbstractProjectComponent {
         });
     }
 
-    public static Balloon createTutorialBalloon(final JComponent content) {
+    public static Balloon createTutorialBalloon(final Project project, final JComponent content) {
         return JBPopupFactory.getInstance().createBalloonBuilder(content)
                 .setFillColor(Colors.samebugOrange)
                 .setBorderColor(Colors.samebugOrange)
+                .setDisposable(project)
                 .createBalloon();
 
     }

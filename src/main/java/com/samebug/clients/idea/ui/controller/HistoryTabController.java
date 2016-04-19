@@ -261,7 +261,7 @@ public class HistoryTabController {
                 settings.historyTab = false;
                 final JPanel tutorialPanel = new TutorialPanel(SamebugBundle.message("samebug.tutorial.historyTab.title"),
                         SamebugBundle.message("samebug.tutorial.historyTab.message"));
-                Balloon balloon = TutorialProjectComponent.createTutorialBalloon(tutorialPanel);
+                Balloon balloon = TutorialProjectComponent.createTutorialBalloon(project, tutorialPanel);
                 balloon.show(RelativePoint.getNorthWestOf(view.toolbarPanel), Balloon.Position.atLeft);
             }
             return null;
