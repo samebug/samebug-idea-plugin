@@ -36,6 +36,8 @@ public class ApplicationSettings {
     public boolean isApacheLoggingEnabled = defaultIsApacheLoggingEnabled;
     public boolean isWriteTipsEnabled = defaultIsWriteTipsEnabled;
     public boolean isMarkSolutionsEnabled = defaultIsMarkSolutionsEnabled;
+    public boolean showZeroSolutions = defaultShowZeroSolutions;
+    public boolean showRecurring = defaultShowRecurring;
 
     //=========================================================================
 
@@ -47,6 +49,8 @@ public class ApplicationSettings {
     public static final boolean defaultIsApacheLoggingEnabled = false;
     public static final boolean defaultIsWriteTipsEnabled = false;
     public static final boolean defaultIsMarkSolutionsEnabled = false;
+    public static final boolean defaultShowZeroSolutions = true;
+    public static final boolean defaultShowRecurring = true;
 
     public ApplicationSettings() {
     }
@@ -63,6 +67,8 @@ public class ApplicationSettings {
         this.isApacheLoggingEnabled = rhs.isApacheLoggingEnabled;
         this.isWriteTipsEnabled = rhs.isWriteTipsEnabled;
         this.isMarkSolutionsEnabled = rhs.isMarkSolutionsEnabled;
+        this.showZeroSolutions = rhs.showZeroSolutions;
+        this.showRecurring = rhs.showRecurring;
     }
 
     @Override
@@ -86,7 +92,9 @@ public class ApplicationSettings {
                     && rhs.requestTimeout == requestTimeout
                     && rhs.isApacheLoggingEnabled == isApacheLoggingEnabled
                     && rhs.isWriteTipsEnabled == isWriteTipsEnabled
-                    && rhs.isMarkSolutionsEnabled == isMarkSolutionsEnabled;
+                    && rhs.isMarkSolutionsEnabled == isMarkSolutionsEnabled
+                    && rhs.showZeroSolutions == showZeroSolutions
+                    && rhs.showRecurring == showRecurring;
         }
     }
 

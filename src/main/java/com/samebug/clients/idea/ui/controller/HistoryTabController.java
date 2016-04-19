@@ -19,13 +19,17 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
+import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
+import com.samebug.clients.idea.components.project.TutorialProjectComponent;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
@@ -35,6 +39,7 @@ import com.samebug.clients.idea.ui.UrlUtil;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.views.HistoryTabView;
 import com.samebug.clients.idea.ui.views.SearchGroupCardView;
+import com.samebug.clients.idea.ui.views.components.TutorialPanel;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import org.jetbrains.annotations.Nullable;
@@ -53,7 +58,7 @@ import java.util.List;
 public class HistoryTabController {
     final private Project project;
     final private static Logger LOGGER = Logger.getInstance(HistoryTabController.class);
-    final private HistoryTabView view;
+    final public HistoryTabView view;
     @Nullable
     private GroupedHistory model;
     final private List<SearchGroupCardView> searchGroups;
@@ -66,11 +71,12 @@ public class HistoryTabController {
 
 
     public HistoryTabController(Project project) {
+        ApplicationSettings settings = IdeaSamebugPlugin.getInstance().getState();
         this.project = project;
         view = new HistoryTabView();
         searchGroups = new ArrayList<SearchGroupCardView>();
-        showZeroSolutionSearches = false;
-        showRecurringSearches = false;
+        showZeroSolutionSearches = settings != null && settings.showZeroSolutions;
+        showRecurringSearches = settings != null && settings.showRecurring;
         statusUpdater = new ConnectionStatusUpdater();
         historyUpdater = new HistoryUpdater();
     }
@@ -139,6 +145,7 @@ public class HistoryTabController {
                 }
                 view.controlPanel.revalidate();
                 view.controlPanel.repaint();
+                TutorialProjectComponent.withTutorialProject(project, new HistoryTabTutorial());
             }
         });
     }
@@ -148,6 +155,8 @@ public class HistoryTabController {
     }
 
     public void setShowZeroSolutionSearches(boolean showZeroSolutionSearches) {
+        ApplicationSettings settings = IdeaSamebugPlugin.getInstance().getState();
+        if (settings != null) settings.showZeroSolutions = showZeroSolutionSearches;
         this.showZeroSolutionSearches = showZeroSolutionSearches;
     }
 
@@ -156,6 +165,8 @@ public class HistoryTabController {
     }
 
     public void setShowRecurringSearches(boolean showRecurringSearches) {
+        ApplicationSettings settings = IdeaSamebugPlugin.getInstance().getState();
+        if (settings != null) settings.showRecurring = showRecurringSearches;
         this.showRecurringSearches = showRecurringSearches;
     }
 
@@ -242,4 +253,19 @@ public class HistoryTabController {
             refreshHistoryPane();
         }
     }
+
+    class HistoryTabTutorial extends TutorialProjectComponent.TutorialProjectAnonfun<Void> {
+        @Override
+        public Void call() {
+            if (settings.historyTab) {
+                settings.historyTab = false;
+                final JPanel tutorialPanel = new TutorialPanel(SamebugBundle.message("samebug.tutorial.historyTab.title"),
+                        SamebugBundle.message("samebug.tutorial.historyTab.message"));
+                Balloon balloon = TutorialProjectComponent.createTutorialBalloon(tutorialPanel);
+                balloon.show(RelativePoint.getNorthWestOf(view.toolbarPanel), Balloon.Position.atLeft);
+            }
+            return null;
+        }
+    }
+
 }

@@ -22,6 +22,7 @@ import java.awt.*;
  */
 public class Colors {
     public static final Color samebugOrange = new Color(0xFF7800);
+    public static final Color samebugWhite = new Color(0xFFFFFF);
 
     public static final Color unemphasizedText = new Color(0x67746E);
     public static final Color unemphasizedTextDarcula = new Color(0xAAAAAA);

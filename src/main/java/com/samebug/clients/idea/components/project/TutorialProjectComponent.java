@@ -20,13 +20,18 @@ import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
+import com.intellij.openapi.ui.popup.Balloon;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.samebug.clients.idea.components.application.*;
+import com.samebug.clients.idea.components.application.Tracking;
+import com.samebug.clients.idea.components.application.TutorialApplicationComponent;
+import com.samebug.clients.idea.components.application.TutorialSettings;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.notification.TutorialNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.idea.ui.Colors;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -40,6 +45,8 @@ import java.awt.event.ActionListener;
  * project in scope, so clicking on the notification can open the samebug toolbar.
  */
 public class TutorialProjectComponent extends AbstractProjectComponent {
+    private final static Logger LOGGER = Logger.getInstance(TutorialProjectComponent.class);
+
     protected TutorialProjectComponent(Project project) {
         super(project);
     }
@@ -97,5 +104,34 @@ public class TutorialProjectComponent extends AbstractProjectComponent {
         });
     }
 
-    private final static Logger LOGGER = Logger.getInstance(TutorialProjectComponent.class);
+    public static Balloon createTutorialBalloon(final JComponent content) {
+        return JBPopupFactory.getInstance().createBalloonBuilder(content)
+                .setFillColor(Colors.samebugOrange)
+                .setBorderColor(Colors.samebugOrange)
+                .createBalloon();
+
+    }
+
+    public static <T> T withTutorialProject(final Project project, TutorialProjectAnonfun<T> x) {
+        TutorialApplicationComponent tutorialApplicationComponent = ApplicationManager.getApplication().getComponent(TutorialApplicationComponent.class);
+        TutorialProjectComponent component = project.getComponent(TutorialProjectComponent.class);
+        if (tutorialApplicationComponent != null && tutorialApplicationComponent.getState() != null) {
+            TutorialSettings settings = tutorialApplicationComponent.getState();
+            x.component = component;
+            x.settings = settings;
+            x.project = project;
+            return x.call();
+        } else {
+            return null;
+        }
+    }
+
+    public static abstract class TutorialProjectAnonfun<T> {
+        protected TutorialProjectComponent component;
+        protected TutorialSettings settings;
+        protected Project project;
+
+        public abstract T call();
+    }
 }
+
