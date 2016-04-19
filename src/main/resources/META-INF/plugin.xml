@@ -73,6 +73,9 @@
         <component>
             <implementation-class>com.samebug.clients.idea.components.application.Tracking</implementation-class>
         </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.components.application.TutorialApplicationComponent</implementation-class>
+        </component>
     </application-components>
     <project-components>
         <component>
@@ -88,7 +91,7 @@
             <implementation-class>com.samebug.clients.idea.components.project.BatchStackTraceSearchNotifier</implementation-class>
         </component>
         <component>
-            <implementation-class>com.samebug.clients.idea.components.project.TutorialComponent</implementation-class>
+            <implementation-class>com.samebug.clients.idea.components.project.TutorialProjectComponent</implementation-class>
         </component>
     </project-components>
 </idea-plugin>

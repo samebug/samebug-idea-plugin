@@ -19,9 +19,12 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.popup.Balloon;
+import com.intellij.ui.awt.RelativePoint;
 import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
+import com.samebug.clients.idea.components.project.TutorialProjectComponent;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
@@ -34,6 +37,7 @@ import com.samebug.clients.idea.ui.views.SamebugTipView;
 import com.samebug.clients.idea.ui.views.SearchGroupCardView;
 import com.samebug.clients.idea.ui.views.SearchTabView;
 import com.samebug.clients.idea.ui.views.components.MarkPanel;
+import com.samebug.clients.idea.ui.views.components.TutorialPanel;
 import com.samebug.clients.idea.ui.views.components.tip.WriteTip;
 import com.samebug.clients.idea.ui.views.components.tip.WriteTipHint;
 import com.samebug.clients.search.api.entities.ComponentStack;
@@ -160,6 +164,8 @@ public class SearchTabController {
 
                     view.controlPanel.revalidate();
                     view.controlPanel.repaint();
+                    TutorialProjectComponent.withTutorialProject(project, new SearchTabTutorial(model.tips.size() > 0));
+
                 } else {
                     EmptyWarningPanel panel = new EmptyWarningPanel();
                     panel.label.setText(SamebugBundle.message("samebug.toolwindow.search.content.notConnected", UrlUtil.getServerRoot()));
@@ -390,6 +396,32 @@ public class SearchTabController {
                     }
                 }
             });
+        }
+    }
+
+    class SearchTabTutorial extends TutorialProjectComponent.TutorialProjectAnonfun<Void> {
+        final boolean tipsShown;
+
+        public SearchTabTutorial(final boolean tipsShown) {
+            this.tipsShown = tipsShown;
+        }
+
+        @Override
+        public Void call() {
+            final JPanel tutorialPanel;
+            if (settings.searchTab) {
+                settings.searchTab = false;
+                if (tipsShown) {
+                    tutorialPanel = new TutorialPanel(SamebugBundle.message("samebug.tutorial.searchTab.tips.title"),
+                            SamebugBundle.message("samebug.tutorial.searchTab.tips.message"));
+                } else {
+                    tutorialPanel = new TutorialPanel(SamebugBundle.message("samebug.tutorial.searchTab.noTips.title"),
+                            SamebugBundle.message("samebug.tutorial.searchTab.noTips.message"));
+                }
+                Balloon balloon = TutorialProjectComponent.createTutorialBalloon(tutorialPanel);
+                balloon.show(RelativePoint.getNorthWestOf(view.toolbarPanel), Balloon.Position.atLeft);
+            }
+            return null;
         }
     }
 }

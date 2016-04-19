@@ -36,8 +36,9 @@ public class ApplicationSettings {
     public boolean isApacheLoggingEnabled = defaultIsApacheLoggingEnabled;
     public boolean isWriteTipsEnabled = defaultIsWriteTipsEnabled;
     public boolean isMarkSolutionsEnabled = defaultIsMarkSolutionsEnabled;
+    public boolean showZeroSolutions = defaultShowZeroSolutions;
+    public boolean showRecurring = defaultShowRecurring;
 
-    public boolean tutorialFirstRun = true;
     //=========================================================================
 
     public static final String defaultServerRoot = "https://samebug.io";
@@ -48,6 +49,8 @@ public class ApplicationSettings {
     public static final boolean defaultIsApacheLoggingEnabled = false;
     public static final boolean defaultIsWriteTipsEnabled = false;
     public static final boolean defaultIsMarkSolutionsEnabled = false;
+    public static final boolean defaultShowZeroSolutions = true;
+    public static final boolean defaultShowRecurring = true;
 
     public ApplicationSettings() {
     }
@@ -64,7 +67,8 @@ public class ApplicationSettings {
         this.isApacheLoggingEnabled = rhs.isApacheLoggingEnabled;
         this.isWriteTipsEnabled = rhs.isWriteTipsEnabled;
         this.isMarkSolutionsEnabled = rhs.isMarkSolutionsEnabled;
-        this.tutorialFirstRun = rhs.tutorialFirstRun;
+        this.showZeroSolutions = rhs.showZeroSolutions;
+        this.showRecurring = rhs.showRecurring;
     }
 
     @Override
@@ -89,7 +93,8 @@ public class ApplicationSettings {
                     && rhs.isApacheLoggingEnabled == isApacheLoggingEnabled
                     && rhs.isWriteTipsEnabled == isWriteTipsEnabled
                     && rhs.isMarkSolutionsEnabled == isMarkSolutionsEnabled
-                    && rhs.tutorialFirstRun == tutorialFirstRun;
+                    && rhs.showZeroSolutions == showZeroSolutions
+                    && rhs.showRecurring == showRecurring;
         }
     }
 
