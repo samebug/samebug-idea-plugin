@@ -47,7 +47,8 @@ public class AvatarPanel extends TransparentPanel {
         setPreferredSize(new Dimension(74, 100));
         final Image profile = ImageUtil.getScaled(author.avatarUrl, 64, 64);
         add(new AvatarIcon(profile != null ? profile : avatarPlaceholder), BorderLayout.NORTH);
-        add(new LinkLabel(author.name, author.url) {
+        // TODO: use author.url when the profile page will be public
+        add(new LinkLabel(author.name, null) {
             {
                 HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
                 attributes.put(TextAttribute.SIZE, 10);
