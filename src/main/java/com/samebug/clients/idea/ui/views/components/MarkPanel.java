@@ -21,6 +21,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
+import com.samebug.clients.idea.ui.Colors;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +58,12 @@ public class MarkPanel extends TransparentPanel {
         JBPopupFactory.getInstance().createBalloonBuilder(new TransparentPanel() {
             {
                 setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-                add(new JLabel(errorMessage));
+                add(new JLabel() {
+                    {
+                        setText(errorMessage);
+                        setForeground(Colors.samebugWhite);
+                    }
+                });
             }
         }).setFillColor(Color.red).createBalloon().show(RelativePoint.getCenterOf(markButton), Balloon.Position.above);
     }

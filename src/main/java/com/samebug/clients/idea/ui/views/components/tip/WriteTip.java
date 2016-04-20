@@ -18,6 +18,7 @@ package com.samebug.clients.idea.ui.views.components.tip;
 import com.intellij.openapi.application.ApplicationManager;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
+import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.views.components.TransparentPanel;
 import org.apache.commons.lang.StringUtils;
 import org.jdesktop.swingx.prompt.PromptSupport;
@@ -288,7 +289,12 @@ public class WriteTip extends JPanel {
     public void finishPostTipWithError(final String message) {
         ApplicationManager.getApplication().assertIsDispatchThread();
         errorPanel.removeAll();
-        errorPanel.add(new JLabel(message));
+        errorPanel.add(new JLabel(){
+            {
+                setText(message);
+                setForeground(Colors.samebugWhite);
+            }
+        });
         errorPanel.setVisible(true);
         updateSubmitButton(false);
         revalidate();
