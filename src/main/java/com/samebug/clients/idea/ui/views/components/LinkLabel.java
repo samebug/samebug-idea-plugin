@@ -16,8 +16,6 @@
 package com.samebug.clients.idea.ui.views.components;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.DataContext;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.tracking.Events;
 

@@ -15,8 +15,6 @@
  */
 package com.samebug.clients.idea.components.project;
 
-import com.intellij.ide.DataManager;
-import com.intellij.notification.NotificationsManager;
 import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
@@ -24,7 +22,6 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.wm.IdeFrame;
-import com.intellij.openapi.wm.IdeaFrameTitleBuilder;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
@@ -189,7 +186,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
     }
 
     private void showTutorialNotification(final String message) {
-        TutorialProjectComponent.createTutorialBalloon(myProject, new JEditorPane(){
+        TutorialProjectComponent.createTutorialBalloon(myProject, new JEditorPane() {
             {
                 setEditable(false);
                 setOpaque(false);
@@ -199,7 +196,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
                 setForeground(Colors.samebugWhite);
                 addHyperlinkListener(SamebugNotifications.basicHyperlinkListener(myProject, "tutorial"));
             }
-        }).show(RelativePoint.getNorthEastOf(((IdeFrame)NotificationsManagerImpl.findWindowForBalloon(myProject)).getComponent()), Balloon.Position.atLeft);
+        }).show(RelativePoint.getNorthEastOf(((IdeFrame) NotificationsManagerImpl.findWindowForBalloon(myProject)).getComponent()), Balloon.Position.atLeft);
     }
 
     private final static int NOTIFICATION_EXPIRATION_DELAY = 10000;

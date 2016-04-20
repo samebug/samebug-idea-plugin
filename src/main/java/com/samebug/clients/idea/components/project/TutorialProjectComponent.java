@@ -99,7 +99,7 @@ public class TutorialProjectComponent extends AbstractProjectComponent {
         final JPanel controlPanel = new TransparentPanel() {
             {
                 setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-                add(new TransparentPanel(){
+                add(new TransparentPanel() {
                     {
                         setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 16));
                         add(new JLabel(SamebugIcons.info));
