@@ -214,6 +214,7 @@ public class WriteTip extends JPanel {
 
     class CancelButton extends JButton {
         {
+            setFocusable(false);
             setText(SamebugBundle.message("samebug.tip.write.cancel"));
         }
 
@@ -224,6 +225,9 @@ public class WriteTip extends JPanel {
     }
 
     class SubmitButton extends JButton {
+        {
+            setFocusable(false);
+        }
         @Override
         public Color getBackground() {
             return ColorUtil.writeTipPanel();

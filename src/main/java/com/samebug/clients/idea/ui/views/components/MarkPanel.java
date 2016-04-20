@@ -72,6 +72,7 @@ public class MarkPanel extends TransparentPanel {
 
     class MarkButton extends JButton {
         {
+            setFocusable(false);
             setOpaque(false);
         }
     }

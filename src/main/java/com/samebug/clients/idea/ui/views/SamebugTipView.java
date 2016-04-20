@@ -165,6 +165,7 @@ public class SamebugTipView extends JPanel {
     class WriteBetterButton extends JButton {
         {
             setOpaque(false);
+            setFocusable(false);
             setText(SamebugBundle.message("samebug.tip.cta.better"));
         }
     }
