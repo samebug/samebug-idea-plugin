@@ -54,8 +54,12 @@ public class MarkPanel extends TransparentPanel {
     public void finishPostMarkWithError(final String errorMessage) {
         ApplicationManager.getApplication().assertIsDispatchThread();
         markButton.setEnabled(true);
-        JBPopupFactory.getInstance().createBalloonBuilder(new JLabel(errorMessage))
-                .setFillColor(Color.red).createBalloon().show(RelativePoint.getCenterOf(markButton), Balloon.Position.above);
+        JBPopupFactory.getInstance().createBalloonBuilder(new TransparentPanel(){
+            {
+                setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+                add(new JLabel(errorMessage));
+            }
+        }).setFillColor(Color.red).createBalloon().show(RelativePoint.getCenterOf(markButton), Balloon.Position.above);
     }
 
     public void finishPostMarkWithSuccess(final int score, final boolean marked) {
