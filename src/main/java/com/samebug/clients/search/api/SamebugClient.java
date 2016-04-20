@@ -43,6 +43,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -274,11 +275,23 @@ public class SamebugClient {
                 }.handle();
                 throw new BadRequest(restError);
             case HttpStatus.SC_UNAUTHORIZED:
-                throw new UserUnauthenticated();
+                try {
+                    EntityUtils.consume(httpResponse.getEntity());
+                } finally {
+                    throw new UserUnauthenticated();
+                }
             case HttpStatus.SC_FORBIDDEN:
-                throw new UserUnauthorized(httpResponse.getStatusLine().getReasonPhrase());
+                try {
+                    EntityUtils.consume(httpResponse.getEntity());
+                } finally {
+                    throw new UserUnauthorized(httpResponse.getStatusLine().getReasonPhrase());
+                }
             default:
-                throw new UnsuccessfulResponseStatus(statusCode);
+                try {
+                    EntityUtils.consume(httpResponse.getEntity());
+                } finally {
+                    throw new UnsuccessfulResponseStatus(statusCode);
+                }
         }
     }
 

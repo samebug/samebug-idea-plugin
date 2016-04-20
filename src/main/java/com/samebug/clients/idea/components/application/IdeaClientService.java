@@ -152,8 +152,9 @@ public class IdeaClientService {
             } catch (HttpError e) {
                 connected.set(false);
                 throw e;
-            } catch (UnsuccessfulResponseStatus e) {
-                connected.set(false);
+            } catch (BadRequest e) {
+                connected.set(true);
+                if (isAuthenticationRequired) authenticated.set(true);
                 throw e;
             } catch (UserUnauthenticated e) {
                 connected.set(true);
@@ -162,6 +163,9 @@ public class IdeaClientService {
             } catch (UserUnauthorized e) {
                 connected.set(true);
                 authenticated.set(false);
+                throw e;
+            } catch (UnsuccessfulResponseStatus e) {
+                connected.set(true);
                 throw e;
             } finally {
                 nRequests.decrementAndGet();
