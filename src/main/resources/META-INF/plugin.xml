@@ -57,7 +57,7 @@
         </group>
         <group id="Samebug.SearchTabMenu" text="Samebug search tab menu" description="Search tab menu">
             <action id="Samebug.BackToHistory" class="com.samebug.clients.idea.actions.ShowHistoryAction"
-                    icon="/com/samebug/icons/prev.png" text="Show history" description="Show exception history"/>
+                    icon="/com/samebug/icons/back.png" text="Show history" description="Show exception history"/>
             <action id="Samebug.ReloadSearch" class="com.samebug.clients.idea.actions.ReloadSearchAction"
                     icon="/com/samebug/icons/reload.png" text="Reload solutions" description="Reload solutions"/>
         </group>

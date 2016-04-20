@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.ui.views.components;
 
+import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.Colors;
 
 import javax.swing.*;
@@ -28,6 +29,12 @@ import java.util.HashMap;
 public class TutorialPanel extends TransparentPanel {
     public TutorialPanel(final String title, final String message) {
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        add(new TransparentPanel(){
+            {
+                setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 16));
+                add(new JLabel(SamebugIcons.info));
+            }
+        }, BorderLayout.WEST);
         add(new TransparentPanel() {
             {
                 add(new JLabel() {
@@ -49,9 +56,9 @@ public class TutorialPanel extends TransparentPanel {
                         });
                     }
                 }, BorderLayout.CENTER);
-
-                setPreferredSize(new Dimension(400, getPreferredSize().height));
             }
-        });
+        }, BorderLayout.CENTER);
+
+        setPreferredSize(new Dimension(450, getPreferredSize().height));
     }
 }
