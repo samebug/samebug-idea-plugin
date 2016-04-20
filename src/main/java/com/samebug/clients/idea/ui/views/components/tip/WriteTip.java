@@ -229,6 +229,7 @@ public class WriteTip extends JPanel {
         {
             setFocusable(false);
         }
+
         @Override
         public Color getBackground() {
             return ColorUtil.writeTipPanel();
@@ -289,7 +290,7 @@ public class WriteTip extends JPanel {
     public void finishPostTipWithError(final String message) {
         ApplicationManager.getApplication().assertIsDispatchThread();
         errorPanel.removeAll();
-        errorPanel.add(new JLabel(){
+        errorPanel.add(new JLabel() {
             {
                 setText(message);
                 setForeground(Colors.samebugWhite);
