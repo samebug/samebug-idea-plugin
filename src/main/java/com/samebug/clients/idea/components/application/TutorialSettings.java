@@ -20,7 +20,7 @@ package com.samebug.clients.idea.components.application;
  */
 public class TutorialSettings {
     public boolean firstRun = true;
-    public boolean searchResultsZeroSolution = true;
+    public boolean searchResultsZeroSolutions = true;
     public boolean searchResultsRecurring = true;
     public boolean searchResultsMixed = true;
     public boolean historyTab = true;

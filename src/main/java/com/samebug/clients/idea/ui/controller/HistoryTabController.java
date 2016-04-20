@@ -177,7 +177,7 @@ public class HistoryTabController {
                 final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
                 final ContentManager toolwindowCM = toolWindow.getContentManager();
                 final Content content = toolwindowCM.getContent(getControlPanel());
-                toolwindowCM.setSelectedContent(content);
+                if (content != null) toolwindowCM.setSelectedContent(content);
                 toolWindow.show(null);
             }
         });
