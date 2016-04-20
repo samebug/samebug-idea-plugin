@@ -48,7 +48,7 @@ public class WriteTip extends JPanel {
     public final JLabel sourceTitle;
     public final JLabel sourceDescription;
     public final JTextField sourceLink;
-    public final MessagePanel messagePanel;
+    public final ErrorPanel errorPanel;
     public final JButton cancel;
     public final JButton submit;
 
@@ -60,7 +60,7 @@ public class WriteTip extends JPanel {
         sourceTitle = new SourceTitle();
         sourceDescription = new DescriptionLabel(SamebugBundle.message("samebug.tip.write.source.description"));
         sourceLink = new SourceLink();
-        messagePanel = new MessagePanel();
+        errorPanel = new ErrorPanel();
         cancel = new CancelButton();
         submit = new SubmitButton();
 
@@ -104,7 +104,7 @@ public class WriteTip extends JPanel {
         add(new TransparentPanel() {
             {
                 setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-                add(messagePanel);
+                add(errorPanel);
             }
         });
         add(new TransparentPanel() {
@@ -119,7 +119,7 @@ public class WriteTip extends JPanel {
         PromptSupport.setPrompt(SamebugBundle.message("samebug.tip.write.source.placeholder"), sourceLink);
         updateSubmitButton(false);
 
-        ((AbstractDocument) tipBody.getDocument()).setDocumentFilter(new TipContraints());
+        ((AbstractDocument) tipBody.getDocument()).setDocumentFilter(new TipConstraints());
         tipBody.getDocument().addDocumentListener(new TipEditorListener());
     }
 
@@ -203,10 +203,12 @@ public class WriteTip extends JPanel {
         }
     }
 
-    class MessagePanel extends JPanel {
+    class ErrorPanel extends JPanel {
         {
             setLayout(new BorderLayout());
+            setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
             setBackground(Color.red);
+            setVisible(false);
         }
     }
 
@@ -228,7 +230,7 @@ public class WriteTip extends JPanel {
         }
     }
 
-    class TipContraints extends DocumentFilter {
+    class TipConstraints extends DocumentFilter {
         @Override
         public void replace(FilterBypass fb, int offs, int length, String str, AttributeSet a) throws BadLocationException {
             super.replace(fb, offs, length, str, a);
@@ -281,9 +283,12 @@ public class WriteTip extends JPanel {
 
     public void finishPostTipWithError(final String message) {
         ApplicationManager.getApplication().assertIsDispatchThread();
-        messagePanel.removeAll();
-        messagePanel.add(new JLabel(message));
+        errorPanel.removeAll();
+        errorPanel.add(new JLabel(message));
+        errorPanel.setVisible(true);
         updateSubmitButton(false);
+        revalidate();
+        repaint();
     }
 
     public void finishPostTipWithSuccess() {

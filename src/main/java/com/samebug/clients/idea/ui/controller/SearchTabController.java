@@ -270,7 +270,12 @@ public class SearchTabController {
                             } catch (final BadRequest e) {
                                 final String errorMessageKey;
                                 final String markErrorCode = e.getRestError().code;
-                                if ("XXX".equals(markErrorCode)) errorMessageKey = "samebug.tip.write.error.source.handledBadRequest";
+                                if ("UNRECOGNIZED_SOURCE".equals(markErrorCode)) errorMessageKey = "samebug.tip.write.error.source.malformed";
+                                else if ("MESSAGE_TOO_SHORT".equals(markErrorCode)) errorMessageKey = "samebug.tip.write.error.tip.short";
+                                else if ("MESSAGE_TOO_LONG".equals(markErrorCode)) errorMessageKey = "samebug.tip.write.error.tip.long";
+                                else if ("NOT_YOUR_SEARCH".equals(markErrorCode)) errorMessageKey = "samebug.tip.write.error.notYourSearch";
+                                else if ("NOT_EXCEPTION_SEARCH".equals(markErrorCode)) errorMessageKey = "samebug.tip.write.error.notExceptionSearch";
+                                else if ("UNKNOWN_SEARCH".equals(markErrorCode)) errorMessageKey = "samebug.tip.write.error.unknownSearch";
                                 else errorMessageKey = "samebug.tip.write.error.source.unhandledBadRequest";
                                 result = showError(SamebugBundle.message(errorMessageKey));
                             } catch (final SamebugClientException e) {
