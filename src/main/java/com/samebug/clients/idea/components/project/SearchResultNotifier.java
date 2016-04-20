@@ -26,10 +26,12 @@ import com.samebug.clients.idea.components.application.TutorialApplicationCompon
 import com.samebug.clients.idea.components.application.TutorialSettings;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.messages.HistoryListener;
+import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.notification.SearchResultsNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.controller.HistoryTabController;
+import com.samebug.clients.idea.ui.views.components.TutorialPanel;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
@@ -90,7 +92,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
 
         int recurrings = 0;
         int zeroSolutions = 0;
-        List<String> searchIds = new ArrayList<String>();
+        final List<String> searchIds = new ArrayList<String>();
         for (SearchResults result : groupedResults.values()) {
             int searchId = Integer.parseInt(result.searchId);
             GroupedExceptionSearch historyResult = history.get(searchId);
@@ -127,33 +129,65 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
             } else if (zeroSolutions == 0 && recurrings > 0) {
                 if (searchIds.size() == 1) {
                     if (settings.searchResultsRecurring) {
-                        settings.searchResultsRecurring = false;
-                        settings.searchResultsMixed = false;
-                        tutorialComponent.showTutorialNotification(SamebugBundle.message("samebug.notification.tutorial.searchResults.oneRecurring", searchIds.get(0), SamebugIcons.calendarUrl));
+//                        settings.searchResultsRecurring = false;
+//                        settings.searchResultsMixed = false;
+                        TutorialProjectComponent.createTutorialBalloon(myProject, new JEditorPane(){
+                            {
+                                setEditable(false);
+                                setOpaque(false);
+                                setBorder(BorderFactory.createEmptyBorder());
+                                setText(SamebugBundle.message("samebug.tutorial.searchResults.oneRecurring", searchIds.get(0), SamebugIcons.calendarUrl));
+                                addHyperlinkListener(SamebugNotifications.basicHyperlinkListener(myProject, "tutorial"));
+                            }
+                        });
                     } else {
                         showNotification(SamebugBundle.message("samebug.notification.searchresults.oneRecurring", searchIds.get(0)));
                     }
                 } else {
                     if (settings.searchResultsRecurring) {
-                        settings.searchResultsRecurring = false;
-                        settings.searchResultsMixed = false;
-                        tutorialComponent.showTutorialNotification(SamebugBundle.message("samebug.notification.tutorial.searchResults.multipleRecurring", searchIds.size(), SamebugIcons.calendarUrl));
+//                        settings.searchResultsRecurring = false;
+//                        settings.searchResultsMixed = false;
+                        TutorialProjectComponent.createTutorialBalloon(myProject, new JEditorPane(){
+                            {
+                                setEditable(false);
+                                setOpaque(false);
+                                setBorder(BorderFactory.createEmptyBorder());
+                                setText(SamebugBundle.message("samebug.tutorial.searchResults.multipleRecurring", searchIds.size(), SamebugIcons.calendarUrl));
+                                addHyperlinkListener(SamebugNotifications.basicHyperlinkListener(myProject, "tutorial"));
+                            }
+                        });
                     } else {
                         showNotification(SamebugBundle.message("samebug.notification.searchresults.multipleRecurring", searchIds.size()));
                     }
                 }
             } else if (zeroSolutions > 0 && recurrings == 0) {
                 if (settings.searchResultsZeroSolution) {
-                    settings.searchResultsZeroSolution = false;
-                    settings.searchResultsMixed = false;
-                    tutorialComponent.showTutorialNotification(SamebugBundle.message("samebug.notification.tutorial.searchResults.zeroSolutions", searchIds.size(), SamebugIcons.lightbulbUrl));
+//                    settings.searchResultsZeroSolution = false;
+//                    settings.searchResultsMixed = false;
+                    TutorialProjectComponent.createTutorialBalloon(myProject, new JEditorPane(){
+                        {
+                            setEditable(false);
+                            setOpaque(false);
+                            setBorder(BorderFactory.createEmptyBorder());
+                            setText(SamebugBundle.message("samebug.tutorial.searchResults.zeroSolutions", searchIds.size(), SamebugIcons.lightbulbUrl));
+                            addHyperlinkListener(SamebugNotifications.basicHyperlinkListener(myProject, "tutorial"));
+                        }
+                    });
                 } else {
                     showNotification(SamebugBundle.message("samebug.notification.searchresults.zeroSolutions", searchIds.size()));
                 }
             } else {
                 if (settings.searchResultsMixed) {
-                    settings.searchResultsMixed = false;
-                    tutorialComponent.showTutorialNotification(SamebugBundle.message("samebug.notification.tutorial.searchResults.mixed", searchIds.size(), SamebugIcons.calendarUrl, SamebugIcons.lightbulbUrl));
+//                    settings.searchResultsMixed = false;
+                    TutorialProjectComponent.createTutorialBalloon(myProject, new JEditorPane(){
+                        {
+                            setEditable(false);
+                            setOpaque(false);
+                            setBorder(BorderFactory.createEmptyBorder());
+                            setText(SamebugBundle.message("samebug.tutorial.searchResults.mixed", searchIds.size(), SamebugIcons.calendarUrl, SamebugIcons.lightbulbUrl));
+                            addHyperlinkListener(SamebugNotifications.basicHyperlinkListener(myProject, "tutorial"));
+                        }
+                    });
                 } else {
                     showNotification(SamebugBundle.message("samebug.notification.searchresults.mixed", searchIds.size()));
                 }

@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.idea.ui.views.components;
 
-import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.Colors;
 
 import javax.swing.*;
@@ -28,37 +27,24 @@ import java.util.HashMap;
  */
 public class TutorialPanel extends TransparentPanel {
     public TutorialPanel(final String title, final String message) {
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        add(new TransparentPanel(){
+        add(new JLabel() {
             {
-                setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 16));
-                add(new JLabel(SamebugIcons.info));
+                setText(title);
+                HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
+                attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
+                setFont(getFont().deriveFont(attributes));
+                setForeground(Colors.samebugWhite);
             }
-        }, BorderLayout.WEST);
+        }, BorderLayout.NORTH);
         add(new TransparentPanel() {
             {
                 add(new JLabel() {
                     {
-                        setText(title);
-                        HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
-                        attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
-                        setFont(getFont().deriveFont(attributes));
+                        setText(message);
                         setForeground(Colors.samebugWhite);
                     }
-                }, BorderLayout.NORTH);
-                add(new TransparentPanel() {
-                    {
-                        add(new JLabel() {
-                            {
-                                setText(message);
-                                setForeground(Colors.samebugWhite);
-                            }
-                        });
-                    }
-                }, BorderLayout.CENTER);
+                });
             }
         }, BorderLayout.CENTER);
-
-        setPreferredSize(new Dimension(450, getPreferredSize().height));
     }
 }

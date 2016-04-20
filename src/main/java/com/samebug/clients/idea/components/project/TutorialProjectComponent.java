@@ -27,13 +27,14 @@ import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.components.application.TutorialApplicationComponent;
 import com.samebug.clients.idea.components.application.TutorialSettings;
 import com.samebug.clients.idea.notification.SamebugNotifications;
-import com.samebug.clients.idea.notification.TutorialNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.Colors;
+import com.samebug.clients.idea.ui.views.components.TransparentPanel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -66,7 +67,7 @@ public class TutorialProjectComponent extends AbstractProjectComponent {
                             try {
                                 ToolWindowManager.getInstance(myProject).notifyByBalloon(
                                         "Samebug",
-                                        MessageType.INFO, SamebugBundle.message("samebug.notification.tutorial.welcome.message"),
+                                        MessageType.INFO, SamebugBundle.message("samebug.tutorial.welcome.message"),
                                         SamebugIcons.notification,
                                         SamebugNotifications.basicHyperlinkListener(myProject, "tutorial"));
                                 Tracking.projectTracking(myProject).trace(Events.pluginInstall());
@@ -94,18 +95,21 @@ public class TutorialProjectComponent extends AbstractProjectComponent {
         Tracking.projectTracking(myProject).trace(Events.projectClose(myProject));
     }
 
-    public void showTutorialNotification(final String message) {
-        final TutorialNotification notification = new TutorialNotification(myProject, "", message);
-
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            public void run() {
-                notification.notify(myProject);
-            }
-        });
-    }
-
     public static Balloon createTutorialBalloon(final Project project, final JComponent content) {
-        return JBPopupFactory.getInstance().createBalloonBuilder(content)
+        final JPanel controlPanel = new TransparentPanel() {
+            {
+                setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+                add(new TransparentPanel(){
+                    {
+                        setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 16));
+                        add(new JLabel(SamebugIcons.info));
+                    }
+                }, BorderLayout.WEST);
+                add(content, BorderLayout.CENTER);
+                setPreferredSize(new Dimension(450, getPreferredSize().height));
+            }
+        };
+        return JBPopupFactory.getInstance().createBalloonBuilder(controlPanel)
                 .setFillColor(Colors.samebugOrange)
                 .setBorderColor(Colors.samebugOrange)
                 .setDisposable(project)
@@ -113,15 +117,15 @@ public class TutorialProjectComponent extends AbstractProjectComponent {
 
     }
 
-    public static <T> T withTutorialProject(final Project project, TutorialProjectAnonfun<T> x) {
+    public static <T> T withTutorialProject(final Project project, TutorialProjectAnonfun<T> anonfun) {
         TutorialApplicationComponent tutorialApplicationComponent = ApplicationManager.getApplication().getComponent(TutorialApplicationComponent.class);
         TutorialProjectComponent component = project.getComponent(TutorialProjectComponent.class);
         if (tutorialApplicationComponent != null && tutorialApplicationComponent.getState() != null) {
             TutorialSettings settings = tutorialApplicationComponent.getState();
-            x.component = component;
-            x.settings = settings;
-            x.project = project;
-            return x.call();
+            anonfun.component = component;
+            anonfun.settings = settings;
+            anonfun.project = project;
+            return anonfun.call();
         } else {
             return null;
         }
