@@ -54,7 +54,7 @@ public class MarkPanel extends TransparentPanel {
     public void finishPostMarkWithError(final String errorMessage) {
         ApplicationManager.getApplication().assertIsDispatchThread();
         markButton.setEnabled(true);
-        JBPopupFactory.getInstance().createBalloonBuilder(new TransparentPanel(){
+        JBPopupFactory.getInstance().createBalloonBuilder(new TransparentPanel() {
             {
                 setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
                 add(new JLabel(errorMessage));
