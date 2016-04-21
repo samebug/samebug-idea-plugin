@@ -19,6 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
+import com.samebug.clients.idea.ui.views.components.SBButton;
 import com.samebug.clients.idea.ui.views.components.TransparentPanel;
 import org.apache.commons.lang.StringUtils;
 import org.jdesktop.swingx.prompt.PromptSupport;
@@ -51,7 +52,7 @@ public class WriteTip extends JPanel {
     public final JTextField sourceLink;
     public final ErrorPanel errorPanel;
     public final JButton cancel;
-    public final JButton submit;
+    public final SBButton submit;
 
     public WriteTip() {
         tipTitle = new TipTitle();
@@ -225,14 +226,18 @@ public class WriteTip extends JPanel {
         }
     }
 
-    class SubmitButton extends JButton {
-        {
-            setFocusable(false);
+    class SubmitButton extends SBButton {
+        public SubmitButton() {
+            super(SamebugBundle.message("samebug.tip.write.submit"));
         }
 
         @Override
         public Color getBackground() {
-            return ColorUtil.writeTipPanel();
+            return ColorUtil.emphasizedText();
+        }
+        @Override
+        public Color getForeground() {
+            return ColorUtil.highlightPanel();
         }
     }
 
@@ -272,13 +277,8 @@ public class WriteTip extends JPanel {
     }
 
     void updateSubmitButton(boolean working) {
-        if (working) {
-            submit.setText("work in progress");
-            setEnabled(false);
-        } else {
-            submit.setText(SamebugBundle.message("samebug.tip.write.submit"));
-            setEnabled(true);
-        }
+        submit.setHighlighted(!working);
+        setEnabled(working);
     }
 
     public void beginPostTip() {

@@ -151,14 +151,14 @@ public class SearchTabController {
                             SamebugTipView tipView = new SamebugTipView(tip, model.breadcrumb);
                             view.solutionsPanel.add(tipView);
                             final MarkHandler markHandler = new MarkHandler(search.lastSearch.searchId, tip, tipView.markPanel);
-                            tipView.markPanel.markButton.addActionListener(markHandler);
+                            tipView.markPanel.markButton.addMouseListener(markHandler);
                             tipView.writeBetter.addMouseListener(new WriteTipHandler());
                         }
                         for (final RestHit<SolutionReference> s : model.references) {
                             final ExternalSolutionView sv = new ExternalSolutionView(s, model.breadcrumb);
                             view.solutionsPanel.add(sv);
                             final MarkHandler markHandler = new MarkHandler(search.lastSearch.searchId, s, sv.markPanel);
-                            sv.markPanel.markButton.addActionListener(markHandler);
+                            sv.markPanel.markButton.addMouseListener(markHandler);
                         }
                     }
 
@@ -211,7 +211,7 @@ public class SearchTabController {
             final WriteTip writeTip = new WriteTip();
             final SearchGroupCardView searchCard = new SearchGroupCardView(search);
             writeTip.cancel.addActionListener(new TipCancelHandler());
-            writeTip.submit.addActionListener(new TipSubmitHandler(search.lastSearch.searchId, writeTip));
+            writeTip.submit.addMouseListener(new TipSubmitHandler(search.lastSearch.searchId, writeTip));
             view.makeHeader(searchCard, writeTip);
             view.header.revalidate();
             view.header.repaint();
@@ -225,7 +225,7 @@ public class SearchTabController {
         }
     }
 
-    class TipSubmitHandler implements ActionListener {
+    class TipSubmitHandler extends MouseAdapter {
         final int searchId;
         final WriteTip tipPanel;
 
@@ -235,7 +235,7 @@ public class SearchTabController {
         }
 
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void mouseClicked(MouseEvent e) {
             tipPanel.beginPostTip();
             ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
                 @Override
@@ -308,7 +308,7 @@ public class SearchTabController {
         }
     }
 
-    class MarkHandler implements ActionListener {
+    class MarkHandler extends MouseAdapter {
         final int searchId;
         final RestHit hit;
         final MarkPanel markPanel;
@@ -320,7 +320,7 @@ public class SearchTabController {
         }
 
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void mouseClicked(MouseEvent e) {
             markPanel.beginPostMark();
             ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
                 @Override

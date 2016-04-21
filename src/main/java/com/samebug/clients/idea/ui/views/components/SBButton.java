@@ -2,7 +2,7 @@ package com.samebug.clients.idea.ui.views.components;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 /**
  * Created by poroszd on 4/21/16.
@@ -51,7 +51,10 @@ public class SBButton extends JPanel {
 
     }
 
-    public void addActionListener(ActionListener l) {
-        button.addActionListener(l);
+    // TODO this is especially nasty
+    @Override
+    public void addMouseListener(MouseListener l) {
+        super.addMouseListener(l);
+        button.addMouseListener(l);
     }
 }
