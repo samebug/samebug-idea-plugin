@@ -48,7 +48,6 @@ import com.samebug.clients.search.api.entities.legacy.*;
 import com.samebug.clients.search.api.exceptions.BadRequest;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.apache.commons.lang.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -86,50 +85,54 @@ public class SearchTabController {
         return view.controlPanel;
     }
 
-    public void update(@NotNull final Solutions solutions) {
+    public void update(final Solutions solutions) {
         model = solutions;
-        search = new GroupedExceptionSearch() {
-            {
-                firstSeenSimilar = model.searchGroup.firstSeen;
-                lastSeenSimilar = model.searchGroup.lastSeen;
-                numberOfSimilars = model.searchGroup.numberOfSimilars;
-                numberOfSolutions = model.tips.size() + model.references.size();
-                lastSearch = new ExceptionSearch() {
-                    {
-                        searchId = model.search._id;
-                        exception = model.search.exception;
-                        componentStack = new ArrayList<ComponentStack>();
-                        for (final BreadCrumb b : model.breadcrumb) {
-                            componentStack.add(new ComponentStack() {
-                                {
-                                    color = b.component.color;
-                                    crashDocUrl = UrlUtil.getCrashdocUrl(b);
-                                    name = b.component.shortName;
-                                    shortName = b.component.shortName;
-                                }
-                            });
+        if (model != null) {
+            search = new GroupedExceptionSearch() {
+                {
+                    firstSeenSimilar = model.searchGroup.firstSeen;
+                    lastSeenSimilar = model.searchGroup.lastSeen;
+                    numberOfSimilars = model.searchGroup.numberOfSimilars;
+                    numberOfSolutions = model.tips.size() + model.references.size();
+                    lastSearch = new ExceptionSearch() {
+                        {
+                            searchId = model.search._id;
+                            exception = model.search.exception;
+                            componentStack = new ArrayList<ComponentStack>();
+                            for (final BreadCrumb b : model.breadcrumb) {
+                                componentStack.add(new ComponentStack() {
+                                    {
+                                        color = b.component.color;
+                                        crashDocUrl = UrlUtil.getCrashdocUrl(b);
+                                        name = b.component.shortName;
+                                        shortName = b.component.shortName;
+                                    }
+                                });
+                            }
+
                         }
-
+                    };
+                }
+            };
+            ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+                @Override
+                public void run() {
+                    java.util.List<URL> imageUrls = new ArrayList<URL>();
+                    for (final RestHit<Tip> tip : model.tips) {
+                        imageUrls.add(tip.solution.author.avatarUrl);
                     }
-                };
-            }
-        };
-        refreshPane();
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-            @Override
-            public void run() {
-                java.util.List<URL> imageUrls = new ArrayList<URL>();
-                for (final RestHit<Tip> tip : model.tips) {
-                    imageUrls.add(tip.solution.author.avatarUrl);
-                }
-                for (final RestHit<SolutionReference> s : model.references) {
-                    imageUrls.add(UrlUtil.getSourceIconUrl(s.solution.source.icon));
-                }
+                    for (final RestHit<SolutionReference> s : model.references) {
+                        imageUrls.add(UrlUtil.getSourceIconUrl(s.solution.source.icon));
+                    }
 
-                ImageUtil.loadImages(imageUrls);
-                refreshPane();
-            }
-        });
+                    ImageUtil.loadImages(imageUrls);
+                    refreshPane();
+                }
+            });
+        } else {
+            search = null;
+        }
+        refreshPane();
     }
 
     public void refreshPane() {
@@ -138,8 +141,8 @@ public class SearchTabController {
                 view.solutionsPanel.removeAll();
                 view.header.removeAll();
 
+                repaintHeader();
                 if (model != null && search != null) {
-                    repaintHeader();
                     if (model.tips.size() + model.references.size() == 0) {
                         EmptyWarningPanel panel = new EmptyWarningPanel();
                         panel.label.setText(SamebugBundle.message("samebug.toolwindow.search.content.empty"));
@@ -162,7 +165,7 @@ public class SearchTabController {
 
                     view.controlPanel.revalidate();
                     view.controlPanel.repaint();
-                    TutorialProjectComponent.withTutorialProject(project, new SearchTabTutorial(model.tips.size() > 0));
+                    if (model.references.size() + model.tips.size() > 0) TutorialProjectComponent.withTutorialProject(project, new SearchTabTutorial(model.tips.size() > 0));
 
                 } else {
                     EmptyWarningPanel panel = new EmptyWarningPanel();
@@ -176,17 +179,23 @@ public class SearchTabController {
     }
 
     void repaintHeader() {
-        final SearchGroupCardView searchCard = new SearchGroupCardView(search);
-        searchCard.titleLabel.addMouseListener(new OpenSearchHandler());
+        final SearchGroupCardView searchCard;
+        final WriteTipHint writeTipHint;
+        if (search != null) {
+            searchCard = new SearchGroupCardView(search);
+            searchCard.titleLabel.addMouseListener(new OpenSearchHandler());
+        } else {
+            searchCard = null;
+        }
 
-        if (IdeaSamebugPlugin.getInstance().getState().isWriteTipsEnabled && model.tips.size() == 0) {
-            final WriteTipHint writeTipHint = new WriteTipHint();
+        if (model != null && model.tips.size() == 0 && IdeaSamebugPlugin.getInstance().getState().isWriteTipsEnabled) {
+            writeTipHint = new WriteTipHint();
             writeTipHint.ctaButton.addMouseListener(new WriteTipHandler());
-            view.makeHeader(searchCard, writeTipHint);
             // TODO add third case for preview
         } else {
-            view.makeHeader(searchCard, null);
+            writeTipHint = null;
         }
+        view.makeHeader(searchCard, writeTipHint);
         view.header.revalidate();
         view.header.repaint();
     }

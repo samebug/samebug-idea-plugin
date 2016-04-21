@@ -84,7 +84,7 @@ public class SearchTabControllers {
                     searchTab.update(solutions);
                 } catch (SamebugClientException e) {
                     LOGGER.warn("Failed to download solutions", e);
-                    searchTab.refreshPane();
+                    searchTab.update(null);
                 }
 
             }

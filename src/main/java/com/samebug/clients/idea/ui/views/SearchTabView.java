@@ -69,12 +69,14 @@ public class SearchTabView {
         header.add(new TransparentPanel() {
             {
                 add(toolbarPanel, BorderLayout.NORTH);
-                add(search, BorderLayout.CENTER);
-                if (extension != null) {
-                    add(extension, BorderLayout.SOUTH);
-                    setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167 + extension.getPreferredSize().height)));
-                } else {
-                    setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167)));
+                if (search != null) {
+                    add(search, BorderLayout.CENTER);
+                    if (extension != null) {
+                        add(extension, BorderLayout.SOUTH);
+                        setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167 + extension.getPreferredSize().height)));
+                    } else {
+                        setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167)));
+                    }
                 }
             }
         });
