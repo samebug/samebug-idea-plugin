@@ -88,10 +88,12 @@ public class MarkPanel extends TransparentPanel {
         public MarkButton() {
             super("MARK");
         }
+
         @Override
         public Color getForeground() {
             return Colors.samebugWhite;
         }
+
         @Override
         public Color getBackground() {
             return Colors.samebugOrange;

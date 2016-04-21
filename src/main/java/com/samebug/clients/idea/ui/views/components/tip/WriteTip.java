@@ -238,6 +238,7 @@ public class WriteTip extends JPanel {
         public Color getBackground() {
             return ColorUtil.emphasizedText();
         }
+
         @Override
         public Color getForeground() {
             return ColorUtil.highlightPanel();
