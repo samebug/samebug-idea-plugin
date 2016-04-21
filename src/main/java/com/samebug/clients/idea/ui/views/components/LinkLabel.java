@@ -47,7 +47,7 @@ public class LinkLabel extends JLabel {
                     Tracking.appTracking().trace(Events.linkClick(null, link));
                 }
             });
-            setCursor(new Cursor(Cursor.HAND_CURSOR));
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
             attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
             setFont(getFont().deriveFont(attributes));

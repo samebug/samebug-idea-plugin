@@ -210,7 +210,7 @@ public class SearchTabController {
         public void mouseClicked(MouseEvent e) {
             final WriteTip writeTip = new WriteTip();
             final SearchGroupCardView searchCard = new SearchGroupCardView(search);
-            writeTip.cancel.addActionListener(new TipCancelHandler());
+            writeTip.cancel.addMouseListener(new TipCancelHandler());
             writeTip.submit.addMouseListener(new TipSubmitHandler(search.lastSearch.searchId, writeTip));
             view.makeHeader(searchCard, writeTip);
             view.header.revalidate();
@@ -218,9 +218,9 @@ public class SearchTabController {
         }
     }
 
-    class TipCancelHandler implements ActionListener {
+    class TipCancelHandler extends MouseAdapter {
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void mouseClicked(MouseEvent e) {
             repaintHeader();
         }
     }

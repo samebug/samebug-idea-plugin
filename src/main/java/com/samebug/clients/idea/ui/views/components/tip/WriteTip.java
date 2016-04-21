@@ -51,7 +51,7 @@ public class WriteTip extends JPanel {
     public final JLabel sourceDescription;
     public final JTextField sourceLink;
     public final ErrorPanel errorPanel;
-    public final JButton cancel;
+    public final JLabel cancel;
     public final SBButton submit;
 
     public WriteTip() {
@@ -214,10 +214,13 @@ public class WriteTip extends JPanel {
         }
     }
 
-    class CancelButton extends JButton {
+    class CancelButton extends JLabel {
         {
-            setFocusable(false);
+            final HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
+            attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+            setFont(getFont().deriveFont(attributes));
             setText(SamebugBundle.message("samebug.tip.write.cancel"));
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
 
         @Override

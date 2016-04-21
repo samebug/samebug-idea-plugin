@@ -18,6 +18,7 @@ public class SBButton extends JPanel {
         setLayout(new BorderLayout());
         add(button);
         setHighlighted(false);
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
     class Button extends JButton {
@@ -26,6 +27,7 @@ public class SBButton extends JPanel {
             setFocusable(false);
             setContentAreaFilled(false);
             setBorder(null);
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
     }
 

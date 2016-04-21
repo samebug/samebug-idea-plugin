@@ -64,7 +64,7 @@ public class LegacyBreadcrumbBar extends TransparentPanel {
             this.breadCrumb = breadCrumb;
             final URL link = UrlUtil.getCrashdocUrl(breadCrumb);
             if (link != null) {
-                setCursor(new Cursor(Cursor.HAND_CURSOR));
+                setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
