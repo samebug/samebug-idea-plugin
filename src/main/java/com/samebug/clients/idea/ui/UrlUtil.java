@@ -16,6 +16,7 @@
 package com.samebug.clients.idea.ui;
 
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
 import com.samebug.clients.search.api.exceptions.IllegalUriException;
 
 import java.net.MalformedURLException;
@@ -55,5 +56,19 @@ public class UrlUtil {
         }
     }
 
-
+    public static URL getCrashdocUrl(final BreadCrumb b) {
+        // TODO currently we can decide between library- and application components
+        // only by the component color (0 for application components)
+        if (b.component.color == 0) return null;
+        else {
+            try {
+                // TODO handle default package?
+                final String entryUri = b.entry.packageName + "/" + b.entry.className + "/" + b.entry.methodName + "/" + b.exceptionType;
+                final String passThrough = "?pt=" + b.passThrough;
+                return getServerRoot().resolve("/crashdocs/").resolve(entryUri + passThrough).toURL();
+            } catch (MalformedURLException e) {
+                throw new IllegalUriException("Unable to resolve uri for breadcrumb", e);
+            }
+        }
+    }
 }

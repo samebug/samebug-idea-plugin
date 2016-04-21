@@ -105,7 +105,7 @@ public class SearchTabController {
                             componentStack.add(new ComponentStack() {
                                 {
                                     color = b.component.color;
-                                    crashDocUrl = b.detailsUrl;
+                                    crashDocUrl = UrlUtil.getCrashdocUrl(b);
                                     name = b.component.shortName;
                                     shortName = b.component.shortName;
                                 }
