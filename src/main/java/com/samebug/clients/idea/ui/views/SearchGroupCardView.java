@@ -96,7 +96,7 @@ public class SearchGroupCardView extends JPanel {
         {
             setText(exceptionType.className);
             setForeground(Colors.samebugOrange);
-            setCursor(new Cursor(Cursor.HAND_CURSOR));
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             final HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
             attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
             attributes.put(TextAttribute.SIZE, 16);

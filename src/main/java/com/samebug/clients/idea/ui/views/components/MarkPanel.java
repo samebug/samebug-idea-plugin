@@ -32,7 +32,7 @@ import java.awt.*;
  * Created by poroszd on 4/8/16.
  */
 public class MarkPanel extends TransparentPanel {
-    public final JButton markButton;
+    public final SBButton markButton;
     public final JPanel voteIcon;
     public final JLabel helpedLabel;
 
@@ -84,10 +84,17 @@ public class MarkPanel extends TransparentPanel {
         repaint();
     }
 
-    class MarkButton extends JButton {
-        {
-            setFocusable(false);
-            setOpaque(false);
+    class MarkButton extends SBButton {
+        public MarkButton() {
+            super("MARK");
+        }
+        @Override
+        public Color getForeground() {
+            return Colors.samebugWhite;
+        }
+        @Override
+        public Color getBackground() {
+            return Colors.samebugOrange;
         }
     }
 
@@ -118,10 +125,6 @@ public class MarkPanel extends TransparentPanel {
         } else {
             helpedLabel.setText(SamebugBundle.message("samebug.mark.marked.anyone", score));
         }
-        if (marked) {
-            markButton.setText("unmark");
-        } else {
-            markButton.setText("mark");
-        }
+        markButton.setHighlighted(marked);
     }
 }

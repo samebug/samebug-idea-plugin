@@ -41,7 +41,7 @@ public class SamebugTipView extends JPanel {
     public final JPanel sourceReferencePanel;
     public final AvatarPanel avatarPanel;
     public final MarkPanel markPanel;
-    public final JButton writeBetter;
+    public final SBButton writeBetter;
 
     public SamebugTipView(RestHit<Tip> tip, java.util.List<BreadCrumb> searchBreadcrumb) {
         this.tip = tip;
@@ -162,11 +162,19 @@ public class SamebugTipView extends JPanel {
         }
     }
 
-    class WriteBetterButton extends JButton {
-        {
-            setOpaque(false);
-            setFocusable(false);
-            setText(SamebugBundle.message("samebug.tip.cta.better"));
+    class WriteBetterButton extends SBButton {
+        public WriteBetterButton() {
+            super(SamebugBundle.message("samebug.tip.cta.better"));
+            setHighlighted(true);
+        }
+
+        @Override
+        public Color getBackground() {
+            return Colors.writeTipPanel;
+        }
+        @Override
+        public Color getForeground() {
+            return ColorUtil.emphasizedText();
         }
     }
 }

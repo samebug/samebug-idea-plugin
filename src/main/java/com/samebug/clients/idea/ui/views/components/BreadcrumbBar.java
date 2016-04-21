@@ -61,7 +61,7 @@ public class BreadcrumbBar extends TransparentPanel {
         public BreadcrumbLabel(final ComponentStack stack) {
             this.stack = stack;
             if (stack.crashDocUrl != null) {
-                setCursor(new Cursor(Cursor.HAND_CURSOR));
+                setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
