@@ -27,4 +27,5 @@ public class RestHit<T extends RestSolution> {
     public int score;
     public Integer markId;
     public Exception exception;
+    public UserReference createdBy;
 }

@@ -19,9 +19,11 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.Colors;
+import com.samebug.clients.search.api.entities.legacy.UserReference;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,15 +32,21 @@ import java.awt.*;
  * Created by poroszd on 4/8/16.
  */
 public class MarkPanel extends TransparentPanel {
-
     public final JButton markButton;
     public final JPanel voteIcon;
     public final JLabel helpedLabel;
 
-    public MarkPanel(int score, boolean marked) {
+    final UserReference createdBy;
+    final Integer currentUserId;
+
+    public MarkPanel(int score, boolean marked, UserReference createdBy) {
         markButton = new MarkButton();
         voteIcon = new VoteIcon();
         helpedLabel = new HelpedLabel();
+
+        this.createdBy = createdBy;
+        // TODO the current user's userId is hacked here...
+        this.currentUserId = IdeaSamebugPlugin.getInstance().getState().userId;
 
         setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
         add(markButton);
@@ -103,7 +111,9 @@ public class MarkPanel extends TransparentPanel {
     }
 
     void updateState(final int score, final boolean marked) {
-        if (score == 0) {
+        if (createdBy != null) {
+            helpedLabel.setText(SamebugBundle.message("samebug.mark.marked.someone", createdBy.id == currentUserId ? "You" : createdBy.displayName, score));
+        } else if (score == 0) {
             helpedLabel.setText(SamebugBundle.message("samebug.mark.marked.noone"));
         } else {
             helpedLabel.setText(SamebugBundle.message("samebug.mark.marked.anyone", score));

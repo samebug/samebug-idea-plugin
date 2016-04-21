@@ -58,7 +58,7 @@ public class ExternalSolutionView extends JPanel {
         exceptionMessageLabel = new ExceptionMessageLabel(solution.exception.message);
         exceptionTypePanel = new ExceptionTypePanel();
         sourceReferencePanel = new SourceReferencePanel(solution.solution);
-        markPanel = new MarkPanel(solution.score, solution.markId != null);
+        markPanel = new MarkPanel(solution.score, solution.markId != null, solution.createdBy);
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
