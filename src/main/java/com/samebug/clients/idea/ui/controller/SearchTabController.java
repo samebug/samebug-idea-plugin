@@ -188,7 +188,7 @@ public class SearchTabController {
             searchCard = null;
         }
 
-        if (model != null && model.tips.size() == 0 && IdeaSamebugPlugin.getInstance().getState().isWriteTipsEnabled) {
+        if (model != null && model.tips.size() == 0) {
             writeTipHint = new WriteTipHint();
             writeTipHint.ctaButton.addMouseListener(new WriteTipHandler());
             // TODO add third case for preview

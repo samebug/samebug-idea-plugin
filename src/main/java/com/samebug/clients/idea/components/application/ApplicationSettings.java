@@ -34,8 +34,6 @@ public class ApplicationSettings {
     public int connectTimeout = defaultConnectTimeout;
     public int requestTimeout = defaultRequestTimeout;
     public boolean isApacheLoggingEnabled = defaultIsApacheLoggingEnabled;
-    public boolean isWriteTipsEnabled = defaultIsWriteTipsEnabled;
-    public boolean isMarkSolutionsEnabled = defaultIsMarkSolutionsEnabled;
     public boolean showZeroSolutions = defaultShowZeroSolutions;
     public boolean showRecurring = defaultShowRecurring;
 
@@ -47,8 +45,6 @@ public class ApplicationSettings {
     public static final int defaultConnectTimeout = 5000;
     public static final int defaultRequestTimeout = 10000;
     public static final boolean defaultIsApacheLoggingEnabled = false;
-    public static final boolean defaultIsWriteTipsEnabled = false;
-    public static final boolean defaultIsMarkSolutionsEnabled = false;
     public static final boolean defaultShowZeroSolutions = true;
     public static final boolean defaultShowRecurring = true;
 
@@ -65,8 +61,6 @@ public class ApplicationSettings {
         this.connectTimeout = rhs.connectTimeout;
         this.requestTimeout = rhs.requestTimeout;
         this.isApacheLoggingEnabled = rhs.isApacheLoggingEnabled;
-        this.isWriteTipsEnabled = rhs.isWriteTipsEnabled;
-        this.isMarkSolutionsEnabled = rhs.isMarkSolutionsEnabled;
         this.showZeroSolutions = rhs.showZeroSolutions;
         this.showRecurring = rhs.showRecurring;
     }
@@ -91,8 +85,6 @@ public class ApplicationSettings {
                     && rhs.connectTimeout == connectTimeout
                     && rhs.requestTimeout == requestTimeout
                     && rhs.isApacheLoggingEnabled == isApacheLoggingEnabled
-                    && rhs.isWriteTipsEnabled == isWriteTipsEnabled
-                    && rhs.isMarkSolutionsEnabled == isMarkSolutionsEnabled
                     && rhs.showZeroSolutions == showZeroSolutions
                     && rhs.showRecurring == showRecurring;
         }

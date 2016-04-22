@@ -17,7 +17,6 @@ package com.samebug.clients.idea.ui.views;
 
 import com.samebug.clients.common.entities.ExceptionType;
 import com.samebug.clients.common.ui.TextUtil;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.ImageUtil;
@@ -71,7 +70,7 @@ public class ExternalSolutionView extends JPanel {
                     {
                         setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
                         add(exceptionTypePanel, BorderLayout.NORTH);
-                        if (IdeaSamebugPlugin.getInstance().getState().isMarkSolutionsEnabled) add(new TransparentPanel() {
+                        add(new TransparentPanel() {
                             {
                                 setLayout(new GridBagLayout());
                                 GridBagConstraints gbc = new GridBagConstraints();

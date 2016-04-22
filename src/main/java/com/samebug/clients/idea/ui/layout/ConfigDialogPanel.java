@@ -35,8 +35,6 @@ public class ConfigDialogPanel {
     public JSpinner connectTimeout;
     public JSpinner requestTimeout;
     public JTextField apiKey;
-    public JCheckBox writeTips;
-    public JCheckBox markSolutions;
     public JCheckBox apacheLogging;
 
 
@@ -81,8 +79,6 @@ public class ConfigDialogPanel {
         settings.connectTimeout = ApplicationSettings.defaultConnectTimeout;
         settings.requestTimeout = ApplicationSettings.defaultRequestTimeout;
         settings.isApacheLoggingEnabled = ApplicationSettings.defaultIsApacheLoggingEnabled;
-        settings.isWriteTipsEnabled = ApplicationSettings.defaultIsWriteTipsEnabled;
-        settings.isMarkSolutionsEnabled = ApplicationSettings.defaultIsMarkSolutionsEnabled;
         toUI(settings);
     }
 
@@ -94,8 +90,6 @@ public class ConfigDialogPanel {
         settings.connectTimeout = (Integer) connectTimeout.getValue();
         settings.requestTimeout = (Integer) requestTimeout.getValue();
         settings.isApacheLoggingEnabled = apacheLogging.isSelected();
-        settings.isWriteTipsEnabled = writeTips.isSelected();
-        settings.isMarkSolutionsEnabled = markSolutions.isSelected();
         settings.isTrackingEnabled = tracking.isSelected();
         return settings;
     }
@@ -107,8 +101,6 @@ public class ConfigDialogPanel {
         connectTimeout.setValue(settings.connectTimeout);
         requestTimeout.setValue(settings.requestTimeout);
         apacheLogging.setSelected(settings.isApacheLoggingEnabled);
-        writeTips.setSelected(settings.isWriteTipsEnabled);
-        markSolutions.setSelected(settings.isMarkSolutionsEnabled);
         tracking.setSelected(settings.isTrackingEnabled);
     }
 }
