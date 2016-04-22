@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.ui;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
 import com.samebug.clients.search.api.exceptions.IllegalUriException;
@@ -27,6 +28,8 @@ import java.net.URL;
  * Created by poroszd on 4/15/16.
  */
 public class UrlUtil {
+    final static Logger LOGGER = Logger.getInstance(UrlUtil.class);
+
     public static URI getServerRoot() {
         return URI.create(IdeaSamebugPlugin.getInstance().getState().serverRoot);
     }
@@ -65,9 +68,10 @@ public class UrlUtil {
                 // TODO handle default package?
                 final String entryUri = b.entry.packageName + "/" + b.entry.className + "/" + b.entry.methodName + "/" + b.exceptionType;
                 final String passThrough = "?pt=" + b.passThrough;
-                return getServerRoot().resolve("/crashdocs/").resolve(entryUri + passThrough).toURL();
-            } catch (MalformedURLException e) {
-                throw new IllegalUriException("Unable to resolve uri for breadcrumb", e);
+                return getServerRoot().resolve("/crashdocs/").resolve(java.net.URLEncoder.encode(entryUri, "utf-8") + passThrough).toURL();
+            } catch (Throwable e) {
+                LOGGER.warn("Unable to resolve uri for breadcrumb", e);
+                return null;
             }
         }
     }
