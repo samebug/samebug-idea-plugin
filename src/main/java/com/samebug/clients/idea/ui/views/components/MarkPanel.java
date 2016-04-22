@@ -27,6 +27,8 @@ import com.samebug.clients.search.api.entities.legacy.UserReference;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.font.TextAttribute;
+import java.util.HashMap;
 
 /**
  * Created by poroszd on 4/8/16.
@@ -73,12 +75,16 @@ public class MarkPanel extends TransparentPanel {
                 setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
                 add(new JLabel() {
                     {
+                        final HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
+                        attributes.put(TextAttribute.SIZE, 12);
+                        attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
+                        setFont(getFont().deriveFont(attributes));
                         setText(errorMessage);
                         setForeground(Colors.samebugWhite);
                     }
                 });
             }
-        }).setFillColor(Color.red).createBalloon().show(RelativePoint.getCenterOf(markButton), Balloon.Position.above);
+        }).setFillColor(Colors.alertPanel).createBalloon().show(RelativePoint.getCenterOf(markButton), Balloon.Position.above);
     }
 
     public void finishPostMarkWithSuccess(final int score, final boolean marked) {

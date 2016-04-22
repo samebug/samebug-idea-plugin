@@ -28,8 +28,8 @@ public class Colors {
     public static final Color unemphasizedTextDarcula = new Color(0xAAAAAA);
     public static final Color emphasizedText = new Color(0x00000);
     public static final Color emphasizedTextDarcula = new Color(0xFFFFFF);
-    public static final Color alertText = new Color(0xFF0000);
-    public static final Color alertTextDarcula = new Color(0xFF0000);
+    public static final Color alertPanel = new Color(0xF04B3E);
+    public static final Color alertPanelDarcula = new Color(0xF04B3E);
 
     public static final Color highlightPanel = new Color(0xFFFFFF);
     public static final Color highlightPanelDarcula = new Color(0x2D2F30);
@@ -38,6 +38,11 @@ public class Colors {
 
     public static final Color sourceIconBackground = null;
     public static final Color sourceIconBackgroundDarcula = new Color(0xFFFFFF);
+
+    public static final Color ctaButton = new Color(0xFF5621);
+    public static final Color ctaButtonDarcula = new Color(0xFFFFFF);
+    public static final Color button = new Color(0x54615C);
+    public static final Color buttonDarcula = new Color(0x54615C);
 
     public static final Color cardSeparator = new Color(0x54615C);
 

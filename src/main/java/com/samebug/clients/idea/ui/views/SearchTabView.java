@@ -85,7 +85,7 @@ public class SearchTabView {
     class ToolBarPanel extends JPanel {
         {
             setLayout(new BorderLayout());
-            setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
+            setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
 
             final DefaultActionGroup group = (DefaultActionGroup) ActionManager.getInstance().getAction("Samebug.SearchTabMenu");
             final ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);

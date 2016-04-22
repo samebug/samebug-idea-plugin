@@ -31,8 +31,8 @@ public class ColorUtil {
         return normalOrDarcula(Colors.emphasizedText, Colors.emphasizedTextDarcula);
     }
 
-    public static Color alertText() {
-        return normalOrDarcula(Colors.alertText, Colors.alertTextDarcula);
+    public static Color alertPanel() {
+        return normalOrDarcula(Colors.alertPanel, Colors.alertPanelDarcula);
     }
 
     public static Color highlightPanel() {
@@ -45,6 +45,14 @@ public class ColorUtil {
 
     public static Color sourceIconBackground() {
         return normalOrDarcula(Colors.sourceIconBackground, Colors.sourceIconBackgroundDarcula);
+    }
+
+    public static Color ctaButton() {
+        return normalOrDarcula(Colors.ctaButton, Colors.ctaButtonDarcula);
+    }
+
+    public static Color button() {
+        return normalOrDarcula(Colors.button, Colors.buttonDarcula);
     }
 
     public static Color componentColors(int color) {

@@ -171,7 +171,7 @@ public class SamebugTipView extends JPanel {
 
         @Override
         public Color getBackground() {
-            return Colors.writeTipPanel;
+            return Colors.button;
         }
 
         @Override

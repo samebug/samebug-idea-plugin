@@ -105,7 +105,7 @@ public class WriteTip extends JPanel {
         });
         add(new TransparentPanel() {
             {
-                setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+                setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
                 add(errorPanel);
             }
         });
@@ -194,7 +194,7 @@ public class WriteTip extends JPanel {
             if (minCharacters <= length && length <= maxCharacters) {
                 return ColorUtil.unemphasizedText();
             } else {
-                return ColorUtil.alertText();
+                return ColorUtil.alertPanel();
             }
         }
 
@@ -209,8 +209,12 @@ public class WriteTip extends JPanel {
         {
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            setBackground(Color.red);
             setVisible(false);
+        }
+
+        @Override
+        public Color getBackground() {
+            return ColorUtil.alertPanel();
         }
     }
 
@@ -236,7 +240,7 @@ public class WriteTip extends JPanel {
 
         @Override
         public Color getBackground() {
-            return ColorUtil.emphasizedText();
+            return ColorUtil.ctaButton();
         }
 
         @Override
@@ -296,6 +300,10 @@ public class WriteTip extends JPanel {
         errorPanel.removeAll();
         errorPanel.add(new JLabel() {
             {
+                final HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
+                attributes.put(TextAttribute.SIZE, 12);
+                attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
+                setFont(getFont().deriveFont(attributes));
                 setText(message);
                 setForeground(Colors.samebugWhite);
             }
