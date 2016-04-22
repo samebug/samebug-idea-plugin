@@ -48,8 +48,13 @@ public class MarkPanel extends TransparentPanel {
         // TODO the current user's userId is hacked here...
         this.currentUserId = IdeaSamebugPlugin.getInstance().getState().userId;
 
-        setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
         add(markButton);
+        add(new TransparentPanel(){
+            {
+                setPreferredSize(new Dimension(5, 0));
+            }
+        });
         add(voteIcon);
         add(helpedLabel);
         updateState(score, marked);
