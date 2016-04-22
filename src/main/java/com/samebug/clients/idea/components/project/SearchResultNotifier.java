@@ -74,7 +74,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
     @Override
     public void batchFinished(final List<SearchResults> results, int failed) {
         Long timelimitForFreshSearch = new Date().getTime() - (1 * 60 * 1000);
-        // TODO history does not contains the stack ids (or at least the deepest stack id)
+        // TODO history does not contains the stack ids (or at least the deepest stack _id)
         Map<Integer, GroupedExceptionSearch> history = new HashMap<Integer, GroupedExceptionSearch>();
         try {
             final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();

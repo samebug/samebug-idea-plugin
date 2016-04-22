@@ -17,6 +17,7 @@ package com.samebug.clients.idea.ui.views;
 
 import com.samebug.clients.common.entities.ExceptionType;
 import com.samebug.clients.common.ui.TextUtil;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
@@ -48,7 +49,7 @@ public class ExternalSolutionView extends JPanel {
     public final JPanel sourceReferencePanel;
     public final MarkPanel markPanel;
 
-    public ExternalSolutionView(RestHit<SolutionReference> solution, java.util.List<BreadCrumb> searchBreadcrumb) {
+    public ExternalSolutionView(RestHit<SolutionReference> solution, java.util.List<BreadCrumb> searchBreadcrumb, int searchStackId) {
         this.solution = solution;
         this.searchBreadcrumb = searchBreadcrumb;
         exceptionType = new ExceptionType(solution.exception.typeName);
@@ -58,7 +59,8 @@ public class ExternalSolutionView extends JPanel {
         exceptionMessageLabel = new ExceptionMessageLabel(solution.exception.message);
         exceptionTypePanel = new ExceptionTypePanel();
         sourceReferencePanel = new SourceReferencePanel(solution.solution);
-        markPanel = new MarkPanel(solution.score, solution.markId != null, solution.createdBy);
+        markPanel = new MarkPanel(solution.score, solution.markId != null, solution.createdBy,
+                !(solution.createdBy != null && solution.createdBy.id == IdeaSamebugPlugin.getInstance().getState().userId && searchStackId == solution.stackId));
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));

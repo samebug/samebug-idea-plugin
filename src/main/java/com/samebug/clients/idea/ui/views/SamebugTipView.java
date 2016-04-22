@@ -16,6 +16,7 @@
 package com.samebug.clients.idea.ui.views;
 
 import com.samebug.clients.common.ui.TextUtil;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
@@ -42,7 +43,7 @@ public class SamebugTipView extends JPanel {
     public final MarkPanel markPanel;
     public final SBButton writeBetter;
 
-    public SamebugTipView(RestHit<Tip> tip, java.util.List<BreadCrumb> searchBreadcrumb) {
+    public SamebugTipView(RestHit<Tip> tip, java.util.List<BreadCrumb> searchBreadcrumb, int searchStackId) {
         this.tip = tip;
         this.searchBreadcrumb = searchBreadcrumb;
 
@@ -50,7 +51,8 @@ public class SamebugTipView extends JPanel {
         tipLabel = new TipText(tip.solution.tip);
         sourceReferencePanel = new TipSourceReferencePanel(tip.solution);
         avatarPanel = new AvatarPanel(tip.solution.author);
-        markPanel = new MarkPanel(tip.score, tip.markId != null, tip.createdBy);
+        markPanel = new MarkPanel(tip.score, tip.markId != null, tip.createdBy,
+                !(tip.createdBy.id == IdeaSamebugPlugin.getInstance().getState().userId && searchStackId == tip.stackId));
         writeBetter = new WriteBetterButton();
 
         setLayout(new BorderLayout());

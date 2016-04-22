@@ -39,7 +39,7 @@ public class MarkPanel extends TransparentPanel {
     final UserReference createdBy;
     final Integer currentUserId;
 
-    public MarkPanel(int score, boolean marked, UserReference createdBy) {
+    public MarkPanel(int score, boolean marked, UserReference createdBy, boolean markable) {
         markButton = new MarkButton();
         voteIcon = new VoteIcon();
         helpedLabel = new HelpedLabel();
@@ -49,8 +49,8 @@ public class MarkPanel extends TransparentPanel {
         this.currentUserId = IdeaSamebugPlugin.getInstance().getState().userId;
 
         setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        add(markButton);
-        add(new TransparentPanel(){
+        if (markable) add(markButton);
+        add(new TransparentPanel() {
             {
                 setPreferredSize(new Dimension(5, 0));
             }

@@ -149,14 +149,14 @@ public class SearchTabController {
                         view.solutionsPanel.add(panel.controlPanel);
                     } else {
                         for (final RestHit<Tip> tip : model.tips) {
-                            SamebugTipView tipView = new SamebugTipView(tip, model.breadcrumb);
+                            SamebugTipView tipView = new SamebugTipView(tip, model.breadcrumb, model.searchGroup._id.stackId);
                             view.solutionsPanel.add(tipView);
                             final MarkHandler markHandler = new MarkHandler(search.lastSearch.searchId, tip, tipView.markPanel);
                             tipView.markPanel.markButton.addMouseListener(markHandler);
                             tipView.writeBetter.addMouseListener(new WriteTipHandler());
                         }
                         for (final RestHit<SolutionReference> s : model.references) {
-                            final ExternalSolutionView sv = new ExternalSolutionView(s, model.breadcrumb);
+                            final ExternalSolutionView sv = new ExternalSolutionView(s, model.breadcrumb, model.searchGroup._id.stackId);
                             view.solutionsPanel.add(sv);
                             final MarkHandler markHandler = new MarkHandler(search.lastSearch.searchId, s, sv.markPanel);
                             sv.markPanel.markButton.addMouseListener(markHandler);
