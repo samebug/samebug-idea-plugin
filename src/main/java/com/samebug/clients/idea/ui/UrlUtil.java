@@ -71,4 +71,12 @@ public class UrlUtil {
             }
         }
     }
+
+    public static URL getUserAvatar() {
+        try {
+            return new URL(IdeaSamebugPlugin.getInstance().getState().avatarUrl);
+        } catch (MalformedURLException e) {
+            throw new IllegalUriException("Unable to resolve uri for user avatar", e);
+        }
+    }
 }

@@ -118,6 +118,11 @@ public class SearchTabController {
                 @Override
                 public void run() {
                     java.util.List<URL> imageUrls = new ArrayList<URL>();
+                    try {
+                        imageUrls.add(UrlUtil.getUserAvatar());
+                    } catch (Throwable e) {
+                        LOGGER.warn("Failed to load user's avatar", e);
+                    }
                     for (final RestHit<Tip> tip : model.tips) {
                         imageUrls.add(tip.solution.author.avatarUrl);
                     }

@@ -28,6 +28,7 @@ public class ApplicationSettings {
     public String apiKey;
     public String instanceId = UUID.randomUUID().toString();
     public int userId;
+    public String avatarUrl;
     public String serverRoot = defaultServerRoot;
     public String trackingRoot = defaultTrackingRoot;
     public boolean isTrackingEnabled = defaultIsTrackingEnabled;
@@ -55,6 +56,7 @@ public class ApplicationSettings {
         this.apiKey = rhs.apiKey;
         this.instanceId = rhs.instanceId;
         this.userId = rhs.userId;
+        this.avatarUrl = rhs.avatarUrl;
         this.serverRoot = rhs.serverRoot;
         this.trackingRoot = rhs.trackingRoot;
         this.isTrackingEnabled = rhs.isTrackingEnabled;
@@ -79,6 +81,7 @@ public class ApplicationSettings {
             return rhs.apiKey.equals(apiKey)
                     && rhs.instanceId.equals(instanceId)
                     && rhs.userId == userId
+                    && rhs.avatarUrl == avatarUrl
                     && rhs.serverRoot.equals(serverRoot)
                     && rhs.trackingRoot.equals(trackingRoot)
                     && rhs.isTrackingEnabled == isTrackingEnabled
