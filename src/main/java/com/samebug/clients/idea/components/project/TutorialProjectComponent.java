@@ -57,6 +57,7 @@ public class TutorialProjectComponent extends AbstractProjectComponent {
         super.projectOpened();
         final TutorialSettings pluginState = ApplicationManager.getApplication().getComponent(TutorialApplicationComponent.class).getState();
         if (pluginState != null && pluginState.firstRun) {
+            pluginState.firstRun = false;
             // At this point, the Samebug toolwindow is likely not initialized, so we delay the notification
             final int DELAY_MS = 15 * 1000;
             final Timer timer = new Timer(DELAY_MS, new ActionListener() {
@@ -65,13 +66,13 @@ public class TutorialProjectComponent extends AbstractProjectComponent {
                     ApplicationManager.getApplication().invokeLater(new Runnable() {
                         public void run() {
                             try {
+                                // TODO cannot use the same tutorial notification as elsewhere, because I can't find how to access the toolbar button component
                                 ToolWindowManager.getInstance(myProject).notifyByBalloon(
                                         "Samebug",
                                         MessageType.INFO, SamebugBundle.message("samebug.tutorial.welcome.message"),
-                                        SamebugIcons.notification,
+                                        SamebugIcons.info,
                                         SamebugNotifications.basicHyperlinkListener(myProject, "tutorial"));
                                 Tracking.projectTracking(myProject).trace(Events.pluginInstall());
-                                pluginState.firstRun = false;
                             } catch (IllegalStateException e1) {
                                 LOGGER.warn("Samebug tool window was not initialized after "
                                         + DELAY_MS + " millis, welcome message could not be displayed", e1);
