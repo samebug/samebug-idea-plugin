@@ -27,24 +27,29 @@ import java.util.HashMap;
  * Created by poroszd on 4/12/16.
  */
 public class WriteTipHint extends WriteTipCTA {
-    final CTAExplainLabel ctaExplainLabel;
+    final CTAContextLabel ctaPrefix;
+    final CTAContextLabel ctaPostfix;
 
     public WriteTipHint() {
+        ctaPrefix = new CTAContextLabel();
         ctaButton = new CTALabel();
-        ctaExplainLabel = new CTAExplainLabel();
+        ctaPostfix = new CTAContextLabel();
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
         add(new JPanel() {
             {
-                setLayout(new FlowLayout());
+                setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
                 setBorder(BorderFactory.createEmptyBorder());
                 setOpaque(false);
+                ctaPrefix.setText(SamebugBundle.message("samebug.tip.cta.small.prefix"));
+                ctaPostfix.setText(SamebugBundle.message("samebug.tip.cta.small.postfix"));
+                add(ctaPrefix);
                 add(ctaButton);
-                add(ctaExplainLabel);
+                add(ctaPostfix);
             }
         });
+        setPreferredSize(new Dimension(400, getPreferredSize().height));
     }
 
     @Override
@@ -54,7 +59,7 @@ public class WriteTipHint extends WriteTipCTA {
 
     class CTALabel extends JLabel {
         {
-            setText(SamebugBundle.message("samebug.tip.cta.small"));
+            setText(SamebugBundle.message("samebug.tip.cta.small.link"));
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             final HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
             attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
@@ -69,10 +74,8 @@ public class WriteTipHint extends WriteTipCTA {
         }
     }
 
-    class CTAExplainLabel extends JLabel {
+    class CTAContextLabel extends JLabel {
         {
-            setText(SamebugBundle.message("samebug.tip.cta.mock.explain"));
-            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             final HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
             attributes.put(TextAttribute.SIZE, 16);
             attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
