@@ -121,12 +121,17 @@ public class MarkPanel extends TransparentPanel {
 
     void updateState(final int score, final boolean marked) {
         if (createdBy != null) {
-            helpedLabel.setText(SamebugBundle.message("samebug.mark.marked.someone", createdBy.id == currentUserId ? "You" : createdBy.displayName, score));
+            helpedLabel.setText(SamebugBundle.message("samebug.mark.markedBy.someone", createdBy.id == currentUserId ? "You" : createdBy.displayName, score));
         } else if (score == 0) {
-            helpedLabel.setText(SamebugBundle.message("samebug.mark.marked.noone"));
+            helpedLabel.setText(SamebugBundle.message("samebug.mark.markedBy.noone"));
         } else {
-            helpedLabel.setText(SamebugBundle.message("samebug.mark.marked.anyone", score));
+            helpedLabel.setText(SamebugBundle.message("samebug.mark.markedBy.anyone", score));
         }
         markButton.setHighlighted(marked);
+        if (marked) {
+            markButton.setToolTipText(SamebugBundle.message("samebug.mark.marked.tooltip"));
+        } else {
+            markButton.setToolTipText(SamebugBundle.message("samebug.mark.unmarked.tooltip"));
+        }
     }
 }

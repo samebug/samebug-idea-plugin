@@ -17,6 +17,7 @@ package com.samebug.clients.idea.ui.views;
 
 import com.samebug.clients.common.entities.ExceptionType;
 import com.samebug.clients.common.ui.TextUtil;
+import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.ImageUtil;
@@ -115,6 +116,7 @@ public class ExternalSolutionView extends JPanel {
                             attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
                             setFont(getFont().deriveFont(attributes));
                             setForeground(Colors.samebugOrange);
+                            setToolTipText(SamebugBundle.message("samebug.solution.title.tooltip", solution.solution.url));
                         }
                     }, BorderLayout.CENTER);
                 }

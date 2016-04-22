@@ -74,4 +74,10 @@ public class SBButton extends JPanel {
         super.addMouseListener(l);
         button.addMouseListener(l);
     }
+
+    @Override
+    public void setToolTipText(String tooltip) {
+        super.setToolTipText(tooltip);
+        button.setToolTipText(tooltip);
+    }
 }

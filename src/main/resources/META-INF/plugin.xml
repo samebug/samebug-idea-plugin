@@ -51,7 +51,7 @@
             <action id="Samebug.History" class="com.samebug.clients.idea.actions.ReloadHistoryAction"
                     icon="/com/samebug/icons/reload.png" text="Reload history" description="Reload exception history"/>
             <action id="Samebug.ShowRecurringSearches" class="com.samebug.clients.idea.actions.ShowRecurringSearches"
-                    icon="/com/samebug/icons/filter-old.png" text="Show recurring" description="Show recurring searches"/>
+                    icon="/com/samebug/icons/filter-old.png" text="Show recurring" description="Show recurring exceptions"/>
             <action id="Samebug.ShowZeroSolutionSearches" class="com.samebug.clients.idea.actions.ShowZeroSolutionSearches"
                     icon="/com/samebug/icons/filter-unknown.png" text="Show unsolved" description="Show searches with zero solutions"/>
         </group>

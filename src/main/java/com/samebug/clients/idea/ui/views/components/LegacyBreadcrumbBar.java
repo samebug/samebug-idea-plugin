@@ -20,6 +20,7 @@ import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.UrlUtil;
 import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
+import com.samebug.clients.search.api.entities.legacy.EntryInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,6 +73,10 @@ public class LegacyBreadcrumbBar extends TransparentPanel {
 
                     }
                 });
+            }
+            final EntryInfo e = breadCrumb.entry;
+            if (e != null && e.packageName != null && e.className != null && e.methodName != null) {
+                setToolTipText(String.format("%s.%s.%s()", e.packageName, e.className, e.methodName));
             }
         }
 
