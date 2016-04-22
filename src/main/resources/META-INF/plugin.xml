@@ -14,12 +14,14 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>Integrate solutions and tips for searches</li>
-        <li>Search notifications are filter aware</li>
-        <li>Use Idea proxy settings</li>
+        <li>Tip writing</li>
+        <li>Marking solutions</li>
+        <li>Plugin configuration</li>
+        <li>Fixed solution breadcrumb links</li>
+        <li>Tutorial messages</li>
       </ul>
 
-      Check it at <a href="https://medium.com/@samebug/samebug-integration-0-9-8c6501ea19f7">our blog</a>
+      Check it at <a href="https://medium.com/@samebug/samebug-intellij-integration-v0-10-0-beta-933ce6a999dd">our blog</a>
     ]]>
     </change-notes>
 
