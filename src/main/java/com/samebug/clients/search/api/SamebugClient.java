@@ -56,7 +56,7 @@ import java.net.URLEncoder;
 import java.util.*;
 
 public class SamebugClient {
-    final static String USER_AGENT = "Samebug-Idea-Client/1.3.0";
+    final static String USER_AGENT = "Samebug-Idea-Client/1.4.0";
     final static String API_VERSION = "0.9";
     final static Gson gson;
 

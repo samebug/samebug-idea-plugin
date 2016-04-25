@@ -53,7 +53,6 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
 
         project.getMessageBus().connect(project).subscribe(HistoryListener.UPDATE_HISTORY_TOPIC, historyTab.getHistoryUpdater());
 
-        // TODO this logic is duplicated in ReloadHistoryAction
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {

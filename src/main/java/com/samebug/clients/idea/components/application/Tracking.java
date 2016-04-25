@@ -28,7 +28,6 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Created by poroszd on 2/18/16.
  */
-// TODO opt-in tracking configuration
 public class Tracking implements ApplicationComponent, TrackingListener {
     public void trace(final TrackEvent event) {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
