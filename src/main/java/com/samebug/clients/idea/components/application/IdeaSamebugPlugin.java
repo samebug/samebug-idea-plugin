@@ -28,7 +28,6 @@ import com.samebug.clients.search.api.entities.UserInfo;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.search.api.exceptions.UnknownApiKey;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 
 @State(
@@ -119,7 +118,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     }
 
     // PersistentStateComponent overrides
-    @Nullable
+    @NotNull
     @Override
     public ApplicationSettings getState() {
         return this.state;
