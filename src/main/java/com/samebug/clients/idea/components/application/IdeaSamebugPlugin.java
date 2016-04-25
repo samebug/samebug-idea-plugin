@@ -53,7 +53,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
                 throw new UnknownApiKey(apiKey);
             } else {
                 state.userId = userInfo.userId;
-                state.avatarUrl = userInfo.avatarUrl;
+                state.avatarUrl = userInfo.avatarUrl.toString();
             }
         } finally {
             Tracking.appTracking().trace(Events.apiKeySet());
@@ -98,7 +98,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
                         UserInfo userInfo = client.getUserInfo(state.apiKey);
                         if (userInfo.isUserExist) {
                             state.userId = userInfo.userId;
-                            state.avatarUrl = userInfo.avatarUrl;
+                            state.avatarUrl = userInfo.avatarUrl.toString();
                         }
                     } catch (SamebugClientException e) {
                         LOGGER.warn("Failed to get user info", e);

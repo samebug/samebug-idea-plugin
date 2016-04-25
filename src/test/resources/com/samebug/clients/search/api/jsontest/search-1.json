@@ -1,0 +1,718 @@
+{
+  "search": {
+    "type": "exception",
+    "_id": 673467,
+    "timestamp": 1461320606285,
+    "query": "java.lang.NullPointerException\n\n\tat com.samebug.clients.idea.ui.views.ExternalSolutionView.<init>(ExternalSolutionView.java:62)\n\n\tat com.samebug.clients.idea.ui.controller.SearchTabController$3.run(SearchTabController.java:164)\n\n\tat com.intellij.openapi.application.impl.LaterInvocator$FlushQueue.a(LaterInvocator.java:337)\n\n\tat com.intellij.openapi.application.impl.LaterInvocator$FlushQueue.run(LaterInvocator.java:321)\n\n\tat java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:311)\n\n\tat java.awt.EventQueue.dispatchEventImpl(EventQueue.java:756)\n\n\tat java.awt.EventQueue.access$500(EventQueue.java:97)\n\n\tat java.awt.EventQueue$3.run(EventQueue.java:709)\n\n\tat java.awt.EventQueue$3.run(EventQueue.java:703)\n\n\tat java.security.AccessController.doPrivileged(Native Method)\n\n\tat java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:75)\n\n\tat java.awt.EventQueue.dispatchEvent(EventQueue.java:726)\n\n\tat com.intellij.ide.IdeEventQueue.f(IdeEventQueue.java:861)\n\n\tat com.intellij.ide.IdeEventQueue._dispatchEvent(IdeEventQueue.java:649)\n\n\tat com.intellij.ide.IdeEventQueue.dispatchEvent(IdeEventQueue.java:380)\n\n\tat java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)\n\n\tat java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)\n\n\tat java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)\n\n\tat java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)\n\n\tat java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)\n\n\tat java.awt.EventDispatchThread.run(EventDispatchThread.java:82)\n",
+    "indexed": false,
+    "exception": {
+      "typeName": "java.lang.NullPointerException",
+      "frames": "com.samebug.clients.idea.ui.views.ExternalSolutionView.<init>(ExternalSolutionView.java:62)\ncom.samebug.clients.idea.ui.controller.SearchTabController$3.run(SearchTabController.java:164)\ncom.intellij.openapi.application.impl.LaterInvocator$FlushQueue.a(LaterInvocator.java:337)\ncom.intellij.openapi.application.impl.LaterInvocator$FlushQueue.run(LaterInvocator.java:321)\njava.awt.event.InvocationEvent.dispatch(InvocationEvent.java:311)\njava.awt.EventQueue.dispatchEventImpl(EventQueue.java:756)\njava.awt.EventQueue.access$500(EventQueue.java:97)\njava.awt.EventQueue$3.run(EventQueue.java:709)\njava.awt.EventQueue$3.run(EventQueue.java:703)\njava.security.AccessController.doPrivileged(Native Method)\njava.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:75)\njava.awt.EventQueue.dispatchEvent(EventQueue.java:726)\ncom.intellij.ide.IdeEventQueue.f(IdeEventQueue.java:861)\ncom.intellij.ide.IdeEventQueue._dispatchEvent(IdeEventQueue.java:649)\ncom.intellij.ide.IdeEventQueue.dispatchEvent(IdeEventQueue.java:380)\njava.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)\njava.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)\njava.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)\njava.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)\njava.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)\njava.awt.EventDispatchThread.run(EventDispatchThread.java:82)"
+    },
+    "segments": [
+      {
+        "id": 2671830,
+        "frames": 2
+      },
+      {
+        "id": 2671831,
+        "frames": 2,
+        "componentId": 159
+      },
+      {
+        "id": 2671832,
+        "frames": 8,
+        "componentId": 2674
+      },
+      {
+        "id": 2671833,
+        "frames": 3,
+        "componentId": 159
+      },
+      {
+        "id": 2671834,
+        "frames": 6,
+        "componentId": 2674
+      }
+    ],
+    "userId": 1,
+    "searchProtected": true
+  },
+  "breadcrumb": [
+    {
+      "component": {
+        "name": "com.samebug.clients",
+        "shortName": "com.samebug.clients",
+        "color": 0
+      },
+      "entry": {
+        "packageName": "com.samebug.clients.idea.ui.controller",
+        "className": "SearchTabController$3",
+        "methodName": "run"
+      },
+      "exceptionType": "java.lang.NullPointerException",
+      "passThrough": false,
+      "hasTop": true,
+      "confidence": "NotApplicable"
+    },
+    {
+      "component": {
+        "name": "IntelliJ IDEA",
+        "shortName": "IDEA",
+        "color": 16
+      },
+      "entry": {
+        "packageName": "com.intellij.openapi.application.impl",
+        "className": "LaterInvocator$FlushQueue",
+        "methodName": "run"
+      },
+      "exceptionType": "java.lang.NullPointerException",
+      "passThrough": true,
+      "hasTop": false,
+      "confidence": "NotApplicable"
+    },
+    {
+      "component": {
+        "name": "Java Runtime Library",
+        "shortName": "Java RT",
+        "color": 3
+      },
+      "entry": {
+        "packageName": "java.awt",
+        "className": "EventQueue",
+        "methodName": "dispatchEvent"
+      },
+      "exceptionType": "java.lang.NullPointerException",
+      "passThrough": true,
+      "hasTop": false,
+      "confidence": "NotApplicable"
+    },
+    {
+      "component": {
+        "name": "IntelliJ IDEA",
+        "shortName": "IDEA",
+        "color": 16
+      },
+      "entry": {
+        "packageName": "com.intellij.ide",
+        "className": "IdeEventQueue",
+        "methodName": "dispatchEvent"
+      },
+      "exceptionType": "java.lang.NullPointerException",
+      "passThrough": true,
+      "hasTop": false,
+      "confidence": "NotApplicable"
+    },
+    {
+      "component": {
+        "name": "Java Runtime Library",
+        "shortName": "Java RT",
+        "color": 3
+      },
+      "entry": {
+        "packageName": "java.awt",
+        "className": "EventDispatchThread",
+        "methodName": "run"
+      },
+      "exceptionType": "java.lang.NullPointerException",
+      "passThrough": true,
+      "hasTop": false,
+      "confidence": "NotApplicable"
+    }
+  ],
+  "searchGroup": {
+    "_id": {
+      "userId": 1,
+      "stackId": 2671834
+    },
+    "firstSeen": 1461238085060,
+    "lastSeen": 1461320606285,
+    "numberOfSimilars": 14,
+    "lastSearchId": 673467,
+    "lastSearch": {
+      "type": "exception",
+      "_id": 673467,
+      "timestamp": 1461320606285,
+      "query": "java.lang.NullPointerException\n\n\tat com.samebug.clients.idea.ui.views.ExternalSolutionView.<init>(ExternalSolutionView.java:62)\n\n\tat com.samebug.clients.idea.ui.controller.SearchTabController$3.run(SearchTabController.java:164)\n\n\tat com.intellij.openapi.application.impl.LaterInvocator$FlushQueue.a(LaterInvocator.java:337)\n\n\tat com.intellij.openapi.application.impl.LaterInvocator$FlushQueue.run(LaterInvocator.java:321)\n\n\tat java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:311)\n\n\tat java.awt.EventQueue.dispatchEventImpl(EventQueue.java:756)\n\n\tat java.awt.EventQueue.access$500(EventQueue.java:97)\n\n\tat java.awt.EventQueue$3.run(EventQueue.java:709)\n\n\tat java.awt.EventQueue$3.run(EventQueue.java:703)\n\n\tat java.security.AccessController.doPrivileged(Native Method)\n\n\tat java.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:75)\n\n\tat java.awt.EventQueue.dispatchEvent(EventQueue.java:726)\n\n\tat com.intellij.ide.IdeEventQueue.f(IdeEventQueue.java:861)\n\n\tat com.intellij.ide.IdeEventQueue._dispatchEvent(IdeEventQueue.java:649)\n\n\tat com.intellij.ide.IdeEventQueue.dispatchEvent(IdeEventQueue.java:380)\n\n\tat java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)\n\n\tat java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)\n\n\tat java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)\n\n\tat java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)\n\n\tat java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)\n\n\tat java.awt.EventDispatchThread.run(EventDispatchThread.java:82)\n",
+      "indexed": false,
+      "exception": {
+        "typeName": "java.lang.NullPointerException",
+        "frames": "com.samebug.clients.idea.ui.views.ExternalSolutionView.<init>(ExternalSolutionView.java:62)\ncom.samebug.clients.idea.ui.controller.SearchTabController$3.run(SearchTabController.java:164)\ncom.intellij.openapi.application.impl.LaterInvocator$FlushQueue.a(LaterInvocator.java:337)\ncom.intellij.openapi.application.impl.LaterInvocator$FlushQueue.run(LaterInvocator.java:321)\njava.awt.event.InvocationEvent.dispatch(InvocationEvent.java:311)\njava.awt.EventQueue.dispatchEventImpl(EventQueue.java:756)\njava.awt.EventQueue.access$500(EventQueue.java:97)\njava.awt.EventQueue$3.run(EventQueue.java:709)\njava.awt.EventQueue$3.run(EventQueue.java:703)\njava.security.AccessController.doPrivileged(Native Method)\njava.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:75)\njava.awt.EventQueue.dispatchEvent(EventQueue.java:726)\ncom.intellij.ide.IdeEventQueue.f(IdeEventQueue.java:861)\ncom.intellij.ide.IdeEventQueue._dispatchEvent(IdeEventQueue.java:649)\ncom.intellij.ide.IdeEventQueue.dispatchEvent(IdeEventQueue.java:380)\njava.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)\njava.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)\njava.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)\njava.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)\njava.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)\njava.awt.EventDispatchThread.run(EventDispatchThread.java:82)"
+      },
+      "segments": [
+        {
+          "id": 2671830,
+          "frames": 2
+        },
+        {
+          "id": 2671831,
+          "frames": 2,
+          "componentId": 159
+        },
+        {
+          "id": 2671832,
+          "frames": 8,
+          "componentId": 2674
+        },
+        {
+          "id": 2671833,
+          "frames": 3,
+          "componentId": 159
+        },
+        {
+          "id": 2671834,
+          "frames": 6,
+          "componentId": 2674
+        }
+      ],
+      "userId": 1,
+      "searchProtected": true
+    },
+    "numberOfHits": 100,
+    "hasMoreHits": true
+  },
+  "tips": [
+    {
+      "solutionId": 1743021,
+      "solution": {
+        "type": "tip",
+        "author": {
+          "name": "poroszd",
+          "url": "https://samebug.io/user/1/poroszd",
+          "avatarUrl": "https://samebug.io/avatars/1/3"
+        },
+        "createdAt": 1461245909506,
+        "tip": "This is a tip."
+      },
+      "stackId": 2671834,
+      "matchLevel": 5,
+      "score": 0,
+      "createdBy": {
+        "id": 1,
+        "slug": "poroszd",
+        "displayName": "poroszd",
+        "avatarUrl": "https://samebug.io/avatars/1/3"
+      }
+    }
+  ],
+  "references": [
+    {
+      "solutionId": 1746924,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "adzynia",
+          "url": "https://github.com/adzynia",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/998354"
+        },
+        "createdAt": 1347133568000,
+        "title": "[JVM] InvocationTargetException when running maven configured for CLI runner with multiples tags",
+        "url": "https://github.com/cucumber/cucumber-jvm/issues/389"
+      },
+      "stackId": 2671834,
+      "matchLevel": 5,
+      "score": 0,
+      "createdBy": {
+        "id": 1,
+        "slug": "poroszd",
+        "displayName": "poroszd",
+        "avatarUrl": "https://samebug.io/avatars/1/3"
+      },
+      "exception": {
+        "typeName": "java.lang.NullPointerException",
+        "frames": "com.samebug.clients.idea.ui.views.ExternalSolutionView.<init>(ExternalSolutionView.java:62)\ncom.samebug.clients.idea.ui.controller.SearchTabController$3.run(SearchTabController.java:164)\ncom.intellij.openapi.application.impl.LaterInvocator$FlushQueue.a(LaterInvocator.java:337)\ncom.intellij.openapi.application.impl.LaterInvocator$FlushQueue.run(LaterInvocator.java:321)\njava.awt.event.InvocationEvent.dispatch(InvocationEvent.java:311)\njava.awt.EventQueue.dispatchEventImpl(EventQueue.java:756)\njava.awt.EventQueue.access$500(EventQueue.java:97)\njava.awt.EventQueue$3.run(EventQueue.java:709)\njava.awt.EventQueue$3.run(EventQueue.java:703)\njava.security.AccessController.doPrivileged(Native Method)\njava.security.ProtectionDomain$1.doIntersectionPrivilege(ProtectionDomain.java:75)\njava.awt.EventQueue.dispatchEvent(EventQueue.java:726)\ncom.intellij.ide.IdeEventQueue.f(IdeEventQueue.java:861)\ncom.intellij.ide.IdeEventQueue._dispatchEvent(IdeEventQueue.java:649)\ncom.intellij.ide.IdeEventQueue.dispatchEvent(IdeEventQueue.java:380)\njava.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)\njava.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)\njava.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)\njava.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)\njava.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)\njava.awt.EventDispatchThread.run(EventDispatchThread.java:82)"
+      }
+    },
+    {
+      "solutionId": 2,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "jadekler",
+          "url": "https://github.com/jadekler",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/3584893"
+        },
+        "createdAt": 1424060109000,
+        "title": "Without a web.xml, this does not run",
+        "url": "https://github.com/geowarin/spring-mvc-examples/issues/2"
+      },
+      "stackId": 694357,
+      "matchLevel": 0,
+      "score": 0,
+      "exception": {
+        "typeName": "java.lang.NullPointerException",
+        "frames": "org.eclipse.jetty.webapp.WebXmlProcessor.parseFragment(WebXmlProcessor.java:316)\norg.eclipse.jetty.webapp.FragmentConfiguration.parseWebFragments(FragmentConfiguration.java:93)\norg.eclipse.jetty.webapp.FragmentConfiguration.preConfigure(FragmentConfiguration.java:47)\norg.eclipse.jetty.webapp.WebAppContext.doStart(WebAppContext.java:339)\norg.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:55)\norg.eclipse.jetty.server.handler.HandlerCollection.doStart(HandlerCollection.java:164)\norg.eclipse.jetty.server.handler.ContextHandlerCollection.doStart(ContextHandlerCollection.java:161)\norg.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:55)\norg.eclipse.jetty.server.handler.HandlerCollection.doStart(HandlerCollection.java:164)\norg.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:55)\norg.eclipse.jetty.server.handler.HandlerWrapper.doStart(HandlerWrapper.java:92)\norg.eclipse.jetty.server.Server.doStart(Server.java:232)\norg.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:55)\norg.mortbay.jetty.runner.Runner.run(Runner.java:448)\norg.mortbay.jetty.runner.Runner.main(Runner.java:587)"
+      }
+    },
+    {
+      "solutionId": 110,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "timp21337",
+          "url": "https://github.com/timp21337",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/171005"
+        },
+        "createdAt": 1396539719000,
+        "title": "NullPointerException from @Before tag",
+        "url": "https://github.com/cucumber/cucumber-jvm/issues/701"
+      },
+      "stackId": 873,
+      "matchLevel": 0,
+      "score": 0,
+      "exception": {
+        "typeName": "java.lang.NullPointerException",
+        "frames": "gherkin.formatter.JSONFormatter.getSteps(JSONFormatter.java:235)\ngherkin.formatter.JSONFormatter.getCurrentStep(JSONFormatter.java:65)\ngherkin.formatter.JSONFormatter.getOutput(JSONFormatter.java:253)\ngherkin.formatter.JSONFormatter.write(JSONFormatter.java:136)\ncucumber.runtime.Utils$1.call(Utils.java:34)\ncucumber.runtime.Timeout.timeout(Timeout.java:13)\ncucumber.runtime.Utils.invoke(Utils.java:30)\ncucumber.runtime.RuntimeOptions$2.invoke(RuntimeOptions.java:192)\ncom.sun.proxy.$Proxy18.write(Unknown Source)\ncucumber.runtime.junit.JUnitReporter.write(JUnitReporter.java:71)\ncucumber.runtime.ScenarioImpl.write(ScenarioImpl.java:64)\ncucumber.steps.DBUnitHook.logScenarioStart(DBUnitHook.java:54)\ncucumber.runtime.Utils$1.call(Utils.java:34)\ncucumber.runtime.Timeout.timeout(Timeout.java:13)\ncucumber.runtime.Utils.invoke(Utils.java:30)\ncucumber.runtime.java.JavaHookDefinition.execute(JavaHookDefinition.java:59)\ncucumber.runtime.Runtime.runHookIfTagsMatch(Runtime.java:221)\ncucumber.runtime.Runtime.runHooks(Runtime.java:209)\ncucumber.runtime.Runtime.runBeforeHooks(Runtime.java:199)\ncucumber.runtime.model.CucumberScenario.run(CucumberScenario.java:44)\ncucumber.runtime.junit.ExecutionUnitRunner.run(ExecutionUnitRunner.java:83)\ncucumber.runtime.junit.FeatureRunner.runChild(FeatureRunner.java:63)\ncucumber.runtime.junit.FeatureRunner.runChild(FeatureRunner.java:18)\ncucumber.runtime.junit.FeatureRunner.run(FeatureRunner.java:70)\ncucumber.api.junit.Cucumber.runChild(Cucumber.java:89)\ncucumber.api.junit.Cucumber.runChild(Cucumber.java:40)\ncucumber.api.junit.Cucumber.run(Cucumber.java:94)"
+      }
+    },
+    {
+      "solutionId": 118,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "K76154",
+          "url": "https://github.com/K76154",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/577604"
+        },
+        "createdAt": 1378388732000,
+        "title": "NullPointerException when there is background in the feature in cucumber-android",
+        "url": "https://github.com/cucumber/cucumber-jvm/issues/583"
+      },
+      "stackId": 878,
+      "matchLevel": 0,
+      "score": 0,
+      "exception": {
+        "typeName": "java.lang.NullPointerException",
+        "frames": "cucumber.api.android.CucumberInstrumentation$AndroidReporter.result(CucumberInstrumentation.java:296)\ncucumber.runtime.Runtime.runStep(Runtime.java:281)\ncucumber.runtime.model.StepContainer.runStep(StepContainer.java:44)\ncucumber.runtime.model.StepContainer.runSteps(StepContainer.java:39)\ncucumber.runtime.model.CucumberScenario.runBackground(CucumberScenario.java:49)\ncucumber.runtime.model.CucumberScenario.run(CucumberScenario.java:38)\ncucumber.runtime.model.CucumberFeature.run(CucumberFeature.java:116)\ncucumber.api.android.CucumberInstrumentation.onStart(CucumberInstrumentation.java:156)\nandroid.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:1574)"
+      }
+    },
+    {
+      "solutionId": 125,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "aslakhellesoy",
+          "url": "https://github.com/aslakhellesoy",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/1000"
+        },
+        "createdAt": 1333097433000,
+        "title": "NullPointerException in HTMLFormatter",
+        "url": "https://github.com/cucumber/cucumber-jvm/issues/283"
+      },
+      "stackId": 694529,
+      "matchLevel": 0,
+      "score": 0,
+      "exception": {
+        "typeName": "java.lang.reflect.UndeclaredThrowableException",
+        "cause": {
+          "typeName": "java.lang.reflect.InvocationTargetException",
+          "cause": {
+            "typeName": "java.lang.NullPointerException",
+            "frames": "cucumber.formatter.HTMLFormatter.writeBytes(HTMLFormatter.java:161)\ncucumber.formatter.HTMLFormatter.copyReportFiles(HTMLFormatter.java:154)\ncucumber.formatter.HTMLFormatter.done(HTMLFormatter.java:107)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)\njava.lang.reflect.Method.invoke(Unknown Source)\ncucumber.runtime.RuntimeOptions$1.invoke(RuntimeOptions.java:90)\n$Proxy12.done(Unknown Source)\ncucumber.junit.JUnitReporter.done(JUnitReporter.java:141)\ncucumber.junit.Cucumber.run(Cucumber.java:81)\norg.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)\norg.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)\norg.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:467)\norg.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:683)\norg.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:390)\norg.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:197)"
+          },
+          "common": 14,
+          "frames": ""
+        },
+        "common": 9,
+        "frames": ""
+      }
+    },
+    {
+      "solutionId": 130,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "K76154",
+          "url": "https://github.com/K76154",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/577604"
+        },
+        "createdAt": 1385479206000,
+        "title": "NullPointerException when calling Scenario.write in before hook to JSONFormatter",
+        "url": "https://github.com/cucumber/cucumber-jvm/issues/638"
+      },
+      "stackId": 1052,
+      "matchLevel": 0,
+      "score": 0,
+      "exception": {
+        "typeName": "java.lang.NullPointerException",
+        "frames": "gherkin.formatter.JSONFormatter.getSteps(JSONFormatter.java:235)\ngherkin.formatter.JSONFormatter.getCurrentStep(JSONFormatter.java:65)\ngherkin.formatter.JSONFormatter.getOutput(JSONFormatter.java:253)\ngherkin.formatter.JSONFormatter.write(JSONFormatter.java:136)\njava.lang.reflect.Method.invokeNative(Native Method)\njava.lang.reflect.Method.invoke(Method.java:511)\ncucumber.runtime.Utils$1.call(Utils.java:35)\ncucumber.runtime.Timeout.timeout(Timeout.java:12)\ncucumber.runtime.Utils.invoke(Utils.java:31)\ncucumber.runtime.RuntimeOptions$2.invoke(RuntimeOptions.java:178)\n$Proxy7.write(Native Method)\ncucumber.runtime.ScenarioImpl.write(ScenarioImpl.java:62)\ncom.lotus.sync.traveler.test.common.TestLogger.writeToScenario(TestLogger.java:525)\ncom.lotus.sync.traveler.test.common.TestLogger.log(TestLogger.java:469)\ncom.lotus.sync.traveler.test.common.TestLogger.log(TestLogger.java:408)\ncom.lotus.sync.traveler.test.common.TestLogger.info(TestLogger.java:207)\ncom.lotus.sync.traveler.test.steps.SharedDependencies.before(SharedDependencies.java:126)\njava.lang.reflect.Method.invokeNative(Native Method)\njava.lang.reflect.Method.invoke(Method.java:511)\ncucumber.runtime.Utils$1.call(Utils.java:35)\ncucumber.runtime.Timeout.timeout(Timeout.java:12)\ncucumber.runtime.Utils.invoke(Utils.java:31)\ncucumber.runtime.java.JavaHookDefinition.execute(JavaHookDefinition.java:59)\ncucumber.runtime.Runtime.runHookIfTagsMatch(Runtime.java:221)\ncucumber.runtime.Runtime.runHooks(Runtime.java:209)\ncucumber.runtime.Runtime.runBeforeHooks(Runtime.java:199)\ncucumber.runtime.model.CucumberScenario.run(CucumberScenario.java:41)\ncucumber.runtime.model.CucumberFeature.run(CucumberFeature.java:116)\ncucumber.api.android.CucumberInstrumentation.onStart(CucumberInstrumentation.java:175)\nandroid.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:1619)"
+      }
+    },
+    {
+      "solutionId": 144,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "mmalmeida",
+          "url": "https://github.com/mmalmeida",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/1058575"
+        },
+        "createdAt": 1349078687000,
+        "title": "NullPointerException in transform after upgrade from 1.0.10 to 1.0.11",
+        "url": "https://github.com/cucumber/cucumber-jvm/issues/395"
+      },
+      "stackId": 1233,
+      "matchLevel": 0,
+      "score": 0,
+      "exception": {
+        "typeName": "java.lang.NullPointerException",
+        "frames": "cucumber.runtime.converters.ClassWithStringConstructorConverter.fromString(ClassWithStringConstructorConverter.java:20)\ncucumber.deps.com.thoughtworks.xstream.converters.SingleValueConverterWrapper.fromString(SingleValueConverterWrapper.java:41)\ncucumber.table.TableConverter.toListOfSingleValue(TableConverter.java:109)\ncucumber.table.TableConverter.convert(TableConverter.java:60)\ncucumber.table.DataTable.convert(DataTable.java:70)\ncucumber.runtime.StepDefinitionMatch.tableArgument(StepDefinitionMatch.java:101)\ncucumber.runtime.StepDefinitionMatch.transformedArgs(StepDefinitionMatch.java:81)\ncucumber.runtime.StepDefinitionMatch.runStep(StepDefinitionMatch.java:38)\ncucumber.runtime.Runtime.runStep(Runtime.java:267)\ncucumber.runtime.model.StepContainer.runStep(StepContainer.java:44)\ncucumber.runtime.model.StepContainer.runSteps(StepContainer.java:39)\ncucumber.runtime.model.CucumberScenario.run(CucumberScenario.java:36)\ncucumber.junit.ExecutionUnitRunner.run(ExecutionUnitRunner.java:76)\norg.junit.runners.Suite.runChild(Suite.java:128)\norg.junit.runners.Suite.runChild(Suite.java:24)\norg.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\norg.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\norg.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\norg.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\norg.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\norg.junit.runners.ParentRunner.run(ParentRunner.java:236)\norg.junit.runners.Suite.runChild(Suite.java:128)\norg.junit.runners.Suite.runChild(Suite.java:24)\norg.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\norg.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\norg.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\norg.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\norg.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\norg.junit.runners.ParentRunner.run(ParentRunner.java:236)\ncucumber.junit.FeatureRunner.runChild(FeatureRunner.java:65)\ncucumber.junit.FeatureRunner.runChild(FeatureRunner.java:20)\norg.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\norg.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\norg.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\norg.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\norg.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\norg.junit.runners.ParentRunner.run(ParentRunner.java:236)\ncucumber.junit.FeatureRunner.run(FeatureRunner.java:72)\ncucumber.junit.Cucumber.runChild(Cucumber.java:76)\ncucumber.junit.Cucumber.runChild(Cucumber.java:36)\norg.junit.runners.ParentRunner$3.run(ParentRunner.java:193)\norg.junit.runners.ParentRunner$1.schedule(ParentRunner.java:52)\norg.junit.runners.ParentRunner.runChildren(ParentRunner.java:191)\norg.junit.runners.ParentRunner.access$000(ParentRunner.java:42)\norg.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:184)\norg.junit.runners.ParentRunner.run(ParentRunner.java:236)\ncucumber.junit.Cucumber.run(Cucumber.java:81)\norg.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:236)\norg.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:134)\norg.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:113)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)\njava.lang.reflect.Method.invoke(Method.java:597)\norg.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:189)\norg.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:165)\norg.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:85)\norg.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:103)\norg.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:74)"
+      }
+    },
+    {
+      "solutionId": 145,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "attr",
+          "url": "https://github.com/attr",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/3975758"
+        },
+        "createdAt": 1367328402000,
+        "title": "Unable to use surefire with surefire-junit47",
+        "url": "https://github.com/cucumber/cucumber-jvm/issues/514"
+      },
+      "stackId": 1140,
+      "matchLevel": 0,
+      "score": 0,
+      "exception": {
+        "typeName": "java.lang.NullPointerException",
+        "frames": "org.junit.runner.Description.createSuiteDescription(Description.java:123)\norg.apache.maven.surefire.common.junit48.FilterFactory$GroupMatcherCategoryFilter.shouldRun(FilterFactory.java:213)\norg.junit.runners.ParentRunner.shouldRun(ParentRunner.java:373)\norg.junit.runners.ParentRunner.filter(ParentRunner.java:326)\norg.junit.runner.manipulation.Filter.apply(Filter.java:97)\norg.junit.runners.ParentRunner.filter(ParentRunner.java:328)\norg.junit.runner.manipulation.Filter.apply(Filter.java:97)\norg.junit.runners.ParentRunner.filter(ParentRunner.java:328)\norg.junit.runner.manipulation.Filter.apply(Filter.java:97)\norg.junit.runners.ParentRunner.filter(ParentRunner.java:328)\norg.junit.runner.manipulation.Filter.apply(Filter.java:97)\norg.apache.maven.surefire.junitcore.JUnitCoreWrapper$FilteringRequest.<init>(JUnitCoreWrapper.java:56)\norg.apache.maven.surefire.junitcore.JUnitCoreWrapper.createReqestAndRun(JUnitCoreWrapper.java:131)\norg.apache.maven.surefire.junitcore.JUnitCoreWrapper.executeEager(JUnitCoreWrapper.java:111)\norg.apache.maven.surefire.junitcore.JUnitCoreWrapper.execute(JUnitCoreWrapper.java:84)\norg.apache.maven.surefire.junitcore.JUnitCoreProvider.invoke(JUnitCoreProvider.java:138)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:601)\norg.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray2(ReflectionUtils.java:208)\norg.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:159)\norg.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:87)\norg.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:153)\norg.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:95)\norg.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:225)\norg.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:153)\norg.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:145)\norg.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject(LifecycleModuleBuilder.java:84)\norg.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject(LifecycleModuleBuilder.java:59)\norg.apache.maven.lifecycle.internal.LifecycleStarter.singleThreadedBuild(LifecycleStarter.java:183)\norg.apache.maven.lifecycle.internal.LifecycleStarter.execute(LifecycleStarter.java:161)\norg.apache.maven.DefaultMaven.doExecute(DefaultMaven.java:322)\norg.apache.maven.DefaultMaven.execute(DefaultMaven.java:158)\norg.apache.maven.cli.MavenCli.execute(MavenCli.java:537)\norg.apache.maven.cli.MavenCli.doMain(MavenCli.java:196)\norg.apache.maven.cli.MavenCli.main(MavenCli.java:141)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:601)\norg.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced(Launcher.java:290)\norg.codehaus.plexus.classworlds.launcher.Launcher.launch(Launcher.java:230)\norg.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode(Launcher.java:409)\norg.codehaus.plexus.classworlds.launcher.Launcher.main(Launcher.java:352)"
+      }
+    },
+    {
+      "solutionId": 154,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "dkowis",
+          "url": "https://github.com/dkowis",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/28048"
+        },
+        "createdAt": 1333030880000,
+        "title": "UndeclaredThrowableException",
+        "url": "https://github.com/cucumber/cucumber-jvm/issues/280"
+      },
+      "stackId": 1195,
+      "matchLevel": 0,
+      "score": 0,
+      "exception": {
+        "typeName": "java.lang.reflect.UndeclaredThrowableException",
+        "cause": {
+          "typeName": "java.lang.reflect.InvocationTargetException",
+          "cause": {
+            "typeName": "java.lang.NullPointerException",
+            "frames": "gherkin.formatter.PrettyFormatter.result(PrettyFormatter.java:198)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)\njava.lang.reflect.Method.invoke(Method.java:597)\ncucumber.runtime.RuntimeOptions$2.invoke(RuntimeOptions.java:103)\n$Proxy67.result(Unknown Source)\ncucumber.runtime.Runtime.runHookIfTagsMatch(Runtime.java:163)\ncucumber.runtime.Runtime.runHooks(Runtime.java:148)\ncucumber.runtime.Runtime.runBeforeHooks(Runtime.java:139)\ncucumber.runtime.model.CucumberScenario.run(CucumberScenario.java:32)\ncucumber.runtime.model.CucumberFeature.run(CucumberFeature.java:112)\ncucumber.runtime.Runtime.run(Runtime.java:94)\ncucumber.runtime.Runtime.run(Runtime.java:82)\ncucumber.cli.Main.run(Main.java:20)\ncucumber.cli.Main.main(Main.java:12)"
+          },
+          "common": 15,
+          "frames": ""
+        },
+        "common": 10,
+        "frames": ""
+      }
+    },
+    {
+      "solutionId": 158,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "mmalmeida",
+          "url": "https://github.com/mmalmeida",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/1058575"
+        },
+        "createdAt": 1385469891000,
+        "title": "NullPointerException in SpringTransactionHooks when upgrading to 1.1.5",
+        "url": "https://github.com/cucumber/cucumber-jvm/issues/637"
+      },
+      "stackId": 694561,
+      "matchLevel": 0,
+      "score": 0,
+      "exception": {
+        "typeName": "java.lang.NullPointerException",
+        "frames": "cucumber.api.spring.SpringTransactionHooks.obtainPlatformTransactionManager(SpringTransactionHooks.java:65)\ncucumber.api.spring.SpringTransactionHooks.rollBackTransaction(SpringTransactionHooks.java:60)\nsun.reflect.GeneratedMethodAccessor17.invoke(Unknown Source)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)\njava.lang.reflect.Method.invoke(Method.java:597)\ncucumber.runtime.Utils$1.call(Utils.java:35)\ncucumber.runtime.Timeout.timeout(Timeout.java:12)\ncucumber.runtime.Utils.invoke(Utils.java:31)\ncucumber.runtime.java.JavaHookDefinition.execute(JavaHookDefinition.java:59)\ncucumber.runtime.Runtime.runHookIfTagsMatch(Runtime.java:213)\ncucumber.runtime.Runtime.runHooks(Runtime.java:201)\ncucumber.runtime.Runtime.runAfterHooks(Runtime.java:195)\ncucumber.runtime.model.CucumberScenario.run(CucumberScenario.java:42)\ncucumber.runtime.junit.ExecutionUnitRunner.run(ExecutionUnitRunner.java:83)\ncucumber.runtime.junit.FeatureRunner.runChild(FeatureRunner.java:63)\ncucumber.runtime.junit.FeatureRunner.runChild(FeatureRunner.java:18)\norg.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\norg.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\norg.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\norg.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\norg.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\norg.junit.runners.ParentRunner.run(ParentRunner.java:309)\ncucumber.runtime.junit.FeatureRunner.run(FeatureRunner.java:70)\ncucumber.api.junit.Cucumber.runChild(Cucumber.java:82)\ncucumber.api.junit.Cucumber.runChild(Cucumber.java:41)\norg.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\norg.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\norg.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\norg.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\norg.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\norg.junit.runners.ParentRunner.run(ParentRunner.java:309)\ncucumber.api.junit.Cucumber.run(Cucumber.java:87)\norg.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)\norg.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)\norg.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:467)\norg.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:683)\norg.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:390)\norg.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:197)"
+      }
+    },
+    {
+      "solutionId": 178,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "sahajamit",
+          "url": "https://github.com/sahajamit",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/358319"
+        },
+        "createdAt": 1375273399000,
+        "title": "Not able to embed text in my Cucumber reports",
+        "url": "https://github.com/cucumber/cucumber-jvm/issues/565"
+      },
+      "stackId": 1453,
+      "matchLevel": 0,
+      "score": 0,
+      "exception": {
+        "typeName": "java.lang.NullPointerException",
+        "frames": "gherkin.formatter.JSONFormatter.getOutput(JSONFormatter.java:257)\ngherkin.formatter.JSONFormatter.write(JSONFormatter.java:142)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\njava.lang.reflect.Method.invoke(Method.java:601)\ncucumber.runtime.Utils$1.call(Utils.java:44)\ncucumber.runtime.Timeout.timeout(Timeout.java:12)\ncucumber.runtime.Utils.invoke(Utils.java:40)\ncucumber.runtime.RuntimeOptions$2.invoke(RuntimeOptions.java:145)\ncom.sun.proxy.$Proxy13.write(Unknown Source)\ncucumber.runtime.junit.JUnitReporter.write(JUnitReporter.java:71)\ncucumber.runtime.ScenarioImpl.write(ScenarioImpl.java:62)"
+      }
+    },
+    {
+      "solutionId": 194,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "jshiell",
+          "url": "https://github.com/jshiell",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/1030482"
+        },
+        "createdAt": 1340874291000,
+        "title": "NPE in Checker",
+        "url": "https://github.com/jshiell/checkstyle-idea/issues/36"
+      },
+      "stackId": 694655,
+      "matchLevel": 0,
+      "score": 0,
+      "exception": {
+        "typeName": "org.infernus.idea.checkstyle.exception.CheckStylePluginException",
+        "message": "The inspection could not be executed.",
+        "cause": {
+          "typeName": "java.lang.NullPointerException",
+          "frames": "com.puppycrawl.tools.checkstyle.Checker.fireAuditStarted(Checker.java:455)\ncom.puppycrawl.tools.checkstyle.Checker.process(Checker.java:248)\norg.infernus.idea.checkstyle.CheckStyleInspection.scanFile(CheckStyleInspection.java:239)\norg.infernus.idea.checkstyle.CheckStyleInspection.checkFile(CheckStyleInspection.java:208)\ncom.intellij.codeInspection.LocalInspectionTool$1.visitFile(LocalInspectionTool.java:129)\ncom.intellij.psi.impl.source.PsiJavaFileBaseImpl.accept(PsiJavaFileBaseImpl.java:406)\ncom.intellij.codeInsight.daemon.impl.LocalInspectionsPass.a(LocalInspectionsPass.java:403)\ncom.intellij.codeInsight.daemon.impl.LocalInspectionsPass.access$400(LocalInspectionsPass.java:76)\ncom.intellij.codeInsight.daemon.impl.LocalInspectionsPass$3.process(LocalInspectionsPass.java:379)\ncom.intellij.codeInsight.daemon.impl.LocalInspectionsPass$3.process(LocalInspectionsPass.java:373)\ncom.intellij.concurrency.JobUtil$2$1.run(JobUtil.java:117)\ncom.intellij.openapi.progress.impl.ProgressManagerImpl.executeProcessUnderProgress(ProgressManagerImpl.java:218)\ncom.intellij.concurrency.JobUtil$2.process(JobUtil.java:115)\ncom.intellij.concurrency.JobUtil$1.run(JobUtil.java:57)\njava.util.concurrent.Executors$RunnableAdapter.call(Executors.java:441)\njava.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)\njava.util.concurrent.FutureTask.run(FutureTask.java:138)\ncom.intellij.concurrency.PrioritizedFutureTask.access$101(PrioritizedFutureTask.java:31)\ncom.intellij.concurrency.PrioritizedFutureTask$1.run(PrioritizedFutureTask.java:70)\ncom.intellij.openapi.application.impl.ApplicationImpl.tryRunReadAction(ApplicationImpl.java:1053)\ncom.intellij.concurrency.PrioritizedFutureTask.run(PrioritizedFutureTask.java:97)\njava.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)\njava.lang.Thread.run(Thread.java:680)"
+        },
+        "common": 21,
+        "frames": "org.infernus.idea.checkstyle.CheckStylePlugin.processError(CheckStylePlugin.java:340)\norg.infernus.idea.checkstyle.CheckStyleInspection.scanFile(CheckStyleInspection.java:255)"
+      }
+    },
+    {
+      "solutionId": 206,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "duckworth",
+          "url": "https://github.com/duckworth",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/57081"
+        },
+        "createdAt": 1372704136000,
+        "title": "Crash on OSX Checkstyle Add File Browser dialog",
+        "url": "https://github.com/jshiell/checkstyle-idea/issues/72"
+      },
+      "stackId": 694696,
+      "matchLevel": 0,
+      "score": 0,
+      "exception": {
+        "typeName": "java.lang.NullPointerException",
+        "frames": "com.apple.laf.AquaFileChooserUI$ScrollPaneCornerPanel.paintComponent(AquaFileChooserUI.java:1736)\njavax.swing.JComponent.paint(JComponent.java:1037)\njavax.swing.JComponent.paintChildren(JComponent.java:870)\njavax.swing.JComponent.paint(JComponent.java:1046)\njavax.swing.JComponent.paintChildren(JComponent.java:870)\njavax.swing.JComponent.paint(JComponent.java:1046)\njavax.swing.JComponent.paintChildren(JComponent.java:870)\njavax.swing.JComponent.paint(JComponent.java:1046)\njavax.swing.JComponent.paintChildren(JComponent.java:870)\njavax.swing.JComponent.paint(JComponent.java:1046)\njavax.swing.JComponent.paintChildren(JComponent.java:870)\njavax.swing.JComponent.paint(JComponent.java:1046)\njavax.swing.JComponent.paintChildren(JComponent.java:870)\njavax.swing.JComponent.paint(JComponent.java:1046)\njavax.swing.JLayeredPane.paint(JLayeredPane.java:567)\njavax.swing.JComponent.paintChildren(JComponent.java:870)\njavax.swing.JComponent.paint(JComponent.java:1046)\njava.awt.GraphicsCallback$PaintCallback.run(GraphicsCallback.java:34)\nsun.awt.SunGraphicsCallback.runOneComponent(SunGraphicsCallback.java:60)\nsun.awt.SunGraphicsCallback.runComponents(SunGraphicsCallback.java:97)\njava.awt.Container.paint(Container.java:1791)\njava.awt.Window.paint(Window.java:3390)\nsun.awt.RepaintArea.paintComponent(RepaintArea.java:276)\nsun.awt.RepaintArea.paint(RepaintArea.java:241)\napple.awt.ComponentModel.handleEvent(ComponentModel.java:263)\napple.awt.CWindow.handleEvent(CWindow.java:545)\njava.awt.Component.dispatchEventImpl(Component.java:4852)\njava.awt.Container.dispatchEventImpl(Container.java:2141)\njava.awt.Window.dispatchEventImpl(Window.java:2489)\njava.awt.Component.dispatchEvent(Component.java:4604)\njava.awt.EventQueue.dispatchEventImpl(EventQueue.java:717)\njava.awt.EventQueue.access$400(EventQueue.java:82)\njava.awt.EventQueue$2.run(EventQueue.java:676)\njava.awt.EventQueue$2.run(EventQueue.java:674)\njava.security.AccessController.doPrivileged(Native Method)\njava.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:86)\njava.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:97)\njava.awt.EventQueue$3.run(EventQueue.java:690)\njava.awt.EventQueue$3.run(EventQueue.java:688)\njava.security.AccessController.doPrivileged(Native Method)\njava.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:86)\njava.awt.EventQueue.dispatchEvent(EventQueue.java:687)\ncom.intellij.ide.IdeEventQueue.d(IdeEventQueue.java:700)\ncom.intellij.ide.IdeEventQueue._dispatchEvent(IdeEventQueue.java:525)\ncom.intellij.ide.IdeEventQueue.dispatchEvent(IdeEventQueue.java:348)\njava.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:296)\njava.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:211)\njava.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:205)\njava.awt.Dialog$1.run(Dialog.java:1049)\njava.awt.Dialog$3.run(Dialog.java:1101)\njava.security.AccessController.doPrivileged(Native Method)\njava.awt.Dialog.show(Dialog.java:1099)\njavax.swing.JFileChooser.privateShowDialog(JFileChooser.java:758)\njavax.swing.JFileChooser.showDialog(JFileChooser.java:721)\njavax.swing.JFileChooser.showOpenDialog(JFileChooser.java:626)\norg.infernus.idea.checkstyle.ui.LocationDialogue$BrowseAction.actionPerformed(LocationDialogue.java:386)\njavax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2028)\njavax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2351)\njavax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:387)\njavax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:242)\njavax.swing.plaf.basic.BasicButtonListener.mouseReleased(BasicButtonListener.java:236)\njava.awt.AWTEventMulticaster.mouseReleased(AWTEventMulticaster.java:272)\njava.awt.Component.processMouseEvent(Component.java:6414)\njavax.swing.JComponent.processMouseEvent(JComponent.java:3275)\njava.awt.Component.processEvent(Component.java:6179)\njava.awt.Container.processEvent(Container.java:2083)\njava.awt.Component.dispatchEventImpl(Component.java:4776)\njava.awt.Container.dispatchEventImpl(Container.java:2141)\njava.awt.Component.dispatchEvent(Component.java:4604)\njava.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4619)\njava.awt.LightweightDispatcher.processMouseEvent(Container.java:4280)\njava.awt.LightweightDispatcher.dispatchEvent(Container.java:4210)\njava.awt.Container.dispatchEventImpl(Container.java:2127)\njava.awt.Window.dispatchEventImpl(Window.java:2489)\njava.awt.Component.dispatchEvent(Component.java:4604)\njava.awt.EventQueue.dispatchEventImpl(EventQueue.java:717)\njava.awt.EventQueue.access$400(EventQueue.java:82)\njava.awt.EventQueue$2.run(EventQueue.java:676)\njava.awt.EventQueue$2.run(EventQueue.java:674)\njava.security.AccessController.doPrivileged(Native Method)\njava.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:86)\njava.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:97)\njava.awt.EventQueue$3.run(EventQueue.java:690)\njava.awt.EventQueue$3.run(EventQueue.java:688)\njava.security.AccessController.doPrivileged(Native Method)\njava.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:86)\njava.awt.EventQueue.dispatchEvent(EventQueue.java:687)\ncom.intellij.ide.IdeEventQueue.d(IdeEventQueue.java:700)\ncom.intellij.ide.IdeEventQueue._dispatchEvent(IdeEventQueue.java:521)\ncom.intellij.ide.IdeEventQueue.dispatchEvent(IdeEventQueue.java:348)\njava.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:296)\njava.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:211)\njava.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:205)\njava.awt.Dialog$1.run(Dialog.java:1049)\njava.awt.Dialog$3.run(Dialog.java:1101)\njava.security.AccessController.doPrivileged(Native Method)\njava.awt.Dialog.show(Dialog.java:1099)\njava.awt.Component.show(Component.java:1615)\njava.awt.Component.setVisible(Component.java:1567)\njava.awt.Window.setVisible(Window.java:843)\njava.awt.Dialog.setVisible(Dialog.java:984)\norg.infernus.idea.checkstyle.ui.LocationDialogue.setVisible(LocationDialogue.java:162)\norg.infernus.idea.checkstyle.ui.CheckStyleConfigPanel$AddLocationAction.actionPerformed(CheckStyleConfigPanel.java:338)\njavax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:2028)\njavax.swing.AbstractButton$Handler.actionPerformed(AbstractButton.java:2351)\njavax.swing.DefaultButtonModel.fireActionPerformed(DefaultButtonModel.java:387)\njavax.swing.DefaultButtonModel.setPressed(DefaultButtonModel.java:242)\njavax.swing.plaf.basic.BasicButtonListener.mouseReleased(BasicButtonListener.java:236)\njava.awt.AWTEventMulticaster.mouseReleased(AWTEventMulticaster.java:272)\njava.awt.Component.processMouseEvent(Component.java:6414)\njavax.swing.JComponent.processMouseEvent(JComponent.java:3275)\njava.awt.Component.processEvent(Component.java:6179)\njava.awt.Container.processEvent(Container.java:2083)\njava.awt.Component.dispatchEventImpl(Component.java:4776)\njava.awt.Container.dispatchEventImpl(Container.java:2141)\njava.awt.Component.dispatchEvent(Component.java:4604)\njava.awt.LightweightDispatcher.retargetMouseEvent(Container.java:4619)\njava.awt.LightweightDispatcher.processMouseEvent(Container.java:4280)\njava.awt.LightweightDispatcher.dispatchEvent(Container.java:4210)\njava.awt.Container.dispatchEventImpl(Container.java:2127)\njava.awt.Window.dispatchEventImpl(Window.java:2489)\njava.awt.Component.dispatchEvent(Component.java:4604)\njava.awt.EventQueue.dispatchEventImpl(EventQueue.java:717)\njava.awt.EventQueue.access$400(EventQueue.java:82)\njava.awt.EventQueue$2.run(EventQueue.java:676)\njava.awt.EventQueue$2.run(EventQueue.java:674)\njava.security.AccessController.doPrivileged(Native Method)\njava.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:86)\njava.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:97)\njava.awt.EventQueue$3.run(EventQueue.java:690)\njava.awt.EventQueue$3.run(EventQueue.java:688)\njava.security.AccessController.doPrivileged(Native Method)\njava.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:86)\njava.awt.EventQueue.dispatchEvent(EventQueue.java:687)\ncom.intellij.ide.IdeEventQueue.d(IdeEventQueue.java:700)\ncom.intellij.ide.IdeEventQueue._dispatchEvent(IdeEventQueue.java:521)\ncom.intellij.ide.IdeEventQueue.dispatchEvent(IdeEventQueue.java:348)\njava.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:296)\njava.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:211)\njava.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:205)\njava.awt.Dialog$1.run(Dialog.java:1049)\njava.awt.Dialog$3.run(Dialog.java:1101)\njava.security.AccessController.doPrivileged(Native Method)\njava.awt.Dialog.show(Dialog.java:1099)\ncom.intellij.openapi.ui.impl.DialogWrapperPeerImpl$MyDialog.show(DialogWrapperPeerImpl.java:706)\ncom.intellij.openapi.ui.impl.DialogWrapperPeerImpl.show(DialogWrapperPeerImpl.java:399)\ncom.intellij.openapi.ui.DialogWrapper.showAndGetOk(DialogWrapper.java:1460)\ncom.intellij.openapi.ui.DialogWrapper.show(DialogWrapper.java:1435)\ncom.intellij.ide.actions.ShowSettingsUtilImpl.a(ShowSettingsUtilImpl.java:64)\ncom.intellij.ide.actions.ShowSettingsUtilImpl.showSettingsDialog(ShowSettingsUtilImpl.java:51)\ncom.intellij.ide.MacOSApplicationProvider$Worker$1.handlePreferences(MacOSApplicationProvider.java:101)\ncom.apple.eawt._AppEventLegacyHandler$2.dispatchEvent(_AppEventLegacyHandler.java:90)\ncom.apple.eawt._AppEventLegacyHandler.sendEventToEachListenerUntilHandled(_AppEventLegacyHandler.java:168)\ncom.apple.eawt._AppEventLegacyHandler.handlePreferences(_AppEventLegacyHandler.java:88)\ncom.apple.eawt._AppEventHandler$_PreferencesDispatcher.performUsing(_AppEventHandler.java:253)\ncom.apple.eawt._AppEventHandler$_PreferencesDispatcher.performUsing(_AppEventHandler.java:244)\ncom.apple.eawt._AppEventHandler$_AppEventDispatcher$1.run(_AppEventHandler.java:489)\njava.awt.event.InvocationEvent.dispatch(InvocationEvent.java:209)\njava.awt.EventQueue.dispatchEventImpl(EventQueue.java:715)\njava.awt.EventQueue.access$400(EventQueue.java:82)\njava.awt.EventQueue$2.run(EventQueue.java:676)\njava.awt.EventQueue$2.run(EventQueue.java:674)\njava.security.AccessController.doPrivileged(Native Method)\njava.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:86)\njava.awt.EventQueue.dispatchEvent(EventQueue.java:685)\ncom.intellij.ide.IdeEventQueue.d(IdeEventQueue.java:700)\ncom.intellij.ide.IdeEventQueue._dispatchEvent(IdeEventQueue.java:525)\ncom.intellij.ide.IdeEventQueue.dispatchEvent(IdeEventQueue.java:348)\njava.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:296)\njava.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:211)\njava.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:201)\njava.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:196)\njava.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:188)\njava.awt.EventDispatchThread.run(EventDispatchThread.java:122)"
+      }
+    },
+    {
+      "solutionId": 222,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "mdonkers",
+          "url": "https://github.com/mdonkers",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/954721"
+        },
+        "createdAt": 1403551530000,
+        "title": "NPE when trying to show message",
+        "url": "https://github.com/jshiell/checkstyle-idea/issues/104"
+      },
+      "stackId": 1802,
+      "matchLevel": 0,
+      "score": 0,
+      "exception": {
+        "typeName": "java.lang.NullPointerException",
+        "frames": "org.infernus.idea.checkstyle.util.IDEAUtilities$1.getPreferredSize(IDEAUtilities.java:98)\norg.infernus.idea.checkstyle.util.IDEAUtilities$1.run(IDEAUtilities.java:82)\njava.awt.event.InvocationEvent.dispatch(InvocationEvent.java:209)\njava.awt.EventQueue.dispatchEventImpl(EventQueue.java:715)\njava.awt.EventQueue.access$400(EventQueue.java:82)\njava.awt.EventQueue$2.run(EventQueue.java:676)\njava.awt.EventQueue$2.run(EventQueue.java:674)\njava.security.AccessController.doPrivileged(Native Method)\njava.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:86)\njava.awt.EventQueue.dispatchEvent(EventQueue.java:685)\ncom.intellij.ide.IdeEventQueue.e(IdeEventQueue.java:697)\ncom.intellij.ide.IdeEventQueue._dispatchEvent(IdeEventQueue.java:524)\ncom.intellij.ide.IdeEventQueue.dispatchEvent(IdeEventQueue.java:335)\njava.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:296)\njava.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:211)\njava.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:201)\njava.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:196)\njava.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:188)\njava.awt.EventDispatchThread.run(EventDispatchThread.java:122)"
+      }
+    },
+    {
+      "solutionId": 250,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "hibissscus",
+          "url": "https://github.com/hibissscus",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/1389501"
+        },
+        "createdAt": 1358166120000,
+        "title": "Checker could not be created.",
+        "url": "https://github.com/jshiell/checkstyle-idea/issues/49"
+      },
+      "stackId": 694805,
+      "matchLevel": 0,
+      "score": 0,
+      "exception": {
+        "typeName": "java.lang.NullPointerException",
+        "frames": "org.infernus.idea.checkstyle.CheckStyleInspection.moduleClassPathBuilder(CheckStyleInspection.java:81)\norg.infernus.idea.checkstyle.CheckStyleInspection.getChecker(CheckStyleInspection.java:69)\norg.infernus.idea.checkstyle.CheckStyleInspection.scanFile(CheckStyleInspection.java:221)\norg.infernus.idea.checkstyle.CheckStyleInspection.checkFile(CheckStyleInspection.java:212)\ncom.intellij.codeInspection.LocalInspectionTool$1.visitFile(LocalInspectionTool.java:143)\ncom.intellij.psi.impl.source.PsiCodeFragmentImpl.accept(PsiCodeFragmentImpl.java:178)\ncom.intellij.codeInsight.daemon.impl.LocalInspectionsPass.a(LocalInspectionsPass.java:411)\ncom.intellij.codeInsight.daemon.impl.LocalInspectionsPass.a(LocalInspectionsPass.java:369)\ncom.intellij.codeInsight.daemon.impl.LocalInspectionsPass.access$100(LocalInspectionsPass.java:78)\ncom.intellij.codeInsight.daemon.impl.LocalInspectionsPass$2.process(LocalInspectionsPass.java:328)\ncom.intellij.codeInsight.daemon.impl.LocalInspectionsPass$2.process(LocalInspectionsPass.java:306)\ncom.intellij.concurrency.JobLauncherImpl$2$1.run(JobLauncherImpl.java:115)\ncom.intellij.openapi.progress.impl.ProgressManagerImpl.executeProcessUnderProgress(ProgressManagerImpl.java:232)\ncom.intellij.concurrency.JobLauncherImpl$2.process(JobLauncherImpl.java:113)\ncom.intellij.concurrency.JobLauncherImpl$1.run(JobLauncherImpl.java:54)\njava.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)\njava.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:334)\njava.util.concurrent.FutureTask.run(FutureTask.java:166)\ncom.intellij.concurrency.PrioritizedFutureTask.access$101(PrioritizedFutureTask.java:31)\ncom.intellij.concurrency.PrioritizedFutureTask$1.run(PrioritizedFutureTask.java:70)\ncom.intellij.openapi.application.impl.ApplicationImpl.tryRunReadAction(ApplicationImpl.java:1155)\ncom.intellij.concurrency.PrioritizedFutureTask.run(PrioritizedFutureTask.java:97)\ncom.intellij.concurrency.JobImpl.scheduleAndWaitForResults(JobImpl.java:136)\ncom.intellij.concurrency.JobLauncherImpl.a(JobLauncherImpl.java:68)\ncom.intellij.concurrency.JobLauncherImpl.invokeConcurrentlyUnderProgress(JobLauncherImpl.java:110)\ncom.intellij.codeInsight.daemon.impl.LocalInspectionsPass.a(LocalInspectionsPass.java:305)\ncom.intellij.codeInsight.daemon.impl.LocalInspectionsPass.a(LocalInspectionsPass.java:219)\ncom.intellij.codeInsight.daemon.impl.LocalInspectionsPass.collectInformationWithProgress(LocalInspectionsPass.java:136)\ncom.intellij.codeInsight.daemon.impl.ProgressableTextEditorHighlightingPass.doCollectInformation(ProgressableTextEditorHighlightingPass.java:58)\ncom.intellij.codeHighlighting.TextEditorHighlightingPass.collectInformation(TextEditorHighlightingPass.java:62)\ncom.intellij.codeInsight.daemon.impl.PassExecutorService$ScheduledPass$1$1.run(PassExecutorService.java:357)\ncom.intellij.openapi.application.impl.ApplicationImpl.tryRunReadAction(ApplicationImpl.java:1155)\ncom.intellij.codeInsight.daemon.impl.PassExecutorService$ScheduledPass$1.run(PassExecutorService.java:348)\ncom.intellij.openapi.progress.impl.ProgressManagerImpl.executeProcessUnderProgress(ProgressManagerImpl.java:232)\ncom.intellij.codeInsight.daemon.impl.PassExecutorService$ScheduledPass.a(PassExecutorService.java:345)\ncom.intellij.codeInsight.daemon.impl.PassExecutorService$ScheduledPass.run(PassExecutorService.java:321)\ncom.intellij.concurrency.JobLauncherImpl$3.call(JobLauncherImpl.java:129)\ncom.intellij.concurrency.JobLauncherImpl$3.call(JobLauncherImpl.java:126)\njava.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:334)\njava.util.concurrent.FutureTask.run(FutureTask.java:166)\ncom.intellij.concurrency.PrioritizedFutureTask.access$101(PrioritizedFutureTask.java:31)\ncom.intellij.concurrency.PrioritizedFutureTask$1.run(PrioritizedFutureTask.java:70)\ncom.intellij.concurrency.PrioritizedFutureTask.run(PrioritizedFutureTask.java:113)\njava.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1110)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:603)\njava.lang.Thread.run(Thread.java:722)"
+      }
+    },
+    {
+      "solutionId": 257,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "andrewxns",
+          "url": "https://github.com/andrewxns",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/7970323"
+        },
+        "createdAt": 1405020645000,
+        "title": "Plugin will not load. Java Error.",
+        "url": "https://github.com/MassiveCraft/MassiveCore/issues/143"
+      },
+      "stackId": 2057,
+      "matchLevel": 0,
+      "score": 0,
+      "exception": {
+        "typeName": "java.lang.NullPointerException",
+        "frames": "com.massivecraft.mcore.util.IdUtil.loadDatas(IdUtil.java:793)[?:?]\ncom.massivecraft.mcore.util.IdUtil.setup(IdUtil.java:352)[?:?]\ncom.massivecraft.mcore.MCore.onEnable(MCore.java:157)[?:?]\norg.bukkit.plugin.java.JavaPlugin.setEnabled(JavaPlugin.java:316)[spigot.jar:git-Spigot-1529]\norg.bukkit.plugin.java.JavaPluginLoader.enablePlugin(JavaPluginLoader.java:324)[spigot.jar:git-Spigot-1529]\norg.bukkit.plugin.SimplePluginManager.enablePlugin(SimplePluginManager.java:405)[spigot.jar:git-Spigot-1529]\norg.bukkit.craftbukkit.v1_7_R3.CraftServer.loadPlugin(CraftServer.java:476)[spigot.jar:git-Spigot-1529]\norg.bukkit.craftbukkit.v1_7_R3.CraftServer.enablePlugins(CraftServer.java:394)[spigot.jar:git-Spigot-1529]\nnet.minecraft.server.v1_7_R3.DedicatedServer.init(DedicatedServer.java:136)[spigot.jar:git-Spigot-1529]\nnet.minecraft.server.v1_7_R3.MinecraftServer.run(MinecraftServer.java:457)[spigot.jar:git-Spigot-1529]\nnet.minecraft.server.v1_7_R3.ThreadServerApplication.run(SourceFile:628)[spigot.jar:git-Spigot-1529]"
+      }
+    },
+    {
+      "solutionId": 267,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "shefla",
+          "url": "https://github.com/shefla",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/138380"
+        },
+        "createdAt": 1369951619000,
+        "title": "Failed to activate integration with Vault",
+        "url": "https://github.com/MassiveCraft/MassiveCore/issues/8"
+      },
+      "stackId": 2129,
+      "matchLevel": 0,
+      "score": 0,
+      "exception": {
+        "typeName": "java.lang.NullPointerException",
+        "frames": "com.massivecraft.mcore.money.MoneyMixinVault.activate(MoneyMixinVault.java:28)\ncom.massivecraft.mcore.integration.vault.VaultFeatures.activate(VaultFeatures.java:23)\ncom.massivecraft.mcore.integration.Integration.tick(Integration.java:55)\ncom.massivecraft.mcore.integration.Integration.onPluginEnable(Integration.java:118)\nsun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\nsun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)\nsun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)\njava.lang.reflect.Method.invoke(Unknown Source)\norg.bukkit.plugin.java.JavaPluginLoader$1.execute(JavaPluginLoader.java:425)\norg.bukkit.plugin.RegisteredListener.callEvent(RegisteredListener.java:62)\norg.bukkit.plugin.TimedRegisteredListener.callEvent(TimedRegisteredListener.java:26)\norg.bukkit.plugin.SimplePluginManager.fireEvent(SimplePluginManager.java:479)\norg.bukkit.plugin.SimplePluginManager.callEvent(SimplePluginManager.java:464)\norg.bukkit.plugin.java.JavaPluginLoader.enablePlugin(JavaPluginLoader.java:464)\norg.bukkit.plugin.SimplePluginManager.enablePlugin(SimplePluginManager.java:383)\norg.bukkit.craftbukkit.v1_5_R3.CraftServer.loadPlugin(CraftServer.java:306)\norg.bukkit.craftbukkit.v1_5_R3.CraftServer.enablePlugins(CraftServer.java:288)\norg.bukkit.craftbukkit.v1_5_R3.CraftServer.<init>(CraftServer.java:242)\nnet.minecraft.server.v1_5_R3.PlayerList.<init>(PlayerList.java:55)\nnet.minecraft.server.v1_5_R3.DedicatedPlayerList.<init>(SourceFile:11)\nnet.minecraft.server.v1_5_R3.DedicatedServer.init(DedicatedServer.java:58)"
+      }
+    },
+    {
+      "solutionId": 296,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "Pinkii-",
+          "url": "https://github.com/Pinkii-",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/4028884"
+        },
+        "createdAt": 1395167301000,
+        "title": "MCore / Factions Progressbar bug",
+        "url": "https://github.com/MassiveCraft/MassiveCore/issues/107"
+      },
+      "stackId": 2261,
+      "matchLevel": 0,
+      "score": 0,
+      "exception": {
+        "typeName": "org.bukkit.command.CommandException",
+        "message": "Unhandled exception executing 'f p Pinkiib' in com.massivecraft.mcore.cmd.MCoreBukkitCommand(f)",
+        "cause": {
+          "typeName": "java.lang.NullPointerException",
+          "frames": "java.lang.String.replace(String.java:2180)[?:1.7.0_51]\ncom.massivecraft.mcore.Progressbar.render(Progressbar.java:132)[?:?]\ncom.massivecraft.mcore.Progressbar.render(Progressbar.java:107)[?:?]\ncom.massivecraft.factions.cmd.CmdFactionsPlayer.perform(CmdFactionsPlayer.java:51)[?:?]\ncom.massivecraft.mcore.cmd.MCommand.execute(MCommand.java:242)[?:?]\ncom.massivecraft.mcore.cmd.MCommand.execute(MCommand.java:234)[?:?]\ncom.massivecraft.mcore.cmd.MCommand.execute(MCommand.java:249)[?:?]\ncom.massivecraft.mcore.cmd.MCoreBukkitCommand.execute(MCoreBukkitCommand.java:66)[?:?]\norg.bukkit.command.SimpleCommandMap.dispatch(SimpleCommandMap.java:175)[craftbukkit.jar:git-Bukkit-1.7.2-R0.3-b3020jnks]\norg.bukkit.craftbukkit.v1_7_R1.CraftServer.dispatchCommand(CraftServer.java:683)[craftbukkit.jar:git-Bukkit-1.7.2-R0.3-b3020jnks]\norg.bukkit.craftbukkit.v1_7_R1.CraftServer.dispatchServerCommand(CraftServer.java:670)[craftbukkit.jar:git-Bukkit-1.7.2-R0.3-b3020jnks]\nnet.minecraft.server.v1_7_R1.DedicatedServer.aw(DedicatedServer.java:286)[craftbukkit.jar:git-Bukkit-1.7.2-R0.3-b3020jnks]\nnet.minecraft.server.v1_7_R1.DedicatedServer.u(DedicatedServer.java:251)[craftbukkit.jar:git-Bukkit-1.7.2-R0.3-b3020jnks]\nnet.minecraft.server.v1_7_R1.MinecraftServer.t(MinecraftServer.java:545)[craftbukkit.jar:git-Bukkit-1.7.2-R0.3-b3020jnks]\nnet.minecraft.server.v1_7_R1.MinecraftServer.run(MinecraftServer.java:457)[craftbukkit.jar:git-Bukkit-1.7.2-R0.3-b3020jnks]\nnet.minecraft.server.v1_7_R1.ThreadServerApplication.run(SourceFile:617)[craftbukkit.jar:git-Bukkit-1.7.2-R0.3-b3020jnks]"
+        },
+        "common": 7,
+        "frames": "org.bukkit.command.SimpleCommandMap.dispatch(SimpleCommandMap.java:179)[craftbukkit.jar:git-Bukkit-1.7.2-R0.3-b3020jnks]"
+      }
+    },
+    {
+      "solutionId": 301,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "meiamone",
+          "url": "https://github.com/meiamone",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/1060952"
+        },
+        "createdAt": 1368362568000,
+        "title": "[SEVERE] Error occurred while enabling mcore v6.3.0",
+        "url": "https://github.com/MassiveCraft/MassiveCore/issues/6"
+      },
+      "stackId": 2248,
+      "matchLevel": 0,
+      "score": 0,
+      "exception": {
+        "typeName": "java.lang.ExceptionInInitializerError",
+        "cause": {
+          "typeName": "java.lang.NullPointerException",
+          "frames": "com.massivecraft.mcore.store.Coll.<init>(Coll.java:623)\ncom.massivecraft.mcore.store.Coll.<init>(Coll.java:648)\ncom.massivecraft.mcore.MCoreConfColl.<init>(MCoreConfColl.java:17)\ncom.massivecraft.mcore.MCoreConfColl.<clinit>(MCoreConfColl.java:13)\ncom.massivecraft.mcore.MCore.onEnable(MCore.java:151)\norg.bukkit.plugin.java.JavaPlugin.setEnabled(JavaPlugin.java:217)\norg.bukkit.plugin.java.JavaPluginLoader.enablePlugin(JavaPluginLoader.java:457)\norg.bukkit.plugin.SimplePluginManager.enablePlugin(SimplePluginManager.java:381)\norg.bukkit.craftbukkit.v1_5_R3.CraftServer.loadPlugin(CraftServer.java:282)\norg.bukkit.craftbukkit.v1_5_R3.CraftServer.enablePlugins(CraftServer.java:264)\norg.bukkit.craftbukkit.v1_5_R3.CraftServer.<init>(CraftServer.java:218)\nnet.minecraft.server.v1_5_R3.PlayerList.<init>(PlayerList.java:55)\nnet.minecraft.server.v1_5_R3.DedicatedPlayerList.<init>(SourceFile:11)\nnet.minecraft.server.v1_5_R3.DedicatedServer.init(DedicatedServer.java:106)\nnet.minecraft.server.v1_5_R3.MinecraftServer.run(MinecraftServer.java:382)\nnet.minecraft.server.v1_5_R3.ThreadServerApplication.run(SourceFile:573)"
+        },
+        "common": 12,
+        "frames": ""
+      }
+    }
+  ]
+}
