@@ -129,7 +129,8 @@ public class Events {
     }
 
     public static TrackEvent configOpen() {
-        return new TrackBuilder("Configuration", "Open", null) {}.getEvent();
+        return new TrackBuilder("Configuration", "Open", null) {
+        }.getEvent();
     }
 
     public static TrackEvent writeTipOpen(final Project project, final int searchId) {

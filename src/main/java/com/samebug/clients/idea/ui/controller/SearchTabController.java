@@ -259,13 +259,16 @@ public class SearchTabController {
                     final String rawSourceUrl = tipPanel.sourceLink.getText();
 
                     if (tip.length() < WriteTip.minCharacters) {
-                        Tracking.projectTracking(project).trace(Events.writeTipSubmit(project, search.lastSearch.searchId, tip, rawSourceUrl, "samebug.tip.write.error.tip.short"));
+                        Tracking.projectTracking(project).trace(
+                                Events.writeTipSubmit(project, search.lastSearch.searchId, tip, rawSourceUrl, "samebug.tip.write.error.tip.short"));
                         result = showError(SamebugBundle.message("samebug.tip.write.error.tip.short"));
                     } else if (tip.length() > WriteTip.maxCharacters) {
-                        Tracking.projectTracking(project).trace(Events.writeTipSubmit(project, search.lastSearch.searchId, tip, rawSourceUrl, "samebug.tip.write.error.tip.long"));
+                        Tracking.projectTracking(project).trace(
+                                Events.writeTipSubmit(project, search.lastSearch.searchId, tip, rawSourceUrl, "samebug.tip.write.error.tip.long"));
                         result = showError(SamebugBundle.message("samebug.tip.write.error.tip.long"));
                     } else if (StringUtils.countMatches(tip, System.lineSeparator()) >= WriteTip.maxLines) {
-                        Tracking.projectTracking(project).trace(Events.writeTipSubmit(project, search.lastSearch.searchId, tip, rawSourceUrl, "samebug.tip.write.error.tip.tooManyLines"));
+                        Tracking.projectTracking(project).trace(
+                                Events.writeTipSubmit(project, search.lastSearch.searchId, tip, rawSourceUrl, "samebug.tip.write.error.tip.tooManyLines"));
                         result = showError(SamebugBundle.message("samebug.tip.write.error.tip.tooManyLines"));
                     } else {
                         URL sourceUrl = null;
@@ -273,7 +276,8 @@ public class SearchTabController {
                             try {
                                 sourceUrl = new URL(rawSourceUrl);
                             } catch (MalformedURLException e1) {
-                                Tracking.projectTracking(project).trace(Events.writeTipSubmit(project, search.lastSearch.searchId, tip, rawSourceUrl, "samebug.tip.write.error.source.malformed"));
+                                Tracking.projectTracking(project).trace(
+                                        Events.writeTipSubmit(project, search.lastSearch.searchId, tip, rawSourceUrl, "samebug.tip.write.error.source.malformed"));
                                 result = showError(SamebugBundle.message("samebug.tip.write.error.source.malformed"));
                             }
                         }
@@ -283,7 +287,8 @@ public class SearchTabController {
                             try {
                                 final RestHit<Tip> newTip = client.postTip(searchId, tip, sourceUrl);
                                 model.tips.add(newTip);
-                                Tracking.projectTracking(project).trace(Events.writeTipSubmit(project, search.lastSearch.searchId, tip, rawSourceUrl, Integer.toString(newTip.solutionId)));
+                                Tracking.projectTracking(project).trace(
+                                        Events.writeTipSubmit(project, search.lastSearch.searchId, tip, rawSourceUrl, Integer.toString(newTip.solutionId)));
                                 refreshPane();
                                 result = success();
                             } catch (final BadRequest e) {
@@ -296,10 +301,12 @@ public class SearchTabController {
                                 else if ("NOT_EXCEPTION_SEARCH".equals(writeTipErrorCode)) errorMessageKey = "samebug.tip.write.error.notExceptionSearch";
                                 else if ("UNKNOWN_SEARCH".equals(writeTipErrorCode)) errorMessageKey = "samebug.tip.write.error.unknownSearch";
                                 else errorMessageKey = "samebug.tip.write.error.source.unhandledBadRequest";
-                                Tracking.projectTracking(project).trace(Events.writeTipSubmit(project, search.lastSearch.searchId, tip, rawSourceUrl, errorMessageKey));
+                                Tracking.projectTracking(project).trace(
+                                        Events.writeTipSubmit(project, search.lastSearch.searchId, tip, rawSourceUrl, errorMessageKey));
                                 result = showError(SamebugBundle.message(errorMessageKey));
                             } catch (final SamebugClientException e) {
-                                Tracking.projectTracking(project).trace(Events.writeTipSubmit(project, search.lastSearch.searchId, tip, rawSourceUrl, "samebug.tip.write.error.source.unhandled"));
+                                Tracking.projectTracking(project).trace(
+                                        Events.writeTipSubmit(project, search.lastSearch.searchId, tip, rawSourceUrl, "samebug.tip.write.error.source.unhandled"));
                                 result = showError(SamebugBundle.message("samebug.tip.write.error.source.unhandled"));
                             }
                         }
@@ -357,7 +364,8 @@ public class SearchTabController {
                             hit.markId = null;
                             hit.score = mark.marks;
                         }
-                        Tracking.projectTracking(project).trace(Events.markSubmit(project, search.lastSearch.searchId, hit.solutionId, hit.markId == null ? "null" : hit.markId.toString()));
+                        Tracking.projectTracking(project).trace(
+                                Events.markSubmit(project, search.lastSearch.searchId, hit.solutionId, hit.markId == null ? "null" : hit.markId.toString()));
                         ApplicationManager.getApplication().invokeLater(new Runnable() {
                             @Override
                             public void run() {
@@ -372,7 +380,8 @@ public class SearchTabController {
                         else if ("NOT_YOUR_MARK".equals(markErrorCode)) errorMessageKey = "samebug.mark.error.notYourMark";
                         else if ("ALREADY_CANCELLED".equals(markErrorCode)) errorMessageKey = "samebug.mark.error.alreadyCancelled";
                         else errorMessageKey = "samebug.mark.error.unhandledBadRequest";
-                        Tracking.projectTracking(project).trace(Events.markSubmit(project, search.lastSearch.searchId, hit.solutionId, errorMessageKey));
+                        Tracking.projectTracking(project).trace(
+                                Events.markSubmit(project, search.lastSearch.searchId, hit.solutionId, errorMessageKey));
                         ApplicationManager.getApplication().invokeLater(new Runnable() {
                             @Override
                             public void run() {
@@ -381,7 +390,8 @@ public class SearchTabController {
                         });
 
                     } catch (final SamebugClientException e) {
-                        Tracking.projectTracking(project).trace(Events.markSubmit(project, search.lastSearch.searchId, hit.solutionId, "samebug.mark.error.unhandled"));
+                        Tracking.projectTracking(project).trace(
+                                Events.markSubmit(project, search.lastSearch.searchId, hit.solutionId, "samebug.mark.error.unhandled"));
                         ApplicationManager.getApplication().invokeLater(new Runnable() {
                             @Override
                             public void run() {
