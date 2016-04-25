@@ -1,0 +1,2350 @@
+{
+  "searchGroups": [
+    {
+      "firstSeenSimilar": 1461332924240,
+      "lastSeenSimilar": 1461332924240,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 100,
+      "hasMoreHits": true,
+      "lastSearch": {
+        "searchId": 673468,
+        "searchUrl": "https://nightly.samebug.com/search/673468/java.lang.IllegalArgumentException",
+        "timestamp": 1461332924240,
+        "exception": {
+          "typeName": "java.lang.IllegalArgumentException",
+          "message": "Illegal character in path at index 13: java.net/URL/<init>/java.net.MalformedURLException?pt=false"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.net/URI/create/java.lang.IllegalArgumentException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1461238085060,
+      "lastSeenSimilar": 1461320606285,
+      "numberOfSimilars": 14,
+      "numberOfSolutions": 100,
+      "hasMoreHits": true,
+      "lastSearch": {
+        "searchId": 673467,
+        "searchUrl": "https://nightly.samebug.com/search/673467/java.lang.NullPointerException",
+        "timestamp": 1461320606285,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.application.impl/LaterInvocator$FlushQueue/run/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventDispatchThread/run/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1461319603930,
+      "lastSeenSimilar": 1461319643203,
+      "numberOfSimilars": 2,
+      "numberOfSolutions": 100,
+      "hasMoreHits": true,
+      "lastSearch": {
+        "searchId": 673460,
+        "searchUrl": "https://nightly.samebug.com/search/673460/com.samebug.clients.search.api.exceptions.IllegalUriException",
+        "timestamp": 1461319643203,
+        "exception": {
+          "typeName": "com.samebug.clients.search.api.exceptions.IllegalUriException",
+          "message": "Illegal uri: Unable to resolve uri for breadcrumb"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.net/URL/%3Cinit%3E/java.net.MalformedURLException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1461315077520,
+      "lastSeenSimilar": 1461315077520,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 99,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673455,
+        "searchUrl": "https://nightly.samebug.com/search/673455/com.samebug.clients.search.api.exceptions.HttpError",
+        "timestamp": 1461315077520,
+        "exception": {
+          "typeName": "com.samebug.clients.search.api.exceptions.HttpError",
+          "message": "org.apache.http.conn.ConnectTimeoutException: Connect to 192.168.1.100:9000 [/192.168.1.100] failed: connect timed out"
+        },
+        "componentStack": [
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.client/CloseableHttpClient/execute/org.apache.http.conn.ConnectTimeoutException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1461227068914,
+      "lastSeenSimilar": 1461312777039,
+      "numberOfSimilars": 10,
+      "numberOfSolutions": 100,
+      "hasMoreHits": true,
+      "lastSearch": {
+        "searchId": 673451,
+        "searchUrl": "https://nightly.samebug.com/search/673451/com.samebug.clients.search.api.exceptions.HttpError",
+        "timestamp": 1461312777039,
+        "exception": {
+          "typeName": "com.samebug.clients.search.api.exceptions.HttpError",
+          "message": "java.net.SocketTimeoutException: Read timed out"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.net/SocketInputStream/read/java.net.SocketTimeoutException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.io/SessionInputBufferImpl/readLine/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.conn/DefaultHttpResponseParser/parseHead/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl/DefaultBHttpClientConnection/receiveResponseHeader/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.conn/CPoolProxy/receiveResponseHeader/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.protocol/HttpRequestExecutor/execute/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.client/CloseableHttpClient/execute/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1461227086559,
+      "lastSeenSimilar": 1461312022783,
+      "numberOfSimilars": 8,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673443,
+        "searchUrl": "https://nightly.samebug.com/search/673443/com.samebug.clients.search.api.exceptions.UnsuccessfulResponseStatus",
+        "timestamp": 1461312022783,
+        "exception": {
+          "typeName": "com.samebug.clients.search.api.exceptions.UnsuccessfulResponseStatus",
+          "message": "Unable to execute requestJson request, status: 404"
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.application.impl/ApplicationImpl$8/run/com.samebug.clients.search.api.exceptions.UnsuccessfulResponseStatus?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang/Thread/run/com.samebug.clients.search.api.exceptions.UnsuccessfulResponseStatus?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.jetbrains.ide/PooledThreadExecutor$1$1/run/com.samebug.clients.search.api.exceptions.UnsuccessfulResponseStatus?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1461273879815,
+      "lastSeenSimilar": 1461275102710,
+      "numberOfSimilars": 11,
+      "numberOfSolutions": 100,
+      "hasMoreHits": true,
+      "lastSearch": {
+        "searchId": 673441,
+        "searchUrl": "https://nightly.samebug.com/search/673441/com.samebug.clients.search.api.exceptions.HttpError",
+        "timestamp": 1461275102710,
+        "exception": {
+          "typeName": "com.samebug.clients.search.api.exceptions.HttpError",
+          "message": "java.net.UnknownHostException: nightly.samebug.co"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.net/InetAddress/getAllByName/java.net.UnknownHostException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.client/CloseableHttpClient/execute/java.net.UnknownHostException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1461068000168,
+      "lastSeenSimilar": 1461231312409,
+      "numberOfSimilars": 2,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673420,
+        "searchUrl": "https://nightly.samebug.com/search/673420/java.lang.IllegalArgumentException",
+        "timestamp": 1461231312409,
+        "exception": {
+          "typeName": "java.lang.IllegalArgumentException",
+          "message": "Argument for @NotNull parameter 'color' of com/intellij/ui/popup/BalloonPopupBuilderImpl.setBorderColor must not be null"
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ui.popup/BalloonPopupBuilderImpl/setBorderColor/java.lang.IllegalArgumentException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.actionSystem.impl/ActionButton/processMouseEvent/java.lang.IllegalArgumentException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.IllegalArgumentException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.IllegalArgumentException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventDispatchThread/run/java.lang.IllegalArgumentException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1461231011464,
+      "lastSeenSimilar": 1461231063835,
+      "numberOfSimilars": 2,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673419,
+        "searchUrl": "https://nightly.samebug.com/search/673419/java.lang.NullPointerException",
+        "timestamp": 1461231063835,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.application.impl/ApplicationImpl$8/run/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang/Thread/run/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.jetbrains.ide/PooledThreadExecutor$1$1/run/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1461230947552,
+      "lastSeenSimilar": 1461230947552,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 15,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673416,
+        "searchUrl": "https://nightly.samebug.com/search/673416/com.samebug.clients.search.api.exceptions.HttpError",
+        "timestamp": 1461230947552,
+        "exception": {
+          "typeName": "com.samebug.clients.search.api.exceptions.HttpError",
+          "message": "org.apache.http.conn.HttpHostConnectException: Connect to 192.168.1.100:9000 [/192.168.1.100] failed: Connection refused"
+        },
+        "componentStack": [
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.client/CloseableHttpClient/execute/org.apache.http.conn.HttpHostConnectException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1461227171263,
+      "lastSeenSimilar": 1461227527272,
+      "numberOfSimilars": 4,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673414,
+        "searchUrl": "https://nightly.samebug.com/search/673414/java.lang.AssertionError",
+        "timestamp": 1461227527272,
+        "exception": {
+          "typeName": "java.lang.AssertionError",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.application.impl/LaterInvocator$FlushQueue/run/java.lang.AssertionError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.AssertionError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.AssertionError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventDispatchThread/run/java.lang.AssertionError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1461161206466,
+      "lastSeenSimilar": 1461225855894,
+      "numberOfSimilars": 3,
+      "numberOfSolutions": 7,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673398,
+        "searchUrl": "https://nightly.samebug.com/search/673398/com.samebug.clients.search.api.exceptions.HttpError",
+        "timestamp": 1461225855894,
+        "exception": {
+          "typeName": "com.samebug.clients.search.api.exceptions.HttpError",
+          "message": "org.apache.http.conn.ConnectionPoolTimeoutException: Timeout waiting for connection from pool"
+        },
+        "componentStack": [
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.client/CloseableHttpClient/execute/org.apache.http.conn.ConnectionPoolTimeoutException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1461056228759,
+      "lastSeenSimilar": 1461155338410,
+      "numberOfSimilars": 45,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673381,
+        "searchUrl": "https://nightly.samebug.com/search/673381/com.samebug.E1",
+        "timestamp": 1461155338410,
+        "exception": {
+          "typeName": "com.samebug.E1",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug",
+            "shortName": "com.samebug"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang.reflect/Method/invoke/com.samebug.E1?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.rt.execution.application/AppMain/main/com.samebug.E1?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1461056228774,
+      "lastSeenSimilar": 1461155338177,
+      "numberOfSimilars": 16,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673380,
+        "searchUrl": "https://nightly.samebug.com/search/673380/java.lang.StringIndexOutOfBoundsException",
+        "timestamp": 1461155338177,
+        "exception": {
+          "typeName": "java.lang.StringIndexOutOfBoundsException",
+          "message": "String index out of range: -1"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang/String/charAt/java.lang.StringIndexOutOfBoundsException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug",
+            "shortName": "com.samebug"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang.reflect/Method/invoke/java.lang.StringIndexOutOfBoundsException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.StringIndexOutOfBoundsException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1461153012044,
+      "lastSeenSimilar": 1461153012044,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673371,
+        "searchUrl": "https://nightly.samebug.com/search/673371/java.lang.IllegalArgumentException",
+        "timestamp": 1461153012044,
+        "exception": {
+          "typeName": "java.lang.IllegalArgumentException",
+          "message": "Argument for @NotNull parameter 'content' of com/intellij/ui/content/impl/ContentManagerImpl.setSelectedContent must not be null"
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ui.content.impl/ContentManagerImpl/setSelectedContent/java.lang.IllegalArgumentException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.application.impl/LaterInvocator$FlushQueue/run/java.lang.IllegalArgumentException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.IllegalArgumentException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.IllegalArgumentException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventDispatchThread/run/java.lang.IllegalArgumentException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1461071598515,
+      "lastSeenSimilar": 1461075251377,
+      "numberOfSimilars": 25,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673341,
+        "searchUrl": "https://nightly.samebug.com/search/673341/java.lang.RuntimeException",
+        "timestamp": 1461075251377,
+        "exception": {
+          "typeName": "java.lang.RuntimeException",
+          "message": "Memory leak detected: com.intellij.ui.BalloonImpl@1cda372d of class class com.intellij.ui.BalloonImpl\nSee the cause for the corresponding Disposer.register() stacktrace:"
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ui.popup/BalloonPopupBuilderImpl/createBalloon/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1461070962506,
+      "lastSeenSimilar": 1461074837235,
+      "numberOfSimilars": 5,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673339,
+        "searchUrl": "https://nightly.samebug.com/search/673339/java.lang.RuntimeException",
+        "timestamp": 1461074837235,
+        "exception": {
+          "typeName": "java.lang.RuntimeException",
+          "message": "Memory leak detected: com.intellij.ui.BalloonImpl@564e0d20 of class class com.intellij.ui.BalloonImpl\nSee the cause for the corresponding Disposer.register() stacktrace:"
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ui.popup/BalloonPopupBuilderImpl/createBalloon/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1461069447931,
+      "lastSeenSimilar": 1461069751290,
+      "numberOfSimilars": 8,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673311,
+        "searchUrl": "https://nightly.samebug.com/search/673311/java.lang.RuntimeException",
+        "timestamp": 1461069751290,
+        "exception": {
+          "typeName": "java.lang.RuntimeException",
+          "message": "Memory leak detected: com.intellij.ui.BalloonImpl@7cc7ffd7 of class class com.intellij.ui.BalloonImpl\nSee the cause for the corresponding Disposer.register() stacktrace:"
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ui.popup/BalloonPopupBuilderImpl/createBalloon/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ide.actions/GotoActionAction$7/run/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1461068121673,
+      "lastSeenSimilar": 1461069751212,
+      "numberOfSimilars": 6,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673310,
+        "searchUrl": "https://nightly.samebug.com/search/673310/java.lang.RuntimeException",
+        "timestamp": 1461069751212,
+        "exception": {
+          "typeName": "java.lang.RuntimeException",
+          "message": "Memory leak detected: com.intellij.ui.BalloonImpl@5b8ee654 of class class com.intellij.ui.BalloonImpl\nSee the cause for the corresponding Disposer.register() stacktrace:"
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ui.popup/BalloonPopupBuilderImpl/createBalloon/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.actionSystem.impl/ActionButton/processMouseEvent/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.Throwable?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ide/IdeEventQueue/_dispatchEvent/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1453983878000,
+      "lastSeenSimilar": 1461056197849,
+      "numberOfSimilars": 226,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673274,
+        "searchUrl": "https://nightly.samebug.com/search/673274/org.json.JSONException",
+        "timestamp": 1461056197849,
+        "exception": {
+          "typeName": "org.json.JSONException",
+          "message": "No value for query"
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.json/JSONObject/getJSONObject/org.json.JSONException?pt=true",
+            "name": "Android Platform",
+            "shortName": "Android Platform"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.cyanogenmod.lockclock",
+            "shortName": "com.cyanogenmod.lockclock"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/android.os/AsyncTask$2/call/org.json.JSONException?pt=true",
+            "name": "Android Platform",
+            "shortName": "Android Platform"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.util.concurrent/FutureTask/run/org.json.JSONException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/android.os/AsyncTask$SerialExecutor$1/run/org.json.JSONException?pt=true",
+            "name": "Android Platform",
+            "shortName": "Android Platform"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang/Thread/run/org.json.JSONException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1454069142000,
+      "lastSeenSimilar": 1461056197721,
+      "numberOfSimilars": 29,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673269,
+        "searchUrl": "https://nightly.samebug.com/search/673269/com.boxer.emailcommon.mail.CertificateValidationException",
+        "timestamp": 1461056197721,
+        "exception": {
+          "typeName": "com.boxer.emailcommon.mail.CertificateValidationException",
+          "message": "SSL handshake aborted: ssl=0xaea42600: I/O error during system call, Connection reset by peer"
+        },
+        "componentStack": [
+          {
+            "color": 2,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.android.org.conscrypt/OpenSSLSocketImpl/startHandshake/javax.net.ssl.SSLHandshakeException?pt=true",
+            "name": "RoboVM Runtime Library",
+            "shortName": "RoboVM"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.boxer.email",
+            "shortName": "com.boxer.email"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang/Thread/run/com.boxer.emailcommon.mail.CertificateValidationException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1454423963000,
+      "lastSeenSimilar": 1461056197688,
+      "numberOfSimilars": 16,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673268,
+        "searchUrl": "https://nightly.samebug.com/search/673268/com.boxer.emailcommon.mail.MessagingException",
+        "timestamp": 1461056197688,
+        "exception": {
+          "typeName": "com.boxer.emailcommon.mail.MessagingException",
+          "message": "IO Error"
+        },
+        "componentStack": [
+          {
+            "color": 2,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.android.org.conscrypt/OpenSSLSocketImpl$SSLInputStream/read/javax.net.ssl.SSLException?pt=true",
+            "name": "RoboVM Runtime Library",
+            "shortName": "RoboVM"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.io/BufferedInputStream/read/javax.net.ssl.SSLException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.boxer.email",
+            "shortName": "com.boxer.email"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang/Thread/run/com.boxer.emailcommon.mail.MessagingException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1455550105000,
+      "lastSeenSimilar": 1461056196682,
+      "numberOfSimilars": 5,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673263,
+        "searchUrl": "https://nightly.samebug.com/search/673263/android.os.DeadObjectException",
+        "timestamp": 1461056196682,
+        "exception": {
+          "typeName": "android.os.DeadObjectException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/android.app/ApplicationThreadProxy/scheduleUnbindService/android.os.DeadObjectException?pt=true",
+            "name": "Android Platform",
+            "shortName": "Android Platform"
+          },
+          {
+            "color": 2,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.android.server.am/ActivityManagerService$AppDeathRecipient/binderDied/android.os.DeadObjectException?pt=true",
+            "name": "Google Android Bundle",
+            "shortName": "Android"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/android.os/BinderProxy/sendDeathNotice/android.os.DeadObjectException?pt=true",
+            "name": "Android Platform",
+            "shortName": "Android Platform"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1454069142000,
+      "lastSeenSimilar": 1460985544424,
+      "numberOfSimilars": 79,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673223,
+        "searchUrl": "https://nightly.samebug.com/search/673223/java.lang.IllegalStateException",
+        "timestamp": 1460985544424,
+        "exception": {
+          "typeName": "java.lang.IllegalStateException",
+          "message": "Handler (android.media.MediaPlayer$EventHandler) {3ebf55d8} sending message to a Handler on a dead thread"
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/android.media/MediaPlayer/postEventFromNative/java.lang.IllegalStateException?pt=true",
+            "name": "Android Platform",
+            "shortName": "Android Platform"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1454510619000,
+      "lastSeenSimilar": 1460983888382,
+      "numberOfSimilars": 14,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673146,
+        "searchUrl": "https://nightly.samebug.com/search/673146/javax.net.ssl.SSLException",
+        "timestamp": 1460983888382,
+        "exception": {
+          "typeName": "javax.net.ssl.SSLException",
+          "message": "Read error: ssl=0xae88d400: I/O error during system call, Connection reset by peer"
+        },
+        "componentStack": [
+          {
+            "color": 2,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.android.org.conscrypt/OpenSSLSocketImpl$SSLInputStream/read/javax.net.ssl.SSLException?pt=true",
+            "name": "RoboVM Runtime Library",
+            "shortName": "RoboVM"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.io/AbstractSessionInputBuffer/readLine/javax.net.ssl.SSLException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.conn/DefaultResponseParser/parseHead/javax.net.ssl.SSLException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl/AbstractHttpClientConnection/receiveResponseHeader/javax.net.ssl.SSLException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.conn/AbstractClientConnAdapter/receiveResponseHeader/javax.net.ssl.SSLException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.protocol/HttpRequestExecutor/execute/javax.net.ssl.SSLException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.client/AbstractHttpClient/execute/javax.net.ssl.SSLException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.boxer.email",
+            "shortName": "com.boxer.email"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang/Thread/run/javax.net.ssl.SSLException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1454510619000,
+      "lastSeenSimilar": 1460983888368,
+      "numberOfSimilars": 14,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 673144,
+        "searchUrl": "https://nightly.samebug.com/search/673144/com.boxer.emailcommon.mail.CertificateValidationException",
+        "timestamp": 1460983888368,
+        "exception": {
+          "typeName": "com.boxer.emailcommon.mail.CertificateValidationException",
+          "message": "Read error: ssl=0xae88d400: I/O error during system call, Connection reset by peer"
+        },
+        "componentStack": [
+          {
+            "color": 2,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.android.org.conscrypt/OpenSSLSocketImpl$SSLInputStream/read/javax.net.ssl.SSLException?pt=true",
+            "name": "RoboVM Runtime Library",
+            "shortName": "RoboVM"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.io/AbstractSessionInputBuffer/readLine/javax.net.ssl.SSLException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.conn/DefaultResponseParser/parseHead/javax.net.ssl.SSLException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl/AbstractHttpClientConnection/receiveResponseHeader/javax.net.ssl.SSLException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.conn/AbstractClientConnAdapter/receiveResponseHeader/javax.net.ssl.SSLException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.protocol/HttpRequestExecutor/execute/javax.net.ssl.SSLException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.client/AbstractHttpClient/execute/javax.net.ssl.SSLException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.boxer.email",
+            "shortName": "com.boxer.email"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang/Thread/run/com.boxer.emailcommon.mail.CertificateValidationException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1460425920885,
+      "lastSeenSimilar": 1460425920885,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 671461,
+        "searchUrl": "https://nightly.samebug.com/search/671461/java.io.FileNotFoundException",
+        "timestamp": 1460425920885,
+        "exception": {
+          "typeName": "java.io.FileNotFoundException",
+          "message": "banned-players.json (Sistem belirtilen dosyayı bulamıyor)"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.io/FileInputStream/%3Cinit%3E/java.io.FileNotFoundException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "net.minecraft.util",
+            "shortName": "net.minecraft.util"
+          },
+          {
+            "color": 12,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/net.minecraft.server.v1_7_R3/ThreadServerApplication/run/java.io.FileNotFoundException?pt=true",
+            "name": "Minecraft Server",
+            "shortName": "MC Server"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1454668632000,
+      "lastSeenSimilar": 1459322669363,
+      "numberOfSimilars": 9,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 667905,
+        "searchUrl": "https://nightly.samebug.com/search/667905/java.net.ConnectException",
+        "timestamp": 1459322669363,
+        "exception": {
+          "typeName": "java.net.ConnectException",
+          "message": "Connection refused"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.net/Socket/%3Cinit%3E/java.net.ConnectException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.idea/MainImpl/start/java.net.ConnectException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang.reflect/Method/invoke/java.net.ConnectException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ide.plugins/PluginManager$2/run/java.net.ConnectException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang/Thread/run/java.net.ConnectException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1459263368189,
+      "lastSeenSimilar": 1459263588349,
+      "numberOfSimilars": 3,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 631713,
+        "searchUrl": "https://nightly.samebug.com/search/631713/java.lang.NullPointerException",
+        "timestamp": 1459263588349,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/Container/add/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.application.impl/ApplicationImpl$8/run/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang/Thread/run/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.jetbrains.ide/PooledThreadExecutor$1$1/run/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1459263240535,
+      "lastSeenSimilar": 1459263240535,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 631704,
+        "searchUrl": "https://nightly.samebug.com/search/631704/java.lang.IllegalArgumentException",
+        "timestamp": 1459263240535,
+        "exception": {
+          "typeName": "java.lang.IllegalArgumentException",
+          "message": "class com.samebug.clients.search.api.entities.SamebugTip declares multiple JSON fields named solutionId"
+        },
+        "componentStack": [
+          {
+            "color": 10,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.google.gson/Gson/fromJson/java.lang.IllegalArgumentException?pt=true",
+            "name": "Gson",
+            "shortName": "Gson"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.application.impl/ApplicationImpl$8/run/java.lang.IllegalArgumentException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang/Thread/run/java.lang.IllegalArgumentException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.jetbrains.ide/PooledThreadExecutor$1$1/run/java.lang.IllegalArgumentException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1459263002366,
+      "lastSeenSimilar": 1459263002366,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 631578,
+        "searchUrl": "https://nightly.samebug.com/search/631578/java.lang.NullPointerException",
+        "timestamp": 1459263002366,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.application.impl/ApplicationImpl$8/run/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang/Thread/run/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.jetbrains.ide/PooledThreadExecutor$1$1/run/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1459262935047,
+      "lastSeenSimilar": 1459262995754,
+      "numberOfSimilars": 24,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 631575,
+        "searchUrl": "https://nightly.samebug.com/search/631575/java.awt.AWTError",
+        "timestamp": 1459262995754,
+        "exception": {
+          "typeName": "java.awt.AWTError",
+          "message": "BoxLayout can't be shared"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/javax.swing/RepaintManager/validateInvalidComponents/java.awt.AWTError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ide/IdeRepaintManager/validateInvalidComponents/java.awt.AWTError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventQueue/dispatchEvent/java.awt.AWTError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.awt.AWTError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventDispatchThread/run/java.awt.AWTError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1459262993280,
+      "lastSeenSimilar": 1459262993898,
+      "numberOfSimilars": 4,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 631555,
+        "searchUrl": "https://nightly.samebug.com/search/631555/java.awt.AWTError",
+        "timestamp": 1459262993898,
+        "exception": {
+          "typeName": "java.awt.AWTError",
+          "message": "BoxLayout can't be shared"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/Container/validate/java.awt.AWTError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.application.impl/LaterInvocator$FlushQueue/run/java.awt.AWTError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventQueue/dispatchEvent/java.awt.AWTError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.awt.AWTError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventDispatchThread/run/java.awt.AWTError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1459262934538,
+      "lastSeenSimilar": 1459262934538,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 631483,
+        "searchUrl": "https://nightly.samebug.com/search/631483/java.awt.AWTError",
+        "timestamp": 1459262934538,
+        "exception": {
+          "typeName": "java.awt.AWTError",
+          "message": "BoxLayout can't be shared"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/Container/add/java.awt.AWTError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.wm.impl.content/ToolWindowContentUi$1/selectionChanged/java.awt.AWTError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang.reflect/Method/invoke/java.awt.AWTError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.util/EventDispatcher$1/invoke/java.awt.AWTError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.sun.proxy",
+            "shortName": "com.sun.proxy"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.wm.impl/FocusManagerImpl$7/run/java.awt.AWTError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventQueue/dispatchEvent/java.awt.AWTError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.awt.AWTError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventDispatchThread/run/java.awt.AWTError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1459262933587,
+      "lastSeenSimilar": 1459262933587,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 631481,
+        "searchUrl": "https://nightly.samebug.com/search/631481/java.lang.NullPointerException",
+        "timestamp": 1459262933587,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.io/InputStreamReader/%3Cinit%3E/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.application.impl/ApplicationImpl$8/run/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang/Thread/run/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.jetbrains.ide/PooledThreadExecutor$1$1/run/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457614057470,
+      "lastSeenSimilar": 1459260571659,
+      "numberOfSimilars": 21,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 629465,
+        "searchUrl": "https://nightly.samebug.com/search/629465/java.lang.Error",
+        "timestamp": 1459260571659,
+        "exception": {
+          "typeName": "java.lang.Error",
+          "message": ""
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "Unknown Component",
+            "shortName": "Unknown"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang.reflect/Method/invoke/java.lang.Error?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.Error?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1459240144492,
+      "lastSeenSimilar": 1459240144492,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 612949,
+        "searchUrl": "https://nightly.samebug.com/search/612949/com.samebug.clients.search.api.exceptions.HttpError",
+        "timestamp": 1459240144492,
+        "exception": {
+          "typeName": "com.samebug.clients.search.api.exceptions.HttpError",
+          "message": "java.net.SocketTimeoutException: Read timed out"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.net/SocketInputStream/read/java.net.SocketTimeoutException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 12,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/sun.security.ssl/AppInputStream/read/java.net.SocketTimeoutException?pt=true",
+            "name": "Java JSSE",
+            "shortName": "Java JSSE"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.io/SessionInputBufferImpl/readLine/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.conn/DefaultHttpResponseParser/parseHead/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl/DefaultBHttpClientConnection/receiveResponseHeader/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.conn/CPoolProxy/receiveResponseHeader/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.protocol/HttpRequestExecutor/execute/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.client/CloseableHttpClient/execute/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1456741323000,
+      "lastSeenSimilar": 1459215772951,
+      "numberOfSimilars": 2,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 552691,
+        "searchUrl": "https://nightly.samebug.com/search/552691/com.intellij.openapi.externalSystem.model.ExternalSystemException",
+        "timestamp": 1459215772951,
+        "exception": {
+          "typeName": "com.intellij.openapi.externalSystem.model.ExternalSystemException",
+          "message": "Could not run build action using Gradle distribution 'https://services.gradle.org/distributions/gradle-2.2.1-all.zip'."
+        },
+        "componentStack": [
+          {
+            "color": 7,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.jetbrains.plugins.gradle.service.project/BaseGradleProjectResolverExtension/getUserFriendlyError/com.intellij.openapi.externalSystem.model.ExternalSystemException?pt=true",
+            "name": "JetBrains gradle plugin",
+            "shortName": "JetBrains gradle plugin"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.android.tools",
+            "shortName": "com.android.tools"
+          },
+          {
+            "color": 7,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.jetbrains.plugins.gradle.service.project/GradleProjectResolver/resolveProjectInfo/com.intellij.openapi.externalSystem.model.ExternalSystemException?pt=true",
+            "name": "JetBrains gradle plugin",
+            "shortName": "JetBrains gradle plugin"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.application.impl/ApplicationImpl$8/run/com.intellij.openapi.externalSystem.model.ExternalSystemException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang/Thread/run/com.intellij.openapi.externalSystem.model.ExternalSystemException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.jetbrains.ide/PooledThreadExecutor$1$1/run/com.intellij.openapi.externalSystem.model.ExternalSystemException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1458658445042,
+      "lastSeenSimilar": 1458835461259,
+      "numberOfSimilars": 4,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 488709,
+        "searchUrl": "https://nightly.samebug.com/search/488709/com.samebug.clients.search.api.exceptions.HttpError",
+        "timestamp": 1458835461259,
+        "exception": {
+          "typeName": "com.samebug.clients.search.api.exceptions.HttpError",
+          "message": "java.net.SocketTimeoutException: Read timed out"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.net/SocketInputStream/read/java.net.SocketTimeoutException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 12,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/sun.security.ssl/AppInputStream/read/java.net.SocketTimeoutException?pt=true",
+            "name": "Java JSSE",
+            "shortName": "Java JSSE"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.io/SessionInputBufferImpl/readLine/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.conn/DefaultHttpResponseParser/parseHead/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl/DefaultBHttpClientConnection/receiveResponseHeader/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.conn/CPoolProxy/receiveResponseHeader/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.protocol/HttpRequestExecutor/execute/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.client/CloseableHttpClient/execute/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 15,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.client.fluent/Request/execute/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpClient Fluent API",
+            "shortName": "Apache HttpClient Fluent API"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1458828004271,
+      "lastSeenSimilar": 1458828004271,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 487191,
+        "searchUrl": "https://nightly.samebug.com/search/487191/java.lang.Throwable",
+        "timestamp": 1458828004271,
+        "exception": {
+          "typeName": "java.lang.Throwable",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 14,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.diagnostic/Logger/assertTrue/java.lang.Throwable?pt=true",
+            "name": "Jetbrains OpenAPI",
+            "shortName": "Openapi"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.notification/Notification/%3Cinit%3E/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.actionSystem.impl/ActionButton/processMouseEvent/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.Throwable?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventDispatchThread/run/java.lang.Throwable?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1458826490147,
+      "lastSeenSimilar": 1458826490147,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 487115,
+        "searchUrl": "https://nightly.samebug.com/search/487115/java.lang.NullPointerException",
+        "timestamp": 1458826490147,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug",
+            "shortName": "com.samebug"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1458720416348,
+      "lastSeenSimilar": 1458720416348,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 468726,
+        "searchUrl": "https://nightly.samebug.com/search/468726/com.samebug.clients.search.api.exceptions.HttpError",
+        "timestamp": 1458720416348,
+        "exception": {
+          "typeName": "com.samebug.clients.search.api.exceptions.HttpError",
+          "message": "java.net.SocketTimeoutException: Read timed out"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.net/SocketInputStream/read/java.net.SocketTimeoutException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 12,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/sun.security.ssl/AppInputStream/read/java.net.SocketTimeoutException?pt=true",
+            "name": "Java JSSE",
+            "shortName": "Java JSSE"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.io/SessionInputBufferImpl/readLine/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.conn/DefaultHttpResponseParser/parseHead/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl/DefaultBHttpClientConnection/receiveResponseHeader/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.conn/CPoolProxy/receiveResponseHeader/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.protocol/HttpRequestExecutor/execute/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpCore",
+            "shortName": "Apache Http"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.client/CloseableHttpClient/execute/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 15,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.client.fluent/Request/execute/java.net.SocketTimeoutException?pt=true",
+            "name": "Apache HttpClient Fluent API",
+            "shortName": "Apache HttpClient Fluent API"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.application.impl/ApplicationImpl$8/run/com.samebug.clients.search.api.exceptions.HttpError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang/Thread/run/com.samebug.clients.search.api.exceptions.HttpError?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.jetbrains.ide/PooledThreadExecutor$1$1/run/com.samebug.clients.search.api.exceptions.HttpError?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1458563389270,
+      "lastSeenSimilar": 1458658477066,
+      "numberOfSimilars": 45,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 463725,
+        "searchUrl": "https://nightly.samebug.com/search/463725/com.samebug.clients.search.api.exceptions.HttpError",
+        "timestamp": 1458658477066,
+        "exception": {
+          "typeName": "com.samebug.clients.search.api.exceptions.HttpError",
+          "message": "java.net.UnknownHostException: samebug.io"
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.net/InetAddress/getAllByName/java.net.UnknownHostException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 4,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.impl.client/CloseableHttpClient/execute/java.net.UnknownHostException?pt=true",
+            "name": "Apache HttpClient",
+            "shortName": "Apache HttpClient"
+          },
+          {
+            "color": 15,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.apache.http.client.fluent/Request/execute/java.net.UnknownHostException?pt=true",
+            "name": "Apache HttpClient Fluent API",
+            "shortName": "Apache HttpClient Fluent API"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1457434497000,
+      "lastSeenSimilar": 1458658381475,
+      "numberOfSimilars": 10777,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 463682,
+        "searchUrl": "https://nightly.samebug.com/search/463682/com.samebug.clients.search.api.exceptions.UserUnauthenticated",
+        "timestamp": 1458658381475,
+        "exception": {
+          "typeName": "com.samebug.clients.search.api.exceptions.UserUnauthenticated",
+          "message": "User is unauthenticated"
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.application.impl/ApplicationImpl$8/run/com.samebug.clients.search.api.exceptions.UserUnauthenticated?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang/Thread/run/com.samebug.clients.search.api.exceptions.UserUnauthenticated?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.jetbrains.ide/PooledThreadExecutor$1$1/run/com.samebug.clients.search.api.exceptions.UserUnauthenticated?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1458652078334,
+      "lastSeenSimilar": 1458653372096,
+      "numberOfSimilars": 14,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 462961,
+        "searchUrl": "https://nightly.samebug.com/search/462961/com.samebug.clients.search.api.exceptions.SamebugClientException",
+        "timestamp": 1458653372096,
+        "exception": {
+          "typeName": "com.samebug.clients.search.api.exceptions.SamebugClientException",
+          "message": ""
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.application.impl/ApplicationImpl$8/run/com.samebug.clients.search.api.exceptions.SamebugClientException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang/Thread/run/com.samebug.clients.search.api.exceptions.SamebugClientException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/org.jetbrains.ide/PooledThreadExecutor$1$1/run/com.samebug.clients.search.api.exceptions.SamebugClientException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1458649976072,
+      "lastSeenSimilar": 1458649976072,
+      "numberOfSimilars": 1,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 462684,
+        "searchUrl": "https://nightly.samebug.com/search/462684/java.lang.RuntimeException",
+        "timestamp": 1458649976072,
+        "exception": {
+          "typeName": "java.lang.RuntimeException",
+          "message": "Memory leak detected: Project (Default) Default (Template) Project of class class com.intellij.openapi.project.impl.DefaultProject\nSee the cause for the corresponding Disposer.register() stacktrace:"
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.util/Disposer/register/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.util.messages.impl/MessageBusImpl/connect/java.lang.Throwable?pt=true",
+            "name": "Jetbrains OpenAPI",
+            "shortName": "Openapi"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.roots.impl/DirectoryIndexImpl/%3Cinit%3E/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang.reflect/Constructor/newInstance/java.lang.Throwable?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "org.picocontainer.defaults",
+            "shortName": "org.picocontainer.defaults"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.util.pico/ConstructorInjectionComponentAdapter/getComponentInstance/java.lang.Throwable?pt=true",
+            "name": "Jetbrains OpenAPI",
+            "shortName": "Openapi"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.components.impl/ServiceManagerImpl$MyComponentAdapter/getComponentInstance/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.util.pico/DefaultPicoContainer/getComponentInstance/java.lang.Throwable?pt=true",
+            "name": "Jetbrains OpenAPI",
+            "shortName": "Openapi"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "org.picocontainer.defaults",
+            "shortName": "org.picocontainer.defaults"
+          },
+          {
+            "color": 14,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.util.pico/ConstructorInjectionComponentAdapter/getComponentInstance/java.lang.Throwable?pt=true",
+            "name": "Jetbrains OpenAPI",
+            "shortName": "Openapi"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.application.impl/ApplicationImpl/disposeSelf/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1458573242088,
+      "lastSeenSimilar": 1458573282950,
+      "numberOfSimilars": 2,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 450728,
+        "searchUrl": "https://nightly.samebug.com/search/450728/java.lang.NullPointerException",
+        "timestamp": 1458573282950,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/javax.swing/JLabel/%3Cinit%3E/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1458550571733,
+      "lastSeenSimilar": 1458550635461,
+      "numberOfSimilars": 2,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 440449,
+        "searchUrl": "https://nightly.samebug.com/search/440449/java.lang.NullPointerException",
+        "timestamp": 1458550635461,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.io/InputStreamReader/%3Cinit%3E/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.lang.reflect/Method/invoke/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 6,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.rt.execution.application/AppMain/main/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1458248819414,
+      "lastSeenSimilar": 1458249076138,
+      "numberOfSimilars": 2,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 434441,
+        "searchUrl": "https://nightly.samebug.com/search/434441/java.lang.NullPointerException",
+        "timestamp": 1458249076138,
+        "exception": {
+          "typeName": "java.lang.NullPointerException",
+          "message": null
+        },
+        "componentStack": [
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/javax.swing/JLabel/%3Cinit%3E/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 0,
+            "crashDocUrl": null,
+            "name": "com.samebug.clients",
+            "shortName": "com.samebug.clients"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.openapi.application.impl/LaterInvocator$FlushQueue/run/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventQueue/dispatchEvent/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          },
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.ide/IdeEventQueue/dispatchEvent/java.lang.NullPointerException?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          },
+          {
+            "color": 3,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/java.awt/EventDispatchThread/run/java.lang.NullPointerException?pt=true",
+            "name": "Java Runtime Library",
+            "shortName": "Java RT"
+          }
+        ]
+      }
+    },
+    {
+      "firstSeenSimilar": 1454671752000,
+      "lastSeenSimilar": 1458248823955,
+      "numberOfSimilars": 10,
+      "numberOfSolutions": 0,
+      "hasMoreHits": false,
+      "lastSearch": {
+        "searchId": 434439,
+        "searchUrl": "https://nightly.samebug.com/search/434439/java.lang.RuntimeException",
+        "timestamp": 1458248823955,
+        "exception": {
+          "typeName": "java.lang.RuntimeException",
+          "message": "Memory leak detected: com.intellij.ui.BalloonImpl@10ec7671 of class class com.intellij.ui.BalloonImpl\nSee the cause for the corresponding Disposer.register() stacktrace:"
+        },
+        "componentStack": [
+          {
+            "color": 16,
+            "crashDocUrl": "https://nightly.samebug.com/crashdocs/com.intellij.diagnostic/IdeMessagePanel$5/run/java.lang.Throwable?pt=true",
+            "name": "IntelliJ IDEA",
+            "shortName": "IDEA"
+          }
+        ]
+      }
+    }
+  ]
+}

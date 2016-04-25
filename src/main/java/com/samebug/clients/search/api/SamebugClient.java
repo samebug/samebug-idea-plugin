@@ -58,7 +58,7 @@ import java.util.*;
 public class SamebugClient {
     final static String USER_AGENT = "Samebug-Idea-Client/1.4.0";
     final static String API_VERSION = "0.9";
-    final static Gson gson;
+    final static Gson gson = Json.gson;
 
     final Config config;
     final URI gateway;
@@ -66,19 +66,6 @@ public class SamebugClient {
     final RequestConfig requestConfig;
     final RequestConfig trackingConfig;
 
-
-    static {
-        // TODO is this a fine way of serialization of Date?
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
-                    @Override
-                    public Date deserialize(JsonElement json, java.lang.reflect.Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                        return new Date(json.getAsJsonPrimitive().getAsLong());
-                    }
-                }
-        );
-        gson = gsonBuilder.create();
-    }
 
     public SamebugClient(final Config config) {
         this.config = new Config(config);
