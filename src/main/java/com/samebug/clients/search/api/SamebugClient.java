@@ -16,16 +16,17 @@
 package com.samebug.clients.search.api;
 
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.net.IdeHttpClientHelpers;
-import com.samebug.clients.search.api.entities.GroupedHistory;
-import com.samebug.clients.search.api.entities.SearchResults;
-import com.samebug.clients.search.api.entities.UserInfo;
+import com.samebug.clients.search.api.entities.*;
+import com.samebug.clients.search.api.entities.legacy.RestHit;
 import com.samebug.clients.search.api.entities.legacy.Solutions;
+import com.samebug.clients.search.api.entities.legacy.Tip;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
-import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -39,39 +40,34 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.execchain.RequestAbortedException;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Level;
 import org.jetbrains.annotations.Nullable;
 
-import javax.net.ssl.SSLException;
 import java.io.*;
-import java.net.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
+import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.*;
 
 public class SamebugClient {
-    private final String apiKey;
-    final static String USER_AGENT = "Samebug-Idea-Client/1.3.0";
-    final static String API_VERSION = "0.8";
-    //    public final static URI root = URI.create("http://localhost:9000/");
-//    public final static URI root = URI.create("http://nightly.samebug.com/");
-    public final static URI root = URI.create("https://samebug.io/");
-    //    final static URI trackingGateway = URI.create("http://nightly.samebug.com/").resolve("track/trace/");
-    final static URI trackingGateway = URI.create("https://samebug.io/").resolve("track/trace");
-    final static URI gateway = root.resolve("rest/").resolve(API_VERSION + "/");
-
+    final static String USER_AGENT = "Samebug-Idea-Client/1.4.0";
+    final static String API_VERSION = "0.9";
     final static Gson gson;
-    final static HttpClient httpClient;
-    final static RequestConfig requestConfig;
-    final static RequestConfig trackingConfig;
+
+    final Config config;
+    final URI gateway;
+    final HttpClient httpClient;
+    final RequestConfig requestConfig;
+    final RequestConfig trackingConfig;
 
 
     static {
-        // Build gson
         // TODO is this a fine way of serialization of Date?
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
@@ -82,16 +78,19 @@ public class SamebugClient {
                 }
         );
         gson = gsonBuilder.create();
+    }
 
-        // Build http client
+    public SamebugClient(final Config config) {
+        this.config = new Config(config);
+        this.gateway = URI.create(config.serverRoot).resolve("/rest/").resolve(API_VERSION + "/");
         HttpClientBuilder httpBuilder = HttpClientBuilder.create();
         RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
         CredentialsProvider provider = new BasicCredentialsProvider();
 
-        requestConfigBuilder.setConnectTimeout(15000).setSocketTimeout(15000).setConnectionRequestTimeout(500);
+        requestConfigBuilder.setConnectTimeout(config.connectTimeout).setSocketTimeout(config.requestTimeout).setConnectionRequestTimeout(500);
         try {
-            IdeHttpClientHelpers.ApacheHttpClient4.setProxyForUrlIfEnabled(requestConfigBuilder, root.toString());
-            IdeHttpClientHelpers.ApacheHttpClient4.setProxyCredentialsForUrlIfEnabled(provider, root.toString());
+            IdeHttpClientHelpers.ApacheHttpClient4.setProxyForUrlIfEnabled(requestConfigBuilder, config.serverRoot);
+            IdeHttpClientHelpers.ApacheHttpClient4.setProxyCredentialsForUrlIfEnabled(provider, config.serverRoot);
         } catch (Throwable e) {
             // fallback to traditional proxy config for backward compatiblity
             try {
@@ -108,35 +107,17 @@ public class SamebugClient {
         }
         requestConfig = requestConfigBuilder.build();
         trackingConfig = requestConfigBuilder.setSocketTimeout(3000).build();
+        List<BasicHeader> defaultHeaders = new ArrayList<BasicHeader>();
+        defaultHeaders.add(new BasicHeader("User-Agent", USER_AGENT));
+        if (config.apiKey != null) defaultHeaders.add(new BasicHeader("X-Samebug-ApiKey", config.apiKey));
+
         httpClient = httpBuilder.setDefaultRequestConfig(requestConfig)
                 .setMaxConnTotal(20).setMaxConnPerRoute(20)
                 .setDefaultCredentialsProvider(provider)
-                .setRetryHandler(new AggresiveRetryHandler())
-                .setDefaultHeaders(Arrays.asList(new BasicHeader("User-Agent", USER_AGENT)))
+                .setDefaultHeaders(defaultHeaders)
                 .build();
 
-    }
-
-    public SamebugClient(final String apiKey) {
-        this.apiKey = apiKey;
-    }
-
-    public static URL getSearchUrl(int searchId) {
-        String uri = "search/" + searchId;
-        try {
-            return root.resolve(uri).toURL();
-        } catch (MalformedURLException e) {
-            throw new IllegalUriException("Unable to resolve uri " + uri, e);
-        }
-    }
-
-    public static URL getUserProfileUrl(Integer userId) {
-        String uri = "user/" + userId;
-        try {
-            return root.resolve(uri).toURL();
-        } catch (MalformedURLException e) {
-            throw new IllegalUriException("Unable to resolve uri " + uri, e);
-        }
+        if (config.isApacheLoggingEnabled) enableApacheLogging();
     }
 
     public SearchResults searchSolutions(String stacktrace) throws SamebugClientException {
@@ -172,26 +153,63 @@ public class SamebugClient {
         return requestJson(request, Solutions.class);
     }
 
+    public RestHit<Tip> postTip(Integer searchId, String tip, URL source) throws SamebugClientException {
+        HttpPost post = new HttpPost(getApiUrl("tip").toString());
+        List<BasicNameValuePair> form = new ArrayList<BasicNameValuePair>();
+        // TODO checkstyle fails if there are only spaces before the next two lines
+        /**/ form.add(new BasicNameValuePair("message", tip));
+        /**/ form.add(new BasicNameValuePair("searchId", searchId.toString()));
+        if (source != null) form.add(new BasicNameValuePair("sourceUrl", source.toString()));
+        post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
+
+        return requestJson(post, new TypeToken<RestHit<Tip>>() {
+        }.getType());
+    }
+
+    public MarkResponse postMark(Integer searchId, Integer solutionId) throws SamebugClientException {
+        HttpPost post = new HttpPost(getApiUrl("mark").toString());
+        List<BasicNameValuePair> form = Arrays.asList(new BasicNameValuePair("solution", solutionId.toString()),
+                new BasicNameValuePair("search", searchId.toString()));
+        post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
+
+        return requestJson(post, MarkResponse.class);
+    }
+
+    public MarkResponse retractMark(Integer voteId) throws SamebugClientException {
+        HttpPost post = new HttpPost(getApiUrl("mark/cancel").toString());
+        List<BasicNameValuePair> form = Collections.singletonList(new BasicNameValuePair("mark", voteId.toString()));
+        post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
+
+        return requestJson(post, MarkResponse.class);
+    }
+
     public void trace(TrackEvent event) throws SamebugClientException {
-        HttpPost post = new HttpPost(trackingGateway);
-        postJson(post, event.fields);
+        if (config.isTrackingEnabled) {
+            HttpPost post = new HttpPost(config.trackingRoot);
+            postJson(post, event.fields);
+        }
     }
 
     // implementation
     private <T> T requestJson(HttpRequestBase request, final Class<T> classOfT)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
+        return requestJson(request, (Type) classOfT);
+    }
+
+    private <T> T requestJson(HttpRequestBase request, final Type typeOfT)
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
         request.setHeader("Accept", "application/json");
         final HttpResponse httpResponse = executePatient(request);
         return new HandleResponse<T>(httpResponse) {
             @Override
             T process(Reader reader) {
-                return gson.fromJson(reader, classOfT);
+                return gson.fromJson(reader, typeOfT);
             }
         }.handle();
     }
 
     private void postJson(HttpPost post, Object data)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
         String json = gson.toJson(data);
         post.addHeader("Content-Type", "application/json");
         post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
@@ -207,12 +225,12 @@ public class SamebugClient {
 
 
     private HttpResponse executeFailFast(HttpRequestBase request)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
         return execute(request, trackingConfig);
     }
 
     private HttpResponse executePatient(HttpRequestBase request)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
         return execute(request, null);
     }
 
@@ -224,12 +242,12 @@ public class SamebugClient {
      * @throws HttpError                  in case of a problem or the connection was aborted or   if the response is not readable
      * @throws UnsuccessfulResponseStatus if the response status is not 200
      * @throws RemoteError                if the server returned error in the X-Samebug-Errors header
+     * @throws BadRequest                 if the client state is inconsistent with the server (400)
      * @throws UserUnauthenticated        if the user was not authenticated (401)
      * @throws UserUnauthorized           if the user was not authorized (403)
      */
     private HttpResponse execute(HttpRequestBase request, @Nullable RequestConfig config)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, UserUnauthenticated, UserUnauthorized, HttpError {
-        addDefaultHeaders(request);
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
         if (config != null) request.setConfig(config);
 
         HttpResponse httpResponse;
@@ -248,12 +266,32 @@ public class SamebugClient {
                     throw new RemoteError(errors.getValue());
                 }
                 return httpResponse;
+            case HttpStatus.SC_BAD_REQUEST:
+                RestError restError = new HandleResponse<RestError>(httpResponse) {
+                    @Override
+                    RestError process(Reader reader) {
+                        return gson.fromJson(reader, RestError.class);
+                    }
+                }.handle();
+                throw new BadRequest(restError);
             case HttpStatus.SC_UNAUTHORIZED:
-                throw new UserUnauthenticated();
+                try {
+                    EntityUtils.consume(httpResponse.getEntity());
+                } finally {
+                    throw new UserUnauthenticated();
+                }
             case HttpStatus.SC_FORBIDDEN:
-                throw new UserUnauthorized(httpResponse.getStatusLine().getReasonPhrase());
+                try {
+                    EntityUtils.consume(httpResponse.getEntity());
+                } finally {
+                    throw new UserUnauthorized(httpResponse.getStatusLine().getReasonPhrase());
+                }
             default:
-                throw new UnsuccessfulResponseStatus(statusCode);
+                try {
+                    EntityUtils.consume(httpResponse.getEntity());
+                } finally {
+                    throw new UnsuccessfulResponseStatus(statusCode);
+                }
         }
     }
 
@@ -267,8 +305,57 @@ public class SamebugClient {
         return url;
     }
 
-    private void addDefaultHeaders(HttpRequest request) {
-        if (apiKey != null) request.addHeader("X-Samebug-ApiKey", apiKey);
+    public static class Config {
+        public String apiKey;
+        public String serverRoot;
+        public String trackingRoot;
+        public boolean isTrackingEnabled;
+        public int connectTimeout;
+        public int requestTimeout;
+        public boolean isApacheLoggingEnabled;
+
+        public Config() {
+        }
+
+        public Config(final Config rhs) {
+            this.apiKey = rhs.apiKey;
+            this.serverRoot = rhs.serverRoot;
+            this.trackingRoot = rhs.trackingRoot;
+            this.isTrackingEnabled = rhs.isTrackingEnabled;
+            this.connectTimeout = rhs.connectTimeout;
+            this.requestTimeout = rhs.requestTimeout;
+            this.isApacheLoggingEnabled = rhs.isApacheLoggingEnabled;
+        }
+    }
+
+    static void enableApacheLogging() {
+        java.util.logging.Logger.getLogger("org.apache.http.wire").setLevel(java.util.logging.Level.FINER);
+        java.util.logging.Logger.getLogger("org.apache.http.headers").setLevel(java.util.logging.Level.FINER);
+        Logger.getInstance("org.apache.http.conn.ssl.StrictHostnameVerifier").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.conn.DefaultManagedHttpClientConnection").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.conn.ssl.SSLConnectionSocketFactory").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.client.ProxyAuthenticationStrategy").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.client.DefaultRedirectStrategy").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.execchain.RetryExec").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.conn.DefaultHttpClientConnectionOperator").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.execchain.ProtocolExec").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.conn.ssl.DefaultHostnameVerifier").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.client.TargetAuthenticationStrategy").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.conn.DefaultHttpResponseParser").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.client.protocol.RequestAddCookies").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.conn.PoolingHttpClientConnectionManager").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.headers").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.auth.HttpAuthenticator").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.conn.ssl.BrowserCompatHostnameVerifier").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.execchain.MainClientExec").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.client.protocol.RequestAuthCache").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.wire").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.conn.CPool").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.conn.ssl.AllowAllHostnameVerifier").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.execchain.RedirectExec").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.client.protocol.ResponseProcessCookies").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.client.InternalHttpClient").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.client.protocol.RequestClientConnControl").setLevel(Level.DEBUG);
     }
 }
 
@@ -298,12 +385,5 @@ abstract class HandleResponse<T> {
             } catch (IOException ignored) {
             }
         }
-    }
-}
-
-class AggresiveRetryHandler extends DefaultHttpRequestRetryHandler {
-    public AggresiveRetryHandler() {
-        super(3, false, Arrays.asList(ConnectTimeoutException.class, SocketTimeoutException.class, RequestAbortedException.class,
-                UnknownHostException.class, ConnectException.class, SSLException.class));
     }
 }

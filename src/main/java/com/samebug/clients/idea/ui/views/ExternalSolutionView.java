@@ -15,13 +15,19 @@
  */
 package com.samebug.clients.idea.ui.views;
 
+import com.samebug.clients.common.entities.ExceptionType;
+import com.samebug.clients.common.ui.TextUtil;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.Colors;
 import com.samebug.clients.idea.ui.ImageUtil;
-import com.samebug.clients.idea.ui.components.*;
+import com.samebug.clients.idea.ui.UrlUtil;
+import com.samebug.clients.idea.ui.views.components.*;
 import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
 import com.samebug.clients.search.api.entities.legacy.RestHit;
 import com.samebug.clients.search.api.entities.legacy.SolutionReference;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,66 +37,61 @@ import java.util.HashMap;
 /**
  * Created by poroszd on 3/29/16.
  */
-public class ExternalSolutionView {
+public class ExternalSolutionView extends JPanel {
     final RestHit<SolutionReference> solution;
     final java.util.List<BreadCrumb> searchBreadcrumb;
-    final String packageName;
-    final String className;
+    final ExceptionType exceptionType;
 
-    public JPanel controlPanel;
-    public JPanel titlePanel;
-    public ExceptionPanel exceptionPanel;
-    public SourceReferencePanel sourceReferencePanel;
-    public JPanel actionPanel;
-    public JPanel breadcrumbPanel;
+    public final LegacyBreadcrumbBar breadcrumbPanel;
+    public final JPanel titlePanel;
+    public final ExceptionMessageLabel exceptionMessageLabel;
+    public final JPanel exceptionTypePanel;
+    public final JPanel sourceReferencePanel;
+    public final MarkPanel markPanel;
 
-    public ExternalSolutionView(RestHit<SolutionReference> solution, java.util.List<BreadCrumb> searchBreadcrumb) {
+    public ExternalSolutionView(RestHit<SolutionReference> solution, java.util.List<BreadCrumb> searchBreadcrumb, int searchStackId) {
         this.solution = solution;
         this.searchBreadcrumb = searchBreadcrumb;
+        exceptionType = new ExceptionType(solution.exception.typeName);
 
-        int dotIndex = solution.exception.typeName.lastIndexOf('.');
-        if (dotIndex < 0) {
-            this.packageName = null;
-            this.className = solution.exception.typeName;
-        } else {
-            this.packageName = solution.exception.typeName.substring(0, dotIndex);
-            this.className = solution.exception.typeName.substring(dotIndex + 1);
-        }
-
-        controlPanel = new ControlPanel();
         breadcrumbPanel = new LegacyBreadcrumbBar(searchBreadcrumb.subList(0, solution.matchLevel));
-        titlePanel = new TitlePanel();
-        exceptionPanel = new ExceptionPanel();
+        titlePanel = new SolutionTitlePanel();
+        exceptionMessageLabel = new ExceptionMessageLabel(solution.exception.message);
+        exceptionTypePanel = new ExceptionTypePanel();
         sourceReferencePanel = new SourceReferencePanel(solution.solution);
-        actionPanel = new ActionPanel();
+        markPanel = new MarkPanel(solution.score, solution.markId != null, solution.createdBy,
+                !(solution.createdBy != null && solution.createdBy.id == IdeaSamebugPlugin.getInstance().getState().userId && searchStackId == solution.stackId));
 
-        controlPanel.add(new JPanel() {
+        setLayout(new BorderLayout());
+        setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
+        add(new TransparentPanel() {
             {
-                setLayout(new BorderLayout(0, 0));
-                setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
-                setOpaque(false);
-                add(breadcrumbPanel, BorderLayout.SOUTH);
+                setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
                 add(titlePanel, BorderLayout.NORTH);
-                add(new JPanel() {
+                add(breadcrumbPanel, BorderLayout.SOUTH);
+                add(new TransparentPanel() {
                     {
-                        setLayout(new BorderLayout(0, 0));
-                        setBorder(BorderFactory.createEmptyBorder());
-                        setOpaque(false);
-                        add(actionPanel, BorderLayout.SOUTH);
-                        add(new JPanel() {
+                        setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+                        add(exceptionTypePanel, BorderLayout.NORTH);
+                        add(new TransparentPanel() {
                             {
-                                setLayout(new BorderLayout(0, 0));
-                                setBorder(BorderFactory.createEmptyBorder());
-                                setOpaque(false);
+                                setLayout(new GridBagLayout());
+                                GridBagConstraints gbc = new GridBagConstraints();
+                                add(markPanel, gbc);
+                                gbc.gridx = 2;
+                                gbc.weightx = 1;
+                                add(new TransparentPanel(), gbc);
+                            }
+                        }, BorderLayout.SOUTH);
+                        add(new TransparentPanel() {
+                            {
                                 add(sourceReferencePanel, BorderLayout.SOUTH);
-                                add(new JPanel() {
+                                add(new TransparentPanel() {
                                     {
-                                        setLayout(new BorderLayout());
                                         setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-                                        setOpaque(false);
-                                        add(exceptionPanel, BorderLayout.CENTER);
+                                        add(exceptionMessageLabel, BorderLayout.CENTER);
                                     }
-                                });
+                                }, BorderLayout.CENTER);
 
                             }
                         }, BorderLayout.CENTER);
@@ -98,40 +99,18 @@ public class ExternalSolutionView {
                 }, BorderLayout.CENTER);
             }
         }, BorderLayout.CENTER);
+
+        setPreferredSize(new Dimension(400, getPreferredSize().height));
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, Math.min(getPreferredSize().height, 250)));
     }
 
-
-    public class ControlPanel extends JPanel {
+    class SolutionTitlePanel extends TransparentPanel {
         {
-            setLayout(new BorderLayout(0, 0));
-            setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
-        }
-
-        @Override
-        public Dimension getPreferredSize() {
-            Dimension d = super.getPreferredSize();
-            return new Dimension(400, d.height);
-        }
-
-        @Override
-        public Dimension getMaximumSize() {
-            Dimension d = super.getPreferredSize();
-            return new Dimension(Integer.MAX_VALUE, Math.min(d.height, 250));
-        }
-    }
-
-    public class TitlePanel extends JPanel {
-        {
-            setLayout(new BorderLayout(0, 0));
-            setBorder(BorderFactory.createEmptyBorder());
-            setOpaque(false);
-            final Image sourceIcon = ImageUtil.getScaled(solution.solution.source.iconUrl, 32, 32);
+            final Image sourceIcon = ImageUtil.getScaled(UrlUtil.getSourceIconUrl(solution.solution.source.icon), 32, 32);
             add(new SourceIcon(sourceIcon), BorderLayout.WEST);
-            add(new JPanel() {
+            add(new TransparentPanel() {
                 {
-                    setLayout(new BorderLayout());
                     setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-                    setOpaque(false);
                     add(new LinkLabel(solution.solution.title, solution.solution.url) {
                         {
                             HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
@@ -139,6 +118,7 @@ public class ExternalSolutionView {
                             attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
                             setFont(getFont().deriveFont(attributes));
                             setForeground(Colors.samebugOrange);
+                            setToolTipText(SamebugBundle.message("samebug.solution.title.tooltip", solution.solution.url));
                         }
                     }, BorderLayout.CENTER);
                 }
@@ -146,13 +126,11 @@ public class ExternalSolutionView {
         }
     }
 
-    public class ExceptionPanel extends JPanel {
+    class ExceptionTypePanel extends TransparentPanel {
         {
-            setLayout(new BorderLayout());
-            setBorder(BorderFactory.createEmptyBorder());
-            setOpaque(false);
-            add(new JLabel(String.format("%s", className)) {
+            add(new JLabel() {
                 {
+                    setText((String.format("%s", exceptionType.className)));
                     HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
                     attributes.put(TextAttribute.SIZE, 14);
                     attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
@@ -163,16 +141,35 @@ public class ExternalSolutionView {
                 public Color getForeground() {
                     return ColorUtil.unemphasizedText();
                 }
-            }, BorderLayout.NORTH);
-            add(new ExceptionMessageLabel(solution.exception.message), BorderLayout.CENTER);
+            }, BorderLayout.CENTER);
         }
     }
 
-
-    public class ActionPanel extends JPanel {
-        {
-            setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
-            setOpaque(false);
+    class SourceReferencePanel extends TransparentPanel {
+        public SourceReferencePanel(@NotNull SolutionReference solutionReference) {
+            setLayout(new FlowLayout(FlowLayout.RIGHT));
+            if (solutionReference.author == null) {
+                add(new JLabel(String.format("%s", TextUtil.prettyTime(solutionReference.createdAt))) {
+                    @Override
+                    public Color getForeground() {
+                        return ColorUtil.unemphasizedText();
+                    }
+                });
+            } else {
+                add(new JLabel(String.format("%s | by ", TextUtil.prettyTime(solutionReference.createdAt))) {
+                    @Override
+                    public Color getForeground() {
+                        return ColorUtil.unemphasizedText();
+                    }
+                });
+                add(new LinkLabel(solutionReference.author.name, solutionReference.author.url) {
+                    @Override
+                    public Color getForeground() {
+                        return ColorUtil.emphasizedText();
+                    }
+                });
+            }
         }
+
     }
 }

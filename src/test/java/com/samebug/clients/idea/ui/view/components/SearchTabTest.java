@@ -107,10 +107,10 @@ public class SearchTabTest extends JDialog {
 //        SearchGroupCardView v = new SearchGroupCardView(solutions.search);
 //        dialog.tab.header.add(v.controlPanel, BorderLayout.CENTER);
         for (final RestHit<Tip> tip : solutions.tips) {
-            dialog.tab.solutionsPanel.add(new SamebugTipView(tip, solutions.breadcrumb).controlPanel);
+            dialog.tab.solutionsPanel.add(new SamebugTipView(tip, solutions.breadcrumb, 0));
         }
         for (final RestHit<SolutionReference> s : solutions.references) {
-            dialog.tab.solutionsPanel.add(new ExternalSolutionView(s, solutions.breadcrumb).controlPanel);
+            dialog.tab.solutionsPanel.add(new ExternalSolutionView(s, solutions.breadcrumb, 0));
         }
         stream.close();
         dialog.pack();

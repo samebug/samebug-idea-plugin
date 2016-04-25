@@ -60,7 +60,7 @@ public class BatchStackTraceSearchNotifier extends AbstractProjectComponent impl
                 }
             });
             timer.setRepeats(false);
-            myProject.getMessageBus().syncPublisher(BatchStackTraceSearchListener.BATCH_SEARCH_TOPIC).batchStart();
+            if (!myProject.isDisposed()) myProject.getMessageBus().syncPublisher(BatchStackTraceSearchListener.BATCH_SEARCH_TOPIC).batchStart();
         }
     }
 
@@ -98,7 +98,7 @@ public class BatchStackTraceSearchNotifier extends AbstractProjectComponent impl
 
     private void batchFinished() {
         if (started <= searches.size() + failed) {
-            myProject.getMessageBus().syncPublisher(BatchStackTraceSearchListener.BATCH_SEARCH_TOPIC).batchFinished(searches, failed);
+            if (!myProject.isDisposed()) myProject.getMessageBus().syncPublisher(BatchStackTraceSearchListener.BATCH_SEARCH_TOPIC).batchFinished(searches, failed);
             reset();
         }
     }

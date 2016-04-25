@@ -20,12 +20,16 @@ import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.GroupedHistory;
+import com.samebug.clients.search.api.entities.MarkResponse;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
+import com.samebug.clients.search.api.entities.legacy.RestHit;
 import com.samebug.clients.search.api.entities.legacy.Solutions;
+import com.samebug.clients.search.api.entities.legacy.Tip;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
 
+import java.net.URL;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -39,8 +43,8 @@ public class IdeaClientService {
     private AtomicBoolean authenticated;
     private AtomicInteger nRequests;
 
-    public IdeaClientService(final String apiKey) {
-        this.client = new SamebugClient(apiKey);
+    public IdeaClientService(final SamebugClient.Config config) {
+        this.client = new SamebugClient(config);
         // Optimist initialization. If incorrect, that'll turn out soon
         this.connected = new AtomicBoolean(true);
         this.authenticated = new AtomicBoolean(true);
@@ -75,6 +79,30 @@ public class IdeaClientService {
         return new ConnectionAwareHttpRequest<Solutions>() {
             Solutions request() throws SamebugClientException {
                 return client.getSolutions(searchId);
+            }
+        }.execute();
+    }
+
+    public RestHit<Tip> postTip(final int searchId, final String tip, final URL sourceUrl) throws SamebugClientException {
+        return new ConnectionAwareHttpRequest<RestHit<Tip>>() {
+            RestHit<Tip> request() throws SamebugClientException {
+                return client.postTip(searchId, tip, sourceUrl);
+            }
+        }.execute();
+    }
+
+    public MarkResponse postMark(final int searchId, final int solutionId) throws SamebugClientException {
+        return new ConnectionAwareHttpRequest<MarkResponse>() {
+            MarkResponse request() throws SamebugClientException {
+                return client.postMark(searchId, solutionId);
+            }
+        }.execute();
+    }
+
+    public MarkResponse retractMark(final int voteId) throws SamebugClientException {
+        return new ConnectionAwareHttpRequest<MarkResponse>() {
+            MarkResponse request() throws SamebugClientException {
+                return client.retractMark(voteId);
             }
         }.execute();
     }
@@ -124,8 +152,9 @@ public class IdeaClientService {
             } catch (HttpError e) {
                 connected.set(false);
                 throw e;
-            } catch (UnsuccessfulResponseStatus e) {
-                connected.set(false);
+            } catch (BadRequest e) {
+                connected.set(true);
+                if (isAuthenticationRequired) authenticated.set(true);
                 throw e;
             } catch (UserUnauthenticated e) {
                 connected.set(true);
@@ -134,6 +163,9 @@ public class IdeaClientService {
             } catch (UserUnauthorized e) {
                 connected.set(true);
                 authenticated.set(false);
+                throw e;
+            } catch (UnsuccessfulResponseStatus e) {
+                connected.set(true);
                 throw e;
             } finally {
                 nRequests.decrementAndGet();

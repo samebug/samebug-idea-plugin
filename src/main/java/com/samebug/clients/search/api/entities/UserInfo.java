@@ -19,4 +19,5 @@ public class UserInfo {
     public Integer userId;
     public boolean isUserExist;
     public String displayName;
+    public String avatarUrl;
 }

@@ -53,16 +53,15 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
 
         project.getMessageBus().connect(project).subscribe(HistoryListener.UPDATE_HISTORY_TOPIC, historyTab.getHistoryUpdater());
 
-        // TODO this logic is duplicated in ReloadHistoryAction
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
                 IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
                 try {
                     GroupedHistory history = client.getSearchHistory();
-                    project.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(history);
+                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(history);
                 } catch (SamebugClientException e1) {
-                    project.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(null);
+                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(null);
                 }
             }
         });

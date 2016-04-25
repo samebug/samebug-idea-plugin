@@ -15,12 +15,10 @@
  */
 package com.samebug.clients.search.api.entities.legacy;
 
-import java.net.URL;
-
 /**
  * Created by poroszd on 4/1/16.
  */
 public class Source {
     public String name;
-    public URL iconUrl;
+    public String icon;
 }

@@ -15,46 +15,93 @@
  */
 package com.samebug.clients.idea.components.application;
 
+import com.samebug.clients.search.api.SamebugClient;
+
 import java.util.UUID;
 
 /**
  * Created by poroszd on 2/12/16.
  */
 public class ApplicationSettings {
-    private String apiKey;
-    private String instanceId = UUID.randomUUID().toString();
-    private int userId;
-    private boolean tutorialFirstRun = true;
+    //=========================================================================
+    // NOTE: Make sure to extend equals and copy constructor when adding new fields!
+    public String apiKey;
+    public String instanceId = UUID.randomUUID().toString();
+    public int userId;
+    public String avatarUrl;
+    public String serverRoot = defaultServerRoot;
+    public String trackingRoot = defaultTrackingRoot;
+    public boolean isTrackingEnabled = defaultIsTrackingEnabled;
+    public int connectTimeout = defaultConnectTimeout;
+    public int requestTimeout = defaultRequestTimeout;
+    public boolean isApacheLoggingEnabled = defaultIsApacheLoggingEnabled;
+    public boolean showZeroSolutions = defaultShowZeroSolutions;
+    public boolean showRecurring = defaultShowRecurring;
 
-    public String getApiKey() {
-        return apiKey;
+    //=========================================================================
+
+    public static final String defaultServerRoot = "https://samebug.io";
+    public static final String defaultTrackingRoot = defaultServerRoot + "/track/trace";
+    public static final boolean defaultIsTrackingEnabled = true;
+    public static final int defaultConnectTimeout = 5000;
+    public static final int defaultRequestTimeout = 10000;
+    public static final boolean defaultIsApacheLoggingEnabled = false;
+    public static final boolean defaultShowZeroSolutions = true;
+    public static final boolean defaultShowRecurring = true;
+
+    public ApplicationSettings() {
     }
 
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
+    public ApplicationSettings(final ApplicationSettings rhs) {
+        this.apiKey = rhs.apiKey;
+        this.instanceId = rhs.instanceId;
+        this.userId = rhs.userId;
+        this.avatarUrl = rhs.avatarUrl;
+        this.serverRoot = rhs.serverRoot;
+        this.trackingRoot = rhs.trackingRoot;
+        this.isTrackingEnabled = rhs.isTrackingEnabled;
+        this.connectTimeout = rhs.connectTimeout;
+        this.requestTimeout = rhs.requestTimeout;
+        this.isApacheLoggingEnabled = rhs.isApacheLoggingEnabled;
+        this.showZeroSolutions = rhs.showZeroSolutions;
+        this.showRecurring = rhs.showRecurring;
     }
 
-    public String getInstanceId() {
-        return instanceId;
+    @Override
+    public int hashCode() {
+        return ((31 + apiKey.hashCode()) * 31 + serverRoot.hashCode()) * 31 + trackingRoot.hashCode();
     }
 
-    public void setInstanceId(String instanceId) {
-        this.instanceId = instanceId;
+    @Override
+    public boolean equals(Object that) {
+        if (this == that) return true;
+        else if (!(that instanceof ApplicationSettings)) return false;
+        else {
+            final ApplicationSettings rhs = (ApplicationSettings) that;
+            return rhs.apiKey.equals(apiKey)
+                    && rhs.instanceId.equals(instanceId)
+                    && rhs.userId == userId
+                    && rhs.avatarUrl == avatarUrl
+                    && rhs.serverRoot.equals(serverRoot)
+                    && rhs.trackingRoot.equals(trackingRoot)
+                    && rhs.isTrackingEnabled == isTrackingEnabled
+                    && rhs.connectTimeout == connectTimeout
+                    && rhs.requestTimeout == requestTimeout
+                    && rhs.isApacheLoggingEnabled == isApacheLoggingEnabled
+                    && rhs.showZeroSolutions == showZeroSolutions
+                    && rhs.showRecurring == showRecurring;
+        }
     }
 
-    public boolean isTutorialFirstRun() {
-        return tutorialFirstRun;
-    }
-
-    public void setTutorialFirstRun(boolean tutorialFirstRun) {
-        this.tutorialFirstRun = tutorialFirstRun;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public SamebugClient.Config getNetworkConfig() {
+        final SamebugClient.Config config = new SamebugClient.Config();
+        config.apiKey = apiKey;
+        config.serverRoot = serverRoot;
+        config.trackingRoot = trackingRoot;
+        config.isTrackingEnabled = isTrackingEnabled;
+        config.connectTimeout = connectTimeout;
+        config.requestTimeout = requestTimeout;
+        config.isApacheLoggingEnabled = isApacheLoggingEnabled;
+        return config;
     }
 }

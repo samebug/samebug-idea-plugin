@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.components;
+package com.samebug.clients.idea.ui.views.components;
 
 import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.ui.ColorUtil;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Created by poroszd on 4/1/16.
@@ -40,5 +42,11 @@ public class ExceptionMessageLabel extends JLabel {
             setText(escapedText);
             setVerticalAlignment(SwingConstants.TOP);
         }
+
+    }
+
+    @Override
+    public Color getForeground() {
+        return ColorUtil.emphasizedText();
     }
 }

@@ -20,16 +20,21 @@ import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
+import com.intellij.openapi.ui.popup.Balloon;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.samebug.clients.idea.components.application.ApplicationSettings;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
+import com.samebug.clients.idea.components.application.TutorialApplicationComponent;
+import com.samebug.clients.idea.components.application.TutorialSettings;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.idea.ui.Colors;
+import com.samebug.clients.idea.ui.views.components.TransparentPanel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -39,19 +44,20 @@ import java.awt.event.ActionListener;
  * I found no reasonable place for the one-time welcome message.
  * IdeaSamebugPlugin would be a better place, but I wanted to make sure there is an opened
  * project in scope, so clicking on the notification can open the samebug toolbar.
- * <p/>
- * Renaming this class or moving this functionality is welcomed.
  */
-public class TutorialComponent extends AbstractProjectComponent {
-    protected TutorialComponent(Project project) {
+public class TutorialProjectComponent extends AbstractProjectComponent {
+    private final static Logger LOGGER = Logger.getInstance(TutorialProjectComponent.class);
+
+    protected TutorialProjectComponent(Project project) {
         super(project);
     }
 
     @Override
     public void projectOpened() {
         super.projectOpened();
-        final ApplicationSettings pluginState = IdeaSamebugPlugin.getInstance().getState();
-        if (pluginState != null && pluginState.isTutorialFirstRun()) {
+        final TutorialSettings pluginState = ApplicationManager.getApplication().getComponent(TutorialApplicationComponent.class).getState();
+        if (pluginState != null && pluginState.firstRun) {
+            pluginState.firstRun = false;
             // At this point, the Samebug toolwindow is likely not initialized, so we delay the notification
             final int DELAY_MS = 15 * 1000;
             final Timer timer = new Timer(DELAY_MS, new ActionListener() {
@@ -60,13 +66,13 @@ public class TutorialComponent extends AbstractProjectComponent {
                     ApplicationManager.getApplication().invokeLater(new Runnable() {
                         public void run() {
                             try {
+                                // TODO cannot use the same tutorial notification as elsewhere, because I can't find how to access the toolbar button component
                                 ToolWindowManager.getInstance(myProject).notifyByBalloon(
                                         "Samebug",
-                                        MessageType.INFO, SamebugBundle.message("samebug.notification.help.welcome.message"),
-                                        SamebugIcons.notification,
-                                        SamebugNotifications.basicHyperlinkListener(myProject, "help"));
+                                        MessageType.INFO, SamebugBundle.message("samebug.tutorial.welcome.message"),
+                                        SamebugIcons.info,
+                                        SamebugNotifications.basicHyperlinkListener(myProject, "tutorial"));
                                 Tracking.projectTracking(myProject).trace(Events.pluginInstall());
-                                pluginState.setTutorialFirstRun(false);
                             } catch (IllegalStateException e1) {
                                 LOGGER.warn("Samebug tool window was not initialized after "
                                         + DELAY_MS + " millis, welcome message could not be displayed", e1);
@@ -90,5 +96,48 @@ public class TutorialComponent extends AbstractProjectComponent {
         Tracking.projectTracking(myProject).trace(Events.projectClose(myProject));
     }
 
-    private final static Logger LOGGER = Logger.getInstance(TutorialComponent.class);
+    public static Balloon createTutorialBalloon(final Project project, final JComponent content) {
+        final JPanel controlPanel = new TransparentPanel() {
+            {
+                setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+                add(new TransparentPanel() {
+                    {
+                        setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 16));
+                        add(new JLabel(SamebugIcons.info));
+                    }
+                }, BorderLayout.WEST);
+                add(content, BorderLayout.CENTER);
+                setPreferredSize(new Dimension(450, getPreferredSize().height));
+            }
+        };
+        return JBPopupFactory.getInstance().createBalloonBuilder(controlPanel)
+                .setFillColor(Colors.samebugOrange)
+                .setBorderColor(Colors.samebugOrange)
+                .setDisposable(project)
+                .createBalloon();
+
+    }
+
+    public static <T> T withTutorialProject(final Project project, TutorialProjectAnonfun<T> anonfun) {
+        TutorialApplicationComponent tutorialApplicationComponent = ApplicationManager.getApplication().getComponent(TutorialApplicationComponent.class);
+        TutorialProjectComponent component = project.getComponent(TutorialProjectComponent.class);
+        if (tutorialApplicationComponent != null && tutorialApplicationComponent.getState() != null) {
+            TutorialSettings settings = tutorialApplicationComponent.getState();
+            anonfun.component = component;
+            anonfun.settings = settings;
+            anonfun.project = project;
+            return anonfun.call();
+        } else {
+            return null;
+        }
+    }
+
+    public static abstract class TutorialProjectAnonfun<T> {
+        protected TutorialProjectComponent component;
+        protected TutorialSettings settings;
+        protected Project project;
+
+        public abstract T call();
+    }
 }
+

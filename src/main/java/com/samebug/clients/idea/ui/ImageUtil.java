@@ -17,7 +17,6 @@ package com.samebug.clients.idea.ui;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.search.api.SamebugClient;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
@@ -63,7 +62,7 @@ public class ImageUtil {
             if (url == null || cache.get(url) != null) continue;
             try {
                 Image image = ImageIO.read(url);
-                cache.put(url, image);
+                if (image != null) cache.put(url, image);
             } catch (IOException e) {
                 LOGGER.warn("Failed to download image " + url);
             }
@@ -137,7 +136,7 @@ public class ImageUtil {
                 LOGGER.warn("Image " + imageUri + " was not found!");
             } else {
                 try {
-                    URL remoteUrl = samebugImageUrl(imageUri);
+                    URL remoteUrl = UrlUtil.getAssetUrl(imageUri);
                     Image image = ImageIO.read(imageBytes);
                     cache.put(remoteUrl, image);
                 } catch (MalformedURLException e) {
@@ -149,10 +148,6 @@ public class ImageUtil {
         }
     }
 
-    static URL samebugImageUrl(String uri) throws MalformedURLException {
-        return SamebugClient.root.resolve("assets/").resolve(uri).toURL();
-    }
-
     static class ScaledKey {
         public URL src;
         public int height;
@@ -162,6 +157,23 @@ public class ImageUtil {
             this.src = src;
             this.height = height;
             this.width = width;
+        }
+
+        @Override
+        public int hashCode() {
+            return ((31 + src.hashCode()) * 31 + height) * 31 + width;
+        }
+
+        @Override
+        public boolean equals(Object that) {
+            if (that == this) return true;
+            else if (!(that instanceof ScaledKey)) return false;
+            else {
+                final ScaledKey rhs = (ScaledKey) that;
+                return rhs.src.equals(src)
+                        && rhs.width == width
+                        && rhs.height == height;
+            }
         }
     }
 }

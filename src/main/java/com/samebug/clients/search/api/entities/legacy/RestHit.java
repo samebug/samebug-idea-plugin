@@ -23,8 +23,10 @@ import com.samebug.clients.search.api.entities.Exception;
 public class RestHit<T extends RestSolution> {
     public int solutionId;
     public T solution;
+    public int stackId;
     public int matchLevel;
     public int score;
-    public boolean markedByUser;
+    public Integer markId;
     public Exception exception;
+    public UserReference createdBy;
 }

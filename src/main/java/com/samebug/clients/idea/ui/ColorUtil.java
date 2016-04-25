@@ -31,14 +31,33 @@ public class ColorUtil {
         return normalOrDarcula(Colors.emphasizedText, Colors.emphasizedTextDarcula);
     }
 
+    public static Color alertPanel() {
+        return normalOrDarcula(Colors.alertPanel, Colors.alertPanelDarcula);
+    }
+
     public static Color highlightPanel() {
         return normalOrDarcula(Colors.highlightPanel, Colors.highlightPanelDarcula);
+    }
+
+    public static Color writeTipPanel() {
+        return normalOrDarcula(Colors.writeTipPanel, Colors.writeTipPanelDarcula);
     }
 
     public static Color sourceIconBackground() {
         return normalOrDarcula(Colors.sourceIconBackground, Colors.sourceIconBackgroundDarcula);
     }
 
+    public static Color ctaButton() {
+        return normalOrDarcula(Colors.ctaButton, Colors.ctaButtonDarcula);
+    }
+
+    public static Color button() {
+        return normalOrDarcula(Colors.button, Colors.buttonDarcula);
+    }
+
+    public static Color componentColors(int color) {
+        return normalOrDarcula(Colors.componentColors[color], Colors.componentColorsDarcula[color]);
+    }
 
     static Color normalOrDarcula(Color normal, Color darcula) {
         if (UIUtil.isUnderDarcula()) {

@@ -14,12 +14,14 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>Integrate solutions and tips for searches</li>
-        <li>Search notifications are filter aware</li>
-        <li>Use Idea proxy settings</li>
+        <li>Tip writing</li>
+        <li>Marking solutions</li>
+        <li>Plugin configuration</li>
+        <li>Fixed solution breadcrumb links</li>
+        <li>Tutorial messages</li>
       </ul>
 
-      Check it at <a href="https://medium.com/@samebug/samebug-integration-0-9-8c6501ea19f7">our blog</a>
+      Check it at <a href="https://medium.com/@samebug/samebug-intellij-integration-v0-10-0-beta-933ce6a999dd">our blog</a>
     ]]>
     </change-notes>
 
@@ -35,6 +37,8 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Samebug" icon="/com/samebug/samebug-r270.png" anchor="right"
                     factoryClass="com.samebug.clients.idea.ui.SamebugToolWindowFactory"/>
+        <applicationConfigurable groupId="tools" id="Settings.Samebug" displayName="Samebug"
+                                 instance="com.samebug.clients.idea.ui.controller.ConfigDialog"/>
         <projectService serviceInterface="com.samebug.clients.idea.ui.controller.HistoryTabController"
                         serviceImplementation="com.samebug.clients.idea.ui.controller.HistoryTabController"/>
         <projectService serviceInterface="com.samebug.clients.idea.ui.controller.SearchTabControllers"
@@ -47,11 +51,17 @@
             <action id="Samebug.Configure" class="com.samebug.clients.idea.actions.ConfigureAction"
                     icon="/com/samebug/icons/cogwheel.png" text="Configure Samebug" description="Set Samebug API key"/>
             <action id="Samebug.History" class="com.samebug.clients.idea.actions.ReloadHistoryAction"
-                    icon="/com/samebug/icons/reload.png" text="Reload history" description="Reload crash history"/>
+                    icon="/com/samebug/icons/reload.png" text="Reload history" description="Reload exception history"/>
             <action id="Samebug.ShowRecurringSearches" class="com.samebug.clients.idea.actions.ShowRecurringSearches"
-                    icon="/com/samebug/icons/filter-old.png" text="Show recurring" description="Show recurring searches"/>
+                    icon="/com/samebug/icons/filter-old.png" text="Show recurring" description="Show recurring exceptions"/>
             <action id="Samebug.ShowZeroSolutionSearches" class="com.samebug.clients.idea.actions.ShowZeroSolutionSearches"
                     icon="/com/samebug/icons/filter-unknown.png" text="Show unsolved" description="Show searches with zero solutions"/>
+        </group>
+        <group id="Samebug.SearchTabMenu" text="Samebug search tab menu" description="Search tab menu">
+            <action id="Samebug.BackToHistory" class="com.samebug.clients.idea.actions.ShowHistoryAction"
+                    icon="/com/samebug/icons/back.png" text="Show history" description="Show exception history"/>
+            <action id="Samebug.ReloadSearch" class="com.samebug.clients.idea.actions.ReloadSearchAction"
+                    icon="/com/samebug/icons/reload.png" text="Reload solutions" description="Reload solutions"/>
         </group>
     </actions>
 
@@ -64,6 +74,9 @@
         </component>
         <component>
             <implementation-class>com.samebug.clients.idea.components.application.Tracking</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.components.application.TutorialApplicationComponent</implementation-class>
         </component>
     </application-components>
     <project-components>
@@ -80,7 +93,7 @@
             <implementation-class>com.samebug.clients.idea.components.project.BatchStackTraceSearchNotifier</implementation-class>
         </component>
         <component>
-            <implementation-class>com.samebug.clients.idea.components.project.TutorialComponent</implementation-class>
+            <implementation-class>com.samebug.clients.idea.components.project.TutorialProjectComponent</implementation-class>
         </component>
     </project-components>
 </idea-plugin>

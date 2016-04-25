@@ -13,27 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.components;
-
-import javax.swing.*;
-import java.awt.*;
+package com.samebug.clients.search.api.entities.legacy;
 
 /**
- * Created by poroszd on 3/30/16.
+ * Created by poroszd on 4/21/16.
  */
-public class ImagePanel extends JPanel {
-
-    private Image image;
-
-    public ImagePanel(Image image) {
-        this.image = image;
-        setOpaque(false);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(image, 0, 0, null);
-    }
-
+public class UserReference {
+    public int id;
+    public String displayName;
 }
