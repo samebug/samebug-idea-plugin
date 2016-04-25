@@ -30,7 +30,6 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.ImageUtil;
-import com.samebug.clients.idea.ui.UrlUtil;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.views.ExternalSolutionView;
 import com.samebug.clients.idea.ui.views.SamebugTipView;
@@ -103,7 +102,7 @@ public class SearchTabController {
                                 componentStack.add(new ComponentStack() {
                                     {
                                         color = b.component.color;
-                                        crashDocUrl = UrlUtil.getCrashdocUrl(b);
+                                        crashDocUrl = IdeaSamebugPlugin.getInstance().getUrlBuilder().crashdoc(b);
                                         name = b.component.shortName;
                                         shortName = b.component.shortName;
                                     }
@@ -119,7 +118,7 @@ public class SearchTabController {
                 public void run() {
                     java.util.List<URL> imageUrls = new ArrayList<URL>();
                     try {
-                        imageUrls.add(UrlUtil.getUserAvatar());
+                        imageUrls.add(new URL(IdeaSamebugPlugin.getInstance().getState().avatarUrl));
                     } catch (Throwable e) {
                         LOGGER.warn("Failed to load user's avatar", e);
                     }
@@ -127,7 +126,7 @@ public class SearchTabController {
                         imageUrls.add(tip.solution.author.avatarUrl);
                     }
                     for (final RestHit<SolutionReference> s : model.references) {
-                        imageUrls.add(UrlUtil.getSourceIconUrl(s.solution.source.icon));
+                        imageUrls.add(IdeaSamebugPlugin.getInstance().getUrlBuilder().sourceIcon(s.solution.source.icon));
                     }
 
                     ImageUtil.loadImages(imageUrls);
@@ -174,7 +173,7 @@ public class SearchTabController {
 
                 } else {
                     EmptyWarningPanel panel = new EmptyWarningPanel();
-                    panel.label.setText(SamebugBundle.message("samebug.toolwindow.search.content.notConnected", UrlUtil.getServerRoot()));
+                    panel.label.setText(SamebugBundle.message("samebug.toolwindow.search.content.notConnected", IdeaSamebugPlugin.getInstance().getUrlBuilder().getServerRoot()));
                     view.solutionsPanel.add(panel.controlPanel);
                 }
                 view.controlPanel.revalidate();
@@ -208,7 +207,7 @@ public class SearchTabController {
     class OpenSearchHandler extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
-            URL url = UrlUtil.getSearchUrl(search.lastSearch.searchId);
+            URL url = IdeaSamebugPlugin.getInstance().getUrlBuilder().search(search.lastSearch.searchId);
             BrowserUtil.browse(url);
             Tracking.projectTracking(project).trace(Events.linkClick(project, url));
         }
@@ -429,7 +428,9 @@ public class SearchTabController {
                             view.statusIcon.setToolTipText(null);
                         } else {
                             view.statusIcon.setIcon(SamebugIcons.linkError);
-                            view.statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.notConnected", UrlUtil.getServerRoot()));
+                            view.statusIcon.setToolTipText(
+                                    SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.notConnected",
+                                            IdeaSamebugPlugin.getInstance().getUrlBuilder().getServerRoot()));
                         }
                         view.statusIcon.repaint();
                     }

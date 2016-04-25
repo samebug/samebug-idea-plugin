@@ -136,7 +136,7 @@ public class ImageUtil {
                 LOGGER.warn("Image " + imageUri + " was not found!");
             } else {
                 try {
-                    URL remoteUrl = UrlUtil.getAssetUrl(imageUri);
+                    URL remoteUrl = IdeaSamebugPlugin.getInstance().getUrlBuilder().assets(imageUri);
                     Image image = ImageIO.read(imageBytes);
                     cache.put(remoteUrl, image);
                 } catch (MalformedURLException e) {

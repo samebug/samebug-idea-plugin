@@ -45,34 +45,35 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Type;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class SamebugClient {
+public final class SamebugClient {
     final static String USER_AGENT = "Samebug-Idea-Client/1.4.0";
-    final static String API_VERSION = "0.9";
     final static Gson gson = Json.gson;
 
     final Config config;
-    final URI gateway;
     final HttpClient httpClient;
     final RequestConfig requestConfig;
     final RequestConfig trackingConfig;
+    final RestUrlBuilder urlBuilder;
 
-
-    public SamebugClient(final Config config) {
+    // TODO inject httpClient, urlBuilder, requestConfig
+    public SamebugClient(@NotNull final Config config) {
         this.config = new Config(config);
-        this.gateway = URI.create(config.serverRoot).resolve("/rest/").resolve(API_VERSION + "/");
+        this.urlBuilder = new RestUrlBuilder(config.serverRoot);
+
         HttpClientBuilder httpBuilder = HttpClientBuilder.create();
         RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
         CredentialsProvider provider = new BasicCredentialsProvider();
@@ -91,7 +92,7 @@ public class SamebugClient {
                         provider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(proxySettings.PROXY_LOGIN, proxySettings.getPlainProxyPassword()));
                     }
                 }
-            } catch (Throwable e1) {
+            } catch (Throwable ignored) {
                 // if even that fails, we cannot do more
             }
         }
@@ -110,45 +111,51 @@ public class SamebugClient {
         if (config.isApacheLoggingEnabled) enableApacheLogging();
     }
 
-    public SearchResults searchSolutions(String stacktrace) throws SamebugClientException {
-        URL url = getApiUrl("search");
+    public
+    @NotNull
+    SearchResults searchSolutions(@NotNull final String stacktrace) throws SamebugClientException {
+        final URL url = urlBuilder.search();
         HttpPost post = new HttpPost(url.toString());
         post.setEntity(new UrlEncodedFormEntity(Collections.singletonList(new BasicNameValuePair("exception", stacktrace)), Consts.UTF_8));
         return requestJson(post, SearchResults.class);
     }
 
-    public UserInfo getUserInfo(String apiKey) throws SamebugClientException {
-        String url;
-        try {
-            url = getApiUrl("checkApiKey").toString() + "?apiKey=" + URLEncoder.encode(apiKey, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new UnableToPrepareUrl("Unable to resolve uri with apiKey " + apiKey, e);
-        }
-        HttpGet request = new HttpGet(url);
+    public
+    @NotNull
+    UserInfo getUserInfo(@NotNull final String apiKey) throws SamebugClientException {
+        final URL url = urlBuilder.checkApiKey(apiKey);
+        HttpGet request = new HttpGet(url.toString());
 
         return requestJson(request, UserInfo.class);
     }
 
-    public GroupedHistory getSearchHistory() throws SamebugClientException {
-        URL url = getApiUrl("history");
+    public
+    @NotNull
+    GroupedHistory getSearchHistory() throws SamebugClientException {
+        final URL url = urlBuilder.history();
         HttpGet request = new HttpGet(url.toString());
 
         return requestJson(request, GroupedHistory.class);
     }
 
-    public Solutions getSolutions(int searchId) throws SamebugClientException {
-        URL url = getApiUrl("search/" + searchId);
+    public
+    @NotNull
+    Solutions getSolutions(@NotNull final Integer searchId) throws SamebugClientException {
+        final URL url = urlBuilder.search(searchId);
         HttpGet request = new HttpGet(url.toString());
 
         return requestJson(request, Solutions.class);
     }
 
-    public RestHit<Tip> postTip(Integer searchId, String tip, URL source) throws SamebugClientException {
-        HttpPost post = new HttpPost(getApiUrl("tip").toString());
+    public
+    @NotNull
+    RestHit<Tip> postTip(@NotNull final Integer searchId, @NotNull final String tip, @Nullable final URL source) throws SamebugClientException {
+        final URL url = urlBuilder.tip();
+        HttpPost post = new HttpPost(url.toString());
         List<BasicNameValuePair> form = new ArrayList<BasicNameValuePair>();
         // TODO checkstyle fails if there are only spaces before the next two lines
-        /**/ form.add(new BasicNameValuePair("message", tip));
-        /**/ form.add(new BasicNameValuePair("searchId", searchId.toString()));
+        if (tip != null) form.add(new BasicNameValuePair("message", tip));
+        if (searchId != null) form.add(new BasicNameValuePair("searchId", searchId.toString()));
         if (source != null) form.add(new BasicNameValuePair("sourceUrl", source.toString()));
         post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
 
@@ -156,8 +163,11 @@ public class SamebugClient {
         }.getType());
     }
 
-    public MarkResponse postMark(Integer searchId, Integer solutionId) throws SamebugClientException {
-        HttpPost post = new HttpPost(getApiUrl("mark").toString());
+    public
+    @NotNull
+    MarkResponse postMark(@NotNull final Integer searchId, @NotNull final Integer solutionId) throws SamebugClientException {
+        final URL url = urlBuilder.mark();
+        HttpPost post = new HttpPost(url.toString());
         List<BasicNameValuePair> form = Arrays.asList(new BasicNameValuePair("solution", solutionId.toString()),
                 new BasicNameValuePair("search", searchId.toString()));
         post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
@@ -165,15 +175,18 @@ public class SamebugClient {
         return requestJson(post, MarkResponse.class);
     }
 
-    public MarkResponse retractMark(Integer voteId) throws SamebugClientException {
-        HttpPost post = new HttpPost(getApiUrl("mark/cancel").toString());
+    public
+    @NotNull
+    MarkResponse retractMark(@NotNull final Integer voteId) throws SamebugClientException {
+        final URL url = urlBuilder.cancelMark();
+        HttpPost post = new HttpPost(url.toString());
         List<BasicNameValuePair> form = Collections.singletonList(new BasicNameValuePair("mark", voteId.toString()));
         post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
 
         return requestJson(post, MarkResponse.class);
     }
 
-    public void trace(TrackEvent event) throws SamebugClientException {
+    public void trace(@NotNull final TrackEvent event) throws SamebugClientException {
         if (config.isTrackingEnabled) {
             HttpPost post = new HttpPost(config.trackingRoot);
             postJson(post, event.fields);
@@ -181,45 +194,45 @@ public class SamebugClient {
     }
 
     // implementation
-    private <T> T requestJson(HttpRequestBase request, final Class<T> classOfT)
+    <T> T requestJson(final HttpRequestBase request, final Class<T> classOfT)
             throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
         return requestJson(request, (Type) classOfT);
     }
 
-    private <T> T requestJson(HttpRequestBase request, final Type typeOfT)
+    <T> T requestJson(final HttpRequestBase request, final Type typeOfT)
             throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
         request.setHeader("Accept", "application/json");
         final HttpResponse httpResponse = executePatient(request);
         return new HandleResponse<T>(httpResponse) {
             @Override
-            T process(Reader reader) {
+            T process(final Reader reader) {
                 return gson.fromJson(reader, typeOfT);
             }
         }.handle();
     }
 
-    private void postJson(HttpPost post, Object data)
+    private void postJson(final HttpPost post, final Object data)
             throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
-        String json = gson.toJson(data);
+        final String json = gson.toJson(data);
         post.addHeader("Content-Type", "application/json");
         post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
-        HttpResponse httpResponse = executeFailFast(post);
+        final HttpResponse httpResponse = executeFailFast(post);
 
         new HandleResponse<Void>(httpResponse) {
             @Override
-            Void process(Reader reader) {
+            Void process(final Reader reader) {
                 return null;
             }
         }.handle();
     }
 
 
-    private HttpResponse executeFailFast(HttpRequestBase request)
+    private HttpResponse executeFailFast(final HttpRequestBase request)
             throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
         return execute(request, trackingConfig);
     }
 
-    private HttpResponse executePatient(HttpRequestBase request)
+    private HttpResponse executePatient(final HttpRequestBase request)
             throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
         return execute(request, null);
     }
@@ -236,18 +249,18 @@ public class SamebugClient {
      * @throws UserUnauthenticated        if the user was not authenticated (401)
      * @throws UserUnauthorized           if the user was not authorized (403)
      */
-    private HttpResponse execute(HttpRequestBase request, @Nullable RequestConfig config)
+    private HttpResponse execute(final HttpRequestBase request, final RequestConfig config)
             throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
         if (config != null) request.setConfig(config);
 
-        HttpResponse httpResponse;
+        final HttpResponse httpResponse;
         try {
             httpResponse = httpClient.execute(request);
         } catch (IOException e) {
             throw new HttpError(e);
         }
 
-        int statusCode = httpResponse.getStatusLine().getStatusCode();
+        final int statusCode = httpResponse.getStatusLine().getStatusCode();
 
         switch (statusCode) {
             case HttpStatus.SC_OK:
@@ -257,9 +270,9 @@ public class SamebugClient {
                 }
                 return httpResponse;
             case HttpStatus.SC_BAD_REQUEST:
-                RestError restError = new HandleResponse<RestError>(httpResponse) {
+                final RestError restError = new HandleResponse<RestError>(httpResponse) {
                     @Override
-                    RestError process(Reader reader) {
+                    RestError process(final Reader reader) {
                         return gson.fromJson(reader, RestError.class);
                     }
                 }.handle();
@@ -267,32 +280,22 @@ public class SamebugClient {
             case HttpStatus.SC_UNAUTHORIZED:
                 try {
                     EntityUtils.consume(httpResponse.getEntity());
-                } finally {
-                    throw new UserUnauthenticated();
+                } catch (IOException ignored) {
                 }
+                throw new UserUnauthenticated();
             case HttpStatus.SC_FORBIDDEN:
                 try {
                     EntityUtils.consume(httpResponse.getEntity());
-                } finally {
-                    throw new UserUnauthorized(httpResponse.getStatusLine().getReasonPhrase());
+                } catch (IOException ignored) {
                 }
+                throw new UserUnauthorized(httpResponse.getStatusLine().getReasonPhrase());
             default:
                 try {
                     EntityUtils.consume(httpResponse.getEntity());
-                } finally {
-                    throw new UnsuccessfulResponseStatus(statusCode);
+                } catch (IOException ignored) {
                 }
+                throw new UnsuccessfulResponseStatus(statusCode);
         }
-    }
-
-    private URL getApiUrl(String uri) throws SamebugClientError {
-        URL url;
-        try {
-            url = gateway.resolve(uri).toURL();
-        } catch (MalformedURLException e) {
-            throw new IllegalUriException("Unable to resolve uri " + uri, e);
-        }
-        return url;
     }
 
     public static class Config {
@@ -351,15 +354,15 @@ public class SamebugClient {
 
 
 abstract class HandleResponse<T> {
-    final HttpResponse response;
+    HttpResponse response;
 
-    HandleResponse(HttpResponse response) {
+    HandleResponse(final HttpResponse response) {
         this.response = response;
     }
 
-    abstract T process(Reader reader);
+    abstract T process(final Reader reader);
 
-    public T handle() throws HttpError {
+    final public T handle() throws HttpError {
         InputStream content = null;
         Reader reader = null;
         try {
