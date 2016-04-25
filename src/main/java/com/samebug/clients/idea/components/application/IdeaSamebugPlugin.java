@@ -24,6 +24,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.SettingsDialog;
+import com.samebug.clients.search.api.WebUrlBuilder;
 import com.samebug.clients.search.api.entities.UserInfo;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.search.api.exceptions.UnknownApiKey;
@@ -39,7 +40,9 @@ import org.jetbrains.annotations.NotNull;
 final public class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<ApplicationSettings> {
     final private static Logger LOGGER = Logger.getInstance(IdeaSamebugPlugin.class);
     private ApplicationSettings state = new ApplicationSettings();
+
     private IdeaClientService client = new IdeaClientService(state.getNetworkConfig());
+    private WebUrlBuilder urlBuilder = new WebUrlBuilder(state.serverRoot);
 
     // TODO Unlike other methods, this one executes the http request on the caller thread. Is it ok?
     public void setApiKey(@NotNull String apiKey) throws SamebugClientException, UnknownApiKey {
@@ -81,6 +84,11 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     @NotNull
     public IdeaClientService getClient() {
         return client;
+    }
+
+    @NotNull
+    public WebUrlBuilder getUrlBuilder() {
+        return urlBuilder;
     }
 
     // ApplicationComponent overrides

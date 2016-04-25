@@ -35,7 +35,6 @@ import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.idea.ui.UrlUtil;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.views.HistoryTabView;
 import com.samebug.clients.idea.ui.views.SearchGroupCardView;
@@ -109,7 +108,7 @@ public class HistoryTabController {
                 searchGroups.clear();
                 if (!connectionService.isConnected()) {
                     EmptyWarningPanel panel = new EmptyWarningPanel();
-                    panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.notConnected", UrlUtil.getServerRoot()));
+                    panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.notConnected", IdeaSamebugPlugin.getInstance().getUrlBuilder().getServerRoot()));
                     view.contentPanel.add(panel.controlPanel);
                 } else if (connectionService.isConnected() && !connectionService.isAuthenticated()) {
                     EmptyWarningPanel panel = new EmptyWarningPanel();
@@ -221,7 +220,9 @@ public class HistoryTabController {
                             view.statusIcon.setToolTipText(null);
                         } else {
                             view.statusIcon.setIcon(SamebugIcons.linkError);
-                            view.statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.notConnected", UrlUtil.getServerRoot()));
+                            view.statusIcon.setToolTipText(
+                                    SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.notConnected",
+                                            IdeaSamebugPlugin.getInstance().getUrlBuilder().getServerRoot()));
                         }
                         view.statusIcon.repaint();
                     }

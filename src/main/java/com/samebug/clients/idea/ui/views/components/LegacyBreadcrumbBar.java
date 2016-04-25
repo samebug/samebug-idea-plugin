@@ -16,9 +16,9 @@
 package com.samebug.clients.idea.ui.views.components;
 
 import com.intellij.ide.BrowserUtil;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.ColorUtil;
-import com.samebug.clients.idea.ui.UrlUtil;
 import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
 import com.samebug.clients.search.api.entities.legacy.EntryInfo;
 
@@ -63,7 +63,7 @@ public class LegacyBreadcrumbBar extends TransparentPanel {
 
         public BreadcrumbLabel(final BreadCrumb breadCrumb) {
             this.breadCrumb = breadCrumb;
-            final URL link = UrlUtil.getCrashdocUrl(breadCrumb);
+            final URL link = IdeaSamebugPlugin.getInstance().getUrlBuilder().crashdoc(breadCrumb);
             if (link != null) {
                 setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 addMouseListener(new MouseAdapter() {
