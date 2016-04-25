@@ -15,13 +15,19 @@
  */
 package com.samebug.clients.search.api.entities.legacy;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.net.URL;
 
 /**
  * Created by poroszd on 3/30/16.
  */
 public class Author {
+    @NotNull
     public String name;
+    @Nullable
     public URL url;
+    @Nullable
     public URL avatarUrl;
 }

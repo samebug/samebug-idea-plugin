@@ -15,16 +15,28 @@
  */
 package com.samebug.clients.search.api.entities.legacy;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Date;
 
 /**
  * Created by poroszd on 4/1/16.
  */
 public class GroupedSearchHistory {
+    @NotNull
     public GroupedSearchKey _id;
+    @NotNull
     public Date firstSeen;
+    @NotNull
     public Date lastSeen;
-    public int numberOfSimilars;
-    public int lastSearchId;
+    @NotNull
+    public Integer numberOfSimilars;
+    @NotNull
+    public Integer lastSearchId;
+    @NotNull
     public ExceptionSearch lastSearch;
+    @NotNull
+    public Integer numberOfHits;
+    @NotNull
+    public Boolean hasMoreHits;
 }

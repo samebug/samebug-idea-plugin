@@ -16,6 +16,7 @@
 package com.samebug.clients.search.api.entities.legacy;
 
 import com.samebug.clients.search.api.entities.Exception;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 
@@ -23,8 +24,12 @@ import java.util.Date;
  * Created by poroszd on 4/1/16.
  */
 public class ExceptionSearch {
+    @NotNull
+    public Integer _id;
+    @NotNull
     public String type;
-    public int _id;
+    @NotNull
     public Date timestamp;
+    @NotNull
     public Exception exception;
 }

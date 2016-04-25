@@ -15,14 +15,17 @@
  */
 package com.samebug.clients.search.api.entities.legacy;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Created by poroszd on 4/1/16.
  */
 public class BreadCrumb {
+    @NotNull
     public ComponentInfo component;
+    @NotNull
     public EntryInfo entry;
+    @NotNull
     public String exceptionType;
     public boolean passThrough;
-    public boolean hasTop;
-    public String confidence;
 }

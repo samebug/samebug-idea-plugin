@@ -15,15 +15,22 @@
  */
 package com.samebug.clients.search.api.entities.legacy;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 /**
  * Created by poroszd on 2/24/16.
  */
 public class Solutions {
+    @NotNull
     public ExceptionSearch search;
+    @NotNull
     public List<BreadCrumb> breadcrumb;
+    @NotNull
     public GroupedSearchHistory searchGroup;
+    @NotNull
     public List<RestHit<Tip>> tips;
+    @NotNull
     public List<RestHit<SolutionReference>> references;
 }

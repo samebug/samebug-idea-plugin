@@ -52,8 +52,10 @@ public class ExternalSolutionView extends JPanel {
     public ExternalSolutionView(RestHit<SolutionReference> solution, java.util.List<BreadCrumb> searchBreadcrumb, int searchStackId) {
         this.solution = solution;
         this.searchBreadcrumb = searchBreadcrumb;
-        exceptionType = new ExceptionType(solution.exception.typeName);
+        // RestHit<SolutionReference> should always have an exception
+        assert solution.exception != null;
 
+        exceptionType = new ExceptionType(solution.exception.typeName);
         breadcrumbPanel = new LegacyBreadcrumbBar(searchBreadcrumb.subList(0, solution.matchLevel));
         titlePanel = new SolutionTitlePanel();
         exceptionMessageLabel = new ExceptionMessageLabel(solution.exception.message);
