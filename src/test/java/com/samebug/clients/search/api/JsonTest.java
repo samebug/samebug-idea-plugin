@@ -4,7 +4,10 @@ import com.google.gson.Gson;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.entities.UserInfo;
+import com.samebug.clients.search.api.entities.legacy.RestHit;
+import com.samebug.clients.search.api.entities.legacy.SolutionReference;
 import com.samebug.clients.search.api.entities.legacy.Solutions;
+import com.samebug.clients.search.api.entities.legacy.Tip;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,6 +63,12 @@ public class JsonTest {
         Assert.assertTrue(x.searchGroup.lastSearch._id > 0);
         Assert.assertTrue(x.tips.size() > 0);
         Assert.assertTrue(x.references.size() > 0);
+        for (RestHit<Tip> e : x.tips) {
+            Assert.assertNotNull(e.createdBy);
+        }
+        for (RestHit<SolutionReference> e : x.references) {
+            Assert.assertNotNull(e.exception);
+        }
     }
 
     InputStreamReader stream(final String fn) {

@@ -15,10 +15,19 @@
  */
 package com.samebug.clients.search.api.entities.legacy;
 
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
+import java.net.URL;
+
 /**
  * Created by poroszd on 4/21/16.
  */
 public class UserReference {
-    public int id;
+    @NotNull
+    public Integer id;
+    @NotNull
     public String displayName;
+    @Nullable
+    public URL avatarUrl;
 }

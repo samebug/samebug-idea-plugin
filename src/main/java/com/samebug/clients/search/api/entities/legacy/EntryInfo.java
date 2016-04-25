@@ -15,11 +15,17 @@
  */
 package com.samebug.clients.search.api.entities.legacy;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Created by poroszd on 4/1/16.
  */
 public class EntryInfo {
+    @Nullable
     public String packageName;
+    @NotNull
     public String className;
+    @NotNull
     public String methodName;
 }

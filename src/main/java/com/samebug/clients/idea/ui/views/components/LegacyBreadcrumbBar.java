@@ -75,7 +75,7 @@ public class LegacyBreadcrumbBar extends TransparentPanel {
                 });
             }
             final EntryInfo e = breadCrumb.entry;
-            if (e != null && e.packageName != null && e.className != null && e.methodName != null) {
+            if (e.packageName != null) {
                 setToolTipText(String.format("%s.%s.%s()", e.packageName, e.className, e.methodName));
             }
         }

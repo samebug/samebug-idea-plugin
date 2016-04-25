@@ -15,14 +15,21 @@
  */
 package com.samebug.clients.search.api.entities;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.net.URL;
 
 /**
  * Created by poroszd on 3/7/16.
  */
 public class ComponentStack {
-    public int color;
+    @NotNull
+    public Integer color;
+    @Nullable
     public URL crashDocUrl;
+    @NotNull
     public String name;
+    @NotNull
     public String shortName;
 }

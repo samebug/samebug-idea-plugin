@@ -15,9 +15,14 @@
  */
 package com.samebug.clients.search.api.entities;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.net.URL;
+
 public class UserInfo {
+    @NotNull
+    public Boolean isUserExist;
     public Integer userId;
-    public boolean isUserExist;
     public String displayName;
-    public String avatarUrl;
+    public URL avatarUrl;
 }

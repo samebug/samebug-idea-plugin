@@ -15,6 +15,9 @@
  */
 package com.samebug.clients.search.api.entities.legacy;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.net.URL;
 import java.util.Date;
 
@@ -22,9 +25,14 @@ import java.util.Date;
  * Created by poroszd on 4/1/16.
  */
 public class SolutionReference extends RestSolution {
+    @NotNull
     public Source source;
+    @Nullable
     public Author author;
+    @NotNull
     public Date createdAt;
+    @NotNull
     public String title;
+    @NotNull
     public URL url;
 }

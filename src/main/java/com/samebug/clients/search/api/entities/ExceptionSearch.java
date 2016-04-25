@@ -15,13 +15,18 @@
  */
 package com.samebug.clients.search.api.entities;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 /**
  * Created by poroszd on 3/8/16.
  */
 public class ExceptionSearch {
-    public int searchId;
+    @NotNull
+    public Integer searchId;
+    @NotNull
     public Exception exception;
+    @NotNull
     public List<ComponentStack> componentStack;
 }

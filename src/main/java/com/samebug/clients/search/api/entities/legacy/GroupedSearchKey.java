@@ -15,10 +15,14 @@
  */
 package com.samebug.clients.search.api.entities.legacy;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Created by poroszd on 4/1/16.
  */
 public class GroupedSearchKey {
-    public long userId;
-    public int stackId;
+    @NotNull
+    public Integer userId;
+    @NotNull
+    public Integer stackId;
 }
