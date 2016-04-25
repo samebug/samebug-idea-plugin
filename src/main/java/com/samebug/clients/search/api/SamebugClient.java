@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.search.api;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
@@ -53,7 +53,10 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class SamebugClient {
     final static String USER_AGENT = "Samebug-Idea-Client/1.4.0";

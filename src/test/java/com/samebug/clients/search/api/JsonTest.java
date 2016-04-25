@@ -27,23 +27,26 @@ public class JsonTest {
         gson = Json.gson;
     }
 
-    // curl 'http://nightly.samebug.com/rest/0.9/checkApiKey?apiKey=355be195-c10b-11e5-a334-000d3a317492' | jq . > src/test/resources/com/samebug/clients/search/api/jsontest/checkApiKey-1.json
+    // curl 'http://nightly.samebug.com/rest/0.9/checkApiKey?apiKey=355be195-c10b-11e5-a334-000d3a317492' |\
+    // jq . > src/test/resources/com/samebug/clients/search/api/jsontest/checkApiKey-1.json
     @Test
-    public void getUserInfo_Valid() throws MalformedURLException {
+    public void getUserInfoValid() throws MalformedURLException {
         UserInfo x = gson.fromJson(stream("checkApiKey-1"), UserInfo.class);
         Assert.assertEquals(new URL("https://samebug.io/avatars/1/3"), x.avatarUrl);
         Assert.assertEquals("poroszd", x.displayName);
         Assert.assertEquals(Integer.valueOf(1), x.userId);
     }
 
-    // curl 'http://nightly.samebug.com/rest/0.9/checkApiKey?apiKey=x' | jq . > src/test/resources/com/samebug/clients/search/api/jsontest/checkApiKey-2.json
+    // curl 'http://nightly.samebug.com/rest/0.9/checkApiKey?apiKey=x' |\
+    // jq . > src/test/resources/com/samebug/clients/search/api/jsontest/checkApiKey-2.json
     @Test
-    public void getUserInfo_Invalid() {
+    public void getUserInfoInvalid() {
         UserInfo x = gson.fromJson(stream("checkApiKey-2"), UserInfo.class);
         Assert.assertEquals(false, x.isUserExist);
     }
 
-    // curl 'http://nightly.samebug.com/rest/0.9/history' -H'X-Samebug-ApiKey: 355be195-c10b-11e5-a334-000d3a317492' | jq . > src/test/resources/com/samebug/clients/search/api/jsontest/history.json
+    // curl 'http://nightly.samebug.com/rest/0.9/history' -H'X-Samebug-ApiKey: 355be195-c10b-11e5-a334-000d3a317492' ||
+    // jq . > src/test/resources/com/samebug/clients/search/api/jsontest/history.json
     @Test
     public void getSearchHistory() {
         GroupedHistory x = gson.fromJson(stream("history"), GroupedHistory.class);
@@ -54,7 +57,8 @@ public class JsonTest {
         }
     }
 
-    // curl 'http://nightly.samebug.com/rest/0.9/search/673467' -H'X-Samebug-ApiKey: 355be195-c10b-11e5-a334-000d3a317492' | jq . > src/test/resources/com/samebug/clients/search/api/jsontest/search-1.json
+    // curl 'http://nightly.samebug.com/rest/0.9/search/673467' -H'X-Samebug-ApiKey: 355be195-c10b-11e5-a334-000d3a317492' |\
+    // jq . > src/test/resources/com/samebug/clients/search/api/jsontest/search-1.json
     @Test
     public void getSolutions() {
         Solutions x = gson.fromJson(stream("search-1"), Solutions.class);
