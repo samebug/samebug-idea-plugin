@@ -128,6 +128,51 @@ public class Events {
         }.getEvent();
     }
 
+    public static TrackEvent configOpen() {
+        return new TrackBuilder("Configuration", "Open", null) {}.getEvent();
+    }
+
+    public static TrackEvent writeTipOpen(final Project project, final int searchId) {
+        return new TrackBuilder("WriteTip", "Open", project) {
+            @Override
+            protected void initFields() {
+                fields.put("searchId", searchId);
+            }
+        }.getEvent();
+    }
+
+    public static TrackEvent writeTipCancel(final Project project, final int searchId) {
+        return new TrackBuilder("WriteTip", "Cancel", project) {
+            @Override
+            protected void initFields() {
+                fields.put("searchId", searchId);
+            }
+        }.getEvent();
+    }
+
+    public static TrackEvent writeTipSubmit(final Project project, final int searchId, final String tip, final String sourceUrl, final String result) {
+        return new TrackBuilder("WriteTip", "Submit", project) {
+            @Override
+            protected void initFields() {
+                fields.put("searchId", searchId);
+                fields.put("tip", tip);
+                fields.put("sourceUrl", sourceUrl);
+                fields.put("result", result);
+            }
+        }.getEvent();
+    }
+
+    public static TrackEvent markSubmit(final Project project, final int searchId, final int solutionId, final String result) {
+        return new TrackBuilder("Mark", "Submit", project) {
+            @Override
+            protected void initFields() {
+                fields.put("searchId", searchId);
+                fields.put("solutionId", solutionId);
+                fields.put("result", result);
+            }
+        }.getEvent();
+    }
+
     private final static Logger LOGGER = Logger.getInstance(Events.class);
 
     private static abstract class TrackBuilder {
