@@ -16,9 +16,9 @@
 package com.samebug.clients.idea.ui.component.card;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
+import com.samebug.clients.idea.ui.component.ErrorLabel;
 import com.samebug.clients.idea.ui.component.SBButton;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
 import org.apache.commons.lang.StringUtils;
@@ -295,16 +295,7 @@ public class WriteTip extends JPanel {
     public void finishPostTipWithError(final String message) {
         ApplicationManager.getApplication().assertIsDispatchThread();
         errorPanel.removeAll();
-        errorPanel.add(new JLabel() {
-            {
-                final HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
-                attributes.put(TextAttribute.SIZE, 12);
-                attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
-                setFont(getFont().deriveFont(attributes));
-                setText(message);
-                setForeground(Colors.samebugWhite);
-            }
-        });
+        errorPanel.add(new ErrorLabel(message));
         errorPanel.setVisible(true);
         updateSubmitButton(false);
         revalidate();

@@ -22,8 +22,14 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.ImageUtil;
-import com.samebug.clients.idea.ui.component.*;
+import com.samebug.clients.idea.ui.component.ExceptionMessageLabel;
+import com.samebug.clients.idea.ui.component.LinkLabel;
+import com.samebug.clients.idea.ui.component.SourceIcon;
+import com.samebug.clients.idea.ui.component.TransparentPanel;
+import com.samebug.clients.idea.ui.component.organism.LegacyBreadcrumbBar;
+import com.samebug.clients.idea.ui.component.organism.MarkPanel;
 import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
+import com.samebug.clients.search.api.entities.legacy.GroupedSearchHistory;
 import com.samebug.clients.search.api.entities.legacy.RestHit;
 import com.samebug.clients.search.api.entities.legacy.SolutionReference;
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +41,7 @@ import java.util.HashMap;
 
 public class ExternalSolutionView extends JPanel {
     final RestHit<SolutionReference> solution;
+    final GroupedSearchHistory searchGroup;
     final java.util.List<BreadCrumb> searchBreadcrumb;
     final ExceptionType exceptionType;
 
@@ -45,8 +52,12 @@ public class ExternalSolutionView extends JPanel {
     public final JPanel sourceReferencePanel;
     public final MarkPanel markPanel;
 
-    public ExternalSolutionView(RestHit<SolutionReference> solution, java.util.List<BreadCrumb> searchBreadcrumb, int searchStackId) {
+    public ExternalSolutionView(@NotNull RestHit<SolutionReference> solution,
+                                @NotNull GroupedSearchHistory searchGroup,
+                                @NotNull java.util.List<BreadCrumb> searchBreadcrumb,
+                                @NotNull Integer currentUserId) {
         this.solution = solution;
+        this.searchGroup = searchGroup;
         this.searchBreadcrumb = searchBreadcrumb;
         // RestHit<SolutionReference> should always have an exception
         assert solution.exception != null;
@@ -57,8 +68,7 @@ public class ExternalSolutionView extends JPanel {
         exceptionMessageLabel = new ExceptionMessageLabel(solution.exception.message);
         exceptionTypePanel = new ExceptionTypePanel();
         sourceReferencePanel = new SourceReferencePanel(solution.solution);
-        markPanel = new MarkPanel(solution.score, solution.markId != null, solution.createdBy,
-                !(solution.createdBy != null && solution.createdBy.id == IdeaSamebugPlugin.getInstance().getState().userId && searchStackId == solution.stackId));
+        markPanel = new MarkPanel(solution, searchGroup, currentUserId);
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));

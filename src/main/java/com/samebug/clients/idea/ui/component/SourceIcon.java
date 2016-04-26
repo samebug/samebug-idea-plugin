@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.ui.component;
 
 import com.samebug.clients.idea.ui.ColorUtil;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
@@ -25,7 +25,8 @@ final public class SourceIcon extends TransparentPanel {
     static final int width = 32;
     static final int height = 32;
 
-    public SourceIcon(@NotNull Image image) {
+    // TODO default source icon, when it is null?
+    public SourceIcon(@Nullable Image image) {
         iconImage = image;
         setPreferredSize(new Dimension(width, height));
     }

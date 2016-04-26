@@ -13,52 +13,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.component;
+package com.samebug.clients.idea.ui.component.organism;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
 import com.samebug.clients.common.ui.Colors;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
-import com.samebug.clients.search.api.entities.legacy.UserReference;
+import com.samebug.clients.idea.ui.component.ErrorLabel;
+import com.samebug.clients.idea.ui.component.SBButton;
+import com.samebug.clients.idea.ui.component.TransparentPanel;
+import com.samebug.clients.search.api.entities.legacy.GroupedSearchHistory;
+import com.samebug.clients.search.api.entities.legacy.RestHit;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.font.TextAttribute;
-import java.util.HashMap;
 
 public class MarkPanel extends TransparentPanel {
     public final SBButton markButton;
     public final JPanel voteIcon;
     public final JLabel helpedLabel;
 
-    final UserReference createdBy;
+    final RestHit hit;
+    final GroupedSearchHistory searchGroup;
     final Integer currentUserId;
 
-    public MarkPanel(@NotNull Integer score, @NotNull Boolean marked, @Nullable UserReference createdBy, @NotNull Boolean markable) {
+    public MarkPanel(@NotNull RestHit hit, @NotNull GroupedSearchHistory searchGroup, @NotNull Integer currentUserId) {
         markButton = new MarkButton();
         voteIcon = new VoteIcon();
         helpedLabel = new HelpedLabel();
 
-        this.createdBy = createdBy;
-        // TODO the current user's userId is hacked here...
-        this.currentUserId = IdeaSamebugPlugin.getInstance().getState().userId;
+        this.hit = hit;
+        this.searchGroup = searchGroup;
+        this.currentUserId = currentUserId;
 
         setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        if (markable) add(markButton);
-        add(new TransparentPanel() {
-            {
-                setPreferredSize(new Dimension(5, 0));
-            }
-        });
+        final boolean canMark = hit.createdBy == null
+                || !hit.createdBy.id.equals(currentUserId)
+                || !hit.stackId.equals(searchGroup._id.stackId);
+        if (canMark) {
+            add(new TransparentPanel() {
+                {
+                    setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+                    add(markButton);
+                }
+            });
+        }
         add(voteIcon);
         add(helpedLabel);
-        updateState(score, marked);
+        updateState();
     }
 
     public void beginPostMark() {
@@ -66,30 +72,21 @@ public class MarkPanel extends TransparentPanel {
         markButton.setEnabled(false);
     }
 
-    public void finishPostMarkWithError(final String errorMessage) {
+    public void finishPostMarkWithError(@NotNull final String errorMessage) {
         ApplicationManager.getApplication().assertIsDispatchThread();
         markButton.setEnabled(true);
         JBPopupFactory.getInstance().createBalloonBuilder(new TransparentPanel() {
             {
                 setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-                add(new JLabel() {
-                    {
-                        final HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
-                        attributes.put(TextAttribute.SIZE, 12);
-                        attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
-                        setFont(getFont().deriveFont(attributes));
-                        setText(errorMessage);
-                        setForeground(Colors.samebugWhite);
-                    }
-                });
+                add(new ErrorLabel(errorMessage));
             }
         }).setFillColor(Colors.alertPanel).createBalloon().show(RelativePoint.getCenterOf(markButton), Balloon.Position.above);
     }
 
-    public void finishPostMarkWithSuccess(final int score, final boolean marked) {
+    public void finishPostMarkWithSuccess() {
         ApplicationManager.getApplication().assertIsDispatchThread();
         markButton.setEnabled(true);
-        updateState(score, marked);
+        updateState();
         revalidate();
         repaint();
     }
@@ -129,16 +126,16 @@ public class MarkPanel extends TransparentPanel {
     class HelpedLabel extends JLabel {
     }
 
-    void updateState(final int score, final boolean marked) {
-        if (createdBy != null) {
-            helpedLabel.setText(SamebugBundle.message("samebug.mark.markedBy.someone", createdBy.id == currentUserId ? "You" : createdBy.displayName, score));
-        } else if (score == 0) {
+    void updateState() {
+        if (hit.createdBy != null) {
+            helpedLabel.setText(SamebugBundle.message("samebug.mark.markedBy.someone", hit.createdBy.id.equals(currentUserId) ? "You" : hit.createdBy.displayName, hit.score));
+        } else if (hit.score == 0) {
             helpedLabel.setText(SamebugBundle.message("samebug.mark.markedBy.noone"));
         } else {
-            helpedLabel.setText(SamebugBundle.message("samebug.mark.markedBy.anyone", score));
+            helpedLabel.setText(SamebugBundle.message("samebug.mark.markedBy.anyone", hit.score));
         }
-        markButton.setHighlighted(marked);
-        if (marked) {
+        markButton.setHighlighted(hit.markId != null);
+        if (hit.markId != null) {
             markButton.setToolTipText(SamebugBundle.message("samebug.mark.marked.tooltip"));
         } else {
             markButton.setToolTipText(SamebugBundle.message("samebug.mark.unmarked.tooltip"));

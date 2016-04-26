@@ -30,7 +30,7 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.ImageUtil;
-import com.samebug.clients.idea.ui.component.MarkPanel;
+import com.samebug.clients.idea.ui.component.organism.MarkPanel;
 import com.samebug.clients.idea.ui.component.TutorialPanel;
 import com.samebug.clients.idea.ui.component.WriteTipHint;
 import com.samebug.clients.idea.ui.component.card.ExternalSolutionView;
@@ -150,14 +150,14 @@ public class SearchTabController {
                         view.solutionsPanel.add(panel.controlPanel);
                     } else {
                         for (final RestHit<Tip> tip : model.tips) {
-                            SamebugTipView tipView = new SamebugTipView(tip, model.breadcrumb, model.searchGroup._id.stackId);
+                            SamebugTipView tipView = new SamebugTipView(tip, model.searchGroup, model.breadcrumb, IdeaSamebugPlugin.getInstance().getState().userId);
                             view.solutionsPanel.add(tipView);
                             final MarkHandler markHandler = new MarkHandler(search.lastSearch.searchId, tip, tipView.markPanel);
                             tipView.markPanel.markButton.addMouseListener(markHandler);
                             tipView.writeBetter.addMouseListener(new WriteTipHandler());
                         }
                         for (final RestHit<SolutionReference> s : model.references) {
-                            final ExternalSolutionView sv = new ExternalSolutionView(s, model.breadcrumb, model.searchGroup._id.stackId);
+                            final ExternalSolutionView sv = new ExternalSolutionView(s, model.searchGroup, model.breadcrumb, IdeaSamebugPlugin.getInstance().getState().userId);
                             view.solutionsPanel.add(sv);
                             final MarkHandler markHandler = new MarkHandler(search.lastSearch.searchId, s, sv.markPanel);
                             sv.markPanel.markButton.addMouseListener(markHandler);
@@ -365,7 +365,7 @@ public class SearchTabController {
                         ApplicationManager.getApplication().invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                markPanel.finishPostMarkWithSuccess(hit.score, hit.markId != null);
+                                markPanel.finishPostMarkWithSuccess();
                             }
                         });
                     } catch (final BadRequest e) {
