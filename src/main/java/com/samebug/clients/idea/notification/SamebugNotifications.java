@@ -31,9 +31,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-/**
- * Created by poroszd on 2/15/16.
- */
 public class SamebugNotifications {
     public static final String SAMEBUG_SEARCH_NOTIFICATIONS = "Samebug Search Notifications";
 

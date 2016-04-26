@@ -19,9 +19,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-/**
- * Created by poroszd on 2/8/16.
- */
 public class GroupedHistory {
     @NotNull
     public List<GroupedExceptionSearch> searchGroups;

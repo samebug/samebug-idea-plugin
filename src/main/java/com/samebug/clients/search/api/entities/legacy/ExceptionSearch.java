@@ -20,9 +20,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 
-/**
- * Created by poroszd on 4/1/16.
- */
 public class ExceptionSearch {
     @NotNull
     public Integer _id;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.views.components.tip;
+package com.samebug.clients.idea.ui.component;
 
 import javax.swing.*;
 

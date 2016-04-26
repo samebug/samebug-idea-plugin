@@ -22,9 +22,6 @@ import com.intellij.openapi.project.DumbAware;
 import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.ui.controller.HistoryTabController;
 
-/**
- * Created by poroszd on 3/7/16.
- */
 public class ShowZeroSolutionSearches extends ToggleAction implements DumbAware {
     @Override
     public boolean isSelected(AnActionEvent e) {

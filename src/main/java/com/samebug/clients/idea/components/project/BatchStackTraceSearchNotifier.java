@@ -30,9 +30,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by poroszd on 2/11/16.
- */
 public class BatchStackTraceSearchNotifier extends AbstractProjectComponent implements StackTraceSearchListener {
     public BatchStackTraceSearchNotifier(Project project) {
         super(project);

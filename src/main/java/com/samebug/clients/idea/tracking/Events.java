@@ -33,9 +33,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by poroszd on 2/18/16.
- */
 public class Events {
     public static TrackEvent pluginInstall() {
         return new TrackBuilder("Plugin", "FirstRun", null) {

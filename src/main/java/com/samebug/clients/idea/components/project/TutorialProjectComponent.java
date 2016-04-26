@@ -23,6 +23,7 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.components.application.TutorialApplicationComponent;
 import com.samebug.clients.idea.components.application.TutorialSettings;
@@ -30,8 +31,7 @@ import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.common.ui.Colors;
-import com.samebug.clients.idea.ui.views.components.TransparentPanel;
+import com.samebug.clients.idea.ui.component.TransparentPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,8 +39,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Created by poroszd on 2/15/16.
- * <p/>
  * I found no reasonable place for the one-time welcome message.
  * IdeaSamebugPlugin would be a better place, but I wanted to make sure there is an opened
  * project in scope, so clicking on the notification can open the samebug toolbar.

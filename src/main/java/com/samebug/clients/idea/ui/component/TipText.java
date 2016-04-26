@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.views.components;
+package com.samebug.clients.idea.ui.component;
 
 import com.samebug.clients.idea.ui.ColorUtil;
 import org.jetbrains.annotations.NotNull;

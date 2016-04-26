@@ -16,9 +16,6 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Created by poroszd on 4/25/16.
- */
 public class JsonTest {
     Gson gson;
 

@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.views.components;
+package com.samebug.clients.idea.ui.component;
 
-import com.samebug.clients.idea.ui.ColorUtil;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
-final public class SourceIcon extends TransparentPanel {
-    final Image iconImage;
-    static final int width = 32;
-    static final int height = 32;
+final public class AvatarIcon extends TransparentPanel {
+    final Image avatar;
+    static final int width = 64;
+    static final int height = 64;
 
-    public SourceIcon(@NotNull Image image) {
-        iconImage = image;
+    public AvatarIcon(@Nullable Image image) {
+        this.avatar = image;
         setPreferredSize(new Dimension(width, height));
     }
 
@@ -34,12 +33,6 @@ final public class SourceIcon extends TransparentPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        Color iconBackgroundColor = ColorUtil.sourceIconBackground();
-        if (iconBackgroundColor != null) {
-            g2.setColor(iconBackgroundColor);
-            g2.fillOval(0, 0, width, height);
-        }
-        g2.drawImage(iconImage, 2, 0, null, null);
+        g2.drawImage(avatar, 0, 0, null, null);
     }
 }

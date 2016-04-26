@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.views.components.tip;
+package com.samebug.clients.idea.ui.component;
 
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
@@ -23,9 +23,6 @@ import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
-/**
- * Created by poroszd on 4/12/16.
- */
 public class WriteTipHint extends WriteTipCTA {
     final CTAContextLabel ctaPrefix;
     final CTAContextLabel ctaPostfix;

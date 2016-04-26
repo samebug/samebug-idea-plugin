@@ -30,15 +30,15 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.ImageUtil;
+import com.samebug.clients.idea.ui.component.MarkPanel;
+import com.samebug.clients.idea.ui.component.TutorialPanel;
+import com.samebug.clients.idea.ui.component.WriteTipHint;
+import com.samebug.clients.idea.ui.component.card.ExternalSolutionView;
+import com.samebug.clients.idea.ui.component.card.SamebugTipView;
+import com.samebug.clients.idea.ui.component.card.SearchGroupCardView;
+import com.samebug.clients.idea.ui.component.card.WriteTip;
+import com.samebug.clients.idea.ui.component.tab.SearchTabView;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
-import com.samebug.clients.idea.ui.views.ExternalSolutionView;
-import com.samebug.clients.idea.ui.views.SamebugTipView;
-import com.samebug.clients.idea.ui.views.SearchGroupCardView;
-import com.samebug.clients.idea.ui.views.SearchTabView;
-import com.samebug.clients.idea.ui.views.components.MarkPanel;
-import com.samebug.clients.idea.ui.views.components.TutorialPanel;
-import com.samebug.clients.idea.ui.views.components.tip.WriteTip;
-import com.samebug.clients.idea.ui.views.components.tip.WriteTipHint;
 import com.samebug.clients.search.api.entities.ComponentStack;
 import com.samebug.clients.search.api.entities.ExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
@@ -56,9 +56,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-/**
- * Created by poroszd on 3/29/16.
- */
 public class SearchTabController {
     final Project project;
     final static Logger LOGGER = Logger.getInstance(SearchTabController.class);

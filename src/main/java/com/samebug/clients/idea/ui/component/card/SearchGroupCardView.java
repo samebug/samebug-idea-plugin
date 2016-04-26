@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.views;
+package com.samebug.clients.idea.ui.component.card;
 
 import com.samebug.clients.common.entities.ExceptionType;
+import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
-import com.samebug.clients.common.ui.Colors;
-import com.samebug.clients.idea.ui.views.components.BreadcrumbBar;
-import com.samebug.clients.idea.ui.views.components.ExceptionMessageLabel;
-import com.samebug.clients.idea.ui.views.components.TransparentPanel;
+import com.samebug.clients.idea.ui.component.BreadcrumbBar;
+import com.samebug.clients.idea.ui.component.ExceptionMessageLabel;
+import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 
 import javax.swing.*;
@@ -30,9 +30,6 @@ import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
-/**
- * Created by poroszd on 3/3/16.
- */
 public class SearchGroupCardView extends JPanel {
     public final GroupedExceptionSearch searchGroup;
     final ExceptionType exceptionType;

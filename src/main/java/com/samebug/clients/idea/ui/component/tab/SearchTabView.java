@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.views;
+package com.samebug.clients.idea.ui.component.tab;
 
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.samebug.clients.idea.ui.views.components.TransparentPanel;
+import com.samebug.clients.idea.ui.component.TransparentPanel;
+import com.samebug.clients.idea.ui.component.card.SearchGroupCardView;
 
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by poroszd on 3/29/16.
- */
 public class SearchTabView {
     public JPanel controlPanel;
     public JPanel header;

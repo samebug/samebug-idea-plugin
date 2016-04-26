@@ -19,9 +19,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-/**
- * Created by poroszd on 2/24/16.
- */
 public class Solutions {
     @NotNull
     public ExceptionSearch search;

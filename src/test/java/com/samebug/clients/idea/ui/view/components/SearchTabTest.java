@@ -1,9 +1,9 @@
 package com.samebug.clients.idea.ui.view.components;
 
 import com.google.gson.*;
-import com.samebug.clients.idea.ui.views.ExternalSolutionView;
-import com.samebug.clients.idea.ui.views.SamebugTipView;
-import com.samebug.clients.idea.ui.views.SearchTabView;
+import com.samebug.clients.idea.ui.component.card.ExternalSolutionView;
+import com.samebug.clients.idea.ui.component.card.SamebugTipView;
+import com.samebug.clients.idea.ui.component.tab.SearchTabView;
 import com.samebug.clients.search.api.entities.legacy.RestHit;
 import com.samebug.clients.search.api.entities.legacy.SolutionReference;
 import com.samebug.clients.search.api.entities.legacy.Solutions;

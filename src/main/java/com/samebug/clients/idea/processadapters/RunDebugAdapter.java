@@ -29,7 +29,7 @@ import java.util.Map;
 
 /**
  * Receives the output of a run or debug task.
- *
+ * <p/>
  * The output is forwarded to a {@link LogScanner}.
  * There could be multiple types of output (e.g. stdout and stderr), so this class
  * uses a {@link LogScannerFactory} instead of a single instance of a LogScanner.

@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.views.components.tip;
+package com.samebug.clients.idea.ui.component.card;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
-import com.samebug.clients.common.ui.Colors;
-import com.samebug.clients.idea.ui.views.components.SBButton;
-import com.samebug.clients.idea.ui.views.components.TransparentPanel;
+import com.samebug.clients.idea.ui.component.SBButton;
+import com.samebug.clients.idea.ui.component.TransparentPanel;
 import org.apache.commons.lang.StringUtils;
 import org.jdesktop.swingx.prompt.PromptSupport;
 

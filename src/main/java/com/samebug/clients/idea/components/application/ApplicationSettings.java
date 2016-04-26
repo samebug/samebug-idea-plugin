@@ -19,9 +19,6 @@ import com.samebug.clients.search.api.SamebugClient;
 
 import java.util.UUID;
 
-/**
- * Created by poroszd on 2/12/16.
- */
 public class ApplicationSettings {
     //=========================================================================
     // NOTE: Make sure to extend equals and copy constructor when adding new fields!
