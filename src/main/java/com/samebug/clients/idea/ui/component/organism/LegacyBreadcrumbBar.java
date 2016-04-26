@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.component;
+package com.samebug.clients.idea.ui.component.organism;
 
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.BrowserUtil;
 import com.samebug.clients.idea.ui.ColorUtil;
+import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
 import com.samebug.clients.search.api.entities.legacy.EntryInfo;
 import org.jetbrains.annotations.NotNull;

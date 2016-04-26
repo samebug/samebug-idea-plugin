@@ -21,7 +21,10 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.*;
+import com.samebug.clients.idea.ui.component.organism.LegacyBreadcrumbBar;
+import com.samebug.clients.idea.ui.component.organism.MarkPanel;
 import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
+import com.samebug.clients.search.api.entities.legacy.GroupedSearchHistory;
 import com.samebug.clients.search.api.entities.legacy.RestHit;
 import com.samebug.clients.search.api.entities.legacy.Tip;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +34,7 @@ import java.awt.*;
 
 public class SamebugTipView extends JPanel {
     final RestHit<Tip> tip;
+    final GroupedSearchHistory searchGroup;
     final java.util.List<BreadCrumb> searchBreadcrumb;
 
     public final LegacyBreadcrumbBar breadcrumbPanel;
@@ -40,8 +44,12 @@ public class SamebugTipView extends JPanel {
     public final MarkPanel markPanel;
     public final SBButton writeBetter;
 
-    public SamebugTipView(RestHit<Tip> tip, java.util.List<BreadCrumb> searchBreadcrumb, int searchStackId) {
+    public SamebugTipView(@NotNull RestHit<Tip> tip,
+                          @NotNull GroupedSearchHistory searchGroup,
+                          @NotNull java.util.List<BreadCrumb> searchBreadcrumb,
+                          @NotNull Integer currentUserId) {
         this.tip = tip;
+        this.searchGroup = searchGroup;
         this.searchBreadcrumb = searchBreadcrumb;
         // RestHit<Tip> should always have an author
         assert tip.createdBy != null;
@@ -50,8 +58,7 @@ public class SamebugTipView extends JPanel {
         tipLabel = new TipText(tip.solution.tip);
         sourceReferencePanel = new TipSourceReferencePanel(tip.solution);
         avatarPanel = new AvatarPanel(tip.solution.author);
-        markPanel = new MarkPanel(tip.score, tip.markId != null, tip.createdBy,
-                !(tip.createdBy.id == IdeaSamebugPlugin.getInstance().getState().userId && searchStackId == tip.stackId));
+        markPanel = new MarkPanel(tip, searchGroup, currentUserId);
         writeBetter = new WriteBetterButton();
 
         setLayout(new BorderLayout());
