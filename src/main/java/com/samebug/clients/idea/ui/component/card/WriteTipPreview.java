@@ -18,9 +18,9 @@ package com.samebug.clients.idea.ui.component.card;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.AvatarPanel;
-import com.samebug.clients.idea.ui.component.organism.BreadcrumbBar;
 import com.samebug.clients.idea.ui.component.TipText;
 import com.samebug.clients.idea.ui.component.WriteTipCTA;
+import com.samebug.clients.idea.ui.component.organism.BreadcrumbBar;
 import com.samebug.clients.search.api.entities.ExceptionSearch;
 import com.samebug.clients.search.api.entities.legacy.Author;
 

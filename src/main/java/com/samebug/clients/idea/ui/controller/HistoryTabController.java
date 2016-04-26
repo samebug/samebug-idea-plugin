@@ -16,7 +16,6 @@
 package com.samebug.clients.idea.ui.controller;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
@@ -28,28 +27,23 @@ import com.intellij.ui.content.ContentManager;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.components.project.TutorialProjectComponent;
-import com.samebug.clients.idea.messages.ConnectionStatusListener;
-import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
-import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.component.TutorialPanel;
 import com.samebug.clients.idea.ui.component.card.SearchGroupCardView;
 import com.samebug.clients.idea.ui.component.tab.HistoryTabView;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
+import com.samebug.clients.idea.ui.listeners.ConnectionStatusUpdater;
+import com.samebug.clients.idea.ui.listeners.SearchTabOpener;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedHistory;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 public class HistoryTabController {
     final private Project project;
@@ -57,199 +51,114 @@ public class HistoryTabController {
     final public HistoryTabView view;
     @Nullable
     private GroupedHistory model;
-    final private List<SearchGroupCardView> searchGroups;
 
     private boolean showZeroSolutionSearches;
     private boolean showRecurringSearches;
 
     final private ConnectionStatusUpdater statusUpdater;
-    final private HistoryUpdater historyUpdater;
-
 
     public HistoryTabController(Project project) {
         ApplicationSettings settings = IdeaSamebugPlugin.getInstance().getState();
         this.project = project;
         view = new HistoryTabView();
-        searchGroups = new ArrayList<SearchGroupCardView>();
-        showZeroSolutionSearches = settings != null && settings.showZeroSolutions;
-        showRecurringSearches = settings != null && settings.showRecurring;
-        statusUpdater = new ConnectionStatusUpdater();
-        historyUpdater = new HistoryUpdater();
+        showZeroSolutionSearches = settings.showZeroSolutions;
+        showRecurringSearches = settings.showRecurring;
+        statusUpdater = new ConnectionStatusUpdater(view.statusIcon);
     }
 
+    @NotNull
     public ConnectionStatusUpdater getStatusUpdater() {
         return statusUpdater;
     }
 
-    public HistoryUpdater getHistoryUpdater() {
-        return historyUpdater;
-    }
-
+    @NotNull
     public JPanel getControlPanel() {
         return view.controlPanel;
     }
 
-    private void emptyHistoryPane() {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            public void run() {
-                view.contentPanel.removeAll();
-            }
-        });
-    }
-
-    private void refreshHistoryPane() {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            public void run() {
-                IdeaClientService connectionService = IdeaSamebugPlugin.getInstance().getClient();
-                view.contentPanel.removeAll();
-                searchGroups.clear();
-                if (!connectionService.isConnected()) {
-                    EmptyWarningPanel panel = new EmptyWarningPanel();
-                    panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.notConnected", IdeaSamebugPlugin.getInstance().getUrlBuilder().getServerRoot()));
-                    view.contentPanel.add(panel.controlPanel);
-                } else if (connectionService.isConnected() && !connectionService.isAuthenticated()) {
-                    EmptyWarningPanel panel = new EmptyWarningPanel();
-                    panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.notLoggedIn", SamebugIcons.cogwheelTodoUrl));
-                    view.contentPanel.add(panel.controlPanel);
-                } else if (model != null) {
-                    Date now = new Date();
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(now);
-                    cal.add(Calendar.DAY_OF_YEAR, -1);
-                    Date oneDayBefore = cal.getTime();
-                    for (final GroupedExceptionSearch group : model.searchGroups) {
-                        if (!isShowZeroSolutionSearches() && group.numberOfSolutions == 0) {
-                            // filtered because there is no solution for it
-                        } else if (!isShowRecurringSearches() && group.firstSeenSimilar.before(oneDayBefore)) {
-                            // filtered because it is old
-                        } else {
-                            SearchGroupCardView searchGroupCard = new SearchGroupCardView(group);
-                            searchGroupCard.titleLabel.addMouseListener(new OpenSearchHandler(group.lastSearch.searchId));
-                            searchGroups.add(searchGroupCard);
-                            view.contentPanel.add(searchGroupCard);
-                        }
-                    }
-                    if (searchGroups.isEmpty()) {
-                        EmptyWarningPanel panel = new EmptyWarningPanel();
-                        if (model.searchGroups.isEmpty()) {
-                            panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.noSearches"));
-                        } else {
-                            panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.noVisibleSearches", SamebugIcons.calendarUrl, SamebugIcons.lightbulbUrl));
-                        }
-                        view.contentPanel.add(panel.controlPanel);
-                    }
-                }
-                view.controlPanel.revalidate();
-                view.controlPanel.repaint();
-                TutorialProjectComponent.withTutorialProject(project, new HistoryTabTutorial());
-            }
-        });
-    }
-
+    // TODO application settings should not be changed via HistoryTabController, but vica versa.
     public boolean isShowZeroSolutionSearches() {
         return showZeroSolutionSearches;
-    }
-
-    public void setShowZeroSolutionSearches(boolean showZeroSolutionSearches) {
-        ApplicationSettings settings = IdeaSamebugPlugin.getInstance().getState();
-        if (settings != null) settings.showZeroSolutions = showZeroSolutionSearches;
-        this.showZeroSolutionSearches = showZeroSolutionSearches;
     }
 
     public boolean isShowRecurringSearches() {
         return showRecurringSearches;
     }
 
-    public void setShowRecurringSearches(boolean showRecurringSearches) {
+    public void setShowZeroSolutionSearches(boolean showZeroSolutionSearches) {
+        ApplicationManager.getApplication().assertIsDispatchThread();
         ApplicationSettings settings = IdeaSamebugPlugin.getInstance().getState();
-        if (settings != null) settings.showRecurring = showRecurringSearches;
+        settings.showZeroSolutions = showZeroSolutionSearches;
+        this.showZeroSolutionSearches = showZeroSolutionSearches;
+        refreshHistoryPane();
+    }
+
+    public void setShowRecurringSearches(boolean showRecurringSearches) {
+        ApplicationManager.getApplication().assertIsDispatchThread();
+        ApplicationSettings settings = IdeaSamebugPlugin.getInstance().getState();
+        settings.showRecurring = showRecurringSearches;
         this.showRecurringSearches = showRecurringSearches;
+        refreshHistoryPane();
     }
 
     public void focus() {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
-                final ContentManager toolwindowCM = toolWindow.getContentManager();
-                final Content content = toolwindowCM.getContent(getControlPanel());
-                if (content != null) toolwindowCM.setSelectedContent(content);
-                toolWindow.show(null);
+        ApplicationManager.getApplication().assertIsDispatchThread();
+        final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
+        final ContentManager toolwindowCM = toolWindow.getContentManager();
+        final Content content = toolwindowCM.getContent(getControlPanel());
+        if (content != null) toolwindowCM.setSelectedContent(content);
+        toolWindow.show(null);
+    }
+
+    public void update(GroupedHistory history) {
+        ApplicationManager.getApplication().assertIsDispatchThread();
+        model = history;
+        refreshHistoryPane();
+    }
+
+    void refreshHistoryPane() {
+        IdeaClientService connectionService = IdeaSamebugPlugin.getInstance().getClient();
+        view.contentPanel.removeAll();
+        if (!connectionService.isConnected()) {
+            EmptyWarningPanel panel = new EmptyWarningPanel();
+            panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.notConnected", IdeaSamebugPlugin.getInstance().getUrlBuilder().getServerRoot()));
+            view.contentPanel.add(panel.controlPanel);
+        } else if (connectionService.isConnected() && !connectionService.isAuthenticated()) {
+            EmptyWarningPanel panel = new EmptyWarningPanel();
+            panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.notLoggedIn", SamebugIcons.cogwheelTodoUrl));
+            view.contentPanel.add(panel.controlPanel);
+        } else if (model != null) {
+            Date now = new Date();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(now);
+            cal.add(Calendar.DAY_OF_YEAR, -1);
+            Date oneDayBefore = cal.getTime();
+            int visibleSearches = 0;
+            for (final GroupedExceptionSearch group : model.searchGroups) {
+                if (!isShowZeroSolutionSearches() && group.numberOfSolutions == 0) {
+                    // filtered because there is no solution for it
+                } else if (!isShowRecurringSearches() && group.firstSeenSimilar.before(oneDayBefore)) {
+                    // filtered because it is old
+                } else {
+                    visibleSearches++;
+                    SearchGroupCardView searchGroupCard = new SearchGroupCardView(group);
+                    searchGroupCard.titleLabel.addMouseListener(new SearchTabOpener(project, group.lastSearch.searchId));
+                    view.contentPanel.add(searchGroupCard);
+                }
             }
-        });
-    }
-
-    class OpenSearchHandler extends MouseAdapter {
-        final int searchId;
-
-        public OpenSearchHandler(final int searchId) {
-            this.searchId = searchId;
-        }
-
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            ServiceManager.getService(project, SearchTabControllers.class).openSearchTab(searchId);
-            Tracking.projectTracking(project).trace(Events.searchClick(project, searchId));
-        }
-    }
-
-    class ConnectionStatusUpdater implements ConnectionStatusListener {
-        @Override
-        public void startRequest() {
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    view.statusIcon.setIcon(SamebugIcons.linkActive);
-                    view.statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.loading"));
-                    view.statusIcon.repaint();
+            if (visibleSearches == 0) {
+                EmptyWarningPanel panel = new EmptyWarningPanel();
+                if (model.searchGroups.isEmpty()) {
+                    panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.noSearches"));
+                } else {
+                    panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.noVisibleSearches", SamebugIcons.calendarUrl, SamebugIcons.lightbulbUrl));
                 }
-            });
+                view.contentPanel.add(panel.controlPanel);
+            }
         }
-
-        @Override
-        public void finishRequest(final boolean isConnected) {
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (IdeaSamebugPlugin.getInstance().getClient().getNumberOfActiveRequests() == 0) {
-                        if (isConnected) {
-                            view.statusIcon.setIcon(null);
-                            view.statusIcon.setToolTipText(null);
-                        } else {
-                            view.statusIcon.setIcon(SamebugIcons.linkError);
-                            view.statusIcon.setToolTipText(
-                                    SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.notConnected",
-                                            IdeaSamebugPlugin.getInstance().getUrlBuilder().getServerRoot()));
-                        }
-                        view.statusIcon.repaint();
-                    }
-                }
-            });
-        }
-    }
-
-    class HistoryUpdater implements HistoryListener {
-
-        @Override
-        public void startLoading() {
-            emptyHistoryPane();
-        }
-
-        @Override
-        public void update(GroupedHistory history) {
-            model = history;
-            refreshHistoryPane();
-        }
-
-        @Override
-        public void toggleShowSearchedWithZeroSolution(boolean enabled) {
-            refreshHistoryPane();
-        }
-
-        @Override
-        public void toggleShowOldSearches(boolean enabled) {
-            refreshHistoryPane();
-        }
+        view.controlPanel.revalidate();
+        view.controlPanel.repaint();
+        TutorialProjectComponent.withTutorialProject(project, new HistoryTabTutorial());
     }
 
     class HistoryTabTutorial extends TutorialProjectComponent.TutorialProjectAnonfun<Void> {
@@ -265,5 +174,4 @@ public class HistoryTabController {
             return null;
         }
     }
-
 }

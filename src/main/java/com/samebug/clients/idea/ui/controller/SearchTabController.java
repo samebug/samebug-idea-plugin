@@ -25,20 +25,19 @@ import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.components.project.TutorialProjectComponent;
-import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.ImageUtil;
-import com.samebug.clients.idea.ui.component.organism.MarkPanel;
 import com.samebug.clients.idea.ui.component.TutorialPanel;
 import com.samebug.clients.idea.ui.component.WriteTipHint;
 import com.samebug.clients.idea.ui.component.card.ExternalSolutionView;
 import com.samebug.clients.idea.ui.component.card.SamebugTipView;
 import com.samebug.clients.idea.ui.component.card.SearchGroupCardView;
 import com.samebug.clients.idea.ui.component.card.WriteTip;
+import com.samebug.clients.idea.ui.component.organism.MarkPanel;
 import com.samebug.clients.idea.ui.component.tab.SearchTabView;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
+import com.samebug.clients.idea.ui.listeners.ConnectionStatusUpdater;
 import com.samebug.clients.search.api.entities.ComponentStack;
 import com.samebug.clients.search.api.entities.ExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
@@ -70,7 +69,7 @@ public class SearchTabController {
     public SearchTabController(Project project) {
         this.project = project;
         view = new SearchTabView();
-        connectionStatusUpdater = new ConnectionStatusUpdater();
+        connectionStatusUpdater = new ConnectionStatusUpdater(view.statusIcon);
     }
 
     public ConnectionStatusUpdater getStatusUpdater() {
@@ -398,41 +397,6 @@ public class SearchTabController {
                 }
             });
 
-        }
-    }
-
-    class ConnectionStatusUpdater implements ConnectionStatusListener {
-        @Override
-        public void startRequest() {
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    view.statusIcon.setIcon(SamebugIcons.linkActive);
-                    view.statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.loading"));
-                    view.statusIcon.repaint();
-                }
-            });
-        }
-
-        @Override
-        public void finishRequest(final boolean isConnected) {
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (IdeaSamebugPlugin.getInstance().getClient().getNumberOfActiveRequests() == 0) {
-                        if (isConnected) {
-                            view.statusIcon.setIcon(null);
-                            view.statusIcon.setToolTipText(null);
-                        } else {
-                            view.statusIcon.setIcon(SamebugIcons.linkError);
-                            view.statusIcon.setToolTipText(
-                                    SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.notConnected",
-                                            IdeaSamebugPlugin.getInstance().getUrlBuilder().getServerRoot()));
-                        }
-                        view.statusIcon.repaint();
-                    }
-                }
-            });
         }
     }
 

@@ -27,9 +27,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
-import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.idea.ui.controller.HistoryTabController;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
@@ -46,22 +44,25 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
     }
 
     private HistoryTabController initializeHistoryTab(final Project project) {
-        HistoryTabController historyTab = ServiceManager.getService(project, HistoryTabController.class);
+        final HistoryTabController historyTab = ServiceManager.getService(project, HistoryTabController.class);
 
         MessageBusConnection appMessageBus = ApplicationManager.getApplication().getMessageBus().connect(project);
         appMessageBus.subscribe(ConnectionStatusListener.CONNECTION_STATUS_TOPIC, historyTab.getStatusUpdater());
-
-        project.getMessageBus().connect(project).subscribe(HistoryListener.UPDATE_HISTORY_TOPIC, historyTab.getHistoryUpdater());
 
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
                 IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
                 try {
-                    GroupedHistory history = client.getSearchHistory();
-                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(history);
+                    final GroupedHistory history = client.getSearchHistory();
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            historyTab.update(history);
+                        }
+                    });
                 } catch (SamebugClientException e1) {
-                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(null);
+                    historyTab.update(null);
                 }
             }
         });

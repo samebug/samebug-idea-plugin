@@ -22,7 +22,6 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.ui.awt.RelativePoint;
 import com.samebug.clients.idea.components.project.TutorialProjectComponent;
-import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.component.TutorialPanel;
 import com.samebug.clients.idea.ui.controller.HistoryTabController;
@@ -44,8 +43,6 @@ public class ShowRecurringSearches extends ToggleAction implements DumbAware {
         if (e.getProject() != null) {
             final HistoryTabController historyTab = ServiceManager.getService(e.getProject(), HistoryTabController.class);
             historyTab.setShowRecurringSearches(state);
-            e.getProject().getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).toggleShowOldSearches(state);
-
 
             TutorialProjectComponent.withTutorialProject(e.getProject(), new TutorialProjectComponent.TutorialProjectAnonfun<Void>() {
                 @Override
