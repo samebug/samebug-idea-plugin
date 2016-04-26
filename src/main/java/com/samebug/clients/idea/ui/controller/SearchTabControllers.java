@@ -33,9 +33,6 @@ import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by poroszd on 3/29/16.
- */
 public class SearchTabControllers {
     final static Logger LOGGER = Logger.getInstance(SearchTabController.class);
     final private Project project;

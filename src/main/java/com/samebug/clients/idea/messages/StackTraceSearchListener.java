@@ -20,9 +20,6 @@ import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.tracking.SearchInfo;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
-/**
- * Created by poroszd on 2/5/16.
- */
 public interface StackTraceSearchListener {
     Topic<StackTraceSearchListener> SEARCH_TOPIC = Topic.create("stacktrace search", StackTraceSearchListener.class);
 

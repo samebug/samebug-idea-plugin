@@ -33,9 +33,6 @@ import java.net.URL;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Created by poroszd on 2/23/16.
- */
 public class IdeaClientService {
     private final SamebugClient client;
     private final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();

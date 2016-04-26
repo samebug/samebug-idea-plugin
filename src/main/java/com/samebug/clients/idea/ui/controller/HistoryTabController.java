@@ -35,10 +35,10 @@ import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.idea.ui.component.TutorialPanel;
+import com.samebug.clients.idea.ui.component.card.SearchGroupCardView;
+import com.samebug.clients.idea.ui.component.tab.HistoryTabView;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
-import com.samebug.clients.idea.ui.views.HistoryTabView;
-import com.samebug.clients.idea.ui.views.SearchGroupCardView;
-import com.samebug.clients.idea.ui.views.components.TutorialPanel;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import org.jetbrains.annotations.Nullable;
@@ -51,9 +51,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by poroszd on 3/4/16.
- */
 public class HistoryTabController {
     final private Project project;
     final private static Logger LOGGER = Logger.getInstance(HistoryTabController.class);

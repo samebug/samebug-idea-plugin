@@ -20,9 +20,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 
-/**
- * Created by poroszd on 4/1/16.
- */
 public class Tip extends RestSolution {
     @NotNull
     public Author author;

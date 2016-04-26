@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.views.components.tip;
+package com.samebug.clients.idea.ui.component.card;
 
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
-import com.samebug.clients.idea.ui.views.components.AvatarPanel;
-import com.samebug.clients.idea.ui.views.components.BreadcrumbBar;
-import com.samebug.clients.idea.ui.views.components.TipText;
+import com.samebug.clients.idea.ui.component.AvatarPanel;
+import com.samebug.clients.idea.ui.component.BreadcrumbBar;
+import com.samebug.clients.idea.ui.component.TipText;
+import com.samebug.clients.idea.ui.component.WriteTipCTA;
 import com.samebug.clients.search.api.entities.ExceptionSearch;
 import com.samebug.clients.search.api.entities.legacy.Author;
 
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by poroszd on 4/12/16.
- */
 public class WriteTipPreview extends WriteTipCTA {
     final JTextArea tipLabel;
     final JPanel profilePanel;

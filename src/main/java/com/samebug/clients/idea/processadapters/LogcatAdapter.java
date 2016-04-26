@@ -20,7 +20,7 @@ import com.samebug.clients.search.api.LogScanner;
 
 /**
  * Receives the output of the logcat process.
- *
+ * <p/>
  * The logcat output is forwarded to a LogScanner.
  */
 public class LogcatAdapter extends MultiLineReceiver {

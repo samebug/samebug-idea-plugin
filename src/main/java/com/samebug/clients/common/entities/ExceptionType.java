@@ -15,9 +15,6 @@
  */
 package com.samebug.clients.common.entities;
 
-/**
- * Created by poroszd on 4/6/16.
- */
 public class ExceptionType {
     public final String fqn;
     public final String packageName;

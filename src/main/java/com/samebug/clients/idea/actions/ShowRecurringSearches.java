@@ -24,14 +24,11 @@ import com.intellij.ui.awt.RelativePoint;
 import com.samebug.clients.idea.components.project.TutorialProjectComponent;
 import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.ui.component.TutorialPanel;
 import com.samebug.clients.idea.ui.controller.HistoryTabController;
-import com.samebug.clients.idea.ui.views.components.TutorialPanel;
 
 import javax.swing.*;
 
-/**
- * Created by poroszd on 3/7/16.
- */
 public class ShowRecurringSearches extends ToggleAction implements DumbAware {
     @Override
     public boolean isSelected(AnActionEvent e) {

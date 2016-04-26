@@ -25,9 +25,6 @@ import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.controller.SearchTabControllers;
 
-/**
- * Created by poroszd on 4/18/16.
- */
 public class ReloadSearchAction extends RefreshAction implements DumbAware {
     @Override
     public void actionPerformed(final AnActionEvent e) {

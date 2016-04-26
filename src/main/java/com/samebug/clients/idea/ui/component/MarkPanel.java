@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.views.components;
+package com.samebug.clients.idea.ui.component;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
+import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
-import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.search.api.entities.legacy.UserReference;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,9 +32,6 @@ import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
-/**
- * Created by poroszd on 4/8/16.
- */
 public class MarkPanel extends TransparentPanel {
     public final SBButton markButton;
     public final JPanel voteIcon;

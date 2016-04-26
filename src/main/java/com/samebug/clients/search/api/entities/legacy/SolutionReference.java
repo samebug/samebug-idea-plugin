@@ -21,9 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import java.net.URL;
 import java.util.Date;
 
-/**
- * Created by poroszd on 4/1/16.
- */
 public class SolutionReference extends RestSolution {
     @NotNull
     public Source source;

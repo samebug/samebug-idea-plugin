@@ -19,9 +19,6 @@ import com.samebug.clients.search.api.entities.Exception;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Created by poroszd on 4/1/16.
- */
 public class RestHit<T extends RestSolution> {
     @NotNull
     public Integer solutionId;

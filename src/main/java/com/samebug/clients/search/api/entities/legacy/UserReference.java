@@ -20,9 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.net.URL;
 
-/**
- * Created by poroszd on 4/21/16.
- */
 public class UserReference {
     @NotNull
     public Integer id;

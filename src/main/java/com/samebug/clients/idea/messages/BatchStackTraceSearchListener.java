@@ -20,9 +20,6 @@ import com.samebug.clients.search.api.entities.SearchResults;
 
 import java.util.List;
 
-/**
- * Created by poroszd on 2/11/16.
- */
 public interface BatchStackTraceSearchListener {
     Topic<BatchStackTraceSearchListener> BATCH_SEARCH_TOPIC = Topic.create("batch stacktrace search", BatchStackTraceSearchListener.class);
 

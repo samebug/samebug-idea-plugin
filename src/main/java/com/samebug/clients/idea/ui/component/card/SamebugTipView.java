@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.views;
+package com.samebug.clients.idea.ui.component.card;
 
+import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
-import com.samebug.clients.common.ui.Colors;
-import com.samebug.clients.idea.ui.views.components.*;
+import com.samebug.clients.idea.ui.component.*;
 import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
 import com.samebug.clients.search.api.entities.legacy.RestHit;
 import com.samebug.clients.search.api.entities.legacy.Tip;
@@ -29,9 +29,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by poroszd on 3/29/16.
- */
 public class SamebugTipView extends JPanel {
     final RestHit<Tip> tip;
     final java.util.List<BreadCrumb> searchBreadcrumb;

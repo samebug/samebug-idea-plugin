@@ -19,9 +19,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
 import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
 
-/**
- * Created by poroszd on 2/5/16.
- */
 public interface StackTraceMatcherListener {
     Topic<StackTraceMatcherListener> FOUND_TOPIC = Topic.create("stacktrace found", StackTraceMatcherListener.class, Topic.BroadcastDirection.TO_PARENT);
 

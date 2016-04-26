@@ -19,9 +19,6 @@ import com.google.gson.*;
 
 import java.util.Date;
 
-/**
- * Created by poroszd on 4/25/16.
- */
 public class Json {
     public final static Gson gson;
 

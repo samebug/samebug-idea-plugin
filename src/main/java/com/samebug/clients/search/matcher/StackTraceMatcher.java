@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 
 /**
  * Scans the log for stacktrace.
- *
+ * <p/>
  * When a stacktrace is found, notifies the StackTraceListener.
  */
 public class StackTraceMatcher extends MatcherStateMachine implements LogScanner {

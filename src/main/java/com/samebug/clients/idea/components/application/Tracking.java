@@ -25,9 +25,6 @@ import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Created by poroszd on 2/18/16.
- */
 public class Tracking implements ApplicationComponent, TrackingListener {
     public void trace(final TrackEvent event) {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
@@ -87,7 +84,7 @@ public class Tracking implements ApplicationComponent, TrackingListener {
 
 /**
  * Mock implementation of a TrackingListener
- *
+ * <p/>
  * This implementation does nothing.
  * It exists simply to avoid NPEs when the tracking message bus was closed, and we want to ignore the requested tracking event.
  */

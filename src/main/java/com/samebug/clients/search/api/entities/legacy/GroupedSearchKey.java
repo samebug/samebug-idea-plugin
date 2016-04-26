@@ -17,9 +17,6 @@ package com.samebug.clients.search.api.entities.legacy;
 
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Created by poroszd on 4/1/16.
- */
 public class GroupedSearchKey {
     @NotNull
     public Integer userId;

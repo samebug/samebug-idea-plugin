@@ -20,9 +20,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.net.URL;
 
-/**
- * Created by poroszd on 3/7/16.
- */
 public class ComponentStack {
     @NotNull
     public Integer color;

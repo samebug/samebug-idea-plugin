@@ -1,84 +1,93 @@
 /**
  * Copyright 2016 Samebug, Inc.
- * <p/>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.views.components;
+package com.samebug.clients.idea.ui.component;
 
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.BrowserUtil;
 import com.samebug.clients.idea.ui.ColorUtil;
-import com.samebug.clients.search.api.entities.ComponentStack;
+import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
+import com.samebug.clients.search.api.entities.legacy.EntryInfo;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URL;
 
-public class BreadcrumbBar extends TransparentPanel {
-    public BreadcrumbBar(@NotNull java.util.List<ComponentStack> stacks) {
+// TODO remove either this or BreadcrumbBar when the rest api is cleared.
+public class LegacyBreadcrumbBar extends TransparentPanel {
+    public LegacyBreadcrumbBar(@NotNull java.util.List<BreadCrumb> breadcrumbs) {
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         add(new BreadcrumbEndLabel());
-        if (!stacks.isEmpty()) add(new BreadcrumbLabel(stacks.get(0)));
-        for (int i = 1; i < stacks.size(); ++i) {
+        if (!breadcrumbs.isEmpty()) add(new BreadcrumbLabel(breadcrumbs.get(0)));
+        for (int i = 1; i < breadcrumbs.size(); ++i) {
             add(new BreadcrumbDelimeterLabel());
-            add(new BreadcrumbLabel(stacks.get(i)));
+            add(new BreadcrumbLabel(breadcrumbs.get(i)));
         }
 
     }
 
-    class BreadcrumbEndLabel extends JLabel {
+    public class BreadcrumbEndLabel extends JLabel {
         @Override
         public Icon getIcon() {
             return SamebugIcons.breadcrumbEnd;
         }
     }
 
-    class BreadcrumbDelimeterLabel extends JLabel {
+    public class BreadcrumbDelimeterLabel extends JLabel {
         @Override
         public Icon getIcon() {
             return SamebugIcons.breadcrumbDelimeter;
         }
     }
 
-    class BreadcrumbLabel extends JLabel {
-        ComponentStack stack;
+    public class BreadcrumbLabel extends JLabel {
+        BreadCrumb breadCrumb;
 
-        public BreadcrumbLabel(@NotNull final ComponentStack stack) {
-            this.stack = stack;
-            if (stack.crashDocUrl != null) {
+        public BreadcrumbLabel(@NotNull final BreadCrumb breadCrumb) {
+            this.breadCrumb = breadCrumb;
+            final URL link = IdeaSamebugPlugin.getInstance().getUrlBuilder().crashdoc(breadCrumb);
+            if (link != null) {
                 setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        BrowserUtil.browse(stack.crashDocUrl);
+                        BrowserUtil.browse(link);
                     }
                 });
+            }
+            final EntryInfo e = breadCrumb.entry;
+            if (e.packageName != null) {
+                setToolTipText(String.format("%s.%s.%s()", e.packageName, e.className, e.methodName));
             }
         }
 
         @Override
         public String getText() {
-            if (stack == null) return super.getText();
-            else return stack.shortName;
+            if (breadCrumb == null) return super.getText();
+            else return breadCrumb.component.shortName;
         }
 
         @Override
         public Color getForeground() {
-            if (stack == null) return super.getForeground();
-            else return ColorUtil.componentColors(stack.color);
+            if (breadCrumb == null) return super.getForeground();
+            else return ColorUtil.componentColors(breadCrumb.component.color);
         }
     }
 }

@@ -22,9 +22,6 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import javax.swing.*;
 import java.net.URI;
 
-/**
- * Created by poroszd on 4/8/16.
- */
 public class ConfigDialogPanel {
     ApplicationSettings currentConfig;
     public JPanel controlPanel;

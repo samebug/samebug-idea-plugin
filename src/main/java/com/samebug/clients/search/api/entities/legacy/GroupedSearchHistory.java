@@ -19,9 +19,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 
-/**
- * Created by poroszd on 4/1/16.
- */
 public class GroupedSearchHistory {
     @NotNull
     public GroupedSearchKey _id;

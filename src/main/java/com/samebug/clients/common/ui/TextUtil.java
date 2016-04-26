@@ -20,9 +20,6 @@ import org.ocpsoft.prettytime.PrettyTime;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Created by poroszd on 4/6/16.
- */
 public class TextUtil {
     static final PrettyTime pretty = new PrettyTime(Locale.US);
 

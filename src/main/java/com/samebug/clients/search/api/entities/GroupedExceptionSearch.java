@@ -19,9 +19,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 
-/**
- * Created by poroszd on 3/7/16.
- */
 public class GroupedExceptionSearch {
     @NotNull
     public Integer numberOfSimilars;
