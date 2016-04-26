@@ -22,8 +22,10 @@ import com.intellij.ui.awt.RelativePoint;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
-import com.samebug.clients.idea.ui.Colors;
+import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.search.api.entities.legacy.UserReference;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,7 +43,7 @@ public class MarkPanel extends TransparentPanel {
     final UserReference createdBy;
     final Integer currentUserId;
 
-    public MarkPanel(int score, boolean marked, UserReference createdBy, boolean markable) {
+    public MarkPanel(@NotNull Integer score, @NotNull Boolean marked, @Nullable UserReference createdBy, @NotNull Boolean markable) {
         markButton = new MarkButton();
         voteIcon = new VoteIcon();
         helpedLabel = new HelpedLabel();

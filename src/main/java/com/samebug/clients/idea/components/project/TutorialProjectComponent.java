@@ -30,7 +30,7 @@ import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.idea.ui.Colors;
+import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.idea.ui.views.components.TransparentPanel;
 
 import javax.swing.*;

@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,21 +15,19 @@
  */
 package com.samebug.clients.idea.ui.views.components;
 
-import com.intellij.ide.BrowserUtil;
 import com.samebug.clients.idea.resources.SamebugIcons;
+import com.samebug.clients.idea.ui.BrowserUtil;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.search.api.entities.ComponentStack;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-/**
- * Created by poroszd on 3/17/16.
- */
 public class BreadcrumbBar extends TransparentPanel {
-    public BreadcrumbBar(java.util.List<ComponentStack> stacks) {
+    public BreadcrumbBar(@NotNull java.util.List<ComponentStack> stacks) {
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         add(new BreadcrumbEndLabel());
@@ -41,24 +39,24 @@ public class BreadcrumbBar extends TransparentPanel {
 
     }
 
-    public class BreadcrumbEndLabel extends JLabel {
+    class BreadcrumbEndLabel extends JLabel {
         @Override
         public Icon getIcon() {
             return SamebugIcons.breadcrumbEnd;
         }
     }
 
-    public class BreadcrumbDelimeterLabel extends JLabel {
+    class BreadcrumbDelimeterLabel extends JLabel {
         @Override
         public Icon getIcon() {
             return SamebugIcons.breadcrumbDelimeter;
         }
     }
 
-    public class BreadcrumbLabel extends JLabel {
+    class BreadcrumbLabel extends JLabel {
         ComponentStack stack;
 
-        public BreadcrumbLabel(final ComponentStack stack) {
+        public BreadcrumbLabel(@NotNull final ComponentStack stack) {
             this.stack = stack;
             if (stack.crashDocUrl != null) {
                 setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -66,7 +64,6 @@ public class BreadcrumbBar extends TransparentPanel {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         BrowserUtil.browse(stack.crashDocUrl);
-
                     }
                 });
             }

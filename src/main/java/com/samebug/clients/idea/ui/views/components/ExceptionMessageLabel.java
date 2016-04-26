@@ -23,9 +23,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by poroszd on 4/1/16.
- */
 public class ExceptionMessageLabel extends JLabel {
     public ExceptionMessageLabel(@Nullable String message) {
         {

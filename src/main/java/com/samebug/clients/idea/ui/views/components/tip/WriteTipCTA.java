@@ -17,9 +17,6 @@ package com.samebug.clients.idea.ui.views.components.tip;
 
 import javax.swing.*;
 
-/**
- * Created by poroszd on 4/13/16.
- */
 public abstract class WriteTipCTA extends JPanel {
     public JComponent ctaButton;
 }

@@ -50,6 +50,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         try {
             state.apiKey = apiKey;
             client = new IdeaClientService(state.getNetworkConfig());
+            urlBuilder = new WebUrlBuilder(state.serverRoot);
             userInfo = client.getUserInfo(apiKey);
             if (!userInfo.isUserExist) {
                 throw new UnknownApiKey(apiKey);
@@ -66,6 +67,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         state = new ApplicationSettings(settings);
         try {
             client = new IdeaClientService(state.getNetworkConfig());
+            urlBuilder = new WebUrlBuilder(state.serverRoot);
         } finally {
             Tracking.appTracking().trace(Events.apiKeySet());
         }

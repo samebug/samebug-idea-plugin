@@ -34,7 +34,7 @@ import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.notification.SearchResultsNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
-import com.samebug.clients.idea.ui.Colors;
+import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.idea.ui.controller.HistoryTabController;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedHistory;

@@ -19,7 +19,7 @@ import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
-import com.samebug.clients.idea.ui.Colors;
+import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.idea.ui.views.components.*;
 import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
 import com.samebug.clients.search.api.entities.legacy.RestHit;

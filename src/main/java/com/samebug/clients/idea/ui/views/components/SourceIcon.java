@@ -16,18 +16,16 @@
 package com.samebug.clients.idea.ui.views.components;
 
 import com.samebug.clients.idea.ui.ColorUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
-/**
- * Created by poroszd on 4/1/16.
- */
-public class SourceIcon extends TransparentPanel {
+final public class SourceIcon extends TransparentPanel {
     final Image iconImage;
     static final int width = 32;
     static final int height = 32;
 
-    public SourceIcon(Image image) {
+    public SourceIcon(@NotNull Image image) {
         iconImage = image;
         setPreferredSize(new Dimension(width, height));
     }
