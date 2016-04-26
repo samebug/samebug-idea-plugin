@@ -1,0 +1,66 @@
+/**
+ * Copyright 2016 Samebug, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.samebug.clients.idea.ui.listeners;
+
+import com.intellij.openapi.application.ApplicationManager;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.messages.ConnectionStatusListener;
+import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.resources.SamebugIcons;
+import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
+
+public class ConnectionStatusUpdater implements ConnectionStatusListener {
+    final JLabel statusIcon;
+
+    public ConnectionStatusUpdater(@NotNull JLabel statusIcon) {
+        this.statusIcon = statusIcon;
+    }
+
+    @Override
+    public void startRequest() {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                statusIcon.setIcon(SamebugIcons.linkActive);
+                statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.loading"));
+                statusIcon.repaint();
+            }
+        });
+    }
+
+    @Override
+    public void finishRequest(final boolean isConnected) {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if (IdeaSamebugPlugin.getInstance().getClient().getNumberOfActiveRequests() == 0) {
+                    if (isConnected) {
+                        statusIcon.setIcon(null);
+                        statusIcon.setToolTipText(null);
+                    } else {
+                        statusIcon.setIcon(SamebugIcons.linkError);
+                        statusIcon.setToolTipText(
+                                SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.notConnected",
+                                        IdeaSamebugPlugin.getInstance().getUrlBuilder().getServerRoot()));
+                    }
+                    statusIcon.repaint();
+                }
+            }
+        });
+    }
+}

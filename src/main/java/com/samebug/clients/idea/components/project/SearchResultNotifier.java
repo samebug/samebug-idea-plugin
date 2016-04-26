@@ -26,11 +26,11 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.ui.Colors;
+import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.TutorialApplicationComponent;
 import com.samebug.clients.idea.components.application.TutorialSettings;
 import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
-import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.notification.SearchResultsNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
@@ -76,15 +76,26 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
         Long timelimitForFreshSearch = new Date().getTime() - (1 * 60 * 1000);
         // TODO history does not contains the stack ids (or at least the deepest stack _id)
         Map<Integer, GroupedExceptionSearch> history = new HashMap<Integer, GroupedExceptionSearch>();
+        final HistoryTabController historyTab = ServiceManager.getService(myProject, HistoryTabController.class);
         try {
-            final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-            GroupedHistory h = plugin.getClient().getSearchHistory();
-            if (!myProject.isDisposed()) myProject.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(h);
+            final IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
+            final GroupedHistory h = client.getSearchHistory();
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    historyTab.update(h);
+                }
+            });
             for (GroupedExceptionSearch s : h.searchGroups) {
                 history.put(s.lastSearch.searchId, s);
             }
         } catch (SamebugClientException e1) {
-            if (!myProject.isDisposed()) myProject.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(null);
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    historyTab.update(null);
+                }
+            });
         }
 
         boolean isShowRecurringSearches = ServiceManager.getService(myProject, HistoryTabController.class).isShowRecurringSearches();
@@ -106,7 +117,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
                     searchIds.add(result.searchId);
                 }
             } else if (historyResult != null && historyResult.numberOfSimilars > 1
-                    && historyResult.firstSeenSimilar != null && historyResult.firstSeenSimilar.getTime() < timelimitForFreshSearch) {
+                    && historyResult.firstSeenSimilar.getTime() < timelimitForFreshSearch) {
                 if (isShowRecurringSearches) {
                     ++recurrings;
                     searchIds.add(result.searchId);

@@ -19,7 +19,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.DumbAware;
-import com.samebug.clients.idea.messages.HistoryListener;
 import com.samebug.clients.idea.ui.controller.HistoryTabController;
 
 public class ShowZeroSolutionSearches extends ToggleAction implements DumbAware {
@@ -36,7 +35,6 @@ public class ShowZeroSolutionSearches extends ToggleAction implements DumbAware 
     public void setSelected(AnActionEvent e, boolean state) {
         if (e.getProject() != null) {
             ServiceManager.getService(e.getProject(), HistoryTabController.class).setShowZeroSolutionSearches(state);
-            e.getProject().getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).toggleShowSearchedWithZeroSolution(state);
         }
     }
 }

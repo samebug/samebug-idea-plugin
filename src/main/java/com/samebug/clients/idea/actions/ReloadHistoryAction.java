@@ -18,12 +18,13 @@ package com.samebug.clients.idea.actions;
 import com.intellij.ide.actions.RefreshAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.messages.HistoryListener;
+import com.samebug.clients.idea.ui.controller.HistoryTabController;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
@@ -33,16 +34,22 @@ public class ReloadHistoryAction extends RefreshAction implements DumbAware {
         e.getPresentation().setEnabled(false);
         final Project project = e.getProject();
         if (project != null) {
-            project.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).startLoading();
+            final HistoryTabController historyTab = ServiceManager.getService(e.getProject(), HistoryTabController.class);
+            historyTab.update(null);
+
             ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
                 @Override
                 public void run() {
                     IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
                     try {
-                        GroupedHistory history = client.getSearchHistory();
-                        if (!project.isDisposed()) project.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(history);
+                        final GroupedHistory history = client.getSearchHistory();
+                        ApplicationManager.getApplication().invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                historyTab.update(history);
+                            }
+                        });
                     } catch (SamebugClientException e1) {
-                        if (!project.isDisposed()) project.getMessageBus().syncPublisher(HistoryListener.UPDATE_HISTORY_TOPIC).update(null);
                         LOGGER.warn("Failed to retrieve history", e1);
                     } finally {
                         e.getPresentation().setEnabled(true);
