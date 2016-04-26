@@ -15,17 +15,16 @@
  */
 package com.samebug.clients.idea.ui.views.components;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.awt.*;
 
-/**
- * Created by poroszd on 4/4/16.
- */
-public class AvatarIcon extends TransparentPanel {
+final public class AvatarIcon extends TransparentPanel {
     final Image avatar;
     static final int width = 64;
     static final int height = 64;
 
-    public AvatarIcon(Image image) {
+    public AvatarIcon(@Nullable Image image) {
         this.avatar = image;
         setPreferredSize(new Dimension(width, height));
     }

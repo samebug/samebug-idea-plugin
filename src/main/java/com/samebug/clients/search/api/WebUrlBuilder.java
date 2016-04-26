@@ -20,6 +20,7 @@ import com.samebug.clients.search.api.exceptions.IllegalUriException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -34,42 +35,37 @@ final public class WebUrlBuilder {
         this.serverRoot = URI.create(serverRoot);
     }
 
-    public
     @NotNull
-    URI getServerRoot() {
+    public URI getServerRoot() {
         return serverRoot;
     }
 
-    public
     @NotNull
-    URL search(@NotNull final Integer searchId) {
+    public URL search(@NotNull final Integer searchId) {
         return resolveToRoot("/search/" + searchId);
     }
 
-    public
     @NotNull
-    URL assets(@NotNull final String assetUri) {
+    public URL assets(@NotNull final String assetUri) {
         return resolveToRoot("/assets/" + assetUri);
     }
 
-    public
     @NotNull
-    URL sourceIcon(@NotNull final String iconId) {
+    public URL sourceIcon(@NotNull final String iconId) {
         return resolveToRoot("/assets/images/sources/" + iconId + ".png");
     }
 
-    public
     @Nullable
-    URL crashdoc(@NotNull final BreadCrumb b) {
+    public URL crashdoc(@NotNull final BreadCrumb b) {
         // TODO currently we can decide between library- and application components
         // only by the component color (0 for application components)
         if (b.component.color == 0) return null;
         else {
             try {
                 // TODO handle default package?
-                final String entryUri = b.entry.packageName + "/" + b.entry.className + "/" + b.entry.methodName + "/" + b.exceptionType;
+                final String entryUri = enc(b.entry.packageName) + "/" + enc(b.entry.className) + "/" + enc(b.entry.methodName) + "/" + enc(b.exceptionType);
                 final String passThrough = "?pt=" + b.passThrough;
-                return resolveToRoot("/crashdocs/" + URLEncoder.encode(entryUri, "utf-8") + passThrough);
+                return resolveToRoot("/crashdocs/" + entryUri + passThrough);
             } catch (Throwable ignored) {
                 return null;
             }
@@ -83,5 +79,9 @@ final public class WebUrlBuilder {
         } catch (MalformedURLException e) {
             throw new IllegalUriException("Unable to resolve uri " + uri, e);
         }
+    }
+
+    String enc(final String s) throws UnsupportedEncodingException {
+        return URLEncoder.encode(s, "utf-8");
     }
 }

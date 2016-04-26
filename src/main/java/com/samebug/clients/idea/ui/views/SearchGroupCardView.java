@@ -19,7 +19,7 @@ import com.samebug.clients.common.entities.ExceptionType;
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
-import com.samebug.clients.idea.ui.Colors;
+import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.idea.ui.views.components.BreadcrumbBar;
 import com.samebug.clients.idea.ui.views.components.ExceptionMessageLabel;
 import com.samebug.clients.idea.ui.views.components.TransparentPanel;

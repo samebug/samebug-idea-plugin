@@ -16,21 +16,19 @@
 package com.samebug.clients.idea.ui.views.components;
 
 import com.samebug.clients.idea.ui.ColorUtil;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
-/**
- * Created by poroszd on 4/12/16.
- */
 public class TipText extends JTextArea {
-    public TipText(final String tipBody) {
+    public TipText(@NotNull final String tipBody) {
         HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
         attributes.put(TextAttribute.SIZE, 16);
         attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
-        setFont(getFont().deriveFont(attributes));
+        setFont(UIManager.getFont("Label.font").deriveFont(attributes));
         setEditable(false);
         setLineWrap(true);
         setWrapStyleWord(true);

@@ -18,7 +18,7 @@ package com.samebug.clients.idea.ui.views.components.tip;
 import com.intellij.openapi.application.ApplicationManager;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
-import com.samebug.clients.idea.ui.Colors;
+import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.idea.ui.views.components.SBButton;
 import com.samebug.clients.idea.ui.views.components.TransparentPanel;
 import org.apache.commons.lang.StringUtils;
@@ -35,9 +35,6 @@ import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
-/**
- * Created by poroszd on 4/12/16.
- */
 public class WriteTip extends JPanel {
     public static final int maxCharacters = 140;
     public static final int minCharacters = 5;

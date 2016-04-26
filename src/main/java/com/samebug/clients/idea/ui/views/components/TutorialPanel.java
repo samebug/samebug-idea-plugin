@@ -15,18 +15,16 @@
  */
 package com.samebug.clients.idea.ui.views.components;
 
-import com.samebug.clients.idea.ui.Colors;
+import com.samebug.clients.common.ui.Colors;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
-/**
- * Created by poroszd on 4/19/16.
- */
 public class TutorialPanel extends TransparentPanel {
-    public TutorialPanel(final String title, final String message) {
+    public TutorialPanel(@NotNull final String title, @NotNull final String message) {
         add(new JLabel() {
             {
                 setText(title);

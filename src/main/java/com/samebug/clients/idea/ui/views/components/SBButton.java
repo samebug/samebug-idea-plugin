@@ -15,19 +15,20 @@
  */
 package com.samebug.clients.idea.ui.views.components;
 
+import com.samebug.clients.idea.ui.views.listeners.RedispatchingMouseAdapter;
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseListener;
 
-/**
- * Created by poroszd on 4/21/16.
- */
-// TODO it mimics a JButton, but is actually a JPanel, and quite fragile.
-//    It would be better to use Look&Feel correctly to achive the L&F we want.
+// TODO it mimics a JButton, but is actually a JPanel.
+// Simple JButton styling will be broken by com.intellij.ide.ui.laf.darcula.ui.DarculaButtonUI
+// when the button has a border.
+// The other (possibly better) option would be to override paint().
 public class SBButton extends JPanel {
     public final JButton button;
 
-    public SBButton(final String label) {
+    public SBButton(@NotNull final String label) {
         this.button = new Button(label);
 
         setLayout(new BorderLayout());
@@ -43,6 +44,12 @@ public class SBButton extends JPanel {
             setContentAreaFilled(false);
             setBorder(null);
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            addMouseListener(RedispatchingMouseAdapter.INSTANCE);
+        }
+
+        @Override
+        public String getToolTipText() {
+            return SBButton.this.getToolTipText();
         }
     }
 
@@ -65,19 +72,5 @@ public class SBButton extends JPanel {
             ));
             button.setForeground(highlightColor);
         }
-
-    }
-
-    // TODO this is especially nasty
-    @Override
-    public void addMouseListener(MouseListener l) {
-        super.addMouseListener(l);
-        button.addMouseListener(l);
-    }
-
-    @Override
-    public void setToolTipText(String tooltip) {
-        super.setToolTipText(tooltip);
-        button.setToolTipText(tooltip);
     }
 }

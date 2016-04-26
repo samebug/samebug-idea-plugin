@@ -32,54 +32,47 @@ final public class RestUrlBuilder {
 
     public RestUrlBuilder(@NotNull final String serverRoot) {
         assert !serverRoot.endsWith("/");
-        this.gateway = URI.create(serverRoot).resolve("/rest/").resolve(API_VERSION);
+        this.gateway = URI.create(serverRoot + "/").resolve("rest/").resolve(API_VERSION + "/");
     }
 
-    public
     @NotNull
-    URL search() {
-        return resolve("/search");
+    public URL search() {
+        return resolve("search");
     }
 
-    public
     @NotNull
-    URL search(@NotNull final Integer searchId) {
-        return resolve("/search/" + searchId);
+    public URL search(@NotNull final Integer searchId) {
+        return resolve("search/" + searchId);
     }
 
-    public
     @NotNull
-    URL checkApiKey(@NotNull final String apiKey) throws UnableToPrepareUrl {
+    public URL checkApiKey(@NotNull final String apiKey) throws UnableToPrepareUrl {
         try {
-            final String uri = "/checkApiKey?apiKey=" + URLEncoder.encode(apiKey, "UTF-8");
+            final String uri = "checkApiKey?apiKey=" + URLEncoder.encode(apiKey, "UTF-8");
             return resolve(uri);
         } catch (UnsupportedEncodingException e) {
             throw new UnableToPrepareUrl("Unable to resolve uri with apiKey " + apiKey, e);
         }
     }
 
-    public
     @NotNull
-    URL history() {
-        return resolve("/history");
+    public URL history() {
+        return resolve("history");
     }
 
-    public
     @NotNull
-    URL tip() {
-        return resolve("/tip");
+    public URL tip() {
+        return resolve("tip");
     }
 
-    public
     @NotNull
-    URL mark() {
-        return resolve("/mark");
+    public URL mark() {
+        return resolve("mark");
     }
 
-    public
     @NotNull
-    URL cancelMark() {
-        return resolve("/mark/cancel");
+    public URL cancelMark() {
+        return resolve("mark/cancel");
     }
 
 
