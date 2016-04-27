@@ -17,7 +17,7 @@ package com.samebug.clients.common.ui;
 
 import java.awt.*;
 
-public class Colors {
+final public class Colors {
     public static final Color samebugOrange = new Color(0xFF5621);
     public static final Color samebugWhite = new Color(0xFFFFFF);
 

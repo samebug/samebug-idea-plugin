@@ -17,7 +17,7 @@ package com.samebug.clients.search.api.entities.tracking;
 
 import java.util.Map;
 
-public class TrackEvent {
+final public class TrackEvent {
     public TrackEvent(Map<String, Object> fields) {
         this.fields = fields;
     }

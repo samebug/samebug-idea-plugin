@@ -13,17 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.ui;
+package com.samebug.clients.idea.ui.listeners;
 
-import org.ocpsoft.prettytime.PrettyTime;
+import com.samebug.clients.idea.ui.BrowserUtil;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Date;
-import java.util.Locale;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URL;
 
-final public class TextUtil {
-    static final PrettyTime pretty = new PrettyTime(Locale.US);
+final public class LinkOpener extends MouseAdapter {
+    @NotNull
+    final URL link;
 
-    public static String prettyTime(final Date date) {
-        return pretty.format(date);
+    public LinkOpener(@NotNull URL link) {
+        this.link = link;
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        BrowserUtil.browse(link);
     }
 }

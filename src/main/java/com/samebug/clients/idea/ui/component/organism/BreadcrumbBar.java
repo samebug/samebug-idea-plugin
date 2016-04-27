@@ -16,18 +16,16 @@
 package com.samebug.clients.idea.ui.component.organism;
 
 import com.samebug.clients.idea.resources.SamebugIcons;
-import com.samebug.clients.idea.ui.BrowserUtil;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
+import com.samebug.clients.idea.ui.listeners.LinkOpener;
 import com.samebug.clients.search.api.entities.ComponentStack;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
-public class BreadcrumbBar extends TransparentPanel {
+final public class BreadcrumbBar extends TransparentPanel {
     public BreadcrumbBar(@NotNull java.util.List<ComponentStack> stacks) {
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
@@ -40,33 +38,28 @@ public class BreadcrumbBar extends TransparentPanel {
 
     }
 
-    class BreadcrumbEndLabel extends JLabel {
+    final class BreadcrumbEndLabel extends JLabel {
         @Override
         public Icon getIcon() {
             return SamebugIcons.breadcrumbEnd;
         }
     }
 
-    class BreadcrumbDelimeterLabel extends JLabel {
+    final class BreadcrumbDelimeterLabel extends JLabel {
         @Override
         public Icon getIcon() {
             return SamebugIcons.breadcrumbDelimeter;
         }
     }
 
-    class BreadcrumbLabel extends JLabel {
+    final class BreadcrumbLabel extends JLabel {
         ComponentStack stack;
 
         public BreadcrumbLabel(@NotNull final ComponentStack stack) {
             this.stack = stack;
             if (stack.crashDocUrl != null) {
                 setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        BrowserUtil.browse(stack.crashDocUrl);
-                    }
-                });
+                addMouseListener(new LinkOpener(stack.crashDocUrl));
             }
         }
 

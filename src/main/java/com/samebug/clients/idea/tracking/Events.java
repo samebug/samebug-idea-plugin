@@ -33,7 +33,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Events {
+final public class Events {
     public static TrackEvent pluginInstall() {
         return new TrackBuilder("Plugin", "FirstRun", null) {
         }.getEvent();

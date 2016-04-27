@@ -23,7 +23,7 @@ import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
-public class WriteTipHint extends WriteTipCTA {
+final public class WriteTipHint extends WriteTipCTA {
     final CTAContextLabel ctaPrefix;
     final CTAContextLabel ctaPostfix;
 

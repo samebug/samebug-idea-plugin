@@ -21,7 +21,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.DumbAware;
 import com.samebug.clients.idea.ui.controller.HistoryTabController;
 
-public class ShowZeroSolutionSearches extends ToggleAction implements DumbAware {
+final public class ShowZeroSolutionSearches extends ToggleAction implements DumbAware {
     @Override
     public boolean isSelected(AnActionEvent e) {
         if (e.getProject() != null) {

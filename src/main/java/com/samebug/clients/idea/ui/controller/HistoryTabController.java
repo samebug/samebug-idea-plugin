@@ -187,6 +187,7 @@ final public class HistoryTabController {
         public HideRecurringSearchesTutorial(boolean showRecurringSearches) {
             this.showRecurringSearches = showRecurringSearches;
         }
+
         @Override
         public Void call() {
             if (!showRecurringSearches && settings.recurringExceptionsFilter) {

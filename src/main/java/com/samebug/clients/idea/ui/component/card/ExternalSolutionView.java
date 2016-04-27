@@ -39,7 +39,7 @@ import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
-public class ExternalSolutionView extends JPanel {
+final public class ExternalSolutionView extends JPanel {
     final RestHit<SolutionReference> solution;
     final GroupedSearchHistory searchGroup;
     final java.util.List<BreadCrumb> searchBreadcrumb;
@@ -112,7 +112,7 @@ public class ExternalSolutionView extends JPanel {
         setMaximumSize(new Dimension(Integer.MAX_VALUE, Math.min(getPreferredSize().height, 250)));
     }
 
-    class SolutionTitlePanel extends TransparentPanel {
+    final class SolutionTitlePanel extends TransparentPanel {
         {
             final Image sourceIcon = ImageUtil.getScaled(IdeaSamebugPlugin.getInstance().getUrlBuilder().sourceIcon(solution.solution.source.icon), 32, 32);
             add(new SourceIcon(sourceIcon), BorderLayout.WEST);
@@ -134,7 +134,7 @@ public class ExternalSolutionView extends JPanel {
         }
     }
 
-    class ExceptionTypePanel extends TransparentPanel {
+    final class ExceptionTypePanel extends TransparentPanel {
         {
             add(new JLabel() {
                 {
@@ -153,7 +153,7 @@ public class ExternalSolutionView extends JPanel {
         }
     }
 
-    class SourceReferencePanel extends TransparentPanel {
+    final class SourceReferencePanel extends TransparentPanel {
         public SourceReferencePanel(@NotNull SolutionReference solutionReference) {
             setLayout(new FlowLayout(FlowLayout.RIGHT));
             if (solutionReference.author == null) {

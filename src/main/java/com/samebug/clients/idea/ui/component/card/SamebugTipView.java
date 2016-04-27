@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
-public class SamebugTipView extends JPanel {
+final public class SamebugTipView extends JPanel {
     final RestHit<Tip> tip;
     final GroupedSearchHistory searchGroup;
     final java.util.List<BreadCrumb> searchBreadcrumb;
@@ -113,7 +113,7 @@ public class SamebugTipView extends JPanel {
         return ColorUtil.highlightPanel();
     }
 
-    class TipSourceReferencePanel extends TransparentPanel {
+    final class TipSourceReferencePanel extends TransparentPanel {
         public TipSourceReferencePanel(@NotNull Tip tip) {
             setLayout(new FlowLayout(FlowLayout.RIGHT));
             if (tip.via == null) {
@@ -168,7 +168,7 @@ public class SamebugTipView extends JPanel {
         }
     }
 
-    class WriteBetterButton extends SBButton {
+    final class WriteBetterButton extends SBButton {
         public WriteBetterButton() {
             super(SamebugBundle.message("samebug.tip.cta.better"));
             setHighlighted(true);

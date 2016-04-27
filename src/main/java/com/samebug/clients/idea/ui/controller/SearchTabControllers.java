@@ -29,21 +29,27 @@ import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.search.api.entities.legacy.Solutions;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SearchTabControllers {
+final public class SearchTabControllers {
     final static Logger LOGGER = Logger.getInstance(SearchTabController.class);
-    final private Project project;
-    final private Map<Integer, SearchTabController> activeSearches;
+    @NotNull
+    final Project project;
+    @NotNull
+    final Map<Integer, SearchTabController> activeSearches;
+    @Nullable
     Integer focusedSearch = null;
 
-    public SearchTabControllers(Project project) {
+    public SearchTabControllers(@NotNull Project project) {
         this.project = project;
         activeSearches = new HashMap<Integer, SearchTabController>();
     }
 
+    @NotNull
     public SearchTabController openSearchTab(final int searchId) {
         final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
         final ContentManager toolwindowCM = toolWindow.getContentManager();
@@ -78,10 +84,20 @@ public class SearchTabControllers {
             public void run() {
                 try {
                     final Solutions solutions = IdeaSamebugPlugin.getInstance().getClient().getSolutions(searchId);
-                    searchTab.update(solutions);
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            searchTab.update(solutions);
+                        }
+                    });
                 } catch (SamebugClientException e) {
                     LOGGER.warn("Failed to download solutions", e);
-                    searchTab.update(null);
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            searchTab.update(null);
+                        }
+                    });
                 }
 
             }

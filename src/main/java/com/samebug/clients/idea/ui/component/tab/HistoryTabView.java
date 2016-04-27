@@ -26,7 +26,7 @@ import java.awt.*;
 /**
  * Created by poroszd on 3/4/16.
  */
-public class HistoryTabView {
+final public class HistoryTabView {
     public JPanel controlPanel;
     public JPanel toolbarPanel;
     public JLabel statusIcon;

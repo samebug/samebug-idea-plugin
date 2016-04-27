@@ -20,7 +20,7 @@ import com.intellij.AbstractBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
 
-public class SamebugBundle extends AbstractBundle {
+final public class SamebugBundle extends AbstractBundle {
     private static final SamebugBundle BUNDLE = new SamebugBundle();
 
     private SamebugBundle() {

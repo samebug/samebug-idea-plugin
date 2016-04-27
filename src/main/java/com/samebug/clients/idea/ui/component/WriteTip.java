@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.component.card;
+package com.samebug.clients.idea.ui.component;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
-import com.samebug.clients.idea.ui.component.ErrorLabel;
-import com.samebug.clients.idea.ui.component.SBButton;
-import com.samebug.clients.idea.ui.component.TransparentPanel;
 import org.apache.commons.lang.StringUtils;
 import org.jdesktop.swingx.prompt.PromptSupport;
 
@@ -35,7 +32,7 @@ import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
-public class WriteTip extends JPanel {
+final public class WriteTip extends JPanel {
     public static final int maxCharacters = 140;
     public static final int minCharacters = 5;
     public static final int maxLines = 7;
@@ -127,7 +124,7 @@ public class WriteTip extends JPanel {
         return ColorUtil.writeTipPanel();
     }
 
-    class TipTitle extends JLabel {
+    final class TipTitle extends JLabel {
         {
             setText(SamebugBundle.message("samebug.tip.write.tip.title"));
             final HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
@@ -136,7 +133,7 @@ public class WriteTip extends JPanel {
         }
     }
 
-    class SourceTitle extends JLabel {
+    final class SourceTitle extends JLabel {
         {
             setText(SamebugBundle.message("samebug.tip.write.source.title"));
             final HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
@@ -146,13 +143,13 @@ public class WriteTip extends JPanel {
         }
     }
 
-    class DescriptionLabel extends JLabel {
+    final class DescriptionLabel extends JLabel {
         public DescriptionLabel(final String label) {
             super(label);
         }
     }
 
-    class TipBody extends JTextArea {
+    final class TipBody extends JTextArea {
         {
             setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             setRows(4);
@@ -167,7 +164,7 @@ public class WriteTip extends JPanel {
         }
     }
 
-    class SourceLink extends JTextField {
+    final class SourceLink extends JTextField {
         {
             setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         }
@@ -178,7 +175,7 @@ public class WriteTip extends JPanel {
         }
     }
 
-    class LengthCounter extends JLabel {
+    final class LengthCounter extends JLabel {
         int length;
 
         {
@@ -202,7 +199,7 @@ public class WriteTip extends JPanel {
         }
     }
 
-    class ErrorPanel extends JPanel {
+    final class ErrorPanel extends JPanel {
         {
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -215,7 +212,7 @@ public class WriteTip extends JPanel {
         }
     }
 
-    class CancelButton extends JLabel {
+    final class CancelButton extends JLabel {
         {
             final HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
             attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
@@ -230,7 +227,7 @@ public class WriteTip extends JPanel {
         }
     }
 
-    class SubmitButton extends SBButton {
+    final class SubmitButton extends SBButton {
         public SubmitButton() {
             super(SamebugBundle.message("samebug.tip.write.submit"));
         }
@@ -246,7 +243,7 @@ public class WriteTip extends JPanel {
         }
     }
 
-    class TipConstraints extends DocumentFilter {
+    final class TipConstraints extends DocumentFilter {
         @Override
         public void replace(FilterBypass fb, int offs, int length, String str, AttributeSet a) throws BadLocationException {
             super.replace(fb, offs, length, str, a);
@@ -261,7 +258,7 @@ public class WriteTip extends JPanel {
         }
     }
 
-    class TipEditorListener implements DocumentListener {
+    final class TipEditorListener implements DocumentListener {
         @Override
         public void insertUpdate(DocumentEvent e) {
             lengthCounter.updateLength(e.getDocument().getLength());

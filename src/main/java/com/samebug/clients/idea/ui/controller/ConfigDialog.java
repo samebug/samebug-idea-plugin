@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class ConfigDialog implements Configurable {
+final public class ConfigDialog implements Configurable {
     final private static Logger LOGGER = Logger.getInstance(ConfigDialog.class);
 
     ConfigDialogPanel dialog = null;
