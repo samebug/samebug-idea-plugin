@@ -43,14 +43,6 @@ final public class SearchTabView {
         };
         scrollPane = new JScrollPane();
         solutionsPanel = new SolutionsPanel();
-        controlPanel = new JPanel() {
-            {
-                setLayout(new BorderLayout());
-                add(header, BorderLayout.NORTH);
-                add(scrollPane, BorderLayout.CENTER);
-            }
-        };
-
         scrollPane.setViewportView(solutionsPanel);
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
@@ -60,13 +52,26 @@ final public class SearchTabView {
         statusIcon.setIcon(null);
         toolbarPanel = new ToolBarPanel();
         toolbarPanel.add(statusIcon, BorderLayout.EAST);
+
+        controlPanel = new JPanel() {
+            {
+                setLayout(new BorderLayout());
+                add(new TransparentPanel() {
+                    {
+                        add(toolbarPanel, BorderLayout.NORTH);
+                        add(header, BorderLayout.CENTER);
+                    }
+                }, BorderLayout.NORTH);
+                add(scrollPane, BorderLayout.CENTER);
+            }
+        };
+
     }
 
     public void makeHeader(final SearchGroupCardView search, final JComponent extension) {
         header.removeAll();
         header.add(new TransparentPanel() {
             {
-                add(toolbarPanel, BorderLayout.NORTH);
                 if (search != null) {
                     add(search, BorderLayout.CENTER);
                     if (extension != null) {
@@ -80,7 +85,7 @@ final public class SearchTabView {
         });
     }
 
-    class ToolBarPanel extends JPanel {
+    final class ToolBarPanel extends JPanel {
         {
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
@@ -91,7 +96,7 @@ final public class SearchTabView {
         }
     }
 
-    class SolutionsPanel extends JPanel {
+    final class SolutionsPanel extends JPanel {
         {
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         }
