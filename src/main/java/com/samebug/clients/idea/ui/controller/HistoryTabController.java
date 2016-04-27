@@ -45,19 +45,22 @@ import javax.swing.*;
 import java.util.Calendar;
 import java.util.Date;
 
-public class HistoryTabController {
-    final private Project project;
-    final private static Logger LOGGER = Logger.getInstance(HistoryTabController.class);
-    final public HistoryTabView view;
+final public class HistoryTabController {
+    final static Logger LOGGER = Logger.getInstance(HistoryTabController.class);
+    @NotNull
+    final Project project;
+    @NotNull
+    final HistoryTabView view;
+    @NotNull
+    final ConnectionStatusUpdater statusUpdater;
+
     @Nullable
-    private GroupedHistory model;
+    GroupedHistory model;
+    boolean showZeroSolutionSearches;
+    boolean showRecurringSearches;
 
-    private boolean showZeroSolutionSearches;
-    private boolean showRecurringSearches;
 
-    final private ConnectionStatusUpdater statusUpdater;
-
-    public HistoryTabController(Project project) {
+    public HistoryTabController(@NotNull Project project) {
         ApplicationSettings settings = IdeaSamebugPlugin.getInstance().getState();
         this.project = project;
         view = new HistoryTabView();
@@ -76,7 +79,6 @@ public class HistoryTabController {
         return view.controlPanel;
     }
 
-    // TODO application settings should not be changed via HistoryTabController, but vica versa.
     public boolean isShowZeroSolutionSearches() {
         return showZeroSolutionSearches;
     }
@@ -85,6 +87,7 @@ public class HistoryTabController {
         return showRecurringSearches;
     }
 
+    // TODO application settings should not be changed via HistoryTabController, but vica versa.
     public void setShowZeroSolutionSearches(boolean showZeroSolutionSearches) {
         ApplicationManager.getApplication().assertIsDispatchThread();
         ApplicationSettings settings = IdeaSamebugPlugin.getInstance().getState();
@@ -99,8 +102,10 @@ public class HistoryTabController {
         settings.showRecurring = showRecurringSearches;
         this.showRecurringSearches = showRecurringSearches;
         refreshHistoryPane();
+        TutorialProjectComponent.withTutorialProject(project, new HideRecurringSearchesTutorial(showRecurringSearches));
     }
 
+    // TODO this method probably not belongs here, but to a higher level samebug tool window controller
     public void focus() {
         ApplicationManager.getApplication().assertIsDispatchThread();
         final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
@@ -116,6 +121,7 @@ public class HistoryTabController {
         refreshHistoryPane();
     }
 
+    // TODO move connection status error panel elsewhere
     void refreshHistoryPane() {
         IdeaClientService connectionService = IdeaSamebugPlugin.getInstance().getClient();
         view.contentPanel.removeAll();
@@ -170,6 +176,25 @@ public class HistoryTabController {
                         SamebugBundle.message("samebug.tutorial.historyTab.message"));
                 Balloon balloon = TutorialProjectComponent.createTutorialBalloon(project, tutorialPanel);
                 balloon.show(RelativePoint.getNorthWestOf(view.toolbarPanel), Balloon.Position.atLeft);
+            }
+            return null;
+        }
+    }
+
+    class HideRecurringSearchesTutorial extends TutorialProjectComponent.TutorialProjectAnonfun<Void> {
+        final boolean showRecurringSearches;
+
+        public HideRecurringSearchesTutorial(boolean showRecurringSearches) {
+            this.showRecurringSearches = showRecurringSearches;
+        }
+        @Override
+        public Void call() {
+            if (!showRecurringSearches && settings.recurringExceptionsFilter) {
+                settings.recurringExceptionsFilter = false;
+                final JPanel tutorialPanel = new TutorialPanel(SamebugBundle.message("samebug.tutorial.recurringExceptionsFilter.title"),
+                        SamebugBundle.message("samebug.tutorial.recurringExceptionsFilter.message"));
+                Balloon balloon = TutorialProjectComponent.createTutorialBalloon(project, tutorialPanel);
+                balloon.show(RelativePoint.getNorthWestOf(view.toolbarPanel), Balloon.Position.above);
             }
             return null;
         }
