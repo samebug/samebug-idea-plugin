@@ -51,8 +51,7 @@ public class SamebugTipView extends JPanel {
         tipLabel = new TipText(tip.solution.tip);
         sourceReferencePanel = new TipSourceReferencePanel(tip.solution);
         avatarPanel = new AvatarPanel(tip.solution.author);
-        markPanel = new MarkPanel(tip.score, tip.markId != null, tip.createdBy,
-                !(tip.createdBy.id == IdeaSamebugPlugin.getInstance().getState().userId && searchStackId == tip.stackId));
+        markPanel = new MarkPanel(tip.score, tip.markId != null, null, true);
         writeBetter = new WriteBetterButton();
 
         setLayout(new BorderLayout());
