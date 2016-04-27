@@ -31,6 +31,7 @@ final public class ReloadSearchAction extends RefreshAction implements DumbAware
         e.getPresentation().setEnabled(false);
         final Project project = e.getProject();
         if (project != null) {
+            // TODO this and ReloadHistoryAction should behave the same
             ServiceManager.getService(project, SearchTabControllers.class).reloadFocusedSearch();
         }
     }
