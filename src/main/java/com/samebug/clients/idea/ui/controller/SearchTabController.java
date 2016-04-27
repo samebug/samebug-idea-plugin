@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.idea.ui.controller;
 
-import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -29,15 +28,16 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.component.TutorialPanel;
+import com.samebug.clients.idea.ui.component.WriteTip;
 import com.samebug.clients.idea.ui.component.WriteTipHint;
 import com.samebug.clients.idea.ui.component.card.ExternalSolutionView;
 import com.samebug.clients.idea.ui.component.card.SamebugTipView;
 import com.samebug.clients.idea.ui.component.card.SearchGroupCardView;
-import com.samebug.clients.idea.ui.component.card.WriteTip;
 import com.samebug.clients.idea.ui.component.organism.MarkPanel;
 import com.samebug.clients.idea.ui.component.tab.SearchTabView;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.listeners.ConnectionStatusUpdater;
+import com.samebug.clients.idea.ui.listeners.LinkOpener;
 import com.samebug.clients.search.api.entities.ComponentStack;
 import com.samebug.clients.search.api.entities.ExceptionSearch;
 import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
@@ -46,6 +46,7 @@ import com.samebug.clients.search.api.entities.legacy.*;
 import com.samebug.clients.search.api.exceptions.BadRequest;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -55,34 +56,42 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class SearchTabController {
-    final Project project;
+final public class SearchTabController {
     final static Logger LOGGER = Logger.getInstance(SearchTabController.class);
+    @NotNull
+    final Project project;
+    @NotNull
     final SearchTabView view;
+    @NotNull
     final ConnectionStatusUpdater connectionStatusUpdater;
 
     @Nullable
     Solutions model;
+    // TODO this field is actually a transformed field from model. Get rid of this when possible.
     @Nullable
     GroupedExceptionSearch search;
 
-    public SearchTabController(Project project) {
+    public SearchTabController(@NotNull Project project) {
         this.project = project;
         view = new SearchTabView();
         connectionStatusUpdater = new ConnectionStatusUpdater(view.statusIcon);
     }
 
+    @NotNull
     public ConnectionStatusUpdater getStatusUpdater() {
         return connectionStatusUpdater;
     }
 
+    @NotNull
     public JPanel getControlPanel() {
         return view.controlPanel;
     }
 
-    public void update(final Solutions solutions) {
+    public void update(@Nullable final Solutions solutions) {
+        ApplicationManager.getApplication().assertIsDispatchThread();
         model = solutions;
         if (model != null) {
+            // FIXME transform between the two search group entity. Get rid of this after the rest api is cleared.
             search = new GroupedExceptionSearch() {
                 {
                     firstSeenSimilar = model.searchGroup.firstSeen;
@@ -109,6 +118,7 @@ public class SearchTabController {
                     };
                 }
             };
+            // Loading avatars to imageCache on a background thread, and reload them when all images are ready.
             ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
                 @Override
                 public void run() {
@@ -126,7 +136,11 @@ public class SearchTabController {
                     }
 
                     ImageUtil.loadImages(imageUrls);
-                    refreshPane();
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        public void run() {
+                            refreshPane();
+                        }
+                    });
                 }
             });
         } else {
@@ -136,46 +150,43 @@ public class SearchTabController {
     }
 
     public void refreshPane() {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            public void run() {
-                view.solutionsPanel.removeAll();
-                view.header.removeAll();
+        ApplicationManager.getApplication().assertIsDispatchThread();
+        view.solutionsPanel.removeAll();
+        view.header.removeAll();
 
-                repaintHeader();
-                if (model != null && search != null) {
-                    if (model.tips.size() + model.references.size() == 0) {
-                        EmptyWarningPanel panel = new EmptyWarningPanel();
-                        panel.label.setText(SamebugBundle.message("samebug.toolwindow.search.content.empty"));
-                        view.solutionsPanel.add(panel.controlPanel);
-                    } else {
-                        for (final RestHit<Tip> tip : model.tips) {
-                            SamebugTipView tipView = new SamebugTipView(tip, model.searchGroup, model.breadcrumb, IdeaSamebugPlugin.getInstance().getState().userId);
-                            view.solutionsPanel.add(tipView);
-                            final MarkHandler markHandler = new MarkHandler(search.lastSearch.searchId, tip, tipView.markPanel);
-                            tipView.markPanel.markButton.addMouseListener(markHandler);
-                            tipView.writeBetter.addMouseListener(new WriteTipHandler());
-                        }
-                        for (final RestHit<SolutionReference> s : model.references) {
-                            final ExternalSolutionView sv = new ExternalSolutionView(s, model.searchGroup, model.breadcrumb, IdeaSamebugPlugin.getInstance().getState().userId);
-                            view.solutionsPanel.add(sv);
-                            final MarkHandler markHandler = new MarkHandler(search.lastSearch.searchId, s, sv.markPanel);
-                            sv.markPanel.markButton.addMouseListener(markHandler);
-                        }
-                    }
-
-                    view.controlPanel.revalidate();
-                    view.controlPanel.repaint();
-                    if (model.references.size() + model.tips.size() > 0) TutorialProjectComponent.withTutorialProject(project, new SearchTabTutorial(model.tips.size() > 0));
-
-                } else {
-                    EmptyWarningPanel panel = new EmptyWarningPanel();
-                    panel.label.setText(SamebugBundle.message("samebug.toolwindow.search.content.notConnected", IdeaSamebugPlugin.getInstance().getUrlBuilder().getServerRoot()));
-                    view.solutionsPanel.add(panel.controlPanel);
+        repaintHeader();
+        if (model != null && search != null) {
+            if (model.tips.size() + model.references.size() == 0) {
+                EmptyWarningPanel panel = new EmptyWarningPanel();
+                panel.label.setText(SamebugBundle.message("samebug.toolwindow.search.content.empty"));
+                view.solutionsPanel.add(panel.controlPanel);
+            } else {
+                for (final RestHit<Tip> tip : model.tips) {
+                    SamebugTipView tipView = new SamebugTipView(tip, model.searchGroup, model.breadcrumb, IdeaSamebugPlugin.getInstance().getState().userId);
+                    view.solutionsPanel.add(tipView);
+                    final MarkHandler markHandler = new MarkHandler(search.lastSearch.searchId, tip, tipView.markPanel);
+                    tipView.markPanel.markButton.addMouseListener(markHandler);
+                    tipView.writeBetter.addMouseListener(new WriteTipHandler());
                 }
-                view.controlPanel.revalidate();
-                view.controlPanel.repaint();
+                for (final RestHit<SolutionReference> s : model.references) {
+                    final ExternalSolutionView sv = new ExternalSolutionView(s, model.searchGroup, model.breadcrumb, IdeaSamebugPlugin.getInstance().getState().userId);
+                    view.solutionsPanel.add(sv);
+                    final MarkHandler markHandler = new MarkHandler(search.lastSearch.searchId, s, sv.markPanel);
+                    sv.markPanel.markButton.addMouseListener(markHandler);
+                }
             }
-        });
+
+            view.controlPanel.revalidate();
+            view.controlPanel.repaint();
+            if (model.references.size() + model.tips.size() > 0) TutorialProjectComponent.withTutorialProject(project, new SearchTabTutorial(model.tips.size() > 0));
+
+        } else {
+            EmptyWarningPanel panel = new EmptyWarningPanel();
+            panel.label.setText(SamebugBundle.message("samebug.toolwindow.search.content.notConnected", IdeaSamebugPlugin.getInstance().getUrlBuilder().getServerRoot()));
+            view.solutionsPanel.add(panel.controlPanel);
+        }
+        view.controlPanel.revalidate();
+        view.controlPanel.repaint();
     }
 
     void repaintHeader() {
@@ -183,7 +194,7 @@ public class SearchTabController {
         final WriteTipHint writeTipHint;
         if (search != null) {
             searchCard = new SearchGroupCardView(search);
-            searchCard.titleLabel.addMouseListener(new OpenSearchHandler());
+            searchCard.titleLabel.addMouseListener(new LinkOpener(IdeaSamebugPlugin.getInstance().getUrlBuilder().search(search.lastSearch.searchId)));
         } else {
             searchCard = null;
         }
@@ -200,16 +211,8 @@ public class SearchTabController {
         view.header.repaint();
     }
 
-    class OpenSearchHandler extends MouseAdapter {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            URL url = IdeaSamebugPlugin.getInstance().getUrlBuilder().search(search.lastSearch.searchId);
-            BrowserUtil.browse(url);
-            Tracking.projectTracking(project).trace(Events.linkClick(project, url));
-        }
-    }
-
-    class WriteTipHandler extends MouseAdapter {
+    // TODO organize these handlers
+    final class WriteTipHandler extends MouseAdapter {
         public WriteTipHandler() {
         }
 
@@ -226,7 +229,7 @@ public class SearchTabController {
         }
     }
 
-    class TipCancelHandler extends MouseAdapter {
+    final class TipCancelHandler extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
             Tracking.projectTracking(project).trace(Events.writeTipCancel(project, search.lastSearch.searchId));
@@ -234,7 +237,7 @@ public class SearchTabController {
         }
     }
 
-    class TipSubmitHandler extends MouseAdapter {
+    final class TipSubmitHandler extends MouseAdapter {
         final int searchId;
         final WriteTip tipPanel;
 
@@ -284,7 +287,12 @@ public class SearchTabController {
                                 model.tips.add(newTip);
                                 Tracking.projectTracking(project).trace(
                                         Events.writeTipSubmit(project, search.lastSearch.searchId, tip, rawSourceUrl, Integer.toString(newTip.solutionId)));
-                                refreshPane();
+                                ApplicationManager.getApplication().invokeLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        refreshPane();
+                                    }
+                                });
                                 result = success();
                             } catch (final BadRequest e) {
                                 final String errorMessageKey;
@@ -331,7 +339,7 @@ public class SearchTabController {
         }
     }
 
-    class MarkHandler extends MouseAdapter {
+    final class MarkHandler extends MouseAdapter {
         final int searchId;
         final RestHit hit;
         final MarkPanel markPanel;
@@ -400,7 +408,7 @@ public class SearchTabController {
         }
     }
 
-    class SearchTabTutorial extends TutorialProjectComponent.TutorialProjectAnonfun<Void> {
+    final class SearchTabTutorial extends TutorialProjectComponent.TutorialProjectAnonfun<Void> {
         final boolean tipsShown;
 
         public SearchTabTutorial(final boolean tipsShown) {

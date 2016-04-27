@@ -59,7 +59,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public final class SamebugClient {
+final public class SamebugClient {
     final static String USER_AGENT = "Samebug-Idea-Client/1.4.0";
     final static Gson gson = Json.gson;
 

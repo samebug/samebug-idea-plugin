@@ -30,7 +30,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Hashtable;
 
-public class ImageUtil {
+final public class ImageUtil {
     static final Hashtable<URL, Image> cache = new Hashtable<URL, Image>();
     static final Hashtable<ScaledKey, Image> scaledCache = new Hashtable<ScaledKey, Image>();
     static final Logger LOGGER = Logger.getInstance(ImageUtil.class);

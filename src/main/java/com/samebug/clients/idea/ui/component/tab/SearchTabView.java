@@ -25,7 +25,7 @@ import com.samebug.clients.idea.ui.component.card.SearchGroupCardView;
 import javax.swing.*;
 import java.awt.*;
 
-public class SearchTabView {
+final public class SearchTabView {
     public JPanel controlPanel;
     public JPanel header;
     public JScrollPane scrollPane;

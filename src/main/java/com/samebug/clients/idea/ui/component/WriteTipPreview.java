@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.component.card;
+package com.samebug.clients.idea.ui.component;
 
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
-import com.samebug.clients.idea.ui.component.AvatarPanel;
-import com.samebug.clients.idea.ui.component.TipText;
-import com.samebug.clients.idea.ui.component.WriteTipCTA;
 import com.samebug.clients.idea.ui.component.organism.BreadcrumbBar;
 import com.samebug.clients.search.api.entities.ExceptionSearch;
 import com.samebug.clients.search.api.entities.legacy.Author;
@@ -27,7 +24,7 @@ import com.samebug.clients.search.api.entities.legacy.Author;
 import javax.swing.*;
 import java.awt.*;
 
-public class WriteTipPreview extends WriteTipCTA {
+final public class WriteTipPreview extends WriteTipCTA {
     final JTextArea tipLabel;
     final JPanel profilePanel;
     final JPanel breadcrumbPanel;

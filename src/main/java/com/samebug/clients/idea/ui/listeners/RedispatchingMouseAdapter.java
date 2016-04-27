@@ -20,7 +20,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 // from http://stackoverflow.com/a/32204965/1209166
-public class RedispatchingMouseAdapter implements MouseListener, MouseWheelListener, MouseMotionListener {
+final public class RedispatchingMouseAdapter implements MouseListener, MouseWheelListener, MouseMotionListener {
     public static final RedispatchingMouseAdapter INSTANCE = new RedispatchingMouseAdapter();
 
     public void mouseClicked(MouseEvent e) {

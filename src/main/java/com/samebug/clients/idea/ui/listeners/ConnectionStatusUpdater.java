@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class ConnectionStatusUpdater implements ConnectionStatusListener {
+final public class ConnectionStatusUpdater implements ConnectionStatusListener {
     final JLabel statusIcon;
 
     public ConnectionStatusUpdater(@NotNull JLabel statusIcon) {

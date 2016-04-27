@@ -21,7 +21,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.DumbAware;
 import com.samebug.clients.idea.ui.controller.HistoryTabController;
 
-public class ShowHistoryAction extends AnAction implements DumbAware {
+final public class ShowHistoryAction extends AnAction implements DumbAware {
     @Override
     public void actionPerformed(AnActionEvent e) {
         if (e.getProject() != null) {

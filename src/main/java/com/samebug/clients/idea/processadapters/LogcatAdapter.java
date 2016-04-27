@@ -23,7 +23,7 @@ import com.samebug.clients.search.api.LogScanner;
  * <p/>
  * The logcat output is forwarded to a LogScanner.
  */
-public class LogcatAdapter extends MultiLineReceiver {
+final public class LogcatAdapter extends MultiLineReceiver {
 
     private final LogScanner logScanner;
     private boolean finished = false;

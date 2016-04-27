@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
-public class MarkPanel extends TransparentPanel {
+final public class MarkPanel extends TransparentPanel {
     public final SBButton markButton;
     public final JPanel voteIcon;
     public final JLabel helpedLabel;

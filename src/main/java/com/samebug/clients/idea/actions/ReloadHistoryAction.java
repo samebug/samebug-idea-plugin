@@ -28,7 +28,7 @@ import com.samebug.clients.idea.ui.controller.HistoryTabController;
 import com.samebug.clients.search.api.entities.GroupedHistory;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
-public class ReloadHistoryAction extends RefreshAction implements DumbAware {
+final public class ReloadHistoryAction extends RefreshAction implements DumbAware {
     @Override
     public void actionPerformed(final AnActionEvent e) {
         e.getPresentation().setEnabled(false);
@@ -65,6 +65,5 @@ public class ReloadHistoryAction extends RefreshAction implements DumbAware {
         e.getPresentation().setEnabled(client.getNumberOfActiveRequests() == 0);
     }
 
-    final private static Logger LOGGER = Logger.getInstance(ReloadHistoryAction.class);
-
+    final static Logger LOGGER = Logger.getInstance(ReloadHistoryAction.class);
 }

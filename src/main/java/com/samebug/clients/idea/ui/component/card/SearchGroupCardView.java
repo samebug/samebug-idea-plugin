@@ -30,7 +30,7 @@ import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
-public class SearchGroupCardView extends JPanel {
+final public class SearchGroupCardView extends JPanel {
     public final GroupedExceptionSearch searchGroup;
     final ExceptionType exceptionType;
     public final JLabel packageLabel;
@@ -89,7 +89,7 @@ public class SearchGroupCardView extends JPanel {
 
     }
 
-    class TitleLabel extends JLabel {
+    final class TitleLabel extends JLabel {
         {
             setText(exceptionType.className);
             setForeground(Colors.samebugOrange);
@@ -102,7 +102,7 @@ public class SearchGroupCardView extends JPanel {
         }
     }
 
-    class HitsLabel extends JLabel {
+    final class HitsLabel extends JLabel {
         static final int LIMIT = 100;
 
         {
@@ -119,7 +119,7 @@ public class SearchGroupCardView extends JPanel {
         }
     }
 
-    class PackageLabel extends JLabel {
+    final class PackageLabel extends JLabel {
         {
             if (exceptionType.packageName == null) {
                 setText(String.format("%s", SamebugBundle.message("samebug.exception.noPackage")));
@@ -134,7 +134,7 @@ public class SearchGroupCardView extends JPanel {
         }
     }
 
-    class GroupInfoPanel extends TransparentPanel {
+    final class GroupInfoPanel extends TransparentPanel {
         {
             setLayout(new FlowLayout(FlowLayout.RIGHT));
             add(new JLabel() {
@@ -157,9 +157,5 @@ public class SearchGroupCardView extends JPanel {
             });
 
         }
-    }
-
-    public interface ActionHandler {
-        void onTitleClick();
     }
 }

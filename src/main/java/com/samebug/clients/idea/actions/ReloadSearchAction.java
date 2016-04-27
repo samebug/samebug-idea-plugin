@@ -25,7 +25,7 @@ import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.controller.SearchTabControllers;
 
-public class ReloadSearchAction extends RefreshAction implements DumbAware {
+final public class ReloadSearchAction extends RefreshAction implements DumbAware {
     @Override
     public void actionPerformed(final AnActionEvent e) {
         e.getPresentation().setEnabled(false);
@@ -41,6 +41,5 @@ public class ReloadSearchAction extends RefreshAction implements DumbAware {
         e.getPresentation().setEnabled(client.getNumberOfActiveRequests() == 0);
     }
 
-    final private static Logger LOGGER = Logger.getInstance(ReloadSearchAction.class);
-
+    final static Logger LOGGER = Logger.getInstance(ReloadSearchAction.class);
 }

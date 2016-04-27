@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-public class SamebugNotifications {
+final public class SamebugNotifications {
     public static final String SAMEBUG_SEARCH_NOTIFICATIONS = "Samebug Search Notifications";
 
     public static void registerNotificationGroups() {

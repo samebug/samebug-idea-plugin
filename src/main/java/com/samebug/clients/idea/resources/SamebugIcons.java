@@ -20,7 +20,7 @@ import com.intellij.openapi.util.IconLoader;
 import javax.swing.*;
 import java.net.URL;
 
-public class SamebugIcons {
+final public class SamebugIcons {
     public final static Icon notification = IconLoader.getIcon("/com/samebug/icons/samebug-notification.png");
     public final static Icon tutorial = IconLoader.getIcon("/com/samebug/icons/tutorial.png");
     public final static Icon info = IconLoader.getIcon("/com/samebug/icons/info.png");
