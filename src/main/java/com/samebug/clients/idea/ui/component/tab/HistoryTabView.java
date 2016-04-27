@@ -57,7 +57,7 @@ final public class HistoryTabView {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
     }
 
-    class ToolBarPanel extends JPanel {
+    final class ToolBarPanel extends JPanel {
         {
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
@@ -68,7 +68,7 @@ final public class HistoryTabView {
         }
     }
 
-    class ContentPanel extends JPanel {
+    final class ContentPanel extends JPanel {
         {
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         }
