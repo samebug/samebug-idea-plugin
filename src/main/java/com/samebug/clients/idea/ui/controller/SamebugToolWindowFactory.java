@@ -33,7 +33,7 @@ import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 
 
-public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
+final public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
@@ -43,7 +43,7 @@ public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
         toolWindow.getContentManager().addContent(content);
     }
 
-    private HistoryTabController initializeHistoryTab(final Project project) {
+    HistoryTabController initializeHistoryTab(final Project project) {
         final HistoryTabController historyTab = ServiceManager.getService(project, HistoryTabController.class);
 
         MessageBusConnection appMessageBus = ApplicationManager.getApplication().getMessageBus().connect(project);
