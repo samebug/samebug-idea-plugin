@@ -50,8 +50,6 @@ final public class SamebugTipView extends JPanel {
         this.tip = tip;
         this.searchGroup = searchGroup;
         this.searchBreadcrumb = searchBreadcrumb;
-        // RestHit<Tip> should always have an author
-        assert tip.createdBy != null;
 
         breadcrumbPanel = new LegacyBreadcrumbBar(searchBreadcrumb.subList(0, tip.matchLevel));
         tipLabel = new TipText(tip.solution.tip);

@@ -20,18 +20,36 @@ import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
+import com.samebug.clients.idea.ui.component.WriteTip;
+import com.samebug.clients.idea.ui.component.WriteTipHint;
 import com.samebug.clients.idea.ui.component.card.SearchGroupCardView;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
 final public class SearchTabView {
-    public JPanel controlPanel;
-    public JPanel header;
-    public JScrollPane scrollPane;
-    public JPanel solutionsPanel;
-    public JPanel toolbarPanel;
-    public JLabel statusIcon;
+    @NotNull
+    final public JPanel controlPanel;
+    @NotNull
+    final public JPanel header;
+    @NotNull
+    final public JScrollPane scrollPane;
+    @NotNull
+    final public JPanel solutionsPanel;
+    @NotNull
+    final public JPanel toolbarPanel;
+    @NotNull
+    final public JLabel statusIcon;
+    @NotNull
+    final public WriteTipHint writeTipHint;
+    @NotNull
+    final public WriteTip tipPanel;
+
+    // TODO searchCard is set by the controller, refactor
+    @Nullable
+    public SearchGroupCardView searchCard;
 
     public SearchTabView() {
 
@@ -66,21 +84,28 @@ final public class SearchTabView {
             }
         };
 
+        writeTipHint = new WriteTipHint();
+        tipPanel = new WriteTip();
     }
 
-    public void makeHeader(final SearchGroupCardView search, final JComponent extension) {
+    public void showWriteTip() {
         header.removeAll();
         header.add(new TransparentPanel() {
             {
-                if (search != null) {
-                    add(search, BorderLayout.CENTER);
-                    if (extension != null) {
-                        add(extension, BorderLayout.SOUTH);
-                        setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167 + extension.getPreferredSize().height)));
-                    } else {
-                        setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167)));
-                    }
-                }
+                add(searchCard, BorderLayout.CENTER);
+                add(tipPanel, BorderLayout.SOUTH);
+                setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167 + tipPanel.getPreferredSize().height)));
+            }
+        });
+    }
+
+    public void showWriteTipHint() {
+        header.removeAll();
+        header.add(new TransparentPanel() {
+            {
+                add(searchCard, BorderLayout.CENTER);
+                add(writeTipHint, BorderLayout.SOUTH);
+                setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167 + writeTipHint.getPreferredSize().height)));
             }
         });
     }
