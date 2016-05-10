@@ -32,7 +32,7 @@
          on how to target different products -->
     <!-- uncomment to enable plugin in all products
     -->
-    <depends>org.jetbrains.android</depends>
+    <depends optional="true">org.jetbrains.android</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Samebug" icon="/com/samebug/samebug-r270.png" anchor="right"
@@ -81,7 +81,7 @@
     </application-components>
     <project-components>
         <component>
-            <implementation-class>com.samebug.clients.idea.components.project.LogcatProcessWatcher</implementation-class>
+            <implementation-class>com.samebug.clients.idea.components.project.LogcatProcessWatcherProxy</implementation-class>
         </component>
         <component>
             <implementation-class>com.samebug.clients.idea.components.project.RunDebugWatcher</implementation-class>
