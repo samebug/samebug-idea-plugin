@@ -1,15 +1,23 @@
 package com.samebug.clients.search.api;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.samebug.clients.search.api.entities.*;
 import com.samebug.clients.search.api.json.Json;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.InputStreamReader;
+import java.lang.Exception;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class JsonTest {
     Gson gson;
@@ -54,6 +62,7 @@ public class JsonTest {
     @Test
     public void getSolutions() {
         Solutions x = gson.fromJson(stream("search-1"), Solutions.class);
+        checkFields(x);
         Assert.assertTrue(x.searchGroup.lastSearch._id > 0);
         Assert.assertTrue(x.tips.size() > 0);
         Assert.assertTrue(x.references.size() > 0);
@@ -65,7 +74,48 @@ public class JsonTest {
         }
     }
 
+    void checkFields(@NotNull Object o) {
+        if (nullableFieldsForEntities.containsKey(o.getClass())) {
+            List<String> nullableFields = nullableFieldsForEntities.get(o.getClass());
+            for (Field field : o.getClass().getFields()) {
+                try {
+                    Object value = field.get(o);
+                    if (!nullableFields.contains(field.getName())) Assert.assertNotNull(value);
+                    if (value != null) checkFields(value);
+                } catch (IllegalAccessException e) {
+                    throw new Error(e);
+                }
+            }
+        }
+    }
+
     InputStreamReader stream(final String fn) {
         return new InputStreamReader(getClass().getResourceAsStream("/com/samebug/clients/search/api/jsontest/" + fn + ".json"));
     }
+
+    Map<Class<?>, List<String>> nullableFieldsForEntities = ImmutableMap.<Class<?>, List<String>>builder()
+            .put(Author.class, ImmutableList.<String>of("url", "avatarUrl"))
+            .put(BreadCrumb.class, ImmutableList.<String>of())
+            .put(ComponentReference.class, ImmutableList.<String>of())
+            .put(com.samebug.clients.search.api.entities.Exception.class, ImmutableList.<String>of("message"))
+            .put(MarkResponse.class, ImmutableList.<String>of("id"))
+            .put(QualifiedCall.class, ImmutableList.<String>of("packageName"))
+            .put(RestError.class, ImmutableList.<String>of())
+            .put(RestHit.class, ImmutableList.<String>of("markId", "createdBy", "exception"))
+            .put(RestSolution.class, ImmutableList.<String>of())
+            .put(Search.class, ImmutableList.<String>of("visitorId", "userId", "teamId"))
+            .put(SearchGroup.class, ImmutableList.<String>of("visitorId", "userId", "teamId"))
+            .put(SearchHistory.class, ImmutableList.<String>of())
+            .put(SearchResults.class, ImmutableList.<String>of())
+            .put(SolutionReference.class, ImmutableList.<String>of("author"))
+            .put(Solutions.class, ImmutableList.<String>of())
+            .put(Source.class, ImmutableList.<String>of())
+            .put(StackTraceSearch.class, ImmutableList.<String>of())
+            .put(StackTraceSearchGroup.class, ImmutableList.<String>of())
+            .put(StackTraceWithBreadCrumbs.class, ImmutableList.<String>of())
+            .put(TextSearch.class, ImmutableList.<String>of("errorType"))
+            .put(Tip.class, ImmutableList.<String>of("via"))
+            .put(UserInfo.class, ImmutableList.<String>of("userId", "displayName", "avatarUrl"))
+            .put(UserReference.class, ImmutableList.<String>of("avatarUrl"))
+            .build();
 }
