@@ -16,11 +16,16 @@
 package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-public class GroupedHistory {
+/**
+ * Created by poroszd on 4/1/16.
+ */
+public class QualifiedCall {
+    @Nullable
+    public String packageName;
     @NotNull
-    public List<GroupedExceptionSearch> searchGroups;
+    public String className;
+    @NotNull
+    public String methodName;
 }
-

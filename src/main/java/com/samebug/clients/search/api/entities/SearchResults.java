@@ -16,10 +16,6 @@
 package com.samebug.clients.search.api.entities;
 
 public class SearchResults {
-    public String searchType;
     public String searchId;
-    public int ownMatches;
-    public Long firstSeenTime;
-    public Long lastSeenTime;
-    public int deepestStackId;
+    public int stackTraceId;
 }

@@ -36,8 +36,9 @@ import com.samebug.clients.idea.ui.component.tab.HistoryTabView;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.listeners.ConnectionStatusUpdater;
 import com.samebug.clients.idea.ui.listeners.SearchTabOpener;
-import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
-import com.samebug.clients.search.api.entities.GroupedHistory;
+import com.samebug.clients.search.api.entities.SearchGroup;
+import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
+import com.samebug.clients.search.api.entities.SearchHistory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,7 +56,7 @@ final public class HistoryTabController {
     final ConnectionStatusUpdater statusUpdater;
 
     @Nullable
-    GroupedHistory model;
+    SearchHistory model;
     boolean showZeroSolutionSearches;
     boolean showRecurringSearches;
 
@@ -115,7 +116,7 @@ final public class HistoryTabController {
         toolWindow.show(null);
     }
 
-    public void update(GroupedHistory history) {
+    public void update(SearchHistory history) {
         ApplicationManager.getApplication().assertIsDispatchThread();
         model = history;
         refreshHistoryPane();
@@ -140,7 +141,9 @@ final public class HistoryTabController {
             cal.add(Calendar.DAY_OF_YEAR, -1);
             Date oneDayBefore = cal.getTime();
             int visibleSearches = 0;
-            for (final GroupedExceptionSearch group : model.searchGroups) {
+            for (final SearchGroup g : model.searchGroups) {
+                // TODO handle text search groups
+                StackTraceSearchGroup group = (StackTraceSearchGroup) g;
                 if (!isShowZeroSolutionSearches() && group.numberOfSolutions == 0) {
                     // filtered because there is no solution for it
                 } else if (!isShowRecurringSearches() && group.firstSeenSimilar.before(oneDayBefore)) {
@@ -148,7 +151,7 @@ final public class HistoryTabController {
                 } else {
                     visibleSearches++;
                     SearchGroupCardView searchGroupCard = new SearchGroupCardView(group);
-                    searchGroupCard.titleLabel.addMouseListener(new SearchTabOpener(project, group.lastSearch.searchId));
+                    searchGroupCard.titleLabel.addMouseListener(new SearchTabOpener(project, group.lastSearch._id));
                     view.contentPanel.add(searchGroupCard);
                 }
             }

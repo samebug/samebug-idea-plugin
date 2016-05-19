@@ -13,18 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api.entities.legacy;
+package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.net.URL;
-
-public class Author {
+public class BreadCrumb {
     @NotNull
-    public String name;
-    @Nullable
-    public URL url;
-    @Nullable
-    public URL avatarUrl;
+    public Integer level;
+    @NotNull
+    public Integer frames;
+    @NotNull
+    public String typeName;
+    @NotNull
+    public Boolean passThrough;
+    @NotNull
+    public QualifiedCall entry;
+    @NotNull
+    public ComponentReference component;
 }

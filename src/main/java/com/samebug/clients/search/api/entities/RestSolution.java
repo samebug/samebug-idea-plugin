@@ -15,18 +15,5 @@
  */
 package com.samebug.clients.search.api.entities;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.net.URL;
-
-public class ComponentStack {
-    @NotNull
-    public Integer color;
-    @Nullable
-    public URL crashDocUrl;
-    @NotNull
-    public String name;
-    @NotNull
-    public String shortName;
+public class RestSolution {
 }

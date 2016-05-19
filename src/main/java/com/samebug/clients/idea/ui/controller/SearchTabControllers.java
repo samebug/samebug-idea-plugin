@@ -27,7 +27,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.search.api.entities.legacy.Solutions;
+import com.samebug.clients.search.api.entities.Solutions;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

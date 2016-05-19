@@ -1,13 +1,8 @@
 package com.samebug.clients.search.api;
 
 import com.google.gson.Gson;
-import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
-import com.samebug.clients.search.api.entities.GroupedHistory;
-import com.samebug.clients.search.api.entities.UserInfo;
-import com.samebug.clients.search.api.entities.legacy.RestHit;
-import com.samebug.clients.search.api.entities.legacy.SolutionReference;
-import com.samebug.clients.search.api.entities.legacy.Solutions;
-import com.samebug.clients.search.api.entities.legacy.Tip;
+import com.samebug.clients.search.api.entities.*;
+import com.samebug.clients.search.api.json.Json;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,11 +41,11 @@ public class JsonTest {
     // jq . > src/test/resources/com/samebug/clients/search/api/jsontest/history.json
     @Test
     public void getSearchHistory() {
-        GroupedHistory x = gson.fromJson(stream("history"), GroupedHistory.class);
+        SearchHistory x = gson.fromJson(stream("history"), SearchHistory.class);
         Assert.assertEquals(50, x.searchGroups.size());
-        for (GroupedExceptionSearch e : x.searchGroups) {
-            Assert.assertTrue(e.lastSearch.searchId > 0);
-            Assert.assertTrue(e.lastSearch.componentStack.size() > 0);
+        for (SearchGroup e : x.searchGroups) {
+            Assert.assertTrue(e.lastSearch._id > 0);
+            Assert.assertTrue(e.lastSearch.stackTrace.breadCrumbs.size() > 0);
         }
     }
 
@@ -59,8 +54,6 @@ public class JsonTest {
     @Test
     public void getSolutions() {
         Solutions x = gson.fromJson(stream("search-1"), Solutions.class);
-        Assert.assertTrue(x.search._id > 0);
-        Assert.assertTrue(x.breadcrumb.size() > 0);
         Assert.assertTrue(x.searchGroup.lastSearch._id > 0);
         Assert.assertTrue(x.tips.size() > 0);
         Assert.assertTrue(x.references.size() > 0);

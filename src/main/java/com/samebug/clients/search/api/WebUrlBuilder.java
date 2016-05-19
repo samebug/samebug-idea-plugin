@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.search.api;
 
-import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
+import com.samebug.clients.search.api.entities.BreadCrumb;
 import com.samebug.clients.search.api.exceptions.IllegalUriException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -63,7 +63,7 @@ final public class WebUrlBuilder {
         else {
             try {
                 // TODO handle default package?
-                final String entryUri = enc(b.entry.packageName) + "/" + enc(b.entry.className) + "/" + enc(b.entry.methodName) + "/" + enc(b.exceptionType);
+                final String entryUri = enc(b.entry.packageName) + "/" + enc(b.entry.className) + "/" + enc(b.entry.methodName) + "/" + enc(b.typeName);
                 final String passThrough = "?pt=" + b.passThrough;
                 return resolveToRoot("/crashdocs/" + entryUri + passThrough);
             } catch (Throwable ignored) {

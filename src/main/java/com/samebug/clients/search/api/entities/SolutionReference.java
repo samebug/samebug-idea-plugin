@@ -13,13 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api.entities.legacy;
+package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class GroupedSearchKey {
+import java.net.URL;
+import java.util.Date;
+
+public class SolutionReference extends RestSolution {
     @NotNull
-    public Integer userId;
+    public Source source;
+    @Nullable
+    public Author author;
     @NotNull
-    public Integer stackId;
+    public Date createdAt;
+    @NotNull
+    public String title;
+    @NotNull
+    public URL url;
 }

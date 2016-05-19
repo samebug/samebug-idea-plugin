@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api.entities.legacy;
+package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
-import java.net.URL;
+import java.util.List;
 
-public class UserReference {
+public class Solutions {
+    // TODO this could be text search group in the near future
     @NotNull
-    public Integer id;
+    public StackTraceSearchGroup searchGroup;
     @NotNull
-    public String displayName;
-    @Nullable
-    public URL avatarUrl;
+    public List<RestHit<Tip>> tips;
+    @NotNull
+    public List<RestHit<SolutionReference>> references;
 }

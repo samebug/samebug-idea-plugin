@@ -25,7 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.controller.HistoryTabController;
-import com.samebug.clients.search.api.entities.GroupedHistory;
+import com.samebug.clients.search.api.entities.SearchHistory;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
 final public class ReloadHistoryAction extends RefreshAction implements DumbAware {
@@ -42,7 +42,7 @@ final public class ReloadHistoryAction extends RefreshAction implements DumbAwar
                 public void run() {
                     IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
                     try {
-                        final GroupedHistory history = client.getSearchHistory();
+                        final SearchHistory history = client.getSearchHistory();
                         ApplicationManager.getApplication().invokeLater(new Runnable() {
                             @Override
                             public void run() {

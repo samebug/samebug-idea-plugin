@@ -18,8 +18,8 @@ package com.samebug.clients.idea.ui.component;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.organism.BreadcrumbBar;
-import com.samebug.clients.search.api.entities.ExceptionSearch;
-import com.samebug.clients.search.api.entities.legacy.Author;
+import com.samebug.clients.search.api.entities.StackTraceSearch;
+import com.samebug.clients.search.api.entities.Author;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,11 +29,11 @@ final public class WriteTipPreview extends WriteTipCTA {
     final JPanel profilePanel;
     final JPanel breadcrumbPanel;
 
-    public WriteTipPreview(final Author author, final ExceptionSearch search) {
+    public WriteTipPreview(final Author author, final StackTraceSearch search) {
         tipLabel = new TipText(SamebugBundle.message("samebug.tip.write.preview.tip"));
         profilePanel = new AvatarPanel(author);
         ctaButton = new WriteTipButton();
-        breadcrumbPanel = new BreadcrumbBar(search.componentStack);
+        breadcrumbPanel = new BreadcrumbBar(search.stackTrace.breadCrumbs);
 
 
         setLayout(new BorderLayout());

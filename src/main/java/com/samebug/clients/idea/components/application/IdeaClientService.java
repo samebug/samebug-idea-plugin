@@ -19,13 +19,13 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.search.api.SamebugClient;
-import com.samebug.clients.search.api.entities.GroupedHistory;
+import com.samebug.clients.search.api.entities.SearchHistory;
 import com.samebug.clients.search.api.entities.MarkResponse;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.UserInfo;
-import com.samebug.clients.search.api.entities.legacy.RestHit;
-import com.samebug.clients.search.api.entities.legacy.Solutions;
-import com.samebug.clients.search.api.entities.legacy.Tip;
+import com.samebug.clients.search.api.entities.RestHit;
+import com.samebug.clients.search.api.entities.Solutions;
+import com.samebug.clients.search.api.entities.Tip;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
 
@@ -64,9 +64,9 @@ public class IdeaClientService {
         }.executeUnauthenticated();
     }
 
-    public GroupedHistory getSearchHistory() throws SamebugClientException {
-        return new ConnectionAwareHttpRequest<GroupedHistory>() {
-            GroupedHistory request() throws SamebugClientException {
+    public SearchHistory getSearchHistory() throws SamebugClientException {
+        return new ConnectionAwareHttpRequest<SearchHistory>() {
+            SearchHistory request() throws SamebugClientException {
                 return client.getSearchHistory();
             }
         }.execute();

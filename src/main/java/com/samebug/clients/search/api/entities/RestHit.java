@@ -13,13 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api.entities.legacy;
+package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class Source {
+public class RestHit<T extends RestSolution> {
     @NotNull
-    public String name;
+    public Integer solutionId;
     @NotNull
-    public String icon;
+    public T solution;
+    @NotNull
+    public Integer stackId;
+    @NotNull
+    public Integer matchLevel;
+    @NotNull
+    public Integer score;
+    @Nullable
+    public Integer markId;
+    @Nullable
+    public UserReference createdBy;
+    @Nullable
+    public Exception exception;
 }

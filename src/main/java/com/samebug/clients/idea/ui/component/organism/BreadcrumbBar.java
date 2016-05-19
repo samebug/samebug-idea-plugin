@@ -15,25 +15,29 @@
  */
 package com.samebug.clients.idea.ui.component.organism;
 
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.idea.ui.listeners.LinkOpener;
-import com.samebug.clients.search.api.entities.ComponentStack;
+import com.samebug.clients.search.api.entities.BreadCrumb;
+import com.samebug.clients.search.api.entities.QualifiedCall;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 
+// TODO remove either this or BreadcrumbBar when the rest api is cleared.
 final public class BreadcrumbBar extends TransparentPanel {
-    public BreadcrumbBar(@NotNull java.util.List<ComponentStack> stacks) {
+    public BreadcrumbBar(@NotNull java.util.List<BreadCrumb> breadcrumbs) {
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         add(new BreadcrumbEndLabel());
-        if (!stacks.isEmpty()) add(new BreadcrumbLabel(stacks.get(0)));
-        for (int i = 1; i < stacks.size(); ++i) {
+        if (!breadcrumbs.isEmpty()) add(new BreadcrumbLabel(breadcrumbs.get(0)));
+        for (int i = 1; i < breadcrumbs.size(); ++i) {
             add(new BreadcrumbDelimeterLabel());
-            add(new BreadcrumbLabel(stacks.get(i)));
+            add(new BreadcrumbLabel(breadcrumbs.get(i)));
         }
 
     }
@@ -53,26 +57,31 @@ final public class BreadcrumbBar extends TransparentPanel {
     }
 
     final class BreadcrumbLabel extends JLabel {
-        ComponentStack stack;
+        BreadCrumb breadCrumb;
 
-        public BreadcrumbLabel(@NotNull final ComponentStack stack) {
-            this.stack = stack;
-            if (stack.crashDocUrl != null) {
+        public BreadcrumbLabel(@NotNull final BreadCrumb breadCrumb) {
+            this.breadCrumb = breadCrumb;
+            final URL link = IdeaSamebugPlugin.getInstance().getUrlBuilder().crashdoc(breadCrumb);
+            if (link != null) {
                 setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                addMouseListener(new LinkOpener(stack.crashDocUrl));
+                addMouseListener(new LinkOpener(link));
+            }
+            final QualifiedCall e = breadCrumb.entry;
+            if (e.packageName != null) {
+                setToolTipText(String.format("%s.%s.%s()", e.packageName, e.className, e.methodName));
             }
         }
 
         @Override
         public String getText() {
-            if (stack == null) return super.getText();
-            else return stack.shortName;
+            if (breadCrumb == null) return super.getText();
+            else return breadCrumb.component.name;
         }
 
         @Override
         public Color getForeground() {
-            if (stack == null) return super.getForeground();
-            else return ColorUtil.componentColors(stack.color);
+            if (breadCrumb == null) return super.getForeground();
+            else return ColorUtil.componentColors(breadCrumb.component.color);
         }
     }
 }

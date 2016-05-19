@@ -23,7 +23,7 @@ import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.ExceptionMessageLabel;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.idea.ui.component.organism.BreadcrumbBar;
-import com.samebug.clients.search.api.entities.GroupedExceptionSearch;
+import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +31,7 @@ import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
 final public class SearchGroupCardView extends JPanel {
-    public final GroupedExceptionSearch searchGroup;
+    public final StackTraceSearchGroup searchGroup;
     final ExceptionType exceptionType;
     public final JLabel packageLabel;
     public final JLabel hitsLabel;
@@ -40,7 +40,7 @@ final public class SearchGroupCardView extends JPanel {
     public final JPanel groupInfoPanel;
     public final JPanel breadcrumbPanel;
 
-    public SearchGroupCardView(final GroupedExceptionSearch searchGroup) {
+    public SearchGroupCardView(final StackTraceSearchGroup searchGroup) {
         this.searchGroup = searchGroup;
         exceptionType = new ExceptionType(searchGroup.lastSearch.exception.typeName);
 
@@ -49,7 +49,7 @@ final public class SearchGroupCardView extends JPanel {
         titleLabel = new TitleLabel();
         exceptionMessageLabel = new ExceptionMessageLabel(searchGroup.lastSearch.exception.message);
         groupInfoPanel = new GroupInfoPanel();
-        breadcrumbPanel = new BreadcrumbBar(searchGroup.lastSearch.componentStack);
+        breadcrumbPanel = new BreadcrumbBar(searchGroup.lastSearch.stackTrace.breadCrumbs);
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));

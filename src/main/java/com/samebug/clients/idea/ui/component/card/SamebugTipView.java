@@ -20,12 +20,12 @@ import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.*;
-import com.samebug.clients.idea.ui.component.organism.LegacyBreadcrumbBar;
+import com.samebug.clients.idea.ui.component.organism.BreadcrumbBar;
 import com.samebug.clients.idea.ui.component.organism.MarkPanel;
-import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
-import com.samebug.clients.search.api.entities.legacy.GroupedSearchHistory;
-import com.samebug.clients.search.api.entities.legacy.RestHit;
-import com.samebug.clients.search.api.entities.legacy.Tip;
+import com.samebug.clients.search.api.entities.BreadCrumb;
+import com.samebug.clients.search.api.entities.SearchGroup;
+import com.samebug.clients.search.api.entities.RestHit;
+import com.samebug.clients.search.api.entities.Tip;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -33,10 +33,10 @@ import java.awt.*;
 
 final public class SamebugTipView extends JPanel {
     final RestHit<Tip> tip;
-    final GroupedSearchHistory searchGroup;
+    final SearchGroup searchGroup;
     final java.util.List<BreadCrumb> searchBreadcrumb;
 
-    public final LegacyBreadcrumbBar breadcrumbPanel;
+    public final BreadcrumbBar breadcrumbPanel;
     public final TipText tipLabel;
     public final JPanel sourceReferencePanel;
     public final AvatarPanel avatarPanel;
@@ -44,16 +44,15 @@ final public class SamebugTipView extends JPanel {
     public final SBButton writeBetter;
 
     public SamebugTipView(@NotNull RestHit<Tip> tip,
-                          @NotNull GroupedSearchHistory searchGroup,
-                          @NotNull java.util.List<BreadCrumb> searchBreadcrumb,
+                          @NotNull SearchGroup searchGroup,
                           @NotNull Integer currentUserId) {
         this.tip = tip;
         this.searchGroup = searchGroup;
-        this.searchBreadcrumb = searchBreadcrumb;
+        this.searchBreadcrumb = searchGroup.lastSearch.stackTrace.breadCrumbs;
         // RestHit<Tip> should always have an author
         assert tip.createdBy != null;
 
-        breadcrumbPanel = new LegacyBreadcrumbBar(searchBreadcrumb.subList(0, tip.matchLevel));
+        breadcrumbPanel = new BreadcrumbBar(searchBreadcrumb.subList(0, tip.matchLevel));
         tipLabel = new TipText(tip.solution.tip);
         sourceReferencePanel = new TipSourceReferencePanel(tip.solution);
         avatarPanel = new AvatarPanel(tip.solution.author);

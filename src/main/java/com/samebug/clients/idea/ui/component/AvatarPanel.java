@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.ui.component;
 
 import com.samebug.clients.idea.ui.ImageUtil;
-import com.samebug.clients.search.api.entities.legacy.Author;
+import com.samebug.clients.search.api.entities.Author;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

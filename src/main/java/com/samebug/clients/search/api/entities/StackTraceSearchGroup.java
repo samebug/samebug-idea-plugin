@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api.entities.legacy;
+package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.net.URL;
 import java.util.Date;
 
-public class SolutionReference extends RestSolution {
+public class StackTraceSearchGroup extends SearchGroup {
     @NotNull
-    public Source source;
-    @Nullable
-    public Author author;
+    public Integer numberOfSimilars;
     @NotNull
-    public Date createdAt;
+    public Integer numberOfSolutions;
     @NotNull
-    public String title;
+    public Boolean hasMoreHits;
     @NotNull
-    public URL url;
+    public Date firstSeenSimilar;
+    @NotNull
+    public Date lastSeenSimilar;
+    @NotNull
+    public StackTraceSearch lastSearch;
 }

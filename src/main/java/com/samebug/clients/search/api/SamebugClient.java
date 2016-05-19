@@ -22,11 +22,12 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.net.IdeHttpClientHelpers;
 import com.samebug.clients.search.api.entities.*;
-import com.samebug.clients.search.api.entities.legacy.RestHit;
-import com.samebug.clients.search.api.entities.legacy.Solutions;
-import com.samebug.clients.search.api.entities.legacy.Tip;
+import com.samebug.clients.search.api.entities.RestHit;
+import com.samebug.clients.search.api.entities.Solutions;
+import com.samebug.clients.search.api.entities.Tip;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
+import com.samebug.clients.search.api.json.Json;
 import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -131,11 +132,11 @@ final public class SamebugClient {
 
     public
     @NotNull
-    GroupedHistory getSearchHistory() throws SamebugClientException {
+    SearchHistory getSearchHistory() throws SamebugClientException {
         final URL url = urlBuilder.history();
         HttpGet request = new HttpGet(url.toString());
 
-        return requestJson(request, GroupedHistory.class);
+        return requestJson(request, SearchHistory.class);
     }
 
     public

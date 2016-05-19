@@ -13,20 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api.entities.legacy;
+package com.samebug.clients.search.api.entities;
 
-import com.samebug.clients.search.api.entities.Exception;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Date;
-
-public class ExceptionSearch {
+public class StackTraceSearch extends Search {
     @NotNull
-    public Integer _id;
-    @NotNull
-    public String type;
-    @NotNull
-    public Date timestamp;
+    public StackTraceWithBreadCrumbs stackTrace;
+    // TODO this field is not present in the json
     @NotNull
     public Exception exception;
 }

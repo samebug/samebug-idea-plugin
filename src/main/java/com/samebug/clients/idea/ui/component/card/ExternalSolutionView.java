@@ -26,12 +26,12 @@ import com.samebug.clients.idea.ui.component.ExceptionMessageLabel;
 import com.samebug.clients.idea.ui.component.LinkLabel;
 import com.samebug.clients.idea.ui.component.SourceIcon;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
-import com.samebug.clients.idea.ui.component.organism.LegacyBreadcrumbBar;
+import com.samebug.clients.idea.ui.component.organism.BreadcrumbBar;
 import com.samebug.clients.idea.ui.component.organism.MarkPanel;
-import com.samebug.clients.search.api.entities.legacy.BreadCrumb;
-import com.samebug.clients.search.api.entities.legacy.GroupedSearchHistory;
-import com.samebug.clients.search.api.entities.legacy.RestHit;
-import com.samebug.clients.search.api.entities.legacy.SolutionReference;
+import com.samebug.clients.search.api.entities.BreadCrumb;
+import com.samebug.clients.search.api.entities.SearchGroup;
+import com.samebug.clients.search.api.entities.RestHit;
+import com.samebug.clients.search.api.entities.SolutionReference;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -41,11 +41,11 @@ import java.util.HashMap;
 
 final public class ExternalSolutionView extends JPanel {
     final RestHit<SolutionReference> solution;
-    final GroupedSearchHistory searchGroup;
+    final SearchGroup searchGroup;
     final java.util.List<BreadCrumb> searchBreadcrumb;
     final ExceptionType exceptionType;
 
-    public final LegacyBreadcrumbBar breadcrumbPanel;
+    public final BreadcrumbBar breadcrumbPanel;
     public final JPanel titlePanel;
     public final ExceptionMessageLabel exceptionMessageLabel;
     public final JPanel exceptionTypePanel;
@@ -53,17 +53,16 @@ final public class ExternalSolutionView extends JPanel {
     public final MarkPanel markPanel;
 
     public ExternalSolutionView(@NotNull RestHit<SolutionReference> solution,
-                                @NotNull GroupedSearchHistory searchGroup,
-                                @NotNull java.util.List<BreadCrumb> searchBreadcrumb,
+                                @NotNull SearchGroup searchGroup,
                                 @NotNull Integer currentUserId) {
         this.solution = solution;
         this.searchGroup = searchGroup;
-        this.searchBreadcrumb = searchBreadcrumb;
+        this.searchBreadcrumb = searchGroup.lastSearch.stackTrace.breadCrumbs;
         // RestHit<SolutionReference> should always have an exception
         assert solution.exception != null;
 
         exceptionType = new ExceptionType(solution.exception.typeName);
-        breadcrumbPanel = new LegacyBreadcrumbBar(searchBreadcrumb.subList(0, solution.matchLevel));
+        breadcrumbPanel = new BreadcrumbBar(searchBreadcrumb.subList(0, solution.matchLevel));
         titlePanel = new SolutionTitlePanel();
         exceptionMessageLabel = new ExceptionMessageLabel(solution.exception.message);
         exceptionTypePanel = new ExceptionTypePanel();

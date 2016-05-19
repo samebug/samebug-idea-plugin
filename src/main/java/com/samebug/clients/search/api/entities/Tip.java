@@ -13,15 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api.entities.legacy;
+package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class ComponentInfo {
+import java.util.Date;
+
+public class Tip extends RestSolution {
     @NotNull
-    public String name;
+    public Author author;
     @NotNull
-    public String shortName;
+    public Date createdAt;
     @NotNull
-    public Integer color;
+    public String tip;
+    @Nullable
+    public SolutionReference via;
 }

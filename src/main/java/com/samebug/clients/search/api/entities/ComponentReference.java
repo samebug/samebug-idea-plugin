@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api.entities.legacy;
+package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
 
-public class BreadCrumb {
+// TODO do we need the subclasses? (library, vendor, app, default compononent)
+public class ComponentReference {
     @NotNull
-    public ComponentInfo component;
+    public String name;
     @NotNull
-    public EntryInfo entry;
-    @NotNull
-    public String exceptionType;
-    public boolean passThrough;
+    public Integer color;
 }

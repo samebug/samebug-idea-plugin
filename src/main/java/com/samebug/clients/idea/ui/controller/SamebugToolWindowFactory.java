@@ -28,7 +28,7 @@ import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.search.api.entities.GroupedHistory;
+import com.samebug.clients.search.api.entities.SearchHistory;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,7 +54,7 @@ final public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAw
             public void run() {
                 IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
                 try {
-                    final GroupedHistory history = client.getSearchHistory();
+                    final SearchHistory history = client.getSearchHistory();
                     ApplicationManager.getApplication().invokeLater(new Runnable() {
                         @Override
                         public void run() {

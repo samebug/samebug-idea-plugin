@@ -25,8 +25,8 @@ import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.component.ErrorLabel;
 import com.samebug.clients.idea.ui.component.SBButton;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
-import com.samebug.clients.search.api.entities.legacy.GroupedSearchHistory;
-import com.samebug.clients.search.api.entities.legacy.RestHit;
+import com.samebug.clients.search.api.entities.SearchGroup;
+import com.samebug.clients.search.api.entities.RestHit;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -38,10 +38,10 @@ final public class MarkPanel extends TransparentPanel {
     public final JLabel helpedLabel;
 
     final RestHit hit;
-    final GroupedSearchHistory searchGroup;
+    final SearchGroup searchGroup;
     final Integer currentUserId;
 
-    public MarkPanel(@NotNull RestHit hit, @NotNull GroupedSearchHistory searchGroup, @NotNull Integer currentUserId) {
+    public MarkPanel(@NotNull RestHit hit, @NotNull SearchGroup searchGroup, @NotNull Integer currentUserId) {
         markButton = new MarkButton();
         voteIcon = new VoteIcon();
         helpedLabel = new HelpedLabel();
@@ -53,7 +53,8 @@ final public class MarkPanel extends TransparentPanel {
         setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
         final boolean canMark = hit.createdBy == null
                 || !hit.createdBy.id.equals(currentUserId)
-                || !hit.stackId.equals(searchGroup._id.stackId);
+                // TODO you equal what?
+                || !hit.stackId.equals(searchGroup._id);
         if (canMark) {
             add(new TransparentPanel() {
                 {

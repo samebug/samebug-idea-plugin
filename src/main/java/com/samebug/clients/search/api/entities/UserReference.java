@@ -13,7 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api.entities.legacy;
+package com.samebug.clients.search.api.entities;
 
-public class RestSolution {
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
+import java.net.URL;
+
+public class UserReference {
+    @NotNull
+    public Integer id;
+    @NotNull
+    public String displayName;
+    @Nullable
+    public URL avatarUrl;
 }
