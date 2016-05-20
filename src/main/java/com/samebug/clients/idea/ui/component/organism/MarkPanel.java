@@ -54,7 +54,7 @@ final public class MarkPanel extends TransparentPanel {
         final boolean canMark = hit.createdBy == null
                 || !hit.createdBy.id.equals(currentUserId)
                 // TODO you equal what?
-                || !hit.stackId.equals(searchGroup._id);
+                || !hit.stackId.equals(searchGroup.id);
         if (canMark) {
             add(new TransparentPanel() {
                 {

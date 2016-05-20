@@ -20,7 +20,4 @@ import org.jetbrains.annotations.NotNull;
 public class StackTraceSearch extends Search {
     @NotNull
     public StackTraceWithBreadCrumbs stackTrace;
-    // TODO this field is not present in the json
-    @NotNull
-    public Exception exception;
 }

@@ -11,11 +11,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.InputStreamReader;
-import java.lang.Exception;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -32,16 +30,17 @@ public class JsonTest {
     @Test
     public void getUserInfoValid() throws MalformedURLException {
         UserInfo x = gson.fromJson(stream("checkApiKey-1"), UserInfo.class);
+        checkFields(x);
         Assert.assertEquals(new URL("https://samebug.io/avatars/1/3"), x.avatarUrl);
         Assert.assertEquals("poroszd", x.displayName);
         Assert.assertEquals(Integer.valueOf(1), x.userId);
     }
 
-    // curl 'http://nightly.samebug.com/rest/0.9/checkApiKey?apiKey=x' |\
-    // jq . > src/test/resources/com/samebug/clients/search/api/jsontest/checkApiKey-2.json
+    // curl 'http://nightly.samebug.com/rest/0.11/checkApiKey?apiKey=x' | jq . > src/test/resources/com/samebug/clients/search/api/jsontest/checkApiKey-2.json
     @Test
     public void getUserInfoInvalid() {
         UserInfo x = gson.fromJson(stream("checkApiKey-2"), UserInfo.class);
+        checkFields(x);
         Assert.assertEquals(false, x.isUserExist);
     }
 
@@ -50,9 +49,10 @@ public class JsonTest {
     @Test
     public void getSearchHistory() {
         SearchHistory x = gson.fromJson(stream("history"), SearchHistory.class);
+        checkFields(x);
         Assert.assertEquals(50, x.searchGroups.size());
         for (SearchGroup e : x.searchGroups) {
-            Assert.assertTrue(e.lastSearch._id > 0);
+            Assert.assertTrue(e.lastSearch.id > 0);
             Assert.assertTrue(e.lastSearch.stackTrace.breadCrumbs.size() > 0);
         }
     }
@@ -63,15 +63,9 @@ public class JsonTest {
     public void getSolutions() {
         Solutions x = gson.fromJson(stream("search-1"), Solutions.class);
         checkFields(x);
-        Assert.assertTrue(x.searchGroup.lastSearch._id > 0);
+        Assert.assertTrue(x.searchGroup.lastSearch.id > 0);
         Assert.assertTrue(x.tips.size() > 0);
         Assert.assertTrue(x.references.size() > 0);
-        for (RestHit<Tip> e : x.tips) {
-            Assert.assertNotNull(e.createdBy);
-        }
-        for (RestHit<SolutionReference> e : x.references) {
-            Assert.assertNotNull(e.exception);
-        }
     }
 
     void checkFields(@NotNull Object o) {
@@ -80,7 +74,7 @@ public class JsonTest {
             for (Field field : o.getClass().getFields()) {
                 try {
                     Object value = field.get(o);
-                    if (!nullableFields.contains(field.getName())) Assert.assertNotNull(value);
+                    if (!nullableFields.contains(field.getName())) Assert.assertNotNull("Field " + field.getName() + " of " + o, value);
                     if (value != null) checkFields(value);
                 } catch (IllegalAccessException e) {
                     throw new Error(e);
@@ -110,10 +104,10 @@ public class JsonTest {
             .put(SolutionReference.class, ImmutableList.<String>of("author"))
             .put(Solutions.class, ImmutableList.<String>of())
             .put(Source.class, ImmutableList.<String>of())
-            .put(StackTraceSearch.class, ImmutableList.<String>of())
-            .put(StackTraceSearchGroup.class, ImmutableList.<String>of())
+            .put(StackTraceSearch.class, ImmutableList.<String>of("visitorId", "userId", "teamId"))
+            .put(StackTraceSearchGroup.class, ImmutableList.<String>of("visitorId", "userId", "teamId"))
             .put(StackTraceWithBreadCrumbs.class, ImmutableList.<String>of())
-            .put(TextSearch.class, ImmutableList.<String>of("errorType"))
+            .put(TextSearch.class, ImmutableList.<String>of("visitorId", "userId", "teamId", "errorType"))
             .put(Tip.class, ImmutableList.<String>of("via"))
             .put(UserInfo.class, ImmutableList.<String>of("userId", "displayName", "avatarUrl"))
             .put(UserReference.class, ImmutableList.<String>of("avatarUrl"))

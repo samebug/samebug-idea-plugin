@@ -6,8 +6,9 @@ import java.util.List;
 
 public class StackTraceWithBreadCrumbs {
     @NotNull
-    public Integer _id;
-    // TODO trace
+    public Integer stackTraceId;
+    @NotNull
+    public Exception trace;
     @NotNull
     public List<BreadCrumb> breadCrumbs;
 }

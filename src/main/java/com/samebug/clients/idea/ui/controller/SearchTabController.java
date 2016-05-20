@@ -138,7 +138,7 @@ final public class SearchTabController {
             }
 
             view.searchCard = new SearchGroupCardView(model.searchGroup);
-            view.searchCard.titleLabel.addMouseListener(new LinkOpener(IdeaSamebugPlugin.getInstance().getUrlBuilder().search(model.searchGroup.lastSearch._id)));
+            view.searchCard.titleLabel.addMouseListener(new LinkOpener(IdeaSamebugPlugin.getInstance().getUrlBuilder().search(model.searchGroup.lastSearch.id)));
             view.writeTipHint.ctaButton.addMouseListener(new WriteTipHandler(model.searchGroup));
             view.showWriteTipHint();
             view.tipPanel.cancel.addMouseListener(new TipCancelHandler(model.searchGroup));
@@ -166,7 +166,7 @@ final public class SearchTabController {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            Tracking.projectTracking(project).trace(Events.writeTipOpen(project, searchGroup.lastSearch._id));
+            Tracking.projectTracking(project).trace(Events.writeTipOpen(project, searchGroup.lastSearch.id));
             view.showWriteTip();
             view.header.revalidate();
             view.header.repaint();
@@ -183,7 +183,7 @@ final public class SearchTabController {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            Tracking.projectTracking(project).trace(Events.writeTipCancel(project, searchGroup.lastSearch._id));
+            Tracking.projectTracking(project).trace(Events.writeTipCancel(project, searchGroup.lastSearch.id));
             view.showWriteTipHint();
             view.header.revalidate();
             view.header.repaint();
@@ -213,15 +213,15 @@ final public class SearchTabController {
 
                     if (tip.length() < WriteTip.minCharacters) {
                         Tracking.projectTracking(project).trace(
-                                Events.writeTipSubmit(project, searchGroup.lastSearch._id, tip, rawSourceUrl, "samebug.tip.write.error.tip.short"));
+                                Events.writeTipSubmit(project, searchGroup.lastSearch.id, tip, rawSourceUrl, "samebug.tip.write.error.tip.short"));
                         result = showError(SamebugBundle.message("samebug.tip.write.error.tip.short"));
                     } else if (tip.length() > WriteTip.maxCharacters) {
                         Tracking.projectTracking(project).trace(
-                                Events.writeTipSubmit(project, searchGroup.lastSearch._id, tip, rawSourceUrl, "samebug.tip.write.error.tip.long"));
+                                Events.writeTipSubmit(project, searchGroup.lastSearch.id, tip, rawSourceUrl, "samebug.tip.write.error.tip.long"));
                         result = showError(SamebugBundle.message("samebug.tip.write.error.tip.long"));
                     } else if (StringUtils.countMatches(tip, System.lineSeparator()) >= WriteTip.maxLines) {
                         Tracking.projectTracking(project).trace(
-                                Events.writeTipSubmit(project, searchGroup.lastSearch._id, tip, rawSourceUrl, "samebug.tip.write.error.tip.tooManyLines"));
+                                Events.writeTipSubmit(project, searchGroup.lastSearch.id, tip, rawSourceUrl, "samebug.tip.write.error.tip.tooManyLines"));
                         result = showError(SamebugBundle.message("samebug.tip.write.error.tip.tooManyLines"));
                     } else {
                         URL sourceUrl = null;
@@ -230,7 +230,7 @@ final public class SearchTabController {
                                 sourceUrl = new URL(rawSourceUrl);
                             } catch (MalformedURLException e1) {
                                 Tracking.projectTracking(project).trace(
-                                        Events.writeTipSubmit(project, searchGroup.lastSearch._id, tip, rawSourceUrl, "samebug.tip.write.error.source.malformed"));
+                                        Events.writeTipSubmit(project, searchGroup.lastSearch.id, tip, rawSourceUrl, "samebug.tip.write.error.source.malformed"));
                                 result = showError(SamebugBundle.message("samebug.tip.write.error.source.malformed"));
                             }
                         }
@@ -238,10 +238,10 @@ final public class SearchTabController {
                         if (result == null) {
                             IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
                             try {
-                                final RestHit<Tip> newTip = client.postTip(searchGroup.lastSearch._id, tip, sourceUrl);
+                                final RestHit<Tip> newTip = client.postTip(searchGroup.lastSearch.id, tip, sourceUrl);
                                 model.tips.add(newTip);
                                 Tracking.projectTracking(project).trace(
-                                        Events.writeTipSubmit(project, searchGroup.lastSearch._id, tip, rawSourceUrl, Integer.toString(newTip.solutionId)));
+                                        Events.writeTipSubmit(project, searchGroup.lastSearch.id, tip, rawSourceUrl, Integer.toString(newTip.solutionId)));
                                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                                     @Override
                                     public void run() {
@@ -260,11 +260,11 @@ final public class SearchTabController {
                                 else if ("UNKNOWN_SEARCH".equals(writeTipErrorCode)) errorMessageKey = "samebug.tip.write.error.unknownSearch";
                                 else errorMessageKey = "samebug.tip.write.error.source.unhandledBadRequest";
                                 Tracking.projectTracking(project).trace(
-                                        Events.writeTipSubmit(project, searchGroup.lastSearch._id, tip, rawSourceUrl, errorMessageKey));
+                                        Events.writeTipSubmit(project, searchGroup.lastSearch.id, tip, rawSourceUrl, errorMessageKey));
                                 result = showError(SamebugBundle.message(errorMessageKey));
                             } catch (final SamebugClientException e) {
                                 Tracking.projectTracking(project).trace(
-                                        Events.writeTipSubmit(project, searchGroup.lastSearch._id, tip, rawSourceUrl, "samebug.tip.write.error.source.unhandled"));
+                                        Events.writeTipSubmit(project, searchGroup.lastSearch.id, tip, rawSourceUrl, "samebug.tip.write.error.source.unhandled"));
                                 result = showError(SamebugBundle.message("samebug.tip.write.error.source.unhandled"));
                             }
                         }

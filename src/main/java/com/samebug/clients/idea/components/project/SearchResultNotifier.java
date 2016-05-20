@@ -75,7 +75,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
     @Override
     public void batchFinished(final List<SearchResults> results, int failed) {
         Long timelimitForFreshSearch = new Date().getTime() - (1 * 60 * 1000);
-        // TODO history does not contains the stack ids (or at least the deepest stack _id)
+        // TODO history does not contains the stack ids (or at least the deepest stack id)
         Map<Integer, StackTraceSearchGroup> history = new HashMap<Integer, StackTraceSearchGroup>();
         final HistoryTabController historyTab = ServiceManager.getService(myProject, HistoryTabController.class);
         try {
@@ -89,7 +89,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
             });
             for (SearchGroup s : h.searchGroups) {
                 // TODO this cast is bold, we will have text search groups here
-                history.put(s.lastSearch._id, (StackTraceSearchGroup) s);
+                history.put(s.lastSearch.id, (StackTraceSearchGroup) s);
             }
         } catch (SamebugClientException e1) {
             ApplicationManager.getApplication().invokeLater(new Runnable() {
@@ -113,13 +113,13 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
         for (SearchResults result : groupedResults.values()) {
             int searchId = Integer.parseInt(result.searchId);
             StackTraceSearchGroup historyResult = history.get(searchId);
-            if (historyResult != null && historyResult.numberOfSolutions == 0) {
+            if (historyResult != null && historyResult.numberOfHits == 0) {
                 if (isShowZeroSolutionSearches) {
                     ++zeroSolutions;
                     searchIds.add(result.searchId);
                 }
-            } else if (historyResult != null && historyResult.numberOfSimilars > 1
-                    && historyResult.firstSeenSimilar.getTime() < timelimitForFreshSearch) {
+            } else if (historyResult != null && historyResult.numberOfSearches > 1
+                    && historyResult.firstSeen.getTime() < timelimitForFreshSearch) {
                 if (isShowRecurringSearches) {
                     ++recurrings;
                     searchIds.add(result.searchId);

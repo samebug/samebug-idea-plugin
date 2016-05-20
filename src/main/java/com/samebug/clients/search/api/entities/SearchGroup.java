@@ -22,7 +22,7 @@ import java.util.Date;
 
 public class SearchGroup {
     @NotNull
-    public String _id;
+    public String id;
     @Nullable
     public String visitorId;
     @Nullable
@@ -30,15 +30,5 @@ public class SearchGroup {
     @Nullable
     public String teamId;
     @NotNull
-    public Date firstSeen;
-    @NotNull
-    public Date lastSeen;
-    @NotNull
     public StackTraceSearch lastSearch;
-    @NotNull
-    public Integer numberOfSearches;
-    @NotNull
-    public Integer numberOfHits;
-    @NotNull
-    public Boolean hasMoreHits;
 }

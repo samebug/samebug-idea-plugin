@@ -42,12 +42,12 @@ final public class SearchGroupCardView extends JPanel {
 
     public SearchGroupCardView(final StackTraceSearchGroup searchGroup) {
         this.searchGroup = searchGroup;
-        exceptionType = new ExceptionType(searchGroup.lastSearch.exception.typeName);
+        exceptionType = new ExceptionType(searchGroup.lastSearch.stackTrace.trace.typeName);
 
         packageLabel = new PackageLabel();
         hitsLabel = new HitsLabel();
         titleLabel = new TitleLabel();
-        exceptionMessageLabel = new ExceptionMessageLabel(searchGroup.lastSearch.exception.message);
+        exceptionMessageLabel = new ExceptionMessageLabel(searchGroup.lastSearch.stackTrace.trace.message);
         groupInfoPanel = new GroupInfoPanel();
         breadcrumbPanel = new BreadcrumbBar(searchGroup.lastSearch.stackTrace.breadCrumbs);
 
@@ -106,10 +106,10 @@ final public class SearchGroupCardView extends JPanel {
         static final int LIMIT = 100;
 
         {
-            if (searchGroup.numberOfSolutions > LIMIT) {
+            if (searchGroup.numberOfHits > LIMIT) {
                 setText(String.format("%d+ hits", LIMIT));
             } else {
-                setText(String.format("%d hits", searchGroup.numberOfSolutions));
+                setText(String.format("%d hits", searchGroup.numberOfHits));
             }
         }
 
@@ -140,11 +140,11 @@ final public class SearchGroupCardView extends JPanel {
             add(new JLabel() {
                 {
                     String text;
-                    if (searchGroup.numberOfSimilars == 1) {
-                        text = String.format("%s", TextUtil.prettyTime(searchGroup.lastSeenSimilar));
+                    if (searchGroup.numberOfSearches == 1) {
+                        text = String.format("%s", TextUtil.prettyTime(searchGroup.lastSeen));
                     } else {
                         text = String.format("%s | %d times, first %s",
-                                TextUtil.prettyTime(searchGroup.lastSeenSimilar), searchGroup.numberOfSimilars, TextUtil.prettyTime(searchGroup.firstSeenSimilar));
+                                TextUtil.prettyTime(searchGroup.lastSeen), searchGroup.numberOfSearches, TextUtil.prettyTime(searchGroup.firstSeen));
                     }
 
                     setText(text);

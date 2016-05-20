@@ -144,14 +144,14 @@ final public class HistoryTabController {
             for (final SearchGroup g : model.searchGroups) {
                 // TODO handle text search groups
                 StackTraceSearchGroup group = (StackTraceSearchGroup) g;
-                if (!isShowZeroSolutionSearches() && group.numberOfSolutions == 0) {
+                if (!isShowZeroSolutionSearches() && group.numberOfHits == 0) {
                     // filtered because there is no solution for it
-                } else if (!isShowRecurringSearches() && group.firstSeenSimilar.before(oneDayBefore)) {
+                } else if (!isShowRecurringSearches() && group.firstSeen.before(oneDayBefore)) {
                     // filtered because it is old
                 } else {
                     visibleSearches++;
                     SearchGroupCardView searchGroupCard = new SearchGroupCardView(group);
-                    searchGroupCard.titleLabel.addMouseListener(new SearchTabOpener(project, group.lastSearch._id));
+                    searchGroupCard.titleLabel.addMouseListener(new SearchTabOpener(project, group.lastSearch.id));
                     view.contentPanel.add(searchGroupCard);
                 }
             }

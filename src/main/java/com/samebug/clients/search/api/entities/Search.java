@@ -7,7 +7,7 @@ import java.util.Date;
 
 public abstract class Search {
     @NotNull
-    public Integer _id;
+    public Integer id;
     @NotNull
     public Date timestamp;
     @Nullable

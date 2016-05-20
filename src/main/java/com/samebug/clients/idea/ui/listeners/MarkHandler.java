@@ -59,7 +59,7 @@ final public class MarkHandler extends MouseAdapter {
                 try {
                     IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
                     if (hit.markId == null) {
-                        final MarkResponse mark = client.postMark(search._id, hit.solutionId);
+                        final MarkResponse mark = client.postMark(search.id, hit.solutionId);
                         hit.markId = mark.id;
                         hit.score = mark.marks;
                     } else {
@@ -68,7 +68,7 @@ final public class MarkHandler extends MouseAdapter {
                         hit.score = mark.marks;
                     }
                     Tracking.projectTracking(project).trace(
-                            Events.markSubmit(project, search._id, hit.solutionId, hit.markId == null ? "null" : hit.markId.toString()));
+                            Events.markSubmit(project, search.id, hit.solutionId, hit.markId == null ? "null" : hit.markId.toString()));
                     ApplicationManager.getApplication().invokeLater(new Runnable() {
                         @Override
                         public void run() {
@@ -84,7 +84,7 @@ final public class MarkHandler extends MouseAdapter {
                     else if ("ALREADY_CANCELLED".equals(markErrorCode)) errorMessageKey = "samebug.mark.error.alreadyCancelled";
                     else errorMessageKey = "samebug.mark.error.unhandledBadRequest";
                     Tracking.projectTracking(project).trace(
-                            Events.markSubmit(project, search._id, hit.solutionId, errorMessageKey));
+                            Events.markSubmit(project, search.id, hit.solutionId, errorMessageKey));
                     ApplicationManager.getApplication().invokeLater(new Runnable() {
                         @Override
                         public void run() {
@@ -94,7 +94,7 @@ final public class MarkHandler extends MouseAdapter {
 
                 } catch (final SamebugClientException e) {
                     Tracking.projectTracking(project).trace(
-                            Events.markSubmit(project, search._id, hit.solutionId, "samebug.mark.error.unhandled"));
+                            Events.markSubmit(project, search.id, hit.solutionId, "samebug.mark.error.unhandled"));
                     ApplicationManager.getApplication().invokeLater(new Runnable() {
                         @Override
                         public void run() {

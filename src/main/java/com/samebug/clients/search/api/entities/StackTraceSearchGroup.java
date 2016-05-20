@@ -21,15 +21,11 @@ import java.util.Date;
 
 public class StackTraceSearchGroup extends SearchGroup {
     @NotNull
-    public Integer numberOfSimilars;
+    public Integer numberOfSearches;
     @NotNull
-    public Integer numberOfSolutions;
+    public Integer numberOfHits;
     @NotNull
-    public Boolean hasMoreHits;
+    public Date firstSeen;
     @NotNull
-    public Date firstSeenSimilar;
-    @NotNull
-    public Date lastSeenSimilar;
-    @NotNull
-    public StackTraceSearch lastSearch;
+    public Date lastSeen;
 }
