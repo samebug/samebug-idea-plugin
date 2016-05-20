@@ -17,7 +17,7 @@ package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
 
-public class Source {
+public final class Source {
     @NotNull
     public String name;
     @NotNull

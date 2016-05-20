@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.samebug.clients.search.api.entities.*;
+import com.samebug.clients.search.api.entities.Exception;
 import com.samebug.clients.search.api.json.Json;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
@@ -52,8 +53,11 @@ public class JsonTest {
         checkFields(x);
         Assert.assertEquals(50, x.searchGroups.size());
         for (SearchGroup e : x.searchGroups) {
-            Assert.assertTrue(e.lastSearch.id > 0);
-            Assert.assertTrue(e.lastSearch.stackTrace.breadCrumbs.size() > 0);
+            Assert.assertTrue(e.getLastSearch().id > 0);
+            if (e.getLastSearch() instanceof StackTraceSearch) {
+                StackTraceSearch stackTraceSearch = (StackTraceSearch) e.getLastSearch();
+                Assert.assertTrue(stackTraceSearch.stackTrace.breadCrumbs.size() > 0);
+            }
         }
     }
 
@@ -88,10 +92,13 @@ public class JsonTest {
     }
 
     Map<Class<?>, List<String>> nullableFieldsForEntities = ImmutableMap.<Class<?>, List<String>>builder()
+            .put(ApplicationComponentReference.class, ImmutableList.<String>of())
             .put(Author.class, ImmutableList.<String>of("url", "avatarUrl"))
             .put(BreadCrumb.class, ImmutableList.<String>of())
             .put(ComponentReference.class, ImmutableList.<String>of())
-            .put(com.samebug.clients.search.api.entities.Exception.class, ImmutableList.<String>of("message"))
+            .put(DefaultComponentReference.class, ImmutableList.<String>of())
+            .put(Exception.class, ImmutableList.<String>of("message"))
+            .put(LibraryComponentReference.class, ImmutableList.<String>of("description", "mavenId"))
             .put(MarkResponse.class, ImmutableList.<String>of("id"))
             .put(QualifiedCall.class, ImmutableList.<String>of("packageName"))
             .put(RestError.class, ImmutableList.<String>of())
@@ -108,8 +115,10 @@ public class JsonTest {
             .put(StackTraceSearchGroup.class, ImmutableList.<String>of("visitorId", "userId", "teamId"))
             .put(StackTraceWithBreadCrumbs.class, ImmutableList.<String>of())
             .put(TextSearch.class, ImmutableList.<String>of("visitorId", "userId", "teamId", "errorType"))
+            .put(TextSearchGroup.class, ImmutableList.<String>of("visitorId", "userId", "teamId"))
             .put(Tip.class, ImmutableList.<String>of("via"))
             .put(UserInfo.class, ImmutableList.<String>of("userId", "displayName", "avatarUrl"))
             .put(UserReference.class, ImmutableList.<String>of("avatarUrl"))
+            .put(VendorComponentReference.class, ImmutableList.<String>of())
             .build();
 }

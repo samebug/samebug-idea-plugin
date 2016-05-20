@@ -18,7 +18,7 @@ package com.samebug.clients.search.api.entities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class Exception {
+public final class Exception {
     @NotNull
     public String typeName;
     @Nullable

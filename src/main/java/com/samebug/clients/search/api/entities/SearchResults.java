@@ -15,7 +15,11 @@
  */
 package com.samebug.clients.search.api.entities;
 
-public class SearchResults {
+import org.jetbrains.annotations.NotNull;
+
+public final class SearchResults {
+    @NotNull
     public String searchId;
-    public int stackTraceId;
+    @NotNull
+    public Integer stackTraceId;
 }

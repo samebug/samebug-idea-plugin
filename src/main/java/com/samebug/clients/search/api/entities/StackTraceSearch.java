@@ -17,7 +17,7 @@ package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
 
-public class StackTraceSearch extends Search {
+public final class StackTraceSearch extends Search {
     @NotNull
     public StackTraceWithBreadCrumbs stackTrace;
 }

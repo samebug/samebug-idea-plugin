@@ -17,8 +17,7 @@ package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
 
-// TODO do we need the subclasses? (library, vendor, app, default compononent)
-public class ComponentReference {
+public abstract class ComponentReference {
     @NotNull
     public String name;
     @NotNull

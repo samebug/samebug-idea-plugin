@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class StackTraceWithBreadCrumbs {
+public final class StackTraceWithBreadCrumbs {
     @NotNull
     public Integer stackTraceId;
     @NotNull

@@ -18,7 +18,7 @@ package com.samebug.clients.search.api.entities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class MarkResponse {
+public final class MarkResponse {
     @Nullable
     public Integer id;
     @NotNull

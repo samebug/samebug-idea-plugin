@@ -16,7 +16,10 @@
 package com.samebug.clients.search.api.json;
 
 import com.google.gson.*;
+import com.samebug.clients.search.api.entities.ComponentReference;
+import com.samebug.clients.search.api.entities.RestSolution;
 import com.samebug.clients.search.api.entities.Search;
+import com.samebug.clients.search.api.entities.SearchGroup;
 
 import java.util.Date;
 
@@ -33,7 +36,10 @@ public class Json {
                     }
                 }
         );
+        gsonBuilder.registerTypeAdapter(ComponentReference.class, new ComponentReferenceAdapter());
+        gsonBuilder.registerTypeAdapter(RestSolution.class, new RestSolutionAdapter());
         gsonBuilder.registerTypeAdapter(Search.class, new SearchAdapter());
+        gsonBuilder.registerTypeAdapter(SearchGroup.class, new SearchGroupAdapter());
         gson = gsonBuilder.create();
     }
 }

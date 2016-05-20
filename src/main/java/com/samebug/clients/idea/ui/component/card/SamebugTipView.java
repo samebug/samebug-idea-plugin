@@ -22,10 +22,7 @@ import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.*;
 import com.samebug.clients.idea.ui.component.organism.BreadcrumbBar;
 import com.samebug.clients.idea.ui.component.organism.MarkPanel;
-import com.samebug.clients.search.api.entities.BreadCrumb;
-import com.samebug.clients.search.api.entities.SearchGroup;
-import com.samebug.clients.search.api.entities.RestHit;
-import com.samebug.clients.search.api.entities.Tip;
+import com.samebug.clients.search.api.entities.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -48,7 +45,7 @@ final public class SamebugTipView extends JPanel {
                           @NotNull Integer currentUserId) {
         this.tip = tip;
         this.searchGroup = searchGroup;
-        this.searchBreadcrumb = searchGroup.lastSearch.stackTrace.breadCrumbs;
+        this.searchBreadcrumb = ((StackTraceSearchGroup) searchGroup).lastSearch.stackTrace.breadCrumbs;
         // RestHit<Tip> should always have an author
         assert tip.createdBy != null;
 

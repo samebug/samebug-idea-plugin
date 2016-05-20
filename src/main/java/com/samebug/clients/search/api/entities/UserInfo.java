@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
 
-public class UserInfo {
+public final class UserInfo {
     @NotNull
     public Boolean isUserExist;
     public Integer userId;

@@ -17,7 +17,7 @@ package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
 
-public class BreadCrumb {
+public final class BreadCrumb {
     @NotNull
     public Integer level;
     @NotNull

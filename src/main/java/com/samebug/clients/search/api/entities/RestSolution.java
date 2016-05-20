@@ -15,5 +15,11 @@
  */
 package com.samebug.clients.search.api.entities;
 
-public class RestSolution {
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Date;
+
+public abstract class RestSolution {
+    @NotNull
+    public Date createdAt;
 }

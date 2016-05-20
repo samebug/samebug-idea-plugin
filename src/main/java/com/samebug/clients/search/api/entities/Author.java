@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.net.URL;
 
-public class Author {
+public final class Author {
     @NotNull
     public String name;
     @Nullable

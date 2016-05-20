@@ -18,13 +18,9 @@ package com.samebug.clients.search.api.entities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Date;
-
-public class Tip extends RestSolution {
+public final class Tip extends RestSolution {
     @NotNull
     public Author author;
-    @NotNull
-    public Date createdAt;
     @NotNull
     public String tip;
     @Nullable

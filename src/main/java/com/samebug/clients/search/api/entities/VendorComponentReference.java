@@ -2,9 +2,7 @@ package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
-public final class SearchHistory {
+public final class VendorComponentReference extends ComponentReference {
     @NotNull
-    public List<SearchGroup> searchGroups;
+    public String packageName;
 }

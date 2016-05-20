@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.search.api.entities;
 
-public class RestError {
+public final class RestError {
     public String code;
     public String message;
 }

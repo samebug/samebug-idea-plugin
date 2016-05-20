@@ -89,7 +89,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
             });
             for (SearchGroup s : h.searchGroups) {
                 // TODO this cast is bold, we will have text search groups here
-                history.put(s.lastSearch.id, (StackTraceSearchGroup) s);
+                history.put(s.getLastSearch().id, (StackTraceSearchGroup) s);
             }
         } catch (SamebugClientException e1) {
             ApplicationManager.getApplication().invokeLater(new Runnable() {
