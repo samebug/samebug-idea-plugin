@@ -26,7 +26,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 final public class RestUrlBuilder {
-    final static String API_VERSION = "0.9";
+    final static String API_VERSION = "0.11";
     @NotNull
     final URI gateway;
 

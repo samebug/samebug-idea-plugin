@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class ComponentReference {
     @NotNull
-    public String name;
+    abstract public String getName();
     @NotNull
-    public Integer color;
+    abstract public Integer getColor();
 }

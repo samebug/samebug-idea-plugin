@@ -75,13 +75,13 @@ final public class BreadcrumbBar extends TransparentPanel {
         @Override
         public String getText() {
             if (breadCrumb == null) return super.getText();
-            else return breadCrumb.component.name;
+            else return breadCrumb.component.getName();
         }
 
         @Override
         public Color getForeground() {
             if (breadCrumb == null) return super.getForeground();
-            else return ColorUtil.componentColors(breadCrumb.component.color);
+            else return ColorUtil.componentColors(breadCrumb.component.getColor());
         }
     }
 }

@@ -16,6 +16,7 @@
 package com.samebug.clients.search.api;
 
 import com.samebug.clients.search.api.entities.BreadCrumb;
+import com.samebug.clients.search.api.entities.LibraryComponentReference;
 import com.samebug.clients.search.api.exceptions.IllegalUriException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -57,12 +58,9 @@ final public class WebUrlBuilder {
 
     @Nullable
     public URL crashdoc(@NotNull final BreadCrumb b) {
-        // TODO currently we can decide between library- and application components
-        // only by the component color (0 for application components)
-        if (b.component.color == 0) return null;
+        if (!(b.component instanceof LibraryComponentReference)) return null;
         else {
             try {
-                // TODO handle default package?
                 final String entryUri = enc(b.entry.packageName) + "/" + enc(b.entry.className) + "/" + enc(b.entry.methodName) + "/" + enc(b.typeName);
                 final String passThrough = "?pt=" + b.passThrough;
                 return resolveToRoot("/crashdocs/" + entryUri + passThrough);

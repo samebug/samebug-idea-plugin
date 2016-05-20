@@ -11,12 +11,16 @@ class AbstractObjectAdapter<T> implements JsonDeserializer<T> {
         if (json == null) return null;
         else {
             JsonObject jsonObject = json.getAsJsonObject();
-            String type = jsonObject.get(typeField).getAsString();
+            JsonElement typeFieldValue = jsonObject.get(typeField);
+            if (typeFieldValue == null) throw new JsonParseException("Cannot serialize " + typeOfT + " because the type field" + typeField + " is missing");
+            else {
+                String type = jsonObject.get(typeField).getAsString();
 
-            for (Map.Entry<String, Class<? extends T>> entry : typeClasses.entrySet()) {
-                if (entry.getKey().equals(type)) return context.deserialize(jsonObject, entry.getValue());
+                for (Map.Entry<String, Class<? extends T>> entry : typeClasses.entrySet()) {
+                    if (entry.getKey().equals(type)) return context.deserialize(jsonObject, entry.getValue());
+                }
+                throw new JsonParseException("Cannot serialize an abstract " + typeOfT + " with the type " + type);
             }
-            throw new JsonParseException("Cannot serialize an abstract " + typeOfT + " with the type " + type);
         }
     }
 

@@ -62,7 +62,12 @@ final public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAw
                         }
                     });
                 } catch (SamebugClientException e1) {
-                    historyTab.update(null);
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            historyTab.update(null);
+                        }
+                    });
                 }
             }
         });

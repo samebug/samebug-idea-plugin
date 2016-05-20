@@ -9,7 +9,23 @@ public final class LibraryComponentReference extends ComponentReference {
     @Nullable
     public String mavenId;
     @NotNull
+    public String name;
+    @NotNull
     public String slug;
     @Nullable
     public String description;
+    @NotNull
+    public Integer color;
+
+    @Override
+    @NotNull
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    @NotNull
+    public Integer getColor() {
+        return color;
+    }
 }

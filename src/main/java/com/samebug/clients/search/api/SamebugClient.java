@@ -61,7 +61,7 @@ import java.util.Collections;
 import java.util.List;
 
 final public class SamebugClient {
-    final static String USER_AGENT = "Samebug-Idea-Client/1.4.0";
+    final static String USER_AGENT = "Samebug-Idea-Client/2.0.0";
     final static Gson gson = Json.gson;
 
     final Config config;
@@ -196,12 +196,12 @@ final public class SamebugClient {
 
     // implementation
     <T> T requestJson(final HttpRequestBase request, final Class<T> classOfT)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError, JsonParseException {
         return requestJson(request, (Type) classOfT);
     }
 
     <T> T requestJson(final HttpRequestBase request, final Type typeOfT)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError, JsonParseException {
         request.setHeader("Accept", "application/json");
         final HttpResponse httpResponse = executePatient(request);
         return new HandleResponse<T>(httpResponse) {
@@ -213,7 +213,7 @@ final public class SamebugClient {
     }
 
     private void postJson(final HttpPost post, final Object data)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError, JsonParseException {
         final String json = gson.toJson(data);
         post.addHeader("Content-Type", "application/json");
         post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
@@ -229,12 +229,12 @@ final public class SamebugClient {
 
 
     private HttpResponse executeFailFast(final HttpRequestBase request)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError, JsonParseException {
         return execute(request, trackingConfig);
     }
 
     private HttpResponse executePatient(final HttpRequestBase request)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError, JsonParseException {
         return execute(request, null);
     }
 
@@ -251,7 +251,7 @@ final public class SamebugClient {
      * @throws UserUnauthorized           if the user was not authorized (403)
      */
     private HttpResponse execute(final HttpRequestBase request, final RequestConfig config)
-            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError {
+            throws SamebugTimeout, UnsuccessfulResponseStatus, RemoteError, BadRequest, UserUnauthenticated, UserUnauthorized, HttpError, JsonParseException {
         if (config != null) request.setConfig(config);
 
         final HttpResponse httpResponse;
@@ -363,13 +363,15 @@ abstract class HandleResponse<T> {
 
     abstract T process(final Reader reader);
 
-    final public T handle() throws HttpError {
+    final public T handle() throws HttpError, JsonParseException {
         InputStream content = null;
         Reader reader = null;
         try {
             content = response.getEntity().getContent();
             reader = new InputStreamReader(content);
             return process(reader);
+        } catch (com.google.gson.JsonParseException e) {
+            throw new JsonParseException("Failed to parse json response", e);
         } catch (IOException e) {
             throw new HttpError(e);
         } finally {
