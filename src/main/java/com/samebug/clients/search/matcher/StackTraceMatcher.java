@@ -44,8 +44,12 @@ public class StackTraceMatcher extends MatcherStateMachine implements LogScanner
         stop();
     }
 
-    Line recognize(String line) {
-        for (LineType lineType : LineType.values()) {
+    static Line recognize(String line) {
+        return recognize(line, LineType.values());
+    }
+
+    static Line recognize(String line, LineType[] acceptableLineTypes) {
+        for (LineType lineType : acceptableLineTypes) {
             Line match = lineType.match(line);
             if (match != null) return match;
         }
