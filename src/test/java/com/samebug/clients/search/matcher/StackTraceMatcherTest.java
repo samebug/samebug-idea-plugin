@@ -1,6 +1,8 @@
 package com.samebug.clients.search.matcher;
 
 import com.samebug.clients.search.api.StackTraceListener;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -10,90 +12,53 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
-import static org.junit.Assert.assertEquals;
-
 public class StackTraceMatcherTest {
+
+    @Test
+    public void testTabIndentedOutput() throws IOException {
+        openReader("runIdea.txt");
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            matcher.line(line);
+        }
+        matcher.end();
+
+        Mockito.verify(listener).stacktraceFound(null, getTextResource("runIdea-stacktrace-001.txt"));
+    }
+
+    @Test
+    public void testInvalidLongOutput() throws IOException {
+        openReader("invalidLong.txt");
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            matcher.line(line);
+        }
+        matcher.end();
+
+        Mockito.verify(listener).stacktraceFound(null, getTextResource("invalidLong-stacktrace-001.txt"));
+    }
+
     @Test
     public void testAndroidOutput() throws IOException {
-        InputStream is = getClass().getResourceAsStream("/androidoutput.txt");
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
+        openReader("androidOutput.txt");
 
-        StackTraceListener listener = Mockito.mock(StackTraceListener.class);
-        StackTraceMatcher matcher = new StackTraceMatcher(listener, null);
-
-        try {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                matcher.line(line);
-            }
-            matcher.end();
-
-            Mockito.verify(listener).stacktraceFound(null, getTextResource("/stacktrace1.txt"));
-
-            Mockito.verify(listener).stacktraceFound(null, getTextResource("/stacktrace2.txt"));
-
-            Mockito.verify(listener).stacktraceFound(null, getTextResource("/stacktrace3.txt"));
-
-            Mockito.verify(listener).stacktraceFound(null, getTextResource("/stacktrace4.txt"));
-
-            Mockito.verify(listener).stacktraceFound(null, getTextResource("/stacktrace5.txt"));
-
-            Mockito.verify(listener).stacktraceFound(null, getTextResource("/stacktrace6.txt"));
-
-            Mockito.verify(listener).stacktraceFound(null, getTextResource("/stacktrace7.txt"));
-        } finally {
-            reader.close();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            matcher.line(line);
         }
+        matcher.end();
+
+        Mockito.verify(listener).stacktraceFound(null, getTextResource("androidOutput-stacktrace-001.txt"));
+        Mockito.verify(listener).stacktraceFound(null, getTextResource("androidOutput-stacktrace-002.txt"));
+        Mockito.verify(listener).stacktraceFound(null, getTextResource("androidOutput-stacktrace-003.txt"));
+        Mockito.verify(listener).stacktraceFound(null, getTextResource("androidOutput-stacktrace-004.txt"));
+        Mockito.verify(listener).stacktraceFound(null, getTextResource("androidOutput-stacktrace-005.txt"));
+        Mockito.verify(listener).stacktraceFound(null, getTextResource("androidOutput-stacktrace-006.txt"));
+        Mockito.verify(listener).stacktraceFound(null, getTextResource("androidOutput-stacktrace-007.txt"));
     }
 
-    @Test
-    public void recognizeStandardFrame() {
-        checkLineType(
-                LineType.StackFrameType,
-                "at com.android.server.job.JobSchedulerService$JobSchedulerStub.enforceValidJobRequest(JobSchedulerService.java:632)\n");
-    }
-
-    @Test
-    public void recognizeFrameWithNumbers() {
-        checkLineType(
-                LineType.StackFrameType,
-                "at android.app.ActivityThread.access$800(ActivityThread.java:143) \n");
-    }
-
-    @Test
-    public void recognizeCauseWithoutMessage() {
-        checkLineType(
-                LineType.CausedByTypeWithoutMessage,
-                "Caused by: java.lang.reflect.InvocationTargetException\n");
-    }
-
-    @Test
-    public void recognizeCauseWithMessageStart() {
-        checkLineType(
-                LineType.CausedByTypeWithMessage,
-                "Caused by: android.content.res.Resources$NotFoundException: Unable to find resource ID #0x0\n");
-    }
-
-    @Test
-    public void recognizeExceptionStartWithMessage() {
-        checkLineType(
-                LineType.ExceptionStartTypeWithMessage,
-                "android.view.InflateException: Binary XML file line #34: Error inflating class android.widget.FrameLayout\n");
-    }
-
-    @Test
-    public void recognizeExceptionStartWithoutMessage() {
-        checkLineType(
-                LineType.ExceptionStartTypeWithoutMessage,
-                "android.view.InflateException     \n");
-    }
-
-    private void checkLineType(LineType expectedLineType, String line) {
-        StackTraceListener listener = Mockito.mock(StackTraceListener.class);
-        StackTraceMatcher matcher = new StackTraceMatcher(listener, null);
-        Line match = matcher.recognize(line);
-        assertEquals(expectedLineType, match.getType());
-    }
 
     private String getTextResource(String path) throws IOException {
         InputStream is = getClass().getResourceAsStream(path);
@@ -106,6 +71,32 @@ public class StackTraceMatcherTest {
             else first = false;
             b.append(line);
         }
+        reader.close();
         return b.toString();
     }
+
+
+    @Before
+    public void initMatcher() {
+        listener = Mockito.mock(StackTraceListener.class);
+        matcher = new StackTraceMatcher(listener, null);
+    }
+
+    @After
+    public void closeReader() {
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openReader(String resourceName) {
+        InputStream is = getClass().getResourceAsStream(resourceName);
+        reader = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
+    }
+
+    private BufferedReader reader;
+    private StackTraceMatcher matcher;
+    private StackTraceListener listener;
 }
