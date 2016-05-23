@@ -15,41 +15,29 @@
  */
 package com.samebug.clients.idea.ui.component.card;
 
-import com.samebug.clients.common.entities.ExceptionType;
 import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.common.ui.TextUtil;
-import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
-import com.samebug.clients.idea.ui.component.ExceptionMessageLabel;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
-import com.samebug.clients.idea.ui.component.organism.BreadcrumbBar;
-import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
+import com.samebug.clients.search.api.entities.TextSearchGroup;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
-final public class SearchGroupCardView extends JPanel {
-    public final StackTraceSearchGroup searchGroup;
-    final ExceptionType exceptionType;
-    public final JLabel packageLabel;
+final public class TextSearchGroupCard extends JPanel {
+    public final TextSearchGroup searchGroup;
     public final JLabel hitsLabel;
-    public final JLabel titleLabel;
-    public final JLabel exceptionMessageLabel;
+    public final JLabel queryLabel;
     public final JPanel groupInfoPanel;
-    public final JPanel breadcrumbPanel;
 
-    public SearchGroupCardView(final StackTraceSearchGroup searchGroup) {
+    public TextSearchGroupCard(final TextSearchGroup searchGroup) {
         this.searchGroup = searchGroup;
-        exceptionType = new ExceptionType(searchGroup.lastSearch.stackTrace.trace.typeName);
 
-        packageLabel = new PackageLabel();
-        hitsLabel = new HitsLabel();
-        titleLabel = new TitleLabel();
-        exceptionMessageLabel = new ExceptionMessageLabel(searchGroup.lastSearch.stackTrace.trace.message);
-        groupInfoPanel = new GroupInfoPanel();
-        breadcrumbPanel = new BreadcrumbBar(searchGroup.lastSearch.stackTrace.breadCrumbs);
+        hitsLabel = new TextSearchGroupCard.HitsLabel();
+        queryLabel = new TextSearchGroupCard.QueryLabel();
+        groupInfoPanel = new TextSearchGroupCard.GroupInfoPanel();
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
@@ -58,25 +46,16 @@ final public class SearchGroupCardView extends JPanel {
                 setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
                 add(new TransparentPanel() {
                     {
-                        add(packageLabel, BorderLayout.WEST);
                         add(hitsLabel, BorderLayout.EAST);
                     }
                 }, BorderLayout.NORTH);
-                add(breadcrumbPanel, BorderLayout.SOUTH);
                 add(new TransparentPanel() {
                     {
                         add(groupInfoPanel, BorderLayout.SOUTH);
                         add(new TransparentPanel() {
                             {
-                                setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-                                setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-                                add(titleLabel);
-                            }
-                        }, BorderLayout.NORTH);
-                        add(new TransparentPanel() {
-                            {
                                 setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
-                                add(exceptionMessageLabel, BorderLayout.CENTER);
+                                add(queryLabel, BorderLayout.CENTER);
                             }
                         }, BorderLayout.CENTER);
                     }
@@ -89,9 +68,9 @@ final public class SearchGroupCardView extends JPanel {
 
     }
 
-    final class TitleLabel extends JLabel {
+    final class QueryLabel extends JLabel {
         {
-            setText(exceptionType.className);
+            setText(searchGroup.lastSearch.query);
             setForeground(Colors.samebugOrange);
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             final HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
@@ -110,21 +89,6 @@ final public class SearchGroupCardView extends JPanel {
                 setText(String.format("%d+ hits", LIMIT));
             } else {
                 setText(String.format("%d hits", searchGroup.numberOfHits));
-            }
-        }
-
-        @Override
-        public Color getForeground() {
-            return ColorUtil.unemphasizedText();
-        }
-    }
-
-    final class PackageLabel extends JLabel {
-        {
-            if (exceptionType.packageName == null) {
-                setText(String.format("%s", SamebugBundle.message("samebug.exception.noPackage")));
-            } else {
-                setText(String.format("%s", exceptionType.packageName));
             }
         }
 

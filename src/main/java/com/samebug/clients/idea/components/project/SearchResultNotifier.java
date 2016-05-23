@@ -39,7 +39,6 @@ import com.samebug.clients.idea.ui.controller.HistoryTabController;
 import com.samebug.clients.search.api.entities.SearchGroup;
 import com.samebug.clients.search.api.entities.SearchHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
-import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
 import javax.swing.*;
@@ -76,7 +75,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
     public void batchFinished(final List<SearchResults> results, int failed) {
         Long timelimitForFreshSearch = new Date().getTime() - (1 * 60 * 1000);
         // TODO history does not contains the stack ids (or at least the deepest stack id)
-        Map<Integer, StackTraceSearchGroup> history = new HashMap<Integer, StackTraceSearchGroup>();
+        Map<Integer, SearchGroup> history = new HashMap<Integer, SearchGroup>();
         final HistoryTabController historyTab = ServiceManager.getService(myProject, HistoryTabController.class);
         try {
             final IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
@@ -88,8 +87,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
                 }
             });
             for (SearchGroup s : h.searchGroups) {
-                // TODO this cast is bold, we will have text search groups here
-                history.put(s.getLastSearch().id, (StackTraceSearchGroup) s);
+                history.put(s.getLastSearch().id, s);
             }
         } catch (SamebugClientException e1) {
             ApplicationManager.getApplication().invokeLater(new Runnable() {
@@ -112,7 +110,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
         final List<String> searchIds = new ArrayList<String>();
         for (SearchResults result : groupedResults.values()) {
             int searchId = Integer.parseInt(result.searchId);
-            StackTraceSearchGroup historyResult = history.get(searchId);
+            SearchGroup historyResult = history.get(searchId);
             if (historyResult != null && historyResult.numberOfHits == 0) {
                 if (isShowZeroSolutionSearches) {
                     ++zeroSolutions;

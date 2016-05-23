@@ -34,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.TextAttribute;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 final public class ExternalSolutionView extends JPanel {
@@ -54,8 +55,11 @@ final public class ExternalSolutionView extends JPanel {
                                 @NotNull Integer currentUserId) {
         this.solution = solution;
         this.searchGroup = searchGroup;
-        // TODO remove this typecast by implementing the view for text searches
-        this.searchBreadcrumb = ((StackTraceSearchGroup) searchGroup).lastSearch.stackTrace.breadCrumbs;
+        if (searchGroup instanceof StackTraceSearchGroup) {
+            this.searchBreadcrumb = ((StackTraceSearchGroup) searchGroup).lastSearch.stackTrace.breadCrumbs;
+        } else {
+            this.searchBreadcrumb = new ArrayList<BreadCrumb>(0);
+        }
         // RestHit<SolutionReference> should always have an exception
         assert solution.exception != null;
 

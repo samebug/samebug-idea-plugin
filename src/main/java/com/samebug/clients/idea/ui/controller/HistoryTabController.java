@@ -31,7 +31,8 @@ import com.samebug.clients.idea.components.project.TutorialProjectComponent;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.component.TutorialPanel;
-import com.samebug.clients.idea.ui.component.card.SearchGroupCardView;
+import com.samebug.clients.idea.ui.component.card.StackTraceSearchGroupCard;
+import com.samebug.clients.idea.ui.component.card.TextSearchGroupCard;
 import com.samebug.clients.idea.ui.component.tab.HistoryTabView;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.listeners.ConnectionStatusUpdater;
@@ -39,6 +40,7 @@ import com.samebug.clients.idea.ui.listeners.SearchTabOpener;
 import com.samebug.clients.search.api.entities.SearchGroup;
 import com.samebug.clients.search.api.entities.SearchHistory;
 import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
+import com.samebug.clients.search.api.entities.TextSearchGroup;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -141,18 +143,24 @@ final public class HistoryTabController {
             cal.add(Calendar.DAY_OF_YEAR, -1);
             Date oneDayBefore = cal.getTime();
             int visibleSearches = 0;
-            for (final SearchGroup g : model.searchGroups) {
-                // TODO handle text search groups
-                StackTraceSearchGroup group = (StackTraceSearchGroup) g;
+            for (final SearchGroup group : model.searchGroups) {
                 if (!isShowZeroSolutionSearches() && group.numberOfHits == 0) {
                     // filtered because there is no solution for it
                 } else if (!isShowRecurringSearches() && group.firstSeen.before(oneDayBefore)) {
                     // filtered because it is old
                 } else {
                     visibleSearches++;
-                    SearchGroupCardView searchGroupCard = new SearchGroupCardView(group);
-                    searchGroupCard.titleLabel.addMouseListener(new SearchTabOpener(project, group.lastSearch.id));
-                    view.contentPanel.add(searchGroupCard);
+                    if (group instanceof StackTraceSearchGroup) {
+                        StackTraceSearchGroup g = (StackTraceSearchGroup) group;
+                        StackTraceSearchGroupCard searchGroupCard = new StackTraceSearchGroupCard(g);
+                        searchGroupCard.titleLabel.addMouseListener(new SearchTabOpener(project, g.lastSearch.id));
+                        view.contentPanel.add(searchGroupCard);
+                    } else if (group instanceof TextSearchGroup) {
+                        TextSearchGroup g = (TextSearchGroup) group;
+                        TextSearchGroupCard searchGroupCard = new TextSearchGroupCard(g);
+                        searchGroupCard.queryLabel.addMouseListener(new SearchTabOpener(project, g.lastSearch.id));
+                        view.contentPanel.add(searchGroupCard);
+                    }
                 }
             }
             if (visibleSearches == 0) {

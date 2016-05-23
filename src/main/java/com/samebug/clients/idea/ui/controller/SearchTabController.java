@@ -31,7 +31,7 @@ import com.samebug.clients.idea.ui.component.TutorialPanel;
 import com.samebug.clients.idea.ui.component.WriteTip;
 import com.samebug.clients.idea.ui.component.card.ExternalSolutionView;
 import com.samebug.clients.idea.ui.component.card.SamebugTipView;
-import com.samebug.clients.idea.ui.component.card.SearchGroupCardView;
+import com.samebug.clients.idea.ui.component.card.StackTraceSearchGroupCard;
 import com.samebug.clients.idea.ui.component.tab.SearchTabView;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.listeners.ConnectionStatusUpdater;
@@ -137,7 +137,7 @@ final public class SearchTabController {
                 }
             }
 
-            view.searchCard = new SearchGroupCardView(model.searchGroup);
+            view.searchCard = new StackTraceSearchGroupCard(model.searchGroup);
             view.searchCard.titleLabel.addMouseListener(new LinkOpener(IdeaSamebugPlugin.getInstance().getUrlBuilder().search(model.searchGroup.lastSearch.id)));
             view.writeTipHint.ctaButton.addMouseListener(new WriteTipHandler(model.searchGroup));
             view.showWriteTipHint();
