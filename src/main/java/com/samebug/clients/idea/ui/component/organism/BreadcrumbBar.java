@@ -28,7 +28,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 
-// TODO remove either this or BreadcrumbBar when the rest api is cleared.
 final public class BreadcrumbBar extends TransparentPanel {
     public BreadcrumbBar(@NotNull java.util.List<BreadCrumb> breadcrumbs) {
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));

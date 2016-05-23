@@ -37,9 +37,9 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.controller.HistoryTabController;
 import com.samebug.clients.search.api.entities.SearchGroup;
-import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
 import com.samebug.clients.search.api.entities.SearchHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
+import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
 import javax.swing.*;

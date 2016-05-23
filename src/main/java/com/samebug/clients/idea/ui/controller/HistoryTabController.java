@@ -37,8 +37,8 @@ import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.listeners.ConnectionStatusUpdater;
 import com.samebug.clients.idea.ui.listeners.SearchTabOpener;
 import com.samebug.clients.search.api.entities.SearchGroup;
-import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
 import com.samebug.clients.search.api.entities.SearchHistory;
+import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

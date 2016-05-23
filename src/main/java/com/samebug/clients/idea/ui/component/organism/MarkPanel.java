@@ -25,8 +25,8 @@ import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.component.ErrorLabel;
 import com.samebug.clients.idea.ui.component.SBButton;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
-import com.samebug.clients.search.api.entities.SearchGroup;
 import com.samebug.clients.search.api.entities.RestHit;
+import com.samebug.clients.search.api.entities.SearchGroup;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

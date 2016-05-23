@@ -18,8 +18,8 @@ package com.samebug.clients.idea.ui.component;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.organism.BreadcrumbBar;
-import com.samebug.clients.search.api.entities.StackTraceSearch;
 import com.samebug.clients.search.api.entities.Author;
+import com.samebug.clients.search.api.entities.StackTraceSearch;
 
 import javax.swing.*;
 import java.awt.*;
