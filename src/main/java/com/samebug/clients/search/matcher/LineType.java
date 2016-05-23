@@ -27,7 +27,7 @@ enum LineType {
     CausedByTypeWithoutMessage(CausedBy.class, "\\s*Caused by\\:\\s([\\w\\.]*\\.)(\\p{Lu}[\\w\\$]+)(?:\\s*)"),
     ExceptionStartTypeWithMessage(ExceptionStart.class, "(?:.+\\s)?([\\w\\.]*\\.)(\\p{Lu}[\\w\\$]+\\:)\\s(.*)"),
     ExceptionStartTypeWithoutMessage(ExceptionStart.class, "(?:.+\\s)?([\\w\\.]*\\.)(\\p{Lu}[\\w\\$]+)(?:\\s*)"),
-    MoreType(More.class, "(?:.+\\s)?\\.{3} (\\d+) more\\s*"),
+    MoreType(More.class, "(?:\\s*)?\\.{3} (\\d+) more\\s*"),
     MessageType(Message.class, ".*");
 
     private final Pattern pattern;

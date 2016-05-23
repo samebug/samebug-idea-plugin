@@ -13,6 +13,27 @@ import java.nio.charset.Charset;
 import static org.junit.Assert.assertEquals;
 
 public class StackTraceMatcherTest {
+
+    @Test
+    public void testTabIndentedOutput() throws IOException {
+        InputStream is = getClass().getResourceAsStream("/com/samebug/clients/search/runIdea.txt");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
+
+        StackTraceListener listener = Mockito.mock(StackTraceListener.class);
+        StackTraceMatcher matcher = new StackTraceMatcher(listener, null);
+        try {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                matcher.line(line);
+            }
+            matcher.end();
+            Mockito.verify(listener).stacktraceFound(null, getTextResource("/com/samebug/clients/search/runIdea-stacktrace-001.txt"));
+        } finally {
+            reader.close();
+        }
+
+    }
+
     @Test
     public void testAndroidOutput() throws IOException {
         InputStream is = getClass().getResourceAsStream("/androidoutput.txt");
@@ -41,6 +62,8 @@ public class StackTraceMatcherTest {
             Mockito.verify(listener).stacktraceFound(null, getTextResource("/stacktrace6.txt"));
 
             Mockito.verify(listener).stacktraceFound(null, getTextResource("/stacktrace7.txt"));
+
+
         } finally {
             reader.close();
         }
