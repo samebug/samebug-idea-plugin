@@ -22,20 +22,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 enum LineType {
-    StackFrameType(StackFrame.class, "(?:.+\\s)?\\s*at ([\\w\\.]*\\.)?([\\w\\$]+\\.)([\\w\\$<>]+)(\\([\\w\\s\\:\\.]*\\)).*"),
-    CausedByTypeWithMessage(CausedBy.class, "(?:.+\\s)?\\s*Caused by\\:\\s([\\w\\.]*\\.)(\\p{Lu}[\\w\\$]+\\:)\\s(.*)"),
-    CausedByTypeWithoutMessage(CausedBy.class, "(?:.+\\s)?\\s*Caused by\\:\\s([\\w\\.]*\\.)(\\p{Lu}[\\w\\$]+)(?:\\s*)"),
-    ExceptionStartTypeWithMessage(ExceptionStart.class, "(?:.+\\s)?\\s*([\\w\\.]*\\.)(\\p{Lu}[\\w\\$]+\\:)\\s(.*)"),
-    ExceptionStartTypeWithoutMessage(ExceptionStart.class, "(?:.+\\s)?\\s*([\\w\\.]*\\.)(\\p{Lu}[\\w\\$]+)(?:\\s*)"),
-    MoreType(More.class, "(?:.+\\s)?\\s*\\.{3} (\\d+) more\\s*"),
+    StackFrameType(StackFrame.class, "at ([\\w\\.]*\\.)?([\\w\\$]+\\.)([\\w\\$<>]+)(\\([\\w\\s\\:\\.]*\\)).*"),
+    CausedByTypeWithMessage(CausedBy.class, "Caused by\\:\\s([\\w\\.]*\\.)(\\p{Lu}[\\w\\$]+\\:)\\s(.*)"),
+    CausedByTypeWithoutMessage(CausedBy.class, "Caused by\\:\\s([\\w\\.]*\\.)(\\p{Lu}[\\w\\$]+)(?:\\s*)"),
+    ExceptionStartTypeWithMessage(ExceptionStart.class, "([\\w\\.]*\\.)(\\p{Lu}[\\w\\$]+\\:)\\s(.*)"),
+    ExceptionStartTypeWithoutMessage(ExceptionStart.class, "([\\w\\.]*\\.)(\\p{Lu}[\\w\\$]+)(?:\\s*)"),
+    MoreType(More.class, "\\.{3} (\\d+) more\\s*"),
     MessageType(Message.class, ".*");
 
     private final Pattern pattern;
     private final Class<? extends Line> lineClass;
+    private final static String AcceptableLinePrefix = "(?:.*\\d\\d:\\d\\d:\\d\\d\\.\\d\\d\\d.*\\s)?\\s*";
+
 
     LineType(Class<? extends Line> lineClass, String regex) {
         this.lineClass = lineClass;
-        this.pattern = Pattern.compile(regex, Pattern.DOTALL);
+        this.pattern = Pattern.compile(AcceptableLinePrefix + regex, Pattern.DOTALL);
     }
 
     public Line match(String line) {
