@@ -35,6 +35,26 @@ public class StackTraceMatcherTest {
     }
 
     @Test
+    public void testInvalidLongOutput() throws IOException {
+        InputStream is = getClass().getResourceAsStream("/com/samebug/clients/search/invalidLong.txt");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
+
+        StackTraceListener listener = Mockito.mock(StackTraceListener.class);
+        StackTraceMatcher matcher = new StackTraceMatcher(listener, null);
+        try {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                matcher.line(line);
+            }
+            matcher.end();
+            Mockito.verify(listener).stacktraceFound(null, getTextResource("/com/samebug/clients/search/invalidLong-stacktrace-001.txt"));
+        } finally {
+            reader.close();
+        }
+
+    }
+
+    @Test
     public void testAndroidOutput() throws IOException {
         InputStream is = getClass().getResourceAsStream("/androidoutput.txt");
         BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-8")));
