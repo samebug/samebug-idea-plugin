@@ -157,10 +157,8 @@ public class SamebugClient {
         HttpPost post = new HttpPost(getApiUrl("tip").toString());
         List<BasicNameValuePair> form = new ArrayList<BasicNameValuePair>();
         // TODO checkstyle fails if there are only spaces before the next two lines
-        /**/
-        form.add(new BasicNameValuePair("message", tip));
-        /**/
-        form.add(new BasicNameValuePair("searchId", searchId.toString()));
+        if (tip != null) form.add(new BasicNameValuePair("message", tip));
+        if (searchId != null) form.add(new BasicNameValuePair("searchId", searchId.toString()));
         if (source != null) form.add(new BasicNameValuePair("sourceUrl", source.toString()));
         post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
 
