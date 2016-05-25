@@ -39,6 +39,7 @@ import com.samebug.clients.idea.ui.controller.HistoryTabController;
 import com.samebug.clients.search.api.entities.SearchGroup;
 import com.samebug.clients.search.api.entities.SearchHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
+import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
 import javax.swing.*;
@@ -74,20 +75,22 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
     @Override
     public void batchFinished(final List<SearchResults> results, int failed) {
         Long timelimitForFreshSearch = new Date().getTime() - (1 * 60 * 1000);
-        // TODO history does not contains the stack ids (or at least the deepest stack id)
-        Map<Integer, SearchGroup> history = new HashMap<Integer, SearchGroup>();
+        Map<Integer, StackTraceSearchGroup> groupsByStackTraceId = new HashMap<Integer, StackTraceSearchGroup>();
         final HistoryTabController historyTab = ServiceManager.getService(myProject, HistoryTabController.class);
         try {
             final IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
-            final SearchHistory h = client.getSearchHistory();
+            final SearchHistory history = client.getSearchHistory();
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    historyTab.update(h);
+                    historyTab.update(history);
                 }
             });
-            for (SearchGroup s : h.searchGroups) {
-                history.put(s.getLastSearch().id, s);
+            for (SearchGroup s : history.searchGroups) {
+                if (s instanceof StackTraceSearchGroup) {
+                    StackTraceSearchGroup sg = (StackTraceSearchGroup) s;
+                    groupsByStackTraceId.put(sg.lastSearch.stackTrace.stackTraceId, sg);
+                }
             }
         } catch (SamebugClientException e1) {
             ApplicationManager.getApplication().invokeLater(new Runnable() {
@@ -100,17 +103,17 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
 
         boolean isShowRecurringSearches = ServiceManager.getService(myProject, HistoryTabController.class).isShowRecurringSearches();
         boolean isShowZeroSolutionSearches = ServiceManager.getService(myProject, HistoryTabController.class).isShowZeroSolutionSearches();
-        Map<Integer, SearchResults> groupedResults = new HashMap<Integer, SearchResults>();
+        Map<Integer, SearchResults> searchesByStackTraceId = new HashMap<Integer, SearchResults>();
         for (SearchResults result : results) {
-            groupedResults.put(result.stackTraceId, result);
+            searchesByStackTraceId.put(result.stackTraceId, result);
         }
 
         int recurrings = 0;
         int zeroSolutions = 0;
         final List<String> searchIds = new ArrayList<String>();
-        for (SearchResults result : groupedResults.values()) {
-            int searchId = Integer.parseInt(result.searchId);
-            SearchGroup historyResult = history.get(searchId);
+        for (SearchResults result : searchesByStackTraceId.values()) {
+            int stackTraceId = result.stackTraceId;
+            StackTraceSearchGroup historyResult = groupsByStackTraceId.get(stackTraceId);
             if (historyResult != null && historyResult.numberOfHits == 0) {
                 if (isShowZeroSolutionSearches) {
                     ++zeroSolutions;

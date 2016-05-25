@@ -24,7 +24,7 @@ public final class RestHit<T extends RestSolution> {
     @NotNull
     public T solution;
     @NotNull
-    public Integer stackId;
+    public Integer stackTraceId;
     @NotNull
     public Integer matchLevel;
     @NotNull

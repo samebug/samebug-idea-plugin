@@ -67,7 +67,6 @@ final public class SamebugClient {
     final RequestConfig trackingConfig;
     final RestUrlBuilder urlBuilder;
 
-    // TODO inject httpClient, urlBuilder, requestConfig
     public SamebugClient(@NotNull final Config config) {
         this.config = new Config(config);
         this.urlBuilder = new RestUrlBuilder(config.serverRoot);

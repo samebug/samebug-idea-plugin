@@ -27,6 +27,7 @@ import com.samebug.clients.idea.ui.component.SBButton;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.search.api.entities.RestHit;
 import com.samebug.clients.search.api.entities.SearchGroup;
+import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -53,8 +54,8 @@ final public class MarkPanel extends TransparentPanel {
         setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
         final boolean canMark = hit.createdBy == null
                 || !hit.createdBy.id.equals(currentUserId)
-                // TODO you equal what?
-                || !hit.stackId.equals(searchGroup.id);
+                || !(searchGroup instanceof StackTraceSearchGroup)
+                || !hit.stackTraceId.equals(((StackTraceSearchGroup) searchGroup).lastSearch.stackTrace.stackTraceId);
         if (canMark) {
             add(new TransparentPanel() {
                 {
