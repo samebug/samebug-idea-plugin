@@ -103,11 +103,7 @@ enum State {
     }
 
     Line matchLine(String line) {
-        for (LineType lineType : acceptableLineTypes) {
-            Line match = lineType.match(line);
-            if (match != null) return match;
-        }
-        return null;
+        return StackTraceMatcher.recognize(line, acceptableLineTypes);
     }
 
     protected abstract State nextState(Line matchingLine);

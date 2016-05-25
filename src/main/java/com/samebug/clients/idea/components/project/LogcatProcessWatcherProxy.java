@@ -28,6 +28,7 @@ import com.samebug.clients.idea.processadapters.LogcatAdapter;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.util.AndroidSdkUtil;
 import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
+import org.jetbrains.android.facet.AndroidFacet;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -36,8 +37,42 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This proxy class separates the behaviour of Logcat watcher.
+ *
+ * If Android SDK is not present, it does nothing, so it will not crash in environments without Android SDK.
+ */
+public class LogcatProcessWatcherProxy extends AbstractProjectComponent {
+    final AbstractProjectComponent implementation;
 
-public class LogcatProcessWatcher extends AbstractProjectComponent
+    public LogcatProcessWatcherProxy(Project project) {
+        super(project);
+        boolean isAndroidSdkPresent;
+        try {
+            Class<?> resolveAndroidFacet = AndroidFacet.class;
+            isAndroidSdkPresent = true;
+        } catch (NoClassDefFoundError e) {
+            isAndroidSdkPresent = false;
+        }
+        if (isAndroidSdkPresent) {
+            implementation = new LogcatProcessWatcher(project);
+        } else {
+            implementation = new NopProjectComponent(project);
+        }
+    }
+
+    @Override
+    public void projectOpened() {
+        implementation.projectOpened();
+    }
+
+    @Override
+    public void projectClosed() {
+        implementation.projectClosed();
+    }
+}
+
+class LogcatProcessWatcher extends AbstractProjectComponent
         implements AndroidDebugBridge.IDeviceChangeListener {
 
     // AbstractProjectComponent overrides
@@ -145,4 +180,10 @@ public class LogcatProcessWatcher extends AbstractProjectComponent
     private final Map<Integer, LogcatAdapter> listeners = new HashMap<Integer, LogcatAdapter>();
     private final Map<Integer, DebugSessionInfo> debugSessionInfos = new HashMap<Integer, DebugSessionInfo>();
     private final static Logger LOGGER = Logger.getInstance(LogcatProcessWatcher.class);
+}
+
+class NopProjectComponent extends AbstractProjectComponent {
+    NopProjectComponent(Project project) {
+        super(project);
+    }
 }
