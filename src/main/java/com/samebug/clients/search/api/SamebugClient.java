@@ -98,6 +98,7 @@ final public class SamebugClient {
         List<BasicHeader> defaultHeaders = new ArrayList<BasicHeader>();
         defaultHeaders.add(new BasicHeader("User-Agent", USER_AGENT));
         if (config.apiKey != null) defaultHeaders.add(new BasicHeader("X-Samebug-ApiKey", config.apiKey));
+        if (config.workspaceId != null) defaultHeaders.add(new BasicHeader("X-Samebug-WorkspaceId", config.workspaceId.toString()));
 
         httpClient = httpBuilder.setDefaultRequestConfig(requestConfig)
                 .setMaxConnTotal(20).setMaxConnPerRoute(20)
@@ -297,6 +298,8 @@ final public class SamebugClient {
 
     public static class Config {
         public String apiKey;
+        @Nullable
+        public Long workspaceId;
         public String serverRoot;
         public String trackingRoot;
         public boolean isTrackingEnabled;
@@ -309,6 +312,7 @@ final public class SamebugClient {
 
         public Config(final Config rhs) {
             this.apiKey = rhs.apiKey;
+            this.workspaceId = rhs.workspaceId;
             this.serverRoot = rhs.serverRoot;
             this.trackingRoot = rhs.trackingRoot;
             this.isTrackingEnabled = rhs.isTrackingEnabled;

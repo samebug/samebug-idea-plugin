@@ -31,6 +31,7 @@ public class ConfigDialogPanel {
     public JCheckBox tracking;
     public JSpinner connectTimeout;
     public JSpinner requestTimeout;
+    public JSpinner workspaceId;
     public JTextField apiKey;
     public JCheckBox apacheLogging;
 
@@ -70,6 +71,7 @@ public class ConfigDialogPanel {
     // Apparently, IntelliJ's way to reset to defaults seems to be simply deleting the config files.
     public void resetToDefaults() {
         final ApplicationSettings settings = currentConfig;
+        settings.workspaceId = ApplicationSettings.defaultWorkspaceId;
         settings.serverRoot = ApplicationSettings.defaultServerRoot;
         settings.trackingRoot = ApplicationSettings.defaultTrackingRoot;
         settings.isTrackingEnabled = ApplicationSettings.defaultIsTrackingEnabled;
@@ -82,6 +84,7 @@ public class ConfigDialogPanel {
     ApplicationSettings fromUI() {
         final ApplicationSettings settings = new ApplicationSettings(currentConfig);
         settings.apiKey = apiKey.getText();
+        settings.workspaceId = (Integer) workspaceId.getValue() <= 0 ? null : ((Integer) workspaceId.getValue()).longValue();
         settings.serverRoot = serverRoot.getText();
         settings.trackingRoot = trackingRoot.getText();
         settings.connectTimeout = (Integer) connectTimeout.getValue();
@@ -93,6 +96,7 @@ public class ConfigDialogPanel {
 
     void toUI(final ApplicationSettings settings) {
         apiKey.setText(settings.apiKey);
+        workspaceId.setValue(settings.workspaceId.intValue());
         serverRoot.setText(settings.serverRoot);
         trackingRoot.setText(settings.trackingRoot);
         connectTimeout.setValue(settings.connectTimeout);

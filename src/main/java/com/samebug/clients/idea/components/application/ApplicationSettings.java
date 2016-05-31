@@ -23,6 +23,7 @@ public class ApplicationSettings {
     //=========================================================================
     // NOTE: Make sure to extend equals and copy constructor when adding new fields!
     public String apiKey;
+    public Long workspaceId = defaultWorkspaceId;
     public String instanceId = UUID.randomUUID().toString();
     public int userId;
     public String avatarUrl;
@@ -37,6 +38,7 @@ public class ApplicationSettings {
 
     //=========================================================================
 
+    public static final Long defaultWorkspaceId = 0L;
     public static final String defaultServerRoot = "https://samebug.io";
     public static final String defaultTrackingRoot = defaultServerRoot + "/track/trace";
     public static final boolean defaultIsTrackingEnabled = true;
@@ -51,6 +53,7 @@ public class ApplicationSettings {
 
     public ApplicationSettings(final ApplicationSettings rhs) {
         this.apiKey = rhs.apiKey;
+        this.workspaceId = rhs.workspaceId;
         this.instanceId = rhs.instanceId;
         this.userId = rhs.userId;
         this.avatarUrl = rhs.avatarUrl;
@@ -76,9 +79,10 @@ public class ApplicationSettings {
         else {
             final ApplicationSettings rhs = (ApplicationSettings) that;
             return rhs.apiKey.equals(apiKey)
+                    && rhs.workspaceId.equals(workspaceId)
                     && rhs.instanceId.equals(instanceId)
                     && rhs.userId == userId
-                    && rhs.avatarUrl == avatarUrl
+                    && (rhs.avatarUrl == avatarUrl || (rhs.avatarUrl != null && rhs.avatarUrl.equals(avatarUrl)))
                     && rhs.serverRoot.equals(serverRoot)
                     && rhs.trackingRoot.equals(trackingRoot)
                     && rhs.isTrackingEnabled == isTrackingEnabled
@@ -93,6 +97,7 @@ public class ApplicationSettings {
     public SamebugClient.Config getNetworkConfig() {
         final SamebugClient.Config config = new SamebugClient.Config();
         config.apiKey = apiKey;
+        config.workspaceId = workspaceId <= 0 ? null : workspaceId;
         config.serverRoot = serverRoot;
         config.trackingRoot = trackingRoot;
         config.isTrackingEnabled = isTrackingEnabled;
