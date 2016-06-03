@@ -75,7 +75,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
     @Override
     public void batchFinished(final List<SearchResults> results, int failed) {
         Long timelimitForFreshSearch = new Date().getTime() - (1 * 60 * 1000);
-        Map<Integer, StackTraceSearchGroup> groupsByStackTraceId = new HashMap<Integer, StackTraceSearchGroup>();
+        Map<String, StackTraceSearchGroup> groupsByStackTraceId = new HashMap<String, StackTraceSearchGroup>();
         final HistoryTabController historyTab = ServiceManager.getService(myProject, HistoryTabController.class);
         try {
             final IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
@@ -103,7 +103,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
 
         boolean isShowRecurringSearches = ServiceManager.getService(myProject, HistoryTabController.class).isShowRecurringSearches();
         boolean isShowZeroSolutionSearches = ServiceManager.getService(myProject, HistoryTabController.class).isShowZeroSolutionSearches();
-        Map<Integer, SearchResults> searchesByStackTraceId = new HashMap<Integer, SearchResults>();
+        Map<String, SearchResults> searchesByStackTraceId = new HashMap<String, SearchResults>();
         for (SearchResults result : results) {
             searchesByStackTraceId.put(result.stackTraceId, result);
         }
@@ -112,7 +112,7 @@ class SearchResultNotifier extends AbstractProjectComponent implements BatchStac
         int zeroSolutions = 0;
         final List<String> searchIds = new ArrayList<String>();
         for (SearchResults result : searchesByStackTraceId.values()) {
-            int stackTraceId = result.stackTraceId;
+            String stackTraceId = result.stackTraceId;
             StackTraceSearchGroup historyResult = groupsByStackTraceId.get(stackTraceId);
             if (historyResult != null && historyResult.numberOfHits == 0) {
                 if (isShowZeroSolutionSearches) {

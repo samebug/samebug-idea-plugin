@@ -21,5 +21,5 @@ public final class SearchResults {
     @NotNull
     public String searchId;
     @NotNull
-    public Integer stackTraceId;
+    public String stackTraceId;
 }

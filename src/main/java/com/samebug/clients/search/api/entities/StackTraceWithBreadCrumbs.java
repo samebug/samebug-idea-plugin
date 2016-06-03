@@ -21,7 +21,7 @@ import java.util.List;
 
 public final class StackTraceWithBreadCrumbs {
     @NotNull
-    public Integer stackTraceId;
+    public String stackTraceId;
     @NotNull
     public Exception trace;
     @NotNull
