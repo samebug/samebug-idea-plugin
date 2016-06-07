@@ -25,4 +25,5 @@ public final class UserInfo {
     public Integer userId;
     public String displayName;
     public URL avatarUrl;
+    public Long defaultWorkspaceId;
 }
