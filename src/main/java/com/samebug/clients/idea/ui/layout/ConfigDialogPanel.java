@@ -96,7 +96,7 @@ public class ConfigDialogPanel {
 
     void toUI(final ApplicationSettings settings) {
         apiKey.setText(settings.apiKey);
-        workspaceId.setValue(settings.workspaceId.intValue());
+        workspaceId.setValue(settings.workspaceId == null ? 0 : settings.workspaceId.intValue());
         serverRoot.setText(settings.serverRoot);
         trackingRoot.setText(settings.trackingRoot);
         connectTimeout.setValue(settings.connectTimeout);

@@ -25,6 +25,7 @@ public class ApplicationSettings {
     // NOTE: Make sure to extend equals and copy constructor when adding new fields!
     @Nullable
     public String apiKey;
+    @Nullable
     public Long workspaceId = defaultWorkspaceId;
     public String instanceId = UUID.randomUUID().toString();
     public int userId;
@@ -41,7 +42,7 @@ public class ApplicationSettings {
 
     //=========================================================================
 
-    public static final Long defaultWorkspaceId = 0L;
+    public static final Long defaultWorkspaceId = null;
     public static final String defaultServerRoot = "https://samebug.io";
     public static final String defaultTrackingRoot = defaultServerRoot + "/track/trace";
     public static final boolean defaultIsTrackingEnabled = true;
@@ -83,7 +84,7 @@ public class ApplicationSettings {
         else {
             final ApplicationSettings rhs = (ApplicationSettings) that;
             return ((rhs.apiKey == null && apiKey == null) || (rhs.apiKey != null && rhs.apiKey.equals(apiKey)))
-                    && rhs.workspaceId.equals(workspaceId)
+                    && ((rhs.workspaceId == null && workspaceId == null) || (rhs.workspaceId != null && rhs.workspaceId.equals(workspaceId)))
                     && rhs.instanceId.equals(instanceId)
                     && rhs.userId == userId
                     && ((rhs.avatarUrl == null && avatarUrl == null) || (rhs.avatarUrl != null && rhs.avatarUrl.equals(avatarUrl)))
@@ -101,7 +102,7 @@ public class ApplicationSettings {
     public SamebugClient.Config getNetworkConfig() {
         final SamebugClient.Config config = new SamebugClient.Config();
         config.apiKey = apiKey;
-        config.workspaceId = workspaceId <= 0 ? null : workspaceId;
+        config.workspaceId = workspaceId;
         config.serverRoot = serverRoot;
         config.trackingRoot = trackingRoot;
         config.isTrackingEnabled = isTrackingEnabled;
