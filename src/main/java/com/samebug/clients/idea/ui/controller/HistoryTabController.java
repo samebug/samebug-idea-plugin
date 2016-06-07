@@ -158,7 +158,7 @@ final public class HistoryTabController {
                     } else if (group instanceof TextSearchGroup) {
                         TextSearchGroup g = (TextSearchGroup) group;
                         TextSearchGroupCard searchGroupCard = new TextSearchGroupCard(g);
-                        searchGroupCard.queryLabel.addMouseListener(new SearchTabOpener(project, g.lastSearch.id));
+                        searchGroupCard.titleLabel.addMouseListener(new SearchTabOpener(project, g.lastSearch.id));
                         view.contentPanel.add(searchGroupCard);
                     }
                 }

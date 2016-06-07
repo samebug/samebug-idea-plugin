@@ -17,7 +17,9 @@ package com.samebug.clients.idea.ui.component.card;
 
 import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.common.ui.TextUtil;
+import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
+import com.samebug.clients.idea.ui.component.ExceptionMessageLabel;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.search.api.entities.TextSearchGroup;
 
@@ -29,14 +31,16 @@ import java.util.HashMap;
 final public class TextSearchGroupCard extends JPanel {
     public final TextSearchGroup searchGroup;
     public final JLabel hitsLabel;
-    public final JLabel queryLabel;
+    public final JLabel titleLabel;
+    public final ExceptionMessageLabel queryLabel;
     public final JPanel groupInfoPanel;
 
     public TextSearchGroupCard(final TextSearchGroup searchGroup) {
         this.searchGroup = searchGroup;
 
         hitsLabel = new TextSearchGroupCard.HitsLabel();
-        queryLabel = new TextSearchGroupCard.QueryLabel();
+        titleLabel = new TextSearchGroupCard.QueryLabel();
+        queryLabel = new ExceptionMessageLabel(searchGroup.lastSearch.query);
         groupInfoPanel = new TextSearchGroupCard.GroupInfoPanel();
 
         setLayout(new BorderLayout());
@@ -55,6 +59,7 @@ final public class TextSearchGroupCard extends JPanel {
                         add(new TransparentPanel() {
                             {
                                 setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
+                                add(titleLabel, BorderLayout.NORTH);
                                 add(queryLabel, BorderLayout.CENTER);
                             }
                         }, BorderLayout.CENTER);
@@ -70,7 +75,7 @@ final public class TextSearchGroupCard extends JPanel {
 
     final class QueryLabel extends JLabel {
         {
-            setText(searchGroup.lastSearch.query);
+            setText(SamebugBundle.message("samebug.history.search.text.title"));
             setForeground(Colors.samebugOrange);
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             final HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
