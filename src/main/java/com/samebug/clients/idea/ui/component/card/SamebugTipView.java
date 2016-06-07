@@ -27,11 +27,11 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Collections;
 
 final public class SamebugTipView extends JPanel {
     final RestHit<Tip> tip;
     final SearchGroup searchGroup;
-    final java.util.List<BreadCrumb> searchBreadcrumb;
 
     public final BreadcrumbBar breadcrumbPanel;
     public final TipText tipLabel;
@@ -45,11 +45,16 @@ final public class SamebugTipView extends JPanel {
                           @NotNull Integer currentUserId) {
         this.tip = tip;
         this.searchGroup = searchGroup;
-        this.searchBreadcrumb = ((StackTraceSearchGroup) searchGroup).lastSearch.stackTrace.breadCrumbs;
         // RestHit<Tip> should always have an author
         assert tip.createdBy != null;
 
-        breadcrumbPanel = new BreadcrumbBar(searchBreadcrumb.subList(0, tip.matchLevel));
+        final java.util.List<BreadCrumb> searchBreadcrumb;
+        if (searchGroup instanceof StackTraceSearchGroup) {
+            searchBreadcrumb = ((StackTraceSearchGroup) searchGroup).lastSearch.stackTrace.breadCrumbs.subList(0, tip.matchLevel);
+        } else {
+            searchBreadcrumb = Collections.emptyList();
+        }
+        breadcrumbPanel = new BreadcrumbBar(searchBreadcrumb);
         tipLabel = new TipText(tip.solution.tip);
         sourceReferencePanel = new TipSourceReferencePanel(tip.solution);
         avatarPanel = new AvatarPanel(tip.solution.author);

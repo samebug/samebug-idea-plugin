@@ -67,7 +67,7 @@ public class JsonTest {
     public void getSolutions() {
         Solutions x = gson.fromJson(stream("search-1"), Solutions.class);
         checkFields(x);
-        Assert.assertTrue(x.searchGroup.lastSearch.id > 0);
+        Assert.assertTrue(x.searchGroup.getLastSearch().id > 0);
         Assert.assertTrue(x.tips.size() >= 0);
         Assert.assertTrue(x.references.size() > 0);
     }
@@ -117,7 +117,7 @@ public class JsonTest {
             .put(TextSearch.class, ImmutableList.<String>of("visitorId", "userId", "teamId", "errorType"))
             .put(TextSearchGroup.class, ImmutableList.<String>of("visitorId", "userId", "teamId"))
             .put(Tip.class, ImmutableList.<String>of("via"))
-            .put(UserInfo.class, ImmutableList.<String>of("userId", "displayName", "avatarUrl"))
+            .put(UserInfo.class, ImmutableList.<String>of("userId", "displayName", "avatarUrl", "defaultWorkspaceId"))
             .put(UserReference.class, ImmutableList.<String>of("avatarUrl"))
             .put(VendorComponentReference.class, ImmutableList.<String>of())
             .build();

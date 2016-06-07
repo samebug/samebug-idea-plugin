@@ -20,9 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class Solutions {
-    // TODO this could be text search group in the near future
     @NotNull
-    public StackTraceSearchGroup searchGroup;
+    public SearchGroup searchGroup;
     @NotNull
     public List<RestHit<Tip>> tips;
     @NotNull

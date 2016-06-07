@@ -22,7 +22,6 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.idea.ui.component.WriteTip;
 import com.samebug.clients.idea.ui.component.WriteTipHint;
-import com.samebug.clients.idea.ui.component.card.StackTraceSearchGroupCard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,7 +48,7 @@ final public class SearchTabView {
 
     // TODO searchCard is set by the controller, refactor
     @Nullable
-    public StackTraceSearchGroupCard searchCard;
+    public JPanel searchCard;
 
     public SearchTabView() {
 

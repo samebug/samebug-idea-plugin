@@ -25,7 +25,7 @@ import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.component.organism.MarkPanel;
 import com.samebug.clients.search.api.entities.MarkResponse;
 import com.samebug.clients.search.api.entities.RestHit;
-import com.samebug.clients.search.api.entities.StackTraceSearch;
+import com.samebug.clients.search.api.entities.Search;
 import com.samebug.clients.search.api.exceptions.BadRequest;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
@@ -37,13 +37,13 @@ final public class MarkHandler extends MouseAdapter {
     @NotNull
     final Project project;
     @NotNull
-    final StackTraceSearch search;
+    final Search search;
     @NotNull
     final RestHit hit;
     @NotNull
     final MarkPanel markPanel;
 
-    public MarkHandler(@NotNull Project project, @NotNull StackTraceSearch search, @NotNull RestHit hit, @NotNull MarkPanel markPanel) {
+    public MarkHandler(@NotNull Project project, @NotNull Search search, @NotNull RestHit hit, @NotNull MarkPanel markPanel) {
         this.project = project;
         this.search = search;
         this.hit = hit;
