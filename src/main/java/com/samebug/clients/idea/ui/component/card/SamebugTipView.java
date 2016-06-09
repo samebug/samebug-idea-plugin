@@ -45,8 +45,6 @@ final public class SamebugTipView extends JPanel {
                           @NotNull Integer currentUserId) {
         this.tip = tip;
         this.searchGroup = searchGroup;
-        // RestHit<Tip> should always have an author
-        assert tip.createdBy != null;
 
         final java.util.List<BreadCrumb> searchBreadcrumb;
         if (searchGroup instanceof StackTraceSearchGroup) {
