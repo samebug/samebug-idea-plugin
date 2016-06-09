@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 
 final public class SearchTabView {
     @NotNull
@@ -49,6 +50,13 @@ final public class SearchTabView {
     // TODO searchCard is set by the controller, refactor
     @Nullable
     public JPanel searchCard;
+
+    @Nullable
+    MouseAdapter tipCancelHandler;
+    @Nullable
+    MouseAdapter tipSubmitHandler;
+    @Nullable
+    MouseAdapter ctaHandler;
 
     public SearchTabView() {
 
@@ -85,6 +93,24 @@ final public class SearchTabView {
 
         writeTipHint = new WriteTipHint();
         tipPanel = new WriteTip();
+    }
+
+    public void addTipCancelHandler(@NotNull final MouseAdapter handler) {
+        if (tipCancelHandler != null) tipPanel.cancel.removeMouseListener(tipCancelHandler);
+        tipCancelHandler = handler;
+        tipPanel.cancel.addMouseListener(tipCancelHandler);
+    }
+
+    public void addTipSubmitHandler(@NotNull final MouseAdapter handler) {
+        if (tipSubmitHandler != null) tipPanel.submit.removeMouseListener(tipSubmitHandler);
+        tipSubmitHandler = handler;
+        tipPanel.submit.addMouseListener(tipSubmitHandler);
+    }
+
+    public void addCtaHandler(@NotNull final MouseAdapter handler) {
+        if (ctaHandler != null) writeTipHint.ctaButton.removeMouseListener(ctaHandler);
+        ctaHandler = handler;
+        writeTipHint.ctaButton.addMouseListener(ctaHandler);
     }
 
     public void showWriteTip() {

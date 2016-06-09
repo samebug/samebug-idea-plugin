@@ -149,10 +149,10 @@ final public class SearchTabController {
                 card.titleLabel.addMouseListener(new LinkOpener(IdeaSamebugPlugin.getInstance().getUrlBuilder().search(group.lastSearch.id)));
                 view.searchCard = card;
             }
-            view.writeTipHint.ctaButton.addMouseListener(new WriteTipHandler(model.searchGroup));
+            view.addCtaHandler(new WriteTipHandler(model.searchGroup));
             view.showWriteTipHint();
-            view.tipPanel.cancel.addMouseListener(new TipCancelHandler(model.searchGroup));
-            view.tipPanel.submit.addMouseListener(new TipSubmitHandler(model.searchGroup, view.tipPanel));
+            view.addTipCancelHandler(new TipCancelHandler(model.searchGroup));
+            view.addTipSubmitHandler(new TipSubmitHandler(model.searchGroup, view.tipPanel));
             if (model.references.size() + model.tips.size() > 0) TutorialProjectComponent.withTutorialProject(project, new SearchTabTutorial(model.tips.size() > 0));
 
         } else {
