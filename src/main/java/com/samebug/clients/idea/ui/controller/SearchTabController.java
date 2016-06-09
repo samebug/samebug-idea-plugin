@@ -20,6 +20,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.ui.awt.RelativePoint;
+import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
@@ -229,7 +230,7 @@ final public class SearchTabController {
                         Tracking.projectTracking(project).trace(
                                 Events.writeTipSubmit(project, searchGroup.getLastSearch().id, tip, rawSourceUrl, "samebug.tip.write.error.tip.long"));
                         result = showError(SamebugBundle.message("samebug.tip.write.error.tip.long"));
-                    } else if (StringUtils.countMatches(tip, System.lineSeparator()) >= WriteTip.maxLines) {
+                    } else if (StringUtils.countMatches(tip, TextUtil.lineSeparator) >= WriteTip.maxLines) {
                         Tracking.projectTracking(project).trace(
                                 Events.writeTipSubmit(project, searchGroup.getLastSearch().id, tip, rawSourceUrl, "samebug.tip.write.error.tip.tooManyLines"));
                         result = showError(SamebugBundle.message("samebug.tip.write.error.tip.tooManyLines"));

@@ -16,6 +16,7 @@
 package com.samebug.clients.idea.ui.component;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import org.apache.commons.lang.StringUtils;
@@ -249,9 +250,9 @@ final public class WriteTip extends JPanel {
             super.replace(fb, offs, length, str, a);
             final int textSize = fb.getDocument().getLength();
             String text = fb.getDocument().getText(0, textSize);
-            int lineBreaks = StringUtils.countMatches(text, System.lineSeparator());
+            int lineBreaks = StringUtils.countMatches(text, TextUtil.lineSeparator);
             if (lineBreaks >= maxLines) {
-                int lastLineBreakIndex = StringUtils.ordinalIndexOf(text, System.lineSeparator(), maxLines);
+                int lastLineBreakIndex = StringUtils.ordinalIndexOf(text, TextUtil.lineSeparator, maxLines);
                 remove(fb, lastLineBreakIndex, text.length() - lastLineBreakIndex);
             }
 

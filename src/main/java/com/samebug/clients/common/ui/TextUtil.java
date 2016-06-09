@@ -26,4 +26,6 @@ final public class TextUtil {
     public static String prettyTime(final Date date) {
         return pretty.format(date);
     }
+
+    public static String lineSeparator = System.getProperty("line.separator");
 }
