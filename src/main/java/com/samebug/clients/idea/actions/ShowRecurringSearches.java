@@ -19,13 +19,14 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.DumbAware;
-import com.samebug.clients.idea.ui.controller.HistoryTabController;
+import com.samebug.clients.common.services.HistoryService;
+import com.samebug.clients.idea.messages.view.HistoryViewListener;
 
 final public class ShowRecurringSearches extends ToggleAction implements DumbAware {
     @Override
     public boolean isSelected(AnActionEvent e) {
         if (e.getProject() != null) {
-            return ServiceManager.getService(e.getProject(), HistoryTabController.class).isShowRecurringSearches();
+            return ServiceManager.getService(e.getProject(), HistoryService.class).isShowRecurringSearches();
         } else {
             return false;
         }
@@ -34,8 +35,7 @@ final public class ShowRecurringSearches extends ToggleAction implements DumbAwa
     @Override
     public void setSelected(AnActionEvent e, boolean state) {
         if (e.getProject() != null) {
-            final HistoryTabController historyTab = ServiceManager.getService(e.getProject(), HistoryTabController.class);
-            historyTab.setShowRecurringSearches(state);
+            e.getProject().getMessageBus().syncPublisher(HistoryViewListener.TOPIC).setRecurringFilter(state);
         }
     }
 }

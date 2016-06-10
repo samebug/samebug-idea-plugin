@@ -1,21 +1,7 @@
-/**
- * Copyright 2016 Samebug, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.samebug.clients.idea.ui.controller;
+package com.samebug.clients.idea.components.project;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -26,7 +12,11 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
+import com.samebug.clients.idea.messages.view.FocusListener;
+import com.samebug.clients.idea.messages.view.SearchViewListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.ui.controller.HistoryTabController;
+import com.samebug.clients.idea.ui.controller.SearchTabController;
 import com.samebug.clients.search.api.entities.Solutions;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
@@ -35,22 +25,41 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-final public class SearchTabControllers {
-    final static Logger LOGGER = Logger.getInstance(SearchTabController.class);
+public class ToolWindowController extends AbstractProjectComponent implements FocusListener, SearchViewListener {
+    final static Logger LOGGER = Logger.getInstance(ToolWindowController.class);
     @NotNull
     final Project project;
     @NotNull
     final Map<Integer, SearchTabController> activeSearches;
     @Nullable
     Integer focusedSearch = null;
+    @NotNull
+    final HistoryTabController historyTabController;
 
-    public SearchTabControllers(@NotNull Project project) {
+
+    protected ToolWindowController(Project project) {
+        super(project);
         this.project = project;
         activeSearches = new HashMap<Integer, SearchTabController>();
+        historyTabController = new HistoryTabController(project);
     }
 
     @NotNull
-    public SearchTabController openSearchTab(final int searchId) {
+    public HistoryTabController getHistoryTabController() {
+        return historyTabController;
+    }
+
+    @Override
+    public void focusOnHistory() {
+        final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
+        final ContentManager toolwindowCM = toolWindow.getContentManager();
+        final Content content = toolwindowCM.getContent(historyTabController.getControlPanel());
+        if (content != null) toolwindowCM.setSelectedContent(content);
+        toolWindow.show(null);
+    }
+
+    @NotNull
+    public void focusOnSearch(final int searchId) {
         final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
         final ContentManager toolwindowCM = toolWindow.getContentManager();
         SearchTabController tab = activeSearches.get(searchId);
@@ -103,7 +112,6 @@ final public class SearchTabControllers {
             }
         });
         toolWindow.show(null);
-        return tab;
     }
 
     // TODO add close action to tab which calls this method
@@ -119,7 +127,11 @@ final public class SearchTabControllers {
         }
     }
 
-    public void reloadFocusedSearch() {
-        if (focusedSearch != null) openSearchTab(focusedSearch);
+    @Override
+    public void reload() {
+        if (focusedSearch != null) {
+            SearchTabController tab = activeSearches.get(focusedSearch);
+            tab.refreshPane();
+        }
     }
 }

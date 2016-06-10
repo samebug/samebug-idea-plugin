@@ -16,39 +16,33 @@
 package com.samebug.clients.idea.ui.controller;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.awt.RelativePoint;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentManager;
-import com.samebug.clients.idea.components.application.ApplicationSettings;
+import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.services.HistoryService;
+import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.project.TutorialProjectComponent;
+import com.samebug.clients.idea.messages.ConnectionStatusListener;
+import com.samebug.clients.idea.messages.view.HistoryViewListener;
+import com.samebug.clients.idea.messages.model.HistoryModelListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.component.TutorialPanel;
-import com.samebug.clients.idea.ui.component.card.StackTraceSearchGroupCard;
-import com.samebug.clients.idea.ui.component.card.TextSearchGroupCard;
 import com.samebug.clients.idea.ui.component.tab.HistoryTabView;
-import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
 import com.samebug.clients.idea.ui.listeners.ConnectionStatusUpdater;
-import com.samebug.clients.idea.ui.listeners.SearchTabOpener;
 import com.samebug.clients.search.api.entities.SearchGroup;
-import com.samebug.clients.search.api.entities.SearchHistory;
-import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
-import com.samebug.clients.search.api.entities.TextSearchGroup;
+import com.samebug.clients.search.api.entities.SearchResults;
+import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
 
-final public class HistoryTabController {
+final public class HistoryTabController implements HistoryViewListener, HistoryModelListener {
     final static Logger LOGGER = Logger.getInstance(HistoryTabController.class);
     @NotNull
     final Project project;
@@ -57,126 +51,95 @@ final public class HistoryTabController {
     @NotNull
     final ConnectionStatusUpdater statusUpdater;
 
-    @Nullable
-    SearchHistory model;
-    boolean showZeroSolutionSearches;
-    boolean showRecurringSearches;
-
+    @NotNull
+    final HistoryService service;
 
     public HistoryTabController(@NotNull Project project) {
-        ApplicationSettings settings = IdeaSamebugPlugin.getInstance().getState();
         this.project = project;
         view = new HistoryTabView();
-        showZeroSolutionSearches = settings.showZeroSolutions;
-        showRecurringSearches = settings.showRecurring;
+        service = ServiceManager.getService(project, HistoryService.class);
         statusUpdater = new ConnectionStatusUpdater(view.statusIcon);
-    }
 
-    @NotNull
-    public ConnectionStatusUpdater getStatusUpdater() {
-        return statusUpdater;
+        MessageBusConnection appMessageBus = ApplicationManager.getApplication().getMessageBus().connect(project);
+        appMessageBus.subscribe(ConnectionStatusListener.CONNECTION_STATUS_TOPIC, statusUpdater);
     }
 
     @NotNull
     public JPanel getControlPanel() {
-        return view.controlPanel;
+        return view;
     }
 
-    public boolean isShowZeroSolutionSearches() {
-        return showZeroSolutionSearches;
-    }
 
-    public boolean isShowRecurringSearches() {
-        return showRecurringSearches;
-    }
-
-    // TODO application settings should not be changed via HistoryTabController, but vica versa.
-    public void setShowZeroSolutionSearches(boolean showZeroSolutionSearches) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
-        ApplicationSettings settings = IdeaSamebugPlugin.getInstance().getState();
-        settings.showZeroSolutions = showZeroSolutionSearches;
-        this.showZeroSolutionSearches = showZeroSolutionSearches;
+    public void setZeroSolutionFilter(boolean showZeroSolutionSearches) {
+        service.setShowZeroSolutionSearches(showZeroSolutionSearches);
         refreshHistoryPane();
     }
 
-    public void setShowRecurringSearches(boolean showRecurringSearches) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
-        ApplicationSettings settings = IdeaSamebugPlugin.getInstance().getState();
-        settings.showRecurring = showRecurringSearches;
-        this.showRecurringSearches = showRecurringSearches;
+    public void setRecurringFilter(boolean showRecurringSearches) {
+        service.setShowRecurringSearches(showRecurringSearches);
         refreshHistoryPane();
         TutorialProjectComponent.withTutorialProject(project, new HideRecurringSearchesTutorial(showRecurringSearches));
     }
 
-    // TODO this method probably not belongs here, but to a higher level samebug tool window controller
-    public void focus() {
-        ApplicationManager.getApplication().assertIsDispatchThread();
-        final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
-        final ContentManager toolwindowCM = toolWindow.getContentManager();
-        final Content content = toolwindowCM.getContent(getControlPanel());
-        if (content != null) toolwindowCM.setSelectedContent(content);
-        toolWindow.show(null);
+    public void reload() {
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                ClientService client = ApplicationManager.getApplication().getComponent(ClientService.class);
+                try {
+                    client.getSearchHistory();
+                } catch (SamebugClientException e1) {
+                    // TODO log?
+                }
+            }
+        });
     }
 
-    public void update(SearchHistory history) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
-        model = history;
-        refreshHistoryPane();
-    }
-
-    // TODO move connection status error panel elsewhere
     void refreshHistoryPane() {
+        ApplicationManager.getApplication().assertIsDispatchThread();
         IdeaClientService connectionService = IdeaSamebugPlugin.getInstance().getClient();
-        view.contentPanel.removeAll();
+        final List<SearchGroup> groups = service.getVisibleHistory();
         if (!connectionService.isConnected()) {
-            EmptyWarningPanel panel = new EmptyWarningPanel();
-            panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.notConnected", IdeaSamebugPlugin.getInstance().getUrlBuilder().getServerRoot()));
-            view.contentPanel.add(panel.controlPanel);
+            view.setErrorNotConnected();
         } else if (connectionService.isConnected() && !connectionService.isAuthenticated()) {
-            EmptyWarningPanel panel = new EmptyWarningPanel();
-            panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.notLoggedIn", SamebugIcons.cogwheelTodoUrl));
-            view.contentPanel.add(panel.controlPanel);
-        } else if (model != null) {
-            Date now = new Date();
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(now);
-            cal.add(Calendar.DAY_OF_YEAR, -1);
-            Date oneDayBefore = cal.getTime();
-            int visibleSearches = 0;
-            for (final SearchGroup group : model.searchGroups) {
-                if (!isShowZeroSolutionSearches() && group.numberOfHits == 0) {
-                    // filtered because there is no solution for it
-                } else if (!isShowRecurringSearches() && group.firstSeen.before(oneDayBefore)) {
-                    // filtered because it is old
-                } else {
-                    visibleSearches++;
-                    if (group instanceof StackTraceSearchGroup) {
-                        StackTraceSearchGroup g = (StackTraceSearchGroup) group;
-                        StackTraceSearchGroupCard searchGroupCard = new StackTraceSearchGroupCard(g);
-                        searchGroupCard.titleLabel.addMouseListener(new SearchTabOpener(project, g.lastSearch.id));
-                        view.contentPanel.add(searchGroupCard);
-                    } else if (group instanceof TextSearchGroup) {
-                        TextSearchGroup g = (TextSearchGroup) group;
-                        TextSearchGroupCard searchGroupCard = new TextSearchGroupCard(g);
-                        searchGroupCard.titleLabel.addMouseListener(new SearchTabOpener(project, g.lastSearch.id));
-                        view.contentPanel.add(searchGroupCard);
-                    }
-                }
-            }
+            view.setErrorNotLoggedIn();
+        } else if (groups != null) {
+            int visibleSearches = groups.size();
+            int allSearches = service.unfilteredHistoryLength();
             if (visibleSearches == 0) {
-                EmptyWarningPanel panel = new EmptyWarningPanel();
-                if (model.searchGroups.isEmpty()) {
-                    panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.noSearches"));
+                if (allSearches == 0) {
+                    view.setErrorNoSearches();
                 } else {
-                    panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.noVisibleSearches", SamebugIcons.calendarUrl, SamebugIcons.lightbulbUrl));
+                    view.setErrorNoVisibleSearches();
                 }
-                view.contentPanel.add(panel.controlPanel);
+            } else {
+                view.setHistory(groups);
             }
+        } else {
+            view.setErrorOther();
         }
-        view.controlPanel.revalidate();
-        view.controlPanel.repaint();
+        view.revalidate();
+        view.repaint();
         TutorialProjectComponent.withTutorialProject(project, new HistoryTabTutorial());
     }
+
+    @Override
+    public void start() {
+        // TODO update the view to show process
+    }
+
+    @Override
+    public void success(SearchResults result) {
+        // TODO update the model, update the ui
+    }
+
+    @Override
+    public void fail(Exception e) {
+        // TODO update the view to show problem
+    }
+
+    @Override
+    public void finish() { }
 
     class HistoryTabTutorial extends TutorialProjectComponent.TutorialProjectAnonfun<Void> {
         @Override

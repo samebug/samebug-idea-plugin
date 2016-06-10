@@ -42,6 +42,9 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     private ApplicationSettings state = new ApplicationSettings();
 
     private IdeaClientService client = new IdeaClientService(state.getNetworkConfig());
+    {
+        ApplicationManager.getApplication().getComponent(ClientService.class).configure(state.getNetworkConfig());
+    }
     private WebUrlBuilder urlBuilder = new WebUrlBuilder(state.serverRoot);
 
     // TODO Unlike other methods, this one executes the http request on the caller thread. Is it ok?

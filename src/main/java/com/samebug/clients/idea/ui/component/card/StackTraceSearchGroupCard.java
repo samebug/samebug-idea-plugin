@@ -91,6 +91,7 @@ final public class StackTraceSearchGroupCard extends JPanel {
 
     final class TitleLabel extends JLabel {
         {
+            // TODO open tab event on click
             setText(exceptionType.className);
             setForeground(Colors.samebugOrange);
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

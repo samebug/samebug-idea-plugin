@@ -17,13 +17,12 @@ package com.samebug.clients.idea.actions;
 
 import com.intellij.ide.actions.RefreshAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.ui.controller.SearchTabControllers;
+import com.samebug.clients.idea.messages.view.SearchViewListener;
 
 final public class ReloadSearchAction extends RefreshAction implements DumbAware {
     @Override
@@ -31,8 +30,7 @@ final public class ReloadSearchAction extends RefreshAction implements DumbAware
         e.getPresentation().setEnabled(false);
         final Project project = e.getProject();
         if (project != null) {
-            // TODO this and ReloadHistoryAction should behave the same
-            ServiceManager.getService(project, SearchTabControllers.class).reloadFocusedSearch();
+            project.getMessageBus().syncPublisher(SearchViewListener.TOPIC).reload();
         }
     }
 

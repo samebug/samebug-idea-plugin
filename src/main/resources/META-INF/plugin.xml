@@ -43,8 +43,8 @@
                                  instance="com.samebug.clients.idea.ui.controller.ConfigDialog"/>
         <projectService serviceInterface="com.samebug.clients.idea.ui.controller.HistoryTabController"
                         serviceImplementation="com.samebug.clients.idea.ui.controller.HistoryTabController"/>
-        <projectService serviceInterface="com.samebug.clients.idea.ui.controller.SearchTabControllers"
-                        serviceImplementation="com.samebug.clients.idea.ui.controller.SearchTabControllers"/>
+        <projectService serviceInterface="com.samebug.clients.common.services.HistoryService"
+                        serviceImplementation="com.samebug.clients.common.services.HistoryService"/>
     </extensions>
 
     <actions>
@@ -80,6 +80,9 @@
         <component>
             <implementation-class>com.samebug.clients.idea.components.application.TutorialApplicationComponent</implementation-class>
         </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.components.application.ClientService</implementation-class>
+        </component>
     </application-components>
     <project-components>
         <component>
@@ -96,6 +99,9 @@
         </component>
         <component>
             <implementation-class>com.samebug.clients.idea.components.project.TutorialProjectComponent</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.components.project.ToolWindowController</implementation-class>
         </component>
     </project-components>
 </idea-plugin>

@@ -19,6 +19,7 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.samebug.clients.idea.ui.component.NetworkStatusIcon;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.idea.ui.component.WriteTip;
 import com.samebug.clients.idea.ui.component.WriteTipHint;
@@ -41,7 +42,7 @@ final public class SearchTabView {
     @NotNull
     final public JPanel toolbarPanel;
     @NotNull
-    final public JLabel statusIcon;
+    final public NetworkStatusIcon statusIcon;
     @NotNull
     final public WriteTipHint writeTipHint;
     @NotNull
@@ -72,9 +73,7 @@ final public class SearchTabView {
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-        statusIcon = new JLabel();
-        statusIcon.setText(null);
-        statusIcon.setIcon(null);
+        statusIcon = new NetworkStatusIcon();
         toolbarPanel = new ToolBarPanel();
         toolbarPanel.add(statusIcon, BorderLayout.EAST);
 

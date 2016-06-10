@@ -19,13 +19,13 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.DumbAware;
-import com.samebug.clients.idea.ui.controller.HistoryTabController;
+import com.samebug.clients.common.services.HistoryService;
 
 final public class ShowZeroSolutionSearches extends ToggleAction implements DumbAware {
     @Override
     public boolean isSelected(AnActionEvent e) {
         if (e.getProject() != null) {
-            return ServiceManager.getService(e.getProject(), HistoryTabController.class).isShowZeroSolutionSearches();
+            return ServiceManager.getService(e.getProject(), HistoryService.class).isShowZeroSolutionSearches();
         } else {
             return false;
         }
@@ -34,7 +34,7 @@ final public class ShowZeroSolutionSearches extends ToggleAction implements Dumb
     @Override
     public void setSelected(AnActionEvent e, boolean state) {
         if (e.getProject() != null) {
-            ServiceManager.getService(e.getProject(), HistoryTabController.class).setShowZeroSolutionSearches(state);
+            ServiceManager.getService(e.getProject(), HistoryService.class).setShowZeroSolutionSearches(state);
         }
     }
 }

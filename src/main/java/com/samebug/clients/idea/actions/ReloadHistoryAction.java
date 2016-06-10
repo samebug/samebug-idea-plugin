@@ -17,16 +17,12 @@ package com.samebug.clients.idea.actions;
 
 import com.intellij.ide.actions.RefreshAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.ui.controller.HistoryTabController;
-import com.samebug.clients.search.api.entities.SearchHistory;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.idea.messages.view.HistoryViewListener;
 
 final public class ReloadHistoryAction extends RefreshAction implements DumbAware {
     @Override
@@ -34,28 +30,7 @@ final public class ReloadHistoryAction extends RefreshAction implements DumbAwar
         e.getPresentation().setEnabled(false);
         final Project project = e.getProject();
         if (project != null) {
-            final HistoryTabController historyTab = ServiceManager.getService(e.getProject(), HistoryTabController.class);
-            historyTab.update(null);
-
-            ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-                @Override
-                public void run() {
-                    IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
-                    try {
-                        final SearchHistory history = client.getSearchHistory();
-                        ApplicationManager.getApplication().invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                historyTab.update(history);
-                            }
-                        });
-                    } catch (SamebugClientException e1) {
-                        LOGGER.warn("Failed to retrieve history", e1);
-                    } finally {
-                        e.getPresentation().setEnabled(true);
-                    }
-                }
-            });
+            project.getMessageBus().syncPublisher(HistoryViewListener.TOPIC).reload();
         }
     }
 

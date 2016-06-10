@@ -115,6 +115,7 @@ final public class SearchTabController {
     }
 
     public void refreshPane() {
+        // TODO download and refresh, rename to reload
         ApplicationManager.getApplication().assertIsDispatchThread();
         view.solutionsPanel.removeAll();
         view.header.removeAll();

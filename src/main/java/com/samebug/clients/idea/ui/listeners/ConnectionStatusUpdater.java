@@ -18,16 +18,13 @@ package com.samebug.clients.idea.ui.listeners;
 import com.intellij.openapi.application.ApplicationManager;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.ConnectionStatusListener;
-import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.idea.resources.SamebugIcons;
+import com.samebug.clients.idea.ui.component.NetworkStatusIcon;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-
 final public class ConnectionStatusUpdater implements ConnectionStatusListener {
-    final JLabel statusIcon;
+    final NetworkStatusIcon statusIcon;
 
-    public ConnectionStatusUpdater(@NotNull JLabel statusIcon) {
+    public ConnectionStatusUpdater(@NotNull NetworkStatusIcon statusIcon) {
         this.statusIcon = statusIcon;
     }
 
@@ -36,9 +33,7 @@ final public class ConnectionStatusUpdater implements ConnectionStatusListener {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
-                statusIcon.setIcon(SamebugIcons.linkActive);
-                statusIcon.setToolTipText(SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.loading"));
-                statusIcon.repaint();
+                statusIcon.setStatusLoading();
             }
         });
     }
@@ -50,15 +45,10 @@ final public class ConnectionStatusUpdater implements ConnectionStatusListener {
             public void run() {
                 if (IdeaSamebugPlugin.getInstance().getClient().getNumberOfActiveRequests() == 0) {
                     if (isConnected) {
-                        statusIcon.setIcon(null);
-                        statusIcon.setToolTipText(null);
+                        statusIcon.setStatusOk();
                     } else {
-                        statusIcon.setIcon(SamebugIcons.linkError);
-                        statusIcon.setToolTipText(
-                                SamebugBundle.message("samebug.toolwindow.history.connectionStatus.description.notConnected",
-                                        IdeaSamebugPlugin.getInstance().getUrlBuilder().getServerRoot()));
+                        statusIcon.setStatusError();
                     }
-                    statusIcon.repaint();
                 }
             }
         });
