@@ -18,10 +18,10 @@ package com.samebug.clients.idea.components.project;
 import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.awt.RelativePoint;
@@ -29,13 +29,14 @@ import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.services.HistoryService;
 import com.samebug.clients.common.ui.Colors;
-import com.samebug.clients.idea.components.application.*;
-import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
+import com.samebug.clients.idea.components.application.ClientService;
+import com.samebug.clients.idea.components.application.TutorialApplicationComponent;
+import com.samebug.clients.idea.components.application.TutorialSettings;
+import com.samebug.clients.idea.messages.model.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.notification.SearchResultsNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
-import com.samebug.clients.idea.ui.controller.HistoryTabController;
 import com.samebug.clients.search.api.entities.SearchGroup;
 import com.samebug.clients.search.api.entities.SearchHistory;
 import com.samebug.clients.search.api.entities.SearchResults;
@@ -67,7 +68,7 @@ class SearchResultNotifier implements BatchStackTraceSearchListener, Disposable 
         this.project = project;
         service = ServiceManager.getService(project, HistoryService.class);
         messageBusConnection = project.getMessageBus().connect();
-        messageBusConnection.subscribe(BatchStackTraceSearchListener.BATCH_SEARCH_TOPIC, this);
+        messageBusConnection.subscribe(BatchStackTraceSearchListener.TOPIC, this);
     }
 
     @Override

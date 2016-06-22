@@ -22,16 +22,16 @@ import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.*;
 import com.samebug.clients.idea.ui.component.organism.BreadcrumbBar;
 import com.samebug.clients.idea.ui.component.organism.MarkPanel;
-import com.samebug.clients.search.api.entities.*;
+import com.samebug.clients.search.api.entities.BreadCrumb;
+import com.samebug.clients.search.api.entities.RestHit;
+import com.samebug.clients.search.api.entities.Tip;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Collections;
 
 final public class SamebugTipView extends JPanel {
-    final RestHit<Tip> tip;
-    final SearchGroup searchGroup;
+    final Model model;
 
     public final BreadcrumbBar breadcrumbPanel;
     public final TipText tipLabel;
@@ -40,23 +40,16 @@ final public class SamebugTipView extends JPanel {
     public final MarkPanel markPanel;
     public final SBButton writeBetter;
 
-    public SamebugTipView(@NotNull RestHit<Tip> tip,
-                          @NotNull SearchGroup searchGroup,
-                          @NotNull Integer currentUserId) {
-        this.tip = tip;
-        this.searchGroup = searchGroup;
+    public SamebugTipView(@NotNull Model model) {
+        this.model = model;
 
-        final java.util.List<BreadCrumb> searchBreadcrumb;
-        if (searchGroup instanceof StackTraceSearchGroup) {
-            searchBreadcrumb = ((StackTraceSearchGroup) searchGroup).lastSearch.stackTrace.breadCrumbs.subList(0, tip.matchLevel);
-        } else {
-            searchBreadcrumb = Collections.emptyList();
-        }
+        final java.util.List<BreadCrumb> searchBreadcrumb = model.getMatchingBreadCrumb();
+        final RestHit<Tip> tip = model.getHit();
         breadcrumbPanel = new BreadcrumbBar(searchBreadcrumb);
         tipLabel = new TipText(tip.solution.tip);
         sourceReferencePanel = new TipSourceReferencePanel(tip.solution);
         avatarPanel = new AvatarPanel(tip.solution.author);
-        markPanel = new MarkPanel(tip, searchGroup, currentUserId);
+        markPanel = new MarkPanel(model);
         writeBetter = new WriteBetterButton();
 
         setLayout(new BorderLayout());
@@ -182,5 +175,10 @@ final public class SamebugTipView extends JPanel {
         public Color getForeground() {
             return ColorUtil.emphasizedText();
         }
+    }
+
+    public interface Model extends MarkPanel.Model {
+        @Override @NotNull RestHit<Tip> getHit();
+        @NotNull java.util.List<BreadCrumb> getMatchingBreadCrumb();
     }
 }

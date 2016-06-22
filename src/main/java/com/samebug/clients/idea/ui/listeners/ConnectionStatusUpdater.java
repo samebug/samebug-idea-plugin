@@ -17,7 +17,7 @@ package com.samebug.clients.idea.ui.listeners;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.messages.ConnectionStatusListener;
+import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
 import com.samebug.clients.idea.ui.component.NetworkStatusIcon;
 import org.jetbrains.annotations.NotNull;
 

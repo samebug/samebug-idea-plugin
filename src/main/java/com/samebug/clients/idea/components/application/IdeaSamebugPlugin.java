@@ -41,17 +41,19 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     final private static Logger LOGGER = Logger.getInstance(IdeaSamebugPlugin.class);
     private ApplicationSettings state = new ApplicationSettings();
 
-    private IdeaClientService client = new IdeaClientService(state.getNetworkConfig());
+    final ClientService client = ApplicationManager.getApplication().getComponent(ClientService.class);
+
     {
-        ApplicationManager.getApplication().getComponent(ClientService.class).configure(state.getNetworkConfig());
+        client.configure(state.getNetworkConfig());
     }
+
     private WebUrlBuilder urlBuilder = new WebUrlBuilder(state.serverRoot);
 
     // TODO Unlike other methods, this one executes the http request on the caller thread. Is it ok?
     public void setApiKey(@NotNull String apiKey) throws SamebugClientException, UnknownApiKey {
         UserInfo userInfo = null;
         state.apiKey = apiKey;
-        client = new IdeaClientService(state.getNetworkConfig());
+        client.configure(state.getNetworkConfig());
         urlBuilder = new WebUrlBuilder(state.serverRoot);
         userInfo = client.getUserInfo(apiKey);
         if (!userInfo.isUserExist) {
@@ -67,7 +69,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public void saveSettings(final ApplicationSettings settings) {
         state = new ApplicationSettings(settings);
         try {
-            client = new IdeaClientService(state.getNetworkConfig());
+            client.configure(state.getNetworkConfig());
             urlBuilder = new WebUrlBuilder(state.serverRoot);
         } finally {
             Tracking.appTracking().trace(Events.apiKeySet());
@@ -85,7 +87,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     }
 
     @NotNull
-    public IdeaClientService getClient() {
+    public ClientService getClient() {
         return client;
     }
 
@@ -138,6 +140,6 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     @Override
     public void loadState(ApplicationSettings state) {
         this.state = state;
-        client = new IdeaClientService(state.getNetworkConfig());
+        client.configure(state.getNetworkConfig());
     }
 }

@@ -13,14 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages;
+package com.samebug.clients.idea.messages.client;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.search.api.entities.tracking.TrackEvent;
+import com.samebug.clients.search.api.entities.SearchHistory;
 
-public interface TrackingListener {
-    Topic<TrackingListener> TRACK_TOPIC = Topic.create("tracking", TrackingListener.class, Topic.BroadcastDirection.TO_PARENT);
+public interface HistoryModelListener {
+    Topic<HistoryModelListener> TOPIC = Topic.create("history model changes", HistoryModelListener.class);
 
-    void trace(TrackEvent event);
+    void start();
 
+    void success(SearchHistory result);
+
+    void fail(java.lang.Exception e);
+
+    void finish();
 }

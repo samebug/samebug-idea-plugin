@@ -15,48 +15,45 @@
  */
 package com.samebug.clients.idea.ui.component.organism;
 
+import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.DataKeys;
+import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
 import com.samebug.clients.common.ui.Colors;
+import com.samebug.clients.idea.messages.view.MarkViewListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.component.ErrorLabel;
 import com.samebug.clients.idea.ui.component.SBButton;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.search.api.entities.RestHit;
-import com.samebug.clients.search.api.entities.SearchGroup;
-import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 final public class MarkPanel extends TransparentPanel {
     public final SBButton markButton;
     public final JPanel voteIcon;
     public final JLabel helpedLabel;
 
-    final RestHit hit;
-    final SearchGroup searchGroup;
-    final Integer currentUserId;
+    @NotNull Model model;
 
-    public MarkPanel(@NotNull RestHit hit, @NotNull SearchGroup searchGroup, @NotNull Integer currentUserId) {
+    public MarkPanel(@NotNull final Model model) {
         markButton = new MarkButton();
         voteIcon = new VoteIcon();
         helpedLabel = new HelpedLabel();
 
-        this.hit = hit;
-        this.searchGroup = searchGroup;
-        this.currentUserId = currentUserId;
+        this.model = model;
 
         setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        final boolean canMark = hit.createdBy == null
-                || !hit.createdBy.id.equals(currentUserId)
-                || !(searchGroup instanceof StackTraceSearchGroup)
-                || !hit.stackTraceId.equals(((StackTraceSearchGroup) searchGroup).lastSearch.stackTrace.stackTraceId);
-        if (canMark) {
+        if (model.canBeMarked()) {
             add(new TransparentPanel() {
                 {
                     setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
@@ -85,9 +82,10 @@ final public class MarkPanel extends TransparentPanel {
         }).setFillColor(Colors.alertPanel).createBalloon().show(RelativePoint.getCenterOf(markButton), Balloon.Position.above);
     }
 
-    public void finishPostMarkWithSuccess() {
+    public void finishPostMarkWithSuccess(@NotNull final Model model) {
         ApplicationManager.getApplication().assertIsDispatchThread();
         markButton.setEnabled(true);
+        this.model = model;
         updateState();
         revalidate();
         repaint();
@@ -129,8 +127,9 @@ final public class MarkPanel extends TransparentPanel {
     }
 
     void updateState() {
+        final RestHit hit = model.getHit();
         if (hit.createdBy != null) {
-            helpedLabel.setText(SamebugBundle.message("samebug.mark.markedBy.someone", hit.createdBy.id.equals(currentUserId) ? "You" : hit.createdBy.displayName, hit.score));
+            helpedLabel.setText(SamebugBundle.message("samebug.mark.markedBy.someone", model.createdByCurrentUser() ? "You" : hit.createdBy.displayName, hit.score));
         } else if (hit.score == 0) {
             helpedLabel.setText(SamebugBundle.message("samebug.mark.markedBy.noone"));
         } else {
@@ -142,5 +141,24 @@ final public class MarkPanel extends TransparentPanel {
         } else {
             markButton.setToolTipText(SamebugBundle.message("samebug.mark.unmarked.tooltip"));
         }
+
+        markButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                DataProvider provider = DataManager.getDataProvider(MarkPanel.this);
+                if (provider != null) {
+                    Project project = DataKeys.PROJECT.getData(provider);
+                    if (project != null) project.getMessageBus().syncPublisher(MarkViewListener.TOPIC).mark(model.getSearchId(), model.getHit().solutionId, hit.markId == null, MarkPanel.this);
+                }
+            }
+        });
+    }
+
+
+    public interface Model {
+        @NotNull RestHit getHit();
+        @NotNull int getSearchId();
+        boolean canBeMarked();
+        boolean createdByCurrentUser();
     }
 }

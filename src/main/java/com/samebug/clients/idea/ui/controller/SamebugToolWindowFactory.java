@@ -38,6 +38,7 @@ final public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAw
     }
 
     void initializeHistoryTab(final HistoryTabController historyTab) {
+        // TODO change to event
         historyTab.reload();
     }
 }

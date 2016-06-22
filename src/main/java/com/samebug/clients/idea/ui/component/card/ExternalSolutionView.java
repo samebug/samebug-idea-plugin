@@ -28,19 +28,19 @@ import com.samebug.clients.idea.ui.component.SourceIcon;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.idea.ui.component.organism.BreadcrumbBar;
 import com.samebug.clients.idea.ui.component.organism.MarkPanel;
-import com.samebug.clients.search.api.entities.*;
+import com.samebug.clients.search.api.entities.BreadCrumb;
+import com.samebug.clients.search.api.entities.RestHit;
+import com.samebug.clients.search.api.entities.SolutionReference;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.TextAttribute;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 final public class ExternalSolutionView extends JPanel {
+    final Model model;
     final RestHit<SolutionReference> solution;
-    final SearchGroup searchGroup;
-    final java.util.List<BreadCrumb> searchBreadcrumb;
     final ExceptionType exceptionType;
 
     public final BreadcrumbBar breadcrumbPanel;
@@ -50,16 +50,15 @@ final public class ExternalSolutionView extends JPanel {
     public final JPanel sourceReferencePanel;
     public final MarkPanel markPanel;
 
-    public ExternalSolutionView(@NotNull RestHit<SolutionReference> solution,
-                                @NotNull SearchGroup searchGroup,
-                                @NotNull Integer currentUserId) {
-        this.solution = solution;
-        this.searchGroup = searchGroup;
-        if (searchGroup instanceof StackTraceSearchGroup) {
-            this.searchBreadcrumb = ((StackTraceSearchGroup) searchGroup).lastSearch.stackTrace.breadCrumbs;
-        } else {
-            this.searchBreadcrumb = new ArrayList<BreadCrumb>(0);
-        }
+    public ExternalSolutionView(@NotNull Model model) {
+        this.model = model;
+        final java.util.List<BreadCrumb> searchBreadcrumb = model.getMatchingBreadCrumb();
+//        if (searchGroup instanceof StackTraceSearchGroup) {
+//            this.searchBreadcrumb = ((StackTraceSearchGroup) searchGroup).lastSearch.stackTrace.breadCrumbs;
+//        } else {
+//            this.searchBreadcrumb = new ArrayList<BreadCrumb>(0);
+//        }
+        solution = model.getHit();
         // RestHit<SolutionReference> should always have an exception
         assert solution.exception != null;
 
@@ -69,7 +68,7 @@ final public class ExternalSolutionView extends JPanel {
         exceptionMessageLabel = new ExceptionMessageLabel(solution.exception.message);
         exceptionTypePanel = new ExceptionTypePanel();
         sourceReferencePanel = new SourceReferencePanel(solution.solution);
-        markPanel = new MarkPanel(solution, searchGroup, currentUserId);
+        markPanel = new MarkPanel(model);
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
@@ -179,6 +178,11 @@ final public class ExternalSolutionView extends JPanel {
                 });
             }
         }
-
     }
+
+    public interface Model extends MarkPanel.Model {
+        @Override @NotNull RestHit<SolutionReference> getHit();
+        @NotNull java.util.List<BreadCrumb> getMatchingBreadCrumb();
+    }
+
 }

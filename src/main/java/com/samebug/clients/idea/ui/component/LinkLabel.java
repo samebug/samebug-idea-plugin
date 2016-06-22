@@ -16,7 +16,6 @@
 package com.samebug.clients.idea.ui.component;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.openapi.project.ProjectManager;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.tracking.Events;
 import org.jetbrains.annotations.NotNull;

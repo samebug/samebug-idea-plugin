@@ -23,6 +23,7 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.component.NetworkStatusIcon;
+import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.idea.ui.component.card.StackTraceSearchGroupCard;
 import com.samebug.clients.idea.ui.component.card.TextSearchGroupCard;
 import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
@@ -36,15 +37,18 @@ import java.awt.*;
 final public class HistoryTabView extends JPanel {
     final public JPanel toolbarPanel;
     final public NetworkStatusIcon statusIcon;
+    final public JPanel centralPanel;
 
     public HistoryTabView() {
         statusIcon = new NetworkStatusIcon();
         toolbarPanel = new ToolBarPanel();
+        centralPanel = new TransparentPanel();
 
         {
             {
                 setLayout(new BorderLayout());
                 add(toolbarPanel, BorderLayout.NORTH);
+                add(centralPanel, BorderLayout.CENTER);
             }
         }
 
@@ -67,7 +71,9 @@ final public class HistoryTabView extends JPanel {
             }
         }
 
-        add(scrollPane, BorderLayout.CENTER);
+
+        centralPanel.removeAll();
+        centralPanel.add(scrollPane, BorderLayout.CENTER);
         scrollPane.setViewportView(contentPanel);
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
@@ -76,31 +82,36 @@ final public class HistoryTabView extends JPanel {
     public void setErrorNotLoggedIn() {
         EmptyWarningPanel panel = new EmptyWarningPanel();
         panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.notLoggedIn", SamebugIcons.cogwheelTodoUrl));
-        add(panel.controlPanel, BorderLayout.CENTER);
+        centralPanel.removeAll();
+        centralPanel.add(panel.controlPanel, BorderLayout.CENTER);
     }
 
     public void setErrorNotConnected() {
         EmptyWarningPanel panel = new EmptyWarningPanel();
         panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.notConnected", IdeaSamebugPlugin.getInstance().getUrlBuilder().getServerRoot()));
-        add(panel.controlPanel, BorderLayout.CENTER);
+        centralPanel.removeAll();
+        centralPanel.add(panel.controlPanel, BorderLayout.CENTER);
     }
 
     public void setErrorNoVisibleSearches() {
         EmptyWarningPanel panel = new EmptyWarningPanel();
         panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.noVisibleSearches", SamebugIcons.calendarUrl, SamebugIcons.lightbulbUrl));
-        add(panel.controlPanel, BorderLayout.CENTER);
+        centralPanel.removeAll();
+        centralPanel.add(panel.controlPanel, BorderLayout.CENTER);
     }
 
     public void setErrorNoSearches() {
         EmptyWarningPanel panel = new EmptyWarningPanel();
         panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.noSearches"));
-        add(panel.controlPanel, BorderLayout.CENTER);
+        centralPanel.removeAll();
+        centralPanel.add(panel.controlPanel, BorderLayout.CENTER);
     }
 
     public void setErrorOther() {
         EmptyWarningPanel panel = new EmptyWarningPanel();
         panel.label.setText(SamebugBundle.message("samebug.toolwindow.history.content.other"));
-        add(panel.controlPanel, BorderLayout.CENTER);
+        centralPanel.removeAll();
+        centralPanel.add(panel.controlPanel, BorderLayout.CENTER);
     }
 
     final class ToolBarPanel extends JPanel {

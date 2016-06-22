@@ -15,18 +15,28 @@
  */
 package com.samebug.clients.idea.ui.component.card;
 
+import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.DataKeys;
+import com.intellij.openapi.actionSystem.DataProvider;
+import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.entities.ExceptionType;
 import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.common.ui.TextUtil;
+import com.samebug.clients.idea.messages.view.FocusListener;
+import com.samebug.clients.idea.messages.view.SearchViewListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.ExceptionMessageLabel;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.idea.ui.component.organism.BreadcrumbBar;
+import com.samebug.clients.idea.ui.component.organism.GroupInfoPanel;
 import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
@@ -48,7 +58,7 @@ final public class StackTraceSearchGroupCard extends JPanel {
         hitsLabel = new HitsLabel();
         titleLabel = new TitleLabel();
         exceptionMessageLabel = new ExceptionMessageLabel(searchGroup.lastSearch.stackTrace.trace.message);
-        groupInfoPanel = new GroupInfoPanel();
+        groupInfoPanel = new GroupInfoPanel(searchGroup);
         breadcrumbPanel = new BreadcrumbBar(searchGroup.lastSearch.stackTrace.breadCrumbs);
 
         setLayout(new BorderLayout());
@@ -91,7 +101,6 @@ final public class StackTraceSearchGroupCard extends JPanel {
 
     final class TitleLabel extends JLabel {
         {
-            // TODO open tab event on click
             setText(exceptionType.className);
             setForeground(Colors.samebugOrange);
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -100,6 +109,17 @@ final public class StackTraceSearchGroupCard extends JPanel {
             attributes.put(TextAttribute.SIZE, 16);
             attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
             setFont(getFont().deriveFont(attributes));
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    DataProvider provider = DataManager.getDataProvider(StackTraceSearchGroupCard.this);
+                    DataContext ctx = DataManager.getInstance().getDataContext(StackTraceSearchGroupCard.this);
+                    if (provider != null || ctx != null) {
+                        Project project = provider == null ? DataKeys.PROJECT.getData(ctx) : DataKeys.PROJECT.getData(provider);
+                        if (project != null) project.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchGroup.getLastSearch().id);
+                    }
+                }
+            });
         }
     }
 
@@ -132,31 +152,6 @@ final public class StackTraceSearchGroupCard extends JPanel {
         @Override
         public Color getForeground() {
             return ColorUtil.unemphasizedText();
-        }
-    }
-
-    final class GroupInfoPanel extends TransparentPanel {
-        {
-            setLayout(new FlowLayout(FlowLayout.RIGHT));
-            add(new JLabel() {
-                {
-                    String text;
-                    if (searchGroup.numberOfSearches == 1) {
-                        text = String.format("%s", TextUtil.prettyTime(searchGroup.lastSeen));
-                    } else {
-                        text = String.format("%s | %d times, first %s",
-                                TextUtil.prettyTime(searchGroup.lastSeen), searchGroup.numberOfSearches, TextUtil.prettyTime(searchGroup.firstSeen));
-                    }
-
-                    setText(text);
-                }
-
-                @Override
-                public Color getForeground() {
-                    return ColorUtil.unemphasizedText();
-                }
-            });
-
         }
     }
 }

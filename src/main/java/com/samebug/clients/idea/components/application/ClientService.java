@@ -1,9 +1,26 @@
+/**
+ * Copyright 2016 Samebug, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.samebug.clients.idea.components.application;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.util.messages.MessageBus;
-import com.samebug.clients.idea.messages.ConnectionStatusListener;
+import com.samebug.clients.idea.messages.client.SolutionsModelListener;
+import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
+import com.samebug.clients.idea.messages.client.HistoryModelListener;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.*;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
@@ -49,13 +66,36 @@ public class ClientService implements ApplicationComponent {
             SearchHistory request() throws SamebugClientException {
                 return client.getSearchHistory();
             }
+
+            void start() {
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(HistoryModelListener.TOPIC).start();
+            }
+
+            void success(SearchHistory result) {
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(HistoryModelListener.TOPIC).success(result);
+            }
+
+            void fail(java.lang.Exception e) {
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(HistoryModelListener.TOPIC).fail(e);
+            }
         }.execute();
     }
 
     public Solutions getSolutions(final int searchId) throws SamebugClientException {
         return new ConnectionAwareHttpRequest<Solutions>() {
             Solutions request() throws SamebugClientException {
-                return client.getSolutions(searchId);
+                return client.getSolutions(0);
+            }
+            void start() {
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(SolutionsModelListener.TOPIC).start(searchId);
+            }
+
+            void success(Solutions result) {
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(SolutionsModelListener.TOPIC).success(searchId, result);
+            }
+
+            void fail(java.lang.Exception e) {
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(SolutionsModelListener.TOPIC).fail(searchId, e);
             }
         }.execute();
     }
@@ -83,6 +123,7 @@ public class ClientService implements ApplicationComponent {
             }
         }.execute();
     }
+
     public void trace(final TrackEvent event) throws SamebugClientException {
         // Trace bypasses connection status handling.
         client.trace(event);
@@ -118,10 +159,18 @@ public class ClientService implements ApplicationComponent {
 
     private abstract class ConnectionAwareHttpRequest<T> {
         abstract T request() throws SamebugClientException;
-        void start() {}
-        void success(T result) {}
-        void fail(java.lang.Exception e) {}
-        void finish() {}
+
+        void start() {
+        }
+
+        void success(T result) {
+        }
+
+        void fail(java.lang.Exception e) {
+        }
+
+        void finish() {
+        }
 
         public T execute() throws SamebugClientException {
             return execute(true);
@@ -132,9 +181,10 @@ public class ClientService implements ApplicationComponent {
         }
 
         private T execute(boolean isAuthenticationRequired) throws SamebugClientException {
+            start();
             try {
                 nRequests.incrementAndGet();
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).startRequest();
+                messageBus.syncPublisher(ConnectionStatusListener.TOPIC).startRequest();
                 T result = request();
                 connected.set(true);
                 if (isAuthenticationRequired) authenticated.set(true);
@@ -173,7 +223,7 @@ public class ClientService implements ApplicationComponent {
                 throw e;
             } finally {
                 nRequests.decrementAndGet();
-                messageBus.syncPublisher(ConnectionStatusListener.CONNECTION_STATUS_TOPIC).finishRequest(connected.get());
+                messageBus.syncPublisher(ConnectionStatusListener.TOPIC).finishRequest(connected.get());
                 finish();
             }
         }

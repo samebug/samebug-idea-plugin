@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages;
+package com.samebug.clients.idea.messages.model;
 
 import com.intellij.util.messages.Topic;
+import com.samebug.clients.search.api.entities.SearchResults;
 
-public interface ConnectionStatusListener {
-    Topic<ConnectionStatusListener> CONNECTION_STATUS_TOPIC = Topic.create("connection status change", ConnectionStatusListener.class);
+import java.util.List;
 
-    void startRequest();
+public interface BatchStackTraceSearchListener {
+    Topic<BatchStackTraceSearchListener> TOPIC = Topic.create("batch stacktrace search", BatchStackTraceSearchListener.class);
 
-    void finishRequest(boolean isConnected);
+    void batchStart();
+
+    // TODO later we might want more details about the failed ones, currently it's just the number of failed searches.
+    void batchFinished(List<SearchResults> results, int failed);
 }

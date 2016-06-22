@@ -45,6 +45,8 @@
                         serviceImplementation="com.samebug.clients.idea.ui.controller.HistoryTabController"/>
         <projectService serviceInterface="com.samebug.clients.common.services.HistoryService"
                         serviceImplementation="com.samebug.clients.common.services.HistoryService"/>
+        <projectService serviceInterface="com.samebug.clients.common.services.SolutionsService"
+                        serviceImplementation="com.samebug.clients.common.services.SolutionsService"/>
     </extensions>
 
     <actions>

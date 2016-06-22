@@ -23,116 +23,116 @@ import com.samebug.clients.idea.ui.component.NetworkStatusIcon;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.idea.ui.component.WriteTip;
 import com.samebug.clients.idea.ui.component.WriteTipHint;
+import com.samebug.clients.idea.ui.component.card.ExternalSolutionView;
+import com.samebug.clients.idea.ui.component.card.SamebugTipView;
+import com.samebug.clients.idea.ui.component.card.StackTraceSearchGroupCard;
+import com.samebug.clients.idea.ui.component.card.TextSearchGroupCard;
+import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
+import com.samebug.clients.search.api.entities.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
+import java.util.*;
+import java.util.List;
 
-final public class SearchTabView {
-    @NotNull
-    final public JPanel controlPanel;
-    @NotNull
-    final public JPanel header;
-    @NotNull
-    final public JScrollPane scrollPane;
-    @NotNull
-    final public JPanel solutionsPanel;
+final public class SearchTabView extends JPanel {
     @NotNull
     final public JPanel toolbarPanel;
     @NotNull
     final public NetworkStatusIcon statusIcon;
-    @NotNull
-    final public WriteTipHint writeTipHint;
-    @NotNull
-    final public WriteTip tipPanel;
-
-    // TODO searchCard is set by the controller, refactor
-    @Nullable
-    public JPanel searchCard;
-
-    @Nullable
-    MouseAdapter tipCancelHandler;
-    @Nullable
-    MouseAdapter tipSubmitHandler;
-    @Nullable
-    MouseAdapter ctaHandler;
 
     public SearchTabView() {
-
-        header = new JPanel() {
-            {
-                setLayout(new BorderLayout());
-                setBorder(BorderFactory.createEmptyBorder());
-            }
-        };
-        scrollPane = new JScrollPane();
-        solutionsPanel = new SolutionsPanel();
-        scrollPane.setViewportView(solutionsPanel);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-
         statusIcon = new NetworkStatusIcon();
         toolbarPanel = new ToolBarPanel();
-        toolbarPanel.add(statusIcon, BorderLayout.EAST);
 
-        controlPanel = new JPanel() {
+        {
             {
                 setLayout(new BorderLayout());
-                add(new TransparentPanel() {
-                    {
-                        add(toolbarPanel, BorderLayout.NORTH);
-                        add(header, BorderLayout.CENTER);
-                    }
-                }, BorderLayout.NORTH);
-                add(scrollPane, BorderLayout.CENTER);
+                add(toolbarPanel, BorderLayout.NORTH);
             }
-        };
+        }
 
-        writeTipHint = new WriteTipHint();
-        tipPanel = new WriteTip();
+        toolbarPanel.add(statusIcon, BorderLayout.EAST);
     }
 
-    public void addTipCancelHandler(@NotNull final MouseAdapter handler) {
-        if (tipCancelHandler != null) tipPanel.cancel.removeMouseListener(tipCancelHandler);
-        tipCancelHandler = handler;
-        tipPanel.cancel.addMouseListener(tipCancelHandler);
-    }
+    public void reloadImages() {}
 
-    public void addTipSubmitHandler(@NotNull final MouseAdapter handler) {
-        if (tipSubmitHandler != null) tipPanel.submit.removeMouseListener(tipSubmitHandler);
-        tipSubmitHandler = handler;
-        tipPanel.submit.addMouseListener(tipSubmitHandler);
-    }
+    public void setSolutions(@NotNull final Model model) {
+        final  JPanel controlPanel = new TransparentPanel();
+        final  JPanel header = new TransparentPanel();
 
-    public void addCtaHandler(@NotNull final MouseAdapter handler) {
-        if (ctaHandler != null) writeTipHint.ctaButton.removeMouseListener(ctaHandler);
-        ctaHandler = handler;
-        writeTipHint.ctaButton.addMouseListener(ctaHandler);
-    }
-
-    public void showWriteTip() {
-        header.removeAll();
-        header.add(new TransparentPanel() {
+        add(new TransparentPanel() {
             {
-                add(searchCard, BorderLayout.CENTER);
-                add(tipPanel, BorderLayout.SOUTH);
-                setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167 + tipPanel.getPreferredSize().height)));
+                add(header, BorderLayout.NORTH);
+                add(controlPanel, BorderLayout.CENTER);
             }
-        });
+        }, BorderLayout.CENTER);
+
+        // add search card to the header
+        if (model.getSearch() instanceof StackTraceSearchGroup) {
+            StackTraceSearchGroup group = (StackTraceSearchGroup) model.getSearch();
+            header.add(new StackTraceSearchGroupCard(group));
+        } else {
+            TextSearchGroup group = (TextSearchGroup) model.getSearch();
+            header.add(new TextSearchGroupCard(group));
+        }
+        // TODO add tip writing related content?
+
+        if (model.getTips().isEmpty() && model.getReferences().isEmpty()) {
+            // No solutions, show some clarifying message
+            EmptyWarningPanel panel = new EmptyWarningPanel();
+            // TODO bundle
+            panel.label.setText("no solution");
+            controlPanel.add(panel.controlPanel);
+        } else {
+            final JScrollPane scrollPane = new JScrollPane();
+            final JPanel solutionsPanel = new SolutionsPanel();
+
+            scrollPane.setViewportView(solutionsPanel);
+            scrollPane.getVerticalScrollBar().setUnitIncrement(10);
+            scrollPane.setBorder(BorderFactory.createEmptyBorder());
+            for (final SamebugTipView.Model tip : model.getTips()) {
+                SamebugTipView tipView = new SamebugTipView(tip);
+                solutionsPanel.add(tipView);
+            }
+            for (final ExternalSolutionView.Model s : model.getReferences()) {
+                final ExternalSolutionView sv = new ExternalSolutionView(s);
+                solutionsPanel.add(sv);
+            }
+        }
     }
 
-    public void showWriteTipHint() {
-        header.removeAll();
-        header.add(new TransparentPanel() {
-            {
-                add(searchCard, BorderLayout.CENTER);
-                add(writeTipHint, BorderLayout.SOUTH);
-                setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167 + writeTipHint.getPreferredSize().height)));
-            }
-        });
-    }
+    public void setWarningNoSolutions() {}
+    public void setWarningNotLoggedIn() {}
+    public void setWarningNotConnected() {}
+    public void setWarningOther() {}
+
+//    public void showWriteTip() {
+//        header.removeAll();
+//        header.add(new TransparentPanel() {
+//            {
+//                add(searchCard, BorderLayout.CENTER);
+//                add(tipPanel, BorderLayout.SOUTH);
+//                setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167 + tipPanel.getPreferredSize().height)));
+//            }
+//        });
+//    }
+//
+//    public void showWriteTipHint() {
+//        header.removeAll();
+//        header.add(new TransparentPanel() {
+//            {
+//                add(searchCard, BorderLayout.CENTER);
+//                add(writeTipHint, BorderLayout.SOUTH);
+//                setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167 + writeTipHint.getPreferredSize().height)));
+//            }
+//        });
+//    }
+//
+//
 
     final class ToolBarPanel extends JPanel {
         {
@@ -149,5 +149,11 @@ final public class SearchTabView {
         {
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         }
+    }
+
+    public interface Model {
+        SearchGroup getSearch();
+        List<ExternalSolutionView.Model> getReferences();
+        List<SamebugTipView.Model> getTips();
     }
 }

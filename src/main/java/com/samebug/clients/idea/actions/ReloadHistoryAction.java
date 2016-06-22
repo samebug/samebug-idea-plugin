@@ -17,10 +17,9 @@ package com.samebug.clients.idea.actions;
 
 import com.intellij.ide.actions.RefreshAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.idea.components.application.IdeaClientService;
+import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.view.HistoryViewListener;
 
@@ -36,9 +35,7 @@ final public class ReloadHistoryAction extends RefreshAction implements DumbAwar
 
     @Override
     public void update(AnActionEvent e) {
-        IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
+        ClientService client = IdeaSamebugPlugin.getInstance().getClient();
         e.getPresentation().setEnabled(client.getNumberOfActiveRequests() == 0);
     }
-
-    final static Logger LOGGER = Logger.getInstance(ReloadHistoryAction.class);
 }

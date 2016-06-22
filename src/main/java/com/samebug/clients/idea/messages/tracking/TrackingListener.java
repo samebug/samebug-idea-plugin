@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages;
+package com.samebug.clients.idea.messages.tracking;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.search.api.entities.SearchResults;
+import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 
-import java.util.List;
+public interface TrackingListener {
+    Topic<TrackingListener> TOPIC = Topic.create("tracking", TrackingListener.class, Topic.BroadcastDirection.TO_PARENT);
 
-public interface BatchStackTraceSearchListener {
-    Topic<BatchStackTraceSearchListener> BATCH_SEARCH_TOPIC = Topic.create("batch stacktrace search", BatchStackTraceSearchListener.class);
+    void trace(TrackEvent event);
 
-    void batchStart();
-
-    // TODO later we might want more details about the failed ones, currently it's just the number of failed searches.
-    void batchFinished(List<SearchResults> results, int failed);
 }

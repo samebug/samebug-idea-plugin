@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages;
+package com.samebug.clients.idea.messages.model;
 
 import com.intellij.util.messages.Topic;
 import com.samebug.clients.search.api.entities.SearchResults;
@@ -21,7 +21,7 @@ import com.samebug.clients.search.api.entities.tracking.SearchInfo;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
 public interface StackTraceSearchListener {
-    Topic<StackTraceSearchListener> SEARCH_TOPIC = Topic.create("stacktrace search", StackTraceSearchListener.class);
+    Topic<StackTraceSearchListener> TOPIC = Topic.create("stacktrace search", StackTraceSearchListener.class);
 
     void searchStart(SearchInfo searchInfo, String stackTrace);
 

@@ -1,3 +1,18 @@
+/**
+ * Copyright 2016 Samebug, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.samebug.clients.idea.components.project;
 
 import com.intellij.openapi.application.ApplicationManager;
@@ -11,39 +26,46 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.messages.ConnectionStatusListener;
+import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
 import com.samebug.clients.idea.messages.view.FocusListener;
 import com.samebug.clients.idea.messages.view.SearchViewListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.ui.component.tab.SearchTabView;
 import com.samebug.clients.idea.ui.controller.HistoryTabController;
 import com.samebug.clients.idea.ui.controller.SearchTabController;
+import com.samebug.clients.idea.ui.controller.SolutionsController;
 import com.samebug.clients.search.api.entities.Solutions;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ToolWindowController extends AbstractProjectComponent implements FocusListener, SearchViewListener {
+public class ToolWindowController extends AbstractProjectComponent implements FocusListener {
     final static Logger LOGGER = Logger.getInstance(ToolWindowController.class);
     @NotNull
     final Project project;
     @NotNull
-    final Map<Integer, SearchTabController> activeSearches;
+    final HistoryTabController historyTabController;
+    @NotNull
+    final SolutionsController solutionsController;
     @Nullable
     Integer focusedSearch = null;
-    @NotNull
-    final HistoryTabController historyTabController;
 
 
     protected ToolWindowController(Project project) {
         super(project);
         this.project = project;
-        activeSearches = new HashMap<Integer, SearchTabController>();
+        solutionsController = new SolutionsController(project);
         historyTabController = new HistoryTabController(project);
+
+        MessageBusConnection projectMessageBus = project.getMessageBus().connect(project);
+        projectMessageBus.subscribe(FocusListener.TOPIC, this);
     }
 
+    // TODO remove, leave only getHistoryView, or even move toolwindow initialization in this class from the factory
     @NotNull
     public HistoryTabController getHistoryTabController() {
         return historyTabController;
@@ -51,6 +73,7 @@ public class ToolWindowController extends AbstractProjectComponent implements Fo
 
     @Override
     public void focusOnHistory() {
+        ApplicationManager.getApplication().assertIsDispatchThread();
         final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
         final ContentManager toolwindowCM = toolWindow.getContentManager();
         final Content content = toolwindowCM.getContent(historyTabController.getControlPanel());
@@ -58,80 +81,38 @@ public class ToolWindowController extends AbstractProjectComponent implements Fo
         toolWindow.show(null);
     }
 
-    @NotNull
     public void focusOnSearch(final int searchId) {
+        ApplicationManager.getApplication().assertIsDispatchThread();
         final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
         final ContentManager toolwindowCM = toolWindow.getContentManager();
-        SearchTabController tab = activeSearches.get(searchId);
-        // FIXME: for now, we let at most one search tab
-        for (Map.Entry<Integer, SearchTabController> opened : activeSearches.entrySet()) {
-            if (opened.getKey().equals(searchId)) break;
-            else {
-                Content content = toolwindowCM.getContent(opened.getValue().getControlPanel());
-                toolwindowCM.removeContent(content, true);
-                activeSearches.remove(opened.getKey());
-            }
+
+        // FIXME: for now, we let at most one search tab, so we close all
+        if (focusedSearch != null && !focusedSearch.equals(searchId)) {
+            solutionsController.close(focusedSearch);
+            Content content = toolwindowCM.getContent(1);
+            if (content != null) toolwindowCM.removeContent(content, true);
+            focusedSearch = null;
         }
 
+        SearchTabView tab = solutionsController.getTab(searchId);
         if (tab == null) {
-            tab = new SearchTabController(project);
-            ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-            Content content = contentFactory.createContent(tab.getControlPanel(), SamebugBundle.message("samebug.toolwindow.search.tabName"), false);
-            toolwindowCM.addContent(content);
-            activeSearches.put(searchId, tab);
-            focusedSearch = searchId;
-            MessageBusConnection appMessageBus = ApplicationManager.getApplication().getMessageBus().connect(project);
-            appMessageBus.subscribe(ConnectionStatusListener.CONNECTION_STATUS_TOPIC, tab.getStatusUpdater());
-            toolwindowCM.setSelectedContent(content);
+            solutionsController.open(searchId);
         } else {
-            Content content = toolwindowCM.getContent(tab.getControlPanel());
-            toolwindowCM.setSelectedContent(content);
-        }
-        final SearchTabController searchTab = tab;
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final Solutions solutions = IdeaSamebugPlugin.getInstance().getClient().getSolutions(searchId);
-                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            searchTab.update(solutions);
-                        }
-                    });
-                } catch (SamebugClientException e) {
-                    LOGGER.warn("Failed to download solutions", e);
-                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            searchTab.update(null);
-                        }
-                    });
-                }
-
+            focusedSearch = searchId;
+            Content toolWindowTab = toolwindowCM.getContent(tab);
+            if (toolWindowTab != null) toolwindowCM.setSelectedContent(toolWindowTab);
+            else {
+                ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+                Content newToolWindowTab = contentFactory.createContent(tab, SamebugBundle.message("samebug.toolwindow.search.tabName"), false);
+                toolwindowCM.addContent(newToolWindowTab);
+                toolwindowCM.setSelectedContent(newToolWindowTab);
             }
-        });
+        }
         toolWindow.show(null);
     }
 
     // TODO add close action to tab which calls this method
     public void closeSearchTab(int searchId) {
-        ContentManager toolwindowCM = ToolWindowManager.getInstance(project).getToolWindow("Samebug").getContentManager();
-        SearchTabController tab = activeSearches.get(searchId);
-        if (tab != null) {
-            Content history = toolwindowCM.getContent(0);
-            toolwindowCM.requestFocus(history, true);
-            Content content = toolwindowCM.getContent(tab.getControlPanel());
-            toolwindowCM.removeContent(content, true);
-            activeSearches.remove(searchId);
-        }
     }
 
-    @Override
-    public void reload() {
-        if (focusedSearch != null) {
-            SearchTabController tab = activeSearches.get(focusedSearch);
-            tab.refreshPane();
-        }
-    }
 }

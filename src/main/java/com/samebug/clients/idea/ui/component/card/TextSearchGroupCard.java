@@ -21,6 +21,7 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.ExceptionMessageLabel;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
+import com.samebug.clients.idea.ui.component.organism.GroupInfoPanel;
 import com.samebug.clients.search.api.entities.TextSearchGroup;
 
 import javax.swing.*;
@@ -41,7 +42,7 @@ final public class TextSearchGroupCard extends JPanel {
         hitsLabel = new TextSearchGroupCard.HitsLabel();
         titleLabel = new TextSearchGroupCard.QueryLabel();
         queryLabel = new ExceptionMessageLabel(searchGroup.lastSearch.query);
-        groupInfoPanel = new TextSearchGroupCard.GroupInfoPanel();
+        groupInfoPanel = new GroupInfoPanel(searchGroup);
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
@@ -100,31 +101,6 @@ final public class TextSearchGroupCard extends JPanel {
         @Override
         public Color getForeground() {
             return ColorUtil.unemphasizedText();
-        }
-    }
-
-    final class GroupInfoPanel extends TransparentPanel {
-        {
-            setLayout(new FlowLayout(FlowLayout.RIGHT));
-            add(new JLabel() {
-                {
-                    String text;
-                    if (searchGroup.numberOfSearches == 1) {
-                        text = String.format("%s", TextUtil.prettyTime(searchGroup.lastSeen));
-                    } else {
-                        text = String.format("%s | %d times, first %s",
-                                TextUtil.prettyTime(searchGroup.lastSeen), searchGroup.numberOfSearches, TextUtil.prettyTime(searchGroup.firstSeen));
-                    }
-
-                    setText(text);
-                }
-
-                @Override
-                public Color getForeground() {
-                    return ColorUtil.unemphasizedText();
-                }
-            });
-
         }
     }
 }

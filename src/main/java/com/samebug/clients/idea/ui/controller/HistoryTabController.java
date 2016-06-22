@@ -24,18 +24,17 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.services.HistoryService;
 import com.samebug.clients.idea.components.application.ClientService;
-import com.samebug.clients.idea.components.application.IdeaClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.project.TutorialProjectComponent;
-import com.samebug.clients.idea.messages.ConnectionStatusListener;
+import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
+import com.samebug.clients.idea.messages.client.HistoryModelListener;
 import com.samebug.clients.idea.messages.view.HistoryViewListener;
-import com.samebug.clients.idea.messages.model.HistoryModelListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.component.TutorialPanel;
 import com.samebug.clients.idea.ui.component.tab.HistoryTabView;
 import com.samebug.clients.idea.ui.listeners.ConnectionStatusUpdater;
 import com.samebug.clients.search.api.entities.SearchGroup;
-import com.samebug.clients.search.api.entities.SearchResults;
+import com.samebug.clients.search.api.entities.SearchHistory;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,7 +60,10 @@ final public class HistoryTabController implements HistoryViewListener, HistoryM
         statusUpdater = new ConnectionStatusUpdater(view.statusIcon);
 
         MessageBusConnection appMessageBus = ApplicationManager.getApplication().getMessageBus().connect(project);
-        appMessageBus.subscribe(ConnectionStatusListener.CONNECTION_STATUS_TOPIC, statusUpdater);
+        appMessageBus.subscribe(ConnectionStatusListener.TOPIC, statusUpdater);
+        MessageBusConnection projectMessageBus = project.getMessageBus().connect(project);
+        projectMessageBus.subscribe(HistoryViewListener.TOPIC, this);
+        projectMessageBus.subscribe(HistoryModelListener.TOPIC, this);
     }
 
     @NotNull
@@ -85,7 +87,7 @@ final public class HistoryTabController implements HistoryViewListener, HistoryM
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
-                ClientService client = ApplicationManager.getApplication().getComponent(ClientService.class);
+                ClientService client = IdeaSamebugPlugin.getInstance().getClient();
                 try {
                     client.getSearchHistory();
                 } catch (SamebugClientException e1) {
@@ -97,7 +99,7 @@ final public class HistoryTabController implements HistoryViewListener, HistoryM
 
     void refreshHistoryPane() {
         ApplicationManager.getApplication().assertIsDispatchThread();
-        IdeaClientService connectionService = IdeaSamebugPlugin.getInstance().getClient();
+        ClientService connectionService = IdeaSamebugPlugin.getInstance().getClient();
         final List<SearchGroup> groups = service.getVisibleHistory();
         if (!connectionService.isConnected()) {
             view.setErrorNotConnected();
@@ -126,20 +128,34 @@ final public class HistoryTabController implements HistoryViewListener, HistoryM
     @Override
     public void start() {
         // TODO update the view to show process
+        LOGGER.info("start");
     }
 
     @Override
-    public void success(SearchResults result) {
-        // TODO update the model, update the ui
+    public void success(final SearchHistory result) {
+        service.setHistory(result);
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                refreshHistoryPane();
+            }
+        });
     }
 
     @Override
     public void fail(Exception e) {
-        // TODO update the view to show problem
+        service.setHistory(null);
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                refreshHistoryPane();
+            }
+        });
     }
 
     @Override
-    public void finish() { }
+    public void finish() {
+    }
 
     class HistoryTabTutorial extends TutorialProjectComponent.TutorialProjectAnonfun<Void> {
         @Override
