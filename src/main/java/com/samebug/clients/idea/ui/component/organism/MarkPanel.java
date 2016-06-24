@@ -145,11 +145,8 @@ final public class MarkPanel extends TransparentPanel {
         markButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                DataProvider provider = DataManager.getDataProvider(MarkPanel.this);
-                if (provider != null) {
-                    Project project = DataKeys.PROJECT.getData(provider);
-                    if (project != null) project.getMessageBus().syncPublisher(MarkViewListener.TOPIC).mark(model.getSearchId(), model.getHit().solutionId, hit.markId == null, MarkPanel.this);
-                }
+            Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(MarkPanel.this));
+            if (project != null) project.getMessageBus().syncPublisher(MarkViewListener.TOPIC).mark(model.getSearchId(), model.getHit().solutionId, hit.markId == null, MarkPanel.this);
             }
         });
     }

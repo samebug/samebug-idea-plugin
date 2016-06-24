@@ -112,12 +112,8 @@ final public class StackTraceSearchGroupCard extends JPanel {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    DataProvider provider = DataManager.getDataProvider(StackTraceSearchGroupCard.this);
-                    DataContext ctx = DataManager.getInstance().getDataContext(StackTraceSearchGroupCard.this);
-                    if (provider != null || ctx != null) {
-                        Project project = provider == null ? DataKeys.PROJECT.getData(ctx) : DataKeys.PROJECT.getData(provider);
-                        if (project != null) project.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchGroup.getLastSearch().id);
-                    }
+                Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(StackTraceSearchGroupCard.this));
+                if (project != null) project.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchGroup.getLastSearch().id);
                 }
             });
         }

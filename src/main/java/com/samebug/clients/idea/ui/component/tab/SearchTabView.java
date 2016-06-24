@@ -81,6 +81,7 @@ final public class SearchTabView extends JPanel {
         }
         // TODO add tip writing related content?
 
+        // add result list
         if (model.getTips().isEmpty() && model.getReferences().isEmpty()) {
             // No solutions, show some clarifying message
             EmptyWarningPanel panel = new EmptyWarningPanel();
@@ -91,6 +92,7 @@ final public class SearchTabView extends JPanel {
             final JScrollPane scrollPane = new JScrollPane();
             final JPanel solutionsPanel = new SolutionsPanel();
 
+            controlPanel.add(scrollPane);
             scrollPane.setViewportView(solutionsPanel);
             scrollPane.getVerticalScrollBar().setUnitIncrement(10);
             scrollPane.setBorder(BorderFactory.createEmptyBorder());
