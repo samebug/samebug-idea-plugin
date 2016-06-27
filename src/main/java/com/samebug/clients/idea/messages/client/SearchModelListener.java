@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages.view;
+package com.samebug.clients.idea.messages.client;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.idea.ui.component.organism.MarkPanel;
+import com.samebug.clients.search.api.entities.Solutions;
 
-public interface MarkViewListener {
-    Topic<MarkViewListener> TOPIC = Topic.create("mark view", MarkViewListener.class);
+public interface SearchModelListener {
+    Topic<SearchModelListener> TOPIC = Topic.create("solutions model changes", SearchModelListener.class);
 
-    void mark(int searchId, int solutionId, boolean up, MarkPanel markPanel);
+    void start(int searchId);
+
+    void success(int searchId, Solutions result);
+
+    void fail(int searchId, java.lang.Exception e);
+
+    void finish(int searchId);
 }

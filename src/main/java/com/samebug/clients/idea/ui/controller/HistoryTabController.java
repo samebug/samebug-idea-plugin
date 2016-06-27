@@ -15,6 +15,8 @@
  */
 package com.samebug.clients.idea.ui.controller;
 
+import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -25,10 +27,12 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.services.HistoryService;
 import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.components.project.ToolWindowController;
 import com.samebug.clients.idea.components.project.TutorialProjectComponent;
-import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
 import com.samebug.clients.idea.messages.client.HistoryModelListener;
+import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
 import com.samebug.clients.idea.messages.view.HistoryViewListener;
+import com.samebug.clients.idea.messages.view.SearchGroupCardListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.component.TutorialPanel;
 import com.samebug.clients.idea.ui.component.tab.HistoryTabView;
@@ -36,13 +40,16 @@ import com.samebug.clients.idea.ui.listeners.ConnectionStatusUpdater;
 import com.samebug.clients.search.api.entities.SearchGroup;
 import com.samebug.clients.search.api.entities.SearchHistory;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.List;
 
-final public class HistoryTabController implements HistoryViewListener, HistoryModelListener {
+final public class HistoryTabController implements TabController, HistoryViewListener, HistoryModelListener, SearchGroupCardListener {
     final static Logger LOGGER = Logger.getInstance(HistoryTabController.class);
+    @NotNull
+    final ToolWindowController twc;
     @NotNull
     final Project project;
     @NotNull
@@ -53,17 +60,20 @@ final public class HistoryTabController implements HistoryViewListener, HistoryM
     @NotNull
     final HistoryService service;
 
-    public HistoryTabController(@NotNull Project project) {
+    public HistoryTabController(@NotNull ToolWindowController twc, @NotNull Project project) {
+        this.twc = twc;
         this.project = project;
         view = new HistoryTabView();
         service = ServiceManager.getService(project, HistoryService.class);
         statusUpdater = new ConnectionStatusUpdater(view.statusIcon);
 
+        DataManager.registerDataProvider(view, new MyDataProvider());
         MessageBusConnection appMessageBus = ApplicationManager.getApplication().getMessageBus().connect(project);
         appMessageBus.subscribe(ConnectionStatusListener.TOPIC, statusUpdater);
         MessageBusConnection projectMessageBus = project.getMessageBus().connect(project);
         projectMessageBus.subscribe(HistoryViewListener.TOPIC, this);
         projectMessageBus.subscribe(HistoryModelListener.TOPIC, this);
+        projectMessageBus.subscribe(SearchGroupCardListener.TOPIC, this);
     }
 
     @NotNull
@@ -91,7 +101,7 @@ final public class HistoryTabController implements HistoryViewListener, HistoryM
                 try {
                     client.getSearchHistory();
                 } catch (SamebugClientException e1) {
-                    // TODO log?
+                    LOGGER.warn("Failed to download search history", e1);
                 }
             }
         });
@@ -99,26 +109,26 @@ final public class HistoryTabController implements HistoryViewListener, HistoryM
 
     void refreshHistoryPane() {
         ApplicationManager.getApplication().assertIsDispatchThread();
-        ClientService connectionService = IdeaSamebugPlugin.getInstance().getClient();
+        final ClientService connectionService = IdeaSamebugPlugin.getInstance().getClient();
         final List<SearchGroup> groups = service.getVisibleHistory();
         if (!connectionService.isConnected()) {
-            view.setErrorNotConnected();
+            view.setWarningNotConnected();
         } else if (connectionService.isConnected() && !connectionService.isAuthenticated()) {
-            view.setErrorNotLoggedIn();
+            view.setWarningNotLoggedIn();
         } else if (groups != null) {
             int visibleSearches = groups.size();
             int allSearches = service.unfilteredHistoryLength();
             if (visibleSearches == 0) {
                 if (allSearches == 0) {
-                    view.setErrorNoSearches();
+                    view.setWarningNoSearches();
                 } else {
-                    view.setErrorNoVisibleSearches();
+                    view.setWarningNoVisibleSearches();
                 }
             } else {
                 view.setHistory(groups);
             }
         } else {
-            view.setErrorOther();
+            view.setWarningOther();
         }
         view.revalidate();
         view.repaint();
@@ -127,8 +137,12 @@ final public class HistoryTabController implements HistoryViewListener, HistoryM
 
     @Override
     public void start() {
-        // TODO update the view to show process
-        LOGGER.info("start");
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                view.setWarningLoading();
+            }
+        });
     }
 
     @Override
@@ -155,6 +169,21 @@ final public class HistoryTabController implements HistoryViewListener, HistoryM
 
     @Override
     public void finish() {
+    }
+
+    @Override
+    public void titleClick(@NotNull TabController tab, SearchGroup searchGroup) {
+        if (this == tab) {
+            twc.focusOnSearch(searchGroup.getLastSearch().id);
+        }
+    }
+
+    private class MyDataProvider implements DataProvider {
+        @Override
+        public Object getData(@NonNls final String dataId) {
+            if (ToolWindowController.DATA_KEY.is(dataId)) return HistoryTabController.this;
+            else return null;
+        }
     }
 
     class HistoryTabTutorial extends TutorialProjectComponent.TutorialProjectAnonfun<Void> {

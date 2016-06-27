@@ -18,9 +18,9 @@ package com.samebug.clients.idea.components.application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.util.messages.MessageBus;
-import com.samebug.clients.idea.messages.client.SolutionsModelListener;
-import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
 import com.samebug.clients.idea.messages.client.HistoryModelListener;
+import com.samebug.clients.idea.messages.client.SearchModelListener;
+import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.*;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
@@ -84,18 +84,19 @@ public class ClientService implements ApplicationComponent {
     public Solutions getSolutions(final int searchId) throws SamebugClientException {
         return new ConnectionAwareHttpRequest<Solutions>() {
             Solutions request() throws SamebugClientException {
-                return client.getSolutions(0);
+                return client.getSolutions(searchId);
             }
+
             void start() {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(SolutionsModelListener.TOPIC).start(searchId);
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(SearchModelListener.TOPIC).start(searchId);
             }
 
             void success(Solutions result) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(SolutionsModelListener.TOPIC).success(searchId, result);
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(SearchModelListener.TOPIC).success(searchId, result);
             }
 
             void fail(java.lang.Exception e) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(SolutionsModelListener.TOPIC).fail(searchId, e);
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(SearchModelListener.TOPIC).fail(searchId, e);
             }
         }.execute();
     }

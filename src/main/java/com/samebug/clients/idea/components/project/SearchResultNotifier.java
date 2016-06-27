@@ -21,7 +21,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.awt.RelativePoint;
@@ -30,6 +29,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.services.HistoryService;
 import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.idea.components.application.ClientService;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.TutorialApplicationComponent;
 import com.samebug.clients.idea.components.application.TutorialSettings;
 import com.samebug.clients.idea.messages.model.BatchStackTraceSearchListener;
@@ -52,7 +52,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-class SearchResultNotifier implements BatchStackTraceSearchListener, Disposable {
+final class SearchResultNotifier implements BatchStackTraceSearchListener, Disposable {
     final static int NOTIFICATION_EXPIRATION_DELAY = 10000;
     final static Logger LOGGER = Logger.getInstance(SearchResultNotifier.class);
 
@@ -64,7 +64,7 @@ class SearchResultNotifier implements BatchStackTraceSearchListener, Disposable 
     @NotNull
     private MessageBusConnection messageBusConnection;
 
-    public SearchResultNotifier(Project project) {
+    public SearchResultNotifier(@NotNull Project project) {
         this.project = project;
         service = ServiceManager.getService(project, HistoryService.class);
         messageBusConnection = project.getMessageBus().connect();
@@ -80,7 +80,7 @@ class SearchResultNotifier implements BatchStackTraceSearchListener, Disposable 
     public void batchFinished(final List<SearchResults> results, int failed) {
         Long timelimitForFreshSearch = new Date().getTime() - (1 * 60 * 1000);
         Map<String, StackTraceSearchGroup> groupsByStackTraceId = new HashMap<String, StackTraceSearchGroup>();
-        ClientService client = ApplicationManager.getApplication().getComponent(ClientService.class);
+        ClientService client = IdeaSamebugPlugin.getInstance().getClient();
         try {
             SearchHistory history = client.getSearchHistory();
             for (SearchGroup s : history.searchGroups) {
@@ -167,7 +167,8 @@ class SearchResultNotifier implements BatchStackTraceSearchListener, Disposable 
                         } else {
                             if (settings.searchResultsMixed) {
                                 settings.searchResultsMixed = false;
-                                showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.mixed", searchIds.size(), SamebugIcons.calendarUrl, SamebugIcons.lightbulbUrl));
+                                showTutorialNotification(
+                                        SamebugBundle.message("samebug.tutorial.searchResults.mixed", searchIds.size(), SamebugIcons.calendarUrl, SamebugIcons.lightbulbUrl));
                             } else {
                                 showNotification(SamebugBundle.message("samebug.notification.searchresults.mixed", searchIds.size()));
                             }
@@ -176,7 +177,7 @@ class SearchResultNotifier implements BatchStackTraceSearchListener, Disposable 
                 }
             });
         } catch (SamebugClientException e1) {
-            // TODO log?
+            LOGGER.warn("Failed to load history after searching and building result notification.");
         }
     }
 

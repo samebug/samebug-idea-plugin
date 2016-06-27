@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.components.project;
 
+import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
@@ -25,32 +26,28 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
 import com.samebug.clients.idea.messages.view.FocusListener;
-import com.samebug.clients.idea.messages.view.SearchViewListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.idea.ui.component.tab.SearchTabView;
 import com.samebug.clients.idea.ui.controller.HistoryTabController;
 import com.samebug.clients.idea.ui.controller.SearchTabController;
-import com.samebug.clients.idea.ui.controller.SolutionsController;
-import com.samebug.clients.search.api.entities.Solutions;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.idea.ui.controller.TabController;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
-public class ToolWindowController extends AbstractProjectComponent implements FocusListener {
+final public class ToolWindowController extends AbstractProjectComponent implements FocusListener {
     final static Logger LOGGER = Logger.getInstance(ToolWindowController.class);
+    public static final DataKey<TabController> DATA_KEY = DataKey.create("samebugTabController");
+
     @NotNull
     final Project project;
     @NotNull
     final HistoryTabController historyTabController;
     @NotNull
-    final SolutionsController solutionsController;
+    final ConcurrentMap<Integer, SearchTabController> solutionControllers;
+
     @Nullable
     Integer focusedSearch = null;
 
@@ -58,17 +55,18 @@ public class ToolWindowController extends AbstractProjectComponent implements Fo
     protected ToolWindowController(Project project) {
         super(project);
         this.project = project;
-        solutionsController = new SolutionsController(project);
-        historyTabController = new HistoryTabController(project);
+        historyTabController = new HistoryTabController(this, project);
+        solutionControllers = new ConcurrentHashMap<Integer, SearchTabController>();
 
         MessageBusConnection projectMessageBus = project.getMessageBus().connect(project);
         projectMessageBus.subscribe(FocusListener.TOPIC, this);
     }
 
-    // TODO remove, leave only getHistoryView, or even move toolwindow initialization in this class from the factory
-    @NotNull
-    public HistoryTabController getHistoryTabController() {
-        return historyTabController;
+    public void initToolWindow(@NotNull ToolWindow toolWindow) {
+        historyTabController.reload();
+        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+        Content content = contentFactory.createContent(historyTabController.getControlPanel(), SamebugBundle.message("samebug.toolwindow.history.tabName"), false);
+        toolWindow.getContentManager().addContent(content);
     }
 
     @Override
@@ -88,31 +86,41 @@ public class ToolWindowController extends AbstractProjectComponent implements Fo
 
         // FIXME: for now, we let at most one search tab, so we close all
         if (focusedSearch != null && !focusedSearch.equals(searchId)) {
-            solutionsController.close(focusedSearch);
+            closeSearchTab(focusedSearch);
             Content content = toolwindowCM.getContent(1);
             if (content != null) toolwindowCM.removeContent(content, true);
             focusedSearch = null;
         }
 
-        SearchTabView tab = solutionsController.getTab(searchId);
-        if (tab == null) {
-            solutionsController.open(searchId);
-        } else {
-            focusedSearch = searchId;
-            Content toolWindowTab = toolwindowCM.getContent(tab);
-            if (toolWindowTab != null) toolwindowCM.setSelectedContent(toolWindowTab);
-            else {
-                ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-                Content newToolWindowTab = contentFactory.createContent(tab, SamebugBundle.message("samebug.toolwindow.search.tabName"), false);
-                toolwindowCM.addContent(newToolWindowTab);
-                toolwindowCM.setSelectedContent(newToolWindowTab);
-            }
+        final SearchTabController tab = getOrCreateSearchTab(searchId);
+        focusedSearch = searchId;
+        Content toolWindowTab = toolwindowCM.getContent(tab.getControlPanel());
+        if (toolWindowTab != null) toolwindowCM.setSelectedContent(toolWindowTab);
+        else {
+            ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+            Content newToolWindowTab = contentFactory.createContent(tab.getControlPanel(), SamebugBundle.message("samebug.toolwindow.search.tabName"), false);
+            toolwindowCM.addContent(newToolWindowTab);
+            toolwindowCM.setSelectedContent(newToolWindowTab);
         }
         toolWindow.show(null);
     }
 
+    @NotNull
+    SearchTabController getOrCreateSearchTab(final int searchId) {
+        ApplicationManager.getApplication().assertIsDispatchThread();
+        if (solutionControllers.containsKey(searchId)) {
+            return solutionControllers.get(searchId);
+        } else {
+            final SearchTabController newSearchController = new SearchTabController(this, project, searchId);
+            solutionControllers.put(searchId, newSearchController);
+            newSearchController.reload();
+            return newSearchController;
+        }
+    }
+
     // TODO add close action to tab which calls this method
-    public void closeSearchTab(int searchId) {
+    public void closeSearchTab(final int searchId) {
+        solutionControllers.remove(searchId);
     }
 
 }

@@ -181,8 +181,12 @@ final public class ExternalSolutionView extends JPanel {
     }
 
     public interface Model extends MarkPanel.Model {
-        @Override @NotNull RestHit<SolutionReference> getHit();
-        @NotNull java.util.List<BreadCrumb> getMatchingBreadCrumb();
+        @Override
+        @NotNull
+        RestHit<SolutionReference> getHit();
+
+        @NotNull
+        java.util.List<BreadCrumb> getMatchingBreadCrumb();
     }
 
 }

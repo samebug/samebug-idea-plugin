@@ -16,21 +16,19 @@
 package com.samebug.clients.idea.ui.component.card;
 
 import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DataKeys;
-import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.entities.ExceptionType;
 import com.samebug.clients.common.ui.Colors;
-import com.samebug.clients.common.ui.TextUtil;
-import com.samebug.clients.idea.messages.view.FocusListener;
-import com.samebug.clients.idea.messages.view.SearchViewListener;
+import com.samebug.clients.idea.components.project.ToolWindowController;
+import com.samebug.clients.idea.messages.view.SearchGroupCardListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.ExceptionMessageLabel;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.idea.ui.component.organism.BreadcrumbBar;
 import com.samebug.clients.idea.ui.component.organism.GroupInfoPanel;
+import com.samebug.clients.idea.ui.controller.TabController;
 import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
 
 import javax.swing.*;
@@ -112,8 +110,9 @@ final public class StackTraceSearchGroupCard extends JPanel {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(StackTraceSearchGroupCard.this));
-                if (project != null) project.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchGroup.getLastSearch().id);
+                    TabController tab = ToolWindowController.DATA_KEY.getData(DataManager.getInstance().getDataContext(StackTraceSearchGroupCard.this));
+                    Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(StackTraceSearchGroupCard.this));
+                    if (tab != null && project != null) project.getMessageBus().syncPublisher(SearchGroupCardListener.TOPIC).titleClick(tab, searchGroup);
                 }
             });
         }

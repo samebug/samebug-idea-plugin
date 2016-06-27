@@ -13,12 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.layout;
+package com.samebug.clients.idea.ui.component.organism;
+
+import com.samebug.clients.idea.ui.component.TransparentPanel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class EmptyWarningPanel {
-    public JPanel controlPanel;
-    public JLabel label;
+final public class WarningPanel extends TransparentPanel {
+    JLabel label;
+
+    public WarningPanel(@NotNull final String message) {
+        label = new JLabel(message);
+        add(label);
+    }
 
 }

@@ -19,23 +19,23 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.component.NetworkStatusIcon;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
-import com.samebug.clients.idea.ui.component.WriteTip;
-import com.samebug.clients.idea.ui.component.WriteTipHint;
 import com.samebug.clients.idea.ui.component.card.ExternalSolutionView;
 import com.samebug.clients.idea.ui.component.card.SamebugTipView;
 import com.samebug.clients.idea.ui.component.card.StackTraceSearchGroupCard;
 import com.samebug.clients.idea.ui.component.card.TextSearchGroupCard;
-import com.samebug.clients.idea.ui.layout.EmptyWarningPanel;
-import com.samebug.clients.search.api.entities.*;
+import com.samebug.clients.idea.ui.component.organism.WarningPanel;
+import com.samebug.clients.search.api.entities.SearchGroup;
+import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
+import com.samebug.clients.search.api.entities.TextSearchGroup;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.util.*;
 import java.util.List;
 
 final public class SearchTabView extends JPanel {
@@ -43,33 +43,37 @@ final public class SearchTabView extends JPanel {
     final public JPanel toolbarPanel;
     @NotNull
     final public NetworkStatusIcon statusIcon;
+    @NotNull
+    JComponent contentPanel;
 
     public SearchTabView() {
         statusIcon = new NetworkStatusIcon();
         toolbarPanel = new ToolBarPanel();
 
-        {
-            {
-                setLayout(new BorderLayout());
-                add(toolbarPanel, BorderLayout.NORTH);
-            }
-        }
-
+        setLayout(new BorderLayout());
+        add(toolbarPanel, BorderLayout.NORTH);
         toolbarPanel.add(statusIcon, BorderLayout.EAST);
+        setWarningLoading();
     }
 
-    public void reloadImages() {}
+    public void reloadImages() {
+    }
+
+    public void setWarningLoading() {
+        WarningPanel panel = new WarningPanel(SamebugBundle.message("samebug.toolwindow.search.content.loading"));
+        updateContent(panel);
+    }
 
     public void setSolutions(@NotNull final Model model) {
-        final  JPanel controlPanel = new TransparentPanel();
-        final  JPanel header = new TransparentPanel();
+        final JPanel controlPanel = new TransparentPanel();
+        final JPanel header = new TransparentPanel();
 
-        add(new TransparentPanel() {
+        updateContent(new TransparentPanel() {
             {
                 add(header, BorderLayout.NORTH);
                 add(controlPanel, BorderLayout.CENTER);
             }
-        }, BorderLayout.CENTER);
+        });
 
         // add search card to the header
         if (model.getSearch() instanceof StackTraceSearchGroup) {
@@ -84,10 +88,8 @@ final public class SearchTabView extends JPanel {
         // add result list
         if (model.getTips().isEmpty() && model.getReferences().isEmpty()) {
             // No solutions, show some clarifying message
-            EmptyWarningPanel panel = new EmptyWarningPanel();
-            // TODO bundle
-            panel.label.setText("no solution");
-            controlPanel.add(panel.controlPanel);
+            WarningPanel panel = new WarningPanel(SamebugBundle.message("samebug.toolwindow.search.content.empty"));
+            controlPanel.add(panel);
         } else {
             final JScrollPane scrollPane = new JScrollPane();
             final JPanel solutionsPanel = new SolutionsPanel();
@@ -107,10 +109,21 @@ final public class SearchTabView extends JPanel {
         }
     }
 
-    public void setWarningNoSolutions() {}
-    public void setWarningNotLoggedIn() {}
-    public void setWarningNotConnected() {}
-    public void setWarningOther() {}
+    public void setWarningNotLoggedIn() {
+        WarningPanel panel = new WarningPanel(SamebugBundle.message("samebug.toolwindow.search.content.notLoggedIn", SamebugIcons.cogwheelTodoUrl));
+        updateContent(panel);
+    }
+
+    public void setWarningNotConnected() {
+        WarningPanel panel =
+                new WarningPanel(SamebugBundle.message("samebug.toolwindow.search.content.notConnected", IdeaSamebugPlugin.getInstance().getUrlBuilder().getServerRoot()));
+        updateContent(panel);
+    }
+
+    public void setWarningOther() {
+        WarningPanel panel = new WarningPanel(SamebugBundle.message("samebug.toolwindow.search.content.other"));
+        updateContent(panel);
+    }
 
 //    public void showWriteTip() {
 //        header.removeAll();
@@ -136,6 +149,12 @@ final public class SearchTabView extends JPanel {
 //
 //
 
+    void updateContent(final @NotNull JComponent content) {
+        if (contentPanel != null) remove(contentPanel);
+        contentPanel = content;
+        add(contentPanel);
+    }
+
     final class ToolBarPanel extends JPanel {
         {
             setLayout(new BorderLayout());
@@ -155,7 +174,9 @@ final public class SearchTabView extends JPanel {
 
     public interface Model {
         SearchGroup getSearch();
+
         List<ExternalSolutionView.Model> getReferences();
+
         List<SamebugTipView.Model> getTips();
     }
 }

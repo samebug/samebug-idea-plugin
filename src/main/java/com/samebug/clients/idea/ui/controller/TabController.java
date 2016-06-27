@@ -15,19 +15,6 @@
  */
 package com.samebug.clients.idea.ui.controller;
 
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowFactory;
-import com.samebug.clients.idea.components.project.ToolWindowController;
-import org.jetbrains.annotations.NotNull;
+public interface TabController {
 
-
-final public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
-
-    @Override
-    public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        ToolWindowController twc = project.getComponent(ToolWindowController.class);
-        twc.initToolWindow(toolWindow);
-    }
 }

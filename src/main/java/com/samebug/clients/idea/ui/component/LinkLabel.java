@@ -16,6 +16,9 @@
 package com.samebug.clients.idea.ui.component;
 
 import com.intellij.ide.BrowserUtil;
+import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.DataKeys;
+import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.tracking.Events;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +33,12 @@ import java.awt.font.TextAttribute;
 import java.net.URL;
 import java.util.HashMap;
 
+/**
+ * A link that will open a browser on click.
+ *
+ * FIXME: it opens the browser (and also reports tracking) directly, bypassing the controller.
+ * If we want to do something more complicated, using events and handling in the controller might be a good idea.
+ */
 public class LinkLabel extends JLabel {
     @Nullable
     MouseListener myMouseListener;
@@ -46,8 +55,9 @@ public class LinkLabel extends JLabel {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     BrowserUtil.browse(link);
-                    // TODO get project from data context?
-                    Tracking.appTracking().trace(Events.linkClick(null, link));
+                    Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(LinkLabel.this));
+                    if (project != null) Tracking.projectTracking(project).trace(Events.linkClick(project, link));
+                    else Tracking.appTracking().trace(Events.linkClick(null, link));
                 }
             };
             addMouseListener(myMouseListener);

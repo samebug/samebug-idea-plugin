@@ -13,21 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.controller;
+package com.samebug.clients.idea.messages.view;
 
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowFactory;
-import com.samebug.clients.idea.components.project.ToolWindowController;
+import com.intellij.util.messages.Topic;
+import com.samebug.clients.idea.ui.controller.TabController;
 import org.jetbrains.annotations.NotNull;
 
+public interface SearchTabsViewListener {
+    Topic<SearchTabsViewListener> TOPIC = Topic.create("search tabs view", SearchTabsViewListener.class);
 
-final public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
-
-    @Override
-    public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        ToolWindowController twc = project.getComponent(ToolWindowController.class);
-        twc.initToolWindow(toolWindow);
-    }
+    void reloadActiveSearchTab(@NotNull TabController tab);
 }

@@ -17,7 +17,6 @@ package com.samebug.clients.idea.ui.component.organism;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataKeys;
-import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
@@ -43,7 +42,8 @@ final public class MarkPanel extends TransparentPanel {
     public final JPanel voteIcon;
     public final JLabel helpedLabel;
 
-    @NotNull Model model;
+    @NotNull
+    Model model;
 
     public MarkPanel(@NotNull final Model model) {
         markButton = new MarkButton();
@@ -145,17 +145,23 @@ final public class MarkPanel extends TransparentPanel {
         markButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-            Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(MarkPanel.this));
-            if (project != null) project.getMessageBus().syncPublisher(MarkViewListener.TOPIC).mark(model.getSearchId(), model.getHit().solutionId, hit.markId == null, MarkPanel.this);
+                Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(MarkPanel.this));
+                if (project != null)
+                    project.getMessageBus().syncPublisher(MarkViewListener.TOPIC).mark(model.getSearchId(), model.getHit().solutionId, hit.markId == null, MarkPanel.this);
             }
         });
     }
 
 
     public interface Model {
-        @NotNull RestHit getHit();
-        @NotNull int getSearchId();
+        @NotNull
+        RestHit getHit();
+
+        @NotNull
+        int getSearchId();
+
         boolean canBeMarked();
+
         boolean createdByCurrentUser();
     }
 }

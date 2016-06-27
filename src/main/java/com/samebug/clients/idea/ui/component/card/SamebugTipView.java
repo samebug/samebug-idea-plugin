@@ -178,7 +178,11 @@ final public class SamebugTipView extends JPanel {
     }
 
     public interface Model extends MarkPanel.Model {
-        @Override @NotNull RestHit<Tip> getHit();
-        @NotNull java.util.List<BreadCrumb> getMatchingBreadCrumb();
+        @Override
+        @NotNull
+        RestHit<Tip> getHit();
+
+        @NotNull
+        java.util.List<BreadCrumb> getMatchingBreadCrumb();
     }
 }

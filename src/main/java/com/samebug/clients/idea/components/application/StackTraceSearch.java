@@ -61,7 +61,6 @@ public class StackTraceSearch implements ApplicationComponent, StackTraceMatcher
             @Override
             public void run() {
                 SearchInfo searchInfo = new SearchInfo(sessionInfo);
-                // TODO I cannot see what stops 'Already disposed' errors here, but the docs say this is the intended usage.
                 if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.TOPIC).searchStart(searchInfo, stackTrace);
                 try {
                     SearchResults result = client.searchSolutions(stackTrace);
