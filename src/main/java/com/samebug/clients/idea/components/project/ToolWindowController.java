@@ -120,6 +120,8 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
 
     // TODO add close action to tab which calls this method
     public void closeSearchTab(final int searchId) {
+        SearchTabController tab = solutionControllers.get(searchId);
+        if (tab != null) tab.dispose();
         solutionControllers.remove(searchId);
     }
 

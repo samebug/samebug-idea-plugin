@@ -16,6 +16,7 @@
 package com.samebug.clients.idea.ui.controller.search;
 
 import com.intellij.ide.DataManager;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -42,7 +43,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-final public class SearchTabController implements TabController {
+final public class SearchTabController implements TabController, Disposable {
     final static Logger LOGGER = Logger.getInstance(SearchTabController.class);
     @NotNull
     final ToolWindowController twc;
@@ -57,9 +58,13 @@ final public class SearchTabController implements TabController {
     final SearchService service;
 
     @NotNull
+    final HitConverter hitConverter;
+    @NotNull
     final ViewController viewController;
     @NotNull
     final ModelController modelController;
+    @NotNull
+    final MarkModelController markModelController;
     @NotNull
     final TipModelController tipModelController;
 
@@ -70,12 +75,14 @@ final public class SearchTabController implements TabController {
         connectionStatusUpdater = new ConnectionStatusUpdater(view.statusIcon);
         this.mySearchId = searchId;
         service = new SearchService(searchId);
+        hitConverter = new HitConverter(this);
         viewController = new ViewController(this);
         modelController = new ModelController(this);
+        markModelController = new MarkModelController(this);
         tipModelController = new TipModelController(this);
 
         DataManager.registerDataProvider(view, new MyDataProvider());
-        MessageBusConnection projectMessageBus = project.getMessageBus().connect(project);
+        MessageBusConnection projectMessageBus = project.getMessageBus().connect(this);
         projectMessageBus.subscribe(ConnectionStatusUpdater.TOPIC, connectionStatusUpdater);
 
     }
@@ -135,7 +142,7 @@ final public class SearchTabController implements TabController {
         } else if (connectionService.isConnected() && !connectionService.isAuthenticated()) {
             view.setWarningNotLoggedIn();
         } else if (solutions != null) {
-            view.setSolutions(convertSolutions(solutions));
+            view.setSolutions(hitConverter.convertSolutions(solutions));
         } else {
             view.setWarningOther();
         }
@@ -144,125 +151,9 @@ final public class SearchTabController implements TabController {
         view.repaint();
     }
 
-    SearchTabView.Model convertSolutions(@NotNull final Solutions solutions) {
-        return new SearchTabView.Model() {
+    @Override
+    public void dispose() {
 
-            @Override
-            public SearchGroup getSearch() {
-                return solutions.searchGroup;
-            }
-
-            @Override
-            public List<ExternalSolutionView.Model> getReferences() {
-                List<ExternalSolutionView.Model> result = new ArrayList<ExternalSolutionView.Model>(solutions.references.size());
-                for (RestHit<SolutionReference> reference : solutions.references) {
-                    result.add(convertReference(solutions.searchGroup, reference));
-                }
-                return result;
-            }
-
-            @Override
-            public List<SamebugTipView.Model> getTips() {
-                List<SamebugTipView.Model> result = new ArrayList<SamebugTipView.Model>(solutions.tips.size());
-                for (RestHit<Tip> tip : solutions.tips) {
-                    result.add(convertTip(solutions.searchGroup, tip));
-                }
-                return result;
-            }
-        };
-    }
-
-    // TODO reuse the two specifications
-    MarkPanel.Model convertHit(final SearchGroup search, final RestHit hit) {
-        return new MarkPanel.Model() {
-
-            @NotNull
-            @Override
-            public RestHit getHit() {
-                return hit;
-            }
-
-            @NotNull
-            @Override
-            public int getSearchId() {
-                return search.getLastSearch().id;
-            }
-
-            @Override
-            public boolean canBeMarked() {
-                return SearchService.canBeMarked(IdeaSamebugPlugin.getInstance().getState().userId, search, hit);
-            }
-
-            @Override
-            public boolean createdByCurrentUser() {
-                return SearchService.createdByUser(IdeaSamebugPlugin.getInstance().getState().userId, hit);
-            }
-        };
-    }
-
-    SamebugTipView.Model convertTip(final SearchGroup search, final RestHit<Tip> hit) {
-        return new SamebugTipView.Model() {
-            @NotNull
-            @Override
-            public RestHit<Tip> getHit() {
-                return hit;
-            }
-
-            @NotNull
-            @Override
-            public int getSearchId() {
-                return search.getLastSearch().id;
-            }
-
-            @NotNull
-            @Override
-            public List<BreadCrumb> getMatchingBreadCrumb() {
-                return SearchService.getMatchingBreadCrumb(search, hit);
-            }
-
-            @Override
-            public boolean canBeMarked() {
-                return SearchService.canBeMarked(IdeaSamebugPlugin.getInstance().getState().userId, search, hit);
-            }
-
-            @Override
-            public boolean createdByCurrentUser() {
-                return SearchService.createdByUser(IdeaSamebugPlugin.getInstance().getState().userId, hit);
-            }
-        };
-    }
-
-    ExternalSolutionView.Model convertReference(final SearchGroup search, final RestHit<SolutionReference> hit) {
-        return new ExternalSolutionView.Model() {
-
-            @NotNull
-            @Override
-            public RestHit<SolutionReference> getHit() {
-                return hit;
-            }
-
-            @NotNull
-            @Override
-            public int getSearchId() {
-                return search.getLastSearch().id;
-            }
-
-            @Override
-            public boolean canBeMarked() {
-                return SearchService.canBeMarked(IdeaSamebugPlugin.getInstance().getState().userId, search, hit);
-            }
-
-            @Override
-            public boolean createdByCurrentUser() {
-                return SearchService.createdByUser(IdeaSamebugPlugin.getInstance().getState().userId, hit);
-            }
-
-            @NotNull
-            @Override
-            public List<BreadCrumb> getMatchingBreadCrumb() {
-                return SearchService.getMatchingBreadCrumb(search, hit);
-            }
-        };
     }
 
     private class MyDataProvider implements DataProvider {

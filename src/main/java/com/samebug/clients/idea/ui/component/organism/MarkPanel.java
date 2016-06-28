@@ -22,12 +22,14 @@ import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
 import com.samebug.clients.common.ui.Colors;
+import com.samebug.clients.idea.components.project.ToolWindowController;
 import com.samebug.clients.idea.messages.view.MarkViewListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.component.ErrorLabel;
 import com.samebug.clients.idea.ui.component.SBButton;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
+import com.samebug.clients.idea.ui.controller.TabController;
 import com.samebug.clients.search.api.entities.RestHit;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,6 +37,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 final public class MarkPanel extends TransparentPanel {
     public final SBButton markButton;
@@ -65,8 +68,12 @@ final public class MarkPanel extends TransparentPanel {
         updateState();
     }
 
-    public void beginPostMark() {
+    public void beginPostMark(@NotNull final Model model) {
         markButton.setEnabled(false);
+        this.model = model;
+        updateState();
+        revalidate();
+        repaint();
     }
 
     public void finishPostMarkWithError(@NotNull final String errorMessage) {
@@ -138,12 +145,15 @@ final public class MarkPanel extends TransparentPanel {
             markButton.setToolTipText(SamebugBundle.message("samebug.mark.unmarked.tooltip"));
         }
 
+        for( MouseListener ml : markButton.getMouseListeners()) {
+            markButton.removeMouseListener(ml);
+        }
         markButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                TabController tab = ToolWindowController.DATA_KEY.getData(DataManager.getInstance().getDataContext(MarkPanel.this));
                 Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(MarkPanel.this));
-                if (project != null)
-                    project.getMessageBus().syncPublisher(MarkViewListener.TOPIC).mark(model);
+                if (tab != null && project != null) project.getMessageBus().syncPublisher(MarkViewListener.TOPIC).mark(tab, model);
             }
         });
     }

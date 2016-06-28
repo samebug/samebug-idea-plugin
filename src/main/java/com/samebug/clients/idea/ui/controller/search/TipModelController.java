@@ -25,7 +25,7 @@ import com.samebug.clients.search.api.entities.Tip;
 import com.samebug.clients.search.api.exceptions.BadRequest;
 import org.jetbrains.annotations.NotNull;
 
-final public class TipModelController implements TipModelListener {
+final class TipModelController implements TipModelListener {
     final static Logger LOGGER = Logger.getInstance(ModelController.class);
     @NotNull
     final SearchTabController controller;
@@ -35,7 +35,7 @@ final public class TipModelController implements TipModelListener {
         this.controller = controller;
         this.mySearchId = controller.mySearchId;
 
-        MessageBusConnection projectMessageBus = controller.project.getMessageBus().connect(controller.project);
+        MessageBusConnection projectMessageBus = controller.project.getMessageBus().connect(controller);
         projectMessageBus.subscribe(TipModelListener.TOPIC, this);
     }
 

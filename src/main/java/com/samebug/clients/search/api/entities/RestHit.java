@@ -35,4 +35,15 @@ public final class RestHit<T extends RestSolution> {
     public UserReference createdBy;
     @Nullable
     public Exception exception;
+
+    public RestHit(@NotNull final RestHit<T> rhs) {
+        solutionId = rhs.solutionId;
+        solution = rhs.solution;
+        stackTraceId = rhs.stackTraceId;
+        matchLevel = rhs.matchLevel;
+        score = rhs.score;
+        markId = rhs.markId;
+        createdBy = rhs.createdBy;
+        exception = rhs.exception;
+    }
 }

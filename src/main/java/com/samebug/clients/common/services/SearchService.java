@@ -64,10 +64,44 @@ final public class SearchService {
         return null;
     }
 
+    // TODO this is the same as marked, but MarkResponse does not differentiate posting and retracting
+    @Nullable
+    public RestHit markRetracted(final int solutionId, @NotNull final MarkResponse mark) {
+        // TODO synchronize access
+        if (search == null) return null;
+        for (RestHit<SolutionReference> s : search.references) {
+            if (s.solutionId == solutionId) {
+                s.markId = null;
+                s.score = mark.marks;
+                return s;
+            }
+        }
+        for (RestHit<Tip> t : search.tips) {
+            if (t.solutionId == solutionId) {
+                t.markId = null;
+                t.score = mark.marks;
+                return t;
+            }
+        }
+        return null;
+    }
+
     public void addTip(@NotNull final RestHit<Tip> tip) {
         // TODO synchronize
         if (search == null) return;
         search.tips.add(0, tip);
+    }
+
+    @Nullable
+    public RestHit getHitForVote(@NotNull final Integer voteId) {
+        if (search == null) return null;
+        for (RestHit<SolutionReference> s : search.references) {
+            if (voteId.equals(s.markId)) return s;
+        }
+        for (RestHit<Tip> t : search.tips) {
+            if (voteId.equals(t.markId)) return t;
+        }
+        return null;
     }
 
     public static boolean createdByUser(final int userId, @NotNull final RestHit hit) {

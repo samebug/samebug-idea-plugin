@@ -39,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class ViewController
+final class ViewController
         implements SearchGroupCardListener, MarkViewListener, SearchTabsViewListener, WriteTipListener {
     final static Logger LOGGER = Logger.getInstance(ViewController.class);
     @NotNull
@@ -48,7 +48,7 @@ public class ViewController
     public ViewController(@NotNull final SearchTabController controller) {
         this.controller = controller;
 
-        MessageBusConnection projectMessageBus = controller.project.getMessageBus().connect(controller.project);
+        MessageBusConnection projectMessageBus = controller.project.getMessageBus().connect(controller);
         projectMessageBus.subscribe(SearchGroupCardListener.TOPIC, this);
         projectMessageBus.subscribe(MarkViewListener.TOPIC, this);
         projectMessageBus.subscribe(SearchTabsViewListener.TOPIC, this);
@@ -58,30 +58,32 @@ public class ViewController
     @Override
     public void titleClick(@NotNull TabController tab, SearchGroup searchGroup) {
         if (controller == tab) {
-            ApplicationManager.getApplication().assertIsDispatchThread();
             BrowserUtil.browse(IdeaSamebugPlugin.getInstance().getUrlBuilder().search(searchGroup.getLastSearch().id));
         }
     }
 
     @Override
-    public void mark(MarkPanel.Model model) {
-        if (model.getSearchId() == controller.mySearchId) {
-            ApplicationManager.getApplication().assertIsDispatchThread();
-            final ClientService client = IdeaSamebugPlugin.getInstance().getClient();
-            final RestHit hit = model.getHit();
-            try {
-                if (hit.markId == null) client.postMark(model.getSearchId(), hit.solutionId);
-                else client.retractMark(hit.markId);
-            } catch (SamebugClientException e) {
-                LOGGER.warn("Failed to execute mark.", e);
-            }
+    public void mark(final TabController tab, final MarkPanel.Model model) {
+        if (controller == tab) {
+            ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+                @Override
+                public void run() {
+                    final ClientService client = IdeaSamebugPlugin.getInstance().getClient();
+                    final RestHit hit = model.getHit();
+                    try {
+                        if (hit.markId == null) client.postMark(model.getSearchId(), hit.solutionId);
+                        else client.retractMark(hit.markId);
+                    } catch (SamebugClientException e) {
+                        LOGGER.warn("Failed to execute mark.", e);
+                    }
+                }
+            });
         }
     }
 
     @Override
     public void reloadActiveSearchTab(@NotNull TabController tab) {
-        if (this == tab) {
-            ApplicationManager.getApplication().assertIsDispatchThread();
+        if (tab == controller) {
             controller.reload();
         }
     }
