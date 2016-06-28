@@ -15,10 +15,16 @@
  */
 package com.samebug.clients.idea.ui.component;
 
+import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.DataKeys;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.ui.TextUtil;
+import com.samebug.clients.idea.components.project.ToolWindowController;
+import com.samebug.clients.idea.messages.view.WriteTipListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
+import com.samebug.clients.idea.ui.controller.TabController;
 import org.apache.commons.lang.StringUtils;
 import org.jdesktop.swingx.prompt.PromptSupport;
 
@@ -30,6 +36,8 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
@@ -118,6 +126,25 @@ final public class WriteTip extends JPanel {
 
         ((AbstractDocument) tipBody.getDocument()).setDocumentFilter(new TipConstraints());
         tipBody.getDocument().addDocumentListener(new TipEditorListener());
+        cancel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                TabController tab = ToolWindowController.DATA_KEY.getData(DataManager.getInstance().getDataContext(WriteTip.this));
+                Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(WriteTip.this));
+                if (tab != null && project != null) project.getMessageBus().syncPublisher(WriteTipListener.TOPIC).cancelClick(tab);
+            }
+        });
+        submit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                TabController tab = ToolWindowController.DATA_KEY.getData(DataManager.getInstance().getDataContext(WriteTip.this));
+                Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(WriteTip.this));
+                final String tip = tipBody.getText();
+                final String rawSourceUrl = sourceLink.getText();
+
+                if (tab != null && project != null) project.getMessageBus().syncPublisher(WriteTipListener.TOPIC).sendClick(tab, tip, rawSourceUrl);
+            }
+        });
     }
 
     @Override

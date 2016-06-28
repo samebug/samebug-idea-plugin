@@ -25,6 +25,8 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.component.NetworkStatusIcon;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
+import com.samebug.clients.idea.ui.component.WriteTip;
+import com.samebug.clients.idea.ui.component.WriteTipHint;
 import com.samebug.clients.idea.ui.component.card.*;
 import com.samebug.clients.idea.ui.component.organism.WarningPanel;
 import com.samebug.clients.search.api.entities.SearchGroup;
@@ -44,13 +46,21 @@ final public class SearchTabView extends JPanel {
     @NotNull
     final public NetworkStatusIcon statusIcon;
     @NotNull
+    final public WriteTipHint writeTipHint;
+    @NotNull
+    final public WriteTip tipPanel;
+    @NotNull
     JComponent contentPanel;
+    @Nullable
+    public JComponent header;
     @NotNull
     final Map<Integer, HitView> cards;
 
     public SearchTabView() {
         statusIcon = new NetworkStatusIcon();
         toolbarPanel = new ToolBarPanel();
+        writeTipHint = new WriteTipHint();
+        tipPanel = new WriteTip();
         contentPanel = new TransparentPanel();
         cards = new HashMap<Integer, HitView>();
 
@@ -67,9 +77,6 @@ final public class SearchTabView extends JPanel {
         else return null;
     }
 
-    public void reloadImages() {
-    }
-
     public void setWarningLoading() {
         WarningPanel panel = new WarningPanel(SamebugBundle.message("samebug.toolwindow.search.content.loading"));
         updateContent(panel);
@@ -78,7 +85,7 @@ final public class SearchTabView extends JPanel {
     public void setSolutions(@NotNull final Model model) {
         cards.clear();
         final JPanel controlPanel = new TransparentPanel();
-        final JPanel header = new TransparentPanel();
+        header = new TransparentPanel();
 
         updateContent(new TransparentPanel() {
             {
@@ -95,7 +102,8 @@ final public class SearchTabView extends JPanel {
             TextSearchGroup group = (TextSearchGroup) model.getSearch();
             header.add(new TextSearchGroupCard(group));
         }
-        // TODO add tip writing related content?
+
+        showWriteTipHint();
 
         // add result list
         if (model.getTips().isEmpty() && model.getReferences().isEmpty()) {
@@ -120,6 +128,24 @@ final public class SearchTabView extends JPanel {
                 solutionsPanel.add(sv);
                 cards.put(s.getHit().solutionId, sv);
             }
+        }
+    }
+
+    public void showWriteTip() {
+        if (header != null) {
+            header.remove(writeTipHint);
+            header.add(tipPanel, BorderLayout.SOUTH);
+            contentPanel.revalidate();
+            contentPanel.repaint();
+        }
+    }
+
+    public void showWriteTipHint() {
+        if (header != null) {
+            header.remove(tipPanel);
+            header.add(writeTipHint, BorderLayout.SOUTH);
+            contentPanel.revalidate();
+            contentPanel.repaint();
         }
     }
 

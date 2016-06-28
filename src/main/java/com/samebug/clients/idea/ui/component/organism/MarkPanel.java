@@ -17,7 +17,6 @@ package com.samebug.clients.idea.ui.component.organism;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataKeys;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;

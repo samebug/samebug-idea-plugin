@@ -21,6 +21,7 @@ import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.idea.messages.client.HistoryModelListener;
 import com.samebug.clients.idea.messages.client.MarkModelListener;
 import com.samebug.clients.idea.messages.client.SearchModelListener;
+import com.samebug.clients.idea.messages.client.TipModelListener;
 import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
 import com.samebug.clients.search.api.SamebugClient;
 import com.samebug.clients.search.api.entities.*;
@@ -107,6 +108,18 @@ public class ClientService implements ApplicationComponent {
             RestHit<Tip> request() throws SamebugClientException {
                 return client.postTip(searchId, tip, sourceUrl);
             }
+
+            void start() {
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(TipModelListener.TOPIC).start(searchId);
+            }
+
+            void success(RestHit<Tip> result) {
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(TipModelListener.TOPIC).success(searchId, result);
+            }
+
+            void fail(java.lang.Exception e) {
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(TipModelListener.TOPIC).fail(searchId, e);
+            }
         }.execute();
     }
 
@@ -135,6 +148,7 @@ public class ClientService implements ApplicationComponent {
             MarkResponse request() throws SamebugClientException {
                 return client.retractMark(voteId);
             }
+
             void start() {
                 ApplicationManager.getApplication().getMessageBus().syncPublisher(MarkModelListener.TOPIC).startRetractMark(voteId);
             }

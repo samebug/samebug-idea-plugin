@@ -64,6 +64,12 @@ final public class SearchService {
         return null;
     }
 
+    public void addTip(@NotNull final RestHit<Tip> tip) {
+        // TODO synchronize
+        if (search == null) return;
+        search.tips.add(0, tip);
+    }
+
     public static boolean createdByUser(final int userId, @NotNull final RestHit hit) {
         assert hit.createdBy != null;
         return hit.createdBy.id.equals(userId);

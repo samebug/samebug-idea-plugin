@@ -29,8 +29,8 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.messages.view.FocusListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.controller.HistoryTabController;
-import com.samebug.clients.idea.ui.controller.search.SearchTabController;
 import com.samebug.clients.idea.ui.controller.TabController;
+import com.samebug.clients.idea.ui.controller.search.SearchTabController;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

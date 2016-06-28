@@ -15,11 +15,19 @@
  */
 package com.samebug.clients.idea.ui.component;
 
+import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.DataKeys;
+import com.intellij.openapi.project.Project;
+import com.samebug.clients.idea.components.project.ToolWindowController;
+import com.samebug.clients.idea.messages.view.WriteTipListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
+import com.samebug.clients.idea.ui.controller.TabController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
@@ -47,6 +55,14 @@ final public class WriteTipHint extends WriteTipCTA {
             }
         });
         setPreferredSize(new Dimension(400, getPreferredSize().height));
+        ctaButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                TabController tab = ToolWindowController.DATA_KEY.getData(DataManager.getInstance().getDataContext(WriteTipHint.this));
+                Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(WriteTipHint.this));
+                if (tab != null && project != null) project.getMessageBus().syncPublisher(WriteTipListener.TOPIC).ctaClick(tab);
+            }
+        });
     }
 
     @Override

@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.component.card;
+package com.samebug.clients.idea.messages.client;
 
-import com.samebug.clients.idea.ui.component.organism.MarkPanel;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.util.messages.Topic;
+import com.samebug.clients.search.api.entities.RestHit;
+import com.samebug.clients.search.api.entities.Tip;
 
-import javax.swing.*;
+public interface TipModelListener {
+    Topic<TipModelListener> TOPIC = Topic.create("tip", TipModelListener.class);
 
-public abstract class HitView extends JPanel {
-    public final MarkPanel markPanel;
+    void start(int searchId);
 
-    public HitView(@NotNull MarkPanel.Model model) {
-        markPanel = new MarkPanel(model);
-    }
+    void success(int searchId, RestHit<Tip> result);
+
+    void fail(int searchId, java.lang.Exception e);
+
+    void finish(int searchId);
 }
