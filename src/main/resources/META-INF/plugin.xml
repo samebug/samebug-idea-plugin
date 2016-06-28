@@ -65,6 +65,9 @@
             <action id="Samebug.ReloadSearch" class="com.samebug.clients.idea.actions.ReloadSearchAction"
                     icon="/com/samebug/icons/reload.png" text="Reload solutions" description="Reload solutions"/>
         </group>
+        <action id="Samebug.Dialogs" class="com.samebug.clients.idea.actions.Analyze" text="Samebug Search" description="Stacktrace search with Samebug">
+            <add-to-group group-id="AnalyzeMenu" anchor="last"/>
+        </action>
     </actions>
 
     <application-components>
