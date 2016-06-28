@@ -19,24 +19,24 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.util.containers.HashMap;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.component.NetworkStatusIcon;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
-import com.samebug.clients.idea.ui.component.card.ExternalSolutionView;
-import com.samebug.clients.idea.ui.component.card.SamebugTipView;
-import com.samebug.clients.idea.ui.component.card.StackTraceSearchGroupCard;
-import com.samebug.clients.idea.ui.component.card.TextSearchGroupCard;
+import com.samebug.clients.idea.ui.component.card.*;
 import com.samebug.clients.idea.ui.component.organism.WarningPanel;
 import com.samebug.clients.search.api.entities.SearchGroup;
 import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
 import com.samebug.clients.search.api.entities.TextSearchGroup;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
 
 final public class SearchTabView extends JPanel {
     @NotNull
@@ -45,15 +45,26 @@ final public class SearchTabView extends JPanel {
     final public NetworkStatusIcon statusIcon;
     @NotNull
     JComponent contentPanel;
+    @NotNull
+    final Map<Integer, HitView> cards;
 
     public SearchTabView() {
         statusIcon = new NetworkStatusIcon();
         toolbarPanel = new ToolBarPanel();
+        contentPanel = new TransparentPanel();
+        cards = new HashMap<Integer, HitView>();
 
         setLayout(new BorderLayout());
         add(toolbarPanel, BorderLayout.NORTH);
         toolbarPanel.add(statusIcon, BorderLayout.EAST);
         setWarningLoading();
+    }
+
+
+    @Nullable
+    public HitView getHitCard(int solutionId) {
+        if (cards.keySet().contains(solutionId)) return cards.get(solutionId);
+        else return null;
     }
 
     public void reloadImages() {
@@ -65,6 +76,7 @@ final public class SearchTabView extends JPanel {
     }
 
     public void setSolutions(@NotNull final Model model) {
+        cards.clear();
         final JPanel controlPanel = new TransparentPanel();
         final JPanel header = new TransparentPanel();
 
@@ -101,10 +113,12 @@ final public class SearchTabView extends JPanel {
             for (final SamebugTipView.Model tip : model.getTips()) {
                 SamebugTipView tipView = new SamebugTipView(tip);
                 solutionsPanel.add(tipView);
+                cards.put(tip.getHit().solutionId, tipView);
             }
             for (final ExternalSolutionView.Model s : model.getReferences()) {
                 final ExternalSolutionView sv = new ExternalSolutionView(s);
                 solutionsPanel.add(sv);
+                cards.put(s.getHit().solutionId, sv);
             }
         }
     }
@@ -150,7 +164,7 @@ final public class SearchTabView extends JPanel {
 //
 
     void updateContent(final @NotNull JComponent content) {
-        if (contentPanel != null) remove(contentPanel);
+        remove(contentPanel);
         contentPanel = content;
         add(contentPanel);
     }

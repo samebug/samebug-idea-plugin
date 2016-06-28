@@ -38,7 +38,7 @@ import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
-final public class ExternalSolutionView extends JPanel {
+final public class ExternalSolutionView extends HitView {
     final Model model;
     final RestHit<SolutionReference> solution;
     final ExceptionType exceptionType;
@@ -48,9 +48,9 @@ final public class ExternalSolutionView extends JPanel {
     public final ExceptionMessageLabel exceptionMessageLabel;
     public final JPanel exceptionTypePanel;
     public final JPanel sourceReferencePanel;
-    public final MarkPanel markPanel;
 
     public ExternalSolutionView(@NotNull Model model) {
+        super(model);
         this.model = model;
         final java.util.List<BreadCrumb> searchBreadcrumb = model.getMatchingBreadCrumb();
 //        if (searchGroup instanceof StackTraceSearchGroup) {
@@ -68,7 +68,6 @@ final public class ExternalSolutionView extends JPanel {
         exceptionMessageLabel = new ExceptionMessageLabel(solution.exception.message);
         exceptionTypePanel = new ExceptionTypePanel();
         sourceReferencePanel = new SourceReferencePanel(solution.solution);
-        markPanel = new MarkPanel(model);
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));

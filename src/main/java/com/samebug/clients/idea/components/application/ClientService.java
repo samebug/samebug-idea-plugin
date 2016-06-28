@@ -19,6 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.idea.messages.client.HistoryModelListener;
+import com.samebug.clients.idea.messages.client.MarkModelListener;
 import com.samebug.clients.idea.messages.client.SearchModelListener;
 import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
 import com.samebug.clients.search.api.SamebugClient;
@@ -88,15 +89,15 @@ public class ClientService implements ApplicationComponent {
             }
 
             void start() {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(SearchModelListener.TOPIC).start(searchId);
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(SearchModelListener.TOPIC).startLoadingSolutions(searchId);
             }
 
             void success(Solutions result) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(SearchModelListener.TOPIC).success(searchId, result);
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(SearchModelListener.TOPIC).successLoadingSolutions(searchId, result);
             }
 
             void fail(java.lang.Exception e) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(SearchModelListener.TOPIC).fail(searchId, e);
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(SearchModelListener.TOPIC).failLoadingSolutions(searchId, e);
             }
         }.execute();
     }
@@ -114,6 +115,18 @@ public class ClientService implements ApplicationComponent {
             MarkResponse request() throws SamebugClientException {
                 return client.postMark(searchId, solutionId);
             }
+
+            void start() {
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(MarkModelListener.TOPIC).startPostingMark(searchId, solutionId);
+            }
+
+            void success(MarkResponse result) {
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(MarkModelListener.TOPIC).successPostingMark(searchId, solutionId, result);
+            }
+
+            void fail(java.lang.Exception e) {
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(MarkModelListener.TOPIC).failPostingMark(searchId, solutionId, e);
+            }
         }.execute();
     }
 
@@ -121,6 +134,17 @@ public class ClientService implements ApplicationComponent {
         return new ConnectionAwareHttpRequest<MarkResponse>() {
             MarkResponse request() throws SamebugClientException {
                 return client.retractMark(voteId);
+            }
+            void start() {
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(MarkModelListener.TOPIC).startRetractMark(voteId);
+            }
+
+            void success(MarkResponse result) {
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(MarkModelListener.TOPIC).successRetractMark(voteId, result);
+            }
+
+            void fail(java.lang.Exception e) {
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(MarkModelListener.TOPIC).failRetractMark(voteId, e);
             }
         }.execute();
     }

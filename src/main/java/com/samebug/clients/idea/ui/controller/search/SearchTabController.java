@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.controller;
+package com.samebug.clients.idea.ui.controller.search;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataProvider;
@@ -25,16 +25,12 @@ import com.samebug.clients.common.services.SearchService;
 import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.project.ToolWindowController;
-import com.samebug.clients.idea.messages.client.SearchModelListener;
-import com.samebug.clients.idea.messages.view.SearchGroupCardListener;
-import com.samebug.clients.idea.messages.view.SearchTabsViewListener;
-import com.samebug.clients.idea.messages.view.SearchViewListener;
-import com.samebug.clients.idea.ui.BrowserUtil;
 import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.component.card.ExternalSolutionView;
 import com.samebug.clients.idea.ui.component.card.SamebugTipView;
 import com.samebug.clients.idea.ui.component.organism.MarkPanel;
 import com.samebug.clients.idea.ui.component.tab.SearchTabView;
+import com.samebug.clients.idea.ui.controller.TabController;
 import com.samebug.clients.idea.ui.listeners.ConnectionStatusUpdater;
 import com.samebug.clients.search.api.entities.*;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
@@ -46,8 +42,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-final public class SearchTabController implements TabController,
-        SearchModelListener, SearchViewListener, SearchGroupCardListener, SearchTabsViewListener {
+final public class SearchTabController implements TabController {
     final static Logger LOGGER = Logger.getInstance(SearchTabController.class);
     @NotNull
     final ToolWindowController twc;
@@ -58,9 +53,13 @@ final public class SearchTabController implements TabController,
     @NotNull
     final ConnectionStatusUpdater connectionStatusUpdater;
     final int mySearchId;
-
     @NotNull
     final SearchService service;
+
+    @NotNull
+    final ViewController viewController;
+    @NotNull
+    final ModelController modelController;
 
     public SearchTabController(@NotNull ToolWindowController twc, @NotNull Project project, final int searchId) {
         this.twc = twc;
@@ -69,13 +68,11 @@ final public class SearchTabController implements TabController,
         connectionStatusUpdater = new ConnectionStatusUpdater(view.statusIcon);
         this.mySearchId = searchId;
         service = new SearchService(searchId);
+        viewController = new ViewController(this);
+        modelController = new ModelController(this);
 
         DataManager.registerDataProvider(view, new MyDataProvider());
         MessageBusConnection projectMessageBus = project.getMessageBus().connect(project);
-        projectMessageBus.subscribe(SearchModelListener.TOPIC, this);
-        projectMessageBus.subscribe(SearchViewListener.TOPIC, this);
-        projectMessageBus.subscribe(SearchGroupCardListener.TOPIC, this);
-        projectMessageBus.subscribe(SearchTabsViewListener.TOPIC, this);
         projectMessageBus.subscribe(ConnectionStatusUpdater.TOPIC, connectionStatusUpdater);
 
     }
@@ -83,48 +80,6 @@ final public class SearchTabController implements TabController,
     @NotNull
     public JPanel getControlPanel() {
         return view;
-    }
-
-    @Override
-    public void start(final int searchId) {
-        if (mySearchId == searchId) {
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    view.setWarningLoading();
-                }
-            });
-        }
-    }
-
-    @Override
-    public void success(final int searchId, final Solutions result) {
-        if (mySearchId == searchId) {
-            service.setSolutions(result);
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    refreshTab();
-                }
-            });
-        }
-    }
-
-    @Override
-    public void fail(final int searchId, final java.lang.Exception e) {
-        if (mySearchId == searchId) {
-            service.setSolutions(null);
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    refreshTab();
-                }
-            });
-        }
-    }
-
-    @Override
-    public void finish(final int searchId) {
     }
 
     public void reload() {
@@ -186,7 +141,7 @@ final public class SearchTabController implements TabController,
         view.repaint();
     }
 
-    private SearchTabView.Model convertSolutions(@NotNull final Solutions solutions) {
+    SearchTabView.Model convertSolutions(@NotNull final Solutions solutions) {
         return new SearchTabView.Model() {
 
             @Override
@@ -215,7 +170,7 @@ final public class SearchTabController implements TabController,
     }
 
     // TODO reuse the two specifications
-    private MarkPanel.Model convertHit(final SearchGroup search, final RestHit hit) {
+    MarkPanel.Model convertHit(final SearchGroup search, final RestHit hit) {
         return new MarkPanel.Model() {
 
             @NotNull
@@ -242,7 +197,7 @@ final public class SearchTabController implements TabController,
         };
     }
 
-    private SamebugTipView.Model convertTip(final SearchGroup search, final RestHit<Tip> hit) {
+    SamebugTipView.Model convertTip(final SearchGroup search, final RestHit<Tip> hit) {
         return new SamebugTipView.Model() {
             @NotNull
             @Override
@@ -274,7 +229,7 @@ final public class SearchTabController implements TabController,
         };
     }
 
-    private ExternalSolutionView.Model convertReference(final SearchGroup search, final RestHit<SolutionReference> hit) {
+    ExternalSolutionView.Model convertReference(final SearchGroup search, final RestHit<SolutionReference> hit) {
         return new ExternalSolutionView.Model() {
 
             @NotNull
@@ -305,21 +260,6 @@ final public class SearchTabController implements TabController,
                 return SearchService.getMatchingBreadCrumb(search, hit);
             }
         };
-    }
-
-    @Override
-    public void titleClick(@NotNull TabController tab, SearchGroup searchGroup) {
-        if (this == tab) {
-            BrowserUtil.browse(IdeaSamebugPlugin.getInstance().getUrlBuilder().search(searchGroup.getLastSearch().id));
-        }
-    }
-
-    @Override
-    public void reloadActiveSearchTab(@NotNull TabController tab) {
-        if (this == tab) {
-            ApplicationManager.getApplication().assertIsDispatchThread();
-            reload();
-        }
     }
 
     private class MyDataProvider implements DataProvider {
@@ -478,7 +418,7 @@ final public class SearchTabController implements TabController,
 //                                        refreshPane();
 //                                    }
 //                                });
-//                                result = success();
+//                                result = successLoadingSolutions();
 //                            } catch (final BadRequest e) {
 //                                final String errorMessageKey;
 //                                final String writeTipErrorCode = e.getRestError().code;
@@ -514,7 +454,7 @@ final public class SearchTabController implements TabController,
 //            };
 //        }
 //
-//        Runnable success() {
+//        Runnable successLoadingSolutions() {
 //            return new Runnable() {
 //                @Override
 //                public void run() {

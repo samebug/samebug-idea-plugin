@@ -30,17 +30,18 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
-final public class SamebugTipView extends JPanel {
+// TODO common ancestor of this and Solution View with markPanel
+final public class SamebugTipView extends HitView {
     final Model model;
 
     public final BreadcrumbBar breadcrumbPanel;
     public final TipText tipLabel;
     public final JPanel sourceReferencePanel;
     public final AvatarPanel avatarPanel;
-    public final MarkPanel markPanel;
     public final SBButton writeBetter;
 
     public SamebugTipView(@NotNull Model model) {
+        super(model);
         this.model = model;
 
         final java.util.List<BreadCrumb> searchBreadcrumb = model.getMatchingBreadCrumb();
@@ -49,7 +50,6 @@ final public class SamebugTipView extends JPanel {
         tipLabel = new TipText(tip.solution.tip);
         sourceReferencePanel = new TipSourceReferencePanel(tip.solution);
         avatarPanel = new AvatarPanel(tip.solution.author);
-        markPanel = new MarkPanel(model);
         writeBetter = new WriteBetterButton();
 
         setLayout(new BorderLayout());

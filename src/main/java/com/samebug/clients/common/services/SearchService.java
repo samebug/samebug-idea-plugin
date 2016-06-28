@@ -33,12 +33,35 @@ final public class SearchService {
     }
 
     public void setSolutions(@Nullable final Solutions solutions) {
+        // TODO save only copy
         search = solutions;
     }
 
     @Nullable
     public Solutions getSolutions() {
+        // TODO return copy
         return search;
+    }
+
+    @Nullable
+    public RestHit marked(final int solutionId, @NotNull final MarkResponse mark) {
+        // TODO synchronize access
+        if (search == null) return null;
+        for (RestHit<SolutionReference> s : search.references) {
+            if (s.solutionId == solutionId) {
+                s.markId = mark.id;
+                s.score = mark.marks;
+                return s;
+            }
+        }
+        for (RestHit<Tip> t : search.tips) {
+            if (t.solutionId == solutionId) {
+                t.markId = mark.id;
+                t.score = mark.marks;
+                return t;
+            }
+        }
+        return null;
     }
 
     public static boolean createdByUser(final int userId, @NotNull final RestHit hit) {

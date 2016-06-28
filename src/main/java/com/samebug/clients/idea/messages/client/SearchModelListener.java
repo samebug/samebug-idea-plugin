@@ -21,11 +21,11 @@ import com.samebug.clients.search.api.entities.Solutions;
 public interface SearchModelListener {
     Topic<SearchModelListener> TOPIC = Topic.create("solutions model changes", SearchModelListener.class);
 
-    void start(int searchId);
+    void startLoadingSolutions(int searchId);
 
-    void success(int searchId, Solutions result);
+    void successLoadingSolutions(int searchId, Solutions result);
 
-    void fail(int searchId, java.lang.Exception e);
+    void failLoadingSolutions(int searchId, java.lang.Exception e);
 
-    void finish(int searchId);
+    void finishLoadingSolutions(int searchId);
 }

@@ -21,5 +21,5 @@ import com.samebug.clients.idea.ui.component.organism.MarkPanel;
 public interface MarkViewListener {
     Topic<MarkViewListener> TOPIC = Topic.create("mark view", MarkViewListener.class);
 
-    void mark(int searchId, int solutionId, boolean up, MarkPanel markPanel);
+    void mark(MarkPanel.Model model);
 }

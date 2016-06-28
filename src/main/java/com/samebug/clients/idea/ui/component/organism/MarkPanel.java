@@ -67,12 +67,10 @@ final public class MarkPanel extends TransparentPanel {
     }
 
     public void beginPostMark() {
-        ApplicationManager.getApplication().assertIsDispatchThread();
         markButton.setEnabled(false);
     }
 
     public void finishPostMarkWithError(@NotNull final String errorMessage) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
         markButton.setEnabled(true);
         JBPopupFactory.getInstance().createBalloonBuilder(new TransparentPanel() {
             {
@@ -83,7 +81,6 @@ final public class MarkPanel extends TransparentPanel {
     }
 
     public void finishPostMarkWithSuccess(@NotNull final Model model) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
         markButton.setEnabled(true);
         this.model = model;
         updateState();
@@ -147,7 +144,7 @@ final public class MarkPanel extends TransparentPanel {
             public void mouseClicked(MouseEvent e) {
                 Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(MarkPanel.this));
                 if (project != null)
-                    project.getMessageBus().syncPublisher(MarkViewListener.TOPIC).mark(model.getSearchId(), model.getHit().solutionId, hit.markId == null, MarkPanel.this);
+                    project.getMessageBus().syncPublisher(MarkViewListener.TOPIC).mark(model);
             }
         });
     }
