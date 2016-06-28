@@ -40,9 +40,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 final public class MarkPanel extends TransparentPanel {
-    public final SBButton markButton;
-    public final JPanel voteIcon;
-    public final JLabel helpedLabel;
+    private final SBButton markButton;
+    private final JPanel voteIcon;
+    private final JLabel helpedLabel;
 
     @NotNull
     Model model;
@@ -94,42 +94,7 @@ final public class MarkPanel extends TransparentPanel {
         repaint();
     }
 
-    class MarkButton extends SBButton {
-        public MarkButton() {
-            super("MARK");
-        }
-
-        @Override
-        public Color getForeground() {
-            return Colors.samebugWhite;
-        }
-
-        @Override
-        public Color getBackground() {
-            return Colors.samebugOrange;
-        }
-    }
-
-    class VoteIcon extends TransparentPanel {
-        static final int width = 16;
-        static final int height = 16;
-
-        public VoteIcon() {
-            setPreferredSize(new Dimension(width, height));
-        }
-
-        @Override
-        public void paintComponent(Graphics g) {
-            final Icon tickMark = SamebugIcons.tickMark;
-            super.paintComponent(g);
-            tickMark.paintIcon(MarkPanel.this, g, 0, 0);
-        }
-    }
-
-    class HelpedLabel extends JLabel {
-    }
-
-    void updateState() {
+    private void updateState() {
         final RestHit hit = model.getHit();
         if (hit.createdBy != null) {
             helpedLabel.setText(SamebugBundle.message("samebug.mark.markedBy.someone", model.createdByCurrentUser() ? "You" : hit.createdBy.displayName, hit.score));
@@ -158,6 +123,41 @@ final public class MarkPanel extends TransparentPanel {
         });
     }
 
+
+    private class MarkButton extends SBButton {
+        public MarkButton() {
+            super("MARK");
+        }
+
+        @Override
+        public Color getForeground() {
+            return Colors.samebugWhite;
+        }
+
+        @Override
+        public Color getBackground() {
+            return Colors.samebugOrange;
+        }
+    }
+
+    private class VoteIcon extends TransparentPanel {
+        static final int width = 16;
+        static final int height = 16;
+
+        public VoteIcon() {
+            setPreferredSize(new Dimension(width, height));
+        }
+
+        @Override
+        public void paintComponent(Graphics g) {
+            final Icon tickMark = SamebugIcons.tickMark;
+            super.paintComponent(g);
+            tickMark.paintIcon(MarkPanel.this, g, 0, 0);
+        }
+    }
+
+    private class HelpedLabel extends JLabel {
+    }
 
     public interface Model {
         @NotNull

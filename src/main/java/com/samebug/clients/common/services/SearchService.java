@@ -26,10 +26,10 @@ final public class SearchService {
     @Nullable
     Solutions search;
 
-    final int searchId;
+    final int mySearchId;
 
     public SearchService(final int searchId) {
-        this.searchId = searchId;
+        this.mySearchId = searchId;
     }
 
     public void setSolutions(@Nullable final Solutions solutions) {
@@ -66,7 +66,7 @@ final public class SearchService {
 
     // TODO this is the same as marked, but MarkResponse does not differentiate posting and retracting
     @Nullable
-    public RestHit markRetracted(final int solutionId, @NotNull final MarkResponse mark) {
+    public RestHit unmarked(final int solutionId, @NotNull final MarkResponse mark) {
         // TODO synchronize access
         if (search == null) return null;
         for (RestHit<SolutionReference> s : search.references) {
@@ -90,6 +90,21 @@ final public class SearchService {
         // TODO synchronize
         if (search == null) return;
         search.tips.add(0, tip);
+    }
+
+    @Nullable
+    public RestHit getHit(@NotNull final Integer searchId, @NotNull final Integer solutionId) {
+        if (searchId.equals(mySearchId) && search != null) {
+            for (RestHit<SolutionReference> s : search.references) {
+                if (solutionId.equals(s.solutionId)) return s;
+            }
+            for (RestHit<Tip> t : search.tips) {
+                if (solutionId.equals(t.solutionId)) return t;
+            }
+            return null;
+        } else {
+            return null;
+        }
     }
 
     @Nullable

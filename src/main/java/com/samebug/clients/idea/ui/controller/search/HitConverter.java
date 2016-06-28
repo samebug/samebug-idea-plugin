@@ -14,7 +14,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-final public class HitConverter {
+/**
+ * Converting hits from model to view.
+ *
+ * The purpose of this class is to enrich raw data of solution hits with functionality required by the views.
+ * To do so, this is actually a controller, accessing the context of the plugin, e.g. current user, and for
+ * convenience, it also accesses the current solutions.
+ */
+final class HitConverter {
     final static Logger LOGGER = Logger.getInstance(ModelController.class);
     @NotNull
     final SearchTabController controller;
@@ -59,13 +66,13 @@ final public class HitConverter {
     }
 
 
-    MarkPanel.Model convertHit(@NotNull final SearchGroup search, @NotNull final RestHit hit) {
+    private MarkPanel.Model convertHit(@NotNull final SearchGroup search, @NotNull final RestHit hit) {
         if (hit.solution instanceof Tip) return convertTip(search, hit);
         else if (hit.solution instanceof SolutionReference) return convertReference(search, hit);
         else throw new UnsupportedOperationException("Cannot handle solution type " + hit.solution.getClass().getSimpleName());
     }
 
-    SamebugTipView.Model convertTip(final SearchGroup search, final RestHit<Tip> hit) {
+    private SamebugTipView.Model convertTip(final SearchGroup search, final RestHit<Tip> hit) {
         return new SamebugTipView.Model() {
             @NotNull
             @Override
@@ -97,7 +104,7 @@ final public class HitConverter {
         };
     }
 
-    ExternalSolutionView.Model convertReference(final SearchGroup search, final RestHit<SolutionReference> hit) {
+    private ExternalSolutionView.Model convertReference(final SearchGroup search, final RestHit<SolutionReference> hit) {
         return new ExternalSolutionView.Model() {
 
             @NotNull
@@ -131,14 +138,14 @@ final public class HitConverter {
     }
 
     @Nullable
-    SearchGroup currentSearch() {
+    private SearchGroup currentSearch() {
         Solutions solutions = controller.service.getSolutions();
         if (solutions == null) return null;
         else return solutions.searchGroup;
     }
 
     @NotNull
-    Integer currentUserId() {
+    private Integer currentUserId() {
         return IdeaSamebugPlugin.getInstance().getState().userId;
     }
 
