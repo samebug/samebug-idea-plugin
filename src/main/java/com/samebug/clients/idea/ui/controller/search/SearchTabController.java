@@ -67,6 +67,8 @@ final public class SearchTabController implements TabController, Disposable {
     final MarkModelController markModelController;
     @NotNull
     final TipModelController tipModelController;
+    @NotNull
+    final TrackingController trackingController;
 
     public SearchTabController(@NotNull ToolWindowController twc, @NotNull Project project, final int searchId) {
         this.twc = twc;
@@ -80,6 +82,7 @@ final public class SearchTabController implements TabController, Disposable {
         modelController = new ModelController(this);
         markModelController = new MarkModelController(this);
         tipModelController = new TipModelController(this);
+        trackingController = new TrackingController(this);
 
         DataManager.registerDataProvider(view, new MyDataProvider());
         MessageBusConnection projectMessageBus = project.getMessageBus().connect(this);

@@ -41,8 +41,8 @@
                     factoryClass="com.samebug.clients.idea.ui.controller.SamebugToolWindowFactory"/>
         <applicationConfigurable groupId="tools" id="Settings.Samebug" displayName="Samebug"
                                  instance="com.samebug.clients.idea.ui.controller.ConfigDialog"/>
-        <projectService serviceInterface="com.samebug.clients.idea.ui.controller.HistoryTabController"
-                        serviceImplementation="com.samebug.clients.idea.ui.controller.HistoryTabController"/>
+        <projectService serviceInterface="com.samebug.clients.idea.ui.controller.history.HistoryTabController"
+                        serviceImplementation="com.samebug.clients.idea.ui.controller.history.HistoryTabController"/>
         <projectService serviceInterface="com.samebug.clients.common.services.HistoryService"
                         serviceImplementation="com.samebug.clients.common.services.HistoryService"/>
     </extensions>

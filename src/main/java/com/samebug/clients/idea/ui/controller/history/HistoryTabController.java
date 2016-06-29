@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.controller;
+package com.samebug.clients.idea.ui.controller.history;
 
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataProvider;
@@ -36,6 +36,7 @@ import com.samebug.clients.idea.messages.view.SearchGroupCardListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.component.TutorialPanel;
 import com.samebug.clients.idea.ui.component.tab.HistoryTabView;
+import com.samebug.clients.idea.ui.controller.TabController;
 import com.samebug.clients.idea.ui.listeners.ConnectionStatusUpdater;
 import com.samebug.clients.search.api.entities.SearchGroup;
 import com.samebug.clients.search.api.entities.SearchHistory;
@@ -56,6 +57,8 @@ final public class HistoryTabController implements TabController, HistoryViewLis
     final HistoryTabView view;
     @NotNull
     final ConnectionStatusUpdater statusUpdater;
+    @NotNull
+    final TrackingController trackingController;
 
     @NotNull
     final HistoryService service;
@@ -66,6 +69,7 @@ final public class HistoryTabController implements TabController, HistoryViewLis
         view = new HistoryTabView();
         service = ServiceManager.getService(project, HistoryService.class);
         statusUpdater = new ConnectionStatusUpdater(view.statusIcon);
+        trackingController = new TrackingController(this);
 
         DataManager.registerDataProvider(view, new MyDataProvider());
         MessageBusConnection appMessageBus = ApplicationManager.getApplication().getMessageBus().connect(project);
@@ -80,7 +84,6 @@ final public class HistoryTabController implements TabController, HistoryViewLis
     public JPanel getControlPanel() {
         return view;
     }
-
 
     public void setZeroSolutionFilter(boolean showZeroSolutionSearches) {
         service.setShowZeroSolutionSearches(showZeroSolutionSearches);
