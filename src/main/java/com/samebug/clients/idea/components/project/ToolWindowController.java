@@ -28,6 +28,7 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.messages.view.FocusListener;
+import com.samebug.clients.idea.messages.view.HistoryViewListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.controller.history.HistoryTabController;
 import com.samebug.clients.idea.ui.controller.TabController;
@@ -64,7 +65,7 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
     }
 
     public void initToolWindow(@NotNull ToolWindow toolWindow) {
-        historyTabController.reload();
+        project.getMessageBus().syncPublisher(HistoryViewListener.TOPIC).reload();
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(historyTabController.getControlPanel(), SamebugBundle.message("samebug.toolwindow.history.tabName"), false);
         toolWindow.getContentManager().addContent(content);

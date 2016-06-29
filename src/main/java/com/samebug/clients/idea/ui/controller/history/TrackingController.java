@@ -20,7 +20,7 @@ final class TrackingController implements SearchGroupCardListener {
 
     public TrackingController(@NotNull final HistoryTabController controller) {
         this.controller = controller;
-        this.myProject = controller.project;
+        this.myProject = controller.myProject;
         tracker = Tracking.projectTracking(myProject);
 
         MessageBusConnection bus = myProject.getMessageBus().connect();
