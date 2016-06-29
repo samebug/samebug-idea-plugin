@@ -171,6 +171,22 @@ final public class Events {
         }.getEvent();
     }
 
+    public static TrackEvent openSearchDialog() {
+        return new TrackBuilder("SearchDialog", "Open", null) {}.getEvent();
+    }
+
+    public static TrackEvent searchInSearchDialog() {
+        return new TrackBuilder("SearchDialog", "Search", null) {}.getEvent();
+    }
+
+    public static TrackEvent searchSucceedInSearchDialog(final int searchId) {
+        return new TrackBuilder("SearchDialog", "SearchSucceed", null) {
+            protected void initFields() {
+                fields.put("searchId", searchId);
+            }
+        }.getEvent();
+    }
+
     private final static Logger LOGGER = Logger.getInstance(Events.class);
 
     private static abstract class TrackBuilder {

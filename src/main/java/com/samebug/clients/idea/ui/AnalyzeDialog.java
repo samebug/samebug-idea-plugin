@@ -8,7 +8,9 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.unscramble.AnalyzeStacktraceUtil;
 import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.search.api.StackTraceListener;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
@@ -85,6 +87,7 @@ final public class AnalyzeDialog extends DialogWrapper {
         }
         @Override
         protected void doAction(ActionEvent e) {
+            Tracking.appTracking().trace(Events.searchInSearchDialog());
             final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
             final ClientService client = plugin.getClient();
             final String trace = myEditorPanel.getText();
@@ -97,6 +100,7 @@ final public class AnalyzeDialog extends DialogWrapper {
                             int searchId = Integer.parseInt(result.searchId);
                             URL url = plugin.getUrlBuilder().search(searchId);
                             BrowserUtil.browse(url);
+                            Tracking.appTracking().trace(Events.searchSucceedInSearchDialog(searchId));
                         } catch (java.lang.Exception e1) {
                             LOGGER.warn("Failed to open browser for search " + result.searchId, e1);
                         }

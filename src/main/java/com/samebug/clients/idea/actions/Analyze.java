@@ -17,11 +17,14 @@ package com.samebug.clients.idea.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.samebug.clients.idea.components.application.Tracking;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.AnalyzeDialog;
 
 public class Analyze extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
+        Tracking.appTracking().trace(Events.openSearchDialog());
         AnalyzeDialog dialog = new AnalyzeDialog(e.getProject());
         dialog.show();
     }
