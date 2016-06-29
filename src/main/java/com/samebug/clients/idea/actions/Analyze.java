@@ -17,9 +17,12 @@ package com.samebug.clients.idea.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.samebug.clients.idea.ui.AnalyzeDialog;
 
 public class Analyze extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
+        AnalyzeDialog dialog = new AnalyzeDialog(e.getProject());
+        dialog.show();
     }
 }

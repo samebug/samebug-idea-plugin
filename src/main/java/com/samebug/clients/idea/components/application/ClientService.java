@@ -48,6 +48,7 @@ public class ClientService implements ApplicationComponent {
     }
 
     public SearchResults searchSolutions(final String stacktrace) throws SamebugClientException {
+        // TODO notify somebody so we can update the history?
         return new ConnectionAwareHttpRequest<SearchResults>() {
             SearchResults request() throws SamebugClientException {
                 return client.searchSolutions(stacktrace);
