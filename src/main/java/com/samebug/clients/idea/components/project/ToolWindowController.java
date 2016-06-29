@@ -20,6 +20,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
@@ -121,8 +122,15 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
     // TODO add close action to tab which calls this method
     public void closeSearchTab(final int searchId) {
         SearchTabController tab = solutionControllers.get(searchId);
-        if (tab != null) tab.dispose();
+        if (tab != null) Disposer.dispose(tab);
         solutionControllers.remove(searchId);
     }
 
+    @Override
+    public void disposeComponent() {
+        for (SearchTabController s : solutionControllers.values()) {
+            // TODO this results in error because the closed searchTabController can not receive the event
+            Disposer.dispose(s);
+        }
+    }
 }

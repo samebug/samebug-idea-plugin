@@ -15,8 +15,10 @@
  */
 package com.samebug.clients.idea.ui.controller.search;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.components.application.ClientService;
@@ -40,19 +42,26 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 final class ViewController
-        implements SearchGroupCardListener, MarkViewListener, SearchTabsViewListener, WriteTipListener {
+        implements Disposable, SearchGroupCardListener, MarkViewListener, SearchTabsViewListener, WriteTipListener {
     final static Logger LOGGER = Logger.getInstance(ViewController.class);
     @NotNull
     final SearchTabController controller;
+    final MessageBusConnection projectMessageBus;
 
     public ViewController(@NotNull final SearchTabController controller) {
         this.controller = controller;
 
-        MessageBusConnection projectMessageBus = controller.project.getMessageBus().connect(controller);
+        Disposer.register(controller, this);
+        projectMessageBus = controller.project.getMessageBus().connect();
         projectMessageBus.subscribe(SearchGroupCardListener.TOPIC, this);
         projectMessageBus.subscribe(MarkViewListener.TOPIC, this);
         projectMessageBus.subscribe(SearchTabsViewListener.TOPIC, this);
         projectMessageBus.subscribe(WriteTipListener.TOPIC, this);
+    }
+
+    @Override
+    public void dispose() {
+        projectMessageBus.dispose();
     }
 
     @Override

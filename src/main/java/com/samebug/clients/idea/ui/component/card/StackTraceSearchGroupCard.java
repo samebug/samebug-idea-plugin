@@ -97,6 +97,7 @@ final public class StackTraceSearchGroupCard extends JPanel {
 
     }
 
+    // TODO separate TitleLabel by functionality? (i.e. one for history tab, that opens a search tab, and an other for search tab, that opens the browser.
     final class TitleLabel extends JLabel {
         {
             setText(exceptionType.className);
