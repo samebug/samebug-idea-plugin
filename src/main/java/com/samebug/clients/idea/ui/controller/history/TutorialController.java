@@ -20,8 +20,8 @@ final class TutorialController implements HistoryViewListener {
     public TutorialController(@NotNull final HistoryTabController controller) {
         this.controller = controller;
 
-        MessageBusConnection projectMessageBus = controller.myProject.getMessageBus().connect(controller);
-        projectMessageBus.subscribe(HistoryViewListener.TOPIC, this);
+        MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
+        projectConnection.subscribe(HistoryViewListener.TOPIC, this);
     }
 
     @Override

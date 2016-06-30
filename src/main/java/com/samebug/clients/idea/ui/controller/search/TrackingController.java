@@ -1,6 +1,5 @@
 package com.samebug.clients.idea.ui.controller.search;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
@@ -17,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
 
-final public class TrackingController implements SearchGroupCardListener, MarkViewListener, WriteTipListener {
+final class TrackingController implements SearchGroupCardListener, MarkViewListener, WriteTipListener {
     @NotNull
     final SearchTabController controller;
     @NotNull
@@ -30,10 +29,10 @@ final public class TrackingController implements SearchGroupCardListener, MarkVi
         this.myProject = controller.project;
         tracker = Tracking.projectTracking(myProject);
 
-        MessageBusConnection bus = myProject.getMessageBus().connect();
-        bus.subscribe(SearchGroupCardListener.TOPIC, this);
-        bus.subscribe(MarkViewListener.TOPIC, this);
-        bus.subscribe(WriteTipListener.TOPIC, this);
+        MessageBusConnection projectConnection = myProject.getMessageBus().connect(controller);
+        projectConnection.subscribe(SearchGroupCardListener.TOPIC, this);
+        projectConnection.subscribe(MarkViewListener.TOPIC, this);
+        projectConnection.subscribe(WriteTipListener.TOPIC, this);
     }
 
     @Override

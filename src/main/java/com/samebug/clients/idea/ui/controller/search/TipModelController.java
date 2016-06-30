@@ -35,8 +35,8 @@ final class TipModelController implements TipModelListener {
         this.controller = controller;
         this.mySearchId = controller.mySearchId;
 
-        MessageBusConnection projectMessageBus = controller.project.getMessageBus().connect(controller);
-        projectMessageBus.subscribe(TipModelListener.TOPIC, this);
+        MessageBusConnection projectConnection = controller.project.getMessageBus().connect(controller);
+        projectConnection.subscribe(TipModelListener.TOPIC, this);
     }
 
     @Override

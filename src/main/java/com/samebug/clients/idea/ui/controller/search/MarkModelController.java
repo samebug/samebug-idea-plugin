@@ -49,8 +49,8 @@ final class MarkModelController implements MarkModelListener {
         this.service = controller.service;
         this.mySearchId = controller.mySearchId;
 
-        MessageBusConnection projectMessageBus = controller.project.getMessageBus().connect(controller);
-        projectMessageBus.subscribe(MarkModelListener.TOPIC, this);
+        MessageBusConnection projectConnection = controller.project.getMessageBus().connect(controller);
+        projectConnection.subscribe(MarkModelListener.TOPIC, this);
     }
 
     @Override

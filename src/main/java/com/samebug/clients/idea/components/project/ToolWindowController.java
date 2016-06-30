@@ -27,6 +27,7 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.idea.messages.controller.CloseListener;
 import com.samebug.clients.idea.messages.view.FocusListener;
 import com.samebug.clients.idea.messages.view.HistoryViewListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
@@ -39,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-final public class ToolWindowController extends AbstractProjectComponent implements FocusListener {
+final public class ToolWindowController extends AbstractProjectComponent implements FocusListener, CloseListener {
     final static Logger LOGGER = Logger.getInstance(ToolWindowController.class);
     public static final DataKey<TabController> DATA_KEY = DataKey.create("samebugTabController");
 
@@ -54,14 +55,15 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
     Integer focusedSearch = null;
 
 
-    protected ToolWindowController(Project project) {
+    protected ToolWindowController(@NotNull final Project project) {
         super(project);
         this.project = project;
         historyTabController = new HistoryTabController(this, project);
         solutionControllers = new ConcurrentHashMap<Integer, SearchTabController>();
 
-        MessageBusConnection projectMessageBus = project.getMessageBus().connect(project);
-        projectMessageBus.subscribe(FocusListener.TOPIC, this);
+        MessageBusConnection connection = project.getMessageBus().connect(project);
+        connection.subscribe(FocusListener.TOPIC, this);
+        connection.subscribe(CloseListener.TOPIC, this);
     }
 
     public void initToolWindow(@NotNull ToolWindow toolWindow) {
@@ -81,6 +83,7 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
         toolWindow.show(null);
     }
 
+    @Override
     public void focusOnSearch(final int searchId) {
         ApplicationManager.getApplication().assertIsDispatchThread();
         final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
@@ -88,7 +91,7 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
 
         // FIXME: for now, we let at most one search tab, so we close all
         if (focusedSearch != null && !focusedSearch.equals(searchId)) {
-            closeSearchTab(focusedSearch);
+            project.getMessageBus().syncPublisher(CloseListener.TOPIC).closeSearchTab(focusedSearch);
             Content content = toolwindowCM.getContent(1);
             if (content != null) toolwindowCM.removeContent(content, true);
             focusedSearch = null;
@@ -120,18 +123,20 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
         }
     }
 
-    // TODO add close action to tab which calls this method
+    @Override
+    public void disposeComponent() {
+        Disposer.dispose(historyTabController);
+
+        for (Integer searchId : solutionControllers.keySet()) {
+            closeSearchTab(searchId);
+        }
+    }
+
+    @Override
     public void closeSearchTab(final int searchId) {
         SearchTabController tab = solutionControllers.get(searchId);
         if (tab != null) Disposer.dispose(tab);
         solutionControllers.remove(searchId);
     }
-
-    @Override
-    public void disposeComponent() {
-        for (SearchTabController s : solutionControllers.values()) {
-            // TODO this results in error because the closed searchTabController can not receive the event
-            Disposer.dispose(s);
-        }
-    }
 }
+

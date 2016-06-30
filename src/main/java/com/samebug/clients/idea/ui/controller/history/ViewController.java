@@ -5,7 +5,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.components.project.TutorialProjectComponent;
 import com.samebug.clients.idea.messages.view.HistoryViewListener;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +17,8 @@ final class ViewController implements HistoryViewListener {
     public ViewController(@NotNull final HistoryTabController controller) {
         this.controller = controller;
 
-        MessageBusConnection projectMessageBus = controller.myProject.getMessageBus().connect(controller);
-        projectMessageBus.subscribe(HistoryViewListener.TOPIC, this);
+        MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
+        projectConnection.subscribe(HistoryViewListener.TOPIC, this);
     }
 
     @Override

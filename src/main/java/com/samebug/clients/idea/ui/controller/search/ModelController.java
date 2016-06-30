@@ -32,8 +32,8 @@ final class ModelController implements SearchModelListener {
         this.controller = controller;
         this.mySearchId = controller.mySearchId;
 
-        MessageBusConnection projectMessageBus = controller.project.getMessageBus().connect(controller);
-        projectMessageBus.subscribe(SearchModelListener.TOPIC, this);
+        MessageBusConnection projectConnection = controller.project.getMessageBus().connect(controller);
+        projectConnection.subscribe(SearchModelListener.TOPIC, this);
     }
 
     @Override

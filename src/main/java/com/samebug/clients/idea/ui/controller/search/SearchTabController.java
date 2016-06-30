@@ -27,13 +27,13 @@ import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.project.ToolWindowController;
 import com.samebug.clients.idea.ui.ImageUtil;
-import com.samebug.clients.idea.ui.component.card.ExternalSolutionView;
-import com.samebug.clients.idea.ui.component.card.SamebugTipView;
-import com.samebug.clients.idea.ui.component.organism.MarkPanel;
 import com.samebug.clients.idea.ui.component.tab.SearchTabView;
 import com.samebug.clients.idea.ui.controller.TabController;
 import com.samebug.clients.idea.ui.listeners.ConnectionStatusUpdater;
-import com.samebug.clients.search.api.entities.*;
+import com.samebug.clients.search.api.entities.RestHit;
+import com.samebug.clients.search.api.entities.SolutionReference;
+import com.samebug.clients.search.api.entities.Solutions;
+import com.samebug.clients.search.api.entities.Tip;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +41,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 final public class SearchTabController implements TabController, Disposable {
     final static Logger LOGGER = Logger.getInstance(SearchTabController.class);
@@ -85,8 +84,8 @@ final public class SearchTabController implements TabController, Disposable {
         trackingController = new TrackingController(this);
 
         DataManager.registerDataProvider(view, new MyDataProvider());
-        MessageBusConnection projectMessageBus = project.getMessageBus().connect(this);
-        projectMessageBus.subscribe(ConnectionStatusUpdater.TOPIC, connectionStatusUpdater);
+        MessageBusConnection projectConnection = project.getMessageBus().connect(this);
+        projectConnection.subscribe(ConnectionStatusUpdater.TOPIC, connectionStatusUpdater);
 
     }
 

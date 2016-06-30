@@ -15,8 +15,8 @@ final class ModelController implements HistoryModelListener {
     public ModelController(@NotNull final HistoryTabController controller) {
         this.controller = controller;
 
-        MessageBusConnection projectMessageBus = controller.myProject.getMessageBus().connect(controller);
-        projectMessageBus.subscribe(HistoryModelListener.TOPIC, this);
+        MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
+        projectConnection.subscribe(HistoryModelListener.TOPIC, this);
     }
 
     @Override

@@ -56,6 +56,8 @@ final public class HistoryTabController implements TabController, Disposable, Se
     @NotNull
     final ConnectionStatusUpdater statusUpdater;
     @NotNull
+    final ViewController viewController;
+    @NotNull
     final ModelController modelController;
     @NotNull
     final TrackingController trackingController;
@@ -69,14 +71,15 @@ final public class HistoryTabController implements TabController, Disposable, Se
         view = new HistoryTabView();
         service = ServiceManager.getService(project, HistoryService.class);
         statusUpdater = new ConnectionStatusUpdater(view.statusIcon);
+        viewController = new ViewController(this);
         modelController = new ModelController(this);
         trackingController = new TrackingController(this);
 
         DataManager.registerDataProvider(view, new MyDataProvider());
-        MessageBusConnection appMessageBus = ApplicationManager.getApplication().getMessageBus().connect(project);
-        appMessageBus.subscribe(ConnectionStatusListener.TOPIC, statusUpdater);
-        MessageBusConnection projectMessageBus = project.getMessageBus().connect(project);
-        projectMessageBus.subscribe(SearchGroupCardListener.TOPIC, this);
+        MessageBusConnection appConnection = ApplicationManager.getApplication().getMessageBus().connect(this);
+        appConnection.subscribe(ConnectionStatusListener.TOPIC, statusUpdater);
+        MessageBusConnection projectConnection = project.getMessageBus().connect(this);
+        projectConnection.subscribe(SearchGroupCardListener.TOPIC, this);
     }
 
     @NotNull

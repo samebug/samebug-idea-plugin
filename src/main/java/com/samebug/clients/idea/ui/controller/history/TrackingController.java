@@ -23,8 +23,8 @@ final class TrackingController implements SearchGroupCardListener {
         this.myProject = controller.myProject;
         tracker = Tracking.projectTracking(myProject);
 
-        MessageBusConnection bus = myProject.getMessageBus().connect();
-        bus.subscribe(SearchGroupCardListener.TOPIC, this);
+        MessageBusConnection projectConnection = myProject.getMessageBus().connect(controller);
+        projectConnection.subscribe(SearchGroupCardListener.TOPIC, this);
     }
 
     @Override
