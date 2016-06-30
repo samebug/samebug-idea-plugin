@@ -107,7 +107,7 @@ final public class ExternalSolutionView extends HitView {
             }
         }, BorderLayout.CENTER);
 
-        setPreferredSize(new Dimension(400, getPreferredSize().height));
+        setPreferredSize(new Dimension(400, Math.min(getPreferredSize().height, 250)));
         setMaximumSize(new Dimension(Integer.MAX_VALUE, Math.min(getPreferredSize().height, 250)));
     }
 

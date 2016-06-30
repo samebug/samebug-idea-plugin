@@ -87,13 +87,6 @@ final public class SearchTabView extends JPanel {
         final JPanel controlPanel = new TransparentPanel();
         header = new TransparentPanel();
 
-        updateContent(new TransparentPanel() {
-            {
-                add(header, BorderLayout.NORTH);
-                add(controlPanel, BorderLayout.CENTER);
-            }
-        });
-
         // add search card to the header
         if (model.getSearch() instanceof StackTraceSearchGroup) {
             StackTraceSearchGroup group = (StackTraceSearchGroup) model.getSearch();
@@ -114,10 +107,6 @@ final public class SearchTabView extends JPanel {
             final JScrollPane scrollPane = new JScrollPane();
             final JPanel solutionsPanel = new SolutionsPanel();
 
-            controlPanel.add(scrollPane);
-            scrollPane.setViewportView(solutionsPanel);
-            scrollPane.getVerticalScrollBar().setUnitIncrement(10);
-            scrollPane.setBorder(BorderFactory.createEmptyBorder());
             for (final SamebugTipView.Model tip : model.getTips()) {
                 SamebugTipView tipView = new SamebugTipView(tip);
                 solutionsPanel.add(tipView);
@@ -128,7 +117,19 @@ final public class SearchTabView extends JPanel {
                 solutionsPanel.add(sv);
                 cards.put(s.getHit().solutionId, sv);
             }
+
+            controlPanel.add(scrollPane);
+            scrollPane.setViewportView(solutionsPanel);
+            scrollPane.getVerticalScrollBar().setUnitIncrement(10);
+            scrollPane.setBorder(BorderFactory.createEmptyBorder());
         }
+        updateContent(new TransparentPanel() {
+            {
+                add(header, BorderLayout.NORTH);
+                add(controlPanel, BorderLayout.CENTER);
+            }
+        });
+
     }
 
     public void showWriteTip() {
@@ -164,30 +165,6 @@ final public class SearchTabView extends JPanel {
         WarningPanel panel = new WarningPanel(SamebugBundle.message("samebug.toolwindow.search.content.other"));
         updateContent(panel);
     }
-
-//    public void showWriteTip() {
-//        header.removeAll();
-//        header.add(new TransparentPanel() {
-//            {
-//                add(searchCard, BorderLayout.CENTER);
-//                add(tipPanel, BorderLayout.SOUTH);
-//                setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167 + tipPanel.getPreferredSize().height)));
-//            }
-//        });
-//    }
-//
-//    public void showWriteTipHint() {
-//        header.removeAll();
-//        header.add(new TransparentPanel() {
-//            {
-//                add(searchCard, BorderLayout.CENTER);
-//                add(writeTipHint, BorderLayout.SOUTH);
-//                setPreferredSize(new Dimension(getPreferredSize().width, Math.min(getPreferredSize().height, 167 + writeTipHint.getPreferredSize().height)));
-//            }
-//        });
-//    }
-//
-//
 
     void updateContent(final @NotNull JComponent content) {
         remove(contentPanel);

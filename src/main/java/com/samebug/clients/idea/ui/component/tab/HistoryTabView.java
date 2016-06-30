@@ -23,6 +23,7 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.component.NetworkStatusIcon;
+import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.idea.ui.component.card.StackTraceSearchGroupCard;
 import com.samebug.clients.idea.ui.component.card.TextSearchGroupCard;
 import com.samebug.clients.idea.ui.component.organism.WarningPanel;
@@ -45,6 +46,7 @@ final public class HistoryTabView extends JPanel {
     public HistoryTabView() {
         statusIcon = new NetworkStatusIcon();
         toolbarPanel = new ToolBarPanel();
+        contentPanel = new TransparentPanel();
 
         setLayout(new BorderLayout());
         add(toolbarPanel, BorderLayout.NORTH);
@@ -108,7 +110,7 @@ final public class HistoryTabView extends JPanel {
     }
 
     void updateContent(@NotNull final JComponent content) {
-        if (contentPanel != null) remove(contentPanel);
+        remove(contentPanel);
         contentPanel = content;
         add(contentPanel);
     }
