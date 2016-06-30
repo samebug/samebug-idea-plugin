@@ -50,7 +50,7 @@ final class TutorialController implements HistoryViewListener {
     }
 
     @Override
-    public void reload() {
+    public void reloadHistory() {
 
     }
 

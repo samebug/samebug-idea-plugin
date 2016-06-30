@@ -71,15 +71,15 @@ public class ClientService implements ApplicationComponent {
             }
 
             void start() {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(HistoryModelListener.TOPIC).start();
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(HistoryModelListener.TOPIC).startLoadHistory();
             }
 
             void success(SearchHistory result) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(HistoryModelListener.TOPIC).success(result);
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(HistoryModelListener.TOPIC).successLoadHistory(result);
             }
 
             void fail(java.lang.Exception e) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(HistoryModelListener.TOPIC).fail(e);
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(HistoryModelListener.TOPIC).failLoadHistory(e);
             }
         }.execute();
     }
@@ -111,15 +111,15 @@ public class ClientService implements ApplicationComponent {
             }
 
             void start() {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(TipModelListener.TOPIC).start(searchId);
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(TipModelListener.TOPIC).startPostTip(searchId);
             }
 
             void success(RestHit<Tip> result) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(TipModelListener.TOPIC).success(searchId, result);
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(TipModelListener.TOPIC).successPostTip(searchId, result);
             }
 
             void fail(java.lang.Exception e) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(TipModelListener.TOPIC).fail(searchId, e);
+                ApplicationManager.getApplication().getMessageBus().syncPublisher(TipModelListener.TOPIC).failPostTip(searchId, e);
             }
         }.execute();
     }

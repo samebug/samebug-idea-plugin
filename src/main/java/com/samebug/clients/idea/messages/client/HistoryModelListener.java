@@ -21,11 +21,11 @@ import com.samebug.clients.search.api.entities.SearchHistory;
 public interface HistoryModelListener {
     Topic<HistoryModelListener> TOPIC = Topic.create("history model changes", HistoryModelListener.class);
 
-    void start();
+    void startLoadHistory();
 
-    void success(SearchHistory result);
+    void successLoadHistory(SearchHistory result);
 
-    void fail(java.lang.Exception e);
+    void failLoadHistory(java.lang.Exception e);
 
-    void finish();
+    void finishLoadHistory();
 }

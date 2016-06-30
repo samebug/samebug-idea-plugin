@@ -24,5 +24,5 @@ public interface HistoryViewListener {
 
     void setZeroSolutionFilter(boolean on);
 
-    void reload();
+    void reloadHistory();
 }

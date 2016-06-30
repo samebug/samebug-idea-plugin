@@ -30,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
-// TODO common ancestor of this and Solution View with markPanel
 final public class SamebugTipView extends HitView {
     final Model model;
 

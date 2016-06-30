@@ -40,14 +40,14 @@ final class TipModelController implements TipModelListener {
     }
 
     @Override
-    public void start(int searchId) {
+    public void startPostTip(int searchId) {
         if (searchId == mySearchId) {
             // TODO update the view somehow to represent work in progress
         }
     }
 
     @Override
-    public void success(int searchId, RestHit<Tip> result) {
+    public void successPostTip(int searchId, RestHit<Tip> result) {
         if (searchId == mySearchId) {
             controller.service.addTip(result);
             ApplicationManager.getApplication().invokeLater(new Runnable() {
@@ -61,7 +61,7 @@ final class TipModelController implements TipModelListener {
     }
 
     @Override
-    public void fail(int searchId, Exception e) {
+    public void failPostTip(int searchId, Exception e) {
         if (searchId == mySearchId) {
             final String errorMessageKey;
             if (e instanceof BadRequest) {
@@ -86,7 +86,7 @@ final class TipModelController implements TipModelListener {
     }
 
     @Override
-    public void finish(int searchId) {
+    public void finishPostTip(int searchId) {
 
     }
 }

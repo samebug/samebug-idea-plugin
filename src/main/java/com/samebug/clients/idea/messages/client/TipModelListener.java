@@ -22,11 +22,11 @@ import com.samebug.clients.search.api.entities.Tip;
 public interface TipModelListener {
     Topic<TipModelListener> TOPIC = Topic.create("tip", TipModelListener.class);
 
-    void start(int searchId);
+    void startPostTip(int searchId);
 
-    void success(int searchId, RestHit<Tip> result);
+    void successPostTip(int searchId, RestHit<Tip> result);
 
-    void fail(int searchId, java.lang.Exception e);
+    void failPostTip(int searchId, java.lang.Exception e);
 
-    void finish(int searchId);
+    void finishPostTip(int searchId);
 }

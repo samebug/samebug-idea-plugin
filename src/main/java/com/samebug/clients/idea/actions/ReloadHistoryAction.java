@@ -29,7 +29,7 @@ final public class ReloadHistoryAction extends RefreshAction implements DumbAwar
         e.getPresentation().setEnabled(false);
         final Project project = e.getProject();
         if (project != null) {
-            project.getMessageBus().syncPublisher(HistoryViewListener.TOPIC).reload();
+            project.getMessageBus().syncPublisher(HistoryViewListener.TOPIC).reloadHistory();
         }
     }
 

@@ -49,7 +49,7 @@ final class ViewController implements HistoryViewListener {
     }
 
     @Override
-    public void reload() {
+    public void reloadHistory() {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {

@@ -35,7 +35,7 @@ final class ModelController implements HistoryModelListener {
     }
 
     @Override
-    public void start() {
+    public void startLoadHistory() {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -45,7 +45,7 @@ final class ModelController implements HistoryModelListener {
     }
 
     @Override
-    public void success(final SearchHistory result) {
+    public void successLoadHistory(final SearchHistory result) {
         controller.service.setHistory(result);
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
@@ -56,7 +56,7 @@ final class ModelController implements HistoryModelListener {
     }
 
     @Override
-    public void fail(Exception e) {
+    public void failLoadHistory(Exception e) {
         controller.service.setHistory(null);
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
@@ -67,6 +67,6 @@ final class ModelController implements HistoryModelListener {
     }
 
     @Override
-    public void finish() {
+    public void finishLoadHistory() {
     }
 }

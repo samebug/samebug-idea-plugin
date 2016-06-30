@@ -67,7 +67,7 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
     }
 
     public void initToolWindow(@NotNull ToolWindow toolWindow) {
-        project.getMessageBus().syncPublisher(HistoryViewListener.TOPIC).reload();
+        project.getMessageBus().syncPublisher(HistoryViewListener.TOPIC).reloadHistory();
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(historyTabController.getControlPanel(), SamebugBundle.message("samebug.toolwindow.history.tabName"), false);
         toolWindow.getContentManager().addContent(content);
