@@ -24,7 +24,12 @@ final public class WarningPanel extends TransparentPanel {
     JLabel label;
 
     public WarningPanel(@NotNull final String message) {
-        label = new JLabel(message);
+        setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        label = new JLabel(message) {
+            {
+                setHorizontalAlignment(SwingConstants.CENTER);
+            }
+        };
         add(label);
     }
 

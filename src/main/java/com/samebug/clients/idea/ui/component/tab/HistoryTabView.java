@@ -54,7 +54,7 @@ final public class HistoryTabView extends JPanel {
 
 
     public void setWarningLoading() {
-        WarningPanel panel = new WarningPanel(SamebugBundle.message("samebug.toolwindow.search.content.loading"));
+        WarningPanel panel = new WarningPanel(SamebugBundle.message("samebug.toolwindow.history.content.loading"));
         updateContent(panel);
     }
 
