@@ -110,7 +110,7 @@ final public class MarkPanel extends TransparentPanel {
             markButton.setToolTipText(SamebugBundle.message("samebug.mark.unmarked.tooltip"));
         }
 
-        for( MouseListener ml : markButton.getMouseListeners()) {
+        for (MouseListener ml : markButton.getMouseListeners()) {
             markButton.removeMouseListener(ml);
         }
         markButton.addMouseListener(new MouseAdapter() {

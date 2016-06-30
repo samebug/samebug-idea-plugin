@@ -1,3 +1,18 @@
+/**
+ * Copyright 2016 Samebug, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.samebug.clients.idea.ui.controller.search;
 
 import com.intellij.openapi.application.ApplicationManager;
@@ -18,16 +33,15 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Handling model change events related to marks.
- *
+ * <p>
  * Post and retract of marks happen similarly:
- *  - when the process starts, the outcome is predicted optimistically, and the view is updated as if the process happened successfully
- *  - if it succeeds, the model is updated with the result, and the view is also updated with the exact result
- *  - if it fails, the view is updated to reflect the unchanged model.
- *
+ * - when the process starts, the outcome is predicted optimistically, and the view is updated as if the process happened successfully
+ * - if it succeeds, the model is updated with the result, and the view is also updated with the exact result
+ * - if it fails, the view is updated to reflect the unchanged model.
+ * <p>
  * Notes:
- *  - these events have to come from worker threads, any ui access should be done separately
- *  - there could be more instances of this class, and it's possible that a received event is not related to this controller
- *
+ * - these events have to come from worker threads, any ui access should be done separately
+ * - there could be more instances of this class, and it's possible that a received event is not related to this controller
  */
 final class MarkModelController implements MarkModelListener {
     final static Logger LOGGER = Logger.getInstance(MarkModelController.class);

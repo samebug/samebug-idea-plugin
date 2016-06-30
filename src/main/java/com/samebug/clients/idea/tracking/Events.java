@@ -172,11 +172,13 @@ final public class Events {
     }
 
     public static TrackEvent openSearchDialog() {
-        return new TrackBuilder("SearchDialog", "Open", null) {}.getEvent();
+        return new TrackBuilder("SearchDialog", "Open", null) {
+        }.getEvent();
     }
 
     public static TrackEvent searchInSearchDialog() {
-        return new TrackBuilder("SearchDialog", "Search", null) {}.getEvent();
+        return new TrackBuilder("SearchDialog", "Search", null) {
+        }.getEvent();
     }
 
     public static TrackEvent searchSucceedInSearchDialog(final int searchId) {

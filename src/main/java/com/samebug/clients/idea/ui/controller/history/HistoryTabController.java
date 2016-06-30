@@ -31,7 +31,6 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.project.ToolWindowController;
 import com.samebug.clients.idea.components.project.TutorialProjectComponent;
 import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
-import com.samebug.clients.idea.messages.view.HistoryViewListener;
 import com.samebug.clients.idea.messages.view.SearchGroupCardListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.component.TutorialPanel;

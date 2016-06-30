@@ -15,7 +15,5 @@
  */
 package com.samebug.clients.idea.ui.controller;
 
-import com.intellij.openapi.project.Project;
-
 public interface TabController {
 }
