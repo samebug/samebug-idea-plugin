@@ -47,7 +47,7 @@ final public class ExternalSolutionView extends HitView {
     public final JPanel titlePanel;
     public final ExceptionMessageLabel exceptionMessageLabel;
     public final JPanel exceptionTypePanel;
-    public final JPanel sourceReferencePanel;
+    final SourceReferencePanel sourceReferencePanel;
 
     public ExternalSolutionView(@NotNull Model model) {
         super(model);
@@ -111,6 +111,11 @@ final public class ExternalSolutionView extends HitView {
         setMaximumSize(new Dimension(Integer.MAX_VALUE, Math.min(getPreferredSize().height, 250)));
     }
 
+    @Override
+    public void refreshDateLabels() {
+        sourceReferencePanel.refreshView();
+    }
+
     final class SolutionTitlePanel extends TransparentPanel {
         {
             final Image sourceIcon = ImageUtil.getScaled(IdeaSamebugPlugin.getInstance().getUrlBuilder().sourceIcon(solution.solution.source.icon), 32, 32);
@@ -153,7 +158,15 @@ final public class ExternalSolutionView extends HitView {
     }
 
     final class SourceReferencePanel extends TransparentPanel {
+        @NotNull
+        final SolutionReference solutionReference;
+
         public SourceReferencePanel(@NotNull SolutionReference solutionReference) {
+            this.solutionReference = solutionReference;
+            refreshView();
+        }
+
+        void refreshView() {
             setLayout(new FlowLayout(FlowLayout.RIGHT));
             if (solutionReference.author == null) {
                 add(new JLabel(String.format("%s", TextUtil.prettyTime(solutionReference.createdAt))) {

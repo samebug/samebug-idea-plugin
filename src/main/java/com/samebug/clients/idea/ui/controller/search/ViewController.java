@@ -21,10 +21,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.messages.view.MarkViewListener;
-import com.samebug.clients.idea.messages.view.SearchGroupCardListener;
-import com.samebug.clients.idea.messages.view.SearchTabsViewListener;
-import com.samebug.clients.idea.messages.view.WriteTipListener;
+import com.samebug.clients.idea.messages.view.*;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.BrowserUtil;
 import com.samebug.clients.idea.ui.component.WriteTip;
@@ -39,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-final class ViewController implements SearchGroupCardListener, MarkViewListener, SearchTabsViewListener, WriteTipListener {
+final class ViewController implements SearchGroupCardListener, MarkViewListener, SearchTabsViewListener, WriteTipListener, RefreshTimestampsListener {
     final static Logger LOGGER = Logger.getInstance(ViewController.class);
     @NotNull
     final SearchTabController controller;
@@ -137,5 +134,10 @@ final class ViewController implements SearchGroupCardListener, MarkViewListener,
                 });
             }
         }
+    }
+
+    @Override
+    public void refreshDateLabels() {
+        controller.view.refreshDateLabels();
     }
 }

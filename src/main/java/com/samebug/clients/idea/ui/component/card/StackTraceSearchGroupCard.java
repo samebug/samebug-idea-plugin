@@ -29,6 +29,7 @@ import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.idea.ui.component.organism.BreadcrumbBar;
 import com.samebug.clients.idea.ui.component.organism.GroupInfoPanel;
 import com.samebug.clients.idea.ui.controller.TabController;
+import com.samebug.clients.search.api.entities.SearchGroup;
 import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
 
 import javax.swing.*;
@@ -38,17 +39,17 @@ import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
-final public class StackTraceSearchGroupCard extends JPanel {
+final public class StackTraceSearchGroupCard extends SearchGroupCard {
     public final StackTraceSearchGroup searchGroup;
     final ExceptionType exceptionType;
     public final JLabel packageLabel;
     public final JLabel hitsLabel;
     public final JLabel titleLabel;
     public final JLabel exceptionMessageLabel;
-    public final JPanel groupInfoPanel;
     public final JPanel breadcrumbPanel;
 
     public StackTraceSearchGroupCard(final StackTraceSearchGroup searchGroup) {
+        super(searchGroup);
         this.searchGroup = searchGroup;
         exceptionType = new ExceptionType(searchGroup.lastSearch.stackTrace.trace.typeName);
 
@@ -56,7 +57,6 @@ final public class StackTraceSearchGroupCard extends JPanel {
         hitsLabel = new HitsLabel();
         titleLabel = new TitleLabel();
         exceptionMessageLabel = new ExceptionMessageLabel(searchGroup.lastSearch.stackTrace.trace.message);
-        groupInfoPanel = new GroupInfoPanel(searchGroup);
         breadcrumbPanel = new BreadcrumbBar(searchGroup.lastSearch.stackTrace.breadCrumbs);
 
         setLayout(new BorderLayout());
@@ -95,6 +95,11 @@ final public class StackTraceSearchGroupCard extends JPanel {
         setPreferredSize(new Dimension(400, Math.min(getPreferredSize().height, 250)));
         setMaximumSize(new Dimension(Integer.MAX_VALUE, Math.min(getPreferredSize().height, 250)));
 
+    }
+
+    @Override
+    SearchGroup getSearchGroup() {
+        return searchGroup;
     }
 
     // TODO separate TitleLabel by functionality? (i.e. one for history tab, that opens a search tab, and an other for search tab, that opens the browser.

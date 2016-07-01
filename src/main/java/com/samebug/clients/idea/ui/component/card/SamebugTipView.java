@@ -35,7 +35,7 @@ final public class SamebugTipView extends HitView {
 
     public final BreadcrumbBar breadcrumbPanel;
     public final TipText tipLabel;
-    public final JPanel sourceReferencePanel;
+    final TipSourceReferencePanel sourceReferencePanel;
     public final AvatarPanel avatarPanel;
     public final SBButton writeBetter;
 
@@ -104,8 +104,22 @@ final public class SamebugTipView extends HitView {
         return ColorUtil.highlightPanel();
     }
 
+    @Override
+    public void refreshDateLabels() {
+        sourceReferencePanel.refreshView();
+    }
+
     final class TipSourceReferencePanel extends TransparentPanel {
+        @NotNull
+        final Tip tip;
+
+
         public TipSourceReferencePanel(@NotNull Tip tip) {
+            this.tip = tip;
+            refreshView();
+        }
+
+        public void refreshView() {
             setLayout(new FlowLayout(FlowLayout.RIGHT));
             if (tip.via == null) {
                 // no source, show only tip timestamp

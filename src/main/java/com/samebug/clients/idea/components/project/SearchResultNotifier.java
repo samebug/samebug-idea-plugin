@@ -140,7 +140,7 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
                                 // 1 new exception with solutions
                                 StackTraceSearchGroup search = resultsBySearchId.get(searchIds.get(0));
                                 String exceptionSummary = summarizeException(search.getLastSearch().stackTrace.trace);
-                                showNotification(SamebugBundle.message("samebug.notification.searchresults.one", searchIds.get(0), exceptionSummary));
+                                showNotification(SamebugBundle.message("samebug.notification.searchresults.one", searchIds.get(0).toString(), exceptionSummary));
                             } else {
                                 // 2+ new exceptions with solutions
                                 showNotification(SamebugBundle.message("samebug.notification.searchresults.multiple", searchIds.size()));
@@ -153,9 +153,9 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
                                 if (settings.searchResultsRecurring) {
                                     settings.searchResultsRecurring = false;
                                     settings.searchResultsMixed = false;
-                                    showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.oneRecurring", searchIds.get(0), SamebugIcons.calendarUrl, exceptionSummary));
+                                    showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.oneRecurring", searchIds.get(0).toString(), SamebugIcons.calendarUrl, exceptionSummary));
                                 } else {
-                                    showNotification(SamebugBundle.message("samebug.notification.searchresults.oneRecurring", searchIds.get(0), exceptionSummary));
+                                    showNotification(SamebugBundle.message("samebug.notification.searchresults.oneRecurring", searchIds.get(0).toString(), exceptionSummary));
                                 }
                             } else {
                                 // 2+ recurring exception with solutions

@@ -21,10 +21,11 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.view.HistoryViewListener;
+import com.samebug.clients.idea.messages.view.RefreshTimestampsListener;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 
-final class ViewController implements HistoryViewListener {
+final class ViewController implements HistoryViewListener, RefreshTimestampsListener {
     final static Logger LOGGER = Logger.getInstance(ModelController.class);
     @NotNull
     final HistoryTabController controller;
@@ -34,6 +35,7 @@ final class ViewController implements HistoryViewListener {
 
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
         projectConnection.subscribe(HistoryViewListener.TOPIC, this);
+        projectConnection.subscribe(RefreshTimestampsListener.TOPIC, this);
     }
 
     @Override
@@ -63,4 +65,8 @@ final class ViewController implements HistoryViewListener {
         });
     }
 
+    @Override
+    public void refreshDateLabels() {
+        controller.view.refreshDateLabels();
+    }
 }

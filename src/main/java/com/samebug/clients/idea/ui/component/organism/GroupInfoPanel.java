@@ -28,23 +28,30 @@ final public class GroupInfoPanel extends TransparentPanel {
 
     public GroupInfoPanel(@NotNull final SearchGroup searchGroup) {
         setLayout(new FlowLayout(FlowLayout.RIGHT));
-        add(new JLabel() {
-            {
-                String text;
-                if (searchGroup.numberOfSearches == 1) {
-                    text = String.format("%s", TextUtil.prettyTime(searchGroup.lastSeen));
-                } else {
-                    text = String.format("%s | %d times, first %s",
-                            TextUtil.prettyTime(searchGroup.lastSeen), searchGroup.numberOfSearches, TextUtil.prettyTime(searchGroup.firstSeen));
-                }
+        add(new InfoLabel(searchGroup));
+    }
 
-                setText(text);
+    public void refreshDateLabels(@NotNull final SearchGroup searchGroup) {
+        removeAll();
+        add(new InfoLabel(searchGroup));
+    }
+
+    class InfoLabel extends JLabel {
+        InfoLabel(@NotNull final SearchGroup searchGroup) {
+            String text;
+            if (searchGroup.numberOfSearches == 1) {
+                text = String.format("%s", TextUtil.prettyTime(searchGroup.lastSeen));
+            } else {
+                text = String.format("%s | %d times, first %s",
+                        TextUtil.prettyTime(searchGroup.lastSeen), searchGroup.numberOfSearches, TextUtil.prettyTime(searchGroup.firstSeen));
             }
 
-            @Override
-            public Color getForeground() {
-                return ColorUtil.unemphasizedText();
-            }
-        });
+            setText(text);
+        }
+
+        @Override
+        public Color getForeground() {
+            return ColorUtil.unemphasizedText();
+        }
     }
 }

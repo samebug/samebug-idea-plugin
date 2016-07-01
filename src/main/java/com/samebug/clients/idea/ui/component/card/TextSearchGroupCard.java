@@ -27,6 +27,7 @@ import com.samebug.clients.idea.ui.component.ExceptionMessageLabel;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.idea.ui.component.organism.GroupInfoPanel;
 import com.samebug.clients.idea.ui.controller.TabController;
+import com.samebug.clients.search.api.entities.SearchGroup;
 import com.samebug.clients.search.api.entities.TextSearchGroup;
 
 import javax.swing.*;
@@ -36,20 +37,19 @@ import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 
-final public class TextSearchGroupCard extends JPanel {
+final public class TextSearchGroupCard extends SearchGroupCard {
     public final TextSearchGroup searchGroup;
     public final JLabel hitsLabel;
     public final JLabel titleLabel;
     public final ExceptionMessageLabel queryLabel;
-    public final JPanel groupInfoPanel;
 
     public TextSearchGroupCard(final TextSearchGroup searchGroup) {
+        super(searchGroup);
         this.searchGroup = searchGroup;
 
         hitsLabel = new TextSearchGroupCard.HitsLabel();
         titleLabel = new TextSearchGroupCard.QueryLabel();
         queryLabel = new ExceptionMessageLabel(searchGroup.lastSearch.query);
-        groupInfoPanel = new GroupInfoPanel(searchGroup);
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
@@ -78,6 +78,11 @@ final public class TextSearchGroupCard extends JPanel {
 
         setPreferredSize(new Dimension(400, Math.min(getPreferredSize().height, 250)));
         setMaximumSize(new Dimension(Integer.MAX_VALUE, Math.min(getPreferredSize().height, 250)));
+    }
+
+    @Override
+    SearchGroup getSearchGroup() {
+        return searchGroup;
     }
 
     final class QueryLabel extends JLabel {

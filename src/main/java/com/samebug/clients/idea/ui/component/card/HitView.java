@@ -26,4 +26,6 @@ public abstract class HitView extends JPanel {
     public HitView(@NotNull MarkPanel.Model model) {
         markPanel = new MarkPanel(model);
     }
+
+    public abstract void refreshDateLabels();
 }

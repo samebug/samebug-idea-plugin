@@ -30,6 +30,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.messages.controller.CloseListener;
 import com.samebug.clients.idea.messages.view.FocusListener;
 import com.samebug.clients.idea.messages.view.HistoryViewListener;
+import com.samebug.clients.idea.messages.view.RefreshTimestampsListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.controller.TabController;
 import com.samebug.clients.idea.ui.controller.history.HistoryTabController;
@@ -37,6 +38,9 @@ import com.samebug.clients.idea.ui.controller.search.SearchTabController;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -51,6 +55,9 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
     @NotNull
     final ConcurrentMap<Integer, SearchTabController> solutionControllers;
 
+    @NotNull
+    final Timer dateLabelRefresher;
+
     @Nullable
     Integer focusedSearch = null;
 
@@ -64,6 +71,17 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
         MessageBusConnection connection = project.getMessageBus().connect(project);
         connection.subscribe(FocusListener.TOPIC, this);
         connection.subscribe(CloseListener.TOPIC, this);
+
+        final int LabelRefreshInitialDelayInMs = 1 * 60 * 1000;
+        final int LabelRefreshDelayInMs = 1 * 60 * 1000;
+        dateLabelRefresher = new Timer(LabelRefreshDelayInMs, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                project.getMessageBus().syncPublisher(RefreshTimestampsListener.TOPIC).refreshDateLabels();
+            }
+        });
+        dateLabelRefresher.setInitialDelay(LabelRefreshInitialDelayInMs);
+        dateLabelRefresher.start();
     }
 
     public void initToolWindow(@NotNull ToolWindow toolWindow) {

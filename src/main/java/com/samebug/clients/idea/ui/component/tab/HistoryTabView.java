@@ -25,6 +25,7 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.component.NetworkStatusIcon;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
+import com.samebug.clients.idea.ui.component.card.SearchGroupCard;
 import com.samebug.clients.idea.ui.component.card.StackTraceSearchGroupCard;
 import com.samebug.clients.idea.ui.component.card.TextSearchGroupCard;
 import com.samebug.clients.idea.ui.component.organism.WarningPanel;
@@ -46,13 +47,13 @@ final public class HistoryTabView extends JPanel {
     JComponent contentPanel;
 
     @NotNull
-    final Map<Integer, SearchGroup> searches;
+    final Map<Integer, SearchGroupCard> cards;
 
     public HistoryTabView() {
         statusIcon = new NetworkStatusIcon();
         toolbarPanel = new ToolBarPanel();
         contentPanel = new TransparentPanel();
-        searches = new HashMap<Integer, SearchGroup>();
+        cards = new HashMap<Integer, SearchGroupCard>();
 
         setLayout(new BorderLayout());
         add(toolbarPanel, BorderLayout.NORTH);
@@ -70,17 +71,18 @@ final public class HistoryTabView extends JPanel {
         final JScrollPane scrollPane = new JScrollPane();
         final JPanel contentPanel = new ContentPanel();
 
-        searches.clear();
+        cards.clear();
         for (SearchGroup group : groups) {
-            searches.put(group.getLastSearch().id, group);
             if (group instanceof StackTraceSearchGroup) {
                 StackTraceSearchGroup g = (StackTraceSearchGroup) group;
                 StackTraceSearchGroupCard searchGroupCard = new StackTraceSearchGroupCard(g);
                 contentPanel.add(searchGroupCard);
+                cards.put(g.getLastSearch().id, searchGroupCard);
             } else if (group instanceof TextSearchGroup) {
                 TextSearchGroup g = (TextSearchGroup) group;
                 TextSearchGroupCard searchGroupCard = new TextSearchGroupCard(g);
                 contentPanel.add(searchGroupCard);
+                cards.put(g.getLastSearch().id, searchGroupCard);
             }
         }
 
@@ -115,6 +117,14 @@ final public class HistoryTabView extends JPanel {
     public void setWarningOther() {
         WarningPanel panel = new WarningPanel(SamebugBundle.message("samebug.toolwindow.history.content.other"));
         updateContent(panel);
+    }
+
+    public void refreshDateLabels() {
+        for (SearchGroupCard card : cards.values()) {
+            card.refreshDateLabels();
+        }
+        revalidate();
+        repaint();
     }
 
     void updateContent(@NotNull final JComponent content) {

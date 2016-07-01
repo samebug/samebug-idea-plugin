@@ -55,8 +55,11 @@ final public class SearchTabView extends JPanel {
     JComponent contentPanel;
     @Nullable
     public JComponent header;
+
     @NotNull
     final Map<Integer, HitView> cards;
+    @Nullable
+    SearchGroupCard search;
 
     public SearchTabView() {
         statusIcon = new NetworkStatusIcon();
@@ -114,10 +117,12 @@ final public class SearchTabView extends JPanel {
         // add search card to the header
         if (model.getSearch() instanceof StackTraceSearchGroup) {
             StackTraceSearchGroup group = (StackTraceSearchGroup) model.getSearch();
-            header.add(new StackTraceSearchGroupCard(group));
+            search = new StackTraceSearchGroupCard(group);
+            header.add(search);
         } else {
             TextSearchGroup group = (TextSearchGroup) model.getSearch();
-            header.add(new TextSearchGroupCard(group));
+            search = new TextSearchGroupCard(group);
+            header.add(search);
         }
 
         showWriteTipHint();
@@ -188,6 +193,15 @@ final public class SearchTabView extends JPanel {
     public void setWarningOther() {
         WarningPanel panel = new WarningPanel(SamebugBundle.message("samebug.toolwindow.search.content.other"));
         updateContent(panel);
+    }
+
+    public void refreshDateLabels() {
+        search.refreshDateLabels();
+        for (HitView card : cards.values()) {
+            card.refreshDateLabels();
+        }
+        revalidate();
+        repaint();
     }
 
     void updateContent(final @NotNull JComponent content) {
