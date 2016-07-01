@@ -14,13 +14,9 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>Tip writing</li>
-        <li>Marking solutions</li>
-        <li>Plugin configuration</li>
-        <li>Fixed solution breadcrumb links</li>
-        <li>Tutorial messages</li>
-        <li>Less strict parsing</li>
-        <li>Optional Android dependency</li>
+        <li>Search with Samebug in Analyze menu</li>
+        <li>Showing text searches in history</li>
+        <li>Experimental Samebug Workspace</li>
       </ul>
 
       Check it at <a href="https://medium.com/@samebug/samebug-intellij-integration-v0-10-0-beta-933ce6a999dd">our blog</a>
