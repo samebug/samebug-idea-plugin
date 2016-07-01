@@ -30,4 +30,16 @@ public final class BreadCrumb {
     public QualifiedCall entry;
     @NotNull
     public ComponentReference component;
+
+    public BreadCrumb(@NotNull final BreadCrumb rhs) {
+        this.level = rhs.level;
+        this.frames = rhs.frames;
+        this.typeName = rhs.typeName;
+        this.passThrough = rhs.passThrough;
+        this.entry = new QualifiedCall(rhs.entry);
+        if (component instanceof ApplicationComponentReference) this.component = new ApplicationComponentReference((ApplicationComponentReference) rhs.component);
+        else if (component instanceof DefaultComponentReference) this.component = new DefaultComponentReference((DefaultComponentReference) rhs.component);
+        else if (component instanceof LibraryComponentReference) this.component = new LibraryComponentReference((LibraryComponentReference) rhs.component);
+        else if (component instanceof VendorComponentReference) this.component = new VendorComponentReference((VendorComponentReference) rhs.component);
+    }
 }

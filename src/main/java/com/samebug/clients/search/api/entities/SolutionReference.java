@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URL;
+import java.util.Date;
 
 public final class SolutionReference extends RestSolution {
     @NotNull
@@ -29,4 +30,12 @@ public final class SolutionReference extends RestSolution {
     public String title;
     @NotNull
     public URL url;
+
+    public SolutionReference(@NotNull final SolutionReference rhs) {
+        this.createdAt = new Date(rhs.createdAt.getTime());
+        this.source = new Source(rhs.source);
+        this.author = rhs.author == null ? null : new Author(rhs.author);
+        this.title = rhs.title;
+        this.url = rhs.url;
+    }
 }

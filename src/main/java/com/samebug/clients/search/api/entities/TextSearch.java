@@ -18,9 +18,22 @@ package com.samebug.clients.search.api.entities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Date;
+
 public final class TextSearch extends Search {
     @NotNull
     public String query;
     @Nullable
     public String errorType;
+
+    public TextSearch(@NotNull final TextSearch rhs) {
+        this.id = rhs.id;
+        this.timestamp = new Date(rhs.timestamp.getTime());
+        this.visitorId = rhs.visitorId;
+        this.userId = rhs.userId;
+        this.teamId = rhs.teamId;
+        this.query = rhs.query;
+        this.errorType = rhs.errorType;
+    }
+
 }

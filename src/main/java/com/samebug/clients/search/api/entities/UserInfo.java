@@ -26,4 +26,12 @@ public final class UserInfo {
     public String displayName;
     public URL avatarUrl;
     public Long defaultWorkspaceId;
+
+    public UserInfo(@NotNull final UserInfo rhs) {
+        isUserExist = rhs.isUserExist;
+        userId = rhs.userId;
+        displayName = rhs.displayName;
+        avatarUrl = rhs.avatarUrl;
+        defaultWorkspaceId = rhs.defaultWorkspaceId;
+    }
 }

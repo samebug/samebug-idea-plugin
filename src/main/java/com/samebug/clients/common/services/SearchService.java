@@ -96,10 +96,10 @@ final public class SearchService {
     public RestHit getHit(@NotNull final Integer searchId, @NotNull final Integer solutionId) {
         if (searchId.equals(mySearchId) && search != null) {
             for (RestHit<SolutionReference> s : search.references) {
-                if (solutionId.equals(s.solutionId)) return s;
+                if (solutionId.equals(s.solutionId)) return new RestHit<SolutionReference>(s);
             }
             for (RestHit<Tip> t : search.tips) {
-                if (solutionId.equals(t.solutionId)) return t;
+                if (solutionId.equals(t.solutionId)) return new RestHit<Tip>(t);
             }
             return null;
         } else {

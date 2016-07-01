@@ -17,9 +17,21 @@ package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class SearchHistory {
     @NotNull
     public List<SearchGroup> searchGroups;
+
+    public SearchHistory(@NotNull final SearchHistory rhs) {
+        this.searchGroups = new ArrayList<SearchGroup>(rhs.searchGroups.size());
+        for (SearchGroup g : rhs.searchGroups) {
+            SearchGroup c;
+            if (g instanceof StackTraceSearchGroup) c = new StackTraceSearchGroup((StackTraceSearchGroup) g);
+            else if (g instanceof TextSearchGroup) c = new TextSearchGroup((TextSearchGroup) g);
+            else throw new UnsupportedOperationException("Unhandled subtype " + g.getClass().getSimpleName());
+            this.searchGroups.add(c);
+        }
+    }
 }

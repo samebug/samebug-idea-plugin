@@ -15,6 +15,8 @@
  */
 package com.samebug.clients.search.api.entities;
 
+import org.jetbrains.annotations.NotNull;
+
 public final class RestError {
     public String code;
     public String message;
@@ -22,5 +24,10 @@ public final class RestError {
     @Override
     public String toString() {
         return code + ": " + message;
+    }
+
+    public RestError(@NotNull final RestError rhs) {
+        code = rhs.code;
+        message = rhs.message;
     }
 }

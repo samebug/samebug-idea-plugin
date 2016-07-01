@@ -27,4 +27,10 @@ public final class UserReference {
     public String displayName;
     @Nullable
     public URL avatarUrl;
+
+    public UserReference(@NotNull final UserReference rhs) {
+        this.id = rhs.id;
+        this.displayName = rhs.displayName;
+        this.avatarUrl = rhs.avatarUrl;
+    }
 }

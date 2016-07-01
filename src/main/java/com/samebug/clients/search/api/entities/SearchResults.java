@@ -22,4 +22,9 @@ public final class SearchResults {
     public String searchId;
     @NotNull
     public String stackTraceId;
+
+    public SearchResults(@NotNull final SearchResults rhs) {
+        searchId = rhs.searchId;
+        stackTraceId = rhs.stackTraceId;
+    }
 }

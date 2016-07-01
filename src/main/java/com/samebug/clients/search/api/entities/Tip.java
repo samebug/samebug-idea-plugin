@@ -18,6 +18,8 @@ package com.samebug.clients.search.api.entities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Date;
+
 public final class Tip extends RestSolution {
     @NotNull
     public Author author;
@@ -25,4 +27,11 @@ public final class Tip extends RestSolution {
     public String tip;
     @Nullable
     public SolutionReference via;
+
+    public Tip(@NotNull final Tip rhs) {
+        this.createdAt = new Date(rhs.createdAt.getTime());
+        this.author = new Author(rhs.author);
+        this.tip = rhs.tip;
+        this.via = rhs.via == null ? null : new SolutionReference(rhs.via);
+    }
 }

@@ -22,4 +22,9 @@ public final class Source {
     public String name;
     @NotNull
     public String icon;
+
+    public Source(@NotNull final Source rhs) {
+        this.name = rhs.name;
+        this.icon = rhs.icon;
+    }
 }

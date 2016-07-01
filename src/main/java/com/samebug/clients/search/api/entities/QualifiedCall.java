@@ -25,4 +25,10 @@ public final class QualifiedCall {
     public String className;
     @NotNull
     public String methodName;
+
+    public QualifiedCall(@NotNull final QualifiedCall rhs) {
+        this.packageName = rhs.packageName;
+        this.className = rhs.className;
+        this.methodName = rhs.methodName;
+    }
 }

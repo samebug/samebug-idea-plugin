@@ -27,4 +27,10 @@ public final class Author {
     public URL url;
     @Nullable
     public URL avatarUrl;
+
+    public Author(@NotNull final Author rhs) {
+        this.name = rhs.name;
+        this.url = rhs.url;
+        this.avatarUrl = rhs.avatarUrl;
+    }
 }

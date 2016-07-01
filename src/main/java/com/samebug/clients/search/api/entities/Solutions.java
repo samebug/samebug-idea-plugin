@@ -17,6 +17,7 @@ package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Solutions {
@@ -26,4 +27,19 @@ public class Solutions {
     public List<RestHit<Tip>> tips;
     @NotNull
     public List<RestHit<SolutionReference>> references;
+
+    public Solutions(@NotNull final Solutions rhs) {
+        if (rhs.searchGroup instanceof StackTraceSearchGroup) this.searchGroup = new StackTraceSearchGroup((StackTraceSearchGroup) rhs.searchGroup);
+        else if (rhs.searchGroup instanceof TextSearchGroup) this.searchGroup = new TextSearchGroup((TextSearchGroup) rhs.searchGroup);
+        else throw new UnsupportedOperationException("Unhandled subtype " + rhs.searchGroup.getClass().getSimpleName());
+
+        this.tips = new ArrayList<RestHit<Tip>>(rhs.tips.size());
+        for (RestHit<Tip> t : rhs.tips) {
+            this.tips.add(new RestHit<Tip>(t));
+        }
+        this.references = new ArrayList<RestHit<SolutionReference>>(rhs.references.size());
+        for (RestHit<SolutionReference> s : rhs.references) {
+            this.references.add(new RestHit<SolutionReference>(s));
+        }
+    }
 }

@@ -38,12 +38,16 @@ public final class RestHit<T extends RestSolution> {
 
     public RestHit(@NotNull final RestHit<T> rhs) {
         solutionId = rhs.solutionId;
-        solution = rhs.solution;
+        if (rhs.solution instanceof SolutionReference) {
+            solution = (T) new SolutionReference((SolutionReference) rhs.solution);
+        } else if (rhs.solution instanceof Tip) {
+            solution = (T) new Tip((Tip) rhs.solution);
+        }
         stackTraceId = rhs.stackTraceId;
         matchLevel = rhs.matchLevel;
         score = rhs.score;
         markId = rhs.markId;
-        createdBy = rhs.createdBy;
-        exception = rhs.exception;
+        createdBy = rhs.createdBy == null ? null : new UserReference(rhs.createdBy);
+        exception = rhs.exception == null ? null : new Exception(rhs.exception);
     }
 }

@@ -43,4 +43,13 @@ public final class LibraryComponentReference extends ComponentReference {
     public Integer getColor() {
         return color;
     }
+
+    public LibraryComponentReference(@NotNull final LibraryComponentReference rhs) {
+        this.id = rhs.id;
+        this.mavenId = rhs.mavenId;
+        this.name = rhs.name;
+        this.slug = rhs.slug;
+        this.description = rhs.description;
+        this.color = rhs.color;
+    }
 }

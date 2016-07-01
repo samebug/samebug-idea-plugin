@@ -23,4 +23,9 @@ public final class Exception {
     public String typeName;
     @Nullable
     public String message;
+
+    public Exception(@NotNull final Exception rhs) {
+        this.typeName = rhs.typeName;
+        this.message = rhs.message;
+    }
 }

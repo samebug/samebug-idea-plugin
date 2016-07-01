@@ -17,6 +17,7 @@ package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class StackTraceWithBreadCrumbs {
@@ -26,4 +27,13 @@ public final class StackTraceWithBreadCrumbs {
     public Exception trace;
     @NotNull
     public List<BreadCrumb> breadCrumbs;
+
+    public StackTraceWithBreadCrumbs(@NotNull final StackTraceWithBreadCrumbs rhs) {
+        this.stackTraceId = rhs.stackTraceId;
+        this.trace = new Exception(rhs.trace);
+        this.breadCrumbs = new ArrayList<BreadCrumb>(rhs.breadCrumbs.size());
+        for (BreadCrumb c : rhs.breadCrumbs) {
+            this.breadCrumbs.add(new BreadCrumb(c));
+        }
+    }
 }

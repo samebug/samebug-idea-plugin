@@ -32,4 +32,8 @@ public final class VendorComponentReference extends ComponentReference {
     public Integer getColor() {
         return 0;
     }
+
+    public VendorComponentReference(@NotNull final VendorComponentReference rhs) {
+        this.packageName = rhs.packageName;
+    }
 }

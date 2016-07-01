@@ -25,4 +25,10 @@ public final class MarkResponse {
     public Integer marks;
     @NotNull
     public Integer documentVotes;
+
+    public MarkResponse(@NotNull final MarkResponse rhs) {
+        id = rhs.id;
+        marks = rhs.marks;
+        documentVotes = rhs.documentVotes;
+    }
 }
