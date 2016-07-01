@@ -17,33 +17,32 @@ package com.samebug.clients.idea.actions;
 
 import com.intellij.ide.actions.RefreshAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.idea.components.application.IdeaClientService;
+import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.ui.controller.SearchTabControllers;
+import com.samebug.clients.idea.components.project.ToolWindowController;
+import com.samebug.clients.idea.messages.view.SearchTabsViewListener;
+import com.samebug.clients.idea.ui.controller.TabController;
 
-/**
- * Created by poroszd on 4/18/16.
- */
-public class ReloadSearchAction extends RefreshAction implements DumbAware {
+// TODO remove actions, use simple icons, they are useless in this scenario
+final public class ReloadSearchAction extends RefreshAction implements DumbAware {
     @Override
     public void actionPerformed(final AnActionEvent e) {
         e.getPresentation().setEnabled(false);
         final Project project = e.getProject();
-        if (project != null) {
-            ServiceManager.getService(project, SearchTabControllers.class).reloadFocusedSearch();
+        final TabController tab = ToolWindowController.DATA_KEY.getData(e.getDataContext());
+        if (project != null && tab != null) {
+            project.getMessageBus().syncPublisher(SearchTabsViewListener.TOPIC).reloadActiveSearchTab(tab);
         }
     }
 
     @Override
     public void update(AnActionEvent e) {
-        IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
+        ClientService client = IdeaSamebugPlugin.getInstance().getClient();
         e.getPresentation().setEnabled(client.getNumberOfActiveRequests() == 0);
     }
 
-    final private static Logger LOGGER = Logger.getInstance(ReloadSearchAction.class);
-
+    final static Logger LOGGER = Logger.getInstance(ReloadSearchAction.class);
 }

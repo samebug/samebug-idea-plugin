@@ -24,11 +24,11 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.SettingsDialog;
+import com.samebug.clients.search.api.WebUrlBuilder;
 import com.samebug.clients.search.api.entities.UserInfo;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.search.api.exceptions.UnknownApiKey;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 
 @State(
@@ -40,30 +40,36 @@ import org.jetbrains.annotations.Nullable;
 final public class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<ApplicationSettings> {
     final private static Logger LOGGER = Logger.getInstance(IdeaSamebugPlugin.class);
     private ApplicationSettings state = new ApplicationSettings();
-    private IdeaClientService client = new IdeaClientService(state.getNetworkConfig());
+
+    final ClientService client = ApplicationManager.getApplication().getComponent(ClientService.class);
+
+    {
+        client.configure(state.getNetworkConfig());
+    }
+
+    private WebUrlBuilder urlBuilder = new WebUrlBuilder(state.serverRoot);
 
     // TODO Unlike other methods, this one executes the http request on the caller thread. Is it ok?
     public void setApiKey(@NotNull String apiKey) throws SamebugClientException, UnknownApiKey {
         UserInfo userInfo = null;
-        try {
-            state.apiKey = apiKey;
-            client = new IdeaClientService(state.getNetworkConfig());
-            userInfo = client.getUserInfo(apiKey);
-            if (!userInfo.isUserExist) {
-                throw new UnknownApiKey(apiKey);
-            } else {
-                state.userId = userInfo.userId;
-                state.avatarUrl = userInfo.avatarUrl;
-            }
-        } finally {
-            Tracking.appTracking().trace(Events.apiKeySet());
+        state.apiKey = apiKey;
+        client.configure(state.getNetworkConfig());
+        userInfo = client.getUserInfo(apiKey);
+        if (!userInfo.isUserExist) {
+            throw new UnknownApiKey(apiKey);
+        } else {
+            state.userId = userInfo.userId;
+            state.avatarUrl = userInfo.avatarUrl.toString();
+            state.workspaceId = userInfo.defaultWorkspaceId;
+            saveSettings(state);
         }
     }
 
     public void saveSettings(final ApplicationSettings settings) {
         state = new ApplicationSettings(settings);
         try {
-            client = new IdeaClientService(state.getNetworkConfig());
+            client.configure(state.getNetworkConfig());
+            urlBuilder = new WebUrlBuilder(state.serverRoot);
         } finally {
             Tracking.appTracking().trace(Events.apiKeySet());
         }
@@ -80,8 +86,13 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     }
 
     @NotNull
-    public IdeaClientService getClient() {
+    public ClientService getClient() {
         return client;
+    }
+
+    @NotNull
+    public WebUrlBuilder getUrlBuilder() {
+        return urlBuilder;
     }
 
     // ApplicationComponent overrides
@@ -98,7 +109,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
                         UserInfo userInfo = client.getUserInfo(state.apiKey);
                         if (userInfo.isUserExist) {
                             state.userId = userInfo.userId;
-                            state.avatarUrl = userInfo.avatarUrl;
+                            state.avatarUrl = userInfo.avatarUrl.toString();
                         }
                     } catch (SamebugClientException e) {
                         LOGGER.warn("Failed to get user info", e);
@@ -119,7 +130,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     }
 
     // PersistentStateComponent overrides
-    @Nullable
+    @NotNull
     @Override
     public ApplicationSettings getState() {
         return this.state;
@@ -128,6 +139,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     @Override
     public void loadState(ApplicationSettings state) {
         this.state = state;
-        client = new IdeaClientService(state.getNetworkConfig());
+        client.configure(state.getNetworkConfig());
+        urlBuilder = new WebUrlBuilder(state.serverRoot);
     }
 }

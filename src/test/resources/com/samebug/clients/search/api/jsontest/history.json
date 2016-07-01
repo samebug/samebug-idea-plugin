@@ -1,0 +1,303 @@
+{
+  "searchGroups": [
+    {
+      "type": "stacktrace",
+      "id": "573d7649513760ee20db1b7f",
+      "userId": 1,
+      "firstSeen": 1460553353388,
+      "lastSeen": 1460553353388,
+      "lastSearch": {
+        "type": "stacktrace",
+        "id": 5634,
+        "stackTrace": {
+          "stackTraceId": 301997,
+          "trace": {
+            "typeName": "java.net.ConnectException",
+            "message": "Network is unreachable"
+          },
+          "breadCrumbs": [
+            {
+              "level": 0,
+              "frames": 6,
+              "typeName": "java.net.ConnectException",
+              "passThrough": false,
+              "entry": {
+                "packageName": "java.net",
+                "className": "Socket",
+                "methodName": "connect"
+              },
+              "component": {
+                "type": "library",
+                "id": 2674,
+                "slug": "com.oracle.java:java-rt",
+                "name": "Java RT",
+                "color": 3
+              }
+            },
+            {
+              "level": 1,
+              "frames": 1,
+              "typeName": "java.net.ConnectException",
+              "passThrough": true,
+              "entry": {
+                "packageName": "sun.security.ssl",
+                "className": "SSLSocketImpl",
+                "methodName": "connect"
+              },
+              "component": {
+                "type": "library",
+                "id": 6411,
+                "slug": "com.oracle.java:java-jsse",
+                "name": "Java JSSE",
+                "color": 12
+              }
+            },
+            {
+              "level": 2,
+              "frames": 9,
+              "typeName": "java.net.ConnectException",
+              "passThrough": true,
+              "entry": {
+                "packageName": "sun.net.www.protocol.https",
+                "className": "HttpsURLConnectionImpl",
+                "methodName": "connect"
+              },
+              "component": {
+                "type": "library",
+                "id": 2674,
+                "slug": "com.oracle.java:java-rt",
+                "name": "Java RT",
+                "color": 3
+              }
+            },
+            {
+              "level": 3,
+              "frames": 3,
+              "typeName": "java.net.ConnectException",
+              "passThrough": true,
+              "entry": {
+                "packageName": "com.stripe.net",
+                "className": "APIResource",
+                "methodName": "makeURLConnectionRequest"
+              },
+              "component": {
+                "type": "library",
+                "id": 2131,
+                "mavenId": "com.stripe:stripe-java",
+                "slug": "com.stripe:stripe-java",
+                "name": "stripe-java",
+                "description": "Stripe Java Bindings",
+                "color": 4
+              }
+            }
+          ]
+        },
+        "timestamp": 1460553353388,
+        "userId": 1
+      },
+      "numberOfSearches": 1,
+      "numberOfHits": 12
+    },
+    {
+      "type": "stacktrace",
+      "id": "573f1ed3db7bb6ca2642ad84",
+      "userId": 1,
+      "firstSeen": 1463754451442,
+      "lastSeen": 1463754936938,
+      "lastSearch": {
+        "type": "stacktrace",
+        "id": 5640,
+        "stackTrace": {
+          "stackTraceId": 301951,
+          "trace": {
+            "typeName": "com.samebug.E1"
+          },
+          "breadCrumbs": [
+            {
+              "level": 0,
+              "frames": 2,
+              "typeName": "com.samebug.E1",
+              "passThrough": false,
+              "entry": {
+                "packageName": "com.samebug",
+                "className": "Main",
+                "methodName": "main"
+              },
+              "component": {
+                "type": "vendor",
+                "packageName": "com.samebug"
+              }
+            },
+            {
+              "level": 1,
+              "frames": 4,
+              "typeName": "com.samebug.E1",
+              "passThrough": true,
+              "entry": {
+                "packageName": "java.lang.reflect",
+                "className": "Method",
+                "methodName": "invoke"
+              },
+              "component": {
+                "type": "library",
+                "id": 2674,
+                "slug": "com.oracle.java:java-rt",
+                "name": "Java RT",
+                "color": 3
+              }
+            },
+            {
+              "level": 2,
+              "frames": 1,
+              "typeName": "com.samebug.E1",
+              "passThrough": true,
+              "entry": {
+                "packageName": "com.intellij.rt.execution.application",
+                "className": "AppMain",
+                "methodName": "main"
+              },
+              "component": {
+                "type": "library",
+                "id": 6693,
+                "slug": "IntelliJ-IDEA",
+                "name": "IDEA",
+                "color": 6
+              }
+            }
+          ]
+        },
+        "timestamp": 1463754936938,
+        "userId": 1
+      },
+      "numberOfSearches": 3,
+      "numberOfHits": 0
+    },
+    {
+      "type": "stacktrace",
+      "id": "573f1ed3db7bb6ca2642ad85",
+      "userId": 1,
+      "firstSeen": 1463754451424,
+      "lastSeen": 1463754936934,
+      "lastSearch": {
+        "type": "stacktrace",
+        "id": 5641,
+        "stackTrace": {
+          "stackTraceId": 301952,
+          "trace": {
+            "typeName": "java.lang.StringIndexOutOfBoundsException",
+            "message": "String index out of range: -1"
+          },
+          "breadCrumbs": [
+            {
+              "level": 0,
+              "frames": 1,
+              "typeName": "java.lang.StringIndexOutOfBoundsException",
+              "passThrough": false,
+              "entry": {
+                "packageName": "java.lang",
+                "className": "String",
+                "methodName": "charAt"
+              },
+              "component": {
+                "type": "library",
+                "id": 2674,
+                "slug": "com.oracle.java:java-rt",
+                "name": "Java RT",
+                "color": 3
+              }
+            },
+            {
+              "level": 1,
+              "frames": 1,
+              "typeName": "java.lang.StringIndexOutOfBoundsException",
+              "passThrough": true,
+              "entry": {
+                "packageName": "com.samebug",
+                "className": "Main",
+                "methodName": "main"
+              },
+              "component": {
+                "type": "vendor",
+                "packageName": "com.samebug"
+              }
+            },
+            {
+              "level": 2,
+              "frames": 4,
+              "typeName": "java.lang.StringIndexOutOfBoundsException",
+              "passThrough": true,
+              "entry": {
+                "packageName": "java.lang.reflect",
+                "className": "Method",
+                "methodName": "invoke"
+              },
+              "component": {
+                "type": "library",
+                "id": 2674,
+                "slug": "com.oracle.java:java-rt",
+                "name": "Java RT",
+                "color": 3
+              }
+            },
+            {
+              "level": 3,
+              "frames": 1,
+              "typeName": "java.lang.StringIndexOutOfBoundsException",
+              "passThrough": true,
+              "entry": {
+                "packageName": "com.intellij.rt.execution.application",
+                "className": "AppMain",
+                "methodName": "main"
+              },
+              "component": {
+                "type": "library",
+                "id": 6693,
+                "slug": "IntelliJ-IDEA",
+                "name": "IDEA",
+                "color": 6
+              }
+            }
+          ]
+        },
+        "timestamp": 1463754936934,
+        "userId": 1
+      },
+      "numberOfSearches": 3,
+      "numberOfHits": 1
+    },
+    {
+      "type": "text",
+      "id": "5742b69cd361c5f6e41a42bd",
+      "userId": 1,
+      "firstSeen": 1463989915826,
+      "lastSeen": 1463989915826,
+      "lastSearch": {
+        "type": "text",
+        "id": 5642,
+        "query": "this is a text search",
+        "errorType": "oneliner",
+        "timestamp": 1463989915826,
+        "userId": 1
+      },
+      "numberOfSearches": 1,
+      "numberOfHits": 1
+    },
+    {
+      "type": "text",
+      "id": "5742b6c2d361c5f6e41a42be",
+      "userId": 1,
+      "firstSeen": 1463989954467,
+      "lastSeen": 1463989954467,
+      "lastSearch": {
+        "type": "text",
+        "id": 5643,
+        "query": "java.lang.NullPointerException",
+        "errorType": "oneliner",
+        "timestamp": 1463989954467,
+        "userId": 1
+      },
+      "numberOfSearches": 1,
+      "numberOfHits": 0
+    }
+  ]
+}

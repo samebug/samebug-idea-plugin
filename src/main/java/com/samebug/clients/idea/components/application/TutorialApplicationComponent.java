@@ -22,9 +22,6 @@ import com.intellij.openapi.components.Storage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Created by poroszd on 4/19/16.
- */
 @State(
         name = "SamebugTutorialConfiguration",
         storages = {

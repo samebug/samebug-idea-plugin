@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.components.project;
 
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.idea.messages.StackTraceMatcherListener;
+import com.samebug.clients.idea.messages.model.StackTraceMatcherListener;
 import com.samebug.clients.search.api.LogScanner;
 import com.samebug.clients.search.api.LogScannerFactory;
 import com.samebug.clients.search.api.StackTraceListener;
@@ -45,7 +45,7 @@ public class StackTraceMatcherFactory implements LogScannerFactory {
 
         @Override
         public void stacktraceFound(DebugSessionInfo sessionInfo, String stacktrace) {
-            if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceMatcherListener.FOUND_TOPIC).stackTraceFound(project, sessionInfo, stacktrace);
+            if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceMatcherListener.TOPIC).stackTraceFound(project, sessionInfo, stacktrace);
         }
     }
 

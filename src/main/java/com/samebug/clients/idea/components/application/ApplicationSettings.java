@@ -16,18 +16,20 @@
 package com.samebug.clients.idea.components.application;
 
 import com.samebug.clients.search.api.SamebugClient;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-/**
- * Created by poroszd on 2/12/16.
- */
 public class ApplicationSettings {
     //=========================================================================
     // NOTE: Make sure to extend equals and copy constructor when adding new fields!
+    @Nullable
     public String apiKey;
+    @Nullable
+    public Long workspaceId = defaultWorkspaceId;
     public String instanceId = UUID.randomUUID().toString();
     public int userId;
+    @Nullable
     public String avatarUrl;
     public String serverRoot = defaultServerRoot;
     public String trackingRoot = defaultTrackingRoot;
@@ -40,6 +42,7 @@ public class ApplicationSettings {
 
     //=========================================================================
 
+    public static final Long defaultWorkspaceId = null;
     public static final String defaultServerRoot = "https://samebug.io";
     public static final String defaultTrackingRoot = defaultServerRoot + "/track/trace";
     public static final boolean defaultIsTrackingEnabled = true;
@@ -54,6 +57,7 @@ public class ApplicationSettings {
 
     public ApplicationSettings(final ApplicationSettings rhs) {
         this.apiKey = rhs.apiKey;
+        this.workspaceId = rhs.workspaceId;
         this.instanceId = rhs.instanceId;
         this.userId = rhs.userId;
         this.avatarUrl = rhs.avatarUrl;
@@ -69,7 +73,8 @@ public class ApplicationSettings {
 
     @Override
     public int hashCode() {
-        return ((31 + apiKey.hashCode()) * 31 + serverRoot.hashCode()) * 31 + trackingRoot.hashCode();
+        int apiKeyHash = apiKey == null ? 0 : apiKey.hashCode();
+        return ((31 + apiKeyHash) * 31 + serverRoot.hashCode()) * 31 + trackingRoot.hashCode();
     }
 
     @Override
@@ -78,10 +83,11 @@ public class ApplicationSettings {
         else if (!(that instanceof ApplicationSettings)) return false;
         else {
             final ApplicationSettings rhs = (ApplicationSettings) that;
-            return rhs.apiKey.equals(apiKey)
+            return ((rhs.apiKey == null && apiKey == null) || (rhs.apiKey != null && rhs.apiKey.equals(apiKey)))
+                    && ((rhs.workspaceId == null && workspaceId == null) || (rhs.workspaceId != null && rhs.workspaceId.equals(workspaceId)))
                     && rhs.instanceId.equals(instanceId)
                     && rhs.userId == userId
-                    && rhs.avatarUrl == avatarUrl
+                    && ((rhs.avatarUrl == null && avatarUrl == null) || (rhs.avatarUrl != null && rhs.avatarUrl.equals(avatarUrl)))
                     && rhs.serverRoot.equals(serverRoot)
                     && rhs.trackingRoot.equals(trackingRoot)
                     && rhs.isTrackingEnabled == isTrackingEnabled
@@ -96,6 +102,7 @@ public class ApplicationSettings {
     public SamebugClient.Config getNetworkConfig() {
         final SamebugClient.Config config = new SamebugClient.Config();
         config.apiKey = apiKey;
+        config.workspaceId = workspaceId;
         config.serverRoot = serverRoot;
         config.trackingRoot = trackingRoot;
         config.isTrackingEnabled = isTrackingEnabled;

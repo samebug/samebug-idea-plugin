@@ -38,13 +38,13 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Samebug" icon="/com/samebug/samebug-r270.png" anchor="right"
-                    factoryClass="com.samebug.clients.idea.ui.SamebugToolWindowFactory"/>
+                    factoryClass="com.samebug.clients.idea.ui.controller.SamebugToolWindowFactory"/>
         <applicationConfigurable groupId="tools" id="Settings.Samebug" displayName="Samebug"
                                  instance="com.samebug.clients.idea.ui.controller.ConfigDialog"/>
-        <projectService serviceInterface="com.samebug.clients.idea.ui.controller.HistoryTabController"
-                        serviceImplementation="com.samebug.clients.idea.ui.controller.HistoryTabController"/>
-        <projectService serviceInterface="com.samebug.clients.idea.ui.controller.SearchTabControllers"
-                        serviceImplementation="com.samebug.clients.idea.ui.controller.SearchTabControllers"/>
+        <projectService serviceInterface="com.samebug.clients.idea.ui.controller.history.HistoryTabController"
+                        serviceImplementation="com.samebug.clients.idea.ui.controller.history.HistoryTabController"/>
+        <projectService serviceInterface="com.samebug.clients.common.services.HistoryService"
+                        serviceImplementation="com.samebug.clients.common.services.HistoryService"/>
     </extensions>
 
     <actions>
@@ -65,6 +65,9 @@
             <action id="Samebug.ReloadSearch" class="com.samebug.clients.idea.actions.ReloadSearchAction"
                     icon="/com/samebug/icons/reload.png" text="Reload solutions" description="Reload solutions"/>
         </group>
+        <action id="Samebug.Dialogs" class="com.samebug.clients.idea.actions.Analyze" text="Samebug Search" description="Stacktrace search with Samebug">
+            <add-to-group group-id="AnalyzeMenu" anchor="last"/>
+        </action>
     </actions>
 
     <application-components>
@@ -79,6 +82,9 @@
         </component>
         <component>
             <implementation-class>com.samebug.clients.idea.components.application.TutorialApplicationComponent</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.components.application.ClientService</implementation-class>
         </component>
     </application-components>
     <project-components>
@@ -96,6 +102,9 @@
         </component>
         <component>
             <implementation-class>com.samebug.clients.idea.components.project.TutorialProjectComponent</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.components.project.ToolWindowController</implementation-class>
         </component>
     </project-components>
 </idea-plugin>

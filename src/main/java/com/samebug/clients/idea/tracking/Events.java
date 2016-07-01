@@ -33,10 +33,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by poroszd on 2/18/16.
- */
-public class Events {
+final public class Events {
     public static TrackEvent pluginInstall() {
         return new TrackBuilder("Plugin", "FirstRun", null) {
         }.getEvent();
@@ -170,6 +167,24 @@ public class Events {
                 fields.put("searchId", searchId);
                 fields.put("solutionId", solutionId);
                 fields.put("result", result);
+            }
+        }.getEvent();
+    }
+
+    public static TrackEvent openSearchDialog() {
+        return new TrackBuilder("SearchDialog", "Open", null) {
+        }.getEvent();
+    }
+
+    public static TrackEvent searchInSearchDialog() {
+        return new TrackBuilder("SearchDialog", "Search", null) {
+        }.getEvent();
+    }
+
+    public static TrackEvent searchSucceedInSearchDialog(final int searchId) {
+        return new TrackBuilder("SearchDialog", "SearchSucceed", null) {
+            protected void initFields() {
+                fields.put("searchId", searchId);
             }
         }.getEvent();
     }

@@ -15,9 +15,23 @@
  */
 package com.samebug.clients.search.api.entities;
 
-public class UserInfo {
+import org.jetbrains.annotations.NotNull;
+
+import java.net.URL;
+
+public final class UserInfo {
+    @NotNull
+    public Boolean isUserExist;
     public Integer userId;
-    public boolean isUserExist;
     public String displayName;
-    public String avatarUrl;
+    public URL avatarUrl;
+    public Long defaultWorkspaceId;
+
+    public UserInfo(@NotNull final UserInfo rhs) {
+        isUserExist = rhs.isUserExist;
+        userId = rhs.userId;
+        displayName = rhs.displayName;
+        avatarUrl = rhs.avatarUrl;
+        defaultWorkspaceId = rhs.defaultWorkspaceId;
+    }
 }

@@ -15,10 +15,17 @@
  */
 package com.samebug.clients.search.api.entities;
 
-/**
- * Created by poroszd on 3/7/16.
- */
-public class Exception {
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public final class Exception {
+    @NotNull
     public String typeName;
+    @Nullable
     public String message;
+
+    public Exception(@NotNull final Exception rhs) {
+        this.typeName = rhs.typeName;
+        this.message = rhs.message;
+    }
 }

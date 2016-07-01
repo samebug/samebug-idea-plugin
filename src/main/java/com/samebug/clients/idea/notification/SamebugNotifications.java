@@ -20,21 +20,16 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationsConfiguration;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.components.application.Tracking;
+import com.samebug.clients.idea.messages.view.FocusListener;
 import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.idea.ui.controller.HistoryTabController;
-import com.samebug.clients.idea.ui.controller.SearchTabControllers;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-/**
- * Created by poroszd on 2/15/16.
- */
-public class SamebugNotifications {
+final public class SamebugNotifications {
     public static final String SAMEBUG_SEARCH_NOTIFICATIONS = "Samebug Search Notifications";
 
     public static void registerNotificationGroups() {
@@ -55,12 +50,12 @@ public class SamebugNotifications {
                     BrowserUtil.browse(hyperlinkEvent.getURL());
                     Tracking.projectTracking(project).trace(Events.linkClick(project, hyperlinkEvent.getURL()));
                 } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && HISTORY.equals(action)) {
-                    ServiceManager.getService(project, HistoryTabController.class).focus();
+                    project.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnHistory();
                     notification.expire();
                     Tracking.projectTracking(project).trace(Events.toolWindowOpen(project, categoryForTracking));
                 } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && action.startsWith(SEARCH)) {
                     int searchId = Integer.parseInt(action.substring(SEARCH.length()));
-                    ServiceManager.getService(project, SearchTabControllers.class).openSearchTab(searchId);
+                    project.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchId);
                     notification.expire();
                     Tracking.projectTracking(project).trace(Events.toolWindowOpen(project, categoryForTracking));
                 }
@@ -78,11 +73,11 @@ public class SamebugNotifications {
                     BrowserUtil.browse(hyperlinkEvent.getURL());
                     Tracking.projectTracking(project).trace(Events.linkClick(project, hyperlinkEvent.getURL()));
                 } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && HISTORY.equals(action)) {
-                    ServiceManager.getService(project, HistoryTabController.class).focus();
+                    project.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnHistory();
                     Tracking.projectTracking(project).trace(Events.toolWindowOpen(project, categoryForTracking));
                 } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && action.startsWith(SEARCH)) {
                     int searchId = Integer.parseInt(action.substring(SEARCH.length()));
-                    ServiceManager.getService(project, SearchTabControllers.class).openSearchTab(searchId);
+                    project.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchId);
                     Tracking.projectTracking(project).trace(Events.toolWindowOpen(project, categoryForTracking));
                 }
             }

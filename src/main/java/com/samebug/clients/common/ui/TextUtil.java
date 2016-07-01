@@ -20,13 +20,12 @@ import org.ocpsoft.prettytime.PrettyTime;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Created by poroszd on 4/6/16.
- */
-public class TextUtil {
+final public class TextUtil {
     static final PrettyTime pretty = new PrettyTime(Locale.US);
 
     public static String prettyTime(final Date date) {
         return pretty.format(date);
     }
+
+    public static String lineSeparator = System.getProperty("line.separator");
 }

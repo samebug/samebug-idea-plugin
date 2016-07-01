@@ -15,10 +15,19 @@
  */
 package com.samebug.clients.search.api.entities;
 
-/**
- * Created by poroszd on 4/15/16.
- */
-public class RestError {
+import org.jetbrains.annotations.NotNull;
+
+public final class RestError {
     public String code;
     public String message;
+
+    @Override
+    public String toString() {
+        return code + ": " + message;
+    }
+
+    public RestError(@NotNull final RestError rhs) {
+        code = rhs.code;
+        message = rhs.message;
+    }
 }
