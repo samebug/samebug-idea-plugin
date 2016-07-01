@@ -26,6 +26,7 @@ import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.entities.ExceptionType;
 import com.samebug.clients.common.services.HistoryService;
 import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.idea.components.application.ClientService;
@@ -37,10 +38,7 @@ import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.notification.SearchResultsNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
-import com.samebug.clients.search.api.entities.SearchGroup;
-import com.samebug.clients.search.api.entities.SearchHistory;
-import com.samebug.clients.search.api.entities.SearchResults;
-import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
+import com.samebug.clients.search.api.entities.*;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 
@@ -92,14 +90,15 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
 
             boolean isShowRecurringSearches = ServiceManager.getService(project, HistoryService.class).isShowRecurringSearches();
             boolean isShowZeroSolutionSearches = ServiceManager.getService(project, HistoryService.class).isShowZeroSolutionSearches();
-            Map<String, SearchResults> searchesByStackTraceId = new HashMap<String, SearchResults>();
+            final Map<String, SearchResults> searchesByStackTraceId = new HashMap<String, SearchResults>();
+            final Map<Integer, StackTraceSearchGroup> resultsBySearchId = new HashMap<Integer, StackTraceSearchGroup>();
             for (SearchResults result : results) {
                 searchesByStackTraceId.put(result.stackTraceId, result);
             }
 
             int recurrings = 0;
             int zeroSolutions = 0;
-            final List<String> searchIds = new ArrayList<String>();
+            final List<Integer> searchIds = new ArrayList<Integer>();
             for (SearchResults result : searchesByStackTraceId.values()) {
                 String stackTraceId = result.stackTraceId;
                 StackTraceSearchGroup historyResult = groupsByStackTraceId.get(stackTraceId);
@@ -107,12 +106,14 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
                     if (isShowZeroSolutionSearches) {
                         ++zeroSolutions;
                         searchIds.add(result.searchId);
+                        resultsBySearchId.put(result.searchId, groupsByStackTraceId.get(result.stackTraceId));
                     }
                 } else if (historyResult != null && historyResult.numberOfSearches > 1
                         && historyResult.firstSeen.getTime() < timelimitForFreshSearch) {
                     if (isShowRecurringSearches) {
                         ++recurrings;
                         searchIds.add(result.searchId);
+                        resultsBySearchId.put(result.searchId, groupsByStackTraceId.get(result.stackTraceId));
                     }
                 }
             }
@@ -132,22 +133,29 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
                         assert tutorialComponent != null;
 
                         if (nSearchesWithZeroSolutions == 0 && nRecurringSearches == 0) {
-                            // new exceptions with solutions
                             if (searchIds.size() == 1) {
-                                showNotification(SamebugBundle.message("samebug.notification.searchresults.one", searchIds.get(0)));
+                                // 1 new exception with solutions
+                                StackTraceSearchGroup search = resultsBySearchId.get(searchIds.get(0));
+                                String exceptionSummary = summarizeException(search.getLastSearch().stackTrace.trace);
+                                showNotification(SamebugBundle.message("samebug.notification.searchresults.one", searchIds.get(0), exceptionSummary));
                             } else {
+                                // 2+ new exceptions with solutions
                                 showNotification(SamebugBundle.message("samebug.notification.searchresults.multiple", searchIds.size()));
                             }
                         } else if (nSearchesWithZeroSolutions == 0 && nRecurringSearches > 0) {
                             if (searchIds.size() == 1) {
+                                // 1 recurring exception with solutions
+                                StackTraceSearchGroup search = resultsBySearchId.get(searchIds.get(0));
+                                String exceptionSummary = summarizeException(search.getLastSearch().stackTrace.trace);
                                 if (settings.searchResultsRecurring) {
                                     settings.searchResultsRecurring = false;
                                     settings.searchResultsMixed = false;
-                                    showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.oneRecurring", searchIds.get(0), SamebugIcons.calendarUrl));
+                                    showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.oneRecurring", searchIds.get(0), SamebugIcons.calendarUrl, exceptionSummary));
                                 } else {
-                                    showNotification(SamebugBundle.message("samebug.notification.searchresults.oneRecurring", searchIds.get(0)));
+                                    showNotification(SamebugBundle.message("samebug.notification.searchresults.oneRecurring", searchIds.get(0), exceptionSummary));
                                 }
                             } else {
+                                // 2+ recurring exception with solutions
                                 if (settings.searchResultsRecurring) {
                                     settings.searchResultsRecurring = false;
                                     settings.searchResultsMixed = false;
@@ -157,6 +165,7 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
                                 }
                             }
                         } else if (nSearchesWithZeroSolutions > 0 && nRecurringSearches == 0) {
+                            // 1+ new exception without solution
                             if (settings.searchResultsZeroSolutions) {
                                 settings.searchResultsZeroSolutions = false;
                                 settings.searchResultsMixed = false;
@@ -165,6 +174,7 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
                                 showNotification(SamebugBundle.message("samebug.notification.searchresults.zeroSolutions", searchIds.size()));
                             }
                         } else {
+                            // other cases.
                             if (settings.searchResultsMixed) {
                                 settings.searchResultsMixed = false;
                                 showTutorialNotification(
@@ -179,6 +189,13 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
         } catch (SamebugClientException e1) {
             LOGGER.warn("Failed to load history after searching and building result notification.");
         }
+    }
+
+    private String summarizeException(com.samebug.clients.search.api.entities.Exception exception) {
+        ExceptionType exceptionType = new ExceptionType(exception.typeName);
+        String shortMessage = exception.message == null ? null : exception.message.length() > 25 ? exception.message.substring(0, 22) + "..." : exception.message;
+        if (shortMessage == null) return SamebugBundle.message("samebug.notification.exceptionSummary.withoutMessage", exceptionType.className);
+        else return SamebugBundle.message("samebug.notification.exceptionSummary.withMessage", exceptionType.className, shortMessage);
     }
 
     private void showNotification(String message) {

@@ -113,7 +113,7 @@ final public class AnalyzeDialog extends DialogWrapper {
                     try {
                         SearchResults result = client.searchSolutions(trace);
                         try {
-                            int searchId = Integer.parseInt(result.searchId);
+                            int searchId = result.searchId;
                             URL url = plugin.getUrlBuilder().search(searchId);
                             BrowserUtil.browse(url);
                             Tracking.appTracking().trace(Events.searchSucceedInSearchDialog(searchId));

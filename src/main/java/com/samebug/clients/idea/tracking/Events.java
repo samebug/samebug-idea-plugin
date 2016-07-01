@@ -89,7 +89,7 @@ final public class Events {
         return new TrackBuilder("Search", "Succeeded", null) {
             @Override
             protected void initFields() {
-                fields.put("searchId", Integer.parseInt(searchResults.searchId));
+                fields.put("searchId", searchResults.searchId);
                 fields.put("sessionId", searchInfo.getSessionInfo().getId().toString());
                 fields.put("sessionType", searchInfo.getSessionInfo().getSessionType());
             }

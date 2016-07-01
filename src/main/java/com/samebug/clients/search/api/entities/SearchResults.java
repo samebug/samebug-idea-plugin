@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class SearchResults {
     @NotNull
-    public String searchId;
+    public Integer searchId;
     @NotNull
     public String stackTraceId;
 
