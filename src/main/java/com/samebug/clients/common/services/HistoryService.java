@@ -25,51 +25,54 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 final public class HistoryService {
-    @Nullable
-    SearchHistory history;
-    boolean showZeroSolutionSearches;
-    boolean showRecurringSearches;
+    AtomicReference<SearchHistory> history;
+    AtomicBoolean showZeroSolutionSearches;
+    AtomicBoolean showRecurringSearches;
 
     public HistoryService() {
         ApplicationSettings settings = IdeaSamebugPlugin.getInstance().getState();
-        history = null;
-        showZeroSolutionSearches = settings.showZeroSolutions;
-        showRecurringSearches = settings.showRecurring;
+        history = new AtomicReference<SearchHistory>(null);
+        showZeroSolutionSearches = new AtomicBoolean(settings.showZeroSolutions);
+        showRecurringSearches = new AtomicBoolean(settings.showRecurring);
     }
 
     public boolean isShowZeroSolutionSearches() {
-        return showZeroSolutionSearches;
+        return showZeroSolutionSearches.get();
     }
 
     public boolean isShowRecurringSearches() {
-        return showRecurringSearches;
+        return showRecurringSearches.get();
     }
 
     public void setShowZeroSolutionSearches(boolean showZeroSolutionSearches) {
         ApplicationSettings settings = IdeaSamebugPlugin.getInstance().getState();
         settings.showZeroSolutions = showZeroSolutionSearches;
-        this.showZeroSolutionSearches = showZeroSolutionSearches;
+        this.showZeroSolutionSearches.set(showZeroSolutionSearches);
     }
 
     public void setShowRecurringSearches(boolean showRecurringSearches) {
         ApplicationSettings settings = IdeaSamebugPlugin.getInstance().getState();
         settings.showRecurring = showRecurringSearches;
-        this.showRecurringSearches = showRecurringSearches;
+        this.showRecurringSearches.set(showRecurringSearches);
     }
 
     public int unfilteredHistoryLength() {
-        if (history == null) {
+        SearchHistory currentHistory = history.get();
+        if (currentHistory == null) {
             return 0;
         } else {
-            return history.searchGroups.size();
+            return currentHistory.searchGroups.size();
         }
     }
 
     @Nullable
     public List<SearchGroup> getVisibleHistory() {
-        if (history == null) return null;
+        SearchHistory currentHistory = history.get();
+        if (currentHistory == null) return null;
         else {
             final Date now = new Date();
             final Calendar cal = Calendar.getInstance();
@@ -77,10 +80,10 @@ final public class HistoryService {
             cal.add(Calendar.DAY_OF_YEAR, -1);
             final Date oneDayBefore = cal.getTime();
             final List<SearchGroup> result = new ArrayList<SearchGroup>();
-            for (final SearchGroup group : history.searchGroups) {
-                if (!showZeroSolutionSearches && group.numberOfHits == 0) {
+            for (final SearchGroup group : currentHistory.searchGroups) {
+                if (!showZeroSolutionSearches.get() && group.numberOfHits == 0) {
                     // filtered because there is no solution for it
-                } else if (!showRecurringSearches && group.firstSeen.before(oneDayBefore)) {
+                } else if (!showRecurringSearches.get() && group.firstSeen.before(oneDayBefore)) {
                     // filtered because it is old
                 } else {
                     result.add(group);
@@ -90,8 +93,8 @@ final public class HistoryService {
         }
     }
 
+    // TODO make entity classes immutable
     public void setHistory(@Nullable SearchHistory history) {
-        // TODO atomic reference?
-        this.history = history;
+        this.history.set(history);
     }
 }

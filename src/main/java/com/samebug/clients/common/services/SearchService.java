@@ -21,40 +21,40 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 final public class SearchService {
-    @Nullable
-    Solutions search;
+    AtomicReference<Solutions> search;
 
     final int mySearchId;
 
     public SearchService(final int searchId) {
+        this.search = new AtomicReference<Solutions>(null);
         this.mySearchId = searchId;
     }
 
     public void setSolutions(@Nullable final Solutions solutions) {
-        // TODO save only copy
-        search = solutions;
+        // TODO make entity classes immutable
+        this.search.set(solutions);
     }
 
     @Nullable
     public Solutions getSolutions() {
-        // TODO return copy
-        return search;
+        return search.get();
     }
 
     @Nullable
     public RestHit marked(final int solutionId, @NotNull final MarkResponse mark) {
-        // TODO synchronize access
-        if (search == null) return null;
-        for (RestHit<SolutionReference> s : search.references) {
+        Solutions currentSearch = search.get();
+        if (currentSearch == null) return null;
+        for (RestHit<SolutionReference> s : currentSearch.references) {
             if (s.solutionId == solutionId) {
                 s.markId = mark.id;
                 s.score = mark.marks;
                 return s;
             }
         }
-        for (RestHit<Tip> t : search.tips) {
+        for (RestHit<Tip> t : currentSearch.tips) {
             if (t.solutionId == solutionId) {
                 t.markId = mark.id;
                 t.score = mark.marks;
@@ -67,16 +67,16 @@ final public class SearchService {
     // TODO this is the same as marked, but MarkResponse does not differentiate posting and retracting
     @Nullable
     public RestHit unmarked(final int solutionId, @NotNull final MarkResponse mark) {
-        // TODO synchronize access
-        if (search == null) return null;
-        for (RestHit<SolutionReference> s : search.references) {
+        Solutions currentSearch = search.get();
+        if (currentSearch == null) return null;
+        for (RestHit<SolutionReference> s : currentSearch.references) {
             if (s.solutionId == solutionId) {
                 s.markId = null;
                 s.score = mark.marks;
                 return s;
             }
         }
-        for (RestHit<Tip> t : search.tips) {
+        for (RestHit<Tip> t : currentSearch.tips) {
             if (t.solutionId == solutionId) {
                 t.markId = null;
                 t.score = mark.marks;
@@ -87,18 +87,19 @@ final public class SearchService {
     }
 
     public void addTip(@NotNull final RestHit<Tip> tip) {
-        // TODO synchronize
-        if (search == null) return;
-        search.tips.add(0, tip);
+        Solutions currentSearch = search.get();
+        if (currentSearch == null) return;
+        currentSearch.tips.add(0, tip);
     }
 
     @Nullable
     public RestHit getHit(@NotNull final Integer searchId, @NotNull final Integer solutionId) {
-        if (searchId.equals(mySearchId) && search != null) {
-            for (RestHit<SolutionReference> s : search.references) {
+        Solutions currentSearch = search.get();
+        if (searchId.equals(mySearchId) && currentSearch != null) {
+            for (RestHit<SolutionReference> s : currentSearch.references) {
                 if (solutionId.equals(s.solutionId)) return new RestHit<SolutionReference>(s);
             }
-            for (RestHit<Tip> t : search.tips) {
+            for (RestHit<Tip> t : currentSearch.tips) {
                 if (solutionId.equals(t.solutionId)) return new RestHit<Tip>(t);
             }
             return null;
@@ -109,11 +110,12 @@ final public class SearchService {
 
     @Nullable
     public RestHit getHitForVote(@NotNull final Integer voteId) {
-        if (search == null) return null;
-        for (RestHit<SolutionReference> s : search.references) {
+        Solutions currentSearch = search.get();
+        if (currentSearch == null) return null;
+        for (RestHit<SolutionReference> s : currentSearch.references) {
             if (voteId.equals(s.markId)) return s;
         }
-        for (RestHit<Tip> t : search.tips) {
+        for (RestHit<Tip> t : currentSearch.tips) {
             if (voteId.equals(t.markId)) return t;
         }
         return null;
