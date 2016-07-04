@@ -153,7 +153,8 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
                                 if (settings.searchResultsRecurring) {
                                     settings.searchResultsRecurring = false;
                                     settings.searchResultsMixed = false;
-                                    showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.oneRecurring", searchIds.get(0).toString(), SamebugIcons.calendarUrl, exceptionSummary));
+                                    showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.oneRecurring",
+                                            searchIds.get(0).toString(), SamebugIcons.calendarUrl, exceptionSummary));
                                 } else {
                                     showNotification(SamebugBundle.message("samebug.notification.searchresults.oneRecurring", searchIds.get(0).toString(), exceptionSummary));
                                 }
