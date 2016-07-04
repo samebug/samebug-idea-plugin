@@ -35,7 +35,7 @@ import java.util.HashMap;
 
 /**
  * A link that will open a browser on click.
- *
+ * <p>
  * FIXME: it opens the browser (and also reports tracking) directly, bypassing the controller.
  * If we want to do something more complicated, using events and handling in the controller might be a good idea.
  */

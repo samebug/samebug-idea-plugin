@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * This proxy class separates the behaviour of Logcat watcher.
- *
+ * <p>
  * If Android SDK is not present, it does nothing, so it will not crash in environments without Android SDK.
  */
 public class LogcatProcessWatcherProxy extends AbstractProjectComponent {

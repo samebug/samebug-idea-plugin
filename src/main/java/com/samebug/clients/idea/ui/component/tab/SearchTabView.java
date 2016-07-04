@@ -19,7 +19,6 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.util.containers.HashMap;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
@@ -97,9 +96,11 @@ final public class SearchTabView extends JPanel {
     public void beginPostTip() {
         tipPanel.beginPostTip();
     }
+
     public void finishPostTipWithSuccess() {
         tipPanel.finishPostTipWithSuccess();
     }
+
     public void finishPostTipWithError(final String message) {
         tipPanel.finishPostTipWithError(message);
     }
