@@ -140,12 +140,12 @@ final public class SearchTabView extends JPanel {
             for (final SamebugTipView.Model tip : model.getTips()) {
                 SamebugTipView tipView = new SamebugTipView(tip);
                 solutionsPanel.add(tipView);
-                cards.put(tip.getHit().solutionId, tipView);
+                cards.put(tip.getHit().getSolutionId(), tipView);
             }
             for (final ExternalSolutionView.Model s : model.getReferences()) {
                 final ExternalSolutionView sv = new ExternalSolutionView(s);
                 solutionsPanel.add(sv);
-                cards.put(s.getHit().solutionId, sv);
+                cards.put(s.getHit().getSolutionId(), sv);
             }
 
             controlPanel.add(scrollPane);

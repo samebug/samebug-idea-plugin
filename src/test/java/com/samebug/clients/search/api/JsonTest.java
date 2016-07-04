@@ -32,9 +32,9 @@ public class JsonTest {
     public void getUserInfoValid() throws MalformedURLException {
         UserInfo x = gson.fromJson(stream("checkApiKey-1"), UserInfo.class);
         checkFields(x);
-        Assert.assertEquals(new URL("https://samebug.io/avatars/1/3"), x.avatarUrl);
-        Assert.assertEquals("poroszd", x.displayName);
-        Assert.assertEquals(Integer.valueOf(1), x.userId);
+        Assert.assertEquals(new URL("https://samebug.io/avatars/1/3"), x.getAvatarUrl());
+        Assert.assertEquals("poroszd", x.getDisplayName());
+        Assert.assertEquals(Integer.valueOf(1), x.getUserId());
     }
 
     // curl 'http://nightly.samebug.com/rest/0.11/checkApiKey?apiKey=x' | jq . > src/test/resources/com/samebug/clients/search/api/jsontest/checkApiKey-2.json
@@ -42,7 +42,7 @@ public class JsonTest {
     public void getUserInfoInvalid() {
         UserInfo x = gson.fromJson(stream("checkApiKey-2"), UserInfo.class);
         checkFields(x);
-        Assert.assertEquals(false, x.isUserExist);
+        Assert.assertEquals(false, x.getUserExist());
     }
 
     // curl 'http://nightly.samebug.com/rest/0.9/history' -H'X-Samebug-ApiKey: 355be195-c10b-11e5-a334-000d3a317492' ||
@@ -51,12 +51,12 @@ public class JsonTest {
     public void getSearchHistory() {
         SearchHistory x = gson.fromJson(stream("history"), SearchHistory.class);
         checkFields(x);
-        Assert.assertEquals(5, x.searchGroups.size());
-        for (SearchGroup e : x.searchGroups) {
-            Assert.assertTrue(e.getLastSearch().id > 0);
+        Assert.assertEquals(5, x.getSearchGroups().size());
+        for (SearchGroup e : x.getSearchGroups()) {
+            Assert.assertTrue(e.getLastSearch().getId() > 0);
             if (e.getLastSearch() instanceof StackTraceSearch) {
                 StackTraceSearch stackTraceSearch = (StackTraceSearch) e.getLastSearch();
-                Assert.assertTrue(stackTraceSearch.stackTrace.breadCrumbs.size() > 0);
+                Assert.assertTrue(stackTraceSearch.getStackTrace().getBreadCrumbs().size() > 0);
             }
         }
     }
@@ -67,9 +67,9 @@ public class JsonTest {
     public void getSolutions() {
         Solutions x = gson.fromJson(stream("search-1"), Solutions.class);
         checkFields(x);
-        Assert.assertTrue(x.searchGroup.getLastSearch().id > 0);
-        Assert.assertTrue(x.tips.size() >= 0);
-        Assert.assertTrue(x.references.size() > 0);
+        Assert.assertTrue(x.getSearchGroup().getLastSearch().getId() > 0);
+        Assert.assertTrue(x.getTips().size() >= 0);
+        Assert.assertTrue(x.getReferences().size() > 0);
     }
 
     void checkFields(@NotNull Object o) {

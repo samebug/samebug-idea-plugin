@@ -22,22 +22,62 @@ import java.util.Date;
 
 public abstract class SearchGroup {
     @NotNull
-    public String id;
+    protected String id;
     @Nullable
-    public String visitorId;
+    protected String visitorId;
     @Nullable
-    public String userId;
+    protected String userId;
     @Nullable
-    public String teamId;
+    protected String teamId;
     @NotNull
-    public Integer numberOfSearches;
+    protected Integer numberOfSearches;
     @NotNull
-    public Integer numberOfHits;
+    protected Integer numberOfHits;
     @NotNull
-    public Date firstSeen;
+    protected Date firstSeen;
     @NotNull
-    public Date lastSeen;
+    protected Date lastSeen;
 
     @NotNull
     abstract public Search getLastSearch();
+
+    @NotNull
+    public String getId() {
+        return id;
+    }
+
+    @Nullable
+    public String getVisitorId() {
+        return visitorId;
+    }
+
+    @Nullable
+    public String getUserId() {
+        return userId;
+    }
+
+    @Nullable
+    public String getTeamId() {
+        return teamId;
+    }
+
+    @NotNull
+    public Integer getNumberOfSearches() {
+        return numberOfSearches;
+    }
+
+    @NotNull
+    public Integer getNumberOfHits() {
+        return numberOfHits;
+    }
+
+    @NotNull
+    public Date getFirstSeen() {
+        return firstSeen;
+    }
+
+    @NotNull
+    public Date getLastSeen() {
+        return lastSeen;
+    }
 }

@@ -65,7 +65,7 @@ final public class HistoryService {
         if (currentHistory == null) {
             return 0;
         } else {
-            return currentHistory.searchGroups.size();
+            return currentHistory.getSearchGroups().size();
         }
     }
 
@@ -80,10 +80,10 @@ final public class HistoryService {
             cal.add(Calendar.DAY_OF_YEAR, -1);
             final Date oneDayBefore = cal.getTime();
             final List<SearchGroup> result = new ArrayList<SearchGroup>();
-            for (final SearchGroup group : currentHistory.searchGroups) {
-                if (!showZeroSolutionSearches.get() && group.numberOfHits == 0) {
+            for (final SearchGroup group : currentHistory.getSearchGroups()) {
+                if (!showZeroSolutionSearches.get() && group.getNumberOfHits() == 0) {
                     // filtered because there is no solution for it
-                } else if (!showRecurringSearches.get() && group.firstSeen.before(oneDayBefore)) {
+                } else if (!showRecurringSearches.get() && group.getFirstSeen().before(oneDayBefore)) {
                     // filtered because it is old
                 } else {
                     result.add(group);

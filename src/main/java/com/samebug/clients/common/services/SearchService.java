@@ -47,60 +47,43 @@ final public class SearchService {
     public RestHit marked(final int solutionId, @NotNull final MarkResponse mark) {
         Solutions currentSearch = search.get();
         if (currentSearch == null) return null;
-        for (RestHit<SolutionReference> s : currentSearch.references) {
-            if (s.solutionId == solutionId) {
-                s.markId = mark.id;
-                s.score = mark.marks;
-                return s;
-            }
+        else {
+            Solutions updatedModel = currentSearch.asMarked(solutionId, mark);
+            search.set(updatedModel);
+            return updatedModel.getHitForSolutionId(solutionId);
         }
-        for (RestHit<Tip> t : currentSearch.tips) {
-            if (t.solutionId == solutionId) {
-                t.markId = mark.id;
-                t.score = mark.marks;
-                return t;
-            }
-        }
-        return null;
     }
 
     // TODO this is the same as marked, but MarkResponse does not differentiate posting and retracting
     @Nullable
     public RestHit unmarked(final int solutionId, @NotNull final MarkResponse mark) {
-        Solutions currentSearch = search.get();
-        if (currentSearch == null) return null;
-        for (RestHit<SolutionReference> s : currentSearch.references) {
-            if (s.solutionId == solutionId) {
-                s.markId = null;
-                s.score = mark.marks;
-                return s;
-            }
+        Solutions currentModel = search.get();
+        if (currentModel == null) return null;
+        else {
+            Solutions updatedModel = currentModel.asUnmarked(solutionId, mark);
+            search.set(updatedModel);
+            return updatedModel.getHitForSolutionId(solutionId);
         }
-        for (RestHit<Tip> t : currentSearch.tips) {
-            if (t.solutionId == solutionId) {
-                t.markId = null;
-                t.score = mark.marks;
-                return t;
-            }
-        }
-        return null;
     }
 
     public void addTip(@NotNull final RestHit<Tip> tip) {
-        Solutions currentSearch = search.get();
-        if (currentSearch == null) return;
-        currentSearch.tips.add(0, tip);
+        Solutions currentModel = search.get();
+        if (currentModel == null) return;
+        else {
+            Solutions updatedModel = currentModel.addTip(tip);
+            search.set(updatedModel);
+        }
     }
 
     @Nullable
     public RestHit getHit(@NotNull final Integer searchId, @NotNull final Integer solutionId) {
         Solutions currentSearch = search.get();
         if (searchId.equals(mySearchId) && currentSearch != null) {
-            for (RestHit<SolutionReference> s : currentSearch.references) {
-                if (solutionId.equals(s.solutionId)) return new RestHit<SolutionReference>(s);
+            for (RestHit<SolutionReference> s : currentSearch.getReferences()) {
+                if (solutionId.equals(s.getSolutionId())) return new RestHit<SolutionReference>(s);
             }
-            for (RestHit<Tip> t : currentSearch.tips) {
-                if (solutionId.equals(t.solutionId)) return new RestHit<Tip>(t);
+            for (RestHit<Tip> t : currentSearch.getTips()) {
+                if (solutionId.equals(t.getSolutionId())) return new RestHit<Tip>(t);
             }
             return null;
         } else {
@@ -112,30 +95,30 @@ final public class SearchService {
     public RestHit getHitForVote(@NotNull final Integer voteId) {
         Solutions currentSearch = search.get();
         if (currentSearch == null) return null;
-        for (RestHit<SolutionReference> s : currentSearch.references) {
-            if (voteId.equals(s.markId)) return s;
+        for (RestHit<SolutionReference> s : currentSearch.getReferences()) {
+            if (voteId.equals(s.getMarkId())) return s;
         }
-        for (RestHit<Tip> t : currentSearch.tips) {
-            if (voteId.equals(t.markId)) return t;
+        for (RestHit<Tip> t : currentSearch.getTips()) {
+            if (voteId.equals(t.getMarkId())) return t;
         }
         return null;
     }
 
     public static boolean createdByUser(final int userId, @NotNull final RestHit hit) {
-        assert hit.createdBy != null;
-        return hit.createdBy.id.equals(userId);
+        assert hit.getCreatedBy() != null;
+        return hit.getCreatedBy().getId().equals(userId);
     }
 
     public static boolean canBeMarked(final int userId, @NotNull final SearchGroup searchGroup, @NotNull final RestHit hit) {
-        return hit.createdBy == null
-                || !hit.createdBy.id.equals(userId)
+        return hit.getCreatedBy() == null
+                || !hit.getCreatedBy().getId().equals(userId)
                 || !(searchGroup instanceof StackTraceSearchGroup)
-                || !hit.stackTraceId.equals(((StackTraceSearchGroup) searchGroup).lastSearch.stackTrace.stackTraceId);
+                || !hit.getStackTraceId().equals(((StackTraceSearchGroup) searchGroup).getLastSearch().getStackTrace().getStackTraceId());
     }
 
     public static List<BreadCrumb> getMatchingBreadCrumb(@NotNull final SearchGroup search, @NotNull final RestHit hit) {
         if (search instanceof StackTraceSearchGroup) {
-            return ((StackTraceSearchGroup) search).lastSearch.stackTrace.breadCrumbs.subList(0, hit.matchLevel);
+            return ((StackTraceSearchGroup) search).getLastSearch().getStackTrace().getBreadCrumbs().subList(0, hit.getMatchLevel());
         } else {
             return Collections.emptyList();
         }

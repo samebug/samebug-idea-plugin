@@ -17,18 +17,12 @@ package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Date;
-
 public final class StackTraceSearch extends Search {
     @NotNull
-    public StackTraceWithBreadCrumbs stackTrace;
+    private StackTraceWithBreadCrumbs stackTrace;
 
-    public StackTraceSearch(@NotNull final StackTraceSearch rhs) {
-        this.id = rhs.id;
-        this.timestamp = new Date(rhs.timestamp.getTime());
-        this.visitorId = rhs.visitorId;
-        this.userId = rhs.userId;
-        this.teamId = rhs.teamId;
-        this.stackTrace = new StackTraceWithBreadCrumbs(rhs.stackTrace);
+    @NotNull
+    public StackTraceWithBreadCrumbs getStackTrace() {
+        return stackTrace;
     }
 }

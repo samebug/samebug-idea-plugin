@@ -19,12 +19,17 @@ import org.jetbrains.annotations.NotNull;
 
 public final class SearchResults {
     @NotNull
-    public Integer searchId;
+    private Integer searchId;
     @NotNull
-    public String stackTraceId;
+    private String stackTraceId;
 
-    public SearchResults(@NotNull final SearchResults rhs) {
-        searchId = rhs.searchId;
-        stackTraceId = rhs.stackTraceId;
+    @NotNull
+    public Integer getSearchId() {
+        return searchId;
+    }
+
+    @NotNull
+    public String getStackTraceId() {
+        return stackTraceId;
     }
 }

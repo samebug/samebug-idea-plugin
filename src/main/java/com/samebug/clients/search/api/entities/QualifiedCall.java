@@ -20,15 +20,24 @@ import org.jetbrains.annotations.Nullable;
 
 public final class QualifiedCall {
     @Nullable
-    public String packageName;
+    private String packageName;
     @NotNull
-    public String className;
+    private String className;
     @NotNull
-    public String methodName;
+    private String methodName;
 
-    public QualifiedCall(@NotNull final QualifiedCall rhs) {
-        this.packageName = rhs.packageName;
-        this.className = rhs.className;
-        this.methodName = rhs.methodName;
+    @Nullable
+    public String getPackageName() {
+        return packageName;
+    }
+
+    @NotNull
+    public String getClassName() {
+        return className;
+    }
+
+    @NotNull
+    public String getMethodName() {
+        return methodName;
     }
 }

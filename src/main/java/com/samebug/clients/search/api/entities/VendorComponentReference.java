@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class VendorComponentReference extends ComponentReference {
     @NotNull
-    public String packageName;
+    private String packageName;
 
     @Override
     @NotNull
@@ -33,7 +33,8 @@ public final class VendorComponentReference extends ComponentReference {
         return 0;
     }
 
-    public VendorComponentReference(@NotNull final VendorComponentReference rhs) {
-        this.packageName = rhs.packageName;
+    @NotNull
+    public String getPackageName() {
+        return packageName;
     }
 }

@@ -58,11 +58,11 @@ final public class WebUrlBuilder {
 
     @Nullable
     public URL crashdoc(@NotNull final BreadCrumb b) {
-        if (!(b.component instanceof LibraryComponentReference)) return null;
+        if (!(b.getComponent() instanceof LibraryComponentReference)) return null;
         else {
             try {
-                final String entryUri = enc(b.entry.packageName) + "/" + enc(b.entry.className) + "/" + enc(b.entry.methodName) + "/" + enc(b.typeName);
-                final String passThrough = "?pt=" + b.passThrough;
+                final String entryUri = enc(b.getEntry().getPackageName()) + "/" + enc(b.getEntry().getClassName()) + "/" + enc(b.getEntry().getMethodName()) + "/" + enc(b.getTypeName());
+                final String passThrough = "?pt=" + b.getPassThrough();
                 return resolveToRoot("/crashdocs/" + entryUri + passThrough);
             } catch (Throwable ignored) {
                 return null;

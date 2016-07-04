@@ -21,5 +21,10 @@ import java.util.Date;
 
 public abstract class RestSolution {
     @NotNull
-    public Date createdAt;
+    protected Date createdAt;
+
+    @NotNull
+    public Date getCreatedAt() {
+        return createdAt;
+    }
 }

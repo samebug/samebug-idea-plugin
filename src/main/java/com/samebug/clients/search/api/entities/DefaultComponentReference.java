@@ -29,7 +29,4 @@ public final class DefaultComponentReference extends ComponentReference {
     public Integer getColor() {
         return 0;
     }
-
-    public DefaultComponentReference(@NotNull final DefaultComponentReference rhs) {
-    }
 }

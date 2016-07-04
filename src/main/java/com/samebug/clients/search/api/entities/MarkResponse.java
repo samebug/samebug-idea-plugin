@@ -20,15 +20,24 @@ import org.jetbrains.annotations.Nullable;
 
 public final class MarkResponse {
     @Nullable
-    public Integer id;
+    private Integer id;
     @NotNull
-    public Integer marks;
+    private Integer marks;
     @NotNull
-    public Integer documentVotes;
+    private Integer documentVotes;
 
-    public MarkResponse(@NotNull final MarkResponse rhs) {
-        id = rhs.id;
-        marks = rhs.marks;
-        documentVotes = rhs.documentVotes;
+    @Nullable
+    public Integer getId() {
+        return id;
+    }
+
+    @NotNull
+    public Integer getMarks() {
+        return marks;
+    }
+
+    @NotNull
+    public Integer getDocumentVotes() {
+        return documentVotes;
     }
 }

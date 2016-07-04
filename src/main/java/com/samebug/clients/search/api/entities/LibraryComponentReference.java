@@ -20,17 +20,17 @@ import org.jetbrains.annotations.Nullable;
 
 public final class LibraryComponentReference extends ComponentReference {
     @NotNull
-    public Integer id;
+    private Integer id;
     @Nullable
-    public String mavenId;
+    private String mavenId;
     @NotNull
-    public String name;
+    private String name;
     @NotNull
-    public String slug;
+    private String slug;
     @Nullable
-    public String description;
+    private String description;
     @NotNull
-    public Integer color;
+    private Integer color;
 
     @Override
     @NotNull
@@ -44,12 +44,23 @@ public final class LibraryComponentReference extends ComponentReference {
         return color;
     }
 
-    public LibraryComponentReference(@NotNull final LibraryComponentReference rhs) {
-        this.id = rhs.id;
-        this.mavenId = rhs.mavenId;
-        this.name = rhs.name;
-        this.slug = rhs.slug;
-        this.description = rhs.description;
-        this.color = rhs.color;
+    @NotNull
+    public Integer getId() {
+        return id;
+    }
+
+    @Nullable
+    public String getMavenId() {
+        return mavenId;
+    }
+
+    @NotNull
+    public String getSlug() {
+        return slug;
+    }
+
+    @Nullable
+    public String getDescription() {
+        return description;
     }
 }

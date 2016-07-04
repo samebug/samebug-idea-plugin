@@ -84,10 +84,10 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
         ClientService client = IdeaSamebugPlugin.getInstance().getClient();
         try {
             SearchHistory history = client.getSearchHistory();
-            for (SearchGroup s : history.searchGroups) {
+            for (SearchGroup s : history.getSearchGroups()) {
                 if (s instanceof StackTraceSearchGroup) {
                     StackTraceSearchGroup sg = (StackTraceSearchGroup) s;
-                    groupsByStackTraceId.put(sg.lastSearch.stackTrace.stackTraceId, sg);
+                    groupsByStackTraceId.put(sg.getLastSearch().getStackTrace().getStackTraceId(), sg);
                 }
             }
 
@@ -96,27 +96,27 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
             final Map<String, SearchResults> searchesByStackTraceId = new HashMap<String, SearchResults>();
             final Map<Integer, StackTraceSearchGroup> resultsBySearchId = new HashMap<Integer, StackTraceSearchGroup>();
             for (SearchResults result : results) {
-                searchesByStackTraceId.put(result.stackTraceId, result);
+                searchesByStackTraceId.put(result.getStackTraceId(), result);
             }
 
             int recurrings = 0;
             int zeroSolutions = 0;
             final List<Integer> searchIds = new ArrayList<Integer>();
             for (SearchResults result : searchesByStackTraceId.values()) {
-                String stackTraceId = result.stackTraceId;
+                String stackTraceId = result.getStackTraceId();
                 StackTraceSearchGroup historyResult = groupsByStackTraceId.get(stackTraceId);
-                if (historyResult != null && historyResult.numberOfHits == 0) {
+                if (historyResult != null && historyResult.getNumberOfHits() == 0) {
                     if (isShowZeroSolutionSearches) {
                         ++zeroSolutions;
-                        searchIds.add(result.searchId);
-                        resultsBySearchId.put(result.searchId, groupsByStackTraceId.get(result.stackTraceId));
+                        searchIds.add(result.getSearchId());
+                        resultsBySearchId.put(result.getSearchId(), groupsByStackTraceId.get(result.getStackTraceId()));
                     }
-                } else if (historyResult != null && historyResult.numberOfSearches > 1
-                        && historyResult.firstSeen.getTime() < timelimitForFreshSearch) {
+                } else if (historyResult != null && historyResult.getNumberOfSearches() > 1
+                        && historyResult.getFirstSeen().getTime() < timelimitForFreshSearch) {
                     if (isShowRecurringSearches) {
                         ++recurrings;
-                        searchIds.add(result.searchId);
-                        resultsBySearchId.put(result.searchId, groupsByStackTraceId.get(result.stackTraceId));
+                        searchIds.add(result.getSearchId());
+                        resultsBySearchId.put(result.getSearchId(), groupsByStackTraceId.get(result.getStackTraceId()));
                     }
                 }
             }
@@ -139,7 +139,7 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
                             if (searchIds.size() == 1) {
                                 // 1 new exception with solutions
                                 StackTraceSearchGroup search = resultsBySearchId.get(searchIds.get(0));
-                                String exceptionSummary = summarizeException(search.getLastSearch().stackTrace.trace);
+                                String exceptionSummary = summarizeException(search.getLastSearch().getStackTrace().getTrace());
                                 showNotification(SamebugBundle.message("samebug.notification.searchresults.one", searchIds.get(0).toString(), exceptionSummary));
                             } else {
                                 // 2+ new exceptions with solutions
@@ -149,7 +149,7 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
                             if (searchIds.size() == 1) {
                                 // 1 recurring exception with solutions
                                 StackTraceSearchGroup search = resultsBySearchId.get(searchIds.get(0));
-                                String exceptionSummary = summarizeException(search.getLastSearch().stackTrace.trace);
+                                String exceptionSummary = summarizeException(search.getLastSearch().getStackTrace().getTrace());
                                 if (settings.searchResultsRecurring) {
                                     settings.searchResultsRecurring = false;
                                     settings.searchResultsMixed = false;
@@ -196,8 +196,8 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
     }
 
     private String summarizeException(com.samebug.clients.search.api.entities.Exception exception) {
-        ExceptionType exceptionType = new ExceptionType(exception.typeName);
-        String shortMessage = exception.message == null ? null : exception.message.length() > 25 ? exception.message.substring(0, 22) + "..." : exception.message;
+        ExceptionType exceptionType = new ExceptionType(exception.getTypeName());
+        String shortMessage = exception.getMessage() == null ? null : exception.getMessage().length() > 25 ? exception.getMessage().substring(0, 22) + "..." : exception.getMessage();
         if (shortMessage == null) return SamebugBundle.message("samebug.notification.exceptionSummary.withoutMessage", exceptionType.className);
         else return SamebugBundle.message("samebug.notification.exceptionSummary.withMessage", exceptionType.className, shortMessage);
     }

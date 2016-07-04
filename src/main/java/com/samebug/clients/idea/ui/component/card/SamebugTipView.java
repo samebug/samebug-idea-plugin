@@ -46,9 +46,9 @@ final public class SamebugTipView extends HitView {
         final java.util.List<BreadCrumb> searchBreadcrumb = model.getMatchingBreadCrumb();
         final RestHit<Tip> tip = model.getHit();
         breadcrumbPanel = new BreadcrumbBar(searchBreadcrumb);
-        tipLabel = new TipText(tip.solution.tip);
-        sourceReferencePanel = new TipSourceReferencePanel(tip.solution);
-        avatarPanel = new AvatarPanel(tip.solution.author);
+        tipLabel = new TipText(tip.getSolution().getTip());
+        sourceReferencePanel = new TipSourceReferencePanel(tip.getSolution());
+        avatarPanel = new AvatarPanel(tip.getSolution().getAuthor());
         writeBetter = new WriteBetterButton();
 
         setLayout(new BorderLayout());
@@ -121,23 +121,23 @@ final public class SamebugTipView extends HitView {
 
         public void refreshView() {
             setLayout(new FlowLayout(FlowLayout.RIGHT));
-            if (tip.via == null) {
+            if (tip.getVia() == null) {
                 // no source, show only tip timestamp
-                add(new JLabel(String.format("%s", TextUtil.prettyTime(tip.createdAt))) {
+                add(new JLabel(String.format("%s", TextUtil.prettyTime(tip.getCreatedAt()))) {
                     @Override
                     public Color getForeground() {
                         return ColorUtil.unemphasizedText();
                     }
                 });
-            } else if (tip.via.author == null) {
+            } else if (tip.getVia().getAuthor() == null) {
                 // source without author
-                add(new JLabel(String.format("%s | via ", TextUtil.prettyTime(tip.createdAt))) {
+                add(new JLabel(String.format("%s | via ", TextUtil.prettyTime(tip.getCreatedAt()))) {
                     @Override
                     public Color getForeground() {
                         return ColorUtil.unemphasizedText();
                     }
                 });
-                add(new LinkLabel(tip.via.source.name, tip.via.url) {
+                add(new LinkLabel(tip.getVia().getSource().getName(), tip.getVia().getUrl()) {
                     @Override
                     public Color getForeground() {
                         return ColorUtil.emphasizedText();
@@ -145,13 +145,13 @@ final public class SamebugTipView extends HitView {
                 });
             } else {
                 // source with author
-                add(new JLabel(String.format("%s | ", TextUtil.prettyTime(tip.createdAt))) {
+                add(new JLabel(String.format("%s | ", TextUtil.prettyTime(tip.getCreatedAt()))) {
                     @Override
                     public Color getForeground() {
                         return ColorUtil.unemphasizedText();
                     }
                 });
-                add(new LinkLabel(tip.via.author.name, tip.via.author.url) {
+                add(new LinkLabel(tip.getVia().getAuthor().getName(), tip.getVia().getAuthor().getUrl()) {
                     @Override
                     public Color getForeground() {
                         return ColorUtil.emphasizedText();
@@ -163,7 +163,7 @@ final public class SamebugTipView extends HitView {
                         return ColorUtil.unemphasizedText();
                     }
                 });
-                add(new LinkLabel(tip.via.source.name, tip.via.url) {
+                add(new LinkLabel(tip.getVia().getSource().getName(), tip.getVia().getUrl()) {
                     @Override
                     public Color getForeground() {
                         return ColorUtil.emphasizedText();

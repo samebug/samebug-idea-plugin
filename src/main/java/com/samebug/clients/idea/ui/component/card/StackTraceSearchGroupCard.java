@@ -50,13 +50,13 @@ final public class StackTraceSearchGroupCard extends SearchGroupCard {
     public StackTraceSearchGroupCard(final StackTraceSearchGroup searchGroup) {
         super(searchGroup);
         this.searchGroup = searchGroup;
-        exceptionType = new ExceptionType(searchGroup.lastSearch.stackTrace.trace.typeName);
+        exceptionType = new ExceptionType(searchGroup.getLastSearch().getStackTrace().getTrace().getTypeName());
 
         packageLabel = new PackageLabel();
         hitsLabel = new HitsLabel();
         titleLabel = new TitleLabel();
-        exceptionMessageLabel = new ExceptionMessageLabel(searchGroup.lastSearch.stackTrace.trace.message);
-        breadcrumbPanel = new BreadcrumbBar(searchGroup.lastSearch.stackTrace.breadCrumbs);
+        exceptionMessageLabel = new ExceptionMessageLabel(searchGroup.getLastSearch().getStackTrace().getTrace().getMessage());
+        breadcrumbPanel = new BreadcrumbBar(searchGroup.getLastSearch().getStackTrace().getBreadCrumbs());
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
@@ -127,10 +127,10 @@ final public class StackTraceSearchGroupCard extends SearchGroupCard {
         static final int LIMIT = 100;
 
         {
-            if (searchGroup.numberOfHits > LIMIT) {
+            if (searchGroup.getNumberOfHits() > LIMIT) {
                 setText(String.format("%d+ hits", LIMIT));
             } else {
-                setText(String.format("%d hits", searchGroup.numberOfHits));
+                setText(String.format("%d hits", searchGroup.getNumberOfHits()));
             }
         }
 

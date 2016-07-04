@@ -18,7 +18,6 @@ package com.samebug.clients.idea.ui.controller.search;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.services.RestHits;
 import com.samebug.clients.common.services.SearchService;
 import com.samebug.clients.idea.messages.client.MarkModelListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
@@ -69,7 +68,7 @@ final class MarkModelController implements MarkModelListener {
     @Override
     public void startPostingMark(final int searchId, final int solutionId) {
         final RestHit currentHit = service.getHit(searchId, solutionId);
-        final RestHit predictedHit = currentHit == null ? null : RestHits.asMarked(currentHit);
+        final RestHit predictedHit = currentHit == null ? null : currentHit.asMarked();
         updateViewForStartedMark(currentHit, predictedHit);
     }
 
@@ -96,7 +95,7 @@ final class MarkModelController implements MarkModelListener {
     @Override
     public void startRetractMark(final int voteId) {
         final RestHit currentHit = service.getHitForVote(voteId);
-        final RestHit predictedHit = currentHit == null ? null : RestHits.asUnmarked(currentHit);
+        final RestHit predictedHit = currentHit == null ? null : currentHit.asUnmarked();
         updateViewForStartedMark(currentHit, predictedHit);
     }
 
@@ -104,7 +103,7 @@ final class MarkModelController implements MarkModelListener {
     public void successRetractMark(final int voteId, final MarkResponse result) {
         final RestHit oldHit = controller.service.getHitForVote(voteId);
         if (oldHit != null) {
-            final RestHit updatedHit = service.unmarked(oldHit.solutionId, result);
+            final RestHit updatedHit = service.unmarked(oldHit.getSolutionId(), result);
             updateViewForFinishedMark(updatedHit);
         }
     }
@@ -127,7 +126,7 @@ final class MarkModelController implements MarkModelListener {
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    view.beginPostMark(currentHit.solutionId, predictedModel);
+                    view.beginPostMark(currentHit.getSolutionId(), predictedModel);
                 }
             });
         }
@@ -139,7 +138,7 @@ final class MarkModelController implements MarkModelListener {
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    view.finishPostMarkWithSuccess(updatedHit.solutionId, updatedModel);
+                    view.finishPostMarkWithSuccess(updatedHit.getSolutionId(), updatedModel);
                 }
             });
         }
@@ -149,7 +148,7 @@ final class MarkModelController implements MarkModelListener {
         if (currentHit != null) {
             final String errorMessageKey;
             if (e instanceof BadRequest) {
-                final String markErrorCode = ((BadRequest) e).getRestError().code;
+                final String markErrorCode = ((BadRequest) e).getRestError().getCode();
                 if ("ALREADY_MARKED".equals(markErrorCode)) errorMessageKey = "samebug.mark.error.alreadyMarked";
                 else if ("NOT_YOUR_SEARCH".equals(markErrorCode)) errorMessageKey = "samebug.mark.error.notYourSearch";
                 else if ("NOT_YOUR_MARK".equals(markErrorCode)) errorMessageKey = "samebug.mark.error.notYourMark";
@@ -161,7 +160,7 @@ final class MarkModelController implements MarkModelListener {
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    view.finishPostMarkWithError(currentHit.solutionId, SamebugBundle.message(errorMessageKey));
+                    view.finishPostMarkWithError(currentHit.getSolutionId(), SamebugBundle.message(errorMessageKey));
                 }
             });
         }

@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class ApplicationComponentReference extends ComponentReference {
     @NotNull
-    public String packageName;
+    private String packageName;
 
     @Override
     @NotNull
@@ -31,9 +31,5 @@ public final class ApplicationComponentReference extends ComponentReference {
     @NotNull
     public Integer getColor() {
         return 0;
-    }
-
-    public ApplicationComponentReference(@NotNull final ApplicationComponentReference rhs) {
-        this.packageName = rhs.packageName;
     }
 }

@@ -54,7 +54,7 @@ final class ViewController implements SearchGroupCardListener, MarkViewListener,
     @Override
     public void titleClick(@NotNull TabController tab, SearchGroup searchGroup) {
         if (controller == tab) {
-            BrowserUtil.browse(IdeaSamebugPlugin.getInstance().getUrlBuilder().search(searchGroup.getLastSearch().id));
+            BrowserUtil.browse(IdeaSamebugPlugin.getInstance().getUrlBuilder().search(searchGroup.getLastSearch().getId()));
         }
     }
 
@@ -67,8 +67,8 @@ final class ViewController implements SearchGroupCardListener, MarkViewListener,
                     final ClientService client = IdeaSamebugPlugin.getInstance().getClient();
                     final RestHit hit = model.getHit();
                     try {
-                        if (hit.markId == null) client.postMark(model.getSearchId(), hit.solutionId);
-                        else client.retractMark(hit.markId);
+                        if (hit.getMarkId() == null) client.postMark(model.getSearchId(), hit.getSolutionId());
+                        else client.retractMark(hit.getMarkId());
                     } catch (SamebugClientException e) {
                         LOGGER.warn("Failed to execute mark.", e);
                     }

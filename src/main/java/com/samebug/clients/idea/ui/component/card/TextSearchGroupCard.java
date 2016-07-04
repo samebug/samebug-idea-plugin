@@ -48,7 +48,7 @@ final public class TextSearchGroupCard extends SearchGroupCard {
 
         hitsLabel = new TextSearchGroupCard.HitsLabel();
         titleLabel = new TextSearchGroupCard.QueryLabel();
-        queryLabel = new ExceptionMessageLabel(searchGroup.lastSearch.query);
+        queryLabel = new ExceptionMessageLabel(searchGroup.getLastSearch().getQuery());
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
@@ -109,10 +109,10 @@ final public class TextSearchGroupCard extends SearchGroupCard {
         static final int LIMIT = 100;
 
         {
-            if (searchGroup.numberOfHits > LIMIT) {
+            if (searchGroup.getNumberOfHits() > LIMIT) {
                 setText(String.format("%d+ hits", LIMIT));
             } else {
-                setText(String.format("%d hits", searchGroup.numberOfHits));
+                setText(String.format("%d hits", searchGroup.getNumberOfHits()));
             }
         }
 

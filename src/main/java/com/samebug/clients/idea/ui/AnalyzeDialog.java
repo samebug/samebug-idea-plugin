@@ -113,12 +113,12 @@ final public class AnalyzeDialog extends DialogWrapper {
                     try {
                         SearchResults result = client.searchSolutions(trace);
                         try {
-                            int searchId = result.searchId;
+                            int searchId = result.getSearchId();
                             URL url = plugin.getUrlBuilder().search(searchId);
                             BrowserUtil.browse(url);
                             Tracking.appTracking().trace(Events.searchSucceedInSearchDialog(searchId));
                         } catch (java.lang.Exception e1) {
-                            LOGGER.warn("Failed to open browser for search " + result.searchId, e1);
+                            LOGGER.warn("Failed to open browser for search " + result.getSearchId(), e1);
                         }
                     } catch (SamebugClientException e1) {
                         LOGGER.warn("Failed to execute search", e1);

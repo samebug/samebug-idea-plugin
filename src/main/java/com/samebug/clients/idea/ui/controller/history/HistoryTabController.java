@@ -117,7 +117,7 @@ final public class HistoryTabController implements TabController, Disposable, Se
     @Override
     public void titleClick(@NotNull TabController tab, SearchGroup searchGroup) {
         if (this == tab) {
-            twc.focusOnSearch(searchGroup.getLastSearch().id);
+            twc.focusOnSearch(searchGroup.getLastSearch().getId());
         }
     }
 

@@ -19,27 +19,45 @@ import org.jetbrains.annotations.NotNull;
 
 public final class BreadCrumb {
     @NotNull
-    public Integer level;
+    private Integer level;
     @NotNull
-    public Integer frames;
+    private Integer frames;
     @NotNull
-    public String typeName;
+    private String typeName;
     @NotNull
-    public Boolean passThrough;
+    private Boolean passThrough;
     @NotNull
-    public QualifiedCall entry;
+    private QualifiedCall entry;
     @NotNull
-    public ComponentReference component;
+    private ComponentReference component;
 
-    public BreadCrumb(@NotNull final BreadCrumb rhs) {
-        this.level = rhs.level;
-        this.frames = rhs.frames;
-        this.typeName = rhs.typeName;
-        this.passThrough = rhs.passThrough;
-        this.entry = new QualifiedCall(rhs.entry);
-        if (component instanceof ApplicationComponentReference) this.component = new ApplicationComponentReference((ApplicationComponentReference) rhs.component);
-        else if (component instanceof DefaultComponentReference) this.component = new DefaultComponentReference((DefaultComponentReference) rhs.component);
-        else if (component instanceof LibraryComponentReference) this.component = new LibraryComponentReference((LibraryComponentReference) rhs.component);
-        else if (component instanceof VendorComponentReference) this.component = new VendorComponentReference((VendorComponentReference) rhs.component);
+    @NotNull
+    public Integer getLevel() {
+        return level;
+    }
+
+    @NotNull
+    public Integer getFrames() {
+        return frames;
+    }
+
+    @NotNull
+    public String getTypeName() {
+        return typeName;
+    }
+
+    @NotNull
+    public Boolean getPassThrough() {
+        return passThrough;
+    }
+
+    @NotNull
+    public QualifiedCall getEntry() {
+        return entry;
+    }
+
+    @NotNull
+    public ComponentReference getComponent() {
+        return component;
     }
 }

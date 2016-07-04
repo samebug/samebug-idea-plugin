@@ -17,27 +17,13 @@ package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Date;
-
 public final class StackTraceSearchGroup extends SearchGroup {
     @NotNull
-    public StackTraceSearch lastSearch;
+    private StackTraceSearch lastSearch;
 
     @Override
     @NotNull
     public StackTraceSearch getLastSearch() {
         return lastSearch;
-    }
-
-    public StackTraceSearchGroup(@NotNull final StackTraceSearchGroup rhs) {
-        this.id = rhs.id;
-        this.visitorId = rhs.visitorId;
-        this.userId = rhs.userId;
-        this.teamId = rhs.teamId;
-        this.numberOfSearches = rhs.numberOfSearches;
-        this.numberOfHits = rhs.numberOfHits;
-        this.firstSeen = new Date(rhs.firstSeen.getTime());
-        this.lastSeen = new Date(rhs.lastSeen.getTime());
-        this.lastSearch = new StackTraceSearch(rhs.lastSearch);
     }
 }

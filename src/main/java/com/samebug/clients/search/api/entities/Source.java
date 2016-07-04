@@ -19,12 +19,17 @@ import org.jetbrains.annotations.NotNull;
 
 public final class Source {
     @NotNull
-    public String name;
+    private String name;
     @NotNull
-    public String icon;
+    private String icon;
 
-    public Source(@NotNull final Source rhs) {
-        this.name = rhs.name;
-        this.icon = rhs.icon;
+    @NotNull
+    public String getName() {
+        return name;
+    }
+
+    @NotNull
+    public String getIcon() {
+        return icon;
     }
 }

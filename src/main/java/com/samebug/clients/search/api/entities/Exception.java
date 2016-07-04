@@ -20,12 +20,17 @@ import org.jetbrains.annotations.Nullable;
 
 public final class Exception {
     @NotNull
-    public String typeName;
+    private String typeName;
     @Nullable
-    public String message;
+    private String message;
 
-    public Exception(@NotNull final Exception rhs) {
-        this.typeName = rhs.typeName;
-        this.message = rhs.message;
+    @NotNull
+    public String getTypeName() {
+        return typeName;
+    }
+
+    @Nullable
+    public String getMessage() {
+        return message;
     }
 }

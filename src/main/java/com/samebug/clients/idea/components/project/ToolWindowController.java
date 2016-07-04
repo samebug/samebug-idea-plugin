@@ -77,7 +77,9 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
         dateLabelRefresher = new Timer(LabelRefreshDelayInMs, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                project.getMessageBus().syncPublisher(RefreshTimestampsListener.TOPIC).refreshDateLabels();
+                if (!project.isDisposed()) {
+                    project.getMessageBus().syncPublisher(RefreshTimestampsListener.TOPIC).refreshDateLabels();
+                }
             }
         });
         dateLabelRefresher.setInitialDelay(LabelRefreshInitialDelayInMs);

@@ -60,14 +60,14 @@ final public class ExternalSolutionView extends HitView {
 //        }
         solution = model.getHit();
         // RestHit<SolutionReference> should always have an exception
-        assert solution.exception != null;
+        assert solution.getException() != null;
 
-        exceptionType = new ExceptionType(solution.exception.typeName);
-        breadcrumbPanel = new BreadcrumbBar(searchBreadcrumb.subList(0, solution.matchLevel));
+        exceptionType = new ExceptionType(solution.getException().getTypeName());
+        breadcrumbPanel = new BreadcrumbBar(searchBreadcrumb.subList(0, solution.getMatchLevel()));
         titlePanel = new SolutionTitlePanel();
-        exceptionMessageLabel = new ExceptionMessageLabel(solution.exception.message);
+        exceptionMessageLabel = new ExceptionMessageLabel(solution.getException().getMessage());
         exceptionTypePanel = new ExceptionTypePanel();
-        sourceReferencePanel = new SourceReferencePanel(solution.solution);
+        sourceReferencePanel = new SourceReferencePanel(solution.getSolution());
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.cardSeparator));
@@ -118,19 +118,19 @@ final public class ExternalSolutionView extends HitView {
 
     final class SolutionTitlePanel extends TransparentPanel {
         {
-            final Image sourceIcon = ImageUtil.getScaled(IdeaSamebugPlugin.getInstance().getUrlBuilder().sourceIcon(solution.solution.source.icon), 32, 32);
+            final Image sourceIcon = ImageUtil.getScaled(IdeaSamebugPlugin.getInstance().getUrlBuilder().sourceIcon(solution.getSolution().getSource().getIcon()), 32, 32);
             add(new SourceIcon(sourceIcon), BorderLayout.WEST);
             add(new TransparentPanel() {
                 {
                     setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-                    add(new LinkLabel(solution.solution.title.substring(0, Math.min(solution.solution.title.length(), 200)), solution.solution.url) {
+                    add(new LinkLabel(solution.getSolution().getTitle().substring(0, Math.min(solution.getSolution().getTitle().length(), 200)), solution.getSolution().getUrl()) {
                         {
                             HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
                             attributes.put(TextAttribute.SIZE, 16);
                             attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
                             setFont(getFont().deriveFont(attributes));
                             setForeground(Colors.samebugOrange);
-                            setToolTipText(SamebugBundle.message("samebug.solution.title.tooltip", solution.solution.url));
+                            setToolTipText(SamebugBundle.message("samebug.solution.title.tooltip", solution.getSolution().getUrl()));
                         }
                     }, BorderLayout.CENTER);
                 }
@@ -168,21 +168,21 @@ final public class ExternalSolutionView extends HitView {
 
         void refreshView() {
             setLayout(new FlowLayout(FlowLayout.RIGHT));
-            if (solutionReference.author == null) {
-                add(new JLabel(String.format("%s", TextUtil.prettyTime(solutionReference.createdAt))) {
+            if (solutionReference.getAuthor() == null) {
+                add(new JLabel(String.format("%s", TextUtil.prettyTime(solutionReference.getCreatedAt()))) {
                     @Override
                     public Color getForeground() {
                         return ColorUtil.unemphasizedText();
                     }
                 });
             } else {
-                add(new JLabel(String.format("%s | by ", TextUtil.prettyTime(solutionReference.createdAt))) {
+                add(new JLabel(String.format("%s | by ", TextUtil.prettyTime(solutionReference.getCreatedAt()))) {
                     @Override
                     public Color getForeground() {
                         return ColorUtil.unemphasizedText();
                     }
                 });
-                add(new LinkLabel(solutionReference.author.name, solutionReference.author.url) {
+                add(new LinkLabel(solutionReference.getAuthor().getName(), solutionReference.getAuthor().getUrl()) {
                     @Override
                     public Color getForeground() {
                         return ColorUtil.emphasizedText();

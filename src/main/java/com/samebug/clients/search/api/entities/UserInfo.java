@@ -21,17 +21,30 @@ import java.net.URL;
 
 public final class UserInfo {
     @NotNull
-    public Boolean isUserExist;
-    public Integer userId;
-    public String displayName;
-    public URL avatarUrl;
-    public Long defaultWorkspaceId;
+    private Boolean isUserExist;
+    private Integer userId;
+    private String displayName;
+    private URL avatarUrl;
+    private Long defaultWorkspaceId;
 
-    public UserInfo(@NotNull final UserInfo rhs) {
-        isUserExist = rhs.isUserExist;
-        userId = rhs.userId;
-        displayName = rhs.displayName;
-        avatarUrl = rhs.avatarUrl;
-        defaultWorkspaceId = rhs.defaultWorkspaceId;
+    @NotNull
+    public Boolean getUserExist() {
+        return isUserExist;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public URL getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public Long getDefaultWorkspaceId() {
+        return defaultWorkspaceId;
     }
 }

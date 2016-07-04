@@ -110,11 +110,11 @@ final public class SearchTabController implements TabController, Disposable {
                             } catch (Throwable e) {
                                 LOGGER.warn("Failed to load user's avatar", e);
                             }
-                            for (final RestHit<Tip> tip : solutions.tips) {
-                                imageUrls.add(tip.solution.author.avatarUrl);
+                            for (final RestHit<Tip> tip : solutions.getTips()) {
+                                imageUrls.add(tip.getSolution().getAuthor().getAvatarUrl());
                             }
-                            for (final RestHit<SolutionReference> s : solutions.references) {
-                                imageUrls.add(IdeaSamebugPlugin.getInstance().getUrlBuilder().sourceIcon(s.solution.source.icon));
+                            for (final RestHit<SolutionReference> s : solutions.getReferences()) {
+                                imageUrls.add(IdeaSamebugPlugin.getInstance().getUrlBuilder().sourceIcon(s.getSolution().getSource().getIcon()));
                             }
 
                             ImageUtil.loadImages(imageUrls);

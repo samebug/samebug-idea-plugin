@@ -22,15 +22,24 @@ import java.net.URL;
 
 public final class UserReference {
     @NotNull
-    public Integer id;
+    private Integer id;
     @NotNull
-    public String displayName;
+    private String displayName;
     @Nullable
-    public URL avatarUrl;
+    private URL avatarUrl;
 
-    public UserReference(@NotNull final UserReference rhs) {
-        this.id = rhs.id;
-        this.displayName = rhs.displayName;
-        this.avatarUrl = rhs.avatarUrl;
+    @NotNull
+    public Integer getId() {
+        return id;
+    }
+
+    @NotNull
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    @Nullable
+    public URL getAvatarUrl() {
+        return avatarUrl;
     }
 }

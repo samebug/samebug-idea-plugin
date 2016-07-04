@@ -15,19 +15,20 @@
  */
 package com.samebug.clients.search.api.entities;
 
-import org.jetbrains.annotations.NotNull;
-
 public final class RestError {
-    public String code;
-    public String message;
+    private String code;
+    private String message;
 
     @Override
     public String toString() {
-        return code + ": " + message;
+        return getCode() + ": " + getMessage();
     }
 
-    public RestError(@NotNull final RestError rhs) {
-        code = rhs.code;
-        message = rhs.message;
+    public String getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

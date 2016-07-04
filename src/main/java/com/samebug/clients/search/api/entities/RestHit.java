@@ -20,34 +20,104 @@ import org.jetbrains.annotations.Nullable;
 
 public final class RestHit<T extends RestSolution> {
     @NotNull
-    public Integer solutionId;
+    private Integer solutionId;
     @NotNull
-    public T solution;
+    private T solution;
     @NotNull
-    public String stackTraceId;
+    private String stackTraceId;
     @NotNull
-    public Integer matchLevel;
+    private Integer matchLevel;
     @NotNull
-    public Integer score;
+    private Integer score;
     @Nullable
-    public Integer markId;
+    private Integer markId;
     @Nullable
-    public UserReference createdBy;
+    private UserReference createdBy;
     @Nullable
-    public Exception exception;
+    private Exception exception;
 
-    public RestHit(@NotNull final RestHit<T> rhs) {
+    private RestHit(@NotNull final RestHit<T> rhs) {
         solutionId = rhs.solutionId;
-        if (rhs.solution instanceof SolutionReference) {
-            solution = (T) new SolutionReference((SolutionReference) rhs.solution);
-        } else if (rhs.solution instanceof Tip) {
-            solution = (T) new Tip((Tip) rhs.solution);
-        }
+        solution = rhs.solution;
         stackTraceId = rhs.stackTraceId;
         matchLevel = rhs.matchLevel;
         score = rhs.score;
         markId = rhs.markId;
-        createdBy = rhs.createdBy == null ? null : new UserReference(rhs.createdBy);
-        exception = rhs.exception == null ? null : new Exception(rhs.exception);
+        createdBy = rhs.createdBy;
+        exception = rhs.exception;
+    }
+
+    @NotNull
+    public Integer getSolutionId() {
+        return solutionId;
+    }
+
+    @NotNull
+    public T getSolution() {
+        return solution;
+    }
+
+    @NotNull
+    public String getStackTraceId() {
+        return stackTraceId;
+    }
+
+    @NotNull
+    public Integer getMatchLevel() {
+        return matchLevel;
+    }
+
+    @NotNull
+    public Integer getScore() {
+        return score;
+    }
+
+    @Nullable
+    public Integer getMarkId() {
+        return markId;
+    }
+
+    @Nullable
+    public UserReference getCreatedBy() {
+        return createdBy;
+    }
+
+    @Nullable
+    public Exception getException() {
+        return exception;
+    }
+
+
+    // TODO these should not be part of the entity?
+    @NotNull
+    public RestHit<T> asMarked() {
+        RestHit<T> marked = new RestHit<T>(this);
+        marked.score = marked.getScore() + 1;
+        marked.markId = -1;
+        return marked;
+    }
+
+    @NotNull
+    public RestHit<T> asUnmarked() {
+        RestHit<T> marked = new RestHit<T>(this);
+        marked.score = marked.getScore() - 1;
+        marked.markId = null;
+        return marked;
+    }
+
+    @NotNull
+    public RestHit<T> asMarked(@NotNull final MarkResponse mark) {
+        RestHit<T> marked = new RestHit<T>(this);
+        marked.score = mark.getDocumentVotes();
+        marked.markId = mark.getId();
+        return marked;
+    }
+
+    @NotNull
+    public RestHit<T> asUnmarked(@NotNull final MarkResponse mark) {
+        RestHit<T> marked = new RestHit<T>(this);
+        marked.score = mark.getDocumentVotes();
+        marked.markId = null;
+        return marked;
     }
 }

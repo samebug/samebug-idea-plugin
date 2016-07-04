@@ -17,23 +17,28 @@ package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class StackTraceWithBreadCrumbs {
     @NotNull
-    public String stackTraceId;
+    private String stackTraceId;
     @NotNull
-    public Exception trace;
+    private Exception trace;
     @NotNull
-    public List<BreadCrumb> breadCrumbs;
+    private List<BreadCrumb> breadCrumbs;
 
-    public StackTraceWithBreadCrumbs(@NotNull final StackTraceWithBreadCrumbs rhs) {
-        this.stackTraceId = rhs.stackTraceId;
-        this.trace = new Exception(rhs.trace);
-        this.breadCrumbs = new ArrayList<BreadCrumb>(rhs.breadCrumbs.size());
-        for (BreadCrumb c : rhs.breadCrumbs) {
-            this.breadCrumbs.add(new BreadCrumb(c));
-        }
+    @NotNull
+    public String getStackTraceId() {
+        return stackTraceId;
+    }
+
+    @NotNull
+    public Exception getTrace() {
+        return trace;
+    }
+
+    @NotNull
+    public List<BreadCrumb> getBreadCrumbs() {
+        return breadCrumbs;
     }
 }

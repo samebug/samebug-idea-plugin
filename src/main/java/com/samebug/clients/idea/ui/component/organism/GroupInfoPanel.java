@@ -39,11 +39,11 @@ final public class GroupInfoPanel extends TransparentPanel {
     class InfoLabel extends JLabel {
         InfoLabel(@NotNull final SearchGroup searchGroup) {
             String text;
-            if (searchGroup.numberOfSearches == 1) {
-                text = String.format("%s", TextUtil.prettyTime(searchGroup.lastSeen));
+            if (searchGroup.getNumberOfSearches() == 1) {
+                text = String.format("%s", TextUtil.prettyTime(searchGroup.getLastSeen()));
             } else {
                 text = String.format("%s | %d times, first %s",
-                        TextUtil.prettyTime(searchGroup.lastSeen), searchGroup.numberOfSearches, TextUtil.prettyTime(searchGroup.firstSeen));
+                        TextUtil.prettyTime(searchGroup.getLastSeen()), searchGroup.getNumberOfSearches(), TextUtil.prettyTime(searchGroup.getFirstSeen()));
             }
 
             setText(text);

@@ -55,12 +55,12 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         state.apiKey = apiKey;
         client.configure(state.getNetworkConfig());
         userInfo = client.getUserInfo(apiKey);
-        if (!userInfo.isUserExist) {
+        if (!userInfo.getUserExist()) {
             throw new UnknownApiKey(apiKey);
         } else {
-            state.userId = userInfo.userId;
-            state.avatarUrl = userInfo.avatarUrl.toString();
-            state.workspaceId = userInfo.defaultWorkspaceId;
+            state.userId = userInfo.getUserId();
+            state.avatarUrl = userInfo.getAvatarUrl().toString();
+            state.workspaceId = userInfo.getDefaultWorkspaceId();
             saveSettings(state);
         }
     }
@@ -107,9 +107,9 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
                 } else {
                     try {
                         UserInfo userInfo = client.getUserInfo(state.apiKey);
-                        if (userInfo.isUserExist) {
-                            state.userId = userInfo.userId;
-                            state.avatarUrl = userInfo.avatarUrl.toString();
+                        if (userInfo.getUserExist()) {
+                            state.userId = userInfo.getUserId();
+                            state.avatarUrl = userInfo.getAvatarUrl().toString();
                         }
                     } catch (SamebugClientException e) {
                         LOGGER.warn("Failed to get user info", e);

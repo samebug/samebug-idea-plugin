@@ -22,13 +22,38 @@ import java.util.Date;
 
 public abstract class Search {
     @NotNull
-    public Integer id;
+    protected Integer id;
     @NotNull
-    public Date timestamp;
+    protected Date timestamp;
     @Nullable
-    public String visitorId;
+    protected String visitorId;
     @Nullable
-    public Long userId;
+    protected Long userId;
     @Nullable
-    public Long teamId;
+    protected Long teamId;
+
+    @NotNull
+    public Integer getId() {
+        return id;
+    }
+
+    @NotNull
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    @Nullable
+    public String getVisitorId() {
+        return visitorId;
+    }
+
+    @Nullable
+    public Long getUserId() {
+        return userId;
+    }
+
+    @Nullable
+    public Long getTeamId() {
+        return teamId;
+    }
 }

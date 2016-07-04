@@ -50,23 +50,23 @@ final class HitConverter {
 
             @Override
             public SearchGroup getSearch() {
-                return solutions.searchGroup;
+                return solutions.getSearchGroup();
             }
 
             @Override
             public List<ExternalSolutionView.Model> getReferences() {
-                List<ExternalSolutionView.Model> result = new ArrayList<ExternalSolutionView.Model>(solutions.references.size());
-                for (RestHit<SolutionReference> reference : solutions.references) {
-                    result.add(convertReference(solutions.searchGroup, reference));
+                List<ExternalSolutionView.Model> result = new ArrayList<ExternalSolutionView.Model>(solutions.getReferences().size());
+                for (RestHit<SolutionReference> reference : solutions.getReferences()) {
+                    result.add(convertReference(solutions.getSearchGroup(), reference));
                 }
                 return result;
             }
 
             @Override
             public List<SamebugTipView.Model> getTips() {
-                List<SamebugTipView.Model> result = new ArrayList<SamebugTipView.Model>(solutions.tips.size());
-                for (RestHit<Tip> tip : solutions.tips) {
-                    result.add(convertTip(solutions.searchGroup, tip));
+                List<SamebugTipView.Model> result = new ArrayList<SamebugTipView.Model>(solutions.getTips().size());
+                for (RestHit<Tip> tip : solutions.getTips()) {
+                    result.add(convertTip(solutions.getSearchGroup(), tip));
                 }
                 return result;
             }
@@ -82,9 +82,9 @@ final class HitConverter {
 
 
     private MarkPanel.Model convertHit(@NotNull final SearchGroup search, @NotNull final RestHit hit) {
-        if (hit.solution instanceof Tip) return convertTip(search, hit);
-        else if (hit.solution instanceof SolutionReference) return convertReference(search, hit);
-        else throw new UnsupportedOperationException("Cannot handle solution type " + hit.solution.getClass().getSimpleName());
+        if (hit.getSolution() instanceof Tip) return convertTip(search, hit);
+        else if (hit.getSolution() instanceof SolutionReference) return convertReference(search, hit);
+        else throw new UnsupportedOperationException("Cannot handle solution type " + hit.getSolution().getClass().getSimpleName());
     }
 
     private SamebugTipView.Model convertTip(final SearchGroup search, final RestHit<Tip> hit) {
@@ -98,7 +98,7 @@ final class HitConverter {
             @NotNull
             @Override
             public int getSearchId() {
-                return search.getLastSearch().id;
+                return search.getLastSearch().getId();
             }
 
             @NotNull
@@ -131,7 +131,7 @@ final class HitConverter {
             @NotNull
             @Override
             public int getSearchId() {
-                return search.getLastSearch().id;
+                return search.getLastSearch().getId();
             }
 
             @Override
@@ -156,7 +156,7 @@ final class HitConverter {
     private SearchGroup currentSearch() {
         Solutions solutions = controller.service.getSolutions();
         if (solutions == null) return null;
-        else return solutions.searchGroup;
+        else return solutions.getSearchGroup();
     }
 
     @NotNull

@@ -29,10 +29,10 @@ public class AvatarPanel extends TransparentPanel {
         setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
         // 74 width comes by 5 + 64 + 5 from the border
         setPreferredSize(new Dimension(74, 100));
-        final Image profile = author.avatarUrl == null ? null : ImageUtil.getScaled(author.avatarUrl, 64, 64);
+        final Image profile = author.getAvatarUrl() == null ? null : ImageUtil.getScaled(author.getAvatarUrl(), 64, 64);
         add(new AvatarIcon(profile != null ? profile : ImageUtil.getAvatarPlaceholder()), BorderLayout.NORTH);
         // TODO: use author.url when the profile page will be public
-        add(new LinkLabel(author.name, null) {
+        add(new LinkLabel(author.getName(), null) {
             {
                 HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
                 attributes.put(TextAttribute.SIZE, 10);

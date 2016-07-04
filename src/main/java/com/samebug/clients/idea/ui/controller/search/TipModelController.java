@@ -65,7 +65,7 @@ final class TipModelController implements TipModelListener {
         if (searchId == mySearchId) {
             final String errorMessageKey;
             if (e instanceof BadRequest) {
-                final String writeTipErrorCode = ((BadRequest) e).getRestError().code;
+                final String writeTipErrorCode = ((BadRequest) e).getRestError().getCode();
                 if ("UNRECOGNIZED_SOURCE".equals(writeTipErrorCode)) errorMessageKey = "samebug.tip.write.error.source.malformed";
                 else if ("MESSAGE_TOO_SHORT".equals(writeTipErrorCode)) errorMessageKey = "samebug.tip.write.error.tip.short";
                 else if ("MESSAGE_TOO_LONG".equals(writeTipErrorCode)) errorMessageKey = "samebug.tip.write.error.tip.long";

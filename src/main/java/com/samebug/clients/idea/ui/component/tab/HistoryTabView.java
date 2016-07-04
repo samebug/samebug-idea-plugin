@@ -77,12 +77,12 @@ final public class HistoryTabView extends JPanel {
                 StackTraceSearchGroup g = (StackTraceSearchGroup) group;
                 StackTraceSearchGroupCard searchGroupCard = new StackTraceSearchGroupCard(g);
                 contentPanel.add(searchGroupCard);
-                cards.put(g.getLastSearch().id, searchGroupCard);
+                cards.put(g.getLastSearch().getId(), searchGroupCard);
             } else if (group instanceof TextSearchGroup) {
                 TextSearchGroup g = (TextSearchGroup) group;
                 TextSearchGroupCard searchGroupCard = new TextSearchGroupCard(g);
                 contentPanel.add(searchGroupCard);
-                cards.put(g.getLastSearch().id, searchGroupCard);
+                cards.put(g.getLastSearch().getId(), searchGroupCard);
             }
         }
 

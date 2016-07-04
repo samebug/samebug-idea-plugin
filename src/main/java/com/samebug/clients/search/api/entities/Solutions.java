@@ -16,30 +16,100 @@
 package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Solutions {
     @NotNull
-    public SearchGroup searchGroup;
+    private SearchGroup searchGroup;
     @NotNull
-    public List<RestHit<Tip>> tips;
+    private List<RestHit<Tip>> tips;
     @NotNull
-    public List<RestHit<SolutionReference>> references;
+    private List<RestHit<SolutionReference>> references;
 
-    public Solutions(@NotNull final Solutions rhs) {
-        if (rhs.searchGroup instanceof StackTraceSearchGroup) this.searchGroup = new StackTraceSearchGroup((StackTraceSearchGroup) rhs.searchGroup);
-        else if (rhs.searchGroup instanceof TextSearchGroup) this.searchGroup = new TextSearchGroup((TextSearchGroup) rhs.searchGroup);
-        else throw new UnsupportedOperationException("Unhandled subtype " + rhs.searchGroup.getClass().getSimpleName());
+    private Solutions(@NotNull final Solutions rhs) {
+        this.searchGroup = rhs.searchGroup;
+        this.tips = new ArrayList<RestHit<Tip>>(rhs.tips);
+        this.references = new ArrayList<RestHit<SolutionReference>>(rhs.references);
+    }
 
-        this.tips = new ArrayList<RestHit<Tip>>(rhs.tips.size());
-        for (RestHit<Tip> t : rhs.tips) {
-            this.tips.add(new RestHit<Tip>(t));
+    @NotNull
+    public SearchGroup getSearchGroup() {
+        return searchGroup;
+    }
+
+    @NotNull
+    public List<RestHit<Tip>> getTips() {
+        return tips;
+    }
+
+    @NotNull
+    public List<RestHit<SolutionReference>> getReferences() {
+        return references;
+    }
+
+
+    @NotNull
+    public Solutions addTip(@NotNull final RestHit<Tip> tip) {
+        Solutions updated = new Solutions(this);
+        updated.tips.add(0, tip);
+        return updated;
+    }
+
+    @NotNull
+    public Solutions asMarked(int solutionId, @NotNull final MarkResponse mark) {
+        Solutions updated = new Solutions(this);
+        for (int i = 0; i < references.size(); ++i) {
+            if (references.get(i).getSolutionId() == solutionId) {
+                references.set(i, references.get(i).asMarked(mark));
+            }
         }
-        this.references = new ArrayList<RestHit<SolutionReference>>(rhs.references.size());
-        for (RestHit<SolutionReference> s : rhs.references) {
-            this.references.add(new RestHit<SolutionReference>(s));
+        for (int i = 0; i < tips.size(); ++i) {
+            if (tips.get(i).getSolutionId() == solutionId) {
+                tips.set(i, tips.get(i).asMarked(mark));
+            }
         }
+        return updated;
+    }
+
+    @NotNull
+    public Solutions asUnmarked(int solutionId, @NotNull final MarkResponse mark) {
+        Solutions updated = new Solutions(this);
+        for (int i = 0; i < references.size(); ++i) {
+            if (references.get(i).getSolutionId() == solutionId) {
+                references.set(i, references.get(i).asUnmarked(mark));
+            }
+        }
+        for (int i = 0; i < tips.size(); ++i) {
+            if (tips.get(i).getSolutionId() == solutionId) {
+                tips.set(i, tips.get(i).asUnmarked(mark));
+            }
+        }
+        return updated;
+    }
+
+    @Nullable
+    public RestHit getHitForSolutionId(int solutionId) {
+        RestHit<Tip> t = getTipForSolutionId(solutionId);
+        RestHit<SolutionReference> r = getReferenceForSolutionId(solutionId);
+        return t == null ? r : t;
+    }
+
+    @Nullable
+    private RestHit<Tip> getTipForSolutionId(int solutionId) {
+        for (RestHit<Tip> tip : tips) {
+            if (tip.getSolutionId() == solutionId) return tip;
+        }
+        return null;
+    }
+
+    @Nullable
+    private RestHit<SolutionReference> getReferenceForSolutionId(int solutionId) {
+        for (RestHit<SolutionReference> reference : references) {
+            if (reference.getSolutionId() == solutionId) return reference;
+        }
+        return null;
     }
 }

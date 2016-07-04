@@ -45,7 +45,7 @@ final class TrackingController implements SearchGroupCardListener {
     @Override
     public void titleClick(@NotNull TabController tab, SearchGroup searchGroup) {
         if (controller == tab) {
-            tracker.trace(Events.searchClick(myProject, searchGroup.getLastSearch().id));
+            tracker.trace(Events.searchClick(myProject, searchGroup.getLastSearch().getId()));
         }
     }
 }

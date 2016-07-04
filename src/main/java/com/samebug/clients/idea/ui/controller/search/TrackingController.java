@@ -54,7 +54,7 @@ final class TrackingController implements SearchGroupCardListener, MarkViewListe
     public void titleClick(@NotNull TabController tab, SearchGroup searchGroup) {
         if (controller == tab) {
             // TODO there should be no logic/work here. If the url is not ready, than it is not a linkClicked event.
-            URL url = IdeaSamebugPlugin.getInstance().getUrlBuilder().search(searchGroup.getLastSearch().id);
+            URL url = IdeaSamebugPlugin.getInstance().getUrlBuilder().search(searchGroup.getLastSearch().getId());
             tracker.trace(Events.linkClick(myProject, url));
         }
     }
@@ -83,7 +83,7 @@ final class TrackingController implements SearchGroupCardListener, MarkViewListe
     @Override
     public void mark(TabController tab, MarkPanel.Model model) {
         if (controller == tab) {
-            tracker.trace(Events.markSubmit(myProject, controller.mySearchId, model.getHit().solutionId, null));
+            tracker.trace(Events.markSubmit(myProject, controller.mySearchId, model.getHit().getSolutionId(), null));
         }
     }
 }

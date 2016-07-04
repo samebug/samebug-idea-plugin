@@ -22,15 +22,24 @@ import java.net.URL;
 
 public final class Author {
     @NotNull
-    public String name;
+    private String name;
     @Nullable
-    public URL url;
+    private URL url;
     @Nullable
-    public URL avatarUrl;
+    private URL avatarUrl;
 
-    public Author(@NotNull final Author rhs) {
-        this.name = rhs.name;
-        this.url = rhs.url;
-        this.avatarUrl = rhs.avatarUrl;
+    @NotNull
+    public String getName() {
+        return name;
+    }
+
+    @Nullable
+    public URL getUrl() {
+        return url;
+    }
+
+    @Nullable
+    public URL getAvatarUrl() {
+        return avatarUrl;
     }
 }

@@ -65,22 +65,22 @@ final public class BreadcrumbBar extends TransparentPanel {
                 setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 addMouseListener(new LinkOpener(link));
             }
-            final QualifiedCall e = breadCrumb.entry;
-            if (e.packageName != null) {
-                setToolTipText(String.format("%s.%s.%s()", e.packageName, e.className, e.methodName));
+            final QualifiedCall e = breadCrumb.getEntry();
+            if (e.getPackageName() != null) {
+                setToolTipText(String.format("%s.%s.%s()", e.getPackageName(), e.getClassName(), e.getMethodName()));
             }
         }
 
         @Override
         public String getText() {
             if (breadCrumb == null) return super.getText();
-            else return breadCrumb.component.getName();
+            else return breadCrumb.getComponent().getName();
         }
 
         @Override
         public Color getForeground() {
             if (breadCrumb == null) return super.getForeground();
-            else return ColorUtil.componentColors(breadCrumb.component.getColor());
+            else return ColorUtil.componentColors(breadCrumb.getComponent().getColor());
         }
     }
 }
