@@ -71,15 +71,15 @@ public class ClientService implements ApplicationComponent {
             }
 
             void start() {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(HistoryModelListener.TOPIC).startLoadHistory();
+                messageBus.syncPublisher(HistoryModelListener.TOPIC).startLoadHistory();
             }
 
             void success(SearchHistory result) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(HistoryModelListener.TOPIC).successLoadHistory(result);
+                messageBus.syncPublisher(HistoryModelListener.TOPIC).successLoadHistory(result);
             }
 
             void fail(java.lang.Exception e) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(HistoryModelListener.TOPIC).failLoadHistory(e);
+                messageBus.syncPublisher(HistoryModelListener.TOPIC).failLoadHistory(e);
             }
         }.execute();
     }
@@ -91,15 +91,15 @@ public class ClientService implements ApplicationComponent {
             }
 
             void start() {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(SearchModelListener.TOPIC).startLoadingSolutions(searchId);
+                messageBus.syncPublisher(SearchModelListener.TOPIC).startLoadingSolutions(searchId);
             }
 
             void success(Solutions result) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(SearchModelListener.TOPIC).successLoadingSolutions(searchId, result);
+                messageBus.syncPublisher(SearchModelListener.TOPIC).successLoadingSolutions(searchId, result);
             }
 
             void fail(java.lang.Exception e) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(SearchModelListener.TOPIC).failLoadingSolutions(searchId, e);
+                messageBus.syncPublisher(SearchModelListener.TOPIC).failLoadingSolutions(searchId, e);
             }
         }.execute();
     }
@@ -111,15 +111,15 @@ public class ClientService implements ApplicationComponent {
             }
 
             void start() {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(TipModelListener.TOPIC).startPostTip(searchId);
+                messageBus.syncPublisher(TipModelListener.TOPIC).startPostTip(searchId);
             }
 
             void success(RestHit<Tip> result) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(TipModelListener.TOPIC).successPostTip(searchId, result);
+                messageBus.syncPublisher(TipModelListener.TOPIC).successPostTip(searchId, result);
             }
 
             void fail(java.lang.Exception e) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(TipModelListener.TOPIC).failPostTip(searchId, e);
+                messageBus.syncPublisher(TipModelListener.TOPIC).failPostTip(searchId, e);
             }
         }.execute();
     }
@@ -131,15 +131,15 @@ public class ClientService implements ApplicationComponent {
             }
 
             void start() {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(MarkModelListener.TOPIC).startPostingMark(searchId, solutionId);
+                messageBus.syncPublisher(MarkModelListener.TOPIC).startPostingMark(searchId, solutionId);
             }
 
             void success(MarkResponse result) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(MarkModelListener.TOPIC).successPostingMark(searchId, solutionId, result);
+                messageBus.syncPublisher(MarkModelListener.TOPIC).successPostingMark(searchId, solutionId, result);
             }
 
             void fail(java.lang.Exception e) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(MarkModelListener.TOPIC).failPostingMark(searchId, solutionId, e);
+                messageBus.syncPublisher(MarkModelListener.TOPIC).failPostingMark(searchId, solutionId, e);
             }
         }.execute();
     }
@@ -151,15 +151,15 @@ public class ClientService implements ApplicationComponent {
             }
 
             void start() {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(MarkModelListener.TOPIC).startRetractMark(voteId);
+                messageBus.syncPublisher(MarkModelListener.TOPIC).startRetractMark(voteId);
             }
 
             void success(MarkResponse result) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(MarkModelListener.TOPIC).successRetractMark(voteId, result);
+                messageBus.syncPublisher(MarkModelListener.TOPIC).successRetractMark(voteId, result);
             }
 
             void fail(java.lang.Exception e) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(MarkModelListener.TOPIC).failRetractMark(voteId, e);
+                messageBus.syncPublisher(MarkModelListener.TOPIC).failRetractMark(voteId, e);
             }
         }.execute();
     }
