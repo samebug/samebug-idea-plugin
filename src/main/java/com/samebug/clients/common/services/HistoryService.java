@@ -61,7 +61,7 @@ final public class HistoryService {
     }
 
     public int unfilteredHistoryLength() {
-        SearchHistory currentHistory = history.get();
+        @Nullable SearchHistory currentHistory = history.get();
         if (currentHistory == null) {
             return 0;
         } else {
@@ -71,7 +71,7 @@ final public class HistoryService {
 
     @Nullable
     public List<SearchGroup> getVisibleHistory() {
-        SearchHistory currentHistory = history.get();
+        @Nullable SearchHistory currentHistory = history.get();
         if (currentHistory == null) return null;
         else {
             final Date now = new Date();
@@ -93,7 +93,6 @@ final public class HistoryService {
         }
     }
 
-    // TODO make entity classes immutable
     public void setHistory(@Nullable SearchHistory history) {
         this.history.set(history);
     }

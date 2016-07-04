@@ -34,7 +34,6 @@ final public class SearchService {
     }
 
     public void setSolutions(@Nullable final Solutions solutions) {
-        // TODO make entity classes immutable
         this.search.set(solutions);
     }
 
@@ -45,7 +44,7 @@ final public class SearchService {
 
     @Nullable
     public RestHit marked(final int solutionId, @NotNull final MarkResponse mark) {
-        Solutions currentSearch = search.get();
+        @Nullable Solutions currentSearch = search.get();
         if (currentSearch == null) return null;
         else {
             Solutions updatedModel = currentSearch.asMarked(solutionId, mark);
@@ -54,10 +53,9 @@ final public class SearchService {
         }
     }
 
-    // TODO this is the same as marked, but MarkResponse does not differentiate posting and retracting
     @Nullable
     public RestHit unmarked(final int solutionId, @NotNull final MarkResponse mark) {
-        Solutions currentModel = search.get();
+        @Nullable Solutions currentModel = search.get();
         if (currentModel == null) return null;
         else {
             Solutions updatedModel = currentModel.asUnmarked(solutionId, mark);
@@ -67,9 +65,8 @@ final public class SearchService {
     }
 
     public void addTip(@NotNull final RestHit<Tip> tip) {
-        Solutions currentModel = search.get();
-        if (currentModel == null) return;
-        else {
+        @Nullable Solutions currentModel = search.get();
+        if (currentModel != null) {
             Solutions updatedModel = currentModel.addTip(tip);
             search.set(updatedModel);
         }
@@ -77,23 +74,14 @@ final public class SearchService {
 
     @Nullable
     public RestHit getHit(@NotNull final Integer searchId, @NotNull final Integer solutionId) {
-        Solutions currentSearch = search.get();
-        if (searchId.equals(mySearchId) && currentSearch != null) {
-            for (RestHit<SolutionReference> s : currentSearch.getReferences()) {
-                if (solutionId.equals(s.getSolutionId())) return new RestHit<SolutionReference>(s);
-            }
-            for (RestHit<Tip> t : currentSearch.getTips()) {
-                if (solutionId.equals(t.getSolutionId())) return new RestHit<Tip>(t);
-            }
-            return null;
-        } else {
-            return null;
-        }
+        @Nullable Solutions currentSearch = search.get();
+        if (searchId.equals(mySearchId) && currentSearch != null) return currentSearch.getHitForSolutionId(solutionId);
+        else return null;
     }
 
     @Nullable
     public RestHit getHitForVote(@NotNull final Integer voteId) {
-        Solutions currentSearch = search.get();
+        @Nullable Solutions currentSearch = search.get();
         if (currentSearch == null) return null;
         for (RestHit<SolutionReference> s : currentSearch.getReferences()) {
             if (voteId.equals(s.getMarkId())) return s;
