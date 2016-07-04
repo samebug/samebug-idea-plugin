@@ -123,7 +123,7 @@ final public class ExternalSolutionView extends HitView {
             add(new TransparentPanel() {
                 {
                     setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-                    add(new LinkLabel(solution.solution.title, solution.solution.url) {
+                    add(new LinkLabel(solution.solution.title.substring(0, Math.min(solution.solution.title.length(), 200)), solution.solution.url) {
                         {
                             HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
                             attributes.put(TextAttribute.SIZE, 16);
