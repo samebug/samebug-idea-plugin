@@ -72,6 +72,7 @@ final class TipModelController implements TipModelListener {
                 else if ("NOT_YOUR_SEARCH".equals(writeTipErrorCode)) errorMessageKey = "samebug.tip.write.error.notYourSearch";
                 else if ("NOT_EXCEPTION_SEARCH".equals(writeTipErrorCode)) errorMessageKey = "samebug.tip.write.error.notExceptionSearch";
                 else if ("UNKNOWN_SEARCH".equals(writeTipErrorCode)) errorMessageKey = "samebug.tip.write.error.unknownSearch";
+                else if ("UNREACHABLE_SOURCE".equals(writeTipErrorCode)) errorMessageKey = "samebug.tip.write.error.unreachableSource";
                 else errorMessageKey = "samebug.tip.write.error.source.unhandledBadRequest";
             } else {
                 errorMessageKey = "samebug.tip.write.error.source.unhandled";
