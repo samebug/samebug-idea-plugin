@@ -145,14 +145,14 @@ final public class SamebugClient {
 
     public
     @NotNull
-    RestHit<Tip> postTip(@NotNull final Integer searchId, @NotNull final String tip, @Nullable final URL source) throws SamebugClientException {
+    RestHit<Tip> postTip(@NotNull final Integer searchId, @NotNull final String tip, @Nullable final String source) throws SamebugClientException {
         final URL url = urlBuilder.tip();
         HttpPost post = new HttpPost(url.toString());
         List<BasicNameValuePair> form = new ArrayList<BasicNameValuePair>();
         // TODO checkstyle fails if there are only spaces before the next two lines
         if (tip != null) form.add(new BasicNameValuePair("message", tip));
         if (searchId != null) form.add(new BasicNameValuePair("searchId", searchId.toString()));
-        if (source != null) form.add(new BasicNameValuePair("sourceUrl", source.toString()));
+        if (source != null) form.add(new BasicNameValuePair("sourceUrl", source));
         post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
 
         return requestJson(post, new TypeToken<RestHit<Tip>>() {

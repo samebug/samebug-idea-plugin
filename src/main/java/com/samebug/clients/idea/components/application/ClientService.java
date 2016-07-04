@@ -104,7 +104,7 @@ public class ClientService implements ApplicationComponent {
         }.execute();
     }
 
-    public RestHit<Tip> postTip(final int searchId, final String tip, final URL sourceUrl) throws SamebugClientException {
+    public RestHit<Tip> postTip(final int searchId, final String tip, final String sourceUrl) throws SamebugClientException {
         return new ConnectionAwareHttpRequest<RestHit<Tip>>() {
             RestHit<Tip> request() throws SamebugClientException {
                 return client.postTip(searchId, tip, sourceUrl);

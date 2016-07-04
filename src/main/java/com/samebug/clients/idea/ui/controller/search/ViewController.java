@@ -34,6 +34,8 @@ import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 final class ViewController implements SearchGroupCardListener, MarkViewListener, SearchTabsViewListener, WriteTipListener, RefreshTimestampsListener {
@@ -101,7 +103,7 @@ final class ViewController implements SearchGroupCardListener, MarkViewListener,
     @Override
     public void sendClick(final TabController tab, final String tip, final String rawSourceUrl) {
         if (tab == controller) {
-            URL tmpSourceUrl = null;
+            URI tmpSourceUrl = null;
             String errorKey = null;
             if (tip.length() < WriteTip.minCharacters) {
                 errorKey = "samebug.tip.write.error.tip.short";
@@ -112,13 +114,15 @@ final class ViewController implements SearchGroupCardListener, MarkViewListener,
             } else {
                 if (rawSourceUrl != null && !rawSourceUrl.trim().isEmpty()) {
                     try {
-                        tmpSourceUrl = new URL(rawSourceUrl);
+                        tmpSourceUrl = new URL(rawSourceUrl).toURI();
                     } catch (MalformedURLException e1) {
+                        errorKey = "samebug.tip.write.error.source.malformed";
+                    } catch (URISyntaxException e) {
                         errorKey = "samebug.tip.write.error.source.malformed";
                     }
                 }
             }
-            final URL sourceUrl = tmpSourceUrl;
+            final String sourceUrl = tmpSourceUrl == null ? null : tmpSourceUrl.toString();
             if (errorKey != null) {
                 controller.view.finishPostTipWithError(SamebugBundle.message(errorKey));
             } else {
