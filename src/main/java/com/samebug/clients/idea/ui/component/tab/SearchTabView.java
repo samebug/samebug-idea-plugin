@@ -19,6 +19,7 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.util.containers.HashMap;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
@@ -28,6 +29,7 @@ import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.idea.ui.component.WriteTip;
 import com.samebug.clients.idea.ui.component.WriteTipHint;
 import com.samebug.clients.idea.ui.component.card.*;
+import com.samebug.clients.idea.ui.component.organism.MarkPanel;
 import com.samebug.clients.idea.ui.component.organism.WarningPanel;
 import com.samebug.clients.search.api.entities.SearchGroup;
 import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
@@ -71,10 +73,32 @@ final public class SearchTabView extends JPanel {
     }
 
 
-    @Nullable
-    public HitView getHitCard(int solutionId) {
-        if (cards.keySet().contains(solutionId)) return cards.get(solutionId);
-        else return null;
+    public void beginPostMark(int solutionId, @NotNull final MarkPanel.Model model) {
+        if (cards.keySet().contains(solutionId)) {
+            cards.get(solutionId).markPanel.beginPostMark(model);
+        }
+    }
+
+    public void finishPostMarkWithError(int solutionId, @NotNull final String errorMessage) {
+        if (cards.keySet().contains(solutionId)) {
+            cards.get(solutionId).markPanel.finishPostMarkWithError(errorMessage);
+        }
+    }
+
+    public void finishPostMarkWithSuccess(int solutionId, @NotNull final MarkPanel.Model model) {
+        if (cards.keySet().contains(solutionId)) {
+            cards.get(solutionId).markPanel.finishPostMarkWithSuccess(model);
+        }
+    }
+
+    public void beginPostTip() {
+        tipPanel.beginPostTip();
+    }
+    public void finishPostTipWithSuccess() {
+        tipPanel.finishPostTipWithSuccess();
+    }
+    public void finishPostTipWithError(final String message) {
+        tipPanel.finishPostTipWithError(message);
     }
 
     public void setWarningLoading() {

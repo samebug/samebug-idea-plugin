@@ -22,7 +22,6 @@ import com.samebug.clients.common.services.RestHits;
 import com.samebug.clients.common.services.SearchService;
 import com.samebug.clients.idea.messages.client.MarkModelListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.idea.ui.component.card.HitView;
 import com.samebug.clients.idea.ui.component.organism.MarkPanel;
 import com.samebug.clients.idea.ui.component.tab.SearchTabView;
 import com.samebug.clients.search.api.entities.MarkResponse;
@@ -123,15 +122,12 @@ final class MarkModelController implements MarkModelListener {
 
 
     private void updateViewForStartedMark(@Nullable final RestHit currentHit, @Nullable final RestHit predictedHit) {
-        final MarkPanel.Model updatedModel = predictedHit == null ? null : hitConverter.convertHit(predictedHit);
-        if (currentHit != null && updatedModel != null) {
+        final MarkPanel.Model predictedModel = predictedHit == null ? null : hitConverter.convertHit(predictedHit);
+        if (currentHit != null && predictedModel != null) {
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    final HitView hitCard = view.getHitCard(currentHit.solutionId);
-                    if (hitCard != null) {
-                        hitCard.markPanel.beginPostMark(updatedModel);
-                    }
+                    view.beginPostMark(currentHit.solutionId, predictedModel);
                 }
             });
         }
@@ -143,10 +139,7 @@ final class MarkModelController implements MarkModelListener {
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    final HitView hitCard = view.getHitCard(updatedHit.solutionId);
-                    if (hitCard != null) {
-                        hitCard.markPanel.finishPostMarkWithSuccess(updatedModel);
-                    }
+                    view.finishPostMarkWithSuccess(updatedHit.solutionId, updatedModel);
                 }
             });
         }
@@ -168,10 +161,7 @@ final class MarkModelController implements MarkModelListener {
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    final HitView hitCard = controller.view.getHitCard(currentHit.solutionId);
-                    if (hitCard != null) {
-                        hitCard.markPanel.finishPostMarkWithError(SamebugBundle.message(errorMessageKey));
-                    }
+                    view.finishPostMarkWithError(currentHit.solutionId, SamebugBundle.message(errorMessageKey));
                 }
             });
         }

@@ -123,7 +123,7 @@ final class ViewController implements SearchGroupCardListener, MarkViewListener,
             }
             final URL sourceUrl = tmpSourceUrl;
             if (errorKey != null) {
-                controller.view.tipPanel.finishPostTipWithError(SamebugBundle.message(errorKey));
+                controller.view.finishPostTipWithError(SamebugBundle.message(errorKey));
             } else {
                 ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
                     @Override

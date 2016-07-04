@@ -79,7 +79,7 @@ final class TipModelController implements TipModelListener {
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    controller.view.tipPanel.finishPostTipWithError(SamebugBundle.message(errorMessageKey));
+                    controller.view.finishPostTipWithError(SamebugBundle.message(errorMessageKey));
                 }
             });
         }

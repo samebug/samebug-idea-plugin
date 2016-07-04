@@ -19,6 +19,7 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.util.containers.HashMap;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
@@ -34,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 
 final public class HistoryTabView extends JPanel {
     @NotNull
@@ -43,10 +45,14 @@ final public class HistoryTabView extends JPanel {
     @NotNull
     JComponent contentPanel;
 
+    @NotNull
+    final Map<Integer, SearchGroup> searches;
+
     public HistoryTabView() {
         statusIcon = new NetworkStatusIcon();
         toolbarPanel = new ToolBarPanel();
         contentPanel = new TransparentPanel();
+        searches = new HashMap<Integer, SearchGroup>();
 
         setLayout(new BorderLayout());
         add(toolbarPanel, BorderLayout.NORTH);
@@ -64,7 +70,9 @@ final public class HistoryTabView extends JPanel {
         final JScrollPane scrollPane = new JScrollPane();
         final JPanel contentPanel = new ContentPanel();
 
+        searches.clear();
         for (SearchGroup group : groups) {
+            searches.put(group.getLastSearch().id, group);
             if (group instanceof StackTraceSearchGroup) {
                 StackTraceSearchGroup g = (StackTraceSearchGroup) group;
                 StackTraceSearchGroupCard searchGroupCard = new StackTraceSearchGroupCard(g);
