@@ -26,6 +26,7 @@ import com.samebug.clients.common.services.SearchService;
 import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.project.ToolWindowController;
+import com.samebug.clients.idea.messages.view.WriteTipListener;
 import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.component.tab.SearchTabView;
 import com.samebug.clients.idea.ui.controller.TabController;
@@ -144,7 +145,7 @@ final public class SearchTabController implements TabController, Disposable {
         } else if (connectionService.isConnected() && !connectionService.isAuthenticated()) {
             view.setWarningNotLoggedIn();
         } else if (solutions != null) {
-            view.setSolutions(hitConverter.convertSolutions(solutions));
+            view.setSolutions(hitConverter.convertSolutions(solutions), new Actions());
         } else {
             view.setWarningOther();
         }
@@ -163,6 +164,24 @@ final public class SearchTabController implements TabController, Disposable {
         public Object getData(@NonNls final String dataId) {
             if (ToolWindowController.DATA_KEY.is(dataId)) return SearchTabController.this;
             else return null;
+        }
+    }
+
+    private final class Actions implements SearchTabView.Actions {
+
+        @Override
+        public void onClickWriteTip() {
+            project.getMessageBus().syncPublisher(WriteTipListener.TOPIC).openWriteTip(SearchTabController.this);
+        }
+
+        @Override
+        public void onClickCancel() {
+            project.getMessageBus().syncPublisher(WriteTipListener.TOPIC).cancelWriteTip(SearchTabController.this);
+        }
+
+        @Override
+        public void onClickSubmitTip(String tip, String rawSourceUrl) {
+            project.getMessageBus().syncPublisher(WriteTipListener.TOPIC).submitTip(SearchTabController.this, tip, rawSourceUrl);
         }
     }
 }

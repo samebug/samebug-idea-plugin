@@ -60,21 +60,21 @@ final class TrackingController implements SearchGroupCardListener, MarkViewListe
     }
 
     @Override
-    public void ctaClick(TabController tab) {
+    public void openWriteTip(TabController tab) {
         if (controller == tab) {
             tracker.trace(Events.writeTipOpen(myProject, controller.mySearchId));
         }
     }
 
     @Override
-    public void cancelClick(TabController tab) {
+    public void cancelWriteTip(TabController tab) {
         if (controller == tab) {
             tracker.trace(Events.writeTipCancel(myProject, controller.mySearchId));
         }
     }
 
     @Override
-    public void sendClick(TabController tab, String tip, String rawSourceUrl) {
+    public void submitTip(TabController tab, String tip, String rawSourceUrl) {
         if (controller == tab) {
             tracker.trace(Events.writeTipSubmit(myProject, controller.mySearchId, tip, rawSourceUrl, null));
         }

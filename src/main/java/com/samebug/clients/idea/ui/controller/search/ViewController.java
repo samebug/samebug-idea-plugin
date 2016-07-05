@@ -87,21 +87,15 @@ final class ViewController implements SearchGroupCardListener, MarkViewListener,
     }
 
     @Override
-    public void ctaClick(TabController tab) {
-        if (tab == controller) {
-            controller.view.showWriteTip();
-        }
+    public void openWriteTip(TabController tab) {
     }
 
     @Override
-    public void cancelClick(TabController tab) {
-        if (tab == controller) {
-            controller.view.showWriteTipHint();
-        }
+    public void cancelWriteTip(TabController tab) {
     }
 
     @Override
-    public void sendClick(final TabController tab, final String tip, final String rawSourceUrl) {
+    public void submitTip(final TabController tab, final String tip, final String rawSourceUrl) {
         if (tab == controller) {
             URI tmpSourceUrl = null;
             String errorKey = null;

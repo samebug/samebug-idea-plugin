@@ -21,9 +21,9 @@ import com.samebug.clients.idea.ui.controller.TabController;
 public interface WriteTipListener {
     Topic<WriteTipListener> TOPIC = Topic.create("write tip", WriteTipListener.class);
 
-    void ctaClick(TabController tab);
+    void openWriteTip(TabController tab);
 
-    void cancelClick(TabController tab);
+    void cancelWriteTip(TabController tab);
 
-    void sendClick(TabController tab, String tip, String rawSourceUrl);
+    void submitTip(TabController tab, String tip, String rawSourceUrl);
 }
