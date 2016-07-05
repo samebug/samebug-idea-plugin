@@ -25,8 +25,6 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.component.NetworkStatusIcon;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
-import com.samebug.clients.idea.ui.component.WriteTip;
-import com.samebug.clients.idea.ui.component.WriteTipHint;
 import com.samebug.clients.idea.ui.component.card.*;
 import com.samebug.clients.idea.ui.component.organism.MarkPanel;
 import com.samebug.clients.idea.ui.component.organism.WarningPanel;
@@ -47,13 +45,11 @@ final public class SearchTabView extends JPanel {
     @NotNull
     final public NetworkStatusIcon statusIcon;
     @NotNull
-    final public WriteTipHint writeTipHint;
-    @NotNull
-    final public WriteTip tipPanel;
-    @NotNull
     JComponent contentPanel;
     @Nullable
-    public JComponent header;
+    public CollapsibleTipPanel tipPanel;
+    @Nullable
+    public JPanel header;
 
     @NotNull
     final Map<Integer, HitView> cards;
@@ -63,8 +59,6 @@ final public class SearchTabView extends JPanel {
     public SearchTabView() {
         statusIcon = new NetworkStatusIcon();
         toolbarPanel = new ToolBarPanel();
-        writeTipHint = new WriteTipHint();
-        tipPanel = new WriteTip();
         contentPanel = new TransparentPanel();
         cards = new HashMap<Integer, HitView>();
 
@@ -110,23 +104,21 @@ final public class SearchTabView extends JPanel {
         updateContent(panel);
     }
 
-    public void setSolutions(@NotNull final Model model) {
+    public void setSolutions(@NotNull final Model model, @NotNull final Actions actions) {
         cards.clear();
         final JPanel controlPanel = new TransparentPanel();
-        header = new TransparentPanel();
+        tipPanel = new CollapsibleTipPanel(actions);
 
-        // add search card to the header
+        // add search card to the tipPanel
         if (model.getSearch() instanceof StackTraceSearchGroup) {
             StackTraceSearchGroup group = (StackTraceSearchGroup) model.getSearch();
             search = new StackTraceSearchGroupCard(group);
-            header.add(search);
         } else {
             TextSearchGroup group = (TextSearchGroup) model.getSearch();
             search = new TextSearchGroupCard(group);
-            header.add(search);
         }
-
-        showWriteTipHint();
+        header = new CollapsableView(search,
+                SamebugBundle.message("samebug.toolwindow.search.collapsibleHeader.open"), SamebugBundle.message("samebug.toolwindow.search.collapsibleHeader.close"));
 
         // add result list
         if (model.getTips().isEmpty() && model.getReferences().isEmpty()) {
@@ -155,29 +147,17 @@ final public class SearchTabView extends JPanel {
         }
         updateContent(new TransparentPanel() {
             {
-                add(header, BorderLayout.NORTH);
+                add(new TransparentPanel() {
+                    {
+                        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+                        add(header);
+                        add(tipPanel);
+                    }
+                }, BorderLayout.NORTH);
                 add(controlPanel, BorderLayout.CENTER);
             }
         });
 
-    }
-
-    public void showWriteTip() {
-        if (header != null) {
-            header.remove(writeTipHint);
-            header.add(tipPanel, BorderLayout.SOUTH);
-            contentPanel.revalidate();
-            contentPanel.repaint();
-        }
-    }
-
-    public void showWriteTipHint() {
-        if (header != null) {
-            header.remove(tipPanel);
-            header.add(writeTipHint, BorderLayout.SOUTH);
-            contentPanel.revalidate();
-            contentPanel.repaint();
-        }
     }
 
     public void setWarningNotLoggedIn() {
@@ -234,5 +214,9 @@ final public class SearchTabView extends JPanel {
         List<ExternalSolutionView.Model> getReferences();
 
         List<SamebugTipView.Model> getTips();
+    }
+
+    public interface Actions extends CollapsibleTipPanel.Actions {
+
     }
 }

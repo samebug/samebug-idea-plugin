@@ -88,16 +88,16 @@ final class ViewController implements SearchGroupCardListener, MarkViewListener,
 
     @Override
     public void ctaClick(TabController tab) {
-        if (tab == controller) {
-            controller.view.showWriteTip();
-        }
+//        if (tab == controller) {
+//            controller.view.showWriteTip();
+//        }
     }
 
     @Override
     public void cancelClick(TabController tab) {
-        if (tab == controller) {
-            controller.view.showWriteTipHint();
-        }
+//        if (tab == controller) {
+//            controller.view.showWriteTipHint();
+//        }
     }
 
     @Override

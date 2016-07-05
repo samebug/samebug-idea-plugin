@@ -40,7 +40,7 @@ import java.awt.event.ActionListener;
 
 /**
  * I found no reasonable place for the one-time welcome message.
- * IdeaSamebugPlugin would be a better place, but I wanted to make sure there is an opened
+ * IdeaSamebugPlugin would be a better place, but I wanted to make sure there is an openedView
  * project in scope, so clicking on the notification can open the samebug toolbar.
  */
 public class TutorialProjectComponent extends AbstractProjectComponent {

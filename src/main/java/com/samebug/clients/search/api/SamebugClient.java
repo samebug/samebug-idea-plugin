@@ -46,10 +46,7 @@ import org.apache.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
@@ -132,7 +129,13 @@ final public class SamebugClient {
     SearchHistory getSearchHistory() throws SamebugClientException {
         final URL url = urlBuilder.history();
         HttpGet request = new HttpGet(url.toString());
-        return requestJson(request, SearchHistory.class);
+        try {
+            return gson.fromJson(new InputStreamReader(new FileInputStream("/home/poroszd/prg/samebug/samebug-idea-plugin/h.json")), SearchHistory.class);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+        //        return requestJson(request, SearchHistory.class);
     }
 
     public
@@ -140,7 +143,13 @@ final public class SamebugClient {
     Solutions getSolutions(@NotNull final Integer searchId) throws SamebugClientException {
         final URL url = urlBuilder.search(searchId);
         HttpGet request = new HttpGet(url.toString());
-        return requestJson(request, Solutions.class);
+        try {
+            return gson.fromJson(new InputStreamReader(new FileInputStream("/home/poroszd/prg/samebug/samebug-idea-plugin/s.json")), Solutions.class);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+//        return requestJson(request, Solutions.class);
     }
 
     public

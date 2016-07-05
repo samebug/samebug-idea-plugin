@@ -144,7 +144,7 @@ final public class SearchTabController implements TabController, Disposable {
         } else if (connectionService.isConnected() && !connectionService.isAuthenticated()) {
             view.setWarningNotLoggedIn();
         } else if (solutions != null) {
-            view.setSolutions(hitConverter.convertSolutions(solutions));
+            view.setSolutions(hitConverter.convertSolutions(solutions), new Actions());
         } else {
             view.setWarningOther();
         }
@@ -163,6 +163,28 @@ final public class SearchTabController implements TabController, Disposable {
         public Object getData(@NonNls final String dataId) {
             if (ToolWindowController.DATA_KEY.is(dataId)) return SearchTabController.this;
             else return null;
+        }
+    }
+
+    private final static class Actions implements SearchTabView.Actions {
+
+        public Actions() {
+
+        }
+
+        @Override
+        public void onCTA() {
+
+        }
+
+        @Override
+        public void onCancel() {
+
+        }
+
+        @Override
+        public void onSubmit(String tip, String rawSourceUrl) {
+
         }
     }
 }
