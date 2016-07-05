@@ -129,13 +129,7 @@ final public class SamebugClient {
     SearchHistory getSearchHistory() throws SamebugClientException {
         final URL url = urlBuilder.history();
         HttpGet request = new HttpGet(url.toString());
-        try {
-            return gson.fromJson(new InputStreamReader(new FileInputStream("/home/poroszd/prg/samebug/samebug-idea-plugin/h.json")), SearchHistory.class);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-        //        return requestJson(request, SearchHistory.class);
+        return requestJson(request, SearchHistory.class);
     }
 
     public
@@ -143,13 +137,7 @@ final public class SamebugClient {
     Solutions getSolutions(@NotNull final Integer searchId) throws SamebugClientException {
         final URL url = urlBuilder.search(searchId);
         HttpGet request = new HttpGet(url.toString());
-        try {
-            return gson.fromJson(new InputStreamReader(new FileInputStream("/home/poroszd/prg/samebug/samebug-idea-plugin/s.json")), Solutions.class);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-//        return requestJson(request, Solutions.class);
+        return requestJson(request, Solutions.class);
     }
 
     public

@@ -26,6 +26,7 @@ import com.samebug.clients.common.services.SearchService;
 import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.project.ToolWindowController;
+import com.samebug.clients.idea.messages.view.WriteTipListener;
 import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.component.tab.SearchTabView;
 import com.samebug.clients.idea.ui.controller.TabController;
@@ -166,25 +167,21 @@ final public class SearchTabController implements TabController, Disposable {
         }
     }
 
-    private final static class Actions implements SearchTabView.Actions {
+    private final class Actions implements SearchTabView.Actions {
 
-        public Actions() {
-
+        @Override
+        public void onClickWriteTip() {
+            project.getMessageBus().syncPublisher(WriteTipListener.TOPIC).openWriteTip(SearchTabController.this);
         }
 
         @Override
-        public void onCTA() {
-
+        public void onClickCancel() {
+            project.getMessageBus().syncPublisher(WriteTipListener.TOPIC).cancelWriteTip(SearchTabController.this);
         }
 
         @Override
-        public void onCancel() {
-
-        }
-
-        @Override
-        public void onSubmit(String tip, String rawSourceUrl) {
-
+        public void onClickSubmitTip(String tip, String rawSourceUrl) {
+            project.getMessageBus().syncPublisher(WriteTipListener.TOPIC).submitTip(SearchTabController.this, tip, rawSourceUrl);
         }
     }
 }

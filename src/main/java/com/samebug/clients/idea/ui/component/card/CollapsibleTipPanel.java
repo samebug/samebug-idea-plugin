@@ -53,7 +53,7 @@ final public class CollapsibleTipPanel extends TransparentPanel {
     void open() {
         if (closedView != null) remove(closedView);
         closedView = null;
-        openedView = new WriteTip();
+        openedView = new WriteTip(actions);
         add(openedView);
         openedView.cancel.addMouseListener(new MouseAdapter() {
             @Override
@@ -64,13 +64,7 @@ final public class CollapsibleTipPanel extends TransparentPanel {
         openedView.cancel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                actions.onCancel();
-            }
-        });
-        openedView.submit.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                actions.onSubmit(openedView.tipBody.getText(), openedView.sourceLink.getText());
+                actions.onClickCancel();
             }
         });
         revalidate();
@@ -91,16 +85,15 @@ final public class CollapsibleTipPanel extends TransparentPanel {
         closedView.ctaButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                actions.onCTA();
+                actions.onClickWriteTip();
             }
         });
         revalidate();
         repaint();
     }
 
-    public interface Actions {
-        void onCTA();
-        void onCancel();
-        void onSubmit(String tip, String rawSourceUrl);
+    public interface Actions extends WriteTip.Actions {
+        void onClickWriteTip();
+        void onClickCancel();
     }
 }
