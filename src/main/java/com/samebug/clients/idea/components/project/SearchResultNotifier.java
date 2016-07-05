@@ -197,7 +197,8 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
 
     private String summarizeException(com.samebug.clients.search.api.entities.Exception exception) {
         ExceptionType exceptionType = new ExceptionType(exception.getTypeName());
-        String shortMessage = exception.getMessage() == null ? null : exception.getMessage().length() > 25 ? exception.getMessage().substring(0, 22) + "..." : exception.getMessage();
+        String shortMessage = exception.getMessage() == null ? null
+                : exception.getMessage().length() > 25 ? exception.getMessage().substring(0, 22) + "..." : exception.getMessage();
         if (shortMessage == null) return SamebugBundle.message("samebug.notification.exceptionSummary.withoutMessage", exceptionType.className);
         else return SamebugBundle.message("samebug.notification.exceptionSummary.withMessage", exceptionType.className, shortMessage);
     }

@@ -61,7 +61,10 @@ final public class WebUrlBuilder {
         if (!(b.getComponent() instanceof LibraryComponentReference)) return null;
         else {
             try {
-                final String entryUri = enc(b.getEntry().getPackageName()) + "/" + enc(b.getEntry().getClassName()) + "/" + enc(b.getEntry().getMethodName()) + "/" + enc(b.getTypeName());
+                final String entryUri = enc(b.getEntry().getPackageName()) + "/"
+                        + enc(b.getEntry().getClassName()) + "/"
+                        + enc(b.getEntry().getMethodName()) + "/"
+                        + enc(b.getTypeName());
                 final String passThrough = "?pt=" + b.getPassThrough();
                 return resolveToRoot("/crashdocs/" + entryUri + passThrough);
             } catch (Throwable ignored) {

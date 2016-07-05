@@ -29,7 +29,6 @@ import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.net.URL;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
