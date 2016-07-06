@@ -130,7 +130,7 @@ final public class ExternalSolutionView extends HitView {
                             attributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
                             setFont(getFont().deriveFont(attributes));
                             setForeground(Colors.samebugOrange);
-                            setToolTipText(SamebugBundle.message("samebug.solution.title.tooltip", solution.getSolution().getUrl()));
+                            setToolTipText(SamebugBundle.message("samebug.toolwindow.search.solution.title.tooltip", solution.getSolution().getUrl()));
                         }
                     }, BorderLayout.CENTER);
                 }

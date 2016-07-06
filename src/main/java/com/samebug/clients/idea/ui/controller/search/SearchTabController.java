@@ -28,6 +28,7 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.components.project.ToolWindowController;
 import com.samebug.clients.idea.messages.view.WriteTipListener;
+import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.BrowserUtil;
 import com.samebug.clients.idea.ui.ImageUtil;
@@ -186,7 +187,7 @@ final public class SearchTabController implements TabController, Disposable {
 
         @Override
         public String getTitleMouseOverText(SearchGroup group) {
-            return "Open browser for search " + group.getLastSearch().getId();
+            return SamebugBundle.message("samebug.toolwindow.search.search.title.tooltip", group.getLastSearch().getId());
         }
 
         @Override

@@ -145,7 +145,7 @@ final public class HistoryTabController implements TabController, Disposable {
 
         @Override
         public String getTitleMouseOverText(SearchGroup group) {
-            return "Show solutions for search " + group.getLastSearch().getId();
+            return SamebugBundle.message("samebug.toolwindow.history.search.title.tooltip", group.getLastSearch().getId());
         }
 
         @Override
