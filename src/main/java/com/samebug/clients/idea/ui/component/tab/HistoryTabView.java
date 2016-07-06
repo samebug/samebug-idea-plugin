@@ -67,7 +67,7 @@ final public class HistoryTabView extends JPanel {
         updateContent(panel);
     }
 
-    public void setHistory(@NotNull java.util.List<SearchGroup> groups) {
+    public void setHistory(@NotNull java.util.List<SearchGroup> groups, @NotNull final Actions actions) {
         final JScrollPane scrollPane = new JScrollPane();
         final JPanel contentPanel = new ContentPanel();
 
@@ -75,12 +75,12 @@ final public class HistoryTabView extends JPanel {
         for (SearchGroup group : groups) {
             if (group instanceof StackTraceSearchGroup) {
                 StackTraceSearchGroup g = (StackTraceSearchGroup) group;
-                StackTraceSearchGroupCard searchGroupCard = new StackTraceSearchGroupCard(g);
+                StackTraceSearchGroupCard searchGroupCard = new StackTraceSearchGroupCard(g, actions);
                 contentPanel.add(searchGroupCard);
                 cards.put(g.getLastSearch().getId(), searchGroupCard);
             } else if (group instanceof TextSearchGroup) {
                 TextSearchGroup g = (TextSearchGroup) group;
-                TextSearchGroupCard searchGroupCard = new TextSearchGroupCard(g);
+                TextSearchGroupCard searchGroupCard = new TextSearchGroupCard(g, actions);
                 contentPanel.add(searchGroupCard);
                 cards.put(g.getLastSearch().getId(), searchGroupCard);
             }
@@ -149,4 +149,8 @@ final public class HistoryTabView extends JPanel {
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         }
     }
+
+    public interface Actions extends SearchGroupCard.Actions {
+    }
+
 }

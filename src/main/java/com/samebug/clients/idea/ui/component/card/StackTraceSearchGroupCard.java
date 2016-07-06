@@ -15,21 +15,16 @@
  */
 package com.samebug.clients.idea.ui.component.card;
 
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.DataKeys;
-import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.entities.ExceptionType;
 import com.samebug.clients.common.ui.Colors;
-import com.samebug.clients.idea.components.project.ToolWindowController;
-import com.samebug.clients.idea.messages.view.SearchGroupCardListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.ExceptionMessageLabel;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.idea.ui.component.organism.BreadcrumbBar;
-import com.samebug.clients.idea.ui.controller.TabController;
 import com.samebug.clients.search.api.entities.SearchGroup;
 import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,12 +41,15 @@ final public class StackTraceSearchGroupCard extends SearchGroupCard {
     public final JLabel titleLabel;
     public final JLabel exceptionMessageLabel;
     public final JPanel breadcrumbPanel;
+    @NotNull
+    final Actions actions;
 
-    public StackTraceSearchGroupCard(final StackTraceSearchGroup searchGroup) {
+    public StackTraceSearchGroupCard(final StackTraceSearchGroup searchGroup, @NotNull final Actions actions) {
         super(searchGroup);
         this.searchGroup = searchGroup;
-        exceptionType = new ExceptionType(searchGroup.getLastSearch().getStackTrace().getTrace().getTypeName());
+        this.actions = actions;
 
+        exceptionType = new ExceptionType(searchGroup.getLastSearch().getStackTrace().getTrace().getTypeName());
         packageLabel = new PackageLabel();
         hitsLabel = new HitsLabel();
         titleLabel = new TitleLabel();
@@ -115,11 +113,10 @@ final public class StackTraceSearchGroupCard extends SearchGroupCard {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    TabController tab = ToolWindowController.DATA_KEY.getData(DataManager.getInstance().getDataContext(StackTraceSearchGroupCard.this));
-                    Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(StackTraceSearchGroupCard.this));
-                    if (tab != null && project != null) project.getMessageBus().syncPublisher(SearchGroupCardListener.TOPIC).titleClick(tab, searchGroup);
+                    actions.onClickTitle(searchGroup);
                 }
             });
+            setToolTipText(actions.getTitleMouseOverText(searchGroup));
         }
     }
 

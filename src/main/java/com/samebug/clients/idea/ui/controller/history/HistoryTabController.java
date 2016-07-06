@@ -28,11 +28,13 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.services.HistoryService;
 import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.components.project.ToolWindowController;
 import com.samebug.clients.idea.components.project.TutorialProjectComponent;
 import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
-import com.samebug.clients.idea.messages.view.SearchGroupCardListener;
+import com.samebug.clients.idea.messages.view.FocusListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.component.TutorialPanel;
 import com.samebug.clients.idea.ui.component.tab.HistoryTabView;
 import com.samebug.clients.idea.ui.controller.TabController;
@@ -44,7 +46,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.List;
 
-final public class HistoryTabController implements TabController, Disposable, SearchGroupCardListener {
+final public class HistoryTabController implements TabController, Disposable {
     final static Logger LOGGER = Logger.getInstance(HistoryTabController.class);
     @NotNull
     final ToolWindowController twc;
@@ -78,7 +80,6 @@ final public class HistoryTabController implements TabController, Disposable, Se
         MessageBusConnection appConnection = ApplicationManager.getApplication().getMessageBus().connect(this);
         appConnection.subscribe(ConnectionStatusListener.TOPIC, statusUpdater);
         MessageBusConnection projectConnection = project.getMessageBus().connect(this);
-        projectConnection.subscribe(SearchGroupCardListener.TOPIC, this);
     }
 
     @NotNull
@@ -104,7 +105,7 @@ final public class HistoryTabController implements TabController, Disposable, Se
                     view.setWarningNoVisibleSearches();
                 }
             } else {
-                view.setHistory(groups);
+                view.setHistory(groups, new Actions());
             }
         } else {
             view.setWarningOther();
@@ -112,13 +113,6 @@ final public class HistoryTabController implements TabController, Disposable, Se
         view.revalidate();
         view.repaint();
         TutorialProjectComponent.withTutorialProject(myProject, new HistoryTabTutorial());
-    }
-
-    @Override
-    public void titleClick(@NotNull TabController tab, SearchGroup searchGroup) {
-        if (this == tab) {
-            twc.focusOnSearch(searchGroup.getLastSearch().getId());
-        }
     }
 
     @Override
@@ -144,6 +138,20 @@ final public class HistoryTabController implements TabController, Disposable, Se
                 balloon.show(RelativePoint.getNorthWestOf(view.toolbarPanel), Balloon.Position.atLeft);
             }
             return null;
+        }
+    }
+
+    private final class Actions implements HistoryTabView.Actions {
+
+        @Override
+        public String getTitleMouseOverText(SearchGroup group) {
+            return "Show solutions for search " + group.getLastSearch().getId();
+        }
+
+        @Override
+        public void onClickTitle(SearchGroup group) {
+            myProject.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(group.getLastSearch().getId());
+            Tracking.projectTracking(myProject).trace(Events.searchClick(myProject, group.getLastSearch().getId()));
         }
     }
 

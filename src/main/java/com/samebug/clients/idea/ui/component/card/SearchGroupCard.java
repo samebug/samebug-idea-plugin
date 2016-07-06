@@ -32,4 +32,10 @@ public abstract class SearchGroupCard extends JPanel {
     }
 
     abstract SearchGroup getSearchGroup();
+
+    public interface Actions {
+        String getTitleMouseOverText(SearchGroup group);
+
+        void onClickTitle(SearchGroup group);
+    }
 }

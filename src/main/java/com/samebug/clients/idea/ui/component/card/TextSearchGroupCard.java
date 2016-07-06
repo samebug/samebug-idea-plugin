@@ -15,19 +15,14 @@
  */
 package com.samebug.clients.idea.ui.component.card;
 
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.DataKeys;
-import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.ui.Colors;
-import com.samebug.clients.idea.components.project.ToolWindowController;
-import com.samebug.clients.idea.messages.view.SearchGroupCardListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.ExceptionMessageLabel;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
-import com.samebug.clients.idea.ui.controller.TabController;
 import com.samebug.clients.search.api.entities.SearchGroup;
 import com.samebug.clients.search.api.entities.TextSearchGroup;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,10 +36,13 @@ final public class TextSearchGroupCard extends SearchGroupCard {
     public final JLabel hitsLabel;
     public final JLabel titleLabel;
     public final ExceptionMessageLabel queryLabel;
+    @NotNull
+    final Actions actions;
 
-    public TextSearchGroupCard(final TextSearchGroup searchGroup) {
+    public TextSearchGroupCard(final TextSearchGroup searchGroup, @NotNull final Actions actions) {
         super(searchGroup);
         this.searchGroup = searchGroup;
+        this.actions = actions;
 
         hitsLabel = new TextSearchGroupCard.HitsLabel();
         titleLabel = new TextSearchGroupCard.QueryLabel();
@@ -97,11 +95,10 @@ final public class TextSearchGroupCard extends SearchGroupCard {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    TabController tab = ToolWindowController.DATA_KEY.getData(DataManager.getInstance().getDataContext(TextSearchGroupCard.this));
-                    Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(TextSearchGroupCard.this));
-                    if (tab != null && project != null) project.getMessageBus().syncPublisher(SearchGroupCardListener.TOPIC).titleClick(tab, searchGroup);
+                    actions.onClickTitle(searchGroup);
                 }
             });
+            setToolTipText(actions.getTitleMouseOverText(searchGroup));
         }
     }
 

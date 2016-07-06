@@ -112,10 +112,10 @@ final public class SearchTabView extends JPanel {
         // add search card to the tipPanel
         if (model.getSearch() instanceof StackTraceSearchGroup) {
             StackTraceSearchGroup group = (StackTraceSearchGroup) model.getSearch();
-            search = new StackTraceSearchGroupCard(group);
+            search = new StackTraceSearchGroupCard(group, actions);
         } else {
             TextSearchGroup group = (TextSearchGroup) model.getSearch();
-            search = new TextSearchGroupCard(group);
+            search = new TextSearchGroupCard(group, actions);
         }
         header = new CollapsableView(search,
                 SamebugBundle.message("samebug.toolwindow.search.collapsibleHeader.open"), SamebugBundle.message("samebug.toolwindow.search.collapsibleHeader.close"));
@@ -216,7 +216,7 @@ final public class SearchTabView extends JPanel {
         List<SamebugTipView.Model> getTips();
     }
 
-    public interface Actions extends CollapsibleTipPanel.Actions {
+    public interface Actions extends CollapsibleTipPanel.Actions, SearchGroupCard.Actions {
 
     }
 }

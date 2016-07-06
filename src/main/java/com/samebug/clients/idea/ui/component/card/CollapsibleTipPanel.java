@@ -94,6 +94,7 @@ final public class CollapsibleTipPanel extends TransparentPanel {
 
     public interface Actions extends WriteTip.Actions {
         void onClickWriteTip();
+
         void onClickCancel();
     }
 }

@@ -21,14 +21,15 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.messages.view.*;
+import com.samebug.clients.idea.messages.view.MarkViewListener;
+import com.samebug.clients.idea.messages.view.RefreshTimestampsListener;
+import com.samebug.clients.idea.messages.view.SearchTabsViewListener;
+import com.samebug.clients.idea.messages.view.WriteTipListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.idea.ui.BrowserUtil;
 import com.samebug.clients.idea.ui.component.WriteTip;
 import com.samebug.clients.idea.ui.component.organism.MarkPanel;
 import com.samebug.clients.idea.ui.controller.TabController;
 import com.samebug.clients.search.api.entities.RestHit;
-import com.samebug.clients.search.api.entities.SearchGroup;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +39,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-final class ViewController implements SearchGroupCardListener, MarkViewListener, SearchTabsViewListener, WriteTipListener, RefreshTimestampsListener {
+final class ViewController implements MarkViewListener, SearchTabsViewListener, WriteTipListener, RefreshTimestampsListener {
     final static Logger LOGGER = Logger.getInstance(ViewController.class);
     @NotNull
     final SearchTabController controller;
@@ -47,17 +48,9 @@ final class ViewController implements SearchGroupCardListener, MarkViewListener,
         this.controller = controller;
 
         MessageBusConnection projectConnection = controller.project.getMessageBus().connect(controller);
-        projectConnection.subscribe(SearchGroupCardListener.TOPIC, this);
         projectConnection.subscribe(MarkViewListener.TOPIC, this);
         projectConnection.subscribe(SearchTabsViewListener.TOPIC, this);
         projectConnection.subscribe(WriteTipListener.TOPIC, this);
-    }
-
-    @Override
-    public void titleClick(@NotNull TabController tab, SearchGroup searchGroup) {
-        if (controller == tab) {
-            BrowserUtil.browse(IdeaSamebugPlugin.getInstance().getUrlBuilder().search(searchGroup.getLastSearch().getId()));
-        }
     }
 
     @Override

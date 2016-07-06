@@ -25,16 +25,16 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.services.SearchService;
 import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.components.project.ToolWindowController;
 import com.samebug.clients.idea.messages.view.WriteTipListener;
+import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.idea.ui.BrowserUtil;
 import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.component.tab.SearchTabView;
 import com.samebug.clients.idea.ui.controller.TabController;
 import com.samebug.clients.idea.ui.listeners.ConnectionStatusUpdater;
-import com.samebug.clients.search.api.entities.RestHit;
-import com.samebug.clients.search.api.entities.SolutionReference;
-import com.samebug.clients.search.api.entities.Solutions;
-import com.samebug.clients.search.api.entities.Tip;
+import com.samebug.clients.search.api.entities.*;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -182,6 +182,18 @@ final public class SearchTabController implements TabController, Disposable {
         @Override
         public void onClickSubmitTip(String tip, String rawSourceUrl) {
             project.getMessageBus().syncPublisher(WriteTipListener.TOPIC).submitTip(SearchTabController.this, tip, rawSourceUrl);
+        }
+
+        @Override
+        public String getTitleMouseOverText(SearchGroup group) {
+            return "Open browser for search " + group.getLastSearch().getId();
+        }
+
+        @Override
+        public void onClickTitle(SearchGroup group) {
+            URL link = IdeaSamebugPlugin.getInstance().getUrlBuilder().search(group.getLastSearch().getId());
+            BrowserUtil.browse(link);
+            Tracking.projectTracking(project).trace(Events.linkClick(project, link));
         }
     }
 }

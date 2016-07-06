@@ -55,6 +55,7 @@ final public class CollapsableView extends TransparentPanel {
 
     final class OpenCloseBar extends TransparentPanel {
         JLabel label;
+
         public OpenCloseBar() {
             this.label = new JLabel(openedStateText) {
                 {
