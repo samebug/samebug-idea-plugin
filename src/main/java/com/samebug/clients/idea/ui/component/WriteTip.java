@@ -295,7 +295,7 @@ final public class WriteTip extends JPanel {
 
     void updateSubmitButton(boolean working) {
         submit.setHighlighted(!working);
-        setEnabled(working);
+        submit.setEnabled(working);
     }
 
     public void beginPostTip() {

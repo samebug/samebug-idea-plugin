@@ -107,7 +107,8 @@ final public class SearchTabView extends JPanel {
     public void setSolutions(@NotNull final Model model, @NotNull final Actions actions) {
         cards.clear();
         final JPanel controlPanel = new TransparentPanel();
-        tipPanel = new CollapsibleTipPanel(actions);
+        // TODO it's just a quick workaround to prevent refresh close the tip writing
+        if (tipPanel == null) tipPanel = new CollapsibleTipPanel(actions);
 
         // add search card to the tipPanel
         if (model.getSearch() instanceof StackTraceSearchGroup) {
