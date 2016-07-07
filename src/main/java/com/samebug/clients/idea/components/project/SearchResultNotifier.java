@@ -140,10 +140,10 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
                                 // 1 new exception with solutions
                                 StackTraceSearchGroup search = resultsBySearchId.get(searchIds.get(0));
                                 String exceptionSummary = summarizeException(search.getLastSearch().getStackTrace().getTrace());
-                                showNotification(SamebugBundle.message("samebug.notification.searchresults.one", searchIds.get(0).toString(), exceptionSummary));
+                                showNotification(SamebugBundle.message("samebug.notification.searchresults.new.one", searchIds.get(0).toString(), exceptionSummary));
                             } else {
                                 // 2+ new exceptions with solutions
-                                showNotification(SamebugBundle.message("samebug.notification.searchresults.multiple", searchIds.size()));
+                                showNotification(SamebugBundle.message("samebug.notification.searchresults.new.multiple", searchIds.size()));
                             }
                         } else if (nSearchesWithZeroSolutions == 0 && nRecurringSearches > 0) {
                             if (searchIds.size() == 1) {
@@ -156,7 +156,7 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
                                     showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.oneRecurring",
                                             searchIds.get(0).toString(), SamebugIcons.calendarUrl, exceptionSummary));
                                 } else {
-                                    showNotification(SamebugBundle.message("samebug.notification.searchresults.oneRecurring", searchIds.get(0).toString(), exceptionSummary));
+                                    showNotification(SamebugBundle.message("samebug.notification.searchresults.recurring.one", searchIds.get(0).toString(), exceptionSummary));
                                 }
                             } else {
                                 // 2+ recurring exception with solutions
@@ -165,17 +165,30 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
                                     settings.searchResultsMixed = false;
                                     showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.multipleRecurring", searchIds.size(), SamebugIcons.calendarUrl));
                                 } else {
-                                    showNotification(SamebugBundle.message("samebug.notification.searchresults.multipleRecurring", searchIds.size()));
+                                    showNotification(SamebugBundle.message("samebug.notification.searchresults.recurring.multiple", searchIds.size()));
                                 }
                             }
                         } else if (nSearchesWithZeroSolutions > 0 && nRecurringSearches == 0) {
                             // 1+ new exception without solution
-                            if (settings.searchResultsZeroSolutions) {
-                                settings.searchResultsZeroSolutions = false;
-                                settings.searchResultsMixed = false;
-                                showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.zeroSolutions", searchIds.size(), SamebugIcons.lightbulbUrl));
+                            if (searchIds.size() == 1) {
+                                // 1 recurring exception with solutions
+                                StackTraceSearchGroup search = resultsBySearchId.get(searchIds.get(0));
+                                String exceptionSummary = summarizeException(search.getLastSearch().getStackTrace().getTrace());
+                                if (settings.searchResultsZeroSolutions) {
+                                    settings.searchResultsZeroSolutions = false;
+                                    settings.searchResultsMixed = false;
+                                    showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.zeroSolutions", searchIds.size(), SamebugIcons.lightbulbUrl));
+                                } else {
+                                    showNotification(SamebugBundle.message("samebug.notification.searchresults.zeroSolutions.one", exceptionSummary));
+                                }
                             } else {
-                                showNotification(SamebugBundle.message("samebug.notification.searchresults.zeroSolutions", searchIds.size()));
+                                if (settings.searchResultsZeroSolutions) {
+                                    settings.searchResultsZeroSolutions = false;
+                                    settings.searchResultsMixed = false;
+                                    showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.zeroSolutions", searchIds.size(), SamebugIcons.lightbulbUrl));
+                                } else {
+                                    showNotification(SamebugBundle.message("samebug.notification.searchresults.zeroSolutions.multiple", searchIds.size()));
+                                }
                             }
                         } else {
                             // other cases.
@@ -197,8 +210,9 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
 
     private String summarizeException(com.samebug.clients.search.api.entities.Exception exception) {
         ExceptionType exceptionType = new ExceptionType(exception.getTypeName());
+        final int maxMessageLength = 350;
         String shortMessage = exception.getMessage() == null ? null
-                : exception.getMessage().length() > 25 ? exception.getMessage().substring(0, 22) + "..." : exception.getMessage();
+                : exception.getMessage().length() > maxMessageLength ? exception.getMessage().substring(0, maxMessageLength-3) + "..." : exception.getMessage();
         if (shortMessage == null) return SamebugBundle.message("samebug.notification.exceptionSummary.withoutMessage", exceptionType.className);
         else return SamebugBundle.message("samebug.notification.exceptionSummary.withMessage", exceptionType.className, shortMessage);
     }
