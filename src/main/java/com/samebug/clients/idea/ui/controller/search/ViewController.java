@@ -51,6 +51,7 @@ final class ViewController implements MarkViewListener, SearchTabsViewListener, 
         projectConnection.subscribe(MarkViewListener.TOPIC, this);
         projectConnection.subscribe(SearchTabsViewListener.TOPIC, this);
         projectConnection.subscribe(WriteTipListener.TOPIC, this);
+        projectConnection.subscribe(RefreshTimestampsListener.TOPIC, this);
     }
 
     @Override
