@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.search.api.exceptions;
 
-public class JsonParseException extends SamebugClientException {
+public class JsonParseException extends ProcessResponseException {
     public JsonParseException(String message) {
         super(message);
     }

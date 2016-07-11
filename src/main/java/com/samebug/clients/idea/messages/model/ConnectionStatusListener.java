@@ -16,11 +16,18 @@
 package com.samebug.clients.idea.messages.model;
 
 import com.intellij.util.messages.Topic;
+import com.samebug.clients.search.api.client.ConnectionStatus;
 
 public interface ConnectionStatusListener {
     Topic<ConnectionStatusListener> TOPIC = Topic.create("connection status change", ConnectionStatusListener.class);
 
     void startRequest();
 
-    void finishRequest(boolean isConnected);
+    void connectionChange(boolean isConnected);
+
+    void authenticationChange(boolean isAuthenticated);
+
+    void apiStatusChange(String apiStatus);
+
+    void finishRequest(ConnectionStatus status);
 }

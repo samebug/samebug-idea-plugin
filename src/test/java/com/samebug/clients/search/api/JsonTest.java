@@ -3,6 +3,7 @@ package com.samebug.clients.search.api;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
+import com.samebug.clients.search.api.client.RestError;
 import com.samebug.clients.search.api.entities.*;
 import com.samebug.clients.search.api.entities.Exception;
 import com.samebug.clients.search.api.json.Json;

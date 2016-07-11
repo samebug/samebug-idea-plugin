@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.search.api.entities;
+package com.samebug.clients.search.api.client;
 
 public final class RestError {
     private String code;
