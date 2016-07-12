@@ -19,8 +19,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.MessageType;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.wm.ToolWindowManager;
@@ -160,8 +160,10 @@ public class TutorialProjectComponent extends AbstractProjectComponent implement
                     public void run() {
                         ToolWindowManager.getInstance(myProject).notifyByBalloon(
                                 "Samebug",
-                                MessageType.WARNING, SamebugBundle.message("samebug.tutorial.apiStatus.deprecated"),
-                                SamebugIcons.info, null);
+                                MessageType.WARNING,
+                                SamebugBundle.message("samebug.tutorial.apiStatus.deprecated"),
+                                Messages.getWarningIcon(),
+                                null);
                     }
                 });
             } else if (apiStatus.startsWith("CLOSED")) {
@@ -171,7 +173,8 @@ public class TutorialProjectComponent extends AbstractProjectComponent implement
                         ToolWindowManager.getInstance(myProject).notifyByBalloon(
                                 "Samebug",
                                 MessageType.ERROR, SamebugBundle.message("samebug.tutorial.apiStatus.closed"),
-                                SamebugIcons.info, null);
+                                Messages.getErrorIcon(),
+                                null);
                     }
                 });
             }

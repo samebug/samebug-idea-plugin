@@ -22,9 +22,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.components.project.ToolWindowController;
 import com.samebug.clients.idea.messages.view.SearchTabsViewListener;
-import com.samebug.clients.idea.ui.controller.TabController;
 
 // TODO remove actions, use simple icons, they are useless in this scenario
 final public class ReloadSearchAction extends RefreshAction implements DumbAware {
@@ -32,9 +30,8 @@ final public class ReloadSearchAction extends RefreshAction implements DumbAware
     public void actionPerformed(final AnActionEvent e) {
         e.getPresentation().setEnabled(false);
         final Project project = e.getProject();
-        final TabController tab = ToolWindowController.DATA_KEY.getData(e.getDataContext());
-        if (project != null && tab != null) {
-            project.getMessageBus().syncPublisher(SearchTabsViewListener.TOPIC).reloadActiveSearchTab(tab);
+        if (project != null) {
+            project.getMessageBus().syncPublisher(SearchTabsViewListener.TOPIC).reloadActiveSearchTab(null);
         }
     }
 

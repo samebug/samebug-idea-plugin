@@ -73,11 +73,12 @@ final class ViewController implements MarkViewListener, SearchTabsViewListener, 
         }
     }
 
+    // TODO handle only for current controller
     @Override
-    public void reloadActiveSearchTab(@NotNull TabController tab) {
-        if (tab == controller) {
+    public void reloadActiveSearchTab(TabController tab) {
+//        if (tab == controller) {
             controller.reload();
-        }
+//        }
     }
 
     @Override

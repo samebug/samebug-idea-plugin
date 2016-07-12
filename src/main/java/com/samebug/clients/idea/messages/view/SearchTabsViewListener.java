@@ -17,10 +17,9 @@ package com.samebug.clients.idea.messages.view;
 
 import com.intellij.util.messages.Topic;
 import com.samebug.clients.idea.ui.controller.TabController;
-import org.jetbrains.annotations.NotNull;
 
 public interface SearchTabsViewListener {
     Topic<SearchTabsViewListener> TOPIC = Topic.create("search tabs view", SearchTabsViewListener.class);
 
-    void reloadActiveSearchTab(@NotNull TabController tab);
+    void reloadActiveSearchTab(TabController tab);
 }
