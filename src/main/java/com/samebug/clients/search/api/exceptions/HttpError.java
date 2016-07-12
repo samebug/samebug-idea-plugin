@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.search.api.exceptions;
 
-public class HttpError extends SamebugClientException {
+public class HttpError extends ProcessResponseException {
     public HttpError(String message) {
         super(message);
     }

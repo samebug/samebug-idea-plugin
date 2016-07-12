@@ -15,11 +15,29 @@
  */
 package com.samebug.clients.search.api.entities;
 
-/**
- * Created by poroszd on 4/14/16.
- */
-public class MarkResponse {
-    public Integer id;
-    public Integer marks;
-    public Integer documentVotes;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public final class MarkResponse {
+    @Nullable
+    private Integer id;
+    @NotNull
+    private Integer marks;
+    @NotNull
+    private Integer documentVotes;
+
+    @Nullable
+    public Integer getId() {
+        return id;
+    }
+
+    @NotNull
+    public Integer getMarks() {
+        return marks;
+    }
+
+    @NotNull
+    public Integer getDocumentVotes() {
+        return documentVotes;
+    }
 }

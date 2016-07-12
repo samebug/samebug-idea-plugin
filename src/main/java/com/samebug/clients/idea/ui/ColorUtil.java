@@ -16,45 +16,53 @@
 package com.samebug.clients.idea.ui;
 
 import com.intellij.util.ui.UIUtil;
+import com.samebug.clients.common.ui.Colors;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
-/**
- * Created by poroszd on 3/31/16.
- */
-public class ColorUtil {
+final public class ColorUtil {
+    @Nullable
     public static Color unemphasizedText() {
         return normalOrDarcula(Colors.unemphasizedText, Colors.unemphasizedTextDarcula);
     }
 
+    @Nullable
     public static Color emphasizedText() {
         return normalOrDarcula(Colors.emphasizedText, Colors.emphasizedTextDarcula);
     }
 
+    @Nullable
     public static Color alertPanel() {
         return normalOrDarcula(Colors.alertPanel, Colors.alertPanelDarcula);
     }
 
+    @Nullable
     public static Color highlightPanel() {
         return normalOrDarcula(Colors.highlightPanel, Colors.highlightPanelDarcula);
     }
 
+    @Nullable
     public static Color writeTipPanel() {
         return normalOrDarcula(Colors.writeTipPanel, Colors.writeTipPanelDarcula);
     }
 
+    @Nullable
     public static Color sourceIconBackground() {
         return normalOrDarcula(Colors.sourceIconBackground, Colors.sourceIconBackgroundDarcula);
     }
 
+    @Nullable
     public static Color ctaButton() {
         return normalOrDarcula(Colors.ctaButton, Colors.ctaButtonDarcula);
     }
 
+    @Nullable
     public static Color button() {
         return normalOrDarcula(Colors.button, Colors.buttonDarcula);
     }
 
+    @Nullable
     public static Color componentColors(int color) {
         return normalOrDarcula(Colors.componentColors[color], Colors.componentColorsDarcula[color]);
     }

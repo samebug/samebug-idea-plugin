@@ -1,0 +1,4 @@
+04-08 22:59:17.423: E/AndroidRuntime(4175): java.lang.NumberFormatException: Invalid long: ""
+04-08 22:59:17.423: E/AndroidRuntime(4175): at java.lang.Long.invalidLong(Long.java:125)
+04-08 22:59:17.423: E/AndroidRuntime(4175): at java.lang.Long.parseLong(Long.java:346)
+04-08 22:59:17.423: E/AndroidRuntime(4175): at java.lang.Long.parseLong(Long.java:319)

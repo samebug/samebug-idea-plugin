@@ -20,8 +20,8 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.messages.StackTraceMatcherListener;
-import com.samebug.clients.idea.messages.StackTraceSearchListener;
+import com.samebug.clients.idea.messages.model.StackTraceMatcherListener;
+import com.samebug.clients.idea.messages.model.StackTraceSearchListener;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
@@ -39,7 +39,7 @@ public class StackTraceSearch implements ApplicationComponent, StackTraceMatcher
     @Override
     public void initComponent() {
         messageBusConnection = ApplicationManager.getApplication().getMessageBus().connect();
-        messageBusConnection.subscribe(StackTraceMatcherListener.FOUND_TOPIC, this);
+        messageBusConnection.subscribe(StackTraceMatcherListener.TOPIC, this);
     }
 
     @Override
@@ -56,23 +56,22 @@ public class StackTraceSearch implements ApplicationComponent, StackTraceMatcher
     // StackTraceMatcherListener overrides
     @Override
     public void stackTraceFound(final Project project, final DebugSessionInfo sessionInfo, final String stackTrace) {
-        final IdeaClientService client = IdeaSamebugPlugin.getInstance().getClient();
+        final ClientService client = IdeaSamebugPlugin.getInstance().getClient();
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
                 SearchInfo searchInfo = new SearchInfo(sessionInfo);
-                // TODO I cannot see what stops 'Already disposed' errors here, but the docs say this is the intended usage.
-                if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).searchStart(searchInfo, stackTrace);
+                if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.TOPIC).searchStart(searchInfo, stackTrace);
                 try {
                     SearchResults result = client.searchSolutions(stackTrace);
-                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).searchSucceeded(searchInfo, result);
+                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.TOPIC).searchSucceeded(searchInfo, result);
                     Tracking.projectTracking(project).trace(Events.searchSucceeded(searchInfo, result));
                 } catch (SamebugTimeout ignored) {
-                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).timeout(searchInfo);
+                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.TOPIC).timeout(searchInfo);
                 } catch (UserUnauthorized ignored) {
-                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).unauthorized(searchInfo);
+                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.TOPIC).unauthorized(searchInfo);
                 } catch (SamebugClientException e) {
-                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.SEARCH_TOPIC).searchFailed(searchInfo, e);
+                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.TOPIC).searchFailed(searchInfo, e);
                 }
             }
         });

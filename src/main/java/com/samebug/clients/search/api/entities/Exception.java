@@ -15,10 +15,22 @@
  */
 package com.samebug.clients.search.api.entities;
 
-/**
- * Created by poroszd on 3/7/16.
- */
-public class Exception {
-    public String typeName;
-    public String message;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public final class Exception {
+    @NotNull
+    private String typeName;
+    @Nullable
+    private String message;
+
+    @NotNull
+    public String getTypeName() {
+        return typeName;
+    }
+
+    @Nullable
+    public String getMessage() {
+        return message;
+    }
 }

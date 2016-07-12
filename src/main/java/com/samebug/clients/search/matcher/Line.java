@@ -46,7 +46,7 @@ abstract class Line {
 }
 
 
-class StackFrame extends Line {
+final class StackFrame extends Line {
     public StackFrame(LineType type, Matcher matcher) {
         super(StackFrameType, matcher.group(0));
         this.packageName = matcher.group(1);
@@ -68,7 +68,7 @@ class StackFrame extends Line {
     private final String location;
 }
 
-class ExceptionStart extends Line {
+final class ExceptionStart extends Line {
     public ExceptionStart(LineType type, Matcher matcher) {
         super(type, matcher.group(0));
 
@@ -88,7 +88,7 @@ class ExceptionStart extends Line {
 
 }
 
-class CausedBy extends Line {
+final class CausedBy extends Line {
     public CausedBy(LineType type, Matcher matcher) {
         super(type, matcher.group(0));
         this.packageName = matcher.group(1);
@@ -107,7 +107,7 @@ class CausedBy extends Line {
 }
 
 
-class More extends Line {
+final class More extends Line {
     private final int commonFrames;
 
     public More(LineType type, Matcher matcher) {
@@ -116,7 +116,7 @@ class More extends Line {
     }
 }
 
-class Message extends Line {
+final class Message extends Line {
     public Message(LineType type, Matcher matcher) {
         super(type, matcher.group(0));
     }

@@ -34,7 +34,7 @@ intellij {
 
 //    alternativeIdePath '/Applications/Android Studio.app/Contents'
 //    alternativeIdePath '/opt/idea-IC-135.1306'
-//    alternativeIdePath '/opt/idea-IU-143.382.35'
+    alternativeIdePath '/opt/idea-IU-143.382.35'
 //    alternativeIdePath '/opt/android-studio'
     pluginName 'samebug-idea-plugin'
     updateSinceUntilBuild false
@@ -53,10 +53,10 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.code.gson:gson:2.5'
-    compile 'com.android.tools.ddms:ddmlib:24.5.0'
     compile 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
-    testCompile 'junit:junit:4.11'
+    compile 'com.android.tools.ddms:ddmlib:25.1.0'
+    compile 'com.google.code.gson:gson:2.6.2'
+    testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
 }
 
@@ -83,7 +83,7 @@ license {
 
 group = 'com.samebug.clients.idea'
 description = 'Samebug for IntelliJ IDEA'
-version '0.10.2' + ( project.hasProperty('buildNumber') ? '+' + project.getProperty('buildNumber') : '')
+version '0.11.0' + ( project.hasProperty('buildNumber') ? '+' + project.getProperty('buildNumber') : '')
 
 task checkstyle(type: Checkstyle) {
     configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")

@@ -18,9 +18,11 @@ package com.samebug.clients.idea.ui;
 import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -28,19 +30,24 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Hashtable;
 
-/**
- * Created by poroszd on 2/25/16.
- */
-public class ImageUtil {
+final public class ImageUtil {
     static final Hashtable<URL, Image> cache = new Hashtable<URL, Image>();
     static final Hashtable<ScaledKey, Image> scaledCache = new Hashtable<ScaledKey, Image>();
     static final Logger LOGGER = Logger.getInstance(ImageUtil.class);
+    static final Image avatarPlaceholder;
 
-    public static Image get(URL url) {
+    @Nullable
+    public static Image getAvatarPlaceholder() {
+        return avatarPlaceholder;
+    }
+
+    @Nullable
+    public static Image get(@NotNull URL url) {
         return cache.get(url);
     }
 
-    public static Image getScaled(URL url, int width, int height) {
+    @Nullable
+    public static Image getScaled(@NotNull URL url, int width, int height) {
         ScaledKey key = new ScaledKey(url, width, height);
         Image scaledImage = scaledCache.get(key);
         if (scaledImage == null) {
@@ -130,13 +137,22 @@ public class ImageUtil {
     };
 
     static {
+        BufferedImage tmpImage = null;
+        try {
+            final URL avatarPlaceholderUrl = ImageUtil.class.getClassLoader().getResource("/com/samebug/avatar-placeholder.png");
+            if (avatarPlaceholderUrl != null) tmpImage = ImageIO.read(avatarPlaceholderUrl);
+        } catch (IOException e) {
+            LOGGER.warn("Failed to read avatar-placeholder.png as an image!", e);
+        }
+        avatarPlaceholder = tmpImage;
+
         for (String imageUri : cachedImages) {
             InputStream imageBytes = IdeaSamebugPlugin.class.getResourceAsStream("/com/samebug/cache/" + imageUri);
             if (imageBytes == null) {
                 LOGGER.warn("Image " + imageUri + " was not found!");
             } else {
                 try {
-                    URL remoteUrl = UrlUtil.getAssetUrl(imageUri);
+                    URL remoteUrl = IdeaSamebugPlugin.getInstance().getUrlBuilder().assets(imageUri);
                     Image image = ImageIO.read(imageBytes);
                     cache.put(remoteUrl, image);
                 } catch (MalformedURLException e) {

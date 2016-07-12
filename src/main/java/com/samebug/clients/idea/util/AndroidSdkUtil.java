@@ -30,7 +30,7 @@ import java.util.List;
 import static com.android.SdkConstants.FN_ADB;
 import static org.jetbrains.android.util.AndroidCommonUtils.platformToolPath;
 
-public class AndroidSdkUtil {
+final public class AndroidSdkUtil {
     @Nullable
     public static File getAdb(@NotNull Project project) {
         AndroidPlatform platform = getProjectPlatform(project);

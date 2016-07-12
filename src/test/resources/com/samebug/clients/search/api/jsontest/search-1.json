@@ -1,0 +1,158 @@
+{
+  "searchGroup": {
+    "type": "stacktrace",
+    "id": "573d7649513760ee20db1b7f",
+    "userId": 1,
+    "firstSeen": 1460553353388,
+    "lastSeen": 1460553353388,
+    "lastSearch": {
+      "type": "stacktrace",
+      "id": 5634,
+      "stackTrace": {
+        "stackTraceId": 301997,
+        "trace": {
+          "typeName": "java.net.ConnectException",
+          "message": "Network is unreachable"
+        },
+        "breadCrumbs": [
+          {
+            "level": 0,
+            "frames": 6,
+            "typeName": "java.net.ConnectException",
+            "passThrough": false,
+            "entry": {
+              "packageName": "java.net",
+              "className": "Socket",
+              "methodName": "connect"
+            },
+            "component": {
+              "type": "library",
+              "id": 2674,
+              "slug": "com.oracle.java:java-rt",
+              "name": "Java RT",
+              "color": 3
+            }
+          },
+          {
+            "level": 1,
+            "frames": 1,
+            "typeName": "java.net.ConnectException",
+            "passThrough": true,
+            "entry": {
+              "packageName": "sun.security.ssl",
+              "className": "SSLSocketImpl",
+              "methodName": "connect"
+            },
+            "component": {
+              "type": "library",
+              "id": 6411,
+              "slug": "com.oracle.java:java-jsse",
+              "name": "Java JSSE",
+              "color": 12
+            }
+          },
+          {
+            "level": 2,
+            "frames": 9,
+            "typeName": "java.net.ConnectException",
+            "passThrough": true,
+            "entry": {
+              "packageName": "sun.net.www.protocol.https",
+              "className": "HttpsURLConnectionImpl",
+              "methodName": "connect"
+            },
+            "component": {
+              "type": "library",
+              "id": 2674,
+              "slug": "com.oracle.java:java-rt",
+              "name": "Java RT",
+              "color": 3
+            }
+          },
+          {
+            "level": 3,
+            "frames": 3,
+            "typeName": "java.net.ConnectException",
+            "passThrough": true,
+            "entry": {
+              "packageName": "com.stripe.net",
+              "className": "APIResource",
+              "methodName": "makeURLConnectionRequest"
+            },
+            "component": {
+              "type": "library",
+              "id": 2131,
+              "mavenId": "com.stripe:stripe-java",
+              "slug": "com.stripe:stripe-java",
+              "name": "stripe-java",
+              "description": "Stripe Java Bindings",
+              "color": 4
+            }
+          }
+        ]
+      },
+      "timestamp": 1460553353388,
+      "userId": 1
+    },
+    "numberOfSearches": 1,
+    "numberOfHits": 12
+  },
+  "tips": [],
+  "references": [
+    {
+      "solutionId": 61829,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "Google Groups",
+          "icon": "googlegroups"
+        },
+        "author": {
+          "name": "Maneesh M P"
+        },
+        "createdAt": 1425184620000,
+        "title": "Docker plugin - slave status is connection refused",
+        "url": "https://groups.google.com/d/topic/jenkinsci-users/l5aAOnbxwZo"
+      },
+      "stackId": 61829,
+      "matchLevel": 1,
+      "score": 0,
+      "exception": {
+        "typeName": "java.net.ConnectException",
+        "message": "Connection refused",
+        "frames": "java.net.PlainSocketImpl.socketConnect(Native Method)\njava.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:327)\njava.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:193)\njava.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:180)\njava.net.SocksSocketImpl.connect(SocksSocketImpl.java:385)\njava.net.Socket.connect(Socket.java:546)\ncom.trilead.ssh2.transport.TransportManager.establishConnection(TransportManager.java:346)\ncom.trilead.ssh2.transport.TransportManager.initialize(TransportManager.java:459)\ncom.trilead.ssh2.Connection.connect(Connection.java:758)"
+      }
+    },
+    {
+      "solutionId": 79873,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "Stack Overflow",
+          "icon": "stackoverflow"
+        },
+        "author": {
+          "name": "Popeye",
+          "url": "http://stackoverflow.com/users/980097"
+        },
+        "createdAt": 1421406799927,
+        "title": "Paypal HttpHostConnectException",
+        "url": "http://stackoverflow.com/questions/27982760"
+      },
+      "stackId": 79873,
+      "matchLevel": 1,
+      "score": 0,
+      "exception": {
+        "typeName": "org.apache.http.conn.HttpHostConnectException",
+        "message": "Connect to api-3t.sandbox.paypal.com:443 [api-3t.sandbox.paypal.com/173.0.82.83] failed: Connection timed out: connect",
+        "cause": {
+          "typeName": "java.net.ConnectException",
+          "message": "Connection timed out: connect",
+          "frames": "java.net.DualStackPlainSocketImpl.connect0(Native Method)\njava.net.DualStackPlainSocketImpl.socketConnect(Unknown Source)\njava.net.AbstractPlainSocketImpl.doConnect(Unknown Source)\njava.net.AbstractPlainSocketImpl.connectToAddress(Unknown Source)\njava.net.AbstractPlainSocketImpl.connect(Unknown Source)\njava.net.PlainSocketImpl.connect(Unknown Source)\njava.net.SocksSocketImpl.connect(Unknown Source)\njava.net.Socket.connect(Unknown Source)\norg.apache.http.conn.ssl.SSLConnectionSocketFactory.connectSocket(SSLConnectionSocketFactory.java:239)\norg.apache.http.impl.conn.HttpClientConnectionOperator.connect(HttpClientConnectionOperator.java:123)\norg.apache.http.impl.conn.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:318)\norg.apache.http.impl.execchain.MainClientExec.establishRoute(MainClientExec.java:363)\norg.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:219)\norg.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:195)\norg.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:86)\norg.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:108)\norg.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:184)\norg.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:82)\norg.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:106)\norg.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:57)\nuk.co.cdl.webclient.servicefacade.payment.PaypalPaymentService.paypalHttpCall(PaypalPaymentService.java:192)\nuk.co.cdl.webclient.servicefacade.payment.PaypalPaymentService.registerPaypalExpressCheckoutTransaction(PaypalPaymentService.java:125)\nuk.co.cdl.webclient.model.paypal.RegisterPaypalPayment.doPost(RegisterPaypalPayment.java:41)\njavax.servlet.http.HttpServlet.service(HttpServlet.java:641)\njavax.servlet.http.HttpServlet.service(HttpServlet.java:722)\norg.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:305)\norg.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:210)\norg.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:225)\norg.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:169)\norg.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:472)\norg.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:168)\norg.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:98)\norg.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:927)\norg.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:118)\norg.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:407)\norg.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:999)\norg.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:565)\norg.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:309)\njava.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)\njava.lang.Thread.run(Unknown Source)"
+        },
+        "common": 31,
+        "frames": "org.apache.http.impl.conn.HttpClientConnectionOperator.connect(HttpClientConnectionOperator.java:140)"
+      }
+    }
+  ]
+}

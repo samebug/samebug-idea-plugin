@@ -17,18 +17,14 @@ package com.samebug.clients.idea.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.DumbAware;
-import com.samebug.clients.idea.ui.controller.HistoryTabController;
+import com.samebug.clients.idea.messages.view.FocusListener;
 
-/**
- * Created by poroszd on 4/18/16.
- */
-public class ShowHistoryAction extends AnAction implements DumbAware {
+final public class ShowHistoryAction extends AnAction implements DumbAware {
     @Override
     public void actionPerformed(AnActionEvent e) {
         if (e.getProject() != null) {
-            ServiceManager.getService(e.getProject(), HistoryTabController.class).focus();
+            e.getProject().getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnHistory();
         }
     }
 

@@ -20,18 +20,23 @@ import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.components.application.TutorialApplicationComponent;
 import com.samebug.clients.idea.components.application.TutorialSettings;
+import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.idea.ui.Colors;
-import com.samebug.clients.idea.ui.views.components.TransparentPanel;
+import com.samebug.clients.idea.ui.component.TransparentPanel;
+import com.samebug.clients.search.api.client.ConnectionStatus;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,14 +44,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Created by poroszd on 2/15/16.
- * <p/>
  * I found no reasonable place for the one-time welcome message.
  * IdeaSamebugPlugin would be a better place, but I wanted to make sure there is an opened
  * project in scope, so clicking on the notification can open the samebug toolbar.
  */
-public class TutorialProjectComponent extends AbstractProjectComponent {
+public class TutorialProjectComponent extends AbstractProjectComponent implements ConnectionStatusListener {
     private final static Logger LOGGER = Logger.getInstance(TutorialProjectComponent.class);
+    private boolean apiStatusNotificationShowed;
 
     protected TutorialProjectComponent(Project project) {
         super(project);
@@ -88,6 +92,8 @@ public class TutorialProjectComponent extends AbstractProjectComponent {
         }
 
 
+        MessageBusConnection projectConnection = myProject.getMessageBus().connect(myProject);
+        projectConnection.subscribe(ConnectionStatusListener.TOPIC, this);
         Tracking.projectTracking(myProject).trace(Events.projectOpen(myProject));
     }
 
@@ -131,6 +137,54 @@ public class TutorialProjectComponent extends AbstractProjectComponent {
             return null;
         }
     }
+
+    @Override
+    public void startRequest() {
+    }
+
+    @Override
+    public void connectionChange(boolean isConnected) {
+    }
+
+    @Override
+    public void authenticationChange(boolean isAuthenticated) {
+    }
+
+    @Override
+    public void apiStatusChange(@Nullable String apiStatus) {
+        if (!apiStatusNotificationShowed && apiStatus != null) {
+            apiStatusNotificationShowed = true;
+            if (apiStatus.startsWith("DEPRECATED")) {
+                ApplicationManager.getApplication().invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToolWindowManager.getInstance(myProject).notifyByBalloon(
+                                "Samebug",
+                                MessageType.WARNING,
+                                SamebugBundle.message("samebug.tutorial.apiStatus.deprecated"),
+                                Messages.getWarningIcon(),
+                                null);
+                    }
+                });
+            } else if (apiStatus.startsWith("CLOSED")) {
+                ApplicationManager.getApplication().invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToolWindowManager.getInstance(myProject).notifyByBalloon(
+                                "Samebug",
+                                MessageType.ERROR, SamebugBundle.message("samebug.tutorial.apiStatus.closed"),
+                                Messages.getErrorIcon(),
+                                null);
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
+    public void finishRequest(ConnectionStatus status) {
+    }
+
 
     public static abstract class TutorialProjectAnonfun<T> {
         protected TutorialProjectComponent component;

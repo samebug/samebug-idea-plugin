@@ -15,19 +15,27 @@
  */
 package com.samebug.clients.search.api.exceptions;
 
-import com.samebug.clients.search.api.entities.RestError;
+import com.samebug.clients.search.api.client.RestError;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by poroszd on 4/15/16.
  */
 public class BadRequest extends SamebugClientException {
+    @NotNull
     private final RestError restError;
 
-    public BadRequest(final RestError restError) {
+    public BadRequest(@NotNull final RestError restError) {
         this.restError = restError;
     }
 
+    @NotNull
     public RestError getRestError() {
         return restError;
+    }
+
+    @Override
+    public String getMessage() {
+        return restError.toString();
     }
 }

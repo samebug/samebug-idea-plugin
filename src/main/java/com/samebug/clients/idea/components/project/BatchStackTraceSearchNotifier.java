@@ -18,8 +18,8 @@ package com.samebug.clients.idea.components.project;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.messages.BatchStackTraceSearchListener;
-import com.samebug.clients.idea.messages.StackTraceSearchListener;
+import com.samebug.clients.idea.messages.model.BatchStackTraceSearchListener;
+import com.samebug.clients.idea.messages.model.StackTraceSearchListener;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.tracking.SearchInfo;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
@@ -30,9 +30,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by poroszd on 2/11/16.
- */
 public class BatchStackTraceSearchNotifier extends AbstractProjectComponent implements StackTraceSearchListener {
     public BatchStackTraceSearchNotifier(Project project) {
         super(project);
@@ -42,7 +39,7 @@ public class BatchStackTraceSearchNotifier extends AbstractProjectComponent impl
     public void projectOpened() {
         super.projectOpened();
         messageBusConnection = myProject.getMessageBus().connect();
-        messageBusConnection.subscribe(StackTraceSearchListener.SEARCH_TOPIC, this);
+        messageBusConnection.subscribe(StackTraceSearchListener.TOPIC, this);
     }
 
     @Override
@@ -60,7 +57,7 @@ public class BatchStackTraceSearchNotifier extends AbstractProjectComponent impl
                 }
             });
             timer.setRepeats(false);
-            if (!myProject.isDisposed()) myProject.getMessageBus().syncPublisher(BatchStackTraceSearchListener.BATCH_SEARCH_TOPIC).batchStart();
+            if (!myProject.isDisposed()) myProject.getMessageBus().syncPublisher(BatchStackTraceSearchListener.TOPIC).batchStart();
         }
     }
 
@@ -98,7 +95,7 @@ public class BatchStackTraceSearchNotifier extends AbstractProjectComponent impl
 
     private void batchFinished() {
         if (started <= searches.size() + failed) {
-            if (!myProject.isDisposed()) myProject.getMessageBus().syncPublisher(BatchStackTraceSearchListener.BATCH_SEARCH_TOPIC).batchFinished(searches, failed);
+            if (!myProject.isDisposed()) myProject.getMessageBus().syncPublisher(BatchStackTraceSearchListener.TOPIC).batchFinished(searches, failed);
             reset();
         }
     }
