@@ -170,7 +170,7 @@ public class TutorialProjectComponent extends AbstractProjectComponent implement
                     public void run() {
                         ToolWindowManager.getInstance(myProject).notifyByBalloon(
                                 "Samebug",
-                                MessageType.WARNING, SamebugBundle.message("samebug.tutorial.apiStatus.closed"),
+                                MessageType.ERROR, SamebugBundle.message("samebug.tutorial.apiStatus.closed"),
                                 SamebugIcons.info, null);
                     }
                 });
