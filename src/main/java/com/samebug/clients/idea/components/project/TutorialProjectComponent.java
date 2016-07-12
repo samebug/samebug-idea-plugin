@@ -186,8 +186,6 @@ public class TutorialProjectComponent extends AbstractProjectComponent implement
     }
 
 
-
-
     public static abstract class TutorialProjectAnonfun<T> {
         protected TutorialProjectComponent component;
         protected TutorialSettings settings;
