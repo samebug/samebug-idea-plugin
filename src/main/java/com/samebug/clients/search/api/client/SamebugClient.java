@@ -195,7 +195,7 @@ final public class SamebugClient {
         }
     }
 
-    final <T> T readJsonResponse(HttpResponse response, Type classOfT) throws HttpError, JsonParseException {
+    <T> T readJsonResponse(HttpResponse response, Type classOfT) throws HttpError, JsonParseException {
         InputStream content = null;
         Reader reader = null;
         try {
