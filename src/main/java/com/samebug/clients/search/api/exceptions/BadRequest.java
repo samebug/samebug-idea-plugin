@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.search.api.exceptions;
 
-import com.samebug.clients.search.api.entities.RestError;
+import com.samebug.clients.search.api.client.RestError;
 import org.jetbrains.annotations.NotNull;
 
 /**

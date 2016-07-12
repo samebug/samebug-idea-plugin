@@ -23,8 +23,13 @@ import com.samebug.clients.idea.messages.client.MarkModelListener;
 import com.samebug.clients.idea.messages.client.SearchModelListener;
 import com.samebug.clients.idea.messages.client.TipModelListener;
 import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
-import com.samebug.clients.search.api.SamebugClient;
+import com.samebug.clients.search.api.client.Config;
+import com.samebug.clients.search.api.client.SamebugClient;
 import com.samebug.clients.search.api.entities.*;
+import com.samebug.clients.search.api.client.ConnectionStatus;
+import com.samebug.clients.search.api.client.ClientResponse;
+import com.samebug.clients.search.api.client.Failure;
+import com.samebug.clients.search.api.client.Success;
 import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.search.api.exceptions.*;
 import org.jetbrains.annotations.NotNull;
@@ -39,33 +44,32 @@ public class ClientService implements ApplicationComponent {
     AtomicBoolean authenticated;
     AtomicInteger nRequests;
 
-    public synchronized void configure(final SamebugClient.Config config) {
+    public synchronized void configure(final Config config) {
         this.client = new SamebugClient(config);
         this.connected = new AtomicBoolean(true);
         this.authenticated = new AtomicBoolean(true);
         this.nRequests = new AtomicInteger(0);
     }
 
+    public UserInfo getUserInfo(final String apiKey) throws SamebugClientException {
+        return new ConnectionAwareHttpRequest<UserInfo>() {
+            ClientResponse<UserInfo> request() {
+                return client.getUserInfo(apiKey);
+            }
+        }.execute();
+    }
+
     public SearchResults searchSolutions(final String stacktrace) throws SamebugClientException {
-        // TODO notify somebody so we can update the history?
         return new ConnectionAwareHttpRequest<SearchResults>() {
-            SearchResults request() throws SamebugClientException {
+            ClientResponse<SearchResults> request() {
                 return client.searchSolutions(stacktrace);
             }
         }.execute();
     }
 
-    public UserInfo getUserInfo(final String apiKey) throws SamebugClientException {
-        return new ConnectionAwareHttpRequest<UserInfo>() {
-            UserInfo request() throws SamebugClientException {
-                return client.getUserInfo(apiKey);
-            }
-        }.executeUnauthenticated();
-    }
-
     public SearchHistory getSearchHistory() throws SamebugClientException {
         return new ConnectionAwareHttpRequest<SearchHistory>() {
-            SearchHistory request() throws SamebugClientException {
+            ClientResponse<SearchHistory> request() {
                 return client.getSearchHistory();
             }
 
@@ -77,7 +81,7 @@ public class ClientService implements ApplicationComponent {
                 messageBus.syncPublisher(HistoryModelListener.TOPIC).successLoadHistory(result);
             }
 
-            void fail(java.lang.Exception e) {
+            void fail(SamebugClientException e) {
                 messageBus.syncPublisher(HistoryModelListener.TOPIC).failLoadHistory(e);
             }
         }.execute();
@@ -85,7 +89,7 @@ public class ClientService implements ApplicationComponent {
 
     public Solutions getSolutions(final int searchId) throws SamebugClientException {
         return new ConnectionAwareHttpRequest<Solutions>() {
-            Solutions request() throws SamebugClientException {
+            ClientResponse<Solutions> request() {
                 return client.getSolutions(searchId);
             }
 
@@ -97,7 +101,7 @@ public class ClientService implements ApplicationComponent {
                 messageBus.syncPublisher(SearchModelListener.TOPIC).successLoadingSolutions(searchId, result);
             }
 
-            void fail(java.lang.Exception e) {
+            void fail(SamebugClientException e) {
                 messageBus.syncPublisher(SearchModelListener.TOPIC).failLoadingSolutions(searchId, e);
             }
         }.execute();
@@ -105,7 +109,7 @@ public class ClientService implements ApplicationComponent {
 
     public RestHit<Tip> postTip(final int searchId, final String tip, final String sourceUrl) throws SamebugClientException {
         return new ConnectionAwareHttpRequest<RestHit<Tip>>() {
-            RestHit<Tip> request() throws SamebugClientException {
+            ClientResponse<RestHit<Tip>> request() {
                 return client.postTip(searchId, tip, sourceUrl);
             }
 
@@ -117,7 +121,7 @@ public class ClientService implements ApplicationComponent {
                 messageBus.syncPublisher(TipModelListener.TOPIC).successPostTip(searchId, result);
             }
 
-            void fail(java.lang.Exception e) {
+            void fail(SamebugClientException e) {
                 messageBus.syncPublisher(TipModelListener.TOPIC).failPostTip(searchId, e);
             }
         }.execute();
@@ -125,7 +129,7 @@ public class ClientService implements ApplicationComponent {
 
     public MarkResponse postMark(final int searchId, final int solutionId) throws SamebugClientException {
         return new ConnectionAwareHttpRequest<MarkResponse>() {
-            MarkResponse request() throws SamebugClientException {
+            ClientResponse<MarkResponse> request() {
                 return client.postMark(searchId, solutionId);
             }
 
@@ -137,7 +141,7 @@ public class ClientService implements ApplicationComponent {
                 messageBus.syncPublisher(MarkModelListener.TOPIC).successPostingMark(searchId, solutionId, result);
             }
 
-            void fail(java.lang.Exception e) {
+            void fail(SamebugClientException e) {
                 messageBus.syncPublisher(MarkModelListener.TOPIC).failPostingMark(searchId, solutionId, e);
             }
         }.execute();
@@ -145,7 +149,7 @@ public class ClientService implements ApplicationComponent {
 
     public MarkResponse retractMark(final int voteId) throws SamebugClientException {
         return new ConnectionAwareHttpRequest<MarkResponse>() {
-            MarkResponse request() throws SamebugClientException {
+            ClientResponse<MarkResponse> request() {
                 return client.retractMark(voteId);
             }
 
@@ -157,7 +161,7 @@ public class ClientService implements ApplicationComponent {
                 messageBus.syncPublisher(MarkModelListener.TOPIC).successRetractMark(voteId, result);
             }
 
-            void fail(java.lang.Exception e) {
+            void fail(SamebugClientException e) {
                 messageBus.syncPublisher(MarkModelListener.TOPIC).failRetractMark(voteId, e);
             }
         }.execute();
@@ -197,7 +201,7 @@ public class ClientService implements ApplicationComponent {
     }
 
     private abstract class ConnectionAwareHttpRequest<T> {
-        abstract T request() throws SamebugClientException;
+        abstract ClientResponse<T> request();
 
         void start() {
         }
@@ -205,65 +209,47 @@ public class ClientService implements ApplicationComponent {
         void success(T result) {
         }
 
-        void fail(java.lang.Exception e) {
+        void fail(SamebugClientException e) {
         }
 
-        void finish() {
+        void finish(ClientResponse<T> response) {
         }
 
-        public T execute() throws SamebugClientException {
-            return execute(true);
-        }
+        T execute() throws SamebugClientException {
+            final ClientResponse<T> response;
 
-        public T executeUnauthenticated() throws SamebugClientException {
-            return execute(false);
-        }
-
-        private T execute(boolean isAuthenticationRequired) throws SamebugClientException {
             start();
+            nRequests.incrementAndGet();
+            messageBus.syncPublisher(ConnectionStatusListener.TOPIC).startRequest();
+            response = request();
+
+            ConnectionStatus connectionStatus = response.getConnectionStatus();
+            if (connectionStatus.attemptToConnect && connected.get() != connectionStatus.successfullyConnected) {
+                connected.set(connectionStatus.successfullyConnected);
+                messageBus.syncPublisher(ConnectionStatusListener.TOPIC).connectionChange(connectionStatus.successfullyConnected);
+            }
+            if (connectionStatus.attemptToAuthenticate && authenticated.get() != connectionStatus.successfullyAuthenticated) {
+                authenticated.set(connectionStatus.successfullyAuthenticated);
+                messageBus.syncPublisher(ConnectionStatusListener.TOPIC).authenticationChange(connectionStatus.successfullyAuthenticated);
+            }
+            if (connectionStatus.apiStatus != null) {
+                messageBus.syncPublisher(ConnectionStatusListener.TOPIC).apiStatusChange(connectionStatus.apiStatus);
+            }
+
             try {
-                nRequests.incrementAndGet();
-                messageBus.syncPublisher(ConnectionStatusListener.TOPIC).startRequest();
-                T result = request();
-                connected.set(true);
-                if (isAuthenticationRequired) authenticated.set(true);
-                success(result);
-                return result;
-            } catch (SamebugTimeout e) {
-                connected.set(false);
-                fail(e);
-                throw e;
-            } catch (RemoteError e) {
-                connected.set(false);
-                fail(e);
-                throw e;
-            } catch (HttpError e) {
-                connected.set(false);
-                fail(e);
-                throw e;
-            } catch (BadRequest e) {
-                connected.set(true);
-                if (isAuthenticationRequired) authenticated.set(true);
-                fail(e);
-                throw e;
-            } catch (UserUnauthenticated e) {
-                connected.set(true);
-                authenticated.set(false);
-                fail(e);
-                throw e;
-            } catch (UserUnauthorized e) {
-                connected.set(true);
-                authenticated.set(false);
-                fail(e);
-                throw e;
-            } catch (UnsuccessfulResponseStatus e) {
-                connected.set(true);
-                fail(e);
-                throw e;
+                if (response instanceof Success) {
+                    T result = ((Success<T>) response).getResponse();
+                    success(result);
+                    return result;
+                } else {
+                    SamebugClientException exception = ((Failure<T>) response).getException();
+                    fail(exception);
+                    throw exception;
+                }
             } finally {
                 nRequests.decrementAndGet();
-                messageBus.syncPublisher(ConnectionStatusListener.TOPIC).finishRequest(connected.get());
-                finish();
+                messageBus.syncPublisher(ConnectionStatusListener.TOPIC).finishRequest(connectionStatus);
+                finish(response);
             }
         }
     }

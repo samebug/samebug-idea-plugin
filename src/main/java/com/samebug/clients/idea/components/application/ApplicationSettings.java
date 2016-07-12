@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.idea.components.application;
 
-import com.samebug.clients.search.api.SamebugClient;
+import com.samebug.clients.search.api.client.Config;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -99,8 +99,8 @@ public class ApplicationSettings {
         }
     }
 
-    public SamebugClient.Config getNetworkConfig() {
-        final SamebugClient.Config config = new SamebugClient.Config();
+    public Config getNetworkConfig() {
+        final Config config = new Config();
         config.apiKey = apiKey;
         config.workspaceId = workspaceId;
         config.serverRoot = serverRoot;

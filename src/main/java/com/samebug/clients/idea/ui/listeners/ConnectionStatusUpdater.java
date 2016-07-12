@@ -19,6 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
 import com.samebug.clients.idea.ui.component.NetworkStatusIcon;
+import com.samebug.clients.search.api.client.ConnectionStatus;
 import org.jetbrains.annotations.NotNull;
 
 final public class ConnectionStatusUpdater implements ConnectionStatusListener {
@@ -39,18 +40,35 @@ final public class ConnectionStatusUpdater implements ConnectionStatusListener {
     }
 
     @Override
-    public void finishRequest(final boolean isConnected) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (IdeaSamebugPlugin.getInstance().getClient().getNumberOfActiveRequests() == 0) {
-                    if (isConnected) {
-                        statusIcon.setStatusOk();
-                    } else {
-                        statusIcon.setStatusError();
+    public void connectionChange(boolean isConnected) {
+
+    }
+
+    @Override
+    public void authenticationChange(boolean isAuthenticated) {
+
+    }
+
+    @Override
+    public void apiStatusChange(String apiStatus) {
+
+    }
+
+    @Override
+    public void finishRequest(final ConnectionStatus status) {
+        if (status.attemptToConnect) {
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    if (IdeaSamebugPlugin.getInstance().getClient().getNumberOfActiveRequests() == 0) {
+                        if (status.successfullyConnected) {
+                            statusIcon.setStatusOk();
+                        } else {
+                            statusIcon.setStatusError();
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 }
