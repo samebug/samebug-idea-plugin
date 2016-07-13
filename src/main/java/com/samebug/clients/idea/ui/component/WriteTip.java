@@ -119,7 +119,7 @@ final public class WriteTip extends JPanel {
 
         PromptSupport.setPrompt(SamebugBundle.message("samebug.tip.write.tip.placeholder"), tipBody);
         PromptSupport.setPrompt(SamebugBundle.message("samebug.tip.write.source.placeholder"), sourceLink);
-        updateSubmitButton(false);
+        updateSubmitButton(true);
 
         ((AbstractDocument) tipBody.getDocument()).setDocumentFilter(new TipConstraints());
         tipBody.getDocument().addDocumentListener(new TipEditorListener());
@@ -127,9 +127,12 @@ final public class WriteTip extends JPanel {
         submit.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                final String tip = tipBody.getText();
-                final String rawSourceUrl = sourceLink.getText();
-                actions.onClickSubmitTip(tip, rawSourceUrl);
+                if (submit.isEnabled()) {
+                    final String tip = tipBody.getText();
+                    final String rawSourceUrl = sourceLink.getText();
+                    beginPostTip();
+                    actions.onClickSubmitTip(tip, rawSourceUrl);
+                }
             }
         });
     }
@@ -293,14 +296,14 @@ final public class WriteTip extends JPanel {
         }
     }
 
-    void updateSubmitButton(boolean working) {
-        submit.setHighlighted(!working);
-        submit.setEnabled(working);
+    void updateSubmitButton(boolean enabled) {
+        submit.setHighlighted(enabled);
+        submit.setEnabled(enabled);
     }
 
     public void beginPostTip() {
         ApplicationManager.getApplication().assertIsDispatchThread();
-        updateSubmitButton(true);
+        updateSubmitButton(false);
 
     }
 
@@ -309,14 +312,14 @@ final public class WriteTip extends JPanel {
         errorPanel.removeAll();
         errorPanel.add(new ErrorLabel(message));
         errorPanel.setVisible(true);
-        updateSubmitButton(false);
+        updateSubmitButton(true);
         revalidate();
         repaint();
     }
 
     public void finishPostTipWithSuccess() {
         ApplicationManager.getApplication().assertIsDispatchThread();
-        updateSubmitButton(false);
+        updateSubmitButton(true);
     }
 
     public interface Actions {
