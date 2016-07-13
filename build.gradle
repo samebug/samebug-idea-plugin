@@ -28,7 +28,7 @@ sourceSets {
 apply plugin: 'org.jetbrains.intellij'
 
 intellij {
-    version = project.hasProperty('ideaVersion') ? ideaVersion : 'IC-15.0.3'
+    version = project.hasProperty('ideaVersion') ? ideaVersion : 'IC-2016.2'
 
     plugins 'android'
 

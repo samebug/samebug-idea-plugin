@@ -15,13 +15,11 @@
  */
 package com.samebug.clients.search.api.client;
 
-import com.google.gson.Gson;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.net.IdeHttpClientHelpers;
 import com.samebug.clients.search.api.exceptions.*;
-import com.samebug.clients.search.api.json.Json;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -45,7 +43,6 @@ import java.util.List;
 
 final class RawClient {
     final static String USER_AGENT = "Samebug-Idea-Client/2.0.0";
-    final static Gson gson = Json.gson;
 
     final HttpClient httpClient;
     final RequestConfig defaultRequestConfig;
@@ -65,10 +62,11 @@ final class RawClient {
             // fallback to traditional proxy config for backward compatiblity
             try {
                 final HttpConfigurable proxySettings = HttpConfigurable.getInstance();
+                final ProxyCredentialsFacade facade = new ProxyCredentialsFacade(proxySettings);
                 if (proxySettings != null && proxySettings.USE_HTTP_PROXY && !StringUtil.isEmptyOrSpaces(proxySettings.PROXY_HOST)) {
                     requestConfigBuilder.setProxy(new HttpHost(proxySettings.PROXY_HOST, proxySettings.PROXY_PORT));
                     if (proxySettings.PROXY_AUTHENTICATION) {
-                        provider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(proxySettings.PROXY_LOGIN, proxySettings.getPlainProxyPassword()));
+                        provider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(facade.getLogin(), facade.getPassword()));
                     }
                 }
             } catch (Throwable ignored) {
