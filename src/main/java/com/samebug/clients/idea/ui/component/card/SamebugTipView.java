@@ -116,11 +116,13 @@ final public class SamebugTipView extends HitView {
 
         public TipSourceReferencePanel(@NotNull Tip tip) {
             this.tip = tip;
+
+            setLayout(new FlowLayout(FlowLayout.RIGHT));
             refreshView();
         }
 
         public void refreshView() {
-            setLayout(new FlowLayout(FlowLayout.RIGHT));
+            removeAll();
             if (tip.getVia() == null) {
                 // no source, show only tip timestamp
                 add(new JLabel(String.format("%s", TextUtil.prettyTime(tip.getCreatedAt()))) {

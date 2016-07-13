@@ -47,6 +47,7 @@ import java.util.List;
 
 final public class SamebugClient {
     final static Gson gson = Json.gson;
+    public static final int TipSourceLoadingTime_Handicap_Millis = 30000;
 
     final Config config;
     final RestUrlBuilder urlBuilder;
@@ -111,7 +112,8 @@ final public class SamebugClient {
         if (searchId != null) form.add(new BasicNameValuePair("searchId", searchId.toString()));
         if (source != null) form.add(new BasicNameValuePair("sourceUrl", source));
         post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
-
+        // NOTE: posting a tip includes downloading the source on the server side, which might take a while, hence we let it work a bit more.
+        post.setConfig(rawClient.requestConfigBuilder.setSocketTimeout(config.requestTimeout + TipSourceLoadingTime_Handicap_Millis).build());
         Type typeToken = new TypeToken<RestHit<Tip>>() {
         }.getType();
         return rawClient.execute(post, new HandleAuthenticatedJsonRequest<RestHit<Tip>>(typeToken));

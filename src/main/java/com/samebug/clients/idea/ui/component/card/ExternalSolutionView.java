@@ -163,11 +163,13 @@ final public class ExternalSolutionView extends HitView {
 
         public SourceReferencePanel(@NotNull SolutionReference solutionReference) {
             this.solutionReference = solutionReference;
+
+            setLayout(new FlowLayout(FlowLayout.RIGHT));
             refreshView();
         }
 
         void refreshView() {
-            setLayout(new FlowLayout(FlowLayout.RIGHT));
+            removeAll();
             if (solutionReference.getAuthor() == null) {
                 add(new JLabel(String.format("%s", TextUtil.prettyTime(solutionReference.getCreatedAt()))) {
                     @Override

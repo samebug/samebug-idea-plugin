@@ -42,7 +42,12 @@ final class TipModelController implements TipModelListener {
     @Override
     public void startPostTip(int searchId) {
         if (searchId == mySearchId) {
-            // TODO update the view somehow to represent work in progress
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    controller.view.beginPostTip();
+                }
+            });
         }
     }
 
@@ -53,6 +58,9 @@ final class TipModelController implements TipModelListener {
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
+                    controller.view.finishPostTipWithSuccess();
+                    // TODO workaround to close
+                    controller.view.tipPanel = null;
                     // TODO should we avoid refreshing the whole view?
                     controller.refreshTab();
                 }
@@ -88,6 +96,5 @@ final class TipModelController implements TipModelListener {
 
     @Override
     public void finishPostTip(int searchId) {
-
     }
 }

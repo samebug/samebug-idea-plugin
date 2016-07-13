@@ -15,13 +15,11 @@
  */
 package com.samebug.clients.search.api.client;
 
-import com.google.gson.Gson;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.net.IdeHttpClientHelpers;
 import com.samebug.clients.search.api.exceptions.*;
-import com.samebug.clients.search.api.json.Json;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -45,7 +43,8 @@ import java.util.List;
 
 final class RawClient {
     final static String USER_AGENT = "Samebug-Idea-Client/2.0.0";
-    final static Gson gson = Json.gson;
+    public static final int TrackingRequestTimeout_Millis = 3000;
+    public static final int MaxConnections = 20;
 
     final HttpClient httpClient;
     final RequestConfig defaultRequestConfig;
@@ -65,10 +64,11 @@ final class RawClient {
             // fallback to traditional proxy config for backward compatiblity
             try {
                 final HttpConfigurable proxySettings = HttpConfigurable.getInstance();
+                final ProxyCredentialsFacade facade = new ProxyCredentialsFacade(proxySettings);
                 if (proxySettings != null && proxySettings.USE_HTTP_PROXY && !StringUtil.isEmptyOrSpaces(proxySettings.PROXY_HOST)) {
                     requestConfigBuilder.setProxy(new HttpHost(proxySettings.PROXY_HOST, proxySettings.PROXY_PORT));
                     if (proxySettings.PROXY_AUTHENTICATION) {
-                        provider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(proxySettings.PROXY_LOGIN, proxySettings.getPlainProxyPassword()));
+                        provider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(facade.getLogin(), facade.getPassword()));
                     }
                 }
             } catch (Throwable ignored) {
@@ -76,14 +76,14 @@ final class RawClient {
             }
         }
         defaultRequestConfig = requestConfigBuilder.build();
-        trackingConfig = requestConfigBuilder.setSocketTimeout(3000).build();
+        trackingConfig = requestConfigBuilder.setSocketTimeout(TrackingRequestTimeout_Millis).build();
         List<BasicHeader> defaultHeaders = new ArrayList<BasicHeader>();
         defaultHeaders.add(new BasicHeader("User-Agent", USER_AGENT));
         if (config.apiKey != null) defaultHeaders.add(new BasicHeader("X-Samebug-ApiKey", config.apiKey));
         if (config.workspaceId != null) defaultHeaders.add(new BasicHeader("X-Samebug-WorkspaceId", config.workspaceId.toString()));
 
         httpClient = httpBuilder.setDefaultRequestConfig(defaultRequestConfig)
-                .setMaxConnTotal(20).setMaxConnPerRoute(20)
+                .setMaxConnTotal(MaxConnections).setMaxConnPerRoute(MaxConnections)
                 .setDefaultCredentialsProvider(provider)
                 .setDefaultHeaders(defaultHeaders)
                 .build();
