@@ -43,6 +43,8 @@ import java.util.List;
 
 final class RawClient {
     final static String USER_AGENT = "Samebug-Idea-Client/2.0.0";
+    public static final int TrackingRequestTimeout_Millis = 3000;
+    public static final int MaxConnections = 20;
 
     final HttpClient httpClient;
     final RequestConfig defaultRequestConfig;
@@ -74,14 +76,14 @@ final class RawClient {
             }
         }
         defaultRequestConfig = requestConfigBuilder.build();
-        trackingConfig = requestConfigBuilder.setSocketTimeout(3000).build();
+        trackingConfig = requestConfigBuilder.setSocketTimeout(TrackingRequestTimeout_Millis).build();
         List<BasicHeader> defaultHeaders = new ArrayList<BasicHeader>();
         defaultHeaders.add(new BasicHeader("User-Agent", USER_AGENT));
         if (config.apiKey != null) defaultHeaders.add(new BasicHeader("X-Samebug-ApiKey", config.apiKey));
         if (config.workspaceId != null) defaultHeaders.add(new BasicHeader("X-Samebug-WorkspaceId", config.workspaceId.toString()));
 
         httpClient = httpBuilder.setDefaultRequestConfig(defaultRequestConfig)
-                .setMaxConnTotal(20).setMaxConnPerRoute(20)
+                .setMaxConnTotal(MaxConnections).setMaxConnPerRoute(MaxConnections)
                 .setDefaultCredentialsProvider(provider)
                 .setDefaultHeaders(defaultHeaders)
                 .build();
