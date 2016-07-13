@@ -14,9 +14,11 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>Search with Samebug in Analyze menu</li>
-        <li>Showing text searches in history</li>
-        <li>Experimental Samebug Workspace</li>
+        <li>Write tip panel close after successful submit</li>
+        <li>Tip submit and mark buttons disabled while work in progress</li>
+        <li>Increased timeout for tip posting, as it might take a while</li>
+        <li>Fix display bug where solution source component get duplicated</li>
+        <li>Workaround for IntelliJ 2016.2 breaking API change related to proxy settings</li>
       </ul>
 
       Check it at <a href="https://medium.com/@samebug/samebug-0-11-0-a03c07933982">our blog</a>
