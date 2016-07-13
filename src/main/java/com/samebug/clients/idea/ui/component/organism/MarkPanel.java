@@ -116,9 +116,12 @@ final public class MarkPanel extends TransparentPanel {
         markButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                TabController tab = ToolWindowController.DATA_KEY.getData(DataManager.getInstance().getDataContext(MarkPanel.this));
-                Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(MarkPanel.this));
-                if (tab != null && project != null) project.getMessageBus().syncPublisher(MarkViewListener.TOPIC).mark(tab, model);
+                if (markButton.isEnabled()) {
+                    TabController tab = ToolWindowController.DATA_KEY.getData(DataManager.getInstance().getDataContext(MarkPanel.this));
+                    Project project = DataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(MarkPanel.this));
+                    beginPostMark(model);
+                    if (tab != null && project != null) project.getMessageBus().syncPublisher(MarkViewListener.TOPIC).mark(tab, model);
+                }
             }
         });
     }
