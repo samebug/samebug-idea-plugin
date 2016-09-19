@@ -15,49 +15,44 @@
  */
 package com.samebug.clients.search.matcher;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.InvocationTargetException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 enum LineType {
-    StackFrameType(StackFrame.class, "at ([\\w\\.]*\\.)?([\\w\\$]+\\.)([\\w\\$<>]+)(\\([\\w\\s\\:\\.]*\\)).*"),
-    CausedByTypeWithMessage(CausedBy.class, "Caused by\\:\\s([\\w\\.]*\\.)(\\p{Lu}[\\w\\$]+\\:)\\s(.*)"),
-    CausedByTypeWithoutMessage(CausedBy.class, "Caused by\\:\\s([\\w\\.]*\\.)(\\p{Lu}[\\w\\$]+)(?:\\s*)"),
-    ExceptionStartTypeWithMessage(ExceptionStart.class, "([\\w\\.]*\\.)(\\p{Lu}[\\w\\$]+\\:)\\s(.*)"),
-    ExceptionStartTypeWithoutMessage(ExceptionStart.class, "([\\w\\.]*\\.)(\\p{Lu}[\\w\\$]+)(?:\\s*)"),
-    MoreType(More.class, "\\.{3} (\\d+) more\\s*"),
-    MessageType(Message.class, ".*");
+    StackFrameType(Regexes.PossiblyFrameRegex),
+    CausedByType(Regexes.CausedByRegex),
+    MoreType(Regexes.CommonFramesRegex),
+    MessageType(Pattern.compile(".*"));
 
     private final Pattern pattern;
-    private final Class<? extends Line> lineClass;
-    private final static String AcceptableLinePrefix = "(?:.*\\d\\d:\\d\\d:\\d\\d\\.\\d\\d\\d.*\\s)?\\s*";
 
 
-    LineType(Class<? extends Line> lineClass, String regex) {
-        this.lineClass = lineClass;
-        this.pattern = Pattern.compile(AcceptableLinePrefix + regex, Pattern.DOTALL);
+    LineType(Pattern regex) {
+        this.pattern = regex;
     }
 
-    public Line match(String line) {
-        Matcher matcher = this.pattern.matcher(line);
-        if (!matcher.matches()) return null;
-        return convertMatch(matcher);
-    }
-
-    @NotNull
-    private Line convertMatch(Matcher matcher) {
-        try {
-            return lineClass.getConstructor(LineType.class, Matcher.class).newInstance(this, matcher);
-        } catch (InstantiationException e) {
-            throw new Error("Unable to create line " + lineClass.getSimpleName(), e);
-        } catch (IllegalAccessException e) {
-            throw new Error("Unable to create line " + lineClass.getSimpleName(), e);
-        } catch (InvocationTargetException e) {
-            throw new Error("Unable to create line " + lineClass.getSimpleName(), e);
-        } catch (NoSuchMethodException e) {
-            throw new Error("Unable to create line " + lineClass.getSimpleName(), e);
+    public static LineType match(String line) {
+        for (LineType lineType : values()) {
+            Matcher matcher = lineType.pattern.matcher(line);
+            if (matcher.find()) return lineType;
         }
+        throw new IllegalStateException("Message line type should match any input!");
     }
+}
+
+final class Regexes {
+    final static Pattern SpaceRegex = Pattern.compile("[ \\t\\x0B\\xA0]");
+    final static Pattern IdentifierRegex = Pattern.compile("(?:\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)");
+    final static Pattern ExceptionClassNameRegex = Pattern.compile("(?:[A-Z]\\p{javaJavaIdentifierPart}*)");
+    final static Pattern ExceptionTypeRegex = Pattern.compile(String.format("((?:%s\\.)+%s)",
+            IdentifierRegex, ExceptionClassNameRegex));
+    final static Pattern CausedByRegex = Pattern.compile(String.format("(Caused [bB]y:)\\s+%s",
+            ExceptionTypeRegex));
+    final static Pattern CommonFramesRegex = Pattern.compile("\\.\\.\\.\\s+(\\d+)\\s+(?:more|common frames omitted)");
+    final static Pattern PossiblyCallRegex = Pattern.compile("(?:[\\p{javaJavaIdentifierStart}<][\\p{javaJavaIdentifierPart}>]*)");
+    final static Pattern PossiblyLocationRegex = Pattern.compile("\\(([^\\)]*)\\)");
+    final static Pattern PossiblyJarRegex = Pattern.compile(String.format("(?:%s~|%s|~|)\\[([^\\]]*)\\]",
+            SpaceRegex, SpaceRegex));
+    final static Pattern PossiblyFrameRegex = Pattern.compile(String.format("at%s+((?:%s\\.)+(?:%s)?)%s(?:%s)?",
+            SpaceRegex, IdentifierRegex, PossiblyCallRegex, PossiblyLocationRegex, PossiblyJarRegex));
 }

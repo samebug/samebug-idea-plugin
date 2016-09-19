@@ -22,29 +22,15 @@ public class LineTypeTest {
     @Test
     public void recognizeCauseWithoutMessage() {
         checkLineType(
-                LineType.CausedByTypeWithoutMessage,
+                LineType.CausedByType,
                 "Caused by: java.lang.reflect.InvocationTargetException\n");
     }
 
     @Test
     public void recognizeCauseWithMessageStart() {
         checkLineType(
-                LineType.CausedByTypeWithMessage,
+                LineType.CausedByType,
                 "Caused by: android.content.res.Resources$NotFoundException: Unable to find resource ID #0x0\n");
-    }
-
-    @Test
-    public void recognizeExceptionStartWithMessage() {
-        checkLineType(
-                LineType.ExceptionStartTypeWithMessage,
-                "android.view.InflateException: Binary XML file line #34: Error inflating class android.widget.FrameLayout\n");
-    }
-
-    @Test
-    public void recognizeExceptionStartWithoutMessage() {
-        checkLineType(
-                LineType.ExceptionStartTypeWithoutMessage,
-                "android.view.InflateException     \n");
     }
 
     @Test
@@ -62,7 +48,7 @@ public class LineTypeTest {
     }
 
     private void checkLineType(LineType expectedLineType, String line) {
-        Line match = StackTraceMatcher.recognize(line);
-        assertEquals(expectedLineType, match.getType());
+        LineType lineType = LineType.match(line);
+        assertEquals(expectedLineType, lineType);
     }
 }

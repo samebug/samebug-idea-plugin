@@ -1,3 +1,12 @@
+01-25 11:33:53.045 1888-2456/system_process I/ActivityManager: START u0 {act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10000000 cmp=com.example.android.trivialdrivesample/.MainActivity} from pid 2982 on display 0
+01-25 11:33:53.046 1888-2456/system_process I/wm_stack_created: [1,0,0,0,0]
+01-25 11:33:53.049 1888-2456/system_process I/am_create_task: [0,2]
+01-25 11:33:53.049 1888-2456/system_process I/am_create_activity: [0,948239667,2,com.example.android.trivialdrivesample/.MainActivity,android.intent.action.MAIN,NULL,NULL,268435456]
+01-25 11:33:53.049 1888-2456/system_process I/wm_task_created: [2,1]
+01-25 11:33:53.049 1888-2456/system_process I/wm_task_moved: [2,1,0]
+01-25 11:33:53.049 1888-2456/system_process I/am_pause_activity: [0,813915629,com.android.launcher/com.android.launcher2.Launcher]
+01-25 11:33:53.051 1888-1942/system_process W/ResourceType: No package identifier when getting name for resource number 0x00000000
+01-25 11:33:53.051 1888-1942/system_process W/WindowManager: Token{1e3788f0 ActivityRecord{3884fd33 u0 com.example.android.trivialdrivesample/.MainActivity t2}} failed creating starting window
                                                              android.view.InflateException: Binary XML file line #34: Error inflating class android.widget.FrameLayout
                                                                  at android.view.LayoutInflater.createView(LayoutInflater.java:629)
                                                                  at com.android.internal.policy.impl.PhoneLayoutInflater.onCreateView(PhoneLayoutInflater.java:55)
@@ -63,3 +72,36 @@
                                                                  at android.os.Looper.loop(Looper.java:135) 
                                                                  at android.os.HandlerThread.run(HandlerThread.java:61) 
                                                                  at com.android.server.ServiceThread.run(ServiceThread.java:46) 
+                                                                                      java.lang.RuntimeException: Unable to start activity ComponentInfo{com.example.android.trivialdrivesample/com.example.android.trivialdrivesample.MainActivity}: java.lang.RuntimeException: Please put your app's public key in MainActivity.java. See README.
+                                                                                          at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2255)
+                                                                                          at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2317)
+                                                                                          at android.app.ActivityThread.access$800(ActivityThread.java:143)
+                                                                                          at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1258)
+                                                                                          at android.os.Handler.dispatchMessage(Handler.java:102)
+                                                                                          at android.os.Looper.loop(Looper.java:135)
+                                                                                          at android.app.ActivityThread.main(ActivityThread.java:5070)
+                                                                                          at java.lang.reflect.Method.invoke(Native Method)
+                                                                                          at java.lang.reflect.Method.invoke(Method.java:372)
+                                                                                          at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:836)
+                                                                                          at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:631)
+                                                                                       Caused by: java.lang.RuntimeException: Please put your app's public key in MainActivity.java. See README.
+                                                                                          at com.example.android.trivialdrivesample.MainActivity.onCreate(MainActivity.java:168)
+                                                                                          at android.app.Activity.performCreate(Activity.java:5720)
+                                                                                          at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1102)
+                                                                                          at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2208)
+                                                                                          at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2317) 
+                                                                                          at android.app.ActivityThread.access$800(ActivityThread.java:143) 
+                                                                                          at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1258) 
+                                                                                          at android.os.Handler.dispatchMessage(Handler.java:102) 
+                                                                                          at android.os.Looper.loop(Looper.java:135) 
+                                                                                          at android.app.ActivityThread.main(ActivityThread.java:5070) 
+                                                                                          at java.lang.reflect.Method.invoke(Native Method) 
+                                                                                          at java.lang.reflect.Method.invoke(Method.java:372) 
+                                                                                          at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:836) 
+                                                                                          at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:631) 
+01-25 11:33:53.178 1888-2457/system_process I/am_crash: [2998,0,com.example.android.trivialdrivesample,8961606,java.lang.RuntimeException,Please put your app's public key in MainActivity.java. See README.,MainActivity.java,168]
+01-25 11:33:53.180 1888-2457/system_process W/ActivityManager:   Force finishing activity com.example.android.trivialdrivesample/.MainActivity
+01-25 11:33:53.180 1888-2457/system_process I/am_finish_activity: [0,948239667,2,com.example.android.trivialdrivesample/.MainActivity,crashed]
+01-25 11:33:53.180 1888-2457/system_process I/wm_task_moved: [1,1,0]
+01-25 11:33:53.180 1888-2457/system_process E/ActivityManager: Invalid thumbnail dimensions: 768x768
+01-25 11:33:53.180 1888-2457/system_process I/am_pause_activity: [0,948239667,com.example.android.trivialdrivesample/.MainActivity]

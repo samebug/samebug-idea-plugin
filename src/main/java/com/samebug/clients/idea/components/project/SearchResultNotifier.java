@@ -96,7 +96,8 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
             final Map<String, SearchResults> searchesByStackTraceId = new HashMap<String, SearchResults>();
             final Map<Integer, StackTraceSearchGroup> resultsBySearchId = new HashMap<Integer, StackTraceSearchGroup>();
             for (SearchResults result : results) {
-                searchesByStackTraceId.put(result.getStackTraceId(), result);
+                // text searches will have null as stackTraceId. We simply ignore them for the sake of notifications
+                if (result.getStackTraceId() != null) searchesByStackTraceId.put(result.getStackTraceId(), result);
             }
 
             int recurrings = 0;
