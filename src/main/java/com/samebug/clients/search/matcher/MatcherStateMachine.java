@@ -15,104 +15,114 @@
  */
 package com.samebug.clients.search.matcher;
 
-import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
-import org.jetbrains.annotations.NotNull;
+import com.google.common.collect.EvictingQueue;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.samebug.clients.search.matcher.State.*;
 
 abstract class MatcherStateMachine {
-    protected abstract void stackTraceFound();
 
-    protected abstract void matchingFailed();
+    public static final int MAX_MESSAGE_LINES = 10;
 
-    MatcherStateMachine(DebugSessionInfo sessionInfo) {
-        this(new ArrayList<Line>(), sessionInfo);
+    protected abstract void stackTraceFound(final List<String> stackTraceLines);
+
+    private State state;
+    private final ArrayList<String> lines;
+    private final EvictingQueue<String> buffer;
+
+    MatcherStateMachine() {
+        this.state = State.WaitingForExceptionStart;
+        this.lines = new ArrayList<String>();
+        this.buffer = EvictingQueue.create(MAX_MESSAGE_LINES);
     }
 
-    MatcherStateMachine step(String line) {
-        Line matchingLine = state.matchLine(line);
-        State nextState;
-        if (matchingLine == null) {
-            matchingFailed();
-            return restart(line);
-        } else {
-            nextState = state.nextState(matchingLine);
-            if (state == ExceptionStartedWithMessage && nonChangingSteps > 10) {
-                return restart(line);
-            } else if (state == StackTraceStarted && nonChangingSteps > 500) {
-                return restart(line);
-            } else {
-                return transition(nextState, matchingLine);
-            }
+    void step(String line) {
+        LineType lineType = LineType.match(line);
+        switch (state) {
+            case WaitingForExceptionStart:
+                switch (lineType) {
+                    case MessageType:
+                        buffer.add(line);
+                        break;
+                    case MoreType:
+                    case StackFrameType:
+                        lines.addAll(buffer);
+                        buffer.clear();
+                        lines.add(line);
+                        state = StackTraceStarted;
+                        break;
+                    case CausedByType:
+                        lines.add(line);
+                        state = CausedBy;
+                        break;
+                    default:
+                        throw new IllegalStateException("All states should be covered explicitly");
+                }
+                break;
+            case StackTraceStarted:
+                switch (lineType) {
+                    case MessageType:
+                        stackTraceFound(lines);
+                        lines.clear();
+                        buffer.clear();
+                        state = WaitingForExceptionStart;
+                        buffer.add(line);
+                        break;
+                    case MoreType:
+                    case StackFrameType:
+                        lines.add(line);
+                        break;
+                    case CausedByType:
+                        lines.add(line);
+                        state = CausedBy;
+                        break;
+                    default:
+                        throw new IllegalStateException("All states should be covered explicitly");
+                }
+                break;
+            case CausedBy:
+                switch (lineType) {
+                    case MessageType:
+                        if (buffer.remainingCapacity() == 0) {
+                            // The Caused By message is longer than the maximum acceptable lines.
+                            // We throw away the lines before the 'Caused By', and try to accept a new stack trace.
+                            lines.clear();
+                            state = WaitingForExceptionStart;
+                        } else {
+                            buffer.add(line);
+                        }
+                        break;
+                    case MoreType:
+                    case StackFrameType:
+                        lines.addAll(buffer);
+                        buffer.clear();
+                        lines.add(line);
+                        state = StackTraceStarted;
+                        break;
+                    case CausedByType:
+                        lines.addAll(buffer);
+                        buffer.clear();
+                        lines.add(line);
+                        break;
+                    default:
+                        throw new IllegalStateException("All states should be covered explicitly");
+                }
+                break;
+            default:
+                throw new IllegalStateException("All states should be covered explicitly");
         }
     }
 
     void stop() {
         switch (state) {
             case StackTraceStarted:
-            case More:
-                stackTraceFound();
+                stackTraceFound(lines);
             default:
         }
-    }
-
-
-    private MatcherStateMachine restart(String line) {
-        state = WaitingForExceptionStart;
-        Line matchingLine = state.matchLine(line);
-        if (matchingLine == null) {
-            return reset();
-        } else {
-            State nextState = state.nextState(matchingLine);
-            return transition(nextState, matchingLine);
-        }
-    }
-
-    private MatcherStateMachine(ArrayList<Line> lines, DebugSessionInfo sessionInfo) {
-        this.state = State.WaitingForExceptionStart;
-        this.lines = lines;
-        this.sessionInfo = sessionInfo;
-    }
-
-    private MatcherStateMachine transition(@NotNull State nextState, @NotNull Line line) {
-        if (state == nextState) {
-            nonChangingSteps++;
-        } else {
-            nonChangingSteps = 0;
-        }
-        switch (nextState) {
-            case ExceptionFinished:
-                stackTraceFound();
-                state = WaitingForExceptionStart;
-                return restart(line.getRaw());
-            default:
-                lines.add(line);
-                state = nextState;
-                return this;
-        }
-    }
-
-    String getStackTrace() {
-        StringBuilder b = new StringBuilder();
-        boolean first = true;
-        for (Line line : lines) {
-            if (!first) b.append("\n");
-            else first = false;
-            b.append(line.getRaw());
-        }
-        return b.toString();
-    }
-
-    private MatcherStateMachine reset() {
+        buffer.clear();
         lines.clear();
         state = WaitingForExceptionStart;
-        return this;
     }
-
-    private State state;
-    private final ArrayList<Line> lines;
-    protected final DebugSessionInfo sessionInfo;
-    private int nonChangingSteps = 0;
 }

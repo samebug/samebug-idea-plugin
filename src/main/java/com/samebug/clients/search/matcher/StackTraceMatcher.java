@@ -20,6 +20,8 @@ import com.samebug.clients.search.api.StackTraceListener;
 import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
 
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Scans the log for stacktrace.
@@ -27,11 +29,13 @@ import javax.annotation.Nullable;
  * When a stacktrace is found, notifies the StackTraceListener.
  */
 final public class StackTraceMatcher extends MatcherStateMachine implements LogScanner {
+    private final DebugSessionInfo sessionInfo;
     private final StackTraceListener listener;
 
     public StackTraceMatcher(StackTraceListener listener, @Nullable DebugSessionInfo sessionInfo) {
-        super(sessionInfo);
+        super();
         this.listener = listener;
+        this.sessionInfo = sessionInfo;
     }
 
     @Override
@@ -44,26 +48,32 @@ final public class StackTraceMatcher extends MatcherStateMachine implements LogS
         stop();
     }
 
-    static Line recognize(String line) {
-        return recognize(line, LineType.values());
-    }
-
-    static Line recognize(String line, LineType[] acceptableLineTypes) {
-        for (LineType lineType : acceptableLineTypes) {
-            Line match = lineType.match(line);
-            if (match != null) return match;
+    @Override
+    protected void stackTraceFound(final List<String> stackTraceLines) {
+        StringBuilder b = new StringBuilder();
+        boolean first = true;
+        for (String line : stackTraceLines) {
+            if (!first) b.append("\n");
+            else first = false;
+            b.append(line);
         }
-        return null;
+        listener.stacktraceFound(sessionInfo, b.toString());
     }
 
-    @Override
-    protected void stackTraceFound() {
-        listener.stacktraceFound(sessionInfo, getStackTrace());
-    }
+    private final static Pattern SpaceRegex = Pattern.compile("[ \\t\\x0B\\xA0]");
+    private final static Pattern IdentifierRegex = Pattern.compile("(?:\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)");
+    private final static Pattern ExceptionClassNameRegex = Pattern.compile("(?:[A-Z]\\p{javaJavaIdentifierPart}*)");
+    private final static Pattern ExceptionTypeRegex = Pattern.compile(String.format("((?:%s\\.)+%s)",
+            IdentifierRegex, ExceptionClassNameRegex));
+    private final static Pattern CausedByRegex = Pattern.compile(String.format("(Caused [bB]y:)\\s+%s",
+            ExceptionTypeRegex));
+    private final static Pattern CommonFramesRegex = Pattern.compile("\\.\\.\\.\\s+(\\d+)\\s+(?:more|common frames omitted)");
+    private final static Pattern PossiblyCallRegex = Pattern.compile("(?:[\\p{javaJavaIdentifierStart}<][\\p{javaJavaIdentifierPart}>]*)");
+    private final static Pattern PossiblyLocationRegex = Pattern.compile("\\(([^\\)]*)\\)");
+    private final static Pattern PossiblyJarRegex = Pattern.compile(String.format("(?:%s~|%s|~|)\\[([^\\]]*)\\]",
+            SpaceRegex, SpaceRegex));
+    private final static Pattern PossiblyFrameRegex = Pattern.compile(String.format("at%s+((?:%s\\.)+(?:%s)?)%s(?:%s)?",
+            SpaceRegex, IdentifierRegex, PossiblyCallRegex, PossiblyLocationRegex, PossiblyJarRegex));
 
-    @Override
-    protected void matchingFailed() {
-
-    }
 }
 
