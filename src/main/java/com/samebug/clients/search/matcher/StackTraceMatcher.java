@@ -20,8 +20,10 @@ import com.samebug.clients.search.api.StackTraceListener;
 import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
 
 import javax.annotation.Nullable;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Scans the log for stacktrace.
@@ -29,17 +31,28 @@ import java.util.regex.Pattern;
  * When a stacktrace is found, notifies the StackTraceListener.
  */
 final public class StackTraceMatcher extends MatcherStateMachine implements LogScanner {
+    public static final int FINISH_STACKTRACE_TIMEOUT = 1000;
     private final DebugSessionInfo sessionInfo;
     private final StackTraceListener listener;
+    // FIXME: It would be better not to use swing timer here
+    private Timer timer;
 
     public StackTraceMatcher(StackTraceListener listener, @Nullable DebugSessionInfo sessionInfo) {
         super();
         this.listener = listener;
+        this.timer = new Timer(FINISH_STACKTRACE_TIMEOUT, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                StackTraceMatcher.this.end();
+            }
+        });
+        this.timer.setRepeats(false);
         this.sessionInfo = sessionInfo;
     }
 
     @Override
     public void line(String line) {
+        timer.restart();
         step(line);
     }
 
@@ -59,21 +72,6 @@ final public class StackTraceMatcher extends MatcherStateMachine implements LogS
         }
         listener.stacktraceFound(sessionInfo, b.toString());
     }
-
-    private final static Pattern SpaceRegex = Pattern.compile("[ \\t\\x0B\\xA0]");
-    private final static Pattern IdentifierRegex = Pattern.compile("(?:\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)");
-    private final static Pattern ExceptionClassNameRegex = Pattern.compile("(?:[A-Z]\\p{javaJavaIdentifierPart}*)");
-    private final static Pattern ExceptionTypeRegex = Pattern.compile(String.format("((?:%s\\.)+%s)",
-            IdentifierRegex, ExceptionClassNameRegex));
-    private final static Pattern CausedByRegex = Pattern.compile(String.format("(Caused [bB]y:)\\s+%s",
-            ExceptionTypeRegex));
-    private final static Pattern CommonFramesRegex = Pattern.compile("\\.\\.\\.\\s+(\\d+)\\s+(?:more|common frames omitted)");
-    private final static Pattern PossiblyCallRegex = Pattern.compile("(?:[\\p{javaJavaIdentifierStart}<][\\p{javaJavaIdentifierPart}>]*)");
-    private final static Pattern PossiblyLocationRegex = Pattern.compile("\\(([^\\)]*)\\)");
-    private final static Pattern PossiblyJarRegex = Pattern.compile(String.format("(?:%s~|%s|~|)\\[([^\\]]*)\\]",
-            SpaceRegex, SpaceRegex));
-    private final static Pattern PossiblyFrameRegex = Pattern.compile(String.format("at%s+((?:%s\\.)+(?:%s)?)%s(?:%s)?",
-            SpaceRegex, IdentifierRegex, PossiblyCallRegex, PossiblyLocationRegex, PossiblyJarRegex));
 
 }
 
