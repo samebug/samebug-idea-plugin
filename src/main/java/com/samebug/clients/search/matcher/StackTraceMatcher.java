@@ -53,7 +53,11 @@ final public class StackTraceMatcher extends MatcherStateMachine implements LogS
     @Override
     public void line(String line) {
         timer.restart();
-        step(line);
+        if (TeamCityDecoder.isTestFrameworkException(line)) {
+            for (String processedLine : TeamCityDecoder.testFailureLines(line)) {
+                step(processedLine);
+            }
+        } else step(line);
     }
 
     @Override
