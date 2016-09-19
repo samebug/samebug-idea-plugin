@@ -19,6 +19,9 @@
         <li>Increased timeout for tip posting, as it might take a while</li>
         <li>Fix display bug where solution source component get duplicated</li>
         <li>Workaround for IntelliJ 2016.2 breaking API change related to proxy settings</li>
+        <li>Fix error for text searches</li>
+        <li>Less strict parsing of the logs for stack traces</li>
+        <li>Searching for stack trace in the log not only when it closes, but also after a short period of idle</li>
       </ul>
 
       Check it at <a href="https://medium.com/@samebug/samebug-0-11-0-a03c07933982">our blog</a>
