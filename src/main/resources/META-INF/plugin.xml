@@ -22,6 +22,7 @@
         <li>Fix error for text searches</li>
         <li>Less strict parsing of the logs for stack traces</li>
         <li>Searching for stack trace in the log not only when it closes, but also after a short period of idle</li>
+        <li>LogScanner handles not finished lines</li>
       </ul>
 
       Check it at <a href="https://medium.com/@samebug/samebug-0-11-0-a03c07933982">our blog</a>
