@@ -158,9 +158,7 @@ final public class AnalyzeDialog extends DialogWrapper {
 
         public boolean hasStackTrace(String text) {
             found = false;
-            for (String line : text.split("\n")) {
-                parser.line(line);
-            }
+            parser.append(text);
             parser.end();
             return found;
         }

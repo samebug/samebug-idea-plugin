@@ -43,7 +43,7 @@ final public class RunDebugAdapter extends ProcessAdapter {
     @Override
     public void onTextAvailable(ProcessEvent event, Key outputType) {
         String line = event.getText();
-        getOrCreateScanner(outputType).line(line);
+        getOrCreateScanner(outputType).append(line);
     }
 
     @Override

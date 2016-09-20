@@ -36,7 +36,7 @@ final public class LogcatAdapter extends MultiLineReceiver {
     @Override
     public void processNewLines(String[] lines) {
         for (String line : lines) {
-            logScanner.line(line + "\n");
+            logScanner.append(line + "\n");
         }
     }
 
