@@ -30,12 +30,12 @@ abstract class MatcherStateMachine {
 
     private State state;
     private final ArrayList<String> lines;
-    private final EvictingQueue<String> buffer;
+    private final EvictingQueue<String> messageBuffer;
 
     MatcherStateMachine() {
         this.state = State.WaitingForExceptionStart;
         this.lines = new ArrayList<String>();
-        this.buffer = EvictingQueue.create(MAX_MESSAGE_LINES);
+        this.messageBuffer = EvictingQueue.create(MAX_MESSAGE_LINES);
     }
 
     void step(String line) {
@@ -44,12 +44,12 @@ abstract class MatcherStateMachine {
             case WaitingForExceptionStart:
                 switch (lineType) {
                     case MessageType:
-                        buffer.add(line);
+                        messageBuffer.add(line);
                         break;
                     case MoreType:
                     case StackFrameType:
-                        lines.addAll(buffer);
-                        buffer.clear();
+                        lines.addAll(messageBuffer);
+                        messageBuffer.clear();
                         lines.add(line);
                         state = StackTraceStarted;
                         break;
@@ -66,9 +66,9 @@ abstract class MatcherStateMachine {
                     case MessageType:
                         stackTraceFound(lines);
                         lines.clear();
-                        buffer.clear();
+                        messageBuffer.clear();
                         state = WaitingForExceptionStart;
-                        buffer.add(line);
+                        messageBuffer.add(line);
                         break;
                     case MoreType:
                     case StackFrameType:
@@ -85,25 +85,25 @@ abstract class MatcherStateMachine {
             case CausedBy:
                 switch (lineType) {
                     case MessageType:
-                        if (buffer.remainingCapacity() == 0) {
+                        if (messageBuffer.remainingCapacity() == 0) {
                             // The Caused By message is longer than the maximum acceptable lines.
                             // We throw away the lines before the 'Caused By', and try to accept a new stack trace.
                             lines.clear();
                             state = WaitingForExceptionStart;
                         } else {
-                            buffer.add(line);
+                            messageBuffer.add(line);
                         }
                         break;
                     case MoreType:
                     case StackFrameType:
-                        lines.addAll(buffer);
-                        buffer.clear();
+                        lines.addAll(messageBuffer);
+                        messageBuffer.clear();
                         lines.add(line);
                         state = StackTraceStarted;
                         break;
                     case CausedByType:
-                        lines.addAll(buffer);
-                        buffer.clear();
+                        lines.addAll(messageBuffer);
+                        messageBuffer.clear();
                         lines.add(line);
                         break;
                     default:
@@ -121,7 +121,7 @@ abstract class MatcherStateMachine {
                 stackTraceFound(lines);
             default:
         }
-        buffer.clear();
+        messageBuffer.clear();
         lines.clear();
         state = WaitingForExceptionStart;
     }

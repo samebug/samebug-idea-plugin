@@ -36,6 +36,8 @@ final public class StackTraceMatcher extends MatcherStateMachine implements LogS
     private final StackTraceListener listener;
     // FIXME: It would be better not to use swing timer here
     private Timer timer;
+    private final StringBuilder lineBuffer;
+
 
     public StackTraceMatcher(StackTraceListener listener, @Nullable DebugSessionInfo sessionInfo) {
         super();
@@ -47,21 +49,33 @@ final public class StackTraceMatcher extends MatcherStateMachine implements LogS
             }
         });
         this.timer.setRepeats(false);
+        this.lineBuffer = new StringBuilder();
         this.sessionInfo = sessionInfo;
     }
 
     @Override
-    public void line(String line) {
-        timer.restart();
-        if (TeamCityDecoder.isTestFrameworkException(line)) {
-            for (String processedLine : TeamCityDecoder.testFailureLines(line)) {
-                step(processedLine);
+    public void append(String text) {
+        timer.stop();
+        String[] lines = text.split("\\r\\n|\\r|\\n", -1);
+        if (lines.length == 1) {
+            lineBuffer.append(lines[0]);
+        } else {
+            lineBuffer.append(lines[0]);
+            processLine(lineBuffer.toString());
+            lineBuffer.setLength(0);
+            for (int i = 1; i < lines.length - 1; ++i) {
+                processLine(lines[i]);
             }
-        } else step(line);
+            lineBuffer.append(lines[lines.length - 1]);
+        }
+
+        timer.restart();
     }
 
     @Override
     public void end() {
+        processLine(lineBuffer.toString());
+        lineBuffer.setLength(0);
         stop();
     }
 
@@ -75,6 +89,15 @@ final public class StackTraceMatcher extends MatcherStateMachine implements LogS
             b.append(line);
         }
         listener.stacktraceFound(sessionInfo, b.toString());
+    }
+
+    private void processLine(String line) {
+        if (TeamCityDecoder.isTestFrameworkException(line)) {
+            for (String processedLine : TeamCityDecoder.testFailureLines(line)) {
+                step(processedLine);
+            }
+        } else step(line);
+
     }
 
 }
