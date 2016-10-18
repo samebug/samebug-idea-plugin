@@ -178,12 +178,14 @@ final public class SearchTabView extends JPanel {
     }
 
     public void refreshDateLabels() {
-        search.refreshDateLabels();
-        for (HitView card : cards.values()) {
-            card.refreshDateLabels();
+        if (search != null) {
+            search.refreshDateLabels();
+            for (HitView card : cards.values()) {
+                card.refreshDateLabels();
+            }
+            revalidate();
+            repaint();
         }
-        revalidate();
-        repaint();
     }
 
     void updateContent(final @NotNull JComponent content) {
