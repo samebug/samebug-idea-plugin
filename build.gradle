@@ -2,7 +2,7 @@
 // The above triggers groovy syntax highlighting in vim
 
 plugins {
-    id "org.jetbrains.intellij" version "0.0.39"
+    id "org.jetbrains.intellij" version "0.1.10"
     id "com.github.hierynomus.license" version "0.12.1"
 }
 
