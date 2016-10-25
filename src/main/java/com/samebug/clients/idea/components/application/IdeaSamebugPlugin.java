@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.components.application;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -29,6 +30,7 @@ import com.samebug.clients.search.api.entities.UserInfo;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.search.api.exceptions.UnknownApiKey;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -50,6 +52,17 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     }
 
     private WebUrlBuilder urlBuilder = new WebUrlBuilder(state.get().serverRoot);
+
+    @NotNull
+    private Disposable connectionToken = new Disposable() {
+        @Override
+        public void dispose() {
+
+        }
+    };
+
+    @Nullable
+    private TimedTasks timedTasks;
 
     // TODO Unlike other methods, this one executes the http request on the caller thread. Is it ok?
     public void setApiKey(@NotNull String apiKey) throws SamebugClientException, UnknownApiKey {
@@ -123,10 +136,13 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
                 }
             }
         });
+
+        timedTasks = new TimedTasks(connectionToken);
     }
 
     @Override
     public void disposeComponent() {
+        connectionToken.dispose();
     }
 
     @Override

@@ -18,10 +18,7 @@ package com.samebug.clients.idea.components.application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.util.messages.MessageBus;
-import com.samebug.clients.idea.messages.client.HistoryModelListener;
-import com.samebug.clients.idea.messages.client.MarkModelListener;
-import com.samebug.clients.idea.messages.client.SearchModelListener;
-import com.samebug.clients.idea.messages.client.TipModelListener;
+import com.samebug.clients.idea.messages.client.*;
 import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
 import com.samebug.clients.search.api.client.*;
 import com.samebug.clients.search.api.entities.*;
@@ -168,13 +165,12 @@ public class ClientService implements ApplicationComponent {
                 return client.getUserStats(userId, workspaceId);
             }
 
-            void start() {
-            }
-
             void success(UserStats result) {
+                messageBus.syncPublisher(UserStatsListener.TOPIC).successGetUserStats(userId, workspaceId, result);
             }
 
             void fail(SamebugClientException e) {
+                messageBus.syncPublisher(UserStatsListener.TOPIC).failGetUserStats(userId, workspaceId, e);
             }
         }.execute();
     }
