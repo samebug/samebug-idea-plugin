@@ -25,7 +25,7 @@ public class UserStats {
     @NotNull
     private Integer numberOfTips;
     @NotNull
-    private Integer numberOfVotesOnMe;
+    private Integer numberOfThanks;
 
     @NotNull
     public Integer getNumberOfCrashes() {
@@ -43,7 +43,7 @@ public class UserStats {
     }
 
     @NotNull
-    public Integer getNumberOfVotesOnMe() {
-        return numberOfVotesOnMe;
+    public Integer getNumberOfThanks() {
+        return numberOfThanks;
     }
 }

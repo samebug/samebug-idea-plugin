@@ -77,7 +77,7 @@ final public class RestUrlBuilder {
 
     @NotNull
     public URL userStats(@NotNull final Integer userId, @NotNull final Integer workspaceId) {
-        return resolve("stats/" + userId);
+        return resolve("user/statistics");
     }
 
 
