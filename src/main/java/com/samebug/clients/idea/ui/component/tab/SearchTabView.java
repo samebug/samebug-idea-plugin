@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.util.containers.HashMap;
+import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
@@ -50,6 +51,8 @@ final public class SearchTabView extends JPanel {
     public CollapsibleTipPanel tipPanel;
     @Nullable
     public JPanel header;
+    @NotNull
+    final public UserStatisticsPanel userStatisticsPanel;
 
     @NotNull
     final Map<Integer, HitView> cards;
@@ -60,6 +63,7 @@ final public class SearchTabView extends JPanel {
         statusIcon = new NetworkStatusIcon();
         toolbarPanel = new ToolBarPanel();
         contentPanel = new TransparentPanel();
+        userStatisticsPanel = new UserStatisticsPanel();
         cards = new HashMap<Integer, HitView>();
 
         setLayout(new BorderLayout());
@@ -156,9 +160,9 @@ final public class SearchTabView extends JPanel {
                     }
                 }, BorderLayout.NORTH);
                 add(controlPanel, BorderLayout.CENTER);
+                add(userStatisticsPanel, BorderLayout.SOUTH);
             }
         });
-
     }
 
     public void setWarningNotLoggedIn() {
