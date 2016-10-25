@@ -34,10 +34,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
@@ -140,6 +137,28 @@ final public class SamebugClient {
         post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
 
         return rawClient.execute(post, new HandleAuthenticatedJsonRequest<MarkResponse>(MarkResponse.class));
+    }
+
+    public
+    @NotNull
+    ClientResponse<UserStats> getUserStats(@NotNull final Integer userId, @NotNull final Integer workspaceId) {
+        try {
+            UserStats s = gson.fromJson(new InputStreamReader(new FileInputStream("/home/poroszd/prg/samebug/samebug-idea-plugin/s.json")), UserStats.class);
+            ConnectionStatus status = new ConnectionStatus();
+            status.attemptToConnect = true;
+            status.successfullyConnected = true;
+            status.attemptToAuthenticate = true;
+            status.successfullyAuthenticated = true;
+            return new Success<UserStats>(status, s);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+//        final URL url = urlBuilder.userStats(userId, workspaceId);
+//        HttpGet get = new HttpGet(url.toString());
+//
+//        return rawClient.execute(get, new HandleAuthenticatedJsonRequest<UserStats>(UserStats.class));
     }
 
     public void trace(@NotNull final TrackEvent event) throws SamebugClientException {

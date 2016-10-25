@@ -162,6 +162,23 @@ public class ClientService implements ApplicationComponent {
         }.execute();
     }
 
+    public UserStats getUserStats(final int userId, final int workspaceId) throws SamebugClientException {
+        return new ConnectionAwareHttpRequest<UserStats>() {
+            ClientResponse<UserStats> request() {
+                return client.getUserStats(userId, workspaceId);
+            }
+
+            void start() {
+            }
+
+            void success(UserStats result) {
+            }
+
+            void fail(SamebugClientException e) {
+            }
+        }.execute();
+    }
+
     public void trace(final TrackEvent event) throws SamebugClientException {
         // Trace bypasses connection status handling.
         client.trace(event);

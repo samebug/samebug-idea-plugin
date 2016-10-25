@@ -75,6 +75,11 @@ final public class RestUrlBuilder {
         return resolve("mark/cancel");
     }
 
+    @NotNull
+    public URL userStats(@NotNull final Integer userId, @NotNull final Integer workspaceId) {
+        return resolve("stats/" + userId);
+    }
+
 
     @NotNull
     URL resolve(@NotNull final String uri) throws IllegalUriException {
