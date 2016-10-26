@@ -25,6 +25,7 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.component.NetworkStatusIcon;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
+import com.samebug.clients.idea.ui.component.card.CollapsibleUserProfile;
 import com.samebug.clients.idea.ui.component.card.SearchGroupCard;
 import com.samebug.clients.idea.ui.component.card.StackTraceSearchGroupCard;
 import com.samebug.clients.idea.ui.component.card.TextSearchGroupCard;
@@ -45,6 +46,8 @@ final public class HistoryTabView extends JPanel {
     final public NetworkStatusIcon statusIcon;
     @NotNull
     JComponent contentPanel;
+    @NotNull
+    public CollapsibleUserProfile collapsableUserPanel;
 
     @NotNull
     final Map<Integer, SearchGroupCard> cards;
@@ -53,6 +56,7 @@ final public class HistoryTabView extends JPanel {
         statusIcon = new NetworkStatusIcon();
         toolbarPanel = new ToolBarPanel();
         contentPanel = new TransparentPanel();
+        collapsableUserPanel = new CollapsibleUserProfile();
         cards = new HashMap<Integer, SearchGroupCard>();
 
         setLayout(new BorderLayout());
@@ -88,6 +92,7 @@ final public class HistoryTabView extends JPanel {
 
 
         updateContent(scrollPane);
+        add(collapsableUserPanel.getControl(), BorderLayout.SOUTH);
         scrollPane.setViewportView(contentPanel);
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());

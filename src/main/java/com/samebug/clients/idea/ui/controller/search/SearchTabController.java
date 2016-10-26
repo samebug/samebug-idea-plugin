@@ -69,7 +69,7 @@ final public class SearchTabController implements TabController, Disposable {
     @NotNull
     final TipModelController tipModelController;
     @NotNull
-    final UserStatisticsController userStatisticsController;
+    final UserProfileController userProfileController;
     @NotNull
     final TrackingController trackingController;
 
@@ -85,7 +85,7 @@ final public class SearchTabController implements TabController, Disposable {
         modelController = new ModelController(this);
         markModelController = new MarkModelController(this);
         tipModelController = new TipModelController(this);
-        userStatisticsController = new UserStatisticsController(this);
+        userProfileController = new UserProfileController(this);
         trackingController = new TrackingController(this);
 
         DataManager.registerDataProvider(view, new MyDataProvider());

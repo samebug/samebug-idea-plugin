@@ -50,8 +50,8 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
 
     @NotNull
     final Project project;
-    @NotNull
-    final HistoryTabController historyTabController;
+    @Nullable
+    HistoryTabController historyTabController;
     @NotNull
     final ConcurrentMap<Integer, SearchTabController> solutionControllers;
 
@@ -65,7 +65,6 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
     protected ToolWindowController(@NotNull final Project project) {
         super(project);
         this.project = project;
-        historyTabController = new HistoryTabController(this, project);
         solutionControllers = new ConcurrentHashMap<Integer, SearchTabController>();
 
         MessageBusConnection connection = project.getMessageBus().connect(project);
@@ -87,6 +86,7 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
     }
 
     public void initToolWindow(@NotNull ToolWindow toolWindow) {
+        historyTabController = new HistoryTabController(this, project);
         project.getMessageBus().syncPublisher(HistoryViewListener.TOPIC).reloadHistory();
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(historyTabController.getControlPanel(), SamebugBundle.message("samebug.toolwindow.history.tabName"), false);
@@ -95,6 +95,7 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
 
     @Override
     public void focusOnHistory() {
+        assert historyTabController != null;
         ApplicationManager.getApplication().assertIsDispatchThread();
         final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
         final ContentManager toolwindowCM = toolWindow.getContentManager();
@@ -145,7 +146,7 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
 
     @Override
     public void disposeComponent() {
-        Disposer.dispose(historyTabController);
+        if (historyTabController != null) Disposer.dispose(historyTabController);
 
         for (Integer searchId : solutionControllers.keySet()) {
             closeSearchTab(searchId);

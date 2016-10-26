@@ -34,7 +34,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
@@ -141,8 +144,8 @@ final public class SamebugClient {
 
     public
     @NotNull
-    ClientResponse<UserStats> getUserStats(@NotNull final Integer userId, @NotNull final Integer workspaceId) {
-        final URL url = urlBuilder.userStats(userId, workspaceId);
+    ClientResponse<UserStats> getUserStats() {
+        final URL url = urlBuilder.userStats();
         HttpGet get = new HttpGet(url.toString());
 
         return rawClient.execute(get, new HandleAuthenticatedJsonRequest<UserStats>(UserStats.class));

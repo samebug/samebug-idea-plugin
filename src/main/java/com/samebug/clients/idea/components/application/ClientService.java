@@ -48,6 +48,18 @@ public class ClientService implements ApplicationComponent {
             ClientResponse<UserInfo> request() {
                 return client.getUserInfo(apiKey);
             }
+
+            void success(UserInfo result) {
+                messageBus.syncPublisher(UserModelListener.TOPIC).successLoadUserInfo(result);
+            }
+
+            void fail(SamebugClientException e) {
+                messageBus.syncPublisher(UserModelListener.TOPIC).failLoadUserInfo(e);
+            }
+
+            void finish() {
+                messageBus.syncPublisher(UserModelListener.TOPIC).finishLoadHistory();
+            }
         }.execute();
     }
 
@@ -159,18 +171,18 @@ public class ClientService implements ApplicationComponent {
         }.execute();
     }
 
-    public UserStats getUserStats(final int userId, final int workspaceId) throws SamebugClientException {
+    public UserStats getUserStats() throws SamebugClientException {
         return new ConnectionAwareHttpRequest<UserStats>() {
             ClientResponse<UserStats> request() {
-                return client.getUserStats(userId, workspaceId);
+                return client.getUserStats();
             }
 
             void success(UserStats result) {
-                messageBus.syncPublisher(UserStatsListener.TOPIC).successGetUserStats(userId, workspaceId, result);
+                messageBus.syncPublisher(UserStatsListener.TOPIC).successGetUserStats(result);
             }
 
             void fail(SamebugClientException e) {
-                messageBus.syncPublisher(UserStatsListener.TOPIC).failGetUserStats(userId, workspaceId, e);
+                messageBus.syncPublisher(UserStatsListener.TOPIC).failGetUserStats(e);
             }
         }.execute();
     }

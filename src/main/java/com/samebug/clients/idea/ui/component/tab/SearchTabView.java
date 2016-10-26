@@ -20,7 +20,6 @@ import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.util.containers.HashMap;
-import com.intellij.util.ui.components.BorderLayoutPanel;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
@@ -52,7 +51,7 @@ final public class SearchTabView extends JPanel {
     @Nullable
     public JPanel header;
     @NotNull
-    final public UserStatisticsPanel userStatisticsPanel;
+    public CollapsibleUserProfile collapsableUserPanel;
 
     @NotNull
     final Map<Integer, HitView> cards;
@@ -63,7 +62,7 @@ final public class SearchTabView extends JPanel {
         statusIcon = new NetworkStatusIcon();
         toolbarPanel = new ToolBarPanel();
         contentPanel = new TransparentPanel();
-        userStatisticsPanel = new UserStatisticsPanel();
+        collapsableUserPanel = new CollapsibleUserProfile();
         cards = new HashMap<Integer, HitView>();
 
         setLayout(new BorderLayout());
@@ -122,8 +121,17 @@ final public class SearchTabView extends JPanel {
             TextSearchGroup group = (TextSearchGroup) model.getSearch();
             search = new TextSearchGroupCard(group, actions);
         }
-        header = new CollapsableView(search,
-                SamebugBundle.message("samebug.toolwindow.search.collapsibleHeader.open"), SamebugBundle.message("samebug.toolwindow.search.collapsibleHeader.close"));
+        final JComponent closedStateLabel = new JLabel(SamebugBundle.message("samebug.toolwindow.search.collapsibleHeader.open")) {
+            {
+                setHorizontalAlignment(SwingConstants.CENTER);
+            }
+        };
+        final JComponent openedStateLabel = new JLabel(SamebugBundle.message("samebug.toolwindow.search.collapsibleHeader.close")) {
+            {
+                setHorizontalAlignment(SwingConstants.CENTER);
+            }
+        };
+        header = new CollapsableView(search, closedStateLabel, openedStateLabel);
 
         // add result list
         if (model.getTips().isEmpty() && model.getReferences().isEmpty()) {
@@ -160,7 +168,7 @@ final public class SearchTabView extends JPanel {
                     }
                 }, BorderLayout.NORTH);
                 add(controlPanel, BorderLayout.CENTER);
-                add(userStatisticsPanel, BorderLayout.SOUTH);
+                add(collapsableUserPanel.getControl(), BorderLayout.SOUTH);
             }
         });
     }

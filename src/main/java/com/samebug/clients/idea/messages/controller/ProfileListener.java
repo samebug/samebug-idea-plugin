@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages.client;
+package com.samebug.clients.idea.messages.controller;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.search.api.entities.UserStats;
+import com.samebug.clients.common.entities.user.Statistics;
+import com.samebug.clients.common.entities.user.User;
 
-public interface UserStatsListener {
-    Topic<UserStatsListener> TOPIC = Topic.create("Update in user stats", UserStatsListener.class);
+public interface ProfileListener {
+    Topic<ProfileListener> TOPIC = Topic.create("user profile change", ProfileListener.class);
 
-    void successGetUserStats(UserStats userStats);
-
-    void failGetUserStats(java.lang.Exception e);
+    void profileChange(User user, Statistics statistics);
 }

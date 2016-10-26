@@ -16,12 +16,14 @@
 package com.samebug.clients.idea.messages.client;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.search.api.entities.UserStats;
+import com.samebug.clients.search.api.entities.UserInfo;
 
-public interface UserStatsListener {
-    Topic<UserStatsListener> TOPIC = Topic.create("Update in user stats", UserStatsListener.class);
+public interface UserModelListener {
+    Topic<UserModelListener> TOPIC = Topic.create("user model changes", UserModelListener.class);
 
-    void successGetUserStats(UserStats userStats);
+    void successLoadUserInfo(UserInfo result);
 
-    void failGetUserStats(java.lang.Exception e);
+    void failLoadUserInfo(Exception e);
+
+    void finishLoadHistory();
 }

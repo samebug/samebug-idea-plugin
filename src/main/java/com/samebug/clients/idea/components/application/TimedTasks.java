@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.idea.components.application;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
@@ -41,8 +40,8 @@ public class TimedTasks implements RefreshUserStatsListener {
         this.connection = connection;
         connection.subscribe(RefreshUserStatsListener.TOPIC, this);
 
-        final int UserStatsRefreshInitialDelayInMs = 1 * 60 * 1000;
-        final int UserStatsRefreshDelayInMs = 1 * 60 * 1000;
+        final int UserStatsRefreshInitialDelayInMs = 10 * 1000;
+        final int UserStatsRefreshDelayInMs = 10 * 60 * 1000;
         userStatsRefresher = new Timer(UserStatsRefreshDelayInMs, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -57,14 +56,13 @@ public class TimedTasks implements RefreshUserStatsListener {
     @Override
     public void requestRefresh() {
         final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-        final ApplicationSettings state = plugin.getState();
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    plugin.client.getUserStats(state.userId, state.workspaceId.intValue());
+                    plugin.client.getUserStats();
                 } catch (SamebugClientException e) {
-                    LOGGER.warn("Failed to execute getUserStats");
+                    LOGGER.warn("Failed to execute getUserStats", e);
                 }
             }
         });
