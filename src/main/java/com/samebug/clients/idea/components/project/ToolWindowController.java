@@ -35,7 +35,6 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.controller.TabController;
 import com.samebug.clients.idea.ui.controller.history.HistoryTabController;
 import com.samebug.clients.idea.ui.controller.search.SearchTabController;
-import com.samebug.clients.idea.ui.controller.user.UserController;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,8 +54,6 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
     final HistoryTabController historyTabController;
     @NotNull
     final ConcurrentMap<Integer, SearchTabController> solutionControllers;
-    @NotNull
-    final UserController userController;
 
     @NotNull
     final Timer dateLabelRefresher;
@@ -70,7 +67,6 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
         this.project = project;
         historyTabController = new HistoryTabController(this, project);
         solutionControllers = new ConcurrentHashMap<Integer, SearchTabController>();
-        userController = new UserController(this, project);
 
         MessageBusConnection connection = project.getMessageBus().connect(project);
         connection.subscribe(FocusListener.TOPIC, this);

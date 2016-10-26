@@ -33,9 +33,12 @@ public class TimedTasks implements RefreshUserStatsListener {
     @NotNull
     final Timer userStatsRefresher;
 
+    @NotNull
+    final MessageBusConnection connection;
 
-    public TimedTasks(Disposable connectionToken) {
-        MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(connectionToken);
+
+    public TimedTasks(@NotNull MessageBusConnection connection) {
+        this.connection = connection;
         connection.subscribe(RefreshUserStatsListener.TOPIC, this);
 
         final int UserStatsRefreshInitialDelayInMs = 1 * 60 * 1000;

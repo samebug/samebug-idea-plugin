@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,13 +15,13 @@
  */
 package com.samebug.clients.idea.components.application;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.SettingsDialog;
@@ -53,16 +53,11 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
 
     private WebUrlBuilder urlBuilder = new WebUrlBuilder(state.get().serverRoot);
 
-    @NotNull
-    private Disposable connectionToken = new Disposable() {
-        @Override
-        public void dispose() {
-
-        }
-    };
-
     @Nullable
     private TimedTasks timedTasks;
+
+    @Nullable
+    private MessageBusConnection connection;
 
     // TODO Unlike other methods, this one executes the http request on the caller thread. Is it ok?
     public void setApiKey(@NotNull String apiKey) throws SamebugClientException, UnknownApiKey {
@@ -137,12 +132,15 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
             }
         });
 
-        timedTasks = new TimedTasks(connectionToken);
+        connection = ApplicationManager.getApplication().getMessageBus().connect();
+        timedTasks = new TimedTasks(connection);
     }
 
     @Override
     public void disposeComponent() {
-        connectionToken.dispose();
+        if (connection != null) {
+            connection.disconnect();
+        }
     }
 
     @Override

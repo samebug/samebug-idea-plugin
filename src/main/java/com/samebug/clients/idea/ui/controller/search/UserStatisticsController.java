@@ -3,7 +3,6 @@ package com.samebug.clients.idea.ui.controller.search;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.messages.client.UserStatsListener;
 import com.samebug.clients.search.api.entities.UserStats;
 import org.jetbrains.annotations.NotNull;
