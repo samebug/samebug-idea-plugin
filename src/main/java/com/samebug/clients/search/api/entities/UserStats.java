@@ -16,36 +16,34 @@
 package com.samebug.clients.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.net.URL;
-
-public final class Author {
+public class UserStats {
     @NotNull
-    private String name;
-    @Nullable
-    private URL url;
-    @Nullable
-    private URL avatarUrl;
+    private Integer numberOfCrashes;
+    @NotNull
+    private Integer numberOfMarks;
+    @NotNull
+    private Integer numberOfTips;
+    @NotNull
+    private Integer numberOfThanks;
 
-    public Author(@NotNull String name, @Nullable URL url, @Nullable URL avatarUrl) {
-        this.name = name;
-        this.url = url;
-        this.avatarUrl = avatarUrl;
+    @NotNull
+    public Integer getNumberOfCrashes() {
+        return numberOfCrashes;
     }
 
     @NotNull
-    public String getName() {
-        return name;
+    public Integer getNumberOfMarks() {
+        return numberOfMarks;
     }
 
-    @Nullable
-    public URL getUrl() {
-        return url;
+    @NotNull
+    public Integer getNumberOfTips() {
+        return numberOfTips;
     }
 
-    @Nullable
-    public URL getAvatarUrl() {
-        return avatarUrl;
+    @NotNull
+    public Integer getNumberOfThanks() {
+        return numberOfThanks;
     }
 }

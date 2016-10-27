@@ -61,6 +61,8 @@ final public class HistoryTabController implements TabController, Disposable {
     @NotNull
     final ModelController modelController;
     @NotNull
+    final UserProfileController userProfileController;
+    @NotNull
     final TrackingController trackingController;
 
     @NotNull
@@ -74,6 +76,7 @@ final public class HistoryTabController implements TabController, Disposable {
         statusUpdater = new ConnectionStatusUpdater(view.statusIcon);
         viewController = new ViewController(this);
         modelController = new ModelController(this);
+        userProfileController = new UserProfileController(this);
         trackingController = new TrackingController(this);
 
         DataManager.registerDataProvider(view, new MyDataProvider());

@@ -48,11 +48,21 @@ public class ConfigDialogPanel {
         final ApplicationSettings settings = fromUI();
         try {
             try {
+                final String serverRoot = settings.serverRoot;
+                // Silently remove trailing slash
+                if (serverRoot.endsWith("/")) {
+                    settings.serverRoot = serverRoot.substring(0, serverRoot.length() - 1);
+                }
                 URI.create(settings.serverRoot);
             } catch (Exception e) {
                 throw new ConfigurationException(settings.serverRoot + " is not a valid URI");
             }
             try {
+                final String trackingRoot = settings.trackingRoot;
+                // Silently remove trailing slash
+                if (trackingRoot.endsWith("/")) {
+                    settings.trackingRoot = trackingRoot.substring(0, trackingRoot.length() - 1);
+                }
                 URI.create(settings.trackingRoot);
             } catch (Exception e) {
                 throw new ConfigurationException(settings.trackingRoot + " is not a valid URI");

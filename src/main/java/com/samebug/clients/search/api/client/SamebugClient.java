@@ -142,6 +142,15 @@ final public class SamebugClient {
         return rawClient.execute(post, new HandleAuthenticatedJsonRequest<MarkResponse>(MarkResponse.class));
     }
 
+    public
+    @NotNull
+    ClientResponse<UserStats> getUserStats() {
+        final URL url = urlBuilder.userStats();
+        HttpGet get = new HttpGet(url.toString());
+
+        return rawClient.execute(get, new HandleAuthenticatedJsonRequest<UserStats>(UserStats.class));
+    }
+
     public void trace(@NotNull final TrackEvent event) throws SamebugClientException {
         if (config.isTrackingEnabled) {
             HttpPost post = new HttpPost(config.trackingRoot);

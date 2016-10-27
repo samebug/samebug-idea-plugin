@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.ui.component.card;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
 import org.jdesktop.swingx.JXCollapsiblePane;
 
@@ -27,13 +28,14 @@ final public class CollapsableView extends TransparentPanel {
     final JComponent content;
     final JXCollapsiblePane collapsiblePane;
     final OpenCloseBar openCloseBar;
-    final String closedStateText;
-    final String openedStateText;
+    final JComponent closedStateComponent;
+    final JComponent openedStateComponent;
 
-    public CollapsableView(final JComponent content, final String closedStateText, final String openedStateText) {
+    public CollapsableView(final JComponent content, final JComponent closedStateComponent, final JComponent openedStateComponent) {
+        ApplicationManager.getApplication().assertIsDispatchThread();
         this.content = content;
-        this.closedStateText = closedStateText;
-        this.openedStateText = openedStateText;
+        this.closedStateComponent = closedStateComponent;
+        this.openedStateComponent = openedStateComponent;
         this.collapsiblePane = new JXCollapsiblePane();
         this.openCloseBar = new OpenCloseBar();
         this.collapsiblePane.add(content);
@@ -44,27 +46,24 @@ final public class CollapsableView extends TransparentPanel {
     }
 
     public void open() {
+        ApplicationManager.getApplication().assertIsDispatchThread();
         collapsiblePane.setCollapsed(false);
-        openCloseBar.label.setText(openedStateText);
+        openCloseBar.removeAll();
+        openCloseBar.add(openedStateComponent);
     }
 
     public void close() {
+        ApplicationManager.getApplication().assertIsDispatchThread();
         collapsiblePane.setCollapsed(true);
-        openCloseBar.label.setText(closedStateText);
+        openCloseBar.removeAll();
+        openCloseBar.add(closedStateComponent);
     }
 
     final class OpenCloseBar extends TransparentPanel {
-        JLabel label;
+        OpenCloseBar() {
+            add(openedStateComponent);
 
-        public OpenCloseBar() {
-            this.label = new JLabel(openedStateText) {
-                {
-                    setHorizontalAlignment(SwingConstants.CENTER);
-                }
-            };
-            add(label);
-
-            label.addMouseListener(new MouseAdapter() {
+            addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (collapsiblePane.isCollapsed()) {

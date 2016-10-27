@@ -18,10 +18,7 @@ package com.samebug.clients.idea.components.application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.util.messages.MessageBus;
-import com.samebug.clients.idea.messages.client.HistoryModelListener;
-import com.samebug.clients.idea.messages.client.MarkModelListener;
-import com.samebug.clients.idea.messages.client.SearchModelListener;
-import com.samebug.clients.idea.messages.client.TipModelListener;
+import com.samebug.clients.idea.messages.client.*;
 import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
 import com.samebug.clients.search.api.client.*;
 import com.samebug.clients.search.api.entities.*;
@@ -50,6 +47,18 @@ public class ClientService implements ApplicationComponent {
         return new ConnectionAwareHttpRequest<UserInfo>() {
             ClientResponse<UserInfo> request() {
                 return client.getUserInfo(apiKey);
+            }
+
+            void success(UserInfo result) {
+                messageBus.syncPublisher(UserModelListener.TOPIC).successLoadUserInfo(result);
+            }
+
+            void fail(SamebugClientException e) {
+                messageBus.syncPublisher(UserModelListener.TOPIC).failLoadUserInfo(e);
+            }
+
+            void finish() {
+                messageBus.syncPublisher(UserModelListener.TOPIC).finishLoadHistory();
             }
         }.execute();
     }
@@ -158,6 +167,22 @@ public class ClientService implements ApplicationComponent {
 
             void fail(SamebugClientException e) {
                 messageBus.syncPublisher(MarkModelListener.TOPIC).failRetractMark(voteId, e);
+            }
+        }.execute();
+    }
+
+    public UserStats getUserStats() throws SamebugClientException {
+        return new ConnectionAwareHttpRequest<UserStats>() {
+            ClientResponse<UserStats> request() {
+                return client.getUserStats();
+            }
+
+            void success(UserStats result) {
+                messageBus.syncPublisher(UserStatsListener.TOPIC).successGetUserStats(result);
+            }
+
+            void fail(SamebugClientException e) {
+                messageBus.syncPublisher(UserStatsListener.TOPIC).failGetUserStats(e);
             }
         }.execute();
     }

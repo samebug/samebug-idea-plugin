@@ -21,6 +21,7 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.SettingsDialog;
@@ -29,6 +30,7 @@ import com.samebug.clients.search.api.entities.UserInfo;
 import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.search.api.exceptions.UnknownApiKey;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -50,6 +52,15 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     }
 
     private WebUrlBuilder urlBuilder = new WebUrlBuilder(state.get().serverRoot);
+
+    @Nullable
+    private TimedTasks timedTasks;
+
+    @Nullable
+    private ApplicationCache cache;
+
+    @Nullable
+    private MessageBusConnection connection;
 
     // TODO Unlike other methods, this one executes the http request on the caller thread. Is it ok?
     public void setApiKey(@NotNull String apiKey) throws SamebugClientException, UnknownApiKey {
@@ -99,6 +110,11 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         return urlBuilder;
     }
 
+    @Nullable
+    public ApplicationCache getCache() {
+        return cache;
+    }
+
     // ApplicationComponent overrides
     @Override
     public void initComponent() {
@@ -123,10 +139,17 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
                 }
             }
         });
+
+        connection = ApplicationManager.getApplication().getMessageBus().connect();
+        timedTasks = new TimedTasks(connection);
+        cache = new ApplicationCache(connection);
     }
 
     @Override
     public void disposeComponent() {
+        if (connection != null) {
+            connection.disconnect();
+        }
     }
 
     @Override

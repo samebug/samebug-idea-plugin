@@ -50,6 +50,8 @@ final public class SearchTabView extends JPanel {
     public CollapsibleTipPanel tipPanel;
     @Nullable
     public JPanel header;
+    @NotNull
+    public CollapsibleUserProfile collapsableUserPanel;
 
     @NotNull
     final Map<Integer, HitView> cards;
@@ -60,6 +62,7 @@ final public class SearchTabView extends JPanel {
         statusIcon = new NetworkStatusIcon();
         toolbarPanel = new ToolBarPanel();
         contentPanel = new TransparentPanel();
+        collapsableUserPanel = new CollapsibleUserProfile();
         cards = new HashMap<Integer, HitView>();
 
         setLayout(new BorderLayout());
@@ -118,8 +121,17 @@ final public class SearchTabView extends JPanel {
             TextSearchGroup group = (TextSearchGroup) model.getSearch();
             search = new TextSearchGroupCard(group, actions);
         }
-        header = new CollapsableView(search,
-                SamebugBundle.message("samebug.toolwindow.search.collapsibleHeader.open"), SamebugBundle.message("samebug.toolwindow.search.collapsibleHeader.close"));
+        final JComponent closedStateLabel = new JLabel(SamebugBundle.message("samebug.toolwindow.search.collapsibleHeader.open")) {
+            {
+                setHorizontalAlignment(SwingConstants.CENTER);
+            }
+        };
+        final JComponent openedStateLabel = new JLabel(SamebugBundle.message("samebug.toolwindow.search.collapsibleHeader.close")) {
+            {
+                setHorizontalAlignment(SwingConstants.CENTER);
+            }
+        };
+        header = new CollapsableView(search, closedStateLabel, openedStateLabel);
 
         // add result list
         if (model.getTips().isEmpty() && model.getReferences().isEmpty()) {
@@ -156,9 +168,9 @@ final public class SearchTabView extends JPanel {
                     }
                 }, BorderLayout.NORTH);
                 add(controlPanel, BorderLayout.CENTER);
+                add(collapsableUserPanel.getControl(), BorderLayout.SOUTH);
             }
         });
-
     }
 
     public void setWarningNotLoggedIn() {
