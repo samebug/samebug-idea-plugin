@@ -28,6 +28,12 @@ public final class Author {
     @Nullable
     private URL avatarUrl;
 
+    public Author(@NotNull String name, @Nullable URL url, @Nullable URL avatarUrl) {
+        this.name = name;
+        this.url = url;
+        this.avatarUrl = avatarUrl;
+    }
+
     @NotNull
     public String getName() {
         return name;

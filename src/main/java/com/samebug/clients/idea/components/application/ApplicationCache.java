@@ -63,18 +63,24 @@ public class ApplicationCache implements UserStatsListener, UserModelListener {
 
     @Override
     public void successLoadUserInfo(UserInfo result) {
-        final Long lWorkspaceId = IdeaSamebugPlugin.getInstance().getState().workspaceId;
-        final Integer workspaceId;
-        if (lWorkspaceId == null) workspaceId = null;
-        else workspaceId = lWorkspaceId.intValue();
-        final User user = new User(result.getUserId(), result.getDisplayName(), result.getAvatarUrl(), workspaceId);
+        final User user;
+        if (result.getUserExist()) {
+            final Long lWorkspaceId = IdeaSamebugPlugin.getInstance().getState().workspaceId;
+            final Integer workspaceId;
+            if (lWorkspaceId == null) workspaceId = null;
+            else workspaceId = lWorkspaceId.intValue();
+            user = new User(result.getUserId(), result.getDisplayName(), result.getAvatarUrl(), workspaceId);
+        } else {
+            user = null;
+        }
         this.user.set(user);
         ApplicationManager.getApplication().getMessageBus().syncPublisher(ProfileListener.TOPIC).profileChange(user, statistics.get());
     }
 
     @Override
     public void failLoadUserInfo(Exception e) {
-
+        this.user.set(null);
+        ApplicationManager.getApplication().getMessageBus().syncPublisher(ProfileListener.TOPIC).profileChange(null, statistics.get());
     }
 
     @Override
@@ -91,6 +97,7 @@ public class ApplicationCache implements UserStatsListener, UserModelListener {
 
     @Override
     public void failGetUserStats(Exception e) {
-
+        this.statistics.set(null);
+        ApplicationManager.getApplication().getMessageBus().syncPublisher(ProfileListener.TOPIC).profileChange(user.get(), null);
     }
 }
