@@ -76,7 +76,8 @@ public class CollapsibleUserProfile {
             if (statistics == null) {
                 label = String.format("Logged in as %s (no statistics available)", user.getDisplayName());
             } else {
-                label = String.format("Logged in as %s (%d marks | %d tips | %d thanks)", user.getDisplayName(), statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks());
+                label = String.format("Logged in as %s (%d marks | %d tips | %d thanks)",
+                        user.getDisplayName(), statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks());
             }
         }
         closedStateLabel.setText(label);
