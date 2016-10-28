@@ -23,7 +23,10 @@ import com.samebug.clients.common.entities.user.User;
 import com.samebug.clients.idea.components.application.ApplicationCache;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.controller.ProfileListener;
+import com.samebug.clients.idea.ui.ImageUtil;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
 
 public class UserProfileController implements ProfileListener {
     final static Logger LOGGER = Logger.getInstance(UserProfileController.class);
@@ -49,8 +52,22 @@ public class UserProfileController implements ProfileListener {
             public void run() {
                 controller.view.collapsableUserPanel.updateUser(user);
                 controller.view.collapsableUserPanel.updateStatistics(statistics);
-
             }
         });
+
+        // When the avatar is not already loaded, we have to load it and update the view
+        if (ImageUtil.get(user.getAvatarUrl()) == null) {
+            ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+                @Override
+                public void run() {
+                    ImageUtil.loadImages(Arrays.asList(user.getAvatarUrl()));
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        public void run() {
+                            controller.view.collapsableUserPanel.updateUser(user);
+                        }
+                    });
+                }
+            });
+        }
     }
 }
