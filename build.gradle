@@ -40,8 +40,6 @@ intellij {
     updateSinceUntilBuild false
 
     publish {
-        pluginId '8174'
-
         username project.hasProperty('JETBRAINS_USERNAME') ? project.getProperty('JETBRAINS_USERNAME') : null
         password project.hasProperty('JETBRAINS_PASSWORD') ? project.getProperty('JETBRAINS_PASSWORD') : null
         channel project.hasProperty('JETBRAINS_CHANNEL') ? project.getProperty('JETBRAINS_CHANNEL') : null
