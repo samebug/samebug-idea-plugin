@@ -56,7 +56,7 @@ public class UserProfileController implements ProfileListener {
         });
 
         // When the avatar is not already loaded, we have to load it and update the view
-        if (ImageUtil.get(user.getAvatarUrl()) == null) {
+        if (user != null && ImageUtil.get(user.getAvatarUrl()) == null) {
             ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
                 @Override
                 public void run() {

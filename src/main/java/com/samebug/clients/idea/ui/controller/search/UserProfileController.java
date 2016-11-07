@@ -58,7 +58,7 @@ public class UserProfileController implements ProfileListener {
 
         // TODO extract the logic of loading an image on background thread and update what is necessary on the ui thread.
         // When the avatar is not already loaded, we have to load it and update the view
-        if (ImageUtil.get(user.getAvatarUrl()) == null) {
+        if (user != null && ImageUtil.get(user.getAvatarUrl()) == null) {
             ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
                 @Override
                 public void run() {
