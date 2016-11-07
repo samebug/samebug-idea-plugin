@@ -2,7 +2,7 @@
 // The above triggers groovy syntax highlighting in vim
 
 plugins {
-    id "org.jetbrains.intellij" version "0.1.10"
+    id "org.jetbrains.intellij" version "0.0.39"
     id "com.github.hierynomus.license" version "0.12.1"
 }
 
@@ -40,6 +40,8 @@ intellij {
     updateSinceUntilBuild false
 
     publish {
+        pluginId '8174'
+
         username project.hasProperty('JETBRAINS_USERNAME') ? project.getProperty('JETBRAINS_USERNAME') : null
         password project.hasProperty('JETBRAINS_PASSWORD') ? project.getProperty('JETBRAINS_PASSWORD') : null
         channel project.hasProperty('JETBRAINS_CHANNEL') ? project.getProperty('JETBRAINS_CHANNEL') : null
