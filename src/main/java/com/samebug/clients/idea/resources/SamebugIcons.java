@@ -25,6 +25,9 @@ final public class SamebugIcons {
     public final static Icon tutorial = IconLoader.getIcon("/com/samebug/icons/tutorial.png");
     public final static Icon info = IconLoader.getIcon("/com/samebug/icons/info.png");
 
+    public final static Icon twSamebug = IconLoader.getIcon("/com/samebug/toolwindow/samebug.png");
+    public final static Icon twBolt = IconLoader.getIcon("/com/samebug/toolwindow/bolt.png");
+
 
     public final static Icon cogwheel = IconLoader.getIcon("/com/samebug/icons/cogwheel.png");
     public final static Icon cogwheelTodo = IconLoader.getIcon("/com/samebug/icons/cogwheel-todo.png");

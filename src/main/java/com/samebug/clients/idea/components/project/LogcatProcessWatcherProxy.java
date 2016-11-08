@@ -124,6 +124,7 @@ class LogcatProcessWatcher extends AbstractProjectComponent
 
     // implementation
     private synchronized void initReceiver(@NotNull IDevice device) {
+        myProject.getComponent(ToolWindowController.class).changeToolwindowIcon(false);
         if (device.isOnline()) {
             Integer deviceHashCode = System.identityHashCode(device);
             if (listeners.get(deviceHashCode) == null) {

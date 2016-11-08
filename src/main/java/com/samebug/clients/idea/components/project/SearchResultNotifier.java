@@ -23,16 +23,15 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.wm.IdeFrame;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.entities.ExceptionType;
 import com.samebug.clients.common.services.HistoryService;
 import com.samebug.clients.common.ui.Colors;
-import com.samebug.clients.idea.components.application.ClientService;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.components.application.TutorialApplicationComponent;
-import com.samebug.clients.idea.components.application.TutorialSettings;
+import com.samebug.clients.idea.components.application.*;
 import com.samebug.clients.idea.messages.model.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.notification.SearchResultsNotification;
@@ -142,39 +141,6 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
         else return SamebugBundle.message("samebug.notification.exceptionSummary.withMessage", exceptionType.className, shortMessage);
     }
 
-    private void showNotification(String message) {
-        final SearchResultsNotification notification = new SearchResultsNotification(project, message);
-
-        final Timer timer = new Timer(NOTIFICATION_EXPIRATION_DELAY, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                notification.expire();
-            }
-        });
-
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            public void run() {
-                notification.notify(project);
-                timer.start();
-            }
-        });
-    }
-
-    private void showTutorialNotification(final String message) {
-        TutorialProjectComponent.createTutorialBalloon(project, new JEditorPane() {
-            {
-                setEditable(false);
-                setOpaque(false);
-                setBorder(BorderFactory.createEmptyBorder());
-                setContentType("text/html");
-                setText(message);
-                setForeground(Colors.samebugWhite);
-                addHyperlinkListener(SamebugNotifications.basicHyperlinkListener(project, "tutorial"));
-            }
-        }).show(RelativePoint.getNorthEastOf(((IdeFrame) NotificationsManagerImpl.findWindowForBalloon(project)).getComponent()), Balloon.Position.atLeft);
-    }
-
-
     @Override
     public void dispose() {
         messageBusConnection.disconnect();
@@ -187,7 +153,6 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
         private final int nRecurringSearches;
         private final int nSearchesWithZeroSolutions;
         private final TutorialSettings settings;
-        TutorialProjectComponent tutorialComponent;
 
         Notifier(List<Integer> searchIds, Map<Integer, StackTraceSearchGroup> resultsBySearchId, int nRecurringSearches, int nSearchesWithZeroSolutions) {
             this.searchIds = searchIds;
@@ -195,9 +160,7 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
             this.nRecurringSearches = nRecurringSearches;
             this.nSearchesWithZeroSolutions = nSearchesWithZeroSolutions;
             this.settings = ApplicationManager.getApplication().getComponent(TutorialApplicationComponent.class).getState();
-            this.tutorialComponent = project.getComponent(TutorialProjectComponent.class);
             assert settings != null;
-            assert tutorialComponent != null;
         }
 
         void execute() {
@@ -233,19 +196,23 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
         }
 
         private void noSearches() {
+            changeToolwindowIcon(false);
         }
 
         private void oneNewExceptionWithSolutions() {
+            changeToolwindowIcon(true);
             StackTraceSearchGroup search = resultsBySearchId.get(searchIds.get(0));
             String exceptionSummary = summarizeException(search.getLastSearch().getStackTrace().getTrace());
             showNotification(SamebugBundle.message("samebug.notification.searchresults.new.one", searchIds.get(0).toString(), exceptionSummary));
         }
 
         private void twoPlusNewExceptionsWithSolutions() {
+            changeToolwindowIcon(true);
             showNotification(SamebugBundle.message("samebug.notification.searchresults.new.multiple", searchIds.size()));
         }
 
         private void oneRecurringExceptionWithSolutions() {
+            changeToolwindowIcon(true);
             StackTraceSearchGroup search = resultsBySearchId.get(searchIds.get(0));
             String exceptionSummary = summarizeException(search.getLastSearch().getStackTrace().getTrace());
             if (settings.searchResultsRecurring) {
@@ -259,6 +226,7 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
         }
 
         private void twoPlusRecurringExceptionsWithSolutions() {
+            changeToolwindowIcon(true);
             if (settings.searchResultsRecurring) {
                 settings.searchResultsRecurring = false;
                 settings.searchResultsMixed = false;
@@ -269,6 +237,7 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
         }
 
         private void oneNewExceptionNoSolutions() {
+            changeToolwindowIcon(true);
             StackTraceSearchGroup search = resultsBySearchId.get(searchIds.get(0));
             String exceptionSummary = summarizeException(search.getLastSearch().getStackTrace().getTrace());
             if (settings.searchResultsZeroSolutions) {
@@ -281,6 +250,7 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
         }
 
         private void twoPlusNewExceptionsNoSolutions() {
+            changeToolwindowIcon(true);
             if (settings.searchResultsZeroSolutions) {
                 settings.searchResultsZeroSolutions = false;
                 settings.searchResultsMixed = false;
@@ -291,6 +261,7 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
         }
 
         private void mixesSearches() {
+            changeToolwindowIcon(true);
             if (settings.searchResultsMixed) {
                 settings.searchResultsMixed = false;
                 showTutorialNotification(
@@ -300,5 +271,41 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
             }
         }
 
+
+        private void showNotification(String message) {
+            final SearchResultsNotification notification = new SearchResultsNotification(project, message);
+
+            final Timer timer = new Timer(NOTIFICATION_EXPIRATION_DELAY, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    notification.expire();
+                }
+            });
+
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                public void run() {
+                    notification.notify(project);
+                    timer.start();
+                }
+            });
+        }
+
+        private void showTutorialNotification(final String message) {
+            TutorialProjectComponent.createTutorialBalloon(project, new JEditorPane() {
+                {
+                    setEditable(false);
+                    setOpaque(false);
+                    setBorder(BorderFactory.createEmptyBorder());
+                    setContentType("text/html");
+                    setText(message);
+                    setForeground(Colors.samebugWhite);
+                    addHyperlinkListener(SamebugNotifications.basicHyperlinkListener(project, "tutorial"));
+                }
+            }).show(RelativePoint.getNorthEastOf(((IdeFrame) NotificationsManagerImpl.findWindowForBalloon(project)).getComponent()), Balloon.Position.atLeft);
+        }
+
+        private void changeToolwindowIcon(boolean hasNew) {
+            project.getComponent(ToolWindowController.class).changeToolwindowIcon(hasNew);
+        }
     }
 }
