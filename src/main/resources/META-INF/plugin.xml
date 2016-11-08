@@ -1,5 +1,5 @@
 <idea-plugin version="2">
-    <id>8174</id>
+    <id>Samebug</id>
     <name>Samebug</name>
     <vendor email="hello@samebug.io" url="http://samebug.io">Samebug</vendor>
 
