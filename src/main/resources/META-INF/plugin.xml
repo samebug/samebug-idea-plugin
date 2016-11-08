@@ -39,7 +39,7 @@
     <depends optional="true">org.jetbrains.android</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Samebug" icon="/com/samebug/samebug-r270.png" anchor="right"
+        <toolWindow id="Samebug" icon="/com/samebug/toolwindow/samebug.png" anchor="right"
                     factoryClass="com.samebug.clients.idea.ui.controller.SamebugToolWindowFactory"/>
         <applicationConfigurable groupId="tools" id="Settings.Samebug" displayName="Samebug"
                                  instance="com.samebug.clients.idea.ui.controller.ConfigDialog"/>

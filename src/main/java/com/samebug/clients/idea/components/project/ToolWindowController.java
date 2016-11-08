@@ -20,9 +20,11 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.openapi.wm.impl.ToolWindowImpl;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
@@ -32,6 +34,7 @@ import com.samebug.clients.idea.messages.view.FocusListener;
 import com.samebug.clients.idea.messages.view.HistoryViewListener;
 import com.samebug.clients.idea.messages.view.RefreshTimestampsListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.controller.TabController;
 import com.samebug.clients.idea.ui.controller.history.HistoryTabController;
 import com.samebug.clients.idea.ui.controller.search.SearchTabController;
@@ -97,7 +100,7 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
     public void focusOnHistory() {
         assert historyTabController != null;
         ApplicationManager.getApplication().assertIsDispatchThread();
-        final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
+        final ToolWindow toolWindow = getToolWindow();
         final ContentManager toolwindowCM = toolWindow.getContentManager();
         final Content content = toolwindowCM.getContent(historyTabController.getControlPanel());
         if (content != null) toolwindowCM.setSelectedContent(content);
@@ -107,7 +110,7 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
     @Override
     public void focusOnSearch(final int searchId) {
         ApplicationManager.getApplication().assertIsDispatchThread();
-        final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
+        final ToolWindow toolWindow = getToolWindow();
         final ContentManager toolwindowCM = toolWindow.getContentManager();
 
         // FIXME: for now, we let at most one search tab, so we close all
@@ -159,5 +162,19 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
         if (tab != null) Disposer.dispose(tab);
         solutionControllers.remove(searchId);
     }
+
+    public void changeToolwindowIcon(boolean hasNewExceptions) {
+        ToolWindow toolWindow = getToolWindow();
+        if (hasNewExceptions) {
+            toolWindow.setIcon(SamebugIcons.twBolt);
+        } else {
+            toolWindow.setIcon(SamebugIcons.twSamebug);
+        }
+    }
+
+    private ToolWindow getToolWindow() {
+        return ToolWindowManager.getInstance(project).getToolWindow("Samebug");
+    }
+
 }
 
