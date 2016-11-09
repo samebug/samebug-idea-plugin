@@ -164,6 +164,7 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
     }
 
     public void changeToolwindowIcon(boolean hasNewExceptions) {
+        ApplicationManager.getApplication().assertIsDispatchThread();
         ToolWindow toolWindow = getToolWindow();
         if (hasNewExceptions) {
             toolWindow.setIcon(SamebugIcons.twBolt);

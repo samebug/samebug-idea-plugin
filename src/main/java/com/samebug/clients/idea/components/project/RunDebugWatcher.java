@@ -18,6 +18,7 @@ package com.samebug.clients.idea.components.project;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunContentManager;
 import com.intellij.execution.ui.RunContentWithExecutorListener;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
@@ -54,7 +55,12 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
 
     // RunContentWithExecutorListener overrides
     public void contentSelected(@Nullable RunContentDescriptor descriptor, @NotNull com.intellij.execution.Executor executor) {
-        myProject.getComponent(ToolWindowController.class).changeToolwindowIcon(false);
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                myProject.getComponent(ToolWindowController.class).changeToolwindowIcon(false);
+            }
+        });
         if (descriptor != null) {
             initListener(descriptor);
         }
