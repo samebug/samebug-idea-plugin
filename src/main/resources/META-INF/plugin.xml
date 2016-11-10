@@ -109,5 +109,8 @@
         <component>
             <implementation-class>com.samebug.clients.idea.components.project.ToolWindowController</implementation-class>
         </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.components.project.SamebugProjectComponent</implementation-class>
+        </component>
     </project-components>
 </idea-plugin>
