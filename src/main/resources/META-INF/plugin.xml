@@ -47,6 +47,7 @@
                         serviceImplementation="com.samebug.clients.idea.ui.controller.history.HistoryTabController"/>
         <projectService serviceInterface="com.samebug.clients.common.services.HistoryService"
                         serviceImplementation="com.samebug.clients.common.services.HistoryService"/>
+        <consoleActionsPostProcessor implementation="com.samebug.clients.idea.console.PostProcessor"/>
     </extensions>
 
     <actions>
@@ -107,6 +108,9 @@
         </component>
         <component>
             <implementation-class>com.samebug.clients.idea.components.project.ToolWindowController</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.samebug.clients.idea.components.project.SamebugProjectComponent</implementation-class>
         </component>
     </project-components>
 </idea-plugin>
