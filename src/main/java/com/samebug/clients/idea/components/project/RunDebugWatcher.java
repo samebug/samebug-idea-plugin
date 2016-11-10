@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.idea.components.project;
 
-import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunContentManager;
 import com.intellij.execution.ui.RunContentWithExecutorListener;
@@ -57,7 +56,7 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
 
     // RunContentWithExecutorListener overrides
     public void contentSelected(@Nullable RunContentDescriptor descriptor, @NotNull com.intellij.execution.Executor executor) {
-        Logger.getInstance(this.getClass()).warn("RunDebug process handler: "  + descriptor.getProcessHandler().toString());
+        Logger.getInstance(this.getClass()).warn("RunDebug process handler: " + descriptor.getProcessHandler().toString());
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
