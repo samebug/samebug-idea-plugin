@@ -17,6 +17,7 @@ package com.samebug.clients.common.services;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.idea.messages.console.SearchFinishedListener;
 import com.samebug.clients.idea.messages.model.StackTraceSearchListener;
 import com.samebug.clients.search.api.entities.SearchResults;
 import com.samebug.clients.search.api.entities.tracking.SearchInfo;
@@ -51,6 +52,11 @@ public class SearchStore implements StackTraceSearchListener {
         return results.get(requestId);
     }
 
+    public void removeRequest(UUID requestId) {
+        traces.remove(requestId);
+        results.remove(requestId);
+    }
+
     @Override
     public void searchStart(SearchInfo searchInfo, String stackTrace) {
         ongoingRequests.put(searchInfo.getRequestId(), stackTrace);
@@ -72,6 +78,7 @@ public class SearchStore implements StackTraceSearchListener {
             traces.put(requestId, trace);
         }
         ongoingRequests.remove(requestId);
+        myProject.getMessageBus().syncPublisher(SearchFinishedListener.TOPIC).finishedProcessing();
     }
 
     @Override

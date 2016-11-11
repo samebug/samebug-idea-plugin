@@ -28,9 +28,12 @@ import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.actions.ActiveAnnotationGutter;
+import com.intellij.util.containers.ArrayListSet;
+import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.services.SearchStore;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.components.project.SamebugProjectComponent;
+import com.samebug.clients.idea.messages.console.SearchFinishedListener;
 import com.samebug.clients.idea.messages.view.FocusListener;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.search.api.entities.SearchResults;
@@ -38,6 +41,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -47,8 +51,9 @@ public class PostProcessor extends ConsoleActionsPostProcessor {
     public AnAction[] postProcess(@NotNull ConsoleView console, @NotNull AnAction[] actions) {
         Editor editor = ((ConsoleViewImpl) console).getEditor();
         SearchCache cache = new SearchCache();
-        ConsoleWatcher consoleWatcher = new ConsoleWatcher(cache);
-        Annotation annotation = new Annotation(editor.getProject(), consoleWatcher, cache);
+        Project project = editor.getProject();
+        ConsoleWatcher consoleWatcher = new ConsoleWatcher(editor, cache);
+        Annotation annotation = new Annotation(editor.getProject(), cache);
 
         editor.getDocument().addDocumentListener(consoleWatcher);
         editor.getGutter().registerTextAnnotation(annotation, annotation);
@@ -56,28 +61,59 @@ public class PostProcessor extends ConsoleActionsPostProcessor {
     }
 }
 
-class ConsoleWatcher extends DocumentAdapter {
-    SearchCache cache;
+class ConsoleWatcher extends DocumentAdapter implements SearchFinishedListener {
+    private final Editor editor;
+    private final SearchStore searchStore;
+    private final SearchCache cache;
 
-    public ConsoleWatcher(SearchCache cache) {
+    public ConsoleWatcher(Editor editor, SearchCache cache) {
+        Project project = editor.getProject();
+        this.editor = editor;
         this.cache = cache;
+        this.searchStore = project.getComponent(SamebugProjectComponent.class).getSearchStore();
+
+        MessageBusConnection messageBusConnection = project.getMessageBus().connect(project);
+        messageBusConnection.subscribe(SearchFinishedListener.TOPIC, this);
     }
 
     @Override
     public void documentChanged(DocumentEvent e) {
+        finishedProcessing();
+    }
+
+    @Override
+    public synchronized void finishedProcessing() {
+        Document document = editor.getDocument();
+        Collection<UUID> lostRequests = new ArrayListSet<UUID>();
+        lostRequests.addAll(cache.values());
         cache.clear();
+        StringBuilder text = new StringBuilder(document.getText());
+        for (Map.Entry<UUID, String> traceEntry : searchStore.getTraces().entrySet()) {
+            String trace = traceEntry.getValue();
+            int traceStartsAt = text.indexOf(trace);
+            if (traceStartsAt >= 0) {
+                // Save to cache that this trace was found at that line
+                int traceLine = document.getLineNumber(traceStartsAt);
+                cache.put(traceLine, traceEntry.getKey());
+                lostRequests.remove(traceEntry.getKey());
+                // Make sure we will not find this part of the document again
+                String blank = new String(new char[trace.length()]);
+                text = text.replace(traceStartsAt, traceStartsAt + trace.length(), blank);
+            }
+        }
+        for (UUID lostRequestId : lostRequests) {
+            searchStore.removeRequest(lostRequestId);
+        }
     }
 }
 
 class Annotation implements ActiveAnnotationGutter, EditorGutterAction {
     private final Project myProject;
-    private final ConsoleWatcher watcher;
     private final SearchCache cache;
     private final SearchStore searchStore;
 
-    public Annotation(Project project, ConsoleWatcher watcher, SearchCache cache) {
+    public Annotation(Project project, SearchCache cache) {
         myProject = project;
-        this.watcher = watcher;
         this.cache = cache;
         this.searchStore = project.getComponent(SamebugProjectComponent.class).getSearchStore();
     }
@@ -103,20 +139,12 @@ class Annotation implements ActiveAnnotationGutter, EditorGutterAction {
     @Nullable
     @Override
     public String getLineText(int i, Editor editor) {
-        // TODO This method has the side effect of writing the cache.
-        // Probably it would be cleaner to load the cache on document change.
-
-        Document document = editor.getDocument();
-        String textFromCurrentLine = document.getText().substring(document.getLineStartOffset(i));
-        for (Map.Entry<UUID, String> traceEntry : searchStore.getTraces().entrySet()) {
-            if (textFromCurrentLine.startsWith(traceEntry.getValue())) {
-                cache.put(i, traceEntry.getKey());
-                return "X";
-            } else {
-                continue;
-            }
+        UUID requestForLine = cache.get(i);
+        if (requestForLine != null) {
+            return "X";
+        } else {
+            return null;
         }
-        return null;
     }
 
     @Nullable
@@ -180,5 +208,9 @@ class SearchCache {
 
     public UUID get(Integer line) {
         return searchesByLine.get(line);
+    }
+
+    public Collection<UUID> values() {
+        return searchesByLine.values();
     }
 }
