@@ -23,6 +23,8 @@ public final class SearchResults {
     private Integer searchId;
     @Nullable
     private String stackTraceId;
+    @Nullable
+    private Integer firstLine;
 
     @NotNull
     public Integer getSearchId() {
@@ -32,5 +34,10 @@ public final class SearchResults {
     @Nullable
     public String getStackTraceId() {
         return stackTraceId;
+    }
+
+    @Nullable
+    public Integer getFirstLine() {
+        return firstLine;
     }
 }

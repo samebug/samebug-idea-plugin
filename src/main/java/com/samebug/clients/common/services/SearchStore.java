@@ -30,11 +30,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SearchStore implements StackTraceSearchListener {
     private final Project myProject;
     private final Map<UUID, String> traces;
+    private final Map<UUID, String> ongoingRequests;
     private final Map<UUID, SearchResults> results;
 
     public SearchStore(Project project) {
         myProject = project;
         traces = new ConcurrentHashMap<UUID, String>();
+        ongoingRequests = new ConcurrentHashMap<UUID, String>();
         results = new ConcurrentHashMap<UUID, SearchResults>();
         MessageBusConnection projectConnection = project.getMessageBus().connect(project);
         projectConnection.subscribe(StackTraceSearchListener.TOPIC, this);
@@ -51,12 +53,25 @@ public class SearchStore implements StackTraceSearchListener {
 
     @Override
     public void searchStart(SearchInfo searchInfo, String stackTrace) {
-        traces.put(searchInfo.getRequestId(), stackTrace);
+        ongoingRequests.put(searchInfo.getRequestId(), stackTrace);
     }
 
     @Override
     public void searchSucceeded(SearchInfo searchInfo, SearchResults result) {
-        results.put(searchInfo.getRequestId(), result);
+        UUID requestId = searchInfo.getRequestId();
+        results.put(requestId, result);
+        if (result.getStackTraceId() != null) {
+            String trace = ongoingRequests.get(requestId);
+            if (result.getFirstLine() != null) {
+                int lineOffset = result.getFirstLine();
+                for (int i = 0; i < lineOffset; ++i) {
+                    int nextNL = trace.indexOf('\n');
+                    trace = trace.substring(nextNL + 1);
+                }
+            }
+            traces.put(requestId, trace);
+        }
+        ongoingRequests.remove(requestId);
     }
 
     @Override
