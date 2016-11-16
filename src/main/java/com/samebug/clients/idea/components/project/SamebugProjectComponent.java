@@ -15,20 +15,23 @@
  */
 package com.samebug.clients.idea.components.project;
 
+import com.intellij.execution.ui.RunContentManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.common.services.SearchStore;
+import com.intellij.ui.content.ContentManager;
+import com.intellij.ui.content.impl.ContentManagerImpl;
+import com.samebug.clients.common.services.RequestService;
 
 public class SamebugProjectComponent extends AbstractProjectComponent {
-    private final SearchStore searchStore;
+    private final RequestService requestService;
 
     public SamebugProjectComponent(Project project) {
         super(project);
-        this.searchStore = new SearchStore(project);
+        this.requestService = new RequestService(project);
     }
 
-    public SearchStore getSearchStore() {
-        return searchStore;
+    public RequestService getRequestService() {
+        return requestService;
     }
 
 }

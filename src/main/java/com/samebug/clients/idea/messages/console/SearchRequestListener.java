@@ -16,9 +16,14 @@
 package com.samebug.clients.idea.messages.console;
 
 import com.intellij.util.messages.Topic;
+import com.samebug.clients.common.entities.search.Saved;
 
-public interface SearchFinishedListener {
-    Topic<SearchFinishedListener> TOPIC = Topic.create("finished processing stacktrace search", SearchFinishedListener.class);
+import java.util.UUID;
 
-    void finishedProcessing();
+public interface SearchRequestListener {
+    Topic<SearchRequestListener> TOPIC = Topic.create("Request stacktrace search", SearchRequestListener.class);
+
+    void failed(UUID requestId);
+    void saved(UUID requestId, Saved savedSearch);
+    void searched(UUID requestId);
 }
