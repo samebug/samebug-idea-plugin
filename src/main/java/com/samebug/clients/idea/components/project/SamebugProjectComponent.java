@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Samebug, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,16 +18,21 @@ package com.samebug.clients.idea.components.project;
 import com.intellij.execution.ui.RunContentManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.content.ContentManager;
-import com.intellij.ui.content.impl.ContentManagerImpl;
+import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.services.RequestService;
+import com.samebug.clients.idea.console.RunWatcher;
 
 public class SamebugProjectComponent extends AbstractProjectComponent {
     private final RequestService requestService;
+    private final RunWatcher runWatcher;
 
     public SamebugProjectComponent(Project project) {
         super(project);
         this.requestService = new RequestService(project);
+        this.runWatcher = new RunWatcher();
+
+        MessageBusConnection messageBusConnection = myProject.getMessageBus().connect();
+        messageBusConnection.subscribe(RunContentManager.TOPIC, runWatcher);
     }
 
     public RequestService getRequestService() {

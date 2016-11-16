@@ -47,7 +47,6 @@
                         serviceImplementation="com.samebug.clients.idea.ui.controller.history.HistoryTabController"/>
         <projectService serviceInterface="com.samebug.clients.common.services.HistoryService"
                         serviceImplementation="com.samebug.clients.common.services.HistoryService"/>
-        <consoleActionsPostProcessor implementation="com.samebug.clients.idea.console.PostProcessor"/>
     </extensions>
 
     <actions>
