@@ -50,7 +50,6 @@
     </extensions>
 
     <actions>
-        <!-- Add your actions here -->
         <group id="Samebug.ToolWindowMenu" text="Samebug menu" description="Samebug menu">
             <action id="Samebug.Configure" class="com.samebug.clients.idea.actions.ConfigureAction"
                     icon="/com/samebug/icons/cogwheel.png" text="Configure Samebug" description="Set Samebug API key"/>

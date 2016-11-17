@@ -7,6 +7,8 @@ import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunContentWithExecutorListener;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -17,6 +19,7 @@ import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ArrayListSet;
 import com.intellij.util.containers.HashMap;
@@ -28,6 +31,7 @@ import com.samebug.clients.common.entities.search.Searched;
 import com.samebug.clients.common.services.RequestService;
 import com.samebug.clients.idea.components.project.SamebugProjectComponent;
 import com.samebug.clients.idea.messages.console.SearchRequestListener;
+import com.samebug.clients.idea.messages.view.FocusListener;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -92,7 +96,6 @@ class ConsoleWatcher extends DocumentAdapter implements SearchRequestListener {
         this.highlights = new ConcurrentHashMap<UUID, RangeHighlighter>();
 
         editor.getDocument().addDocumentListener(this, console);
-        editor.getSettings().setLineMarkerAreaShown(true);
         MessageBusConnection messageBusConnection = project.getMessageBus().connect(console);
         messageBusConnection.subscribe(SearchRequestListener.TOPIC, this);
     }
@@ -180,6 +183,7 @@ class ConsoleWatcher extends DocumentAdapter implements SearchRequestListener {
                     h.dispose();
                 }
                 highlights.clear();
+                editor.getSettings().setLineMarkerAreaShown(false);
 
                 for (Map.Entry<Integer, UUID> foundRequest : foundRequests.entrySet()) {
                     final RangeHighlighter highlight;
@@ -199,10 +203,10 @@ class ConsoleWatcher extends DocumentAdapter implements SearchRequestListener {
     private RangeHighlighter addRequestedSearchMarker(int line, Requested request) {
         ApplicationManager.getApplication().assertIsDispatchThread();
 
+        editor.getSettings().setLineMarkerAreaShown(true);
         final MarkupModel markupModel = editor.getMarkupModel();
         RangeHighlighter highlighter;
         highlighter = markupModel.addLineHighlighter(line, HighlighterLayer.ADDITIONAL_SYNTAX, null);
-        highlighter.setGutterIconRenderer(new RequestedSearchMark());
         return highlighter;
     }
 
@@ -215,7 +219,7 @@ class ConsoleWatcher extends DocumentAdapter implements SearchRequestListener {
         Integer traceLineOffset = request.getSavedSearch().getFirstLine();
         int correctedLine = traceLineOffset == null ? line : line + traceLineOffset;
         highlighter = markupModel.addLineHighlighter(correctedLine, HighlighterLayer.ADDITIONAL_SYNTAX, null);
-        highlighter.setGutterIconRenderer(new SavedSearchMark());
+        highlighter.setGutterIconRenderer(new SavedSearchMark(request));
         return highlighter;
     }
 
@@ -228,25 +232,13 @@ class ConsoleWatcher extends DocumentAdapter implements SearchRequestListener {
     }
 }
 
-class RequestedSearchMark extends GutterIconRenderer {
-    @NotNull
-    @Override
-    public Icon getIcon() {
-        return SamebugIcons.reload;
+class SavedSearchMark extends GutterIconRenderer implements DumbAware {
+    private final Saved search;
+
+    public SavedSearchMark(Saved search) {
+        this.search = search;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return 0;
-    }
-}
-
-class SavedSearchMark extends GutterIconRenderer {
     @NotNull
     @Override
     public Icon getIcon() {
@@ -255,11 +247,40 @@ class SavedSearchMark extends GutterIconRenderer {
 
     @Override
     public boolean equals(Object o) {
-        return false;
+        if (o instanceof SavedSearchMark) {
+            SavedSearchMark rhs = (SavedSearchMark) o;
+            return rhs.search.equals(search);
+        } else {
+            return false;
+        }
     }
 
     @Override
     public int hashCode() {
-        return 0;
+        return search.hashCode();
     }
+
+    @Override
+    public boolean isNavigateAction() {
+        return true;
+    }
+
+    @Override
+    @NotNull
+    public String getTooltipText() {
+        return "Search " + search.getSavedSearch().getSearchId() +
+                "\nClick to show solutions.";
+    }
+
+    @NotNull
+    public AnAction getClickAction() {
+        return new AnAction() {
+            @Override
+            public void actionPerformed(AnActionEvent e) {
+                getEventProject(e).getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(search.getSavedSearch().getSearchId());
+            }
+        };
+    }
+
 }
+
