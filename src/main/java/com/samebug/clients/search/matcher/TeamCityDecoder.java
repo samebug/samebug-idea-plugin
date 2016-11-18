@@ -15,22 +15,38 @@
  */
 package com.samebug.clients.search.matcher;
 
-import java.util.ArrayList;
+import jetbrains.buildServer.messages.serviceMessages.ServiceMessage;
+import org.apache.commons.lang.ArrayUtils;
+
+import java.text.ParseException;
+import java.util.Map;
 
 /**
  * Tests write to the console do this in teamcity's format. See https://confluence.jetbrains.com/display/TCD10/Build+Script+Interaction+with+TeamCity
  * This means that we have to decode it to find stack traces from test runners.
- * <p>
- * Also, TeamCity's source code is not available, so here we have this class as a workaround.
  */
 public class TeamCityDecoder {
     public static boolean isTestFrameworkException(String line) {
         return line.startsWith("##teamcity[testFailed ");
     }
 
-    public static ArrayList<String> testFailureLines(String line) {
-        ArrayList<String> processedLines = new ArrayList<String>();
-        // TODO implement
-        return processedLines;
+    public static String[] testFailureLines(String line) {
+        try {
+            ServiceMessage msg = ServiceMessage.parse(line);
+            if (msg != null) {
+                Map<String, String> attributes = msg.getAttributes();
+                if (attributes.containsKey("message") && attributes.containsKey("details")) {
+                    String sb = attributes.get("message")
+                            + attributes.get("details");
+                    return sb.split("\n");
+                } else {
+                    return ArrayUtils.EMPTY_STRING_ARRAY;
+                }
+            } else {
+                return ArrayUtils.EMPTY_STRING_ARRAY;
+            }
+        } catch (ParseException e) {
+            return ArrayUtils.EMPTY_STRING_ARRAY;
+        }
     }
 }
