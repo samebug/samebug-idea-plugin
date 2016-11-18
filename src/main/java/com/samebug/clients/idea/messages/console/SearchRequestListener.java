@@ -24,6 +24,8 @@ public interface SearchRequestListener {
     Topic<SearchRequestListener> TOPIC = Topic.create("Request stacktrace search", SearchRequestListener.class);
 
     void failed(UUID requestId);
+
     void saved(UUID requestId, Saved savedSearch);
+
     void searched(UUID requestId);
 }

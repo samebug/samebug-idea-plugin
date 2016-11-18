@@ -20,7 +20,6 @@ import com.intellij.execution.ui.RunContentManager;
 import com.intellij.execution.ui.RunContentWithExecutorListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.components.application.Tracking;
@@ -56,7 +55,6 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
 
     // RunContentWithExecutorListener overrides
     public void contentSelected(@Nullable RunContentDescriptor descriptor, @NotNull com.intellij.execution.Executor executor) {
-        Logger.getInstance(this.getClass()).warn("RunDebug process handler: " + descriptor.getProcessHandler().toString());
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
