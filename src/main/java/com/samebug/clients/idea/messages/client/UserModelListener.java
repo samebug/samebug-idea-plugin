@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.messages.client;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.search.api.entities.UserInfo;
+import com.samebug.clients.common.search.api.entities.UserInfo;
 
 public interface UserModelListener {
     Topic<UserModelListener> TOPIC = Topic.create("user model changes", UserModelListener.class);

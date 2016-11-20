@@ -16,10 +16,10 @@
 package com.samebug.clients.idea.ui.listeners;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.samebug.clients.common.search.api.client.ConnectionStatus;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
 import com.samebug.clients.idea.ui.component.NetworkStatusIcon;
-import com.samebug.clients.search.api.client.ConnectionStatus;
 import org.jetbrains.annotations.NotNull;
 
 final public class ConnectionStatusUpdater implements ConnectionStatusListener {

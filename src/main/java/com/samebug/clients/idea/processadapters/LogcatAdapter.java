@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.processadapters;
 
 import com.android.ddmlib.MultiLineReceiver;
-import com.samebug.clients.search.api.LogScanner;
+import com.samebug.clients.common.search.api.LogScanner;
 
 /**
  * Receives the output of the logcat process.

@@ -19,11 +19,11 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.entities.user.Statistics;
 import com.samebug.clients.common.entities.user.User;
+import com.samebug.clients.common.search.api.entities.UserInfo;
+import com.samebug.clients.common.search.api.entities.UserStats;
 import com.samebug.clients.idea.messages.client.UserModelListener;
 import com.samebug.clients.idea.messages.client.UserStatsListener;
 import com.samebug.clients.idea.messages.controller.ProfileListener;
-import com.samebug.clients.search.api.entities.UserInfo;
-import com.samebug.clients.search.api.entities.UserStats;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

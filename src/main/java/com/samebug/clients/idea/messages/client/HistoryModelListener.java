@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.messages.client;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.search.api.entities.SearchHistory;
+import com.samebug.clients.common.search.api.entities.SearchHistory;
 
 public interface HistoryModelListener {
     Topic<HistoryModelListener> TOPIC = Topic.create("history model changes", HistoryModelListener.class);

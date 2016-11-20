@@ -18,12 +18,12 @@ package com.samebug.clients.idea.components.application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.util.messages.MessageBus;
+import com.samebug.clients.common.search.api.client.*;
+import com.samebug.clients.common.search.api.entities.*;
+import com.samebug.clients.common.search.api.entities.tracking.TrackEvent;
+import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.idea.messages.client.*;
 import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
-import com.samebug.clients.search.api.client.*;
-import com.samebug.clients.search.api.entities.*;
-import com.samebug.clients.search.api.entities.tracking.TrackEvent;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.atomic.AtomicBoolean;

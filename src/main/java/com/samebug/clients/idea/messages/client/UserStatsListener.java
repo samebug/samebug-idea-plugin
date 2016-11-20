@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.messages.client;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.search.api.entities.UserStats;
+import com.samebug.clients.common.search.api.entities.UserStats;
 
 public interface UserStatsListener {
     Topic<UserStatsListener> TOPIC = Topic.create("Update in user stats", UserStatsListener.class);

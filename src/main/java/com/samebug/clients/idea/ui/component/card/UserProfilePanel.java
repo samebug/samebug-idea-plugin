@@ -17,9 +17,9 @@ package com.samebug.clients.idea.ui.component.card;
 
 import com.samebug.clients.common.entities.user.Statistics;
 import com.samebug.clients.common.entities.user.User;
+import com.samebug.clients.common.search.api.entities.Author;
 import com.samebug.clients.idea.ui.component.AvatarPanel;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
-import com.samebug.clients.search.api.entities.Author;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;

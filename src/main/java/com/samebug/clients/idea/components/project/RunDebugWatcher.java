@@ -22,10 +22,10 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.processadapters.RunDebugAdapter;
 import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

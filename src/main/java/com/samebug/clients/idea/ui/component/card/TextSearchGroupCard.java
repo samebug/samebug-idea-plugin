@@ -15,13 +15,13 @@
  */
 package com.samebug.clients.idea.ui.component.card;
 
+import com.samebug.clients.common.search.api.entities.SearchGroup;
+import com.samebug.clients.common.search.api.entities.TextSearchGroup;
 import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.ExceptionMessageLabel;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
-import com.samebug.clients.search.api.entities.SearchGroup;
-import com.samebug.clients.search.api.entities.TextSearchGroup;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

@@ -21,11 +21,11 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.entities.search.Requested;
 import com.samebug.clients.common.entities.search.Saved;
 import com.samebug.clients.common.entities.search.SearchRequest;
+import com.samebug.clients.common.search.api.entities.SearchResults;
+import com.samebug.clients.common.search.api.entities.tracking.SearchInfo;
+import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.idea.messages.console.SearchRequestListener;
 import com.samebug.clients.idea.messages.model.StackTraceSearchListener;
-import com.samebug.clients.search.api.entities.SearchResults;
-import com.samebug.clients.search.api.entities.tracking.SearchInfo;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;

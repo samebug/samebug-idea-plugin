@@ -27,6 +27,9 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.entities.ExceptionType;
+import com.samebug.clients.common.search.api.entities.Exception;
+import com.samebug.clients.common.search.api.entities.*;
+import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.HistoryService;
 import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.idea.components.application.ClientService;
@@ -38,11 +41,6 @@ import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.notification.SearchResultsNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
-import com.samebug.clients.search.api.entities.SearchGroup;
-import com.samebug.clients.search.api.entities.SearchHistory;
-import com.samebug.clients.search.api.entities.SearchResults;
-import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -133,7 +131,7 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
         }
     }
 
-    private String summarizeException(com.samebug.clients.search.api.entities.Exception exception) {
+    private String summarizeException(Exception exception) {
         ExceptionType exceptionType = new ExceptionType(exception.getTypeName());
         final int maxMessageLength = 350;
         String shortMessage = exception.getMessage() == null ? null

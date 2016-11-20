@@ -17,7 +17,7 @@ package com.samebug.clients.idea.messages.model;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
+import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
 
 public interface StackTraceMatcherListener {
     Topic<StackTraceMatcherListener> TOPIC = Topic.create("stacktrace found", StackTraceMatcherListener.class, Topic.BroadcastDirection.TO_PARENT);

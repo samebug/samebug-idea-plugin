@@ -16,8 +16,8 @@
 package com.samebug.clients.idea.messages.client;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.search.api.entities.RestHit;
-import com.samebug.clients.search.api.entities.Tip;
+import com.samebug.clients.common.search.api.entities.RestHit;
+import com.samebug.clients.common.search.api.entities.Tip;
 
 public interface TipModelListener {
     Topic<TipModelListener> TOPIC = Topic.create("tip", TipModelListener.class);

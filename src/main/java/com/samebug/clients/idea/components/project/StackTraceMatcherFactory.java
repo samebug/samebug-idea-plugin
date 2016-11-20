@@ -16,12 +16,12 @@
 package com.samebug.clients.idea.components.project;
 
 import com.intellij.openapi.project.Project;
+import com.samebug.clients.common.search.api.LogScanner;
+import com.samebug.clients.common.search.api.LogScannerFactory;
+import com.samebug.clients.common.search.api.StackTraceListener;
+import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
+import com.samebug.clients.common.search.matcher.StackTraceMatcher;
 import com.samebug.clients.idea.messages.model.StackTraceMatcherListener;
-import com.samebug.clients.search.api.LogScanner;
-import com.samebug.clients.search.api.LogScannerFactory;
-import com.samebug.clients.search.api.StackTraceListener;
-import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
-import com.samebug.clients.search.matcher.StackTraceMatcher;
 
 public class StackTraceMatcherFactory implements LogScannerFactory {
     private final StackTraceListener listener;

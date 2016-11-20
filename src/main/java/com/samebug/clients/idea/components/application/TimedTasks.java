@@ -18,8 +18,8 @@ package com.samebug.clients.idea.components.application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.idea.messages.model.RefreshUserStatsListener;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

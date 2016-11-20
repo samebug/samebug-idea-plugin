@@ -19,10 +19,10 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.Messages;
+import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.common.search.api.exceptions.UnknownApiKey;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
-import com.samebug.clients.search.api.exceptions.UnknownApiKey;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 

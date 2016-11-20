@@ -15,6 +15,9 @@
  */
 package com.samebug.clients.idea.ui.component.card;
 
+import com.samebug.clients.common.search.api.entities.BreadCrumb;
+import com.samebug.clients.common.search.api.entities.RestHit;
+import com.samebug.clients.common.search.api.entities.Tip;
 import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.resources.SamebugBundle;
@@ -22,9 +25,6 @@ import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.*;
 import com.samebug.clients.idea.ui.component.organism.BreadcrumbBar;
 import com.samebug.clients.idea.ui.component.organism.MarkPanel;
-import com.samebug.clients.search.api.entities.BreadCrumb;
-import com.samebug.clients.search.api.entities.RestHit;
-import com.samebug.clients.search.api.entities.Tip;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

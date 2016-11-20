@@ -18,11 +18,11 @@ package com.samebug.clients.idea.ui.controller.history;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.view.HistoryViewListener;
 import com.samebug.clients.idea.messages.view.RefreshTimestampsListener;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 
 final class ViewController implements HistoryViewListener, RefreshTimestampsListener {

@@ -22,13 +22,13 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.search.api.WebUrlBuilder;
+import com.samebug.clients.common.search.api.entities.UserInfo;
+import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.common.search.api.exceptions.UnknownApiKey;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.SettingsDialog;
-import com.samebug.clients.search.api.WebUrlBuilder;
-import com.samebug.clients.search.api.entities.UserInfo;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
-import com.samebug.clients.search.api.exceptions.UnknownApiKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

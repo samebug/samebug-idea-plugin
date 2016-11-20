@@ -25,6 +25,7 @@ import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.search.api.client.ConnectionStatus;
 import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.components.application.TutorialApplicationComponent;
@@ -35,7 +36,6 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
-import com.samebug.clients.search.api.client.ConnectionStatus;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;

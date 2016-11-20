@@ -19,7 +19,7 @@ import com.android.tools.idea.logcat.AndroidConsoleWriter;
 import com.android.tools.idea.logcat.AndroidLogcatFormatter;
 import com.android.tools.idea.logcat.AndroidLogcatPreferences;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.search.api.LogScanner;
+import com.samebug.clients.common.search.api.LogScanner;
 import org.jetbrains.annotations.NotNull;
 
 public class LogcatWriter implements AndroidConsoleWriter {

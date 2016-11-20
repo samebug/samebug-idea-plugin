@@ -16,6 +16,9 @@
 package com.samebug.clients.idea.ui.component.card;
 
 import com.samebug.clients.common.entities.ExceptionType;
+import com.samebug.clients.common.search.api.entities.BreadCrumb;
+import com.samebug.clients.common.search.api.entities.RestHit;
+import com.samebug.clients.common.search.api.entities.SolutionReference;
 import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
@@ -28,9 +31,6 @@ import com.samebug.clients.idea.ui.component.SourceIcon;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.idea.ui.component.organism.BreadcrumbBar;
 import com.samebug.clients.idea.ui.component.organism.MarkPanel;
-import com.samebug.clients.search.api.entities.BreadCrumb;
-import com.samebug.clients.search.api.entities.RestHit;
-import com.samebug.clients.search.api.entities.SolutionReference;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

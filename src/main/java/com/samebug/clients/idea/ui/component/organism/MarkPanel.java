@@ -21,6 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
+import com.samebug.clients.common.search.api.entities.RestHit;
 import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.idea.components.project.ToolWindowController;
 import com.samebug.clients.idea.messages.view.MarkViewListener;
@@ -30,7 +31,6 @@ import com.samebug.clients.idea.ui.component.ErrorLabel;
 import com.samebug.clients.idea.ui.component.SBButton;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.idea.ui.controller.TabController;
-import com.samebug.clients.search.api.entities.RestHit;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

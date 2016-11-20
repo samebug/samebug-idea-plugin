@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.messages.model;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.search.api.client.ConnectionStatus;
+import com.samebug.clients.common.search.api.client.ConnectionStatus;
 
 public interface ConnectionStatusListener {
     Topic<ConnectionStatusListener> TOPIC = Topic.create("connection status change", ConnectionStatusListener.class);
