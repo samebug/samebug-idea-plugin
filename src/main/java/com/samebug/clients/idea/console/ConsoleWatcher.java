@@ -36,6 +36,7 @@ import com.samebug.clients.common.entities.search.Searched;
 import com.samebug.clients.common.services.RequestService;
 import com.samebug.clients.idea.components.project.SamebugProjectComponent;
 import com.samebug.clients.idea.messages.console.SearchRequestListener;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -169,29 +170,39 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
         });
     }
 
+    @Nullable
     private RangeHighlighter addRequestedSearchMarker(int line, Requested request) {
         LOGGER.info("Add request marker for editor " + editor.toString() + " to line " + line + " for request " + request.toString());
         ApplicationManager.getApplication().assertIsDispatchThread();
 
-        final MarkupModel markupModel = editor.getMarkupModel();
-        RangeHighlighter highlighter;
-        highlighter = markupModel.addLineHighlighter(line, HighlighterLayer.ADDITIONAL_SYNTAX, null);
-        return highlighter;
+        if (editor.getDocument().getLineCount() >= line) {
+            final MarkupModel markupModel = editor.getMarkupModel();
+            RangeHighlighter highlighter;
+            highlighter = markupModel.addLineHighlighter(line, HighlighterLayer.ADDITIONAL_SYNTAX, null);
+            return highlighter;
+        } else {
+            return null;
+        }
     }
 
 
+    @Nullable
     private RangeHighlighter addSavedSearchMarker(int line, Saved request) {
         LOGGER.info("Add saved search marker for editor " + editor.toString() + " to line " + line + " for request " + request.toString());
         ApplicationManager.getApplication().assertIsDispatchThread();
 
         editor.getSettings().setLineMarkerAreaShown(true);
         final MarkupModel markupModel = editor.getMarkupModel();
-        RangeHighlighter highlighter;
         Integer traceLineOffset = request.getSavedSearch().getFirstLine();
         int correctedLine = traceLineOffset == null ? line : line + traceLineOffset;
-        highlighter = markupModel.addLineHighlighter(correctedLine, HighlighterLayer.ADDITIONAL_SYNTAX, null);
-        highlighter.setGutterIconRenderer(new SavedSearchMark(request));
-        return highlighter;
+        if (editor.getDocument().getLineCount() >= correctedLine) {
+            RangeHighlighter highlighter;
+            highlighter = markupModel.addLineHighlighter(correctedLine, HighlighterLayer.ADDITIONAL_SYNTAX, null);
+            highlighter.setGutterIconRenderer(new SavedSearchMark(request));
+            return highlighter;
+        } else {
+            return null;
+        }
     }
 
     private RangeHighlighter addSearchedSearchMarker(int line, Searched request) {
