@@ -24,28 +24,26 @@ import com.samebug.clients.common.search.matcher.StackTraceMatcher;
 import com.samebug.clients.idea.messages.model.StackTraceMatcherListener;
 
 public class StackTraceMatcherFactory implements LogScannerFactory {
+    private final Project myProject;
     private final StackTraceListener listener;
+    private final DebugSessionInfo sessionInfo;
 
-    public StackTraceMatcherFactory(Project project) {
-        this.listener = new StackTracePublisher(project);
+    public StackTraceMatcherFactory(Project project, DebugSessionInfo sessionInfo) {
+        myProject = project;
+        this.listener = new StackTracePublisher();
+        this.sessionInfo = sessionInfo;
     }
 
     @Override
-    public LogScanner createScanner(DebugSessionInfo sessionInfo) {
-        return new StackTraceMatcher(listener, sessionInfo);
+    public LogScanner createScanner() {
+        return new StackTraceMatcher(listener);
     }
 
 
-    static private class StackTracePublisher implements StackTraceListener {
-        private final Project project;
-
-        StackTracePublisher(Project project) {
-            this.project = project;
-        }
-
+    private class StackTracePublisher implements StackTraceListener {
         @Override
-        public void stacktraceFound(DebugSessionInfo sessionInfo, String stacktrace) {
-            if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceMatcherListener.TOPIC).stackTraceFound(project, sessionInfo, stacktrace);
+        public void stacktraceFound(String stacktrace) {
+            if (!myProject.isDisposed()) myProject.getMessageBus().syncPublisher(StackTraceMatcherListener.TOPIC).stackTraceFound(myProject, sessionInfo, stacktrace);
         }
     }
 

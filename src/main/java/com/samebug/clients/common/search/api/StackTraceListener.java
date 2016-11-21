@@ -15,10 +15,6 @@
  */
 package com.samebug.clients.common.search.api;
 
-import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
-
-import javax.annotation.Nullable;
-
 public interface StackTraceListener {
-    void stacktraceFound(@Nullable DebugSessionInfo sessionInfo, String stacktrace);
+    void stacktraceFound(String stacktrace);
 }

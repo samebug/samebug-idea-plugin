@@ -31,6 +31,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
+import com.samebug.clients.common.search.api.LogScannerFactory;
 import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.console.ConsoleWatcher;
@@ -92,7 +93,6 @@ class LogcatProcessWatcher extends AbstractProjectComponent
 
     @Override
     public void projectOpened() {
-        this.scannerFactory = new StackTraceMatcherFactory(myProject);
         File adb = AndroidSdkUtil.getAdb(myProject);
         if (adb != null) {
             AndroidDebugBridge.initIfNeeded(AndroidEnableAdbServiceAction.isAdbServiceEnabled());
@@ -143,26 +143,32 @@ class LogcatProcessWatcher extends AbstractProjectComponent
         if (device.isOnline()) {
             Integer deviceHashCode = System.identityHashCode(device);
             if (listeners.get(deviceHashCode) == null) {
-                createReceiver(device, deviceHashCode);
+                createListener(device, deviceHashCode);
             }
         }
     }
 
-    private AndroidLogcatReceiver createReceiver(@NotNull final IDevice device, Integer deviceHashCode) {
+    private AndroidLogcatReceiver createListener(@NotNull final IDevice device, Integer deviceHashCode) {
         final DebugSessionInfo sessionInfo = new DebugSessionInfo("logcat");
-        final AndroidLogcatReceiver receiver = new AndroidLogcatReceiver(device, new LogcatWriter(myProject, scannerFactory.createScanner(sessionInfo)));
+
+        final LogScannerFactory scannerFactory = new StackTraceMatcherFactory(myProject, sessionInfo);
+        final AndroidLogcatReceiver receiver = new AndroidLogcatReceiver(device, new LogcatWriter(myProject, scannerFactory.createScanner()));
         listeners.put(deviceHashCode, receiver);
         debugSessionInfos.put(deviceHashCode, sessionInfo);
+
         ToolWindow t = ToolWindowManager.getInstance(myProject).getToolWindow(AndroidToolWindowFactory.TOOL_WINDOW_ID);
         for (Content content : t.getContentManager().getContents()) {
             final AndroidLogcatView view = content.getUserData(AndroidLogcatView.ANDROID_LOGCAT_VIEW_KEY);
 
             if (view != null) {
                 ConsoleView c = view.getLogConsole().getConsole();
-                new ConsoleWatcher((ConsoleViewImpl) c);
+                if (c instanceof ConsoleViewImpl) {
+                    // do we have to keep this reference?
+                    new ConsoleWatcher((ConsoleViewImpl) c, sessionInfo);
+                }
             }
         }
-        Tracking.projectTracking(myProject).trace(Events.debugStart(myProject, sessionInfo));
+
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
@@ -188,6 +194,9 @@ class LogcatProcessWatcher extends AbstractProjectComponent
 
             }
         });
+
+        Tracking.projectTracking(myProject).trace(Events.debugStart(myProject, sessionInfo));
+
         return receiver;
     }
 
@@ -206,7 +215,6 @@ class LogcatProcessWatcher extends AbstractProjectComponent
         }
     }
 
-    private StackTraceMatcherFactory scannerFactory;
     private final Map<Integer, AndroidLogcatReceiver> listeners = new HashMap<Integer, AndroidLogcatReceiver>();
     private final Map<Integer, DebugSessionInfo> debugSessionInfos = new HashMap<Integer, DebugSessionInfo>();
     private final static Logger LOGGER = Logger.getInstance(LogcatProcessWatcher.class);

@@ -23,7 +23,6 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.unscramble.AnalyzeStacktraceUtil;
 import com.samebug.clients.common.search.api.StackTraceListener;
 import com.samebug.clients.common.search.api.entities.SearchResults;
-import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.search.matcher.StackTraceMatcher;
 import com.samebug.clients.idea.components.application.ClientService;
@@ -153,7 +152,7 @@ final public class AnalyzeDialog extends DialogWrapper {
         boolean found;
 
         public Parser() {
-            this.parser = new StackTraceMatcher(this, null);
+            this.parser = new StackTraceMatcher(this);
         }
 
         public boolean hasStackTrace(String text) {
@@ -164,7 +163,7 @@ final public class AnalyzeDialog extends DialogWrapper {
         }
 
         @Override
-        public void stacktraceFound(@javax.annotation.Nullable DebugSessionInfo sessionInfo, String stacktrace) {
+        public void stacktraceFound(String stacktrace) {
             found = true;
         }
     }
