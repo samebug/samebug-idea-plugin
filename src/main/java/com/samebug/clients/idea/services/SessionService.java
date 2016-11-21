@@ -25,7 +25,6 @@ import com.samebug.clients.common.search.api.entities.SearchResults;
 import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
 import com.samebug.clients.common.search.api.entities.tracking.SearchInfo;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
-import com.samebug.clients.idea.components.project.RunDebugWatcher;
 import com.samebug.clients.idea.messages.console.SearchRequestListener;
 import com.samebug.clients.idea.messages.model.StackTraceSearchListener;
 import org.jetbrains.annotations.Nullable;
