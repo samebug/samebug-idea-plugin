@@ -15,8 +15,6 @@
  */
 package com.samebug.clients.common.search.api;
 
-import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
-
 public interface LogScannerFactory {
-    LogScanner createScanner(DebugSessionInfo debugSessionInfo);
+    LogScanner createScanner();
 }

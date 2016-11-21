@@ -23,8 +23,17 @@ public class Saved implements SearchRequest {
     private final SearchResults savedSearch;
 
     public Saved(String trace, SearchResults savedSearch) {
-        this.trace = trace;
         this.savedSearch = savedSearch;
+        Integer lineOffset = savedSearch.getFirstLine();
+        if (lineOffset != null) {
+            int startOffset = 0;
+            for (int line = 0; line < lineOffset; ++line) {
+                startOffset = trace.indexOf("\n", startOffset) + 1;
+            }
+            this.trace = trace.substring(startOffset);
+        } else {
+            this.trace = trace;
+        }
     }
 
     @Override

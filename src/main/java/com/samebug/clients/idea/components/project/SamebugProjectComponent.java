@@ -15,28 +15,23 @@
  */
 package com.samebug.clients.idea.components.project;
 
-import com.intellij.execution.ui.RunContentManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.services.RequestService;
-import com.samebug.clients.idea.console.RunWatcher;
+import com.samebug.clients.idea.services.SessionService;
 
 public class SamebugProjectComponent extends AbstractProjectComponent {
-    private final RequestService requestService;
-    private final RunWatcher runWatcher;
+    private final SessionService sessionService;
 
     public SamebugProjectComponent(Project project) {
         super(project);
-        this.requestService = new RequestService(project);
-        this.runWatcher = new RunWatcher();
+        this.sessionService = new SessionService(project);
 
-        MessageBusConnection messageBusConnection = myProject.getMessageBus().connect();
-        messageBusConnection.subscribe(RunContentManager.TOPIC, runWatcher);
+        MessageBusConnection messageBusConnection = myProject.getMessageBus().connect(project);
     }
 
-    public RequestService getRequestService() {
-        return requestService;
+    public SessionService getSessionService() {
+        return sessionService;
     }
 
 }

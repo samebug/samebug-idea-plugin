@@ -189,6 +189,22 @@ final public class Events {
         }.getEvent();
     }
 
+    public static TrackEvent gutterIconForSavedSearch(final int searchId) {
+        return new TrackBuilder("Gutter", "SavedSearch", null) {
+            protected void initFields() {
+                fields.put("searchId", searchId);
+            }
+        }.getEvent();
+    }
+
+    public static TrackEvent gutterIconClicked(final int searchId) {
+        return new TrackBuilder("Gutter", "Clicked", null) {
+            protected void initFields() {
+                fields.put("searchId", searchId);
+            }
+        }.getEvent();
+    }
+
     private final static Logger LOGGER = Logger.getInstance(Events.class);
 
     private static abstract class TrackBuilder {

@@ -20,7 +20,6 @@ import com.intellij.execution.process.ProcessEvent;
 import com.intellij.openapi.util.Key;
 import com.samebug.clients.common.search.api.LogScanner;
 import com.samebug.clients.common.search.api.LogScannerFactory;
-import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -35,9 +34,8 @@ import java.util.Map;
  * uses a {@link LogScannerFactory} instead of a single instance of a LogScanner.
  */
 final public class RunDebugAdapter extends ProcessAdapter {
-    public RunDebugAdapter(@NotNull LogScannerFactory scannerFactory, DebugSessionInfo debugSessionInfo) {
+    public RunDebugAdapter(@NotNull LogScannerFactory scannerFactory) {
         this.scannerFactory = scannerFactory;
-        this.debugSessionInfo = debugSessionInfo;
     }
 
     @Override
@@ -58,7 +56,7 @@ final public class RunDebugAdapter extends ProcessAdapter {
     private synchronized LogScanner getOrCreateScanner(Key outputType) {
         LogScanner scanner = scanners.get(outputType);
         if (scanner == null) {
-            scanner = scannerFactory.createScanner(debugSessionInfo);
+            scanner = scannerFactory.createScanner();
             scanners.put(outputType, scanner);
         }
         return scanner;
@@ -76,5 +74,4 @@ final public class RunDebugAdapter extends ProcessAdapter {
 
     private final Map<Key, LogScanner> scanners = new HashMap<Key, LogScanner>();
     private final LogScannerFactory scannerFactory;
-    private final DebugSessionInfo debugSessionInfo;
 }
