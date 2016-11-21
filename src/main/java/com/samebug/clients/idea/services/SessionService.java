@@ -41,14 +41,10 @@ final public class SessionService implements StackTraceSearchListener {
     private final Map<DebugSessionInfo, Set<UUID>> sessions;
     private final Map<UUID, SearchRequest> requests;
 
-    private final RunDebugWatcher runDebugWatcher;
-
     public SessionService(Project project) {
         myProject = project;
         requests = new ConcurrentHashMap<UUID, SearchRequest>();
         sessions = new ConcurrentHashMap<DebugSessionInfo, Set<UUID>>();
-
-        runDebugWatcher = new RunDebugWatcher(project);
 
         MessageBusConnection messageBusConnection = myProject.getMessageBus().connect(myProject);
         messageBusConnection.subscribe(StackTraceSearchListener.TOPIC, this);

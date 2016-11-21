@@ -19,9 +19,12 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.entities.search.Saved;
+import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.messages.view.FocusListener;
 import com.samebug.clients.idea.resources.SamebugIcons;
+import com.samebug.clients.idea.tracking.Events;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -71,7 +74,12 @@ class SavedSearchMark extends GutterIconRenderer implements DumbAware {
         return new AnAction() {
             @Override
             public void actionPerformed(AnActionEvent e) {
-                getEventProject(e).getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(search.getSavedSearch().getSearchId());
+                Integer searchId = search.getSavedSearch().getSearchId();
+                Project project = getEventProject(e);
+                if (project != null) {
+                    Tracking.projectTracking(project).trace(Events.gutterIconClicked(searchId));
+                    project.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchId);
+                }
             }
         };
     }

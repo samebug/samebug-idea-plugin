@@ -34,9 +34,11 @@ import com.samebug.clients.common.entities.search.Saved;
 import com.samebug.clients.common.entities.search.SearchRequest;
 import com.samebug.clients.common.entities.search.Searched;
 import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
+import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.components.project.SamebugProjectComponent;
 import com.samebug.clients.idea.messages.console.SearchRequestListener;
 import com.samebug.clients.idea.services.SessionService;
+import com.samebug.clients.idea.tracking.Events;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -195,6 +197,12 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
             RangeHighlighter highlighter;
             highlighter = markupModel.addLineHighlighter(line, HighlighterLayer.ADDITIONAL_SYNTAX, null);
             highlighter.setGutterIconRenderer(new SavedSearchMark(request));
+
+            Project project = editor.getProject();
+            if (project != null) {
+                Tracking.projectTracking(project).trace(Events.gutterIconForSavedSearch(request.getSavedSearch().getSearchId()));
+            }
+
             return highlighter;
         } else {
             return null;
