@@ -65,8 +65,11 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
         if (descriptor != null) {
             Integer descriptorHashCode = System.identityHashCode(descriptor);
             Tracking.projectTracking(myProject).trace(Events.debugStop(myProject, debugSessionIds.get(descriptorHashCode)));
+
+            DebugSessionInfo sessionInfo = debugSessionIds.get(descriptorHashCode);
             debugSessionIds.remove(descriptorHashCode);
             listeners.remove(descriptorHashCode);
+            myProject.getComponent(SamebugProjectComponent.class).getSessionService().removeSession(sessionInfo);
         }
     }
 

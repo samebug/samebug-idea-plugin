@@ -85,10 +85,12 @@ final public class SessionService implements StackTraceSearchListener {
     public void searchStart(SearchInfo searchInfo, String stackTrace) {
         Requested request = new Requested(stackTrace);
         UUID requestId = searchInfo.getRequestId();
+        DebugSessionInfo sessionInfo = searchInfo.getSessionInfo();
         requests.put(requestId, request);
-        Set<UUID> requestIds = sessions.get(searchInfo.getSessionInfo());
+        Set<UUID> requestIds = sessions.get(sessionInfo);
         if (requestIds == null) requestIds = new ConcurrentSkipListSet<UUID>();
         requestIds.add(requestId);
+        sessions.put(sessionInfo, requestIds);
     }
 
     @Override

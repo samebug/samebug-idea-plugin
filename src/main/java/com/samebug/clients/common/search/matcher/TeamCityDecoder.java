@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.common.search.matcher;
 
+import com.intellij.execution.testframework.sm.runner.states.TestErrorState;
 import jetbrains.buildServer.messages.serviceMessages.ServiceMessage;
 import org.apache.commons.lang.ArrayUtils;
 
@@ -24,6 +25,8 @@ import java.util.Map;
 /**
  * Tests write to the console do this in teamcity's format. See https://confluence.jetbrains.com/display/TCD10/Build+Script+Interaction+with+TeamCity
  * This means that we have to decode it to find stack traces from test runners.
+ *
+ * However, converting the teamcity failed state to its actual presentation text is not trivially available, so we kind of hack it.
  */
 public class TeamCityDecoder {
     public static boolean isTestFrameworkException(String line) {
@@ -32,13 +35,16 @@ public class TeamCityDecoder {
 
     public static String[] testFailureLines(String line) {
         try {
-            ServiceMessage msg = ServiceMessage.parse(line);
+            ServiceMessage msg = ServiceMessage.parse(line.trim());
             if (msg != null) {
                 Map<String, String> attributes = msg.getAttributes();
                 if (attributes.containsKey("message") && attributes.containsKey("details")) {
-                    String sb = attributes.get("message")
-                            + attributes.get("details");
-                    return sb.split("\n");
+                    String state = TestErrorState.buildErrorPresentationText(attributes.get("message"), attributes.get("details"));
+                    if (state != null) {
+                        return state.split("\n");
+                    } else {
+                        return ArrayUtils.EMPTY_STRING_ARRAY;
+                    }
                 } else {
                     return ArrayUtils.EMPTY_STRING_ARRAY;
                 }

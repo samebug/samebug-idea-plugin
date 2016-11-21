@@ -2,11 +2,9 @@ package com.samebug.clients.common.search.matcher;
 
 import com.samebug.TestUtils;
 import com.samebug.clients.common.search.api.StackTraceListener;
-import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -58,7 +56,7 @@ public class StackTraceMatcherTest {
     @Before
     public void initMatcher() {
         listener = new StackTraceBuffer();
-        matcher = new StackTraceMatcher(listener, null);
+        matcher = new StackTraceMatcher(listener);
     }
 
     private StackTraceMatcher matcher;
@@ -69,7 +67,7 @@ public class StackTraceMatcherTest {
         final ArrayList<String> foundStackTraces = new ArrayList<String>();
 
         @Override
-        public void stacktraceFound(@Nullable DebugSessionInfo sessionInfo, String stacktrace) {
+        public void stacktraceFound(String stacktrace) {
             foundStackTraces.add(stacktrace);
         }
     }

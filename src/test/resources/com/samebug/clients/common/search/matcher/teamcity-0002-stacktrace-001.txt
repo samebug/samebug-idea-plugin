@@ -1,4 +1,5 @@
 java.lang.IllegalStateException: samebug test
+
 	at ExceptionTest.t1(ExceptionTest.java:9)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)

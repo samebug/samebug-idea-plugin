@@ -73,21 +73,25 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
     @Override
     public void saved(final UUID requestId, final Saved savedSearch) {
         final Document document = editor.getDocument();
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                RangeHighlighter highlightForRequest = highlights.get(requestId);
-                if (highlightForRequest != null) {
-                    // The stacktrace does not begins at the start of the fragment, we have to move the marker
-                    int originalStartOffset = highlightForRequest.getStartOffset();
-                    int originalStartLine = document.getLineNumber(originalStartOffset);
+        if (highlights.get(requestId) == null) {
+            rebuildMarkers();
+        } else {
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    RangeHighlighter highlightForRequest = highlights.get(requestId);
+                    if (highlightForRequest != null) {
+                        // The stacktrace does not begins at the start of the fragment, we have to move the marker
+                        int originalStartOffset = highlightForRequest.getStartOffset();
+                        int originalStartLine = document.getLineNumber(originalStartOffset);
 
-                    highlightForRequest.dispose();
-                    RangeHighlighter newHighlighter = addSavedSearchMarker(originalStartLine, savedSearch);
-                    highlights.put(requestId, newHighlighter);
+                        highlightForRequest.dispose();
+                        RangeHighlighter newHighlighter = addSavedSearchMarker(originalStartLine, savedSearch);
+                        highlights.put(requestId, newHighlighter);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override

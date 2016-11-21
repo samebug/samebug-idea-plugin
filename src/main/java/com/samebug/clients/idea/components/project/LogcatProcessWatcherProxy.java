@@ -210,8 +210,11 @@ class LogcatProcessWatcher extends AbstractProjectComponent
             receiver.processNewLine("\n");
             receiver.done();
             Tracking.projectTracking(myProject).trace(Events.debugStop(myProject, debugSessionInfos.get(deviceHashCode)));
+
+            DebugSessionInfo sessionInfo = debugSessionInfos.get(deviceHashCode);
             debugSessionInfos.remove(deviceHashCode);
             listeners.remove(deviceHashCode);
+            myProject.getComponent(SamebugProjectComponent.class).getSessionService().removeSession(sessionInfo);
         }
     }
 
