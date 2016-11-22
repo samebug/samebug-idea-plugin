@@ -51,6 +51,15 @@ public class ClientService implements ApplicationComponent {
 
             void success(UserInfo result) {
                 messageBus.syncPublisher(UserModelListener.TOPIC).successLoadUserInfo(result);
+
+                // NOTE: this is a special case, we handle connection status by the result, not by the http status
+                if (result.getUserExist()) {
+                    authenticated.set(true);
+                    messageBus.syncPublisher(ConnectionStatusListener.TOPIC).authenticationChange(true);
+                } else {
+                    authenticated.set(false);
+                    messageBus.syncPublisher(ConnectionStatusListener.TOPIC).authenticationChange(false);
+                }
             }
 
             void fail(SamebugClientException e) {
