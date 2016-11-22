@@ -58,9 +58,13 @@ public class LogcatProcessWatcherProxy extends AbstractProjectComponent {
 
     public LogcatProcessWatcherProxy(Project project) {
         super(project);
+
         boolean isAndroidSdkPresent;
         try {
             Class<?> resolveAndroidFacet = AndroidFacet.class;
+            Class<?> resolveAndroidDebugBridge = AndroidDebugBridge.class;
+            Class<?> resolveIDeviceChangeListener = AndroidDebugBridge.IDeviceChangeListener.class;
+            Class<?> resolveAndroidLogcatReceiver = AndroidLogcatReceiver.class;
             isAndroidSdkPresent = true;
         } catch (NoClassDefFoundError e) {
             isAndroidSdkPresent = false;

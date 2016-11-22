@@ -1,6 +1,3 @@
-#!groovy
-// The above triggers groovy syntax highlighting in vim
-
 plugins {
     id "org.jetbrains.intellij" version "0.1.10"
     id "com.github.hierynomus.license" version "0.12.1"
@@ -33,10 +30,10 @@ intellij {
     plugins 'android'
 
 //    alternativeIdePath '/Applications/Android Studio.app/Contents'
-//    alternativeIdePath '/opt/idea-IC-135.1306'
+    alternativeIdePath '/opt/idea-IC-141.178.9'
 //    alternativeIdePath '/opt/idea-IU-143.382.35'
 //    alternativeIdePath '/opt/idea-IU-162.1121.32'
-    alternativeIdePath '/opt/idea-IC-162.2228.15'
+//    alternativeIdePath '/opt/idea-IC-162.2228.15'
 //    alternativeIdePath '/opt/android-studio'
     pluginName 'samebug-idea-plugin'
     updateSinceUntilBuild false
@@ -93,4 +90,3 @@ task checkstyle(type: Checkstyle) {
 
     classpath = files()
 }
-
