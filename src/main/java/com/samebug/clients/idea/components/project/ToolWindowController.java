@@ -23,6 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.openapi.wm.impl.ToolWindowImpl;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
@@ -96,10 +97,10 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
 
     @Override
     public void focusOnHistory() {
-        assert historyTabController != null;
         ApplicationManager.getApplication().assertIsDispatchThread();
         final ToolWindow toolWindow = getToolWindow();
         final ContentManager toolwindowCM = toolWindow.getContentManager();
+        assert historyTabController != null;
         final Content content = toolwindowCM.getContent(historyTabController.getControlPanel());
         if (content != null) toolwindowCM.setSelectedContent(content);
         toolWindow.show(null);
@@ -172,7 +173,10 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
     }
 
     private ToolWindow getToolWindow() {
-        return ToolWindowManager.getInstance(project).getToolWindow("Samebug");
+        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
+        ((ToolWindowImpl)toolWindow).ensureContentInitialized();
+
+        return toolWindow;
     }
 
 }
