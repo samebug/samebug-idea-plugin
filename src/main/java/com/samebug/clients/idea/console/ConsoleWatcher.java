@@ -85,9 +85,12 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
                     if (highlightForRequest != null) {
                         int originalStartOffset = highlightForRequest.getStartOffset();
                         int originalStartLine = document.getLineNumber(originalStartOffset);
+                        Integer correction = savedSearch.getSavedSearch().getFirstLine();
+                        int correctedStartLine = originalStartLine;
+                        if (correction != null) correctedStartLine += correction;
 
                         highlightForRequest.dispose();
-                        RangeHighlighter newHighlighter = addSavedSearchMarker(originalStartLine, savedSearch);
+                        RangeHighlighter newHighlighter = addSavedSearchMarker(correctedStartLine, savedSearch);
                         highlights.put(requestId, newHighlighter);
                     }
                 }
@@ -130,19 +133,21 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
         StringBuilder text = new StringBuilder(document.getText());
         for (Map.Entry<UUID, SearchRequest> traceEntry : sessionService.getRequests(sessionInfo).entrySet()) {
             final SearchRequest request = traceEntry.getValue();
-            final String trace = request.getTrace();
-            final int traceStartsAt = text.indexOf(trace);
-            final UUID requestId = traceEntry.getKey();
-            if (traceStartsAt >= 0) {
-                final int traceLine = document.getLineNumber(traceStartsAt);
+            if (request != null) {
+                final String trace = request.getTrace();
+                final int traceStartsAt = text.indexOf(trace);
+                final UUID requestId = traceEntry.getKey();
+                if (traceStartsAt >= 0) {
+                    final int traceLine = document.getLineNumber(traceStartsAt);
 
-                // Save to cache that this request was found at that line
-                foundRequests.put(traceLine, requestId);
-                lostRequests.remove(requestId);
+                    // Save to cache that this request was found at that line
+                    foundRequests.put(traceLine, requestId);
+                    lostRequests.remove(requestId);
 
-                // Make sure we will not find this part of the document again
-                String blank = new String(new char[trace.length()]);
-                text = text.replace(traceStartsAt, traceStartsAt + trace.length(), blank);
+                    // Make sure we will not find this part of the document again
+                    String blank = new String(new char[trace.length()]);
+                    text = text.replace(traceStartsAt, traceStartsAt + trace.length(), blank);
+                }
             }
         }
 
