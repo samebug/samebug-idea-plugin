@@ -73,7 +73,7 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
         }
     }
 
-    private RunDebugAdapter createListener(@NotNull RunContentDescriptor descriptor, Integer descriptorHashCode) {
+    private void createListener(@NotNull RunContentDescriptor descriptor, Integer descriptorHashCode) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -92,17 +92,14 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
                     new ConsoleWatcher(impl, sessionInfo);
                 }
             }
+            final LogScannerFactory scannerFactory = new StackTraceMatcherFactory(myProject, sessionInfo);
+            RunDebugAdapter listener = new RunDebugAdapter(scannerFactory);
+            listeners.put(descriptorHashCode, listener);
+            debugSessionIds.put(descriptorHashCode, sessionInfo);
+            descriptor.getProcessHandler().addProcessListener(listener);
+
+            Tracking.projectTracking(myProject).trace(Events.debugStart(myProject, sessionInfo));
         }
-
-        final LogScannerFactory scannerFactory = new StackTraceMatcherFactory(myProject, sessionInfo);
-        RunDebugAdapter listener = new RunDebugAdapter(scannerFactory);
-        listeners.put(descriptorHashCode, listener);
-        debugSessionIds.put(descriptorHashCode, sessionInfo);
-        descriptor.getProcessHandler().addProcessListener(listener);
-
-        Tracking.projectTracking(myProject).trace(Events.debugStart(myProject, sessionInfo));
-
-        return listener;
     }
 
     @Nullable
