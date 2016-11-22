@@ -62,7 +62,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     @Nullable
     private MessageBusConnection connection;
 
-    // TODO Unlike other methods, this one executes the http request on the caller thread. Is it ok?
+    // NOTE should not be called from UI thread
     public void setApiKey(@NotNull String apiKey) throws SamebugClientException, UnknownApiKey {
         ApplicationSettings currentState = state.get();
         UserInfo userInfo = null;
@@ -119,6 +119,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     @Override
     public void initComponent() {
         SamebugNotifications.registerNotificationGroups();
+
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {

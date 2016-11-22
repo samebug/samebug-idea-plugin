@@ -16,25 +16,24 @@
 package com.samebug.clients.idea.ui;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.options.ShowSettingsUtil;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.Messages;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.search.api.exceptions.UnknownApiKey;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.resources.SamebugBundle;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.Nullable;
+import com.samebug.clients.idea.ui.controller.ConfigDialog;
 
 import javax.swing.*;
 import java.awt.event.*;
 
-public class SettingsDialog extends JDialog implements Configurable {
+public class SettingsDialog extends JDialog {
     private JPanel contentPane;
     private JTextField apiKeyTextField;
     private JTextPane descriptionTextPane;
     private JButton cancelButton;
     private JButton okButton;
+    public JButton detailsButton;
 
     private SettingsDialog() {
         setContentPane(contentPane);
@@ -53,6 +52,12 @@ public class SettingsDialog extends JDialog implements Configurable {
             }
         });
 
+        detailsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onDetails();
+            }
+        });
         // call onClickCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -70,16 +75,45 @@ public class SettingsDialog extends JDialog implements Configurable {
     }
 
     private void onOK() {
-        try {
-            apply();
-            dispose();
-        } catch (ConfigurationException e) {
-            Messages.showErrorDialog(e.getMessage(), "Samebug Settings Error");
-        }
+        ApplicationManager.getApplication().assertIsDispatchThread();
+        dispose();
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                IdeaSamebugPlugin plugin = ApplicationManager.getApplication().getComponent(IdeaSamebugPlugin.class);
+                String apiKey = apiKeyTextField.getText().trim();
+                if (!apiKey.isEmpty()) {
+                    try {
+                        plugin.setApiKey(apiKey);
+                    } catch (UnknownApiKey unknownApiKey) {
+                        ApplicationManager.getApplication().invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                Messages.showErrorDialog("Unknown Samebug API Key.", "Samebug Settings Error");
+                            }
+                        });
+                    } catch (SamebugClientException e) {
+                        ApplicationManager.getApplication().invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                Messages.showErrorDialog("Error during API Key validation. Samebug server is not available currently.", "Samebug Settings Error");
+                            }
+                        });
+                    }
+                }
+            }
+        });
     }
 
     private void onCancel() {
+        ApplicationManager.getApplication().assertIsDispatchThread();
         dispose();
+    }
+
+    private void onDetails() {
+        ApplicationManager.getApplication().assertIsDispatchThread();
+        dispose();
+        ShowSettingsUtil.getInstance().showSettingsDialog(ProjectManager.getInstance().getDefaultProject(), ConfigDialog.class);
     }
 
     public static void setup(String apiKey) {
@@ -92,51 +126,4 @@ public class SettingsDialog extends JDialog implements Configurable {
         }
         dialog.setVisible(true);
     }
-
-    @Nls
-    @Override
-    public String getDisplayName() {
-        return SamebugBundle.message("samebug.settings.displayName");
-    }
-
-    @Nullable
-    @Override
-    public String getHelpTopic() {
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public JComponent createComponent() {
-        return null;
-    }
-
-    @Override
-    public boolean isModified() {
-        return false;
-    }
-
-    @Override
-    public void apply() throws ConfigurationException {
-        IdeaSamebugPlugin plugin = ApplicationManager.getApplication().getComponent(IdeaSamebugPlugin.class);
-        try {
-            String apiKey = apiKeyTextField.getText().trim();
-            plugin.setApiKey(apiKey);
-        } catch (UnknownApiKey unknownApiKey) {
-            throw new ConfigurationException("Unknown Samebug API Key.");
-        } catch (SamebugClientException e) {
-            throw new ConfigurationException("Error during API Key validation. Samebug server is not available currently.");
-        }
-    }
-
-    @Override
-    public void reset() {
-
-    }
-
-    @Override
-    public void disposeUIResources() {
-
-    }
-
 }
