@@ -139,6 +139,14 @@ final class RawClient {
                 } catch (IOException ignored) {
                 }
                 return new Failure<T>(connectionStatus, new UserUnauthorized(httpResponse.getStatusLine().getReasonPhrase()));
+            case HttpStatus.SC_GONE:
+                connectionStatus.successfullyAuthenticated = false;
+                connectionStatus.apiStatus = ConnectionStatus.API_DEPRECATED;
+                try {
+                    EntityUtils.consume(httpResponse.getEntity());
+                } catch (IOException ignored) {
+                }
+                return new Failure<T>(connectionStatus, new DeprecatedApiVersion());
             default:
                 connectionStatus.successfullyAuthenticated = true;
                 try {

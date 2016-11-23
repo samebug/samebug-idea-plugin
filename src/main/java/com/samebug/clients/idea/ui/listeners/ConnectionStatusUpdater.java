@@ -50,7 +50,12 @@ final public class ConnectionStatusUpdater implements ConnectionStatusListener {
     }
 
     @Override
-    public void apiStatusChange(String apiStatus) {
+    public void apiToBeDeprecated() {
+
+    }
+
+    @Override
+    public void apiDeprecated() {
 
     }
 

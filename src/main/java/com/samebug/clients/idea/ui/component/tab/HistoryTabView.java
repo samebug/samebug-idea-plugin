@@ -109,6 +109,12 @@ final public class HistoryTabView extends JPanel {
         updateContent(panel);
     }
 
+    public void setWarningDeprecated() {
+        WarningPanel panel =
+                new WarningPanel(SamebugBundle.message("samebug.toolwindow.history.content.deprecated"));
+        updateContent(panel);
+    }
+
     public void setWarningNoVisibleSearches() {
         WarningPanel panel = new WarningPanel(SamebugBundle.message("samebug.toolwindow.history.content.noVisibleSearches", SamebugIcons.calendarUrl, SamebugIcons.lightbulbUrl));
         updateContent(panel);

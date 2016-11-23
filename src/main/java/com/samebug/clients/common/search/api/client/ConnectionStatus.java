@@ -21,4 +21,7 @@ final public class ConnectionStatus {
     public boolean attemptToAuthenticate = false;
     public boolean successfullyAuthenticated = false;
     public String apiStatus = null;
+
+    public static final String API_TO_BE_DEPRECATED = "To Be Deprecated";
+    public static final String API_DEPRECATED = "Deprecated";
 }

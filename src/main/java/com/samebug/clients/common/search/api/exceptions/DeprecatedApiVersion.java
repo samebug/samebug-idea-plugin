@@ -13,23 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages.model;
+package com.samebug.clients.common.search.api.exceptions;
 
-import com.intellij.util.messages.Topic;
-import com.samebug.clients.common.search.api.client.ConnectionStatus;
+public class DeprecatedApiVersion extends SamebugClientException {
+    public DeprecatedApiVersion() {
 
-public interface ConnectionStatusListener {
-    Topic<ConnectionStatusListener> TOPIC = Topic.create("connection status change", ConnectionStatusListener.class);
+    }
 
-    void startRequest();
-
-    void connectionChange(boolean isConnected);
-
-    void authenticationChange(boolean isAuthenticated);
-
-    void apiToBeDeprecated();
-
-    void apiDeprecated();
-
-    void finishRequest(ConnectionStatus status);
+    @Override
+    public String getMessage() {
+        return "Deprecated API version. Please upgrade Samebug Plugin";
+    }
 }

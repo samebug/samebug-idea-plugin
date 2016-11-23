@@ -25,9 +25,11 @@ import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.idea.messages.client.*;
 import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ClientService implements ApplicationComponent {
     final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
@@ -35,12 +37,14 @@ public class ClientService implements ApplicationComponent {
     AtomicBoolean connected;
     AtomicBoolean authenticated;
     AtomicInteger nRequests;
+    AtomicReference<String> apiStatus;
 
     public synchronized void configure(final Config config) {
         this.client = new SamebugClient(config);
         this.connected = new AtomicBoolean(true);
         this.authenticated = new AtomicBoolean(true);
         this.nRequests = new AtomicInteger(0);
+        this.apiStatus = new AtomicReference<String>(null);
     }
 
     public UserInfo getUserInfo(final String apiKey) throws SamebugClientException {
@@ -213,6 +217,11 @@ public class ClientService implements ApplicationComponent {
         return nRequests.get();
     }
 
+    @Nullable
+    public String getApiStatus() {
+        return apiStatus.get();
+    }
+
     @Override
     public void initComponent() {
 
@@ -261,8 +270,13 @@ public class ClientService implements ApplicationComponent {
                 authenticated.set(connectionStatus.successfullyAuthenticated);
                 messageBus.syncPublisher(ConnectionStatusListener.TOPIC).authenticationChange(connectionStatus.successfullyAuthenticated);
             }
-            if (connectionStatus.apiStatus != null) {
-                messageBus.syncPublisher(ConnectionStatusListener.TOPIC).apiStatusChange(connectionStatus.apiStatus);
+            if (!apiStatus.get().equals(connectionStatus.apiStatus)) {
+                apiStatus.set(connectionStatus.apiStatus);
+                if (ConnectionStatus.API_TO_BE_DEPRECATED.equals(connectionStatus.apiStatus)) {
+                    messageBus.syncPublisher(ConnectionStatusListener.TOPIC).apiToBeDeprecated();
+                } else if (ConnectionStatus.API_DEPRECATED.equals(connectionStatus.apiStatus)) {
+                    messageBus.syncPublisher(ConnectionStatusListener.TOPIC).apiDeprecated();
+                }
             }
 
             try {

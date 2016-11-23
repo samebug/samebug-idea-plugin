@@ -25,6 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.search.api.client.ConnectionStatus;
 import com.samebug.clients.common.search.api.entities.SearchGroup;
 import com.samebug.clients.common.services.HistoryService;
 import com.samebug.clients.idea.components.application.ClientService;
@@ -98,6 +99,8 @@ final public class HistoryTabController implements TabController, Disposable {
             view.setWarningNotConnected();
         } else if (connectionService.isConnected() && !connectionService.isAuthenticated()) {
             view.setWarningNotLoggedIn();
+        } else if (connectionService.isConnected() && ConnectionStatus.API_DEPRECATED.equals(connectionService.getApiStatus())) {
+            view.setWarningDeprecated();
         } else if (groups != null) {
             int visibleSearches = groups.size();
             int allSearches = service.unfilteredHistoryLength();

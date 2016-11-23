@@ -17,7 +17,7 @@ package com.samebug.clients.idea.components.project;
 
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.idea.services.ApiService;
 import com.samebug.clients.idea.services.SessionService;
 import com.samebug.clients.idea.services.android.LogcatService;
 import com.samebug.clients.idea.services.android.LogcatServiceFactory;
@@ -25,12 +25,13 @@ import com.samebug.clients.idea.services.android.LogcatServiceFactory;
 public class SamebugProjectComponent extends AbstractProjectComponent {
     private final SessionService sessionService;
     private final LogcatService logcatService;
+    private final ApiService apiService;
 
     public SamebugProjectComponent(Project project) {
         super(project);
         this.sessionService = new SessionService(project);
         this.logcatService = LogcatServiceFactory.createService(project);
-        MessageBusConnection messageBusConnection = myProject.getMessageBus().connect(project);
+        this.apiService = new ApiService(project);
     }
 
     public SessionService getSessionService() {
@@ -40,11 +41,13 @@ public class SamebugProjectComponent extends AbstractProjectComponent {
     @Override
     public void projectOpened() {
         logcatService.projectOpened();
+        apiService.projectOpened();
     }
 
     @Override
     public void projectClosed() {
         logcatService.projectClosed();
+        apiService.projectClosed();
     }
 
 }
