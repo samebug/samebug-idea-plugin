@@ -22,6 +22,6 @@ final public class ConnectionStatus {
     public boolean successfullyAuthenticated = false;
     public String apiStatus = null;
 
-    public static final String API_TO_BE_DEPRECATED = "To Be Deprecated";
-    public static final String API_DEPRECATED = "Deprecated";
+    public static final String API_TO_BE_DEPRECATED = "TO_BE_DEPRECATED";
+    public static final String API_DEPRECATED = "DEPRECATED";
 }
