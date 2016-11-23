@@ -140,7 +140,7 @@ final class RawClient {
                 }
                 return new Failure<T>(connectionStatus, new UserUnauthorized(httpResponse.getStatusLine().getReasonPhrase()));
             case HttpStatus.SC_GONE:
-                connectionStatus.successfullyAuthenticated = false;
+                connectionStatus.successfullyAuthenticated = true;
                 connectionStatus.apiStatus = ConnectionStatus.API_DEPRECATED;
                 try {
                     EntityUtils.consume(httpResponse.getEntity());

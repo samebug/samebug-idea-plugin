@@ -270,7 +270,7 @@ public class ClientService implements ApplicationComponent {
                 authenticated.set(connectionStatus.successfullyAuthenticated);
                 messageBus.syncPublisher(ConnectionStatusListener.TOPIC).authenticationChange(connectionStatus.successfullyAuthenticated);
             }
-            if (!apiStatus.get().equals(connectionStatus.apiStatus)) {
+            if (connectionStatus.apiStatus != null && !connectionStatus.apiStatus.equals(apiStatus.get())) {
                 apiStatus.set(connectionStatus.apiStatus);
                 if (ConnectionStatus.API_TO_BE_DEPRECATED.equals(connectionStatus.apiStatus)) {
                     messageBus.syncPublisher(ConnectionStatusListener.TOPIC).apiToBeDeprecated();
