@@ -165,17 +165,20 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
     public void changeToolwindowIcon(boolean hasNewExceptions) {
         ApplicationManager.getApplication().assertIsDispatchThread();
         ToolWindow toolWindow = getToolWindow();
-        if (hasNewExceptions) {
-            toolWindow.setIcon(SamebugIcons.twBolt);
-        } else {
-            toolWindow.setIcon(SamebugIcons.twSamebug);
+        if (toolWindow != null) {
+            if (hasNewExceptions) {
+                toolWindow.setIcon(SamebugIcons.twBolt);
+            } else {
+                toolWindow.setIcon(SamebugIcons.twSamebug);
+            }
         }
     }
 
     private ToolWindow getToolWindow() {
         ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
-        ((ToolWindowImpl)toolWindow).ensureContentInitialized();
-
+        if (toolWindow instanceof ToolWindowImpl) {
+            ((ToolWindowImpl) toolWindow).ensureContentInitialized();
+        }
         return toolWindow;
     }
 
