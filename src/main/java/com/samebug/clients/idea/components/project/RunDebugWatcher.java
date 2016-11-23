@@ -17,6 +17,7 @@ package com.samebug.clients.idea.components.project;
 
 import com.intellij.execution.console.DuplexConsoleView;
 import com.intellij.execution.impl.ConsoleViewImpl;
+import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.execution.ui.*;
 import com.intellij.openapi.application.ApplicationManager;
@@ -64,12 +65,13 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
     public synchronized void contentRemoved(@Nullable RunContentDescriptor descriptor, @NotNull com.intellij.execution.Executor executor) {
         if (descriptor != null) {
             Integer descriptorHashCode = System.identityHashCode(descriptor);
-            Tracking.projectTracking(myProject).trace(Events.debugStop(myProject, debugSessionIds.get(descriptorHashCode)));
-
-            DebugSessionInfo sessionInfo = debugSessionIds.get(descriptorHashCode);
-            debugSessionIds.remove(descriptorHashCode);
             listeners.remove(descriptorHashCode);
-            myProject.getComponent(SamebugProjectComponent.class).getSessionService().removeSession(sessionInfo);
+            DebugSessionInfo sessionInfo = debugSessionIds.get(descriptorHashCode);
+            if (sessionInfo != null) {
+                Tracking.projectTracking(myProject).trace(Events.debugStop(myProject, sessionInfo));
+                debugSessionIds.remove(descriptorHashCode);
+                myProject.getComponent(SamebugProjectComponent.class).getSessionService().removeSession(sessionInfo);
+            }
         }
     }
 
@@ -83,7 +85,8 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
 
         DebugSessionInfo sessionInfo = new DebugSessionInfo("run/debug");
 
-        if (descriptor.getProcessHandler() != null) {
+        ProcessHandler processHandler = descriptor.getProcessHandler();
+        if (processHandler != null) {
             ExecutionConsole console = descriptor.getExecutionConsole();
             if (console instanceof ConsoleView) {
                 ConsoleViewImpl impl = extractConsoleImpl((ConsoleView) console);
@@ -96,7 +99,7 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
             RunDebugAdapter listener = new RunDebugAdapter(scannerFactory);
             listeners.put(descriptorHashCode, listener);
             debugSessionIds.put(descriptorHashCode, sessionInfo);
-            descriptor.getProcessHandler().addProcessListener(listener);
+            processHandler.addProcessListener(listener);
 
             Tracking.projectTracking(myProject).trace(Events.debugStart(myProject, sessionInfo));
         }
