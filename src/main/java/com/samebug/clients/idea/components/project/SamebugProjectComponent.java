@@ -19,19 +19,32 @@ import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.services.SessionService;
+import com.samebug.clients.idea.services.android.LogcatService;
+import com.samebug.clients.idea.services.android.LogcatServiceFactory;
 
 public class SamebugProjectComponent extends AbstractProjectComponent {
     private final SessionService sessionService;
+    private final LogcatService logcatService;
 
     public SamebugProjectComponent(Project project) {
         super(project);
         this.sessionService = new SessionService(project);
-
+        this.logcatService = LogcatServiceFactory.createService(project);
         MessageBusConnection messageBusConnection = myProject.getMessageBus().connect(project);
     }
 
     public SessionService getSessionService() {
         return sessionService;
+    }
+
+    @Override
+    public void projectOpened() {
+        logcatService.projectOpened();
+    }
+
+    @Override
+    public void projectClosed() {
+        logcatService.projectClosed();
     }
 
 }

@@ -1,19 +1,4 @@
-/**
- * Copyright 2016 Samebug, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.samebug.clients.idea.components.project;
+package com.samebug.clients.idea.services.android;
 
 import com.android.ddmlib.*;
 import com.android.tools.idea.logcat.AndroidLogcatReceiver;
@@ -34,12 +19,14 @@ import com.intellij.ui.content.Content;
 import com.samebug.clients.common.search.api.LogScannerFactory;
 import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
 import com.samebug.clients.idea.components.application.Tracking;
+import com.samebug.clients.idea.components.project.SamebugProjectComponent;
+import com.samebug.clients.idea.components.project.StackTraceMatcherFactory;
+import com.samebug.clients.idea.components.project.ToolWindowController;
 import com.samebug.clients.idea.console.ConsoleWatcher;
 import com.samebug.clients.idea.processadapters.LogcatWriter;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.util.AndroidSdkUtil;
 import org.jetbrains.android.actions.AndroidEnableAdbServiceAction;
-import org.jetbrains.android.facet.AndroidFacet;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -48,51 +35,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-/**
- * This proxy class separates the behaviour of Logcat watcher.
- * <p>
- * If Android SDK is not present, it does nothing, so it will not crash in environments without Android SDK.
- */
-public class LogcatProcessWatcherProxy extends AbstractProjectComponent {
-    final AbstractProjectComponent implementation;
-
-    public LogcatProcessWatcherProxy(Project project) {
-        super(project);
-
-        boolean isAndroidSdkPresent;
-        try {
-            Class<?> resolveAndroidFacet = AndroidFacet.class;
-            Class<?> resolveAndroidDebugBridge = AndroidDebugBridge.class;
-            Class<?> resolveIDeviceChangeListener = AndroidDebugBridge.IDeviceChangeListener.class;
-            Class<?> resolveAndroidLogcatReceiver = AndroidLogcatReceiver.class;
-            isAndroidSdkPresent = true;
-        } catch (NoClassDefFoundError e) {
-            isAndroidSdkPresent = false;
-        }
-        if (isAndroidSdkPresent) {
-            implementation = new LogcatProcessWatcher(project);
-        } else {
-            implementation = new NopProjectComponent(project);
-        }
-    }
-
-    @Override
-    public void projectOpened() {
-        implementation.projectOpened();
-    }
-
-    @Override
-    public void projectClosed() {
-        implementation.projectClosed();
-    }
-}
-
-class LogcatProcessWatcher extends AbstractProjectComponent
-        implements AndroidDebugBridge.IDeviceChangeListener {
+class LogcatProcessWatcher implements LogcatService, AndroidDebugBridge.IDeviceChangeListener {
+    final private Project myProject;
 
     // AbstractProjectComponent overrides
     public LogcatProcessWatcher(Project project) {
-        super(project);
+        myProject = project;
     }
 
     @Override
@@ -225,10 +173,4 @@ class LogcatProcessWatcher extends AbstractProjectComponent
     private final Map<Integer, AndroidLogcatReceiver> listeners = new HashMap<Integer, AndroidLogcatReceiver>();
     private final Map<Integer, DebugSessionInfo> debugSessionInfos = new HashMap<Integer, DebugSessionInfo>();
     private final static Logger LOGGER = Logger.getInstance(LogcatProcessWatcher.class);
-}
-
-class NopProjectComponent extends AbstractProjectComponent {
-    NopProjectComponent(Project project) {
-        super(project);
-    }
 }

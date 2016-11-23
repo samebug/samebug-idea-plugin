@@ -90,9 +90,6 @@
     </application-components>
     <project-components>
         <component>
-            <implementation-class>com.samebug.clients.idea.components.project.LogcatProcessWatcherProxy</implementation-class>
-        </component>
-        <component>
             <implementation-class>com.samebug.clients.idea.components.project.RunDebugWatcher</implementation-class>
         </component>
         <component>
