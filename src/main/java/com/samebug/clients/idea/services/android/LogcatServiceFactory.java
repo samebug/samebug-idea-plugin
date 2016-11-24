@@ -16,7 +16,6 @@
 package com.samebug.clients.idea.services.android;
 
 import com.android.ddmlib.AndroidDebugBridge;
-import com.android.tools.idea.logcat.AndroidLogcatReceiver;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.android.facet.AndroidFacet;
 
@@ -32,9 +31,10 @@ public class LogcatServiceFactory {
             Class<?> resolveAndroidFacet = AndroidFacet.class;
             Class<?> resolveAndroidDebugBridge = AndroidDebugBridge.class;
             Class<?> resolveIDeviceChangeListener = AndroidDebugBridge.IDeviceChangeListener.class;
-            Class<?> resolveAndroidLogcatReceiver = AndroidLogcatReceiver.class;
             isAndroidSdkPresent = true;
         } catch (NoClassDefFoundError e) {
+            isAndroidSdkPresent = false;
+        } catch (IllegalAccessError e) {
             isAndroidSdkPresent = false;
         }
         if (isAndroidSdkPresent) {

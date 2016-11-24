@@ -15,31 +15,20 @@
  */
 package com.samebug.clients.idea.processadapters;
 
-import com.android.tools.idea.logcat.AndroidConsoleWriter;
-import com.android.tools.idea.logcat.AndroidLogcatFormatter;
-import com.android.tools.idea.logcat.AndroidLogcatPreferences;
-import com.intellij.openapi.project.Project;
+import com.android.ddmlib.logcat.LogCatMessage;
+import com.android.tools.idea.logcat.AndroidLogcatService;
 import com.samebug.clients.common.search.api.LogScanner;
 import org.jetbrains.annotations.NotNull;
 
-public class LogcatWriter implements AndroidConsoleWriter {
-    private final AndroidLogcatFormatter logFormatter;
+public class LogcatWriter implements AndroidLogcatService.LogLineListener {
     private final LogScanner logScanner;
 
-    public LogcatWriter(Project project, LogScanner logScanner) {
-        AndroidLogcatPreferences logcatPreferences = AndroidLogcatPreferences.getInstance(project);
-        this.logFormatter = new AndroidLogcatFormatter(logcatPreferences);
+    public LogcatWriter(LogScanner logScanner) {
         this.logScanner = logScanner;
     }
 
     @Override
-    public void clear() {
-
-    }
-
-    @Override
-    public void addMessage(@NotNull String text) {
-        String formattedMessage = logFormatter.formatMessage(text);
-        logScanner.append(formattedMessage + "\n");
+    public void receiveLogLine(@NotNull LogCatMessage logCatMessage) {
+        logScanner.append(logCatMessage + "\n");
     }
 }

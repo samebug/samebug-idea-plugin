@@ -15,15 +15,13 @@
  */
 package com.samebug.clients.idea.services.android;
 
-import com.android.ddmlib.*;
-import com.android.tools.idea.logcat.AndroidLogcatReceiver;
+import com.android.ddmlib.AndroidDebugBridge;
+import com.android.ddmlib.IDevice;
+import com.android.tools.idea.logcat.AndroidLogcatService;
 import com.android.tools.idea.logcat.AndroidLogcatView;
 import com.android.tools.idea.monitor.AndroidToolWindowFactory;
 import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.ui.ConsoleView;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -44,10 +42,8 @@ import org.jetbrains.android.actions.AndroidEnableAdbServiceAction;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 class LogcatProcessWatcher implements LogcatService, AndroidDebugBridge.IDeviceChangeListener {
     final private Project myProject;
@@ -114,11 +110,11 @@ class LogcatProcessWatcher implements LogcatService, AndroidDebugBridge.IDeviceC
         }
     }
 
-    private AndroidLogcatReceiver createListener(@NotNull final IDevice device, Integer deviceHashCode) {
+    private void createListener(@NotNull final IDevice device, Integer deviceHashCode) {
         final DebugSessionInfo sessionInfo = new DebugSessionInfo("logcat");
 
         final LogScannerFactory scannerFactory = new StackTraceMatcherFactory(myProject, sessionInfo);
-        final AndroidLogcatReceiver receiver = new AndroidLogcatReceiver(device, new LogcatWriter(myProject, scannerFactory.createScanner()));
+        final AndroidLogcatService.LogLineListener receiver = new LogcatWriter(scannerFactory.createScanner());
         listeners.put(deviceHashCode, receiver);
         debugSessionInfos.put(deviceHashCode, sessionInfo);
 
@@ -135,35 +131,9 @@ class LogcatProcessWatcher implements LogcatService, AndroidDebugBridge.IDeviceC
             }
         }
 
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    device.executeShellCommand("logcat -v long", receiver, 0L, TimeUnit.NANOSECONDS);
-                } catch (TimeoutException e) {
-                    LOGGER.warn("Unable to create receiver for device " + device.getName(), e);
-                    Notifications.Bus.notify(new Notification("samebug", "Adb connection failure",
-                            "Unable to create receiver for device " + device.getName(), NotificationType.WARNING));
-                } catch (AdbCommandRejectedException e) {
-                    LOGGER.warn("Unable to create receiver for device " + device.getName(), e);
-                    Notifications.Bus.notify(new Notification("samebug", "Adb connection failure",
-                            "Unable to create receiver for device " + device.getName(), NotificationType.WARNING));
-                } catch (ShellCommandUnresponsiveException e) {
-                    LOGGER.warn("Unable to create receiver for device " + device.getName(), e);
-                    Notifications.Bus.notify(new Notification("samebug", "Adb connection failure",
-                            "Unable to create receiver for device " + device.getName(), NotificationType.WARNING));
-                } catch (IOException e) {
-                    LOGGER.warn("Unable to create receiver for device " + device.getName(), e);
-                    Notifications.Bus.notify(new Notification("samebug", "Adb connection failure",
-                            "Unable to create receiver for device " + device.getName(), NotificationType.WARNING));
-                }
-
-            }
-        });
+        AndroidLogcatService.getInstance().addListener(device, receiver, true);
 
         Tracking.projectTracking(myProject).trace(Events.debugStart(myProject, sessionInfo));
-
-        return receiver;
     }
 
     private synchronized void removeReceiver(@NotNull IDevice device) {
@@ -171,10 +141,8 @@ class LogcatProcessWatcher implements LogcatService, AndroidDebugBridge.IDeviceC
     }
 
     private void removeReceiver(Integer deviceHashCode) {
-        AndroidLogcatReceiver receiver = listeners.get(deviceHashCode);
+        AndroidLogcatService.LogLineListener receiver = listeners.get(deviceHashCode);
         if (receiver != null) {
-            receiver.processNewLine("\n");
-            receiver.done();
             Tracking.projectTracking(myProject).trace(Events.debugStop(myProject, debugSessionInfos.get(deviceHashCode)));
 
             DebugSessionInfo sessionInfo = debugSessionInfos.get(deviceHashCode);
@@ -184,7 +152,7 @@ class LogcatProcessWatcher implements LogcatService, AndroidDebugBridge.IDeviceC
         }
     }
 
-    private final Map<Integer, AndroidLogcatReceiver> listeners = new HashMap<Integer, AndroidLogcatReceiver>();
+    private final Map<Integer, AndroidLogcatService.LogLineListener> listeners = new HashMap<Integer, AndroidLogcatService.LogLineListener>();
     private final Map<Integer, DebugSessionInfo> debugSessionInfos = new HashMap<Integer, DebugSessionInfo>();
     private final static Logger LOGGER = Logger.getInstance(LogcatProcessWatcher.class);
 }
