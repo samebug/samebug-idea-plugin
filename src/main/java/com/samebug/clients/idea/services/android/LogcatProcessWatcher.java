@@ -17,6 +17,7 @@ package com.samebug.clients.idea.services.android;
 
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
+import com.android.tools.idea.logcat.AndroidLogcatPreferences;
 import com.android.tools.idea.logcat.AndroidLogcatService;
 import com.android.tools.idea.logcat.AndroidLogcatView;
 import com.android.tools.idea.monitor.AndroidToolWindowFactory;
@@ -114,7 +115,8 @@ class LogcatProcessWatcher implements LogcatService, AndroidDebugBridge.IDeviceC
         final DebugSessionInfo sessionInfo = new DebugSessionInfo("logcat");
 
         final LogScannerFactory scannerFactory = new StackTraceMatcherFactory(myProject, sessionInfo);
-        final AndroidLogcatService.LogLineListener receiver = new LogcatWriter(scannerFactory.createScanner());
+        AndroidLogcatPreferences logcatPreferences = AndroidLogcatPreferences.getInstance(myProject);
+        final AndroidLogcatService.LogLineListener receiver = new LogcatWriter(logcatPreferences, scannerFactory.createScanner());
         listeners.put(deviceHashCode, receiver);
         debugSessionInfos.put(deviceHashCode, sessionInfo);
 

@@ -15,20 +15,53 @@
  */
 package com.samebug.clients.idea.processadapters;
 
+import com.android.ddmlib.logcat.LogCatHeader;
 import com.android.ddmlib.logcat.LogCatMessage;
+import com.android.tools.idea.logcat.AndroidLogcatFormatter;
+import com.android.tools.idea.logcat.AndroidLogcatPreferences;
 import com.android.tools.idea.logcat.AndroidLogcatService;
 import com.samebug.clients.common.search.api.LogScanner;
 import org.jetbrains.annotations.NotNull;
 
-public class LogcatWriter implements AndroidLogcatService.LogLineListener {
+public class LogcatWriter extends FormattedLogLineReceiver {
     private final LogScanner logScanner;
+    private final AndroidLogcatFormatter logFormatter;
 
-    public LogcatWriter(LogScanner logScanner) {
+    public LogcatWriter(AndroidLogcatPreferences logcatPreferences, LogScanner logScanner) {
         this.logScanner = logScanner;
+        this.logFormatter = new AndroidLogcatFormatter(logcatPreferences);
     }
 
     @Override
-    public void receiveLogLine(@NotNull LogCatMessage logCatMessage) {
-        logScanner.append(logCatMessage + "\n");
+    protected void receiveFormattedLogLine(@NotNull String message) {
+        String formattedMessage = logFormatter.formatMessage(message);
+        logScanner.append(formattedMessage + "\n");
     }
+}
+
+/**
+ * We have to imitate the behavior of the logcat console, but that class was not public.
+ *
+ * This is definitely not the best solution, but works for now.
+ */
+abstract class FormattedLogLineReceiver implements AndroidLogcatService.LogLineListener {
+    private LogCatHeader myActiveHeader;
+
+    FormattedLogLineReceiver() {
+    }
+
+    public final void receiveLogLine(@NotNull LogCatMessage line) {
+        String message;
+        if (!line.getHeader().equals(this.myActiveHeader)) {
+            this.myActiveHeader = line.getHeader();
+            message = AndroidLogcatFormatter.formatMessageFull(this.myActiveHeader, line.getMessage());
+            this.receiveFormattedLogLine(message);
+        } else {
+            message = AndroidLogcatFormatter.formatContinuation(line.getMessage());
+            this.receiveFormattedLogLine(message);
+        }
+
+    }
+
+    protected abstract void receiveFormattedLogLine(@NotNull String var1);
 }
