@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.idea.components.application;
 
-import com.samebug.clients.search.api.client.Config;
+import com.samebug.clients.common.search.api.client.Config;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;

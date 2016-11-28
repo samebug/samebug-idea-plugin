@@ -20,15 +20,15 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.search.api.entities.SearchResults;
+import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
+import com.samebug.clients.common.search.api.entities.tracking.SearchInfo;
+import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.common.search.api.exceptions.SamebugTimeout;
+import com.samebug.clients.common.search.api.exceptions.UserUnauthorized;
 import com.samebug.clients.idea.messages.model.StackTraceMatcherListener;
 import com.samebug.clients.idea.messages.model.StackTraceSearchListener;
 import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.search.api.entities.SearchResults;
-import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
-import com.samebug.clients.search.api.entities.tracking.SearchInfo;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
-import com.samebug.clients.search.api.exceptions.SamebugTimeout;
-import com.samebug.clients.search.api.exceptions.UserUnauthorized;
 import org.jetbrains.annotations.NotNull;
 
 public class StackTraceSearch implements ApplicationComponent, StackTraceMatcherListener {

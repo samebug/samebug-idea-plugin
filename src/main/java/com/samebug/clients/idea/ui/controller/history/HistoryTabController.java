@@ -25,6 +25,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.search.api.client.ConnectionStatus;
+import com.samebug.clients.common.search.api.entities.SearchGroup;
 import com.samebug.clients.common.services.HistoryService;
 import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
@@ -39,7 +41,6 @@ import com.samebug.clients.idea.ui.component.TutorialPanel;
 import com.samebug.clients.idea.ui.component.tab.HistoryTabView;
 import com.samebug.clients.idea.ui.controller.TabController;
 import com.samebug.clients.idea.ui.listeners.ConnectionStatusUpdater;
-import com.samebug.clients.search.api.entities.SearchGroup;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,6 +62,8 @@ final public class HistoryTabController implements TabController, Disposable {
     @NotNull
     final ModelController modelController;
     @NotNull
+    final UserProfileController userProfileController;
+    @NotNull
     final TrackingController trackingController;
 
     @NotNull
@@ -74,6 +77,7 @@ final public class HistoryTabController implements TabController, Disposable {
         statusUpdater = new ConnectionStatusUpdater(view.statusIcon);
         viewController = new ViewController(this);
         modelController = new ModelController(this);
+        userProfileController = new UserProfileController(this);
         trackingController = new TrackingController(this);
 
         DataManager.registerDataProvider(view, new MyDataProvider());
@@ -95,6 +99,8 @@ final public class HistoryTabController implements TabController, Disposable {
             view.setWarningNotConnected();
         } else if (connectionService.isConnected() && !connectionService.isAuthenticated()) {
             view.setWarningNotLoggedIn();
+        } else if (connectionService.isConnected() && ConnectionStatus.API_DEPRECATED.equals(connectionService.getApiStatus())) {
+            view.setWarningDeprecated();
         } else if (groups != null) {
             int visibleSearches = groups.size();
             int allSearches = service.unfilteredHistoryLength();

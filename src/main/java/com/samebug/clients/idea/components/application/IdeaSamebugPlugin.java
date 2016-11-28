@@ -21,14 +21,18 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.search.api.WebUrlBuilder;
+import com.samebug.clients.common.search.api.entities.UserInfo;
+import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.common.search.api.exceptions.UnknownApiKey;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.SettingsDialog;
-import com.samebug.clients.search.api.WebUrlBuilder;
-import com.samebug.clients.search.api.entities.UserInfo;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
-import com.samebug.clients.search.api.exceptions.UnknownApiKey;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 
 @State(
@@ -39,37 +43,48 @@ import org.jetbrains.annotations.NotNull;
 )
 final public class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<ApplicationSettings> {
     final private static Logger LOGGER = Logger.getInstance(IdeaSamebugPlugin.class);
-    private ApplicationSettings state = new ApplicationSettings();
+    private AtomicReference<ApplicationSettings> state = new AtomicReference<ApplicationSettings>(new ApplicationSettings());
 
     final ClientService client = ApplicationManager.getApplication().getComponent(ClientService.class);
 
     {
-        client.configure(state.getNetworkConfig());
+        client.configure(state.get().getNetworkConfig());
     }
 
-    private WebUrlBuilder urlBuilder = new WebUrlBuilder(state.serverRoot);
+    private WebUrlBuilder urlBuilder = new WebUrlBuilder(state.get().serverRoot);
 
-    // TODO Unlike other methods, this one executes the http request on the caller thread. Is it ok?
+    @Nullable
+    private TimedTasks timedTasks;
+
+    @Nullable
+    private ApplicationCache cache;
+
+    @Nullable
+    private MessageBusConnection connection;
+
+    // NOTE should not be called from UI thread
     public void setApiKey(@NotNull String apiKey) throws SamebugClientException, UnknownApiKey {
+        ApplicationSettings currentState = state.get();
         UserInfo userInfo = null;
-        state.apiKey = apiKey;
-        client.configure(state.getNetworkConfig());
+        currentState.apiKey = apiKey;
+        client.configure(currentState.getNetworkConfig());
         userInfo = client.getUserInfo(apiKey);
         if (!userInfo.getUserExist()) {
             throw new UnknownApiKey(apiKey);
         } else {
-            state.userId = userInfo.getUserId();
-            state.avatarUrl = userInfo.getAvatarUrl().toString();
-            state.workspaceId = userInfo.getDefaultWorkspaceId();
-            saveSettings(state);
+            currentState.userId = userInfo.getUserId();
+            currentState.avatarUrl = userInfo.getAvatarUrl().toString();
+            currentState.workspaceId = userInfo.getDefaultWorkspaceId();
+            saveSettings(currentState);
         }
     }
 
     public void saveSettings(final ApplicationSettings settings) {
-        state = new ApplicationSettings(settings);
+        ApplicationSettings newSettings = new ApplicationSettings(settings);
+        state.set(newSettings);
         try {
-            client.configure(state.getNetworkConfig());
-            urlBuilder = new WebUrlBuilder(state.serverRoot);
+            client.configure(newSettings.getNetworkConfig());
+            urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
         } finally {
             Tracking.appTracking().trace(Events.apiKeySet());
         }
@@ -95,21 +110,29 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         return urlBuilder;
     }
 
+    @Nullable
+    public ApplicationCache getCache() {
+        return cache;
+    }
+
     // ApplicationComponent overrides
     @Override
     public void initComponent() {
         SamebugNotifications.registerNotificationGroups();
+
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
-                if (state.apiKey == null) {
+                ApplicationSettings newSettings = new ApplicationSettings(state.get());
+                if (newSettings.apiKey == null) {
                     SettingsDialog.setup(null);
                 } else {
                     try {
-                        UserInfo userInfo = client.getUserInfo(state.apiKey);
+                        UserInfo userInfo = client.getUserInfo(newSettings.apiKey);
                         if (userInfo.getUserExist()) {
-                            state.userId = userInfo.getUserId();
-                            state.avatarUrl = userInfo.getAvatarUrl().toString();
+                            newSettings.userId = userInfo.getUserId();
+                            newSettings.avatarUrl = userInfo.getAvatarUrl().toString();
+                            saveSettings(newSettings);
                         }
                     } catch (SamebugClientException e) {
                         LOGGER.warn("Failed to get user info", e);
@@ -117,10 +140,17 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
                 }
             }
         });
+
+        connection = ApplicationManager.getApplication().getMessageBus().connect();
+        timedTasks = new TimedTasks(connection);
+        cache = new ApplicationCache(connection);
     }
 
     @Override
     public void disposeComponent() {
+        if (connection != null) {
+            connection.disconnect();
+        }
     }
 
     @Override
@@ -133,13 +163,14 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     @NotNull
     @Override
     public ApplicationSettings getState() {
-        return this.state;
+        return new ApplicationSettings(state.get());
     }
 
     @Override
     public void loadState(ApplicationSettings state) {
-        this.state = state;
-        client.configure(state.getNetworkConfig());
-        urlBuilder = new WebUrlBuilder(state.serverRoot);
+        ApplicationSettings newSettings = new ApplicationSettings(state);
+        this.state.set(newSettings);
+        client.configure(newSettings.getNetworkConfig());
+        urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
     }
 }

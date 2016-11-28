@@ -16,9 +16,9 @@
 package com.samebug.clients.idea.messages.model;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.search.api.entities.SearchResults;
-import com.samebug.clients.search.api.entities.tracking.SearchInfo;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.common.search.api.entities.SearchResults;
+import com.samebug.clients.common.search.api.entities.tracking.SearchInfo;
+import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 
 public interface StackTraceSearchListener {
     Topic<StackTraceSearchListener> TOPIC = Topic.create("stacktrace search", StackTraceSearchListener.class);

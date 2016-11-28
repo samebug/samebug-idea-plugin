@@ -18,14 +18,14 @@ package com.samebug.clients.idea.ui.controller.search;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.search.api.entities.MarkResponse;
+import com.samebug.clients.common.search.api.entities.RestHit;
+import com.samebug.clients.common.search.api.exceptions.BadRequest;
 import com.samebug.clients.common.services.SearchService;
 import com.samebug.clients.idea.messages.client.MarkModelListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.component.organism.MarkPanel;
 import com.samebug.clients.idea.ui.component.tab.SearchTabView;
-import com.samebug.clients.search.api.entities.MarkResponse;
-import com.samebug.clients.search.api.entities.RestHit;
-import com.samebug.clients.search.api.exceptions.BadRequest;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

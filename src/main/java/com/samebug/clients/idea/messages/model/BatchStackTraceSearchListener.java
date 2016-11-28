@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.messages.model;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.search.api.entities.SearchResults;
+import com.samebug.clients.common.search.api.entities.SearchResults;
 
 import java.util.List;
 

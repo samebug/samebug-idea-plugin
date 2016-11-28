@@ -16,13 +16,13 @@
 package com.samebug.clients.idea.ui.controller.search;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.samebug.clients.common.search.api.entities.*;
 import com.samebug.clients.common.services.SearchService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.component.card.ExternalSolutionView;
 import com.samebug.clients.idea.ui.component.card.SamebugTipView;
 import com.samebug.clients.idea.ui.component.organism.MarkPanel;
 import com.samebug.clients.idea.ui.component.tab.SearchTabView;
-import com.samebug.clients.search.api.entities.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -20,18 +20,19 @@ import com.intellij.openapi.actionSystem.ActionPlaces;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.util.containers.HashMap;
+import com.samebug.clients.common.search.api.entities.SearchGroup;
+import com.samebug.clients.common.search.api.entities.StackTraceSearchGroup;
+import com.samebug.clients.common.search.api.entities.TextSearchGroup;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.component.NetworkStatusIcon;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
+import com.samebug.clients.idea.ui.component.card.CollapsibleUserProfile;
 import com.samebug.clients.idea.ui.component.card.SearchGroupCard;
 import com.samebug.clients.idea.ui.component.card.StackTraceSearchGroupCard;
 import com.samebug.clients.idea.ui.component.card.TextSearchGroupCard;
 import com.samebug.clients.idea.ui.component.organism.WarningPanel;
-import com.samebug.clients.search.api.entities.SearchGroup;
-import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
-import com.samebug.clients.search.api.entities.TextSearchGroup;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -45,6 +46,8 @@ final public class HistoryTabView extends JPanel {
     final public NetworkStatusIcon statusIcon;
     @NotNull
     JComponent contentPanel;
+    @NotNull
+    public CollapsibleUserProfile collapsableUserPanel;
 
     @NotNull
     final Map<Integer, SearchGroupCard> cards;
@@ -53,6 +56,7 @@ final public class HistoryTabView extends JPanel {
         statusIcon = new NetworkStatusIcon();
         toolbarPanel = new ToolBarPanel();
         contentPanel = new TransparentPanel();
+        collapsableUserPanel = new CollapsibleUserProfile();
         cards = new HashMap<Integer, SearchGroupCard>();
 
         setLayout(new BorderLayout());
@@ -88,6 +92,7 @@ final public class HistoryTabView extends JPanel {
 
 
         updateContent(scrollPane);
+        add(collapsableUserPanel.getControl(), BorderLayout.SOUTH);
         scrollPane.setViewportView(contentPanel);
         scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
@@ -101,6 +106,12 @@ final public class HistoryTabView extends JPanel {
     public void setWarningNotConnected() {
         WarningPanel panel =
                 new WarningPanel(SamebugBundle.message("samebug.toolwindow.history.content.notConnected", IdeaSamebugPlugin.getInstance().getUrlBuilder().getServerRoot()));
+        updateContent(panel);
+    }
+
+    public void setWarningDeprecated() {
+        WarningPanel panel =
+                new WarningPanel(SamebugBundle.message("samebug.toolwindow.history.content.deprecated"));
         updateContent(panel);
     }
 

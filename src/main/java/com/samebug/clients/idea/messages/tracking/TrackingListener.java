@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.messages.tracking;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.search.api.entities.tracking.TrackEvent;
+import com.samebug.clients.common.search.api.entities.tracking.TrackEvent;
 
 public interface TrackingListener {
     Topic<TrackingListener> TOPIC = Topic.create("tracking", TrackingListener.class, Topic.BroadcastDirection.TO_PARENT);

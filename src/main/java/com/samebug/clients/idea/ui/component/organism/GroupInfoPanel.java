@@ -15,10 +15,10 @@
  */
 package com.samebug.clients.idea.ui.component.organism;
 
+import com.samebug.clients.common.search.api.entities.SearchGroup;
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
-import com.samebug.clients.search.api.entities.SearchGroup;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

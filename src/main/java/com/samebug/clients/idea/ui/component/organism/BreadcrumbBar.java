@@ -15,13 +15,13 @@
  */
 package com.samebug.clients.idea.ui.component.organism;
 
+import com.samebug.clients.common.search.api.entities.BreadCrumb;
+import com.samebug.clients.common.search.api.entities.QualifiedCall;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.component.TransparentPanel;
 import com.samebug.clients.idea.ui.listeners.LinkOpener;
-import com.samebug.clients.search.api.entities.BreadCrumb;
-import com.samebug.clients.search.api.entities.QualifiedCall;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

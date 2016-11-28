@@ -21,11 +21,11 @@ import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
+import com.samebug.clients.common.search.api.entities.SearchResults;
+import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
+import com.samebug.clients.common.search.api.entities.tracking.SearchInfo;
+import com.samebug.clients.common.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.search.api.entities.SearchResults;
-import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
-import com.samebug.clients.search.api.entities.tracking.SearchInfo;
-import com.samebug.clients.search.api.entities.tracking.TrackEvent;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -183,6 +183,22 @@ final public class Events {
 
     public static TrackEvent searchSucceedInSearchDialog(final int searchId) {
         return new TrackBuilder("SearchDialog", "SearchSucceed", null) {
+            protected void initFields() {
+                fields.put("searchId", searchId);
+            }
+        }.getEvent();
+    }
+
+    public static TrackEvent gutterIconForSavedSearch(final int searchId) {
+        return new TrackBuilder("Gutter", "SavedSearch", null) {
+            protected void initFields() {
+                fields.put("searchId", searchId);
+            }
+        }.getEvent();
+    }
+
+    public static TrackEvent gutterIconClicked(final int searchId) {
+        return new TrackBuilder("Gutter", "Clicked", null) {
             protected void initFields() {
                 fields.put("searchId", searchId);
             }

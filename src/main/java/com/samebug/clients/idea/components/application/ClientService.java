@@ -18,19 +18,18 @@ package com.samebug.clients.idea.components.application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.util.messages.MessageBus;
-import com.samebug.clients.idea.messages.client.HistoryModelListener;
-import com.samebug.clients.idea.messages.client.MarkModelListener;
-import com.samebug.clients.idea.messages.client.SearchModelListener;
-import com.samebug.clients.idea.messages.client.TipModelListener;
+import com.samebug.clients.common.search.api.client.*;
+import com.samebug.clients.common.search.api.entities.*;
+import com.samebug.clients.common.search.api.entities.tracking.TrackEvent;
+import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.idea.messages.client.*;
 import com.samebug.clients.idea.messages.model.ConnectionStatusListener;
-import com.samebug.clients.search.api.client.*;
-import com.samebug.clients.search.api.entities.*;
-import com.samebug.clients.search.api.entities.tracking.TrackEvent;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ClientService implements ApplicationComponent {
     final MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
@@ -38,18 +37,41 @@ public class ClientService implements ApplicationComponent {
     AtomicBoolean connected;
     AtomicBoolean authenticated;
     AtomicInteger nRequests;
+    AtomicReference<String> apiStatus;
 
     public synchronized void configure(final Config config) {
         this.client = new SamebugClient(config);
         this.connected = new AtomicBoolean(true);
         this.authenticated = new AtomicBoolean(true);
         this.nRequests = new AtomicInteger(0);
+        this.apiStatus = new AtomicReference<String>(null);
     }
 
     public UserInfo getUserInfo(final String apiKey) throws SamebugClientException {
         return new ConnectionAwareHttpRequest<UserInfo>() {
             ClientResponse<UserInfo> request() {
                 return client.getUserInfo(apiKey);
+            }
+
+            void success(UserInfo result) {
+                messageBus.syncPublisher(UserModelListener.TOPIC).successLoadUserInfo(result);
+
+                // NOTE: this is a special case, we handle connection status by the result, not by the http status
+                if (result.getUserExist()) {
+                    authenticated.set(true);
+                    messageBus.syncPublisher(ConnectionStatusListener.TOPIC).authenticationChange(true);
+                } else {
+                    authenticated.set(false);
+                    messageBus.syncPublisher(ConnectionStatusListener.TOPIC).authenticationChange(false);
+                }
+            }
+
+            void fail(SamebugClientException e) {
+                messageBus.syncPublisher(UserModelListener.TOPIC).failLoadUserInfo(e);
+            }
+
+            void finish() {
+                messageBus.syncPublisher(UserModelListener.TOPIC).finishLoadHistory();
             }
         }.execute();
     }
@@ -162,6 +184,22 @@ public class ClientService implements ApplicationComponent {
         }.execute();
     }
 
+    public UserStats getUserStats() throws SamebugClientException {
+        return new ConnectionAwareHttpRequest<UserStats>() {
+            ClientResponse<UserStats> request() {
+                return client.getUserStats();
+            }
+
+            void success(UserStats result) {
+                messageBus.syncPublisher(UserStatsListener.TOPIC).successGetUserStats(result);
+            }
+
+            void fail(SamebugClientException e) {
+                messageBus.syncPublisher(UserStatsListener.TOPIC).failGetUserStats(e);
+            }
+        }.execute();
+    }
+
     public void trace(final TrackEvent event) throws SamebugClientException {
         // Trace bypasses connection status handling.
         client.trace(event);
@@ -177,6 +215,11 @@ public class ClientService implements ApplicationComponent {
 
     public int getNumberOfActiveRequests() {
         return nRequests.get();
+    }
+
+    @Nullable
+    public String getApiStatus() {
+        return apiStatus.get();
     }
 
     @Override
@@ -227,8 +270,13 @@ public class ClientService implements ApplicationComponent {
                 authenticated.set(connectionStatus.successfullyAuthenticated);
                 messageBus.syncPublisher(ConnectionStatusListener.TOPIC).authenticationChange(connectionStatus.successfullyAuthenticated);
             }
-            if (connectionStatus.apiStatus != null) {
-                messageBus.syncPublisher(ConnectionStatusListener.TOPIC).apiStatusChange(connectionStatus.apiStatus);
+            if (connectionStatus.apiStatus != null && !connectionStatus.apiStatus.equals(apiStatus.get())) {
+                apiStatus.set(connectionStatus.apiStatus);
+                if (ConnectionStatus.API_TO_BE_DEPRECATED.equals(connectionStatus.apiStatus)) {
+                    messageBus.syncPublisher(ConnectionStatusListener.TOPIC).apiToBeDeprecated();
+                } else if (ConnectionStatus.API_DEPRECATED.equals(connectionStatus.apiStatus)) {
+                    messageBus.syncPublisher(ConnectionStatusListener.TOPIC).apiDeprecated();
+                }
             }
 
             try {

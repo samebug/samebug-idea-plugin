@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.messages.client;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.search.api.entities.Solutions;
+import com.samebug.clients.common.search.api.entities.Solutions;
 
 public interface SearchModelListener {
     Topic<SearchModelListener> TOPIC = Topic.create("solutions model changes", SearchModelListener.class);

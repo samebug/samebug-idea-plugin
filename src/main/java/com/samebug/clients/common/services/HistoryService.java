@@ -15,10 +15,10 @@
  */
 package com.samebug.clients.common.services;
 
+import com.samebug.clients.common.search.api.entities.SearchGroup;
+import com.samebug.clients.common.search.api.entities.SearchHistory;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.search.api.entities.SearchGroup;
-import com.samebug.clients.search.api.entities.SearchHistory;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

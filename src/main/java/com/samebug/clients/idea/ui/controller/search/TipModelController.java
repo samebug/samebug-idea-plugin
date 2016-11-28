@@ -18,11 +18,11 @@ package com.samebug.clients.idea.ui.controller.search;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.search.api.entities.RestHit;
+import com.samebug.clients.common.search.api.entities.Tip;
+import com.samebug.clients.common.search.api.exceptions.BadRequest;
 import com.samebug.clients.idea.messages.client.TipModelListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.search.api.entities.RestHit;
-import com.samebug.clients.search.api.entities.Tip;
-import com.samebug.clients.search.api.exceptions.BadRequest;
 import org.jetbrains.annotations.NotNull;
 
 final class TipModelController implements TipModelListener {

@@ -18,11 +18,11 @@ package com.samebug.clients.idea.components.project;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.search.api.entities.SearchResults;
+import com.samebug.clients.common.search.api.entities.tracking.SearchInfo;
+import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.idea.messages.model.BatchStackTraceSearchListener;
 import com.samebug.clients.idea.messages.model.StackTraceSearchListener;
-import com.samebug.clients.search.api.entities.SearchResults;
-import com.samebug.clients.search.api.entities.tracking.SearchInfo;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

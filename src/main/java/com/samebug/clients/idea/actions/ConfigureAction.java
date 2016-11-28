@@ -17,17 +17,19 @@ package com.samebug.clients.idea.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.ProjectManager;
 import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
-import com.samebug.clients.idea.ui.SettingsDialog;
+import com.samebug.clients.idea.ui.controller.ConfigDialog;
 
 final public class ConfigureAction extends AnAction implements DumbAware {
     @Override
     public void actionPerformed(AnActionEvent e) {
-        SettingsDialog.setup(IdeaSamebugPlugin.getInstance().getState().apiKey);
+        ShowSettingsUtil.getInstance().showSettingsDialog(ProjectManager.getInstance().getDefaultProject(), ConfigDialog.class);
     }
 
     @Override

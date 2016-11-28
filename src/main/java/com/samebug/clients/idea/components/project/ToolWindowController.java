@@ -23,6 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.openapi.wm.impl.ToolWindowImpl;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
@@ -32,6 +33,7 @@ import com.samebug.clients.idea.messages.view.FocusListener;
 import com.samebug.clients.idea.messages.view.HistoryViewListener;
 import com.samebug.clients.idea.messages.view.RefreshTimestampsListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.controller.TabController;
 import com.samebug.clients.idea.ui.controller.history.HistoryTabController;
 import com.samebug.clients.idea.ui.controller.search.SearchTabController;
@@ -50,8 +52,8 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
 
     @NotNull
     final Project project;
-    @NotNull
-    final HistoryTabController historyTabController;
+    @Nullable
+    HistoryTabController historyTabController;
     @NotNull
     final ConcurrentMap<Integer, SearchTabController> solutionControllers;
 
@@ -65,7 +67,6 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
     protected ToolWindowController(@NotNull final Project project) {
         super(project);
         this.project = project;
-        historyTabController = new HistoryTabController(this, project);
         solutionControllers = new ConcurrentHashMap<Integer, SearchTabController>();
 
         MessageBusConnection connection = project.getMessageBus().connect(project);
@@ -87,6 +88,7 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
     }
 
     public void initToolWindow(@NotNull ToolWindow toolWindow) {
+        historyTabController = new HistoryTabController(this, project);
         project.getMessageBus().syncPublisher(HistoryViewListener.TOPIC).reloadHistory();
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(historyTabController.getControlPanel(), SamebugBundle.message("samebug.toolwindow.history.tabName"), false);
@@ -96,8 +98,9 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
     @Override
     public void focusOnHistory() {
         ApplicationManager.getApplication().assertIsDispatchThread();
-        final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
+        final ToolWindow toolWindow = getToolWindow();
         final ContentManager toolwindowCM = toolWindow.getContentManager();
+        assert historyTabController != null;
         final Content content = toolwindowCM.getContent(historyTabController.getControlPanel());
         if (content != null) toolwindowCM.setSelectedContent(content);
         toolWindow.show(null);
@@ -106,7 +109,7 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
     @Override
     public void focusOnSearch(final int searchId) {
         ApplicationManager.getApplication().assertIsDispatchThread();
-        final ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
+        final ToolWindow toolWindow = getToolWindow();
         final ContentManager toolwindowCM = toolWindow.getContentManager();
 
         // FIXME: for now, we let at most one search tab, so we close all
@@ -145,7 +148,7 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
 
     @Override
     public void disposeComponent() {
-        Disposer.dispose(historyTabController);
+        if (historyTabController != null) Disposer.dispose(historyTabController);
 
         for (Integer searchId : solutionControllers.keySet()) {
             closeSearchTab(searchId);
@@ -158,5 +161,26 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
         if (tab != null) Disposer.dispose(tab);
         solutionControllers.remove(searchId);
     }
+
+    public void changeToolwindowIcon(boolean hasNewExceptions) {
+        ApplicationManager.getApplication().assertIsDispatchThread();
+        ToolWindow toolWindow = getToolWindow();
+        if (toolWindow != null) {
+            if (hasNewExceptions) {
+                toolWindow.setIcon(SamebugIcons.twBolt);
+            } else {
+                toolWindow.setIcon(SamebugIcons.twSamebug);
+            }
+        }
+    }
+
+    private ToolWindow getToolWindow() {
+        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
+        if (toolWindow instanceof ToolWindowImpl) {
+            ((ToolWindowImpl) toolWindow).ensureContentInitialized();
+        }
+        return toolWindow;
+    }
+
 }
 

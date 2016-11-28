@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.messages.client;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.search.api.entities.MarkResponse;
+import com.samebug.clients.common.search.api.entities.MarkResponse;
 
 public interface MarkModelListener {
     Topic<MarkModelListener> TOPIC = Topic.create("search model changes from mark", MarkModelListener.class);

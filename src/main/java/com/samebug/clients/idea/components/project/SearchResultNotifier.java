@@ -27,6 +27,9 @@ import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.entities.ExceptionType;
+import com.samebug.clients.common.search.api.entities.Exception;
+import com.samebug.clients.common.search.api.entities.*;
+import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.HistoryService;
 import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.idea.components.application.ClientService;
@@ -38,11 +41,6 @@ import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.notification.SearchResultsNotification;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
-import com.samebug.clients.search.api.entities.SearchGroup;
-import com.samebug.clients.search.api.entities.SearchHistory;
-import com.samebug.clients.search.api.entities.SearchResults;
-import com.samebug.clients.search.api.entities.StackTraceSearchGroup;
-import com.samebug.clients.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -121,87 +119,11 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
                     }
                 }
             }
-            final int nRecurringSearches = recurrings;
-            final int nSearchesWithZeroSolutions = zeroSolutions;
-
+            final Notifier notifier = new Notifier(searchIds, resultsBySearchId, recurrings, zeroSolutions);
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    if (searchIds.size() == 0) {
-                        // all searches filtered out, show no notification
-                    } else {
-                        // there are searches to report about
-                        final TutorialSettings settings = ApplicationManager.getApplication().getComponent(TutorialApplicationComponent.class).getState();
-                        TutorialProjectComponent tutorialComponent = project.getComponent(TutorialProjectComponent.class);
-                        assert settings != null;
-                        assert tutorialComponent != null;
-
-                        if (nSearchesWithZeroSolutions == 0 && nRecurringSearches == 0) {
-                            if (searchIds.size() == 1) {
-                                // 1 new exception with solutions
-                                StackTraceSearchGroup search = resultsBySearchId.get(searchIds.get(0));
-                                String exceptionSummary = summarizeException(search.getLastSearch().getStackTrace().getTrace());
-                                showNotification(SamebugBundle.message("samebug.notification.searchresults.new.one", searchIds.get(0).toString(), exceptionSummary));
-                            } else {
-                                // 2+ new exceptions with solutions
-                                showNotification(SamebugBundle.message("samebug.notification.searchresults.new.multiple", searchIds.size()));
-                            }
-                        } else if (nSearchesWithZeroSolutions == 0 && nRecurringSearches > 0) {
-                            if (searchIds.size() == 1) {
-                                // 1 recurring exception with solutions
-                                StackTraceSearchGroup search = resultsBySearchId.get(searchIds.get(0));
-                                String exceptionSummary = summarizeException(search.getLastSearch().getStackTrace().getTrace());
-                                if (settings.searchResultsRecurring) {
-                                    settings.searchResultsRecurring = false;
-                                    settings.searchResultsMixed = false;
-                                    showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.oneRecurring",
-                                            searchIds.get(0).toString(), SamebugIcons.calendarUrl, exceptionSummary));
-                                } else {
-                                    showNotification(SamebugBundle.message("samebug.notification.searchresults.recurring.one", searchIds.get(0).toString(), exceptionSummary));
-                                }
-                            } else {
-                                // 2+ recurring exception with solutions
-                                if (settings.searchResultsRecurring) {
-                                    settings.searchResultsRecurring = false;
-                                    settings.searchResultsMixed = false;
-                                    showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.multipleRecurring", searchIds.size(), SamebugIcons.calendarUrl));
-                                } else {
-                                    showNotification(SamebugBundle.message("samebug.notification.searchresults.recurring.multiple", searchIds.size()));
-                                }
-                            }
-                        } else if (nSearchesWithZeroSolutions > 0 && nRecurringSearches == 0) {
-                            // 1+ new exception without solution
-                            if (searchIds.size() == 1) {
-                                // 1 recurring exception with solutions
-                                StackTraceSearchGroup search = resultsBySearchId.get(searchIds.get(0));
-                                String exceptionSummary = summarizeException(search.getLastSearch().getStackTrace().getTrace());
-                                if (settings.searchResultsZeroSolutions) {
-                                    settings.searchResultsZeroSolutions = false;
-                                    settings.searchResultsMixed = false;
-                                    showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.zeroSolutions", searchIds.size(), SamebugIcons.lightbulbUrl));
-                                } else {
-                                    showNotification(SamebugBundle.message("samebug.notification.searchresults.zeroSolutions.one", exceptionSummary));
-                                }
-                            } else {
-                                if (settings.searchResultsZeroSolutions) {
-                                    settings.searchResultsZeroSolutions = false;
-                                    settings.searchResultsMixed = false;
-                                    showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.zeroSolutions", searchIds.size(), SamebugIcons.lightbulbUrl));
-                                } else {
-                                    showNotification(SamebugBundle.message("samebug.notification.searchresults.zeroSolutions.multiple", searchIds.size()));
-                                }
-                            }
-                        } else {
-                            // other cases.
-                            if (settings.searchResultsMixed) {
-                                settings.searchResultsMixed = false;
-                                showTutorialNotification(
-                                        SamebugBundle.message("samebug.tutorial.searchResults.mixed", searchIds.size(), SamebugIcons.calendarUrl, SamebugIcons.lightbulbUrl));
-                            } else {
-                                showNotification(SamebugBundle.message("samebug.notification.searchresults.mixed", searchIds.size()));
-                            }
-                        }
-                    }
+                    notifier.execute();
                 }
             });
         } catch (SamebugClientException e1) {
@@ -209,7 +131,7 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
         }
     }
 
-    private String summarizeException(com.samebug.clients.search.api.entities.Exception exception) {
+    private String summarizeException(Exception exception) {
         ExceptionType exceptionType = new ExceptionType(exception.getTypeName());
         final int maxMessageLength = 350;
         String shortMessage = exception.getMessage() == null ? null
@@ -218,41 +140,171 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
         else return SamebugBundle.message("samebug.notification.exceptionSummary.withMessage", exceptionType.className, shortMessage);
     }
 
-    private void showNotification(String message) {
-        final SearchResultsNotification notification = new SearchResultsNotification(project, message);
-
-        final Timer timer = new Timer(NOTIFICATION_EXPIRATION_DELAY, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                notification.expire();
-            }
-        });
-
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            public void run() {
-                notification.notify(project);
-                timer.start();
-            }
-        });
-    }
-
-    private void showTutorialNotification(final String message) {
-        TutorialProjectComponent.createTutorialBalloon(project, new JEditorPane() {
-            {
-                setEditable(false);
-                setOpaque(false);
-                setBorder(BorderFactory.createEmptyBorder());
-                setContentType("text/html");
-                setText(message);
-                setForeground(Colors.samebugWhite);
-                addHyperlinkListener(SamebugNotifications.basicHyperlinkListener(project, "tutorial"));
-            }
-        }).show(RelativePoint.getNorthEastOf(((IdeFrame) NotificationsManagerImpl.findWindowForBalloon(project)).getComponent()), Balloon.Position.atLeft);
-    }
-
-
     @Override
     public void dispose() {
         messageBusConnection.disconnect();
+    }
+
+
+    private class Notifier {
+        private final List<Integer> searchIds;
+        private final Map<Integer, StackTraceSearchGroup> resultsBySearchId;
+        private final int nRecurringSearches;
+        private final int nSearchesWithZeroSolutions;
+        private final TutorialSettings settings;
+
+        Notifier(List<Integer> searchIds, Map<Integer, StackTraceSearchGroup> resultsBySearchId, int nRecurringSearches, int nSearchesWithZeroSolutions) {
+            this.searchIds = searchIds;
+            this.resultsBySearchId = resultsBySearchId;
+            this.nRecurringSearches = nRecurringSearches;
+            this.nSearchesWithZeroSolutions = nSearchesWithZeroSolutions;
+            this.settings = ApplicationManager.getApplication().getComponent(TutorialApplicationComponent.class).getState();
+            assert settings != null;
+        }
+
+        void execute() {
+            if (searchIds.size() == 0) {
+                // all searches filtered out
+                noSearches();
+            } else {
+                // there are searches to report about
+                if (nSearchesWithZeroSolutions == 0 && nRecurringSearches == 0) {
+                    if (searchIds.size() == 1) {
+                        oneNewExceptionWithSolutions();
+                    } else {
+                        twoPlusNewExceptionsWithSolutions();
+                    }
+                } else if (nSearchesWithZeroSolutions == 0 && nRecurringSearches > 0) {
+                    if (searchIds.size() == 1) {
+                        oneRecurringExceptionWithSolutions();
+                    } else {
+                        twoPlusRecurringExceptionsWithSolutions();
+                    }
+                } else if (nSearchesWithZeroSolutions > 0 && nRecurringSearches == 0) {
+                    // 1+ new exception without solution
+                    if (searchIds.size() == 1) {
+                        oneNewExceptionNoSolutions();
+                    } else {
+                        twoPlusNewExceptionsNoSolutions();
+                    }
+                } else {
+                    // other cases.
+                    mixesSearches();
+                }
+            }
+        }
+
+        private void noSearches() {
+            changeToolwindowIcon(false);
+        }
+
+        private void oneNewExceptionWithSolutions() {
+            changeToolwindowIcon(true);
+            StackTraceSearchGroup search = resultsBySearchId.get(searchIds.get(0));
+            String exceptionSummary = summarizeException(search.getLastSearch().getStackTrace().getTrace());
+            showNotification(SamebugBundle.message("samebug.notification.searchresults.new.one", searchIds.get(0).toString(), exceptionSummary));
+        }
+
+        private void twoPlusNewExceptionsWithSolutions() {
+            changeToolwindowIcon(true);
+            showNotification(SamebugBundle.message("samebug.notification.searchresults.new.multiple", searchIds.size()));
+        }
+
+        private void oneRecurringExceptionWithSolutions() {
+            changeToolwindowIcon(true);
+            StackTraceSearchGroup search = resultsBySearchId.get(searchIds.get(0));
+            String exceptionSummary = summarizeException(search.getLastSearch().getStackTrace().getTrace());
+            if (settings.searchResultsRecurring) {
+                settings.searchResultsRecurring = false;
+                settings.searchResultsMixed = false;
+                showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.oneRecurring",
+                        searchIds.get(0).toString(), SamebugIcons.calendarUrl, exceptionSummary));
+            } else {
+                showNotification(SamebugBundle.message("samebug.notification.searchresults.recurring.one", searchIds.get(0).toString(), exceptionSummary));
+            }
+        }
+
+        private void twoPlusRecurringExceptionsWithSolutions() {
+            changeToolwindowIcon(true);
+            if (settings.searchResultsRecurring) {
+                settings.searchResultsRecurring = false;
+                settings.searchResultsMixed = false;
+                showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.multipleRecurring", searchIds.size(), SamebugIcons.calendarUrl));
+            } else {
+                showNotification(SamebugBundle.message("samebug.notification.searchresults.recurring.multiple", searchIds.size()));
+            }
+        }
+
+        private void oneNewExceptionNoSolutions() {
+            changeToolwindowIcon(true);
+            StackTraceSearchGroup search = resultsBySearchId.get(searchIds.get(0));
+            String exceptionSummary = summarizeException(search.getLastSearch().getStackTrace().getTrace());
+            if (settings.searchResultsZeroSolutions) {
+                settings.searchResultsZeroSolutions = false;
+                settings.searchResultsMixed = false;
+                showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.zeroSolutions", searchIds.size(), SamebugIcons.lightbulbUrl));
+            } else {
+                showNotification(SamebugBundle.message("samebug.notification.searchresults.zeroSolutions.one", exceptionSummary));
+            }
+        }
+
+        private void twoPlusNewExceptionsNoSolutions() {
+            changeToolwindowIcon(true);
+            if (settings.searchResultsZeroSolutions) {
+                settings.searchResultsZeroSolutions = false;
+                settings.searchResultsMixed = false;
+                showTutorialNotification(SamebugBundle.message("samebug.tutorial.searchResults.zeroSolutions", searchIds.size(), SamebugIcons.lightbulbUrl));
+            } else {
+                showNotification(SamebugBundle.message("samebug.notification.searchresults.zeroSolutions.multiple", searchIds.size()));
+            }
+        }
+
+        private void mixesSearches() {
+            changeToolwindowIcon(true);
+            if (settings.searchResultsMixed) {
+                settings.searchResultsMixed = false;
+                showTutorialNotification(
+                        SamebugBundle.message("samebug.tutorial.searchResults.mixed", searchIds.size(), SamebugIcons.calendarUrl, SamebugIcons.lightbulbUrl));
+            } else {
+                showNotification(SamebugBundle.message("samebug.notification.searchresults.mixed", searchIds.size()));
+            }
+        }
+
+
+        private void showNotification(String message) {
+            final SearchResultsNotification notification = new SearchResultsNotification(project, message);
+
+            final Timer timer = new Timer(NOTIFICATION_EXPIRATION_DELAY, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    notification.expire();
+                }
+            });
+
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                public void run() {
+                    notification.notify(project);
+                    timer.start();
+                }
+            });
+        }
+
+        private void showTutorialNotification(final String message) {
+            TutorialProjectComponent.createTutorialBalloon(project, new JEditorPane() {
+                {
+                    setEditable(false);
+                    setOpaque(false);
+                    setBorder(BorderFactory.createEmptyBorder());
+                    setContentType("text/html");
+                    setText(message);
+                    setForeground(Colors.samebugWhite);
+                    addHyperlinkListener(SamebugNotifications.basicHyperlinkListener(project, "tutorial"));
+                }
+            }).show(RelativePoint.getNorthEastOf(((IdeFrame) NotificationsManagerImpl.findWindowForBalloon(project)).getComponent()), Balloon.Position.atLeft);
+        }
+
+        private void changeToolwindowIcon(boolean hasNew) {
+            project.getComponent(ToolWindowController.class).changeToolwindowIcon(hasNew);
+        }
     }
 }

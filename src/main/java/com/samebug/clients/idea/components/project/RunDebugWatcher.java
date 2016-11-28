@@ -15,16 +15,21 @@
  */
 package com.samebug.clients.idea.components.project;
 
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.execution.ui.RunContentManager;
-import com.intellij.execution.ui.RunContentWithExecutorListener;
+import com.intellij.execution.console.DuplexConsoleView;
+import com.intellij.execution.impl.ConsoleViewImpl;
+import com.intellij.execution.process.ProcessHandler;
+import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
+import com.intellij.execution.ui.*;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.search.api.LogScannerFactory;
+import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
 import com.samebug.clients.idea.components.application.Tracking;
+import com.samebug.clients.idea.console.ConsoleWatcher;
 import com.samebug.clients.idea.processadapters.RunDebugAdapter;
 import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.search.api.entities.tracking.DebugSessionInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,10 +41,8 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
         super(project);
     }
 
-    // ProjectComponent overrides
     @Override
     public void projectOpened() {
-        this.scannerFactory = new StackTraceMatcherFactory(myProject);
         MessageBusConnection messageBusConnection = myProject.getMessageBus().connect();
         messageBusConnection.subscribe(RunContentManager.TOPIC, this);
     }
@@ -52,51 +55,74 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
         listeners.clear();
     }
 
-    // RunContentWithExecutorListener overrides
-    public void contentSelected(@Nullable RunContentDescriptor descriptor, @NotNull com.intellij.execution.Executor executor) {
-        if (descriptor != null) {
-            initListener(descriptor);
-        }
-    }
-
-    public void contentRemoved(@Nullable RunContentDescriptor descriptor, @NotNull com.intellij.execution.Executor executor) {
-        if (descriptor != null) {
-            removeListener(descriptor);
-        }
-    }
-
-    // implementation
-    private synchronized RunDebugAdapter initListener(@NotNull RunContentDescriptor descriptor) {
+    public synchronized void contentSelected(@Nullable RunContentDescriptor descriptor, @NotNull com.intellij.execution.Executor executor) {
         Integer descriptorHashCode = System.identityHashCode(descriptor);
-        RunDebugAdapter existingScanner = listeners.get(descriptorHashCode);
-
-        if (existingScanner != null) {
-            return existingScanner;
-        } else {
-            return createScanner(descriptor, descriptorHashCode);
+        if (listeners.get(descriptorHashCode) == null && descriptor != null) {
+            createListener(descriptor, descriptorHashCode);
         }
     }
 
-    private RunDebugAdapter createScanner(@NotNull RunContentDescriptor descriptor, Integer descriptorHashCode) {
-        if (descriptor.getProcessHandler() == null) return null;
+    public synchronized void contentRemoved(@Nullable RunContentDescriptor descriptor, @NotNull com.intellij.execution.Executor executor) {
+        if (descriptor != null) {
+            Integer descriptorHashCode = System.identityHashCode(descriptor);
+            listeners.remove(descriptorHashCode);
+            DebugSessionInfo sessionInfo = debugSessionIds.get(descriptorHashCode);
+            if (sessionInfo != null) {
+                Tracking.projectTracking(myProject).trace(Events.debugStop(myProject, sessionInfo));
+                debugSessionIds.remove(descriptorHashCode);
+                myProject.getComponent(SamebugProjectComponent.class).getSessionService().removeSession(sessionInfo);
+            }
+        }
+    }
+
+    private void createListener(@NotNull RunContentDescriptor descriptor, Integer descriptorHashCode) {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                myProject.getComponent(ToolWindowController.class).changeToolwindowIcon(false);
+            }
+        });
 
         DebugSessionInfo sessionInfo = new DebugSessionInfo("run/debug");
-        Tracking.projectTracking(myProject).trace(Events.debugStart(myProject, sessionInfo));
-        RunDebugAdapter listener = new RunDebugAdapter(scannerFactory, sessionInfo);
-        listeners.put(descriptorHashCode, listener);
-        debugSessionIds.put(descriptorHashCode, sessionInfo);
-        descriptor.getProcessHandler().addProcessListener(listener);
-        return listener;
+
+        ProcessHandler processHandler = descriptor.getProcessHandler();
+        if (processHandler != null) {
+            ExecutionConsole console = descriptor.getExecutionConsole();
+            if (console instanceof ConsoleView) {
+                ConsoleViewImpl impl = extractConsoleImpl((ConsoleView) console);
+                if (impl != null) {
+                    // do we have to keep this reference?
+                    new ConsoleWatcher(impl, sessionInfo);
+                }
+            }
+            final LogScannerFactory scannerFactory = new StackTraceMatcherFactory(myProject, sessionInfo);
+            RunDebugAdapter listener = new RunDebugAdapter(scannerFactory);
+            listeners.put(descriptorHashCode, listener);
+            debugSessionIds.put(descriptorHashCode, sessionInfo);
+            processHandler.addProcessListener(listener);
+
+            Tracking.projectTracking(myProject).trace(Events.debugStart(myProject, sessionInfo));
+        }
     }
 
-    synchronized void removeListener(RunContentDescriptor descriptor) {
-        Integer descriptorHashCode = System.identityHashCode(descriptor);
-        Tracking.projectTracking(myProject).trace(Events.debugStop(myProject, debugSessionIds.get(descriptorHashCode)));
-        debugSessionIds.remove(descriptorHashCode);
-        listeners.remove(descriptorHashCode);
+    @Nullable
+    private static ConsoleViewImpl extractConsoleImpl(ConsoleView console) {
+        ConsoleViewImpl impl;
+
+        if (console instanceof ConsoleViewImpl) {
+            impl = (ConsoleViewImpl) console;
+        } else if (console instanceof DuplexConsoleView) {
+            impl = extractConsoleImpl(((DuplexConsoleView) console).getPrimaryConsoleView());
+            if (impl == null) impl = extractConsoleImpl(((DuplexConsoleView) console).getSecondaryConsoleView());
+        } else if (console instanceof BaseTestsOutputConsoleView) {
+            impl = extractConsoleImpl(((BaseTestsOutputConsoleView) console).getConsole());
+        } else {
+            impl = null;
+        }
+        return impl;
     }
+
 
     private final Map<Integer, RunDebugAdapter> listeners = new HashMap<Integer, RunDebugAdapter>();
     private final Map<Integer, DebugSessionInfo> debugSessionIds = new HashMap<Integer, DebugSessionInfo>();
-    private StackTraceMatcherFactory scannerFactory;
 }
