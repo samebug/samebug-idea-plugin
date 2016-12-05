@@ -1,130 +1,153 @@
 {
   "searchGroup": {
-    "type": "stacktrace",
-    "id": "573d7649513760ee20db1b7f",
-    "userId": 1,
-    "firstSeen": 1460553353388,
-    "lastSeen": 1460553353388,
+    "type": "text",
+    "id": "577d69e7d89a4a1b0bb8eda3",
+    "visitorId": null,
+    "userId": 688,
+    "workspaceId": null,
+    "firstSeen": 1459247588954,
+    "lastSeen": 1459341545302,
     "lastSearch": {
-      "type": "stacktrace",
-      "id": 5634,
-      "stackTrace": {
-        "stackTraceId": 301997,
-        "trace": {
-          "typeName": "java.net.ConnectException",
-          "message": "Network is unreachable"
-        },
-        "breadCrumbs": [
-          {
-            "level": 0,
-            "frames": 6,
-            "typeName": "java.net.ConnectException",
-            "passThrough": false,
-            "entry": {
-              "packageName": "java.net",
-              "className": "Socket",
-              "methodName": "connect"
-            },
-            "component": {
-              "type": "library",
-              "id": 2674,
-              "slug": "com.oracle.java:java-rt",
-              "name": "Java RT",
-              "color": 3
-            }
-          },
-          {
-            "level": 1,
-            "frames": 1,
-            "typeName": "java.net.ConnectException",
-            "passThrough": true,
-            "entry": {
-              "packageName": "sun.security.ssl",
-              "className": "SSLSocketImpl",
-              "methodName": "connect"
-            },
-            "component": {
-              "type": "library",
-              "id": 6411,
-              "slug": "com.oracle.java:java-jsse",
-              "name": "Java JSSE",
-              "color": 12
-            }
-          },
-          {
-            "level": 2,
-            "frames": 9,
-            "typeName": "java.net.ConnectException",
-            "passThrough": true,
-            "entry": {
-              "packageName": "sun.net.www.protocol.https",
-              "className": "HttpsURLConnectionImpl",
-              "methodName": "connect"
-            },
-            "component": {
-              "type": "library",
-              "id": 2674,
-              "slug": "com.oracle.java:java-rt",
-              "name": "Java RT",
-              "color": 3
-            }
-          },
-          {
-            "level": 3,
-            "frames": 3,
-            "typeName": "java.net.ConnectException",
-            "passThrough": true,
-            "entry": {
-              "packageName": "com.stripe.net",
-              "className": "APIResource",
-              "methodName": "makeURLConnectionRequest"
-            },
-            "component": {
-              "type": "library",
-              "id": 2131,
-              "mavenId": "com.stripe:stripe-java",
-              "slug": "com.stripe:stripe-java",
-              "name": "stripe-java",
-              "description": "Stripe Java Bindings",
-              "color": 4
-            }
-          }
-        ]
-      },
-      "timestamp": 1460553353388,
-      "userId": 1
+      "type": "text",
+      "id": 673467,
+      "query": "android.app.ServiceConnectionLeaked: Service com.google.android.gms.car.CarCallService has leaked ServiceConnection com.google.android.gms.car.dq@dfc5101 that was originally bound here\n\nat android.app.LoadedApk$ServiceDispatcher.<init>(LoadedApk.java:1092)\n\nat android.app.LoadedApk.getServiceDispatcher(LoadedApk.java:986)\n\nat android.app.ContextImpl.bindServiceCommon(ContextImpl.java:1303)\n\nat android.app.ContextImpl.bindService(ContextImpl.java:1286)\n\nat android.content.ContextWrapper.bindService(ContextWrapper.java:604)\n\nat com.google.android.gms.common.stats.g.a(:com.google.android.gms:128)\n\nat com.google.android.gms.common.stats.g.a(:com.google.android.gms:145)\n\nat com.google.android.gms.car.dp.a(:com.google.android.gms:586)\n\nat com.google.android.gms.car.dp.<init>(:com.google.android.gms:511)\n\nat com.google.android.gms.car.dp.a(:com.google.android.gms:488)\n\nat com.google.android.gms.car.dm.<init>(:com.google.android.gms:112)\n\nat com.google.android.gms.car.CarCallService.onBind(:com.google.android.gms:79)\n\nat android.app.ActivityThread.handleBindService(ActivityThread.java:2922)\n",
+      "errorType": null,
+      "timestamp": 1459341545302,
+      "visitorId": null,
+      "userId": 688,
+      "workspaceId": null
     },
-    "numberOfSearches": 1,
-    "numberOfHits": 12
+    "numberOfSearches": 7,
+    "numberOfHits": 3881
   },
   "tips": [],
   "references": [
     {
-      "solutionId": 61829,
+      "solutionId": 2437549,
       "solution": {
         "type": "reference",
         "source": {
-          "name": "Google Groups",
-          "icon": "googlegroups"
+          "name": "google.com",
+          "icon": "web"
         },
-        "author": {
-          "name": "Maneesh M P"
-        },
-        "createdAt": 1425184620000,
-        "title": "Docker plugin - slave status is connection refused",
-        "url": "https://groups.google.com/d/topic/jenkinsci-users/l5aAOnbxwZo"
+        "author": null,
+        "createdAt": 1468817208038,
+        "title": "Issue 199261 - android - CarService has leaked ServiceConnection - Android Open Source Project - Issue Tracker - Google Project Hosting",
+        "url": "http://code.google.com/p/android/issues/detail?id=199261"
       },
-      "stackId": 61829,
-      "matchLevel": 1,
+      "stackTraceId": "578c5f38705a68edf6aa28b5",
+      "matchLevel": 0,
       "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
       "exception": {
-        "typeName": "java.net.ConnectException",
-        "message": "Connection refused",
-        "frames": "java.net.PlainSocketImpl.socketConnect(Native Method)\njava.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:327)\njava.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:193)\njava.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:180)\njava.net.SocksSocketImpl.connect(SocksSocketImpl.java:385)\njava.net.Socket.connect(Socket.java:546)\ncom.trilead.ssh2.transport.TransportManager.establishConnection(TransportManager.java:346)\ncom.trilead.ssh2.transport.TransportManager.initialize(TransportManager.java:459)\ncom.trilead.ssh2.Connection.connect(Connection.java:758)"
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Service com.google.android.gms.car.CarCallService has leaked ServiceConnection com.google.android.gms.car.dq@401cfd9 that was originally bound here"
       }
     },
     {
-      "solutionId": 79873,
+      "solutionId": 2634108,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "c3ph3us",
+          "url": "https://github.com/c3ph3us",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/10565704"
+        },
+        "createdAt": 1453264933000,
+        "title": "car service & location & other - issue nano 6.1 - 20.01",
+        "url": "https://github.com/opengapps/opengapps/issues/230"
+      },
+      "stackTraceId": "577ddad2023d66f9d92527d6",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Service com.google.android.gms.car.CarCallService has leaked ServiceConnection com.google.android.gms.car.dq@daafa11 that was originally bound here"
+      }
+    },
+    {
+      "solutionId": 2437548,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "google.com",
+          "icon": "web"
+        },
+        "author": null,
+        "createdAt": 1468817208038,
+        "title": "Issue 199261 - android - CarService has leaked ServiceConnection - Android Open Source Project - Issue Tracker - Google Project Hosting",
+        "url": "http://code.google.com/p/android/issues/detail?id=199261"
+      },
+      "stackTraceId": "578c5f38705a68edf6aa28b4",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Service com.google.android.gms.car.CarService has leaked ServiceConnection com.google.android.gms.car.hr@2810bc6 that was originally bound here"
+      }
+    },
+    {
+      "solutionId": 726037,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "gfkpth",
+          "url": "https://github.com/gfkpth",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/14096743"
+        },
+        "createdAt": 1456290708000,
+        "title": "GitHub comment  40#188074214",
+        "url": "https://github.com/pelya/commandergenius/issues/40#issuecomment-188074214"
+      },
+      "stackTraceId": "577de2a2023d66f9d92628c2",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Service com.google.android.gms.car.CarCallService has leaked ServiceConnection com.google.android.gms.car.dq@8cce860 that was originally bound here"
+      }
+    },
+    {
+      "solutionId": 2567651,
       "solution": {
         "type": "reference",
         "source": {
@@ -132,26 +155,491 @@
           "icon": "stackoverflow"
         },
         "author": {
-          "name": "Popeye",
-          "url": "http://stackoverflow.com/users/980097"
+          "name": "GyeongUk  Moon",
+          "url": "http://stackoverflow.com/users/6746921",
+          "avatarUrl": null
         },
-        "createdAt": 1421406799927,
-        "title": "Paypal HttpHostConnectException",
-        "url": "http://stackoverflow.com/questions/27982760"
+        "createdAt": 1471942504000,
+        "title": "Run button isn&#39;t working",
+        "url": "http://stackoverflow.com/questions/39096636"
       },
-      "stackId": 79873,
-      "matchLevel": 1,
+      "stackTraceId": "57c57b7f705a6810af46fc32",
+      "matchLevel": 0,
       "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
       "exception": {
-        "typeName": "org.apache.http.conn.HttpHostConnectException",
-        "message": "Connect to api-3t.sandbox.paypal.com:443 [api-3t.sandbox.paypal.com/173.0.82.83] failed: Connection timed out: connect",
-        "cause": {
-          "typeName": "java.net.ConnectException",
-          "message": "Connection timed out: connect",
-          "frames": "java.net.DualStackPlainSocketImpl.connect0(Native Method)\njava.net.DualStackPlainSocketImpl.socketConnect(Unknown Source)\njava.net.AbstractPlainSocketImpl.doConnect(Unknown Source)\njava.net.AbstractPlainSocketImpl.connectToAddress(Unknown Source)\njava.net.AbstractPlainSocketImpl.connect(Unknown Source)\njava.net.PlainSocketImpl.connect(Unknown Source)\njava.net.SocksSocketImpl.connect(Unknown Source)\njava.net.Socket.connect(Unknown Source)\norg.apache.http.conn.ssl.SSLConnectionSocketFactory.connectSocket(SSLConnectionSocketFactory.java:239)\norg.apache.http.impl.conn.HttpClientConnectionOperator.connect(HttpClientConnectionOperator.java:123)\norg.apache.http.impl.conn.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:318)\norg.apache.http.impl.execchain.MainClientExec.establishRoute(MainClientExec.java:363)\norg.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:219)\norg.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:195)\norg.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:86)\norg.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:108)\norg.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:184)\norg.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:82)\norg.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:106)\norg.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:57)\nuk.co.cdl.webclient.servicefacade.payment.PaypalPaymentService.paypalHttpCall(PaypalPaymentService.java:192)\nuk.co.cdl.webclient.servicefacade.payment.PaypalPaymentService.registerPaypalExpressCheckoutTransaction(PaypalPaymentService.java:125)\nuk.co.cdl.webclient.model.paypal.RegisterPaypalPayment.doPost(RegisterPaypalPayment.java:41)\njavax.servlet.http.HttpServlet.service(HttpServlet.java:641)\njavax.servlet.http.HttpServlet.service(HttpServlet.java:722)\norg.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:305)\norg.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:210)\norg.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:225)\norg.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:169)\norg.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:472)\norg.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:168)\norg.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:98)\norg.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:927)\norg.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:118)\norg.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:407)\norg.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:999)\norg.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:565)\norg.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:309)\njava.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)\njava.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)\njava.lang.Thread.run(Unknown Source)"
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Service com.google.android.gms.car.CarService has leaked ServiceConnection fmj@d6bf3b1 that was originally bound here"
+      }
+    },
+    {
+      "solutionId": 710051,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
         },
-        "common": 31,
-        "frames": "org.apache.http.impl.conn.HttpClientConnectionOperator.connect(HttpClientConnectionOperator.java:140)"
+        "author": {
+          "name": "jbaginski",
+          "url": "https://github.com/jbaginski",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/201855"
+        },
+        "createdAt": 1455027535000,
+        "title": "PayPalService has leaked ServiceConnection",
+        "url": "https://github.com/paypal/PayPal-Android-SDK/issues/254"
+      },
+      "stackTraceId": "577ddfcf023d66f9d925cd98",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Service com.paypal.android.sdk.payments.PayPalService has leaked ServiceConnection com.google.android.gms.common.g@ae272be that was originally bound here"
+      }
+    },
+    {
+      "solutionId": 2634107,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "c3ph3us",
+          "url": "https://github.com/c3ph3us",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/10565704"
+        },
+        "createdAt": 1453264933000,
+        "title": "car service & location & other - issue nano 6.1 - 20.01",
+        "url": "https://github.com/opengapps/opengapps/issues/230"
+      },
+      "stackTraceId": "577ddad2023d66f9d92527d2",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Service com.google.android.gms.car.CarService has leaked ServiceConnection com.google.android.gms.car.hr@3a6129e that was originally bound here"
+      }
+    },
+    {
+      "solutionId": 757582,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "evervolv.com",
+          "icon": "web"
+        },
+        "author": null,
+        "createdAt": 1467194763777,
+        "title": "Logcat: ev_tenderloin-6.0.1-testing-2016.02.18 - Evervolv Paste",
+        "url": "http://paste.evervolv.com/view/6da1da69"
+      },
+      "stackTraceId": "577de780023d66f9d926c36f",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Service com.google.android.gms.car.CarService has leaked ServiceConnection com.google.android.gms.car.hr@19b7d8a that was originally bound here"
+      }
+    },
+    {
+      "solutionId": 767296,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "evervolv.com",
+          "icon": "web"
+        },
+        "author": null,
+        "createdAt": 1458655214357,
+        "title": "Logcat: ev_tenderloin-6.0.1-testing-2016.03.01 - Evervolv Paste",
+        "url": "http://paste.evervolv.com/view/0cd1856a"
+      },
+      "stackTraceId": "577de8f0023d66f9d926f355",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Service com.google.android.gms.car.CarService has leaked ServiceConnection com.google.android.gms.car.hr@d5c41f2 that was originally bound here"
+      }
+    },
+    {
+      "solutionId": 2582521,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "Stack Overflow",
+          "icon": "stackoverflow"
+        },
+        "author": {
+          "name": "Lurzim Sabahudin",
+          "url": "http://stackoverflow.com/users/6846871",
+          "avatarUrl": null
+        },
+        "createdAt": 1474251328000,
+        "title": "Getting &quot;Activity &lt;activityname&gt; has leaked ServiceConnection&quot; despite unbinding it in onDestroy or onPause",
+        "url": "http://stackoverflow.com/questions/39564479"
+      },
+      "stackTraceId": "57e01bf2705a687362dd3356",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Activity *** has leaked ServiceConnection ***$1@e2e8d7d that was originally bound here"
+      }
+    },
+    {
+      "solutionId": 2548947,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "google.com",
+          "icon": "web"
+        },
+        "author": null,
+        "createdAt": 1471431882843,
+        "title": "Issue 79242 - android - [Nexus5-Lollipop-LPX13D] android.app.ServiceConnectionLeaked: Service com.android.email.service.EmailBroadcastProcessorService has leaked ServiceConnection - Android Open Source Project - Issue Tracker - Google Project Hosting",
+        "url": "http://code.google.com/p/android/issues/detail?id=79242"
+      },
+      "stackTraceId": "57b444ca705a6810af46a360",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Service com.android.email.service.EmailBroadcastProcessorService has leaked ServiceConnection com.android.emailcommon.service.as@158de07 that was originally bound here"
+      }
+    },
+    {
+      "solutionId": 554673,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "pastebin.pl",
+          "icon": "web"
+        },
+        "author": null,
+        "createdAt": 1446472000757,
+        "title": "CDMA only - Pastebin",
+        "url": "http://www.pastebin.pl/view/8f258eca"
+      },
+      "stackTraceId": "577dbd85023d66f0f27a8ee7",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Service com.android.email.service.EmailBroadcastProcessorService has leaked ServiceConnection com.android.emailcommon.service.an@6d3e27b that was originally bound here"
+      }
+    },
+    {
+      "solutionId": 2427105,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "niftynei",
+          "url": "https://github.com/niftynei",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/1097769"
+        },
+        "createdAt": 1466709793000,
+        "title": "GitHub comment  70#228156968",
+        "url": "https://github.com/zulip/zulip-android/issues/70#issuecomment-228156968"
+      },
+      "stackTraceId": "577ea404023d66175f5c25eb",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Activity com.zulip.android.activities.LoginActivity has leaked ServiceConnection net.openid.appauth.BrowserHandler$1@f2300ab that was originally bound here"
+      }
+    },
+    {
+      "solutionId": 643947,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "google.com",
+          "icon": "web"
+        },
+        "author": null,
+        "createdAt": 1451720886685,
+        "title": "KARTIK MOGALAPALLI - Google+",
+        "url": "https://plus.google.com/112362371464953566567"
+      },
+      "stackTraceId": "577dd15c023d66f0f27c3d4d",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Service com.android.email.service.EmailBroadcastProcessorService has leaked ServiceConnection com.android.emailcommon.service.ServiceProxy$ProxyConnection@e0197f2 that was originally bound here"
+      }
+    },
+    {
+      "solutionId": 745757,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "ryanmkelly",
+          "url": "https://github.com/ryanmkelly",
+          "avatarUrl": "https://avatars.githubusercontent.com/u/5175919"
+        },
+        "createdAt": 1457340540000,
+        "title": "ServiceConnection Leak from billing processor.",
+        "url": "https://github.com/afollestad/polar-dashboard/issues/84"
+      },
+      "stackTraceId": "577de579023d66f9d9268276",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Activity com.sixtyfourthirtytwo.redux.ui.MainActivity has leaked ServiceConnection com.anjlab.android.iab.v3.BillingProcessor$1@75a7727 that was originally bound here"
+      }
+    },
+    {
+      "solutionId": 172875,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "Stack Overflow",
+          "icon": "stackoverflow"
+        },
+        "author": {
+          "name": "user3111349",
+          "url": "http://stackoverflow.com/users/3111349",
+          "avatarUrl": null
+        },
+        "createdAt": 1422858682400,
+        "title": "Failed to connect Google API client, using parse.com",
+        "url": "http://stackoverflow.com/questions/28272234"
+      },
+      "stackTraceId": "577d342c023d66cccbfd7381",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Service com.google.android.gms.backup.BackupTransportService has leaked ServiceConnection com.google.android.gms.http.f@35ac63ab that was originally bound here\n     at android.app.LoadedApk$ServiceDispatcher.&lt;init&gt;(LoadedApk.java:1072)"
+      }
+    },
+    {
+      "solutionId": 2473469,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "Stack Overflow",
+          "icon": "stackoverflow"
+        },
+        "author": {
+          "name": "user3303619",
+          "url": "http://stackoverflow.com/users/3303619",
+          "avatarUrl": null
+        },
+        "createdAt": 1392329938000,
+        "title": "Error when loading app",
+        "url": "http://stackoverflow.com/questions/21766760"
+      },
+      "stackTraceId": "5793fc56705a68edf6aabd89",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Service    com.android.exchange.ExchangeService has leaked ServiceConnection com.android.emailcommon.service.ServiceProxy$ProxyConnection@40cda940 that was originally bound here"
+      }
+    },
+    {
+      "solutionId": 767527,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "gmane.org",
+          "icon": "web"
+        },
+        "author": null,
+        "createdAt": 1459159668646,
+        "title": "The forum for Android-x86 project. Any discussion about porting Android to x86 platform. ()",
+        "url": "http://blog.gmane.org/gmane.comp.handhelds.android.x86/day=20160218"
+      },
+      "stackTraceId": "577de8f9023d66f9d926f489",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Service com.android.email.service.EmailBroadcastProcessorService has leaked ServiceConnection com.android.emailcommon.service.ServiceProxy$ProxyConnection <at> 398e2df that was originally bound here"
+      }
+    },
+    {
+      "solutionId": 2570177,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "snip2code.com",
+          "icon": "web"
+        },
+        "author": null,
+        "createdAt": 1472693941129,
+        "title": "Snip2Code - Android Studio 1.5.1 Logcat errors",
+        "url": "https://www.snip2code.com/Snippet/1019474/Android-Studio-1-5-1-Logcat-errors"
+      },
+      "stackTraceId": "57c786b5705a6810af470af0",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Service com.android.email.service.EmailBroadcastProcessorService has leaked ServiceConnection com.android.emailcommon.service.ServiceProxy$ProxyConnection@7fa38f5 that was originally bound here"
+      }
+    },
+    {
+      "solutionId": 267206,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "Stack Overflow",
+          "icon": "stackoverflow"
+        },
+        "author": null,
+        "createdAt": 1427982299000,
+        "title": "Connecting Android app to my database?",
+        "url": "http://stackoverflow.com/questions/29414541"
+      },
+      "stackTraceId": "577d45d6023d66cccbfe8921",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "android.app.ServiceConnectionLeaked",
+        "message": "Service com.android.exchange.ExchangeService has leaked ServiceConnection com.android.emailcommon.service.ServiceProxy$ProxyConnection@40cff480 that was originally bound here "
       }
     }
   ]
