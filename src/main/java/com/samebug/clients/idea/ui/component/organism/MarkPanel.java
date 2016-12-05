@@ -96,7 +96,7 @@ final public class MarkPanel extends TransparentPanel {
 
     private void updateState() {
         final RestHit hit = model.getHit();
-        if (hit.getCreatedBy() != null) {
+        if (hit.getTagged() == null || hit.getTagged()) {
             helpedLabel.setText(SamebugBundle.message("samebug.mark.markedBy.someone", model.createdByCurrentUser() ? "You" : hit.getCreatedBy().getDisplayName(), hit.getScore()));
         } else if (hit.getScore() == 0) {
             helpedLabel.setText(SamebugBundle.message("samebug.mark.markedBy.noone"));
