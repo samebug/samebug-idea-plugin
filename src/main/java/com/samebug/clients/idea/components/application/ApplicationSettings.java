@@ -39,6 +39,7 @@ public class ApplicationSettings {
     public boolean isApacheLoggingEnabled = defaultIsApacheLoggingEnabled;
     public boolean showZeroSolutions = defaultShowZeroSolutions;
     public boolean showRecurring = defaultShowRecurring;
+    public boolean wereNotificationsDisabled = defaultWereNotificationsDisabled;
 
     //=========================================================================
 
@@ -51,6 +52,7 @@ public class ApplicationSettings {
     public static final boolean defaultIsApacheLoggingEnabled = false;
     public static final boolean defaultShowZeroSolutions = true;
     public static final boolean defaultShowRecurring = true;
+    public static final boolean defaultWereNotificationsDisabled = false;
 
     public ApplicationSettings() {
     }
@@ -69,6 +71,7 @@ public class ApplicationSettings {
         this.isApacheLoggingEnabled = rhs.isApacheLoggingEnabled;
         this.showZeroSolutions = rhs.showZeroSolutions;
         this.showRecurring = rhs.showRecurring;
+        this.wereNotificationsDisabled = rhs.wereNotificationsDisabled;
     }
 
     @Override
@@ -95,7 +98,8 @@ public class ApplicationSettings {
                     && rhs.requestTimeout == requestTimeout
                     && rhs.isApacheLoggingEnabled == isApacheLoggingEnabled
                     && rhs.showZeroSolutions == showZeroSolutions
-                    && rhs.showRecurring == showRecurring;
+                    && rhs.showRecurring == showRecurring
+                    && rhs.wereNotificationsDisabled == wereNotificationsDisabled;
         }
     }
 

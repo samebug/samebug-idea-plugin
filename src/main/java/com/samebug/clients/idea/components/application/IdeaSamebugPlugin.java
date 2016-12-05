@@ -15,6 +15,8 @@
  */
 package com.samebug.clients.idea.components.application;
 
+import com.intellij.notification.NotificationDisplayType;
+import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -119,6 +121,13 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     @Override
     public void initComponent() {
         SamebugNotifications.registerNotificationGroups();
+        if (! state.get().wereNotificationsDisabled) {
+            NotificationsConfigurationImpl.getInstanceImpl().changeSettings(SamebugNotifications.SAMEBUG_SEARCH_NOTIFICATIONS, NotificationDisplayType.NONE, false, false);
+            
+            ApplicationSettings newSettings = new ApplicationSettings(state.get());
+            newSettings.wereNotificationsDisabled = true;
+            saveSettings(newSettings);
+        }
 
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
