@@ -27,8 +27,8 @@ public class JsonTest {
         gson = Json.gson;
     }
 
-    // curl 'http://nightly.samebug.com/rest/0.9/checkApiKey?apiKey=355be195-c10b-11e5-a334-000d3a317492' |\
-    // jq . > src/test/resources/com/samebug/clients/common/search/api/jsontest/checkApiKey-1.json
+//     curl 'http://nightly.samebug.com/rest/0.11/checkApiKey?apiKey=355be195-c10b-11e5-a334-000d3a317492' |\
+//     jq . > src/test/resources/com/samebug/clients/common/search/api/jsontest/checkApiKey-1.json
     @Test
     public void getUserInfoValid() throws MalformedURLException {
         UserInfo x = gson.fromJson(stream("checkApiKey-1"), UserInfo.class);
@@ -46,13 +46,13 @@ public class JsonTest {
         Assert.assertEquals(false, x.getUserExist());
     }
 
-    // curl 'http://nightly.samebug.com/rest/0.9/history' -H'X-Samebug-ApiKey: 355be195-c10b-11e5-a334-000d3a317492' ||
-    // jq . > src/test/resources/com/samebug/clients/common/search/api/jsontest/history.json
+//     curl 'http://nightly.samebug.com/rest/0.11/history' -H'X-Samebug-ApiKey: 355be195-c10b-11e5-a334-000d3a317492' |\
+//     jq . > src/test/resources/com/samebug/clients/common/search/api/jsontest/history.json
     @Test
     public void getSearchHistory() {
         SearchHistory x = gson.fromJson(stream("history"), SearchHistory.class);
         checkFields(x);
-        Assert.assertEquals(5, x.getSearchGroups().size());
+        Assert.assertEquals(50, x.getSearchGroups().size());
         for (SearchGroup e : x.getSearchGroups()) {
             Assert.assertTrue(e.getLastSearch().getId() > 0);
             if (e.getLastSearch() instanceof StackTraceSearch) {
@@ -62,8 +62,8 @@ public class JsonTest {
         }
     }
 
-    // curl 'http://nightly.samebug.com/rest/0.9/search/673467' -H'X-Samebug-ApiKey: 355be195-c10b-11e5-a334-000d3a317492' |\
-    // jq . > src/test/resources/com/samebug/clients/common/search/api/jsontest/search-1.json
+//     curl 'http://nightly.samebug.com/rest/0.11/search/673467' -H'X-Samebug-ApiKey: 355be195-c10b-11e5-a334-000d3a317492' |\
+//     jq . > src/test/resources/com/samebug/clients/common/search/api/jsontest/search-1.json
     @Test
     public void getSolutions() {
         Solutions x = gson.fromJson(stream("search-1"), Solutions.class);
@@ -103,7 +103,7 @@ public class JsonTest {
             .put(MarkResponse.class, ImmutableList.<String>of("id"))
             .put(QualifiedCall.class, ImmutableList.<String>of("packageName"))
             .put(RestError.class, ImmutableList.<String>of())
-            .put(RestHit.class, ImmutableList.<String>of("markId", "createdBy", "exception"))
+            .put(RestHit.class, ImmutableList.<String>of("markId"))
             .put(RestSolution.class, ImmutableList.<String>of())
             .put(Search.class, ImmutableList.<String>of("visitorId", "userId", "teamId"))
             .put(SearchGroup.class, ImmutableList.<String>of("visitorId", "userId", "teamId"))
