@@ -93,15 +93,14 @@ final public class SearchService {
     }
 
     public static boolean createdByUser(final int userId, @NotNull final RestHit hit) {
-        assert hit.getCreatedBy() != null;
         return hit.getCreatedBy().getId().equals(userId);
     }
 
     public static boolean canBeMarked(final int userId, @NotNull final SearchGroup searchGroup, @NotNull final RestHit hit) {
-        return hit.getCreatedBy() == null
-                || !hit.getCreatedBy().getId().equals(userId)
-                || !(searchGroup instanceof StackTraceSearchGroup)
-                || !hit.getStackTraceId().equals(((StackTraceSearchGroup) searchGroup).getLastSearch().getStackTrace().getStackTraceId());
+        return hit.getMarkId() == null
+                && !(hit.getCreatedBy().getId().equals(userId)
+                && (searchGroup instanceof StackTraceSearchGroup)
+                && hit.getStackTraceId().equals(((StackTraceSearchGroup) searchGroup).getId()));
     }
 
     public static List<BreadCrumb> getMatchingBreadCrumb(@NotNull final SearchGroup search, @NotNull final RestHit hit) {

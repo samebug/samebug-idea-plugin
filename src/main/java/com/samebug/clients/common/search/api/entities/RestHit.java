@@ -31,10 +31,12 @@ public final class RestHit<T extends RestSolution> {
     private Integer score;
     @Nullable
     private Integer markId;
-    @Nullable
+    @NotNull
     private UserReference createdBy;
-    @Nullable
+    @NotNull
     private Exception exception;
+    @Nullable
+    private Boolean tagged;
 
     private RestHit(@NotNull final RestHit<T> rhs) {
         solutionId = rhs.solutionId;
@@ -45,6 +47,7 @@ public final class RestHit<T extends RestSolution> {
         markId = rhs.markId;
         createdBy = rhs.createdBy;
         exception = rhs.exception;
+        tagged = rhs.tagged;
     }
 
     @NotNull
@@ -77,16 +80,20 @@ public final class RestHit<T extends RestSolution> {
         return markId;
     }
 
-    @Nullable
+    @NotNull
     public UserReference getCreatedBy() {
         return createdBy;
     }
 
-    @Nullable
+    @NotNull
     public Exception getException() {
         return exception;
     }
 
+    @Nullable
+    public Boolean getTagged() {
+        return tagged;
+    }
 
     // TODO these should not be part of the entity?
     @NotNull
