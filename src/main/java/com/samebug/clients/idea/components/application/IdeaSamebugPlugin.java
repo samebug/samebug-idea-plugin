@@ -121,9 +121,8 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     @Override
     public void initComponent() {
         SamebugNotifications.registerNotificationGroups();
-        if (! state.get().wereNotificationsDisabled) {
+        if (!state.get().wereNotificationsDisabled) {
             NotificationsConfigurationImpl.getInstanceImpl().changeSettings(SamebugNotifications.SAMEBUG_SEARCH_NOTIFICATIONS, NotificationDisplayType.NONE, false, false);
-            
             ApplicationSettings newSettings = new ApplicationSettings(state.get());
             newSettings.wereNotificationsDisabled = true;
             saveSettings(newSettings);

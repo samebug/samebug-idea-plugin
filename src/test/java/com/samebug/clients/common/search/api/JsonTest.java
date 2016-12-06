@@ -27,8 +27,8 @@ public class JsonTest {
         gson = Json.gson;
     }
 
-//     curl 'http://nightly.samebug.com/rest/0.11/checkApiKey?apiKey=355be195-c10b-11e5-a334-000d3a317492' |\
-//     jq . > src/test/resources/com/samebug/clients/common/search/api/jsontest/checkApiKey-1.json
+    // curl 'http://nightly.samebug.com/rest/0.11/checkApiKey?apiKey=355be195-c10b-11e5-a334-000d3a317492' |\
+    // jq . > src/test/resources/com/samebug/clients/common/search/api/jsontest/checkApiKey-1.json
     @Test
     public void getUserInfoValid() throws MalformedURLException {
         UserInfo x = gson.fromJson(stream("checkApiKey-1"), UserInfo.class);
@@ -46,8 +46,8 @@ public class JsonTest {
         Assert.assertEquals(false, x.getUserExist());
     }
 
-//     curl 'http://nightly.samebug.com/rest/0.11/history' -H'X-Samebug-ApiKey: 355be195-c10b-11e5-a334-000d3a317492' |\
-//     jq . > src/test/resources/com/samebug/clients/common/search/api/jsontest/history.json
+    // curl 'http://nightly.samebug.com/rest/0.11/history' -H'X-Samebug-ApiKey: 355be195-c10b-11e5-a334-000d3a317492' |\
+    // jq . > src/test/resources/com/samebug/clients/common/search/api/jsontest/history.json
     @Test
     public void getSearchHistory() {
         SearchHistory x = gson.fromJson(stream("history"), SearchHistory.class);
@@ -62,8 +62,8 @@ public class JsonTest {
         }
     }
 
-//     curl 'http://nightly.samebug.com/rest/0.11/search/673467' -H'X-Samebug-ApiKey: 355be195-c10b-11e5-a334-000d3a317492' |\
-//     jq . > src/test/resources/com/samebug/clients/common/search/api/jsontest/search-1.json
+    // curl 'http://nightly.samebug.com/rest/0.11/search/673467' -H'X-Samebug-ApiKey: 355be195-c10b-11e5-a334-000d3a317492' |\
+    // jq . > src/test/resources/com/samebug/clients/common/search/api/jsontest/search-1.json
     @Test
     public void getSolutions() {
         Solutions x = gson.fromJson(stream("search-1"), Solutions.class);
