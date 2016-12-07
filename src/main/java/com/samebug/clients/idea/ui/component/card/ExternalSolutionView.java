@@ -59,9 +59,6 @@ final public class ExternalSolutionView extends HitView {
 //            this.searchBreadcrumb = new ArrayList<BreadCrumb>(0);
 //        }
         solution = model.getHit();
-        // RestHit<SolutionReference> should always have an exception
-        assert solution.getException() != null;
-
         exceptionType = new ExceptionType(solution.getException().getTypeName());
         breadcrumbPanel = new BreadcrumbBar(searchBreadcrumb.subList(0, solution.getMatchLevel()));
         titlePanel = new SolutionTitlePanel();

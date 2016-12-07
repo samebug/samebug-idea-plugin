@@ -2,5 +2,6 @@
   "userId": "1",
   "displayName": "poroszd",
   "avatarUrl": "https://samebug.io/avatars/1/3",
+  "defaultWorkspaceId": 1,
   "isUserExist": true
 }

@@ -76,7 +76,7 @@ license {
 
 group = 'com.samebug.clients.idea'
 description = 'Samebug for IntelliJ IDEA'
-version '0.12.0' +
+version '0.12.1' +
         (project.hasProperty('buildNumber') ? '+' + project.getProperty('buildNumber') : '') +
         '+idea-163.0'
 

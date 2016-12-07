@@ -63,12 +63,12 @@ public class Solutions {
         Solutions updated = new Solutions(this);
         for (int i = 0; i < references.size(); ++i) {
             if (references.get(i).getSolutionId() == solutionId) {
-                references.set(i, references.get(i).asMarked(mark));
+                updated.references.set(i, references.get(i).asMarked(mark));
             }
         }
         for (int i = 0; i < tips.size(); ++i) {
             if (tips.get(i).getSolutionId() == solutionId) {
-                tips.set(i, tips.get(i).asMarked(mark));
+                updated.tips.set(i, tips.get(i).asMarked(mark));
             }
         }
         return updated;
@@ -79,12 +79,12 @@ public class Solutions {
         Solutions updated = new Solutions(this);
         for (int i = 0; i < references.size(); ++i) {
             if (references.get(i).getSolutionId() == solutionId) {
-                references.set(i, references.get(i).asUnmarked(mark));
+                updated.references.set(i, references.get(i).asUnmarked(mark));
             }
         }
         for (int i = 0; i < tips.size(); ++i) {
             if (tips.get(i).getSolutionId() == solutionId) {
-                tips.set(i, tips.get(i).asUnmarked(mark));
+                updated.tips.set(i, tips.get(i).asUnmarked(mark));
             }
         }
         return updated;
