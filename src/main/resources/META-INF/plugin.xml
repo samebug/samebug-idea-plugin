@@ -18,6 +18,8 @@
         <li>More convenient config</li>
         <li>Stack traces are highlighted in the console gutter</li>
         <li>Integration in run, debug, test and logcat consoles</li>
+        <li>Notifications are turned off by default</li>
+        <li>Fixes for marking solution</li>
       </ul>
 
       Check it at <a href="https://medium.com/@samebug/samebug-integration-0-12-0-525dade4d7b6">our blog</a>
