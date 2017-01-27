@@ -27,10 +27,12 @@ apply plugin: 'org.jetbrains.intellij'
 intellij {
     version = project.hasProperty('ideaVersion') ? ideaVersion : 'IC-2016.3'
 
-    plugins 'android'
-
-    alternativeIdePath '/opt/idea-IU-163.7743.44'
-//    alternativeIdePath '/opt/android-studio-145'
+    alternativeIdePath '/opt/idea-IC-141.178.9'
+//    alternativeIdePath '/opt/idea-IU-143.382.35'
+//    alternativeIdePath '/opt/idea-IU-145.972.3'
+//    alternativeIdePath '/opt/idea-IC-162.2228.15'
+//    alternativeIdePath '/opt/idea-IU-163.7743.44'
+//    alternativeIdePath '/opt/idea-IU-171.2272.14'
     pluginName 'samebug-idea-plugin'
     updateSinceUntilBuild false
 
@@ -48,7 +50,6 @@ repositories {
 dependencies {
     compile 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
     compile 'com.google.code.gson:gson:2.6.2'
-    compileOnly 'com.android.tools.ddms:ddmlib:25.2.0'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
 }
@@ -78,7 +79,7 @@ group = 'com.samebug.clients.idea'
 description = 'Samebug for IntelliJ IDEA'
 version '0.13.0-SNAPSHOT' +
         (project.hasProperty('buildNumber') ? '+' + project.getProperty('buildNumber') : '') +
-        '+idea-163.0'
+        '+idea'
 
 task checkstyle(type: Checkstyle) {
     configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")
