@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 Samebug, Inc.
+ * Copyright 2017 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 package com.samebug.clients.common.search.api.entities;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.net.URL;
 
 public final class UserReference {
