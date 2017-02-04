@@ -27,11 +27,11 @@ apply plugin: 'org.jetbrains.intellij'
 intellij {
     version = project.hasProperty('ideaVersion') ? ideaVersion : 'IC-2016.3'
 
-    alternativeIdePath '/opt/idea-IC-141.178.9'
+//    alternativeIdePath '/opt/idea-IC-141.178.9'
 //    alternativeIdePath '/opt/idea-IU-143.382.35'
 //    alternativeIdePath '/opt/idea-IU-145.972.3'
 //    alternativeIdePath '/opt/idea-IC-162.2228.15'
-//    alternativeIdePath '/opt/idea-IU-163.7743.44'
+    alternativeIdePath '/opt/idea-IU-163.7743.44'
 //    alternativeIdePath '/opt/idea-IU-171.2272.14'
     pluginName 'samebug-idea-plugin'
     updateSinceUntilBuild false

@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.components.project;
 
+import com.intellij.execution.testframework.ToolbarPanel;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
@@ -34,6 +35,7 @@ import com.samebug.clients.idea.messages.view.HistoryViewListener;
 import com.samebug.clients.idea.messages.view.RefreshTimestampsListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
+import com.samebug.clients.idea.ui.component.experimental.ToolWindowPanel;
 import com.samebug.clients.idea.ui.controller.TabController;
 import com.samebug.clients.idea.ui.controller.history.HistoryTabController;
 import com.samebug.clients.idea.ui.controller.search.SearchTabController;
@@ -91,7 +93,8 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
         historyTabController = new HistoryTabController(this, project);
         project.getMessageBus().syncPublisher(HistoryViewListener.TOPIC).reloadHistory();
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-        Content content = contentFactory.createContent(historyTabController.getControlPanel(), SamebugBundle.message("samebug.toolwindow.history.tabName"), false);
+        ToolWindowPanel x = new ToolWindowPanel();
+        Content content = contentFactory.createContent(x, SamebugBundle.message("samebug.toolwindow.history.tabName"), false);
         toolWindow.getContentManager().addContent(content);
     }
 
