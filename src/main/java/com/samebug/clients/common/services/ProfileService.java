@@ -3,6 +3,7 @@ package com.samebug.clients.common.services;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.entities.user.Statistics;
 import com.samebug.clients.common.entities.user.User;
+import com.samebug.clients.common.messages.AuthenticationListener;
 import com.samebug.clients.common.messages.ConnectionStatusListener;
 import com.samebug.clients.common.messages.ProfileListener;
 import com.samebug.clients.common.search.api.client.ClientResponse;
@@ -73,9 +74,6 @@ final public class ProfileService {
                             userResult = null;
                         }
                         user.set(userResult);
-                        // TODO rest api should accept the workspaceId, and tell if it is valid or not
-                        // TODO rest api should return the default workspace id if not specified
-                        // TODO someone should listen to this event in order to save userId and workspaceId to application settings when necessary
                         messageBus.syncPublisher(ProfileListener.TOPIC).profileChange(userResult, statistics.get());
 
                         // NOTE: this is a special case, we handle connection status by the result, not by the http status
@@ -110,6 +108,33 @@ final public class ProfileService {
                     protected void fail(SamebugClientException e) {
                         statistics.set(null);
                         messageBus.syncPublisher(ProfileListener.TOPIC).profileChange(user.get(), null);
+                    }
+                };
+        return clientService.execute(requestHandler);
+    }
+
+    public UserInfo authenticate(final String apiKey) throws SamebugClientException {
+        final SamebugClient client = clientService.client;
+
+        ClientService.ConnectionAwareHttpRequest<UserInfo> requestHandler =
+                new ClientService.ConnectionAwareHttpRequest<UserInfo>() {
+                    ClientResponse<UserInfo> request() {
+                        return client.getUserInfo(apiKey);
+                    }
+
+                    protected void success(UserInfo result) {
+                        // TODO save authentication response?
+                        // TODO rest api should accept the workspaceId, and tell if it is valid or not
+                        // TODO rest api should return the default workspace id if not specified
+                        if (result.getUserExist()) {
+                            messageBus.syncPublisher(AuthenticationListener.TOPIC).success(apiKey);
+                        } else {
+                            messageBus.syncPublisher(AuthenticationListener.TOPIC).fail();
+                        }
+                    }
+
+                    protected void fail(SamebugClientException e) {
+                        messageBus.syncPublisher(AuthenticationListener.TOPIC).fail();
                     }
                 };
         return clientService.execute(requestHandler);

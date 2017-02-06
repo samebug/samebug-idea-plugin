@@ -25,17 +25,14 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.messages.AuthenticationListener;
 import com.samebug.clients.common.search.api.WebUrlBuilder;
-import com.samebug.clients.common.search.api.entities.UserInfo;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.search.api.exceptions.UnknownApiKey;
 import com.samebug.clients.common.services.ClientService;
 import com.samebug.clients.common.services.HistoryService;
 import com.samebug.clients.common.services.ProfileService;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.idea.notification.SamebugNotifications;
-import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.idea.ui.SettingsDialog;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,37 +62,11 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
 
     @Nullable
     private TimedTasks timedTasks;
+    @Nullable
+    private AuthenticationListenerImpl authenticationListener;
 
     @Nullable
     private MessageBusConnection connection;
-
-    // NOTE should not be called from UI thread
-    public void setApiKey(@NotNull String apiKey) throws SamebugClientException, UnknownApiKey {
-        ApplicationSettings currentState = state.get();
-        UserInfo userInfo = null;
-        currentState.apiKey = apiKey;
-        clientService.configure(currentState.getNetworkConfig());
-        userInfo = profileService.loadUserInfo(apiKey);
-        if (!userInfo.getUserExist()) {
-            throw new UnknownApiKey(apiKey);
-        } else {
-            currentState.userId = userInfo.getUserId();
-            currentState.avatarUrl = userInfo.getAvatarUrl().toString();
-            currentState.workspaceId = userInfo.getDefaultWorkspaceId();
-            saveSettings(currentState);
-        }
-    }
-
-    public void saveSettings(final ApplicationSettings settings) {
-        ApplicationSettings newSettings = new ApplicationSettings(settings);
-        state.set(newSettings);
-        try {
-            clientService.configure(newSettings.getNetworkConfig());
-            urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
-        } finally {
-            Tracking.appTracking().trace(Events.apiKeySet());
-        }
-    }
 
     @NotNull
     public static IdeaSamebugPlugin getInstance() {
@@ -132,6 +103,23 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         return historyService;
     }
 
+    public void authenticate() {
+        assert profileService != null;
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                ApplicationSettings newSettings = new ApplicationSettings(state.get());
+                String apiKey = newSettings.apiKey;
+                if (apiKey != null) {
+                    try {
+                        profileService.authenticate(apiKey);
+                    } catch (SamebugClientException ignored) {
+                    }
+                }
+            }
+        });
+    }
+
     // ApplicationComponent overrides
     @Override
     public void initComponent() {
@@ -143,28 +131,6 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
             saveSettings(newSettings);
         }
 
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-            @Override
-            public void run() {
-                ApplicationSettings newSettings = new ApplicationSettings(state.get());
-                if (newSettings.apiKey == null) {
-                    SettingsDialog.setup(null);
-                } else {
-                    // TODO
-//                    try {
-//                        UserInfo userInfo = profileService.loadUserInfo(newSettings.apiKey);
-//                        if (userInfo.getUserExist()) {
-//                            newSettings.userId = userInfo.getUserId();
-//                            newSettings.avatarUrl = userInfo.getAvatarUrl().toString();
-//                            saveSettings(newSettings);
-//                        }
-//                    } catch (SamebugClientException e) {
-//                        LOGGER.warn("Failed to get user info", e);
-//                    }
-                }
-            }
-        });
-
         MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
         connection = messageBus.connect();
         clientService = new ClientService(messageBus);
@@ -173,6 +139,11 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         profileService = new ProfileService(messageBus, clientService);
         solutionService = new SolutionService(messageBus, clientService);
         timedTasks = new TimedTasks(connection);
+        authenticationListener = new AuthenticationListenerImpl();
+
+        connection.subscribe(AuthenticationListener.TOPIC, authenticationListener);
+
+        authenticate();
     }
 
     @Override
@@ -188,11 +159,22 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         return getClass().getSimpleName();
     }
 
-    // PersistentStateComponent overrides
-    @NotNull
     @Override
+    @NotNull
     public ApplicationSettings getState() {
         return new ApplicationSettings(state.get());
+    }
+
+    public void saveSettings(final ApplicationSettings settings) {
+        ApplicationSettings newSettings = new ApplicationSettings(settings);
+        state.set(newSettings);
+        try {
+            clientService.configure(newSettings.getNetworkConfig());
+            urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
+        } finally {
+            // TODO change the event
+//            Tracking.appTracking().trace(Events.apiKeySet());
+        }
     }
 
     @Override
@@ -203,5 +185,22 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
             clientService.configure(newSettings.getNetworkConfig());
         }
         urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
+    }
+
+    final class AuthenticationListenerImpl implements AuthenticationListener {
+
+        @Override
+        public void success(String apiKey) {
+            // TODO save workspaceId to application settings when necessary
+            ApplicationSettings newSettings = new ApplicationSettings(state.get());
+            newSettings.apiKey = apiKey;
+            saveSettings(newSettings);
+        }
+
+        @Override
+        public void fail() {
+            // TODO we should notify the user that he has to change the apikey, or else plugin will not work.
+            LOGGER.warn("Failed to authenticate");
+        }
     }
 }

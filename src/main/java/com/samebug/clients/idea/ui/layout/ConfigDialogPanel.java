@@ -69,6 +69,7 @@ public class ConfigDialogPanel {
             }
             IdeaSamebugPlugin.getInstance().saveSettings(settings);
             currentConfig = settings;
+            IdeaSamebugPlugin.getInstance().authenticate();
         } catch (Exception e) {
             throw new ConfigurationException("Failed to save configuration: " + e.getMessage());
         }
