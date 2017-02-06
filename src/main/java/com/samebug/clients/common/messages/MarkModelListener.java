@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages.client;
+package com.samebug.clients.common.messages;
 
 import com.intellij.util.messages.Topic;
 import com.samebug.clients.common.search.api.entities.MarkResponse;

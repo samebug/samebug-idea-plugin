@@ -109,6 +109,7 @@ final class RawClient {
 
         final int statusCode = httpResponse.getStatusLine().getStatusCode();
         switch (statusCode) {
+            // TODO check request for X-Samebug-Apikey and set successfullyAuthenticated accordingly. Then we can remove attemptToAuthenticate from connectionStatus
             case HttpStatus.SC_OK:
                 connectionStatus.successfullyAuthenticated = true;
                 try {

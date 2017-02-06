@@ -34,22 +34,12 @@
                     factoryClass="com.samebug.clients.idea.ui.controller.SamebugToolWindowFactory"/>
         <applicationConfigurable groupId="tools" id="Settings.Samebug" displayName="Samebug"
                                  instance="com.samebug.clients.idea.ui.controller.ConfigDialog"/>
-        <projectService serviceInterface="com.samebug.clients.idea.ui.controller.history.HistoryTabController"
-                        serviceImplementation="com.samebug.clients.idea.ui.controller.history.HistoryTabController"/>
-        <projectService serviceInterface="com.samebug.clients.common.services.HistoryService"
-                        serviceImplementation="com.samebug.clients.common.services.HistoryService"/>
     </extensions>
 
     <actions>
         <group id="Samebug.ToolWindowMenu" text="Samebug menu" description="Samebug menu">
             <action id="Samebug.Configure" class="com.samebug.clients.idea.actions.ConfigureAction"
                     icon="/com/samebug/icons/cogwheel.png" text="Configure Samebug" description="Set Samebug API key"/>
-            <action id="Samebug.History" class="com.samebug.clients.idea.actions.ReloadHistoryAction"
-                    icon="/com/samebug/icons/reload.png" text="Reload history" description="Reload exception history"/>
-            <action id="Samebug.ShowRecurringSearches" class="com.samebug.clients.idea.actions.ShowRecurringSearches"
-                    icon="/com/samebug/icons/filter-old.png" text="Show recurring" description="Show recurring exceptions"/>
-            <action id="Samebug.ShowZeroSolutionSearches" class="com.samebug.clients.idea.actions.ShowZeroSolutionSearches"
-                    icon="/com/samebug/icons/filter-unknown.png" text="Show unsolved" description="Show searches with zero solutions"/>
         </group>
         <group id="Samebug.SearchTabMenu" text="Samebug search tab menu" description="Search tab menu">
             <action id="Samebug.BackToHistory" class="com.samebug.clients.idea.actions.ShowHistoryAction"
@@ -74,9 +64,6 @@
         </component>
         <component>
             <implementation-class>com.samebug.clients.idea.components.application.TutorialApplicationComponent</implementation-class>
-        </component>
-        <component>
-            <implementation-class>com.samebug.clients.idea.components.application.ClientService</implementation-class>
         </component>
     </application-components>
     <project-components>

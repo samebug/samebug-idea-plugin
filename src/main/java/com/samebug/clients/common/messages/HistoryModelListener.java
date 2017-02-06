@@ -13,16 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages.view;
+package com.samebug.clients.common.messages;
 
 import com.intellij.util.messages.Topic;
+import com.samebug.clients.common.search.api.entities.SearchHistory;
 
-public interface HistoryViewListener {
-    Topic<HistoryViewListener> TOPIC = Topic.create("history view changes", HistoryViewListener.class);
+public interface HistoryModelListener {
+    Topic<HistoryModelListener> TOPIC = Topic.create("history model changes", HistoryModelListener.class);
 
-    void setRecurringFilter(boolean on);
+    void startLoadHistory();
 
-    void setZeroSolutionFilter(boolean on);
+    void successLoadHistory(SearchHistory result);
 
-    void reloadHistory();
+    void failLoadHistory(java.lang.Exception e);
+
+    void finishLoadHistory();
 }

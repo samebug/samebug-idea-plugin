@@ -20,5 +20,5 @@ import com.intellij.util.messages.Topic;
 public interface CloseListener {
     Topic<CloseListener> TOPIC = Topic.create("tool window focus", CloseListener.class);
 
-    void closeSearchTab(int searchId);
+    void closeSolutionFrame(int searchId);
 }

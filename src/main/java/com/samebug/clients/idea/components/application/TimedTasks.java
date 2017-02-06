@@ -60,9 +60,9 @@ public class TimedTasks implements RefreshUserStatsListener {
             @Override
             public void run() {
                 try {
-                    plugin.client.getUserStats();
+                    plugin.getProfileService().loadUserStats();
                 } catch (SamebugClientException e) {
-                    LOGGER.warn("Failed to execute getUserStats", e);
+                    LOGGER.warn("Failed to execute loadUserStats", e);
                 }
             }
         });

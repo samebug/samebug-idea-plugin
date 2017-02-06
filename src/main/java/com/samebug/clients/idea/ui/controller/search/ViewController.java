@@ -1,12 +1,12 @@
 /**
  * Copyright 2017 Samebug, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,11 +18,7 @@ package com.samebug.clients.idea.ui.controller.search;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.search.api.entities.RestHit;
-import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.ui.TextUtil;
-import com.samebug.clients.idea.components.application.ClientService;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.view.MarkViewListener;
 import com.samebug.clients.idea.messages.view.RefreshTimestampsListener;
 import com.samebug.clients.idea.messages.view.SearchTabsViewListener;
@@ -56,21 +52,22 @@ final class ViewController implements MarkViewListener, SearchTabsViewListener, 
 
     @Override
     public void mark(final TabController tab, final MarkPanel.Model model) {
-        if (controller == tab) {
-            ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-                @Override
-                public void run() {
-                    final ClientService client = IdeaSamebugPlugin.getInstance().getClient();
-                    final RestHit hit = model.getHit();
-                    try {
-                        if (hit.getMarkId() == null) client.postMark(model.getSearchId(), hit.getSolutionId());
-                        else client.retractMark(hit.getMarkId());
-                    } catch (SamebugClientException e) {
-                        LOGGER.warn("Failed to execute mark.", e);
-                    }
-                }
-            });
-        }
+        // TODO
+//        if (controller == tab) {
+//            ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    final ClientService client = IdeaSamebugPlugin.getInstance().getClient();
+//                    final RestHit hit = model.getHit();
+//                    try {
+//                        if (hit.getMarkId() == null) client.postMark(model.getSearchId(), hit.getSolutionId());
+//                        else client.retractMark(hit.getMarkId());
+//                    } catch (SamebugClientException e) {
+//                        LOGGER.warn("Failed to execute mark.", e);
+//                    }
+//                }
+//            });
+//        }
     }
 
     // TODO handle only for current controller
@@ -118,11 +115,12 @@ final class ViewController implements MarkViewListener, SearchTabsViewListener, 
                 ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
                     @Override
                     public void run() {
-                        try {
-                            IdeaSamebugPlugin.getInstance().getClient().postTip(controller.mySearchId, tip, sourceUrl);
-                        } catch (SamebugClientException e) {
-                            LOGGER.warn("Failed to send tip", e);
-                        }
+                        // TODO
+//                        try {
+//                            IdeaSamebugPlugin.getInstance().getClient().postTip(controller.mySearchId, tip, sourceUrl);
+//                        } catch (SamebugClientException e) {
+//                            LOGGER.warn("Failed to send tip", e);
+//                        }
                     }
                 });
             }

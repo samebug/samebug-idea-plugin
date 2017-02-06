@@ -1,12 +1,12 @@
 /**
  * Copyright 2017 Samebug, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,11 +23,16 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.search.api.WebUrlBuilder;
 import com.samebug.clients.common.search.api.entities.UserInfo;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.search.api.exceptions.UnknownApiKey;
+import com.samebug.clients.common.services.ClientService;
+import com.samebug.clients.common.services.HistoryService;
+import com.samebug.clients.common.services.ProfileService;
+import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.SettingsDialog;
@@ -47,19 +52,19 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     final private static Logger LOGGER = Logger.getInstance(IdeaSamebugPlugin.class);
     private AtomicReference<ApplicationSettings> state = new AtomicReference<ApplicationSettings>(new ApplicationSettings());
 
-    final ClientService client = ApplicationManager.getApplication().getComponent(ClientService.class);
-
-    {
-        client.configure(state.get().getNetworkConfig());
-    }
-
     private WebUrlBuilder urlBuilder = new WebUrlBuilder(state.get().serverRoot);
 
     @Nullable
-    private TimedTasks timedTasks;
+    private ClientService clientService;
+    @Nullable
+    private HistoryService historyService;
+    @Nullable
+    private ProfileService profileService;
+    @Nullable
+    private SolutionService solutionService;
 
     @Nullable
-    private ApplicationCache cache;
+    private TimedTasks timedTasks;
 
     @Nullable
     private MessageBusConnection connection;
@@ -69,8 +74,8 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         ApplicationSettings currentState = state.get();
         UserInfo userInfo = null;
         currentState.apiKey = apiKey;
-        client.configure(currentState.getNetworkConfig());
-        userInfo = client.getUserInfo(apiKey);
+        clientService.configure(currentState.getNetworkConfig());
+        userInfo = profileService.loadUserInfo(apiKey);
         if (!userInfo.getUserExist()) {
             throw new UnknownApiKey(apiKey);
         } else {
@@ -85,7 +90,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         ApplicationSettings newSettings = new ApplicationSettings(settings);
         state.set(newSettings);
         try {
-            client.configure(newSettings.getNetworkConfig());
+            clientService.configure(newSettings.getNetworkConfig());
             urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
         } finally {
             Tracking.appTracking().trace(Events.apiKeySet());
@@ -103,18 +108,28 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     }
 
     @NotNull
-    public ClientService getClient() {
-        return client;
-    }
-
-    @NotNull
     public WebUrlBuilder getUrlBuilder() {
         return urlBuilder;
     }
 
     @Nullable
-    public ApplicationCache getCache() {
-        return cache;
+    public ClientService getClient() {
+        return clientService;
+    }
+
+    @Nullable
+    public ProfileService getProfileService() {
+        return profileService;
+    }
+
+    @Nullable
+    public SolutionService getSolutionService() {
+        return solutionService;
+    }
+
+    @Nullable
+    public HistoryService getHistoryService() {
+        return historyService;
     }
 
     // ApplicationComponent overrides
@@ -135,23 +150,29 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
                 if (newSettings.apiKey == null) {
                     SettingsDialog.setup(null);
                 } else {
-                    try {
-                        UserInfo userInfo = client.getUserInfo(newSettings.apiKey);
-                        if (userInfo.getUserExist()) {
-                            newSettings.userId = userInfo.getUserId();
-                            newSettings.avatarUrl = userInfo.getAvatarUrl().toString();
-                            saveSettings(newSettings);
-                        }
-                    } catch (SamebugClientException e) {
-                        LOGGER.warn("Failed to get user info", e);
-                    }
+                    // TODO
+//                    try {
+//                        UserInfo userInfo = profileService.loadUserInfo(newSettings.apiKey);
+//                        if (userInfo.getUserExist()) {
+//                            newSettings.userId = userInfo.getUserId();
+//                            newSettings.avatarUrl = userInfo.getAvatarUrl().toString();
+//                            saveSettings(newSettings);
+//                        }
+//                    } catch (SamebugClientException e) {
+//                        LOGGER.warn("Failed to get user info", e);
+//                    }
                 }
             }
         });
 
-        connection = ApplicationManager.getApplication().getMessageBus().connect();
+        MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
+        connection = messageBus.connect();
+        clientService = new ClientService(messageBus);
+        clientService.configure(state.get().getNetworkConfig());
+        historyService = new HistoryService(messageBus, clientService);
+        profileService = new ProfileService(messageBus, clientService);
+        solutionService = new SolutionService(messageBus, clientService);
         timedTasks = new TimedTasks(connection);
-        cache = new ApplicationCache(connection);
     }
 
     @Override
@@ -178,7 +199,9 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public void loadState(ApplicationSettings state) {
         ApplicationSettings newSettings = new ApplicationSettings(state);
         this.state.set(newSettings);
-        client.configure(newSettings.getNetworkConfig());
+        if (clientService != null) {
+            clientService.configure(newSettings.getNetworkConfig());
+        }
         urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
     }
 }

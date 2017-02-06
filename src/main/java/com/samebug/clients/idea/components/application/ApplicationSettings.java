@@ -29,6 +29,7 @@ public class ApplicationSettings {
     public Long workspaceId = defaultWorkspaceId;
     public String instanceId = UUID.randomUUID().toString();
     public int userId;
+    // TODO remove it
     @Nullable
     public String avatarUrl;
     public String serverRoot = defaultServerRoot;

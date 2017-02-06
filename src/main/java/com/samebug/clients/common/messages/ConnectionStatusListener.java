@@ -13,17 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages.client;
+package com.samebug.clients.common.messages;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.common.search.api.entities.UserInfo;
+import com.samebug.clients.common.search.api.client.ConnectionStatus;
 
-public interface UserModelListener {
-    Topic<UserModelListener> TOPIC = Topic.create("user model changes", UserModelListener.class);
+public interface ConnectionStatusListener {
+    Topic<ConnectionStatusListener> TOPIC = Topic.create("connection status change", ConnectionStatusListener.class);
 
-    void successLoadUserInfo(UserInfo result);
+    void startRequest();
 
-    void failLoadUserInfo(Exception e);
+    void connectionChange(boolean isConnected);
 
-    void finishLoadHistory();
+    void authenticationChange(boolean isAuthenticated);
+
+    void apiToBeDeprecated();
+
+    void apiDeprecated();
+
+    void finishRequest(ConnectionStatus status);
 }

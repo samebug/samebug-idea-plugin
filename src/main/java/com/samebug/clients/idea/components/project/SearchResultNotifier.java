@@ -1,12 +1,12 @@
 /**
  * Copyright 2017 Samebug, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,16 +24,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.awt.RelativePoint;
-import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.entities.ExceptionType;
 import com.samebug.clients.common.search.api.entities.Exception;
-import com.samebug.clients.common.search.api.entities.*;
-import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.common.search.api.entities.SearchResults;
+import com.samebug.clients.common.search.api.entities.StackTraceSearchGroup;
 import com.samebug.clients.common.services.HistoryService;
 import com.samebug.clients.common.ui.Colors;
-import com.samebug.clients.idea.components.application.ClientService;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.TutorialApplicationComponent;
 import com.samebug.clients.idea.components.application.TutorialSettings;
 import com.samebug.clients.idea.messages.model.BatchStackTraceSearchListener;
@@ -46,8 +43,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -77,58 +72,58 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
 
     @Override
     public void batchFinished(final List<SearchResults> results, int failed) {
-        Long timelimitForFreshSearch = new Date().getTime() - (1 * 60 * 1000);
-        Map<String, StackTraceSearchGroup> groupsByStackTraceId = new HashMap<String, StackTraceSearchGroup>();
-        ClientService client = IdeaSamebugPlugin.getInstance().getClient();
-        try {
-            SearchHistory history = client.getSearchHistory();
-            for (SearchGroup s : history.getSearchGroups()) {
-                if (s instanceof StackTraceSearchGroup) {
-                    StackTraceSearchGroup sg = (StackTraceSearchGroup) s;
-                    groupsByStackTraceId.put(sg.getLastSearch().getStackTrace().getStackTraceId(), sg);
-                }
-            }
-
-            boolean isShowRecurringSearches = ServiceManager.getService(project, HistoryService.class).isShowRecurringSearches();
-            boolean isShowZeroSolutionSearches = ServiceManager.getService(project, HistoryService.class).isShowZeroSolutionSearches();
-            final Map<String, SearchResults> searchesByStackTraceId = new HashMap<String, SearchResults>();
-            final Map<Integer, StackTraceSearchGroup> resultsBySearchId = new HashMap<Integer, StackTraceSearchGroup>();
-            for (SearchResults result : results) {
-                // text searches will have null as stackTraceId. We simply ignore them for the sake of notifications
-                if (result.getStackTraceId() != null) searchesByStackTraceId.put(result.getStackTraceId(), result);
-            }
-
-            int recurrings = 0;
-            int zeroSolutions = 0;
-            final List<Integer> searchIds = new ArrayList<Integer>();
-            for (SearchResults result : searchesByStackTraceId.values()) {
-                String stackTraceId = result.getStackTraceId();
-                StackTraceSearchGroup historyResult = groupsByStackTraceId.get(stackTraceId);
-                if (historyResult != null && historyResult.getNumberOfHits() == 0) {
-                    if (isShowZeroSolutionSearches) {
-                        ++zeroSolutions;
-                        searchIds.add(result.getSearchId());
-                        resultsBySearchId.put(result.getSearchId(), groupsByStackTraceId.get(result.getStackTraceId()));
-                    }
-                } else if (historyResult != null && historyResult.getNumberOfSearches() > 1
-                        && historyResult.getFirstSeen().getTime() < timelimitForFreshSearch) {
-                    if (isShowRecurringSearches) {
-                        ++recurrings;
-                        searchIds.add(result.getSearchId());
-                        resultsBySearchId.put(result.getSearchId(), groupsByStackTraceId.get(result.getStackTraceId()));
-                    }
-                }
-            }
-            final Notifier notifier = new Notifier(searchIds, resultsBySearchId, recurrings, zeroSolutions);
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    notifier.execute();
-                }
-            });
-        } catch (SamebugClientException e1) {
-            LOGGER.warn("Failed to load history after searching and building result notification.");
-        }
+//        Long timelimitForFreshSearch = new Date().getTime() - (1 * 60 * 1000);
+//        Map<String, StackTraceSearchGroup> groupsByStackTraceId = new HashMap<String, StackTraceSearchGroup>();
+//        ClientService client = IdeaSamebugPlugin.getInstance().getClient();
+//        try {
+//            SearchHistory history = client.getSearchHistory();
+//            for (SearchGroup s : history.getSearchGroups()) {
+//                if (s instanceof StackTraceSearchGroup) {
+//                    StackTraceSearchGroup sg = (StackTraceSearchGroup) s;
+//                    groupsByStackTraceId.put(sg.getLastSearch().getStackTrace().getStackTraceId(), sg);
+//                }
+//            }
+//
+//            boolean isShowRecurringSearches = ServiceManager.getService(project, HistoryService.class).isShowRecurringSearches();
+//            boolean isShowZeroSolutionSearches = ServiceManager.getService(project, HistoryService.class).isShowZeroSolutionSearches();
+//            final Map<String, SearchResults> searchesByStackTraceId = new HashMap<String, SearchResults>();
+//            final Map<Integer, StackTraceSearchGroup> resultsBySearchId = new HashMap<Integer, StackTraceSearchGroup>();
+//            for (SearchResults result : results) {
+//                // text searches will have null as stackTraceId. We simply ignore them for the sake of notifications
+//                if (result.getStackTraceId() != null) searchesByStackTraceId.put(result.getStackTraceId(), result);
+//            }
+//
+//            int recurrings = 0;
+//            int zeroSolutions = 0;
+//            final List<Integer> searchIds = new ArrayList<Integer>();
+//            for (SearchResults result : searchesByStackTraceId.values()) {
+//                String stackTraceId = result.getStackTraceId();
+//                StackTraceSearchGroup historyResult = groupsByStackTraceId.get(stackTraceId);
+//                if (historyResult != null && historyResult.getNumberOfHits() == 0) {
+//                    if (isShowZeroSolutionSearches) {
+//                        ++zeroSolutions;
+//                        searchIds.add(result.getSearchId());
+//                        resultsBySearchId.put(result.getSearchId(), groupsByStackTraceId.get(result.getStackTraceId()));
+//                    }
+//                } else if (historyResult != null && historyResult.getNumberOfSearches() > 1
+//                        && historyResult.getFirstSeen().getTime() < timelimitForFreshSearch) {
+//                    if (isShowRecurringSearches) {
+//                        ++recurrings;
+//                        searchIds.add(result.getSearchId());
+//                        resultsBySearchId.put(result.getSearchId(), groupsByStackTraceId.get(result.getStackTraceId()));
+//                    }
+//                }
+//            }
+//            final Notifier notifier = new Notifier(searchIds, resultsBySearchId, recurrings, zeroSolutions);
+//            ApplicationManager.getApplication().invokeLater(new Runnable() {
+//                @Override
+//                public void run() {
+//                    notifier.execute();
+//                }
+//            });
+//        } catch (SamebugClientException e1) {
+//            LOGGER.warn("Failed to load history after searching and building result notification.");
+//        }
     }
 
     private String summarizeException(Exception exception) {

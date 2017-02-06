@@ -24,7 +24,7 @@ final public class ShowHistoryAction extends AnAction implements DumbAware {
     @Override
     public void actionPerformed(AnActionEvent e) {
         if (e.getProject() != null) {
-            e.getProject().getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnHistory();
+            e.getProject().getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnIntro();
         }
     }
 

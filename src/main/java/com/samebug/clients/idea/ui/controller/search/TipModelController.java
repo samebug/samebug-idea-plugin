@@ -21,7 +21,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.search.api.entities.RestHit;
 import com.samebug.clients.common.search.api.entities.Tip;
 import com.samebug.clients.common.search.api.exceptions.BadRequest;
-import com.samebug.clients.idea.messages.client.TipModelListener;
+import com.samebug.clients.common.messages.TipModelListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import org.jetbrains.annotations.NotNull;
 

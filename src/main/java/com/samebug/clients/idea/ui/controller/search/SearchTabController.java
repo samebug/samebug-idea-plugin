@@ -24,8 +24,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.search.api.entities.*;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.common.services.ClientService;
 import com.samebug.clients.common.services.SearchService;
-import com.samebug.clients.idea.components.application.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.components.project.ToolWindowController;
@@ -104,36 +104,37 @@ final public class SearchTabController implements TabController, Disposable {
             @Override
             public void run() {
                 ClientService client = IdeaSamebugPlugin.getInstance().getClient();
-                try {
-                    final Solutions solutions = client.getSolutions(mySearchId);
-                    ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            java.util.List<URL> imageUrls = new ArrayList<URL>();
-                            try {
-                                imageUrls.add(new URL(IdeaSamebugPlugin.getInstance().getState().avatarUrl));
-                            } catch (Throwable e) {
-                                LOGGER.warn("Failed to load user's avatar", e);
-                            }
-                            for (final RestHit<Tip> tip : solutions.getTips()) {
-                                imageUrls.add(tip.getSolution().getAuthor().getAvatarUrl());
-                            }
-                            for (final RestHit<SolutionReference> s : solutions.getReferences()) {
-                                imageUrls.add(IdeaSamebugPlugin.getInstance().getUrlBuilder().sourceIcon(s.getSolution().getSource().getIcon()));
-                            }
-
-                            ImageUtil.loadImages(imageUrls);
-                            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                                public void run() {
-                                    refreshTab();
-                                }
-                            });
-                        }
-                    });
-
-                } catch (SamebugClientException e1) {
-                    LOGGER.warn("Failed to download solutions for search " + mySearchId, e1);
-                }
+                // TODO
+//                try {
+//                    final Solutions solutions = client.getSolutions(mySearchId);
+//                    ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            java.util.List<URL> imageUrls = new ArrayList<URL>();
+//                            try {
+//                                imageUrls.add(new URL(IdeaSamebugPlugin.getInstance().getState().avatarUrl));
+//                            } catch (Throwable e) {
+//                                LOGGER.warn("Failed to load user's avatar", e);
+//                            }
+//                            for (final RestHit<Tip> tip : solutions.getTips()) {
+//                                imageUrls.add(tip.getSolution().getAuthor().getAvatarUrl());
+//                            }
+//                            for (final RestHit<SolutionReference> s : solutions.getReferences()) {
+//                                imageUrls.add(IdeaSamebugPlugin.getInstance().getUrlBuilder().sourceIcon(s.getSolution().getSource().getIcon()));
+//                            }
+//
+//                            ImageUtil.loadImages(imageUrls);
+//                            ApplicationManager.getApplication().invokeLater(new Runnable() {
+//                                public void run() {
+//                                    refreshTab();
+//                                }
+//                            });
+//                        }
+//                    });
+//
+//                } catch (SamebugClientException e1) {
+//                    LOGGER.warn("Failed to download solutions for search " + mySearchId, e1);
+//                }
             }
         });
     }

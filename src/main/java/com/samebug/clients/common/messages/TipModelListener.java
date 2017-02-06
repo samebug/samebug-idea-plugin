@@ -13,14 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages.controller;
+package com.samebug.clients.common.messages;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.common.entities.user.Statistics;
-import com.samebug.clients.common.entities.user.User;
+import com.samebug.clients.common.search.api.entities.RestHit;
+import com.samebug.clients.common.search.api.entities.Tip;
 
-public interface ProfileListener {
-    Topic<ProfileListener> TOPIC = Topic.create("user profile change", ProfileListener.class);
+public interface TipModelListener {
+    Topic<TipModelListener> TOPIC = Topic.create("tip", TipModelListener.class);
 
-    void profileChange(User user, Statistics statistics);
+    void startPostTip(int searchId);
+
+    void successPostTip(int searchId, RestHit<Tip> result);
+
+    void failPostTip(int searchId, java.lang.Exception e);
+
+    void finishPostTip(int searchId);
 }

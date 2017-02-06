@@ -1,12 +1,12 @@
 /**
  * Copyright 2017 Samebug, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,153 +15,122 @@
  */
 package com.samebug.clients.idea.ui.component.tab;
 
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.ActionToolbar;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.util.containers.HashMap;
-import com.samebug.clients.common.search.api.entities.SearchGroup;
-import com.samebug.clients.common.search.api.entities.StackTraceSearchGroup;
-import com.samebug.clients.common.search.api.entities.TextSearchGroup;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.idea.resources.SamebugIcons;
-import com.samebug.clients.idea.ui.component.NetworkStatusIcon;
-import com.samebug.clients.idea.ui.component.TransparentPanel;
-import com.samebug.clients.idea.ui.component.card.CollapsibleUserProfile;
-import com.samebug.clients.idea.ui.component.card.SearchGroupCard;
-import com.samebug.clients.idea.ui.component.card.StackTraceSearchGroupCard;
-import com.samebug.clients.idea.ui.component.card.TextSearchGroupCard;
-import com.samebug.clients.idea.ui.component.organism.WarningPanel;
+import com.samebug.clients.idea.ui.component.experimental.MultiLineLabel;
+import com.samebug.clients.idea.ui.messages.HistoryCardListener;
+import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Collections;
 
 final public class HistoryTabView extends JPanel {
     @NotNull
-    final public JPanel toolbarPanel;
+    final HistoryPanel historyPanel;
     @NotNull
-    final public NetworkStatusIcon statusIcon;
+    final JComponent warningPanel;
     @NotNull
-    JComponent contentPanel;
-    @NotNull
-    public CollapsibleUserProfile collapsableUserPanel;
+    final MessageBus messageBus;
 
-    @NotNull
-    final Map<Integer, SearchGroupCard> cards;
-
-    public HistoryTabView() {
-        statusIcon = new NetworkStatusIcon();
-        toolbarPanel = new ToolBarPanel();
-        contentPanel = new TransparentPanel();
-        collapsableUserPanel = new CollapsibleUserProfile();
-        cards = new HashMap<Integer, SearchGroupCard>();
+    public HistoryTabView(MessageBus messageBus) {
+        historyPanel = new HistoryPanel(messageBus, Collections.<Card.Model>emptyList());
+        warningPanel = new JPanel();
+        this.messageBus = messageBus;
 
         setLayout(new BorderLayout());
-        add(toolbarPanel, BorderLayout.NORTH);
-        toolbarPanel.add(statusIcon, BorderLayout.EAST);
         setWarningLoading();
     }
 
 
     public void setWarningLoading() {
-        WarningPanel panel = new WarningPanel(SamebugBundle.message("samebug.toolwindow.history.content.loading"));
-        updateContent(panel);
+        warningPanel.removeAll();
+        warningPanel.add(new JLabel(SamebugBundle.message("samebug.toolwindow.history.content.loading")));
+        removeAll();
+        add(warningPanel);
     }
 
-    public void setHistory(@NotNull java.util.List<SearchGroup> groups, @NotNull final Actions actions) {
-        final JScrollPane scrollPane = new JScrollPane();
-        final JPanel contentPanel = new ContentPanel();
+    public void update(@NotNull java.util.List<Card.Model> groups) {
+        historyPanel.update(groups);
+        removeAll();
+        add(historyPanel);
+    }
 
-        cards.clear();
-        for (SearchGroup group : groups) {
-            if (group instanceof StackTraceSearchGroup) {
-                StackTraceSearchGroup g = (StackTraceSearchGroup) group;
-                StackTraceSearchGroupCard searchGroupCard = new StackTraceSearchGroupCard(g, actions);
-                contentPanel.add(searchGroupCard);
-                cards.put(g.getLastSearch().getId(), searchGroupCard);
-            } else if (group instanceof TextSearchGroup) {
-                TextSearchGroup g = (TextSearchGroup) group;
-                TextSearchGroupCard searchGroupCard = new TextSearchGroupCard(g, actions);
-                contentPanel.add(searchGroupCard);
-                cards.put(g.getLastSearch().getId(), searchGroupCard);
+    public static final class HistoryPanel extends JPanel {
+        final JScrollPane scrollPane;
+        final JPanel contentPanel;
+        final MessageBus messageBus;
+
+        public HistoryPanel(MessageBus messageBus, java.util.List<Card.Model> groups) {
+            scrollPane = new JScrollPane();
+            contentPanel = new JPanel();
+            this.messageBus = messageBus;
+
+            contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.PAGE_AXIS));
+            contentPanel.setBackground(Color.blue);
+            scrollPane.setViewportView(contentPanel);
+
+            setLayout(new BorderLayout());
+            add(scrollPane);
+            update(groups);
+        }
+
+        public void update(java.util.List<Card.Model> groups) {
+            contentPanel.removeAll();
+            for (Card.Model model : groups) {
+                // NOTE to be able to access a single card for update, we might have to save the cards to a collection (keeping the references)
+                contentPanel.add(new Card(messageBus, model));
+            }
+        }
+    }
+
+    public static final class Card extends JPanel {
+
+        Model model;
+        final MultiLineLabel title;
+        final MessageBus messageBus;
+
+        public Card(final MessageBus messageBus, Model model) {
+            this.messageBus = messageBus;
+            title = new MultiLineLabel("");
+
+            title.addMouseListener(new T());
+
+            setLayout(new MigLayout("fillx", "0[fill]0", "10[fill]10"));
+            add(title, "wmin 0, hmax 56");
+
+            update(model);
+        }
+
+        public void update(Model model) {
+            this.model = new Model(model);
+
+            title.setText(model.title);
+        }
+
+
+        public static final class Model {
+            public String title;
+            public int lastSearchId;
+
+            public Model(Model rhs) {
+                this(rhs.title, rhs.lastSearchId);
+            }
+
+            public Model(String title, int lastSearchId) {
+                this.title = title;
+                this.lastSearchId = lastSearchId;
             }
         }
 
-
-        updateContent(scrollPane);
-        add(collapsableUserPanel.getControl(), BorderLayout.SOUTH);
-        scrollPane.setViewportView(contentPanel);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-    }
-
-    public void setWarningNotLoggedIn() {
-        WarningPanel panel = new WarningPanel(SamebugBundle.message("samebug.toolwindow.history.content.notLoggedIn", SamebugIcons.cogwheelTodoUrl));
-        updateContent(panel);
-    }
-
-    public void setWarningNotConnected() {
-        WarningPanel panel =
-                new WarningPanel(SamebugBundle.message("samebug.toolwindow.history.content.notConnected", IdeaSamebugPlugin.getInstance().getUrlBuilder().getServerRoot()));
-        updateContent(panel);
-    }
-
-    public void setWarningDeprecated() {
-        WarningPanel panel =
-                new WarningPanel(SamebugBundle.message("samebug.toolwindow.history.content.deprecated"));
-        updateContent(panel);
-    }
-
-    public void setWarningNoVisibleSearches() {
-        WarningPanel panel = new WarningPanel(SamebugBundle.message("samebug.toolwindow.history.content.noVisibleSearches", SamebugIcons.calendarUrl, SamebugIcons.lightbulbUrl));
-        updateContent(panel);
-    }
-
-    public void setWarningNoSearches() {
-        WarningPanel panel = new WarningPanel(SamebugBundle.message("samebug.toolwindow.history.content.noSearches"));
-        updateContent(panel);
-    }
-
-    public void setWarningOther() {
-        WarningPanel panel = new WarningPanel(SamebugBundle.message("samebug.toolwindow.history.content.other"));
-        updateContent(panel);
-    }
-
-    public void refreshDateLabels() {
-        for (SearchGroupCard card : cards.values()) {
-            card.refreshDateLabels();
-        }
-        revalidate();
-        repaint();
-    }
-
-    void updateContent(@NotNull final JComponent content) {
-        remove(contentPanel);
-        contentPanel = content;
-        add(contentPanel);
-    }
-
-    final class ToolBarPanel extends JPanel {
-        {
-            setLayout(new BorderLayout());
-            setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
-
-            final DefaultActionGroup group = (DefaultActionGroup) ActionManager.getInstance().getAction("Samebug.ToolWindowMenu");
-            final ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
-            add(actionToolBar.getComponent(), BorderLayout.WEST);
+        final private class T extends MouseAdapter {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                messageBus.syncPublisher(HistoryCardListener.TOPIC).titleClick(model.lastSearchId);
+            }
         }
     }
-
-    final class ContentPanel extends JPanel {
-        {
-            setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        }
-    }
-
-    public interface Actions extends SearchGroupCard.Actions {
-    }
-
 }

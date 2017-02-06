@@ -25,7 +25,7 @@ import com.samebug.clients.common.search.api.StackTraceListener;
 import com.samebug.clients.common.search.api.entities.SearchResults;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.search.matcher.StackTraceMatcher;
-import com.samebug.clients.idea.components.application.ClientService;
+import com.samebug.clients.common.services.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.resources.SamebugBundle;
@@ -109,19 +109,20 @@ final public class AnalyzeDialog extends DialogWrapper {
             ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        SearchResults result = client.searchSolutions(trace);
-                        try {
-                            int searchId = result.getSearchId();
-                            URL url = plugin.getUrlBuilder().search(searchId);
-                            BrowserUtil.browse(url);
-                            Tracking.appTracking().trace(Events.searchSucceedInSearchDialog(searchId));
-                        } catch (java.lang.Exception e1) {
-                            LOGGER.warn("Failed to open browser for search " + result.getSearchId(), e1);
-                        }
-                    } catch (SamebugClientException e1) {
-                        LOGGER.warn("Failed to execute search", e1);
-                    }
+                    // TODO
+//                    try {
+//                        SearchResults result = client.searchSolutions(trace);
+//                        try {
+//                            int searchId = result.getSearchId();
+//                            URL url = plugin.getUrlBuilder().search(searchId);
+//                            BrowserUtil.browse(url);
+//                            Tracking.appTracking().trace(Events.searchSucceedInSearchDialog(searchId));
+//                        } catch (java.lang.Exception e1) {
+//                            LOGGER.warn("Failed to open browser for search " + result.getSearchId(), e1);
+//                        }
+//                    } catch (SamebugClientException e1) {
+//                        LOGGER.warn("Failed to execute search", e1);
+//                    }
                 }
             });
         }

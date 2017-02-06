@@ -3,12 +3,12 @@ package com.samebug.clients.idea.ui.component.experimental;
 import javax.swing.*;
 import java.awt.*;
 
-public class ToolWindowPanel extends JPanel {
+public class SolutionFrame extends JPanel {
     JPanel exceptionHeader;
     JTabbedPane tabs;
     JPanel profilePanel;
 
-    public ToolWindowPanel() {
+    public SolutionFrame() {
         exceptionHeader = new ExceptionHeaderPanel();
         tabs = new ResultTabs();
         profilePanel = new ProfilePanel(null);

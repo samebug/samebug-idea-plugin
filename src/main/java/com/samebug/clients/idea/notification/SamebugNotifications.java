@@ -50,7 +50,7 @@ final public class SamebugNotifications {
                     BrowserUtil.browse(hyperlinkEvent.getURL());
                     Tracking.projectTracking(project).trace(Events.linkClick(project, hyperlinkEvent.getURL()));
                 } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && HISTORY.equals(action)) {
-                    project.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnHistory();
+                    project.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnIntro();
                     notification.expire();
                     Tracking.projectTracking(project).trace(Events.toolWindowOpen(project, categoryForTracking));
                 } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && action.startsWith(SEARCH)) {
@@ -73,7 +73,7 @@ final public class SamebugNotifications {
                     BrowserUtil.browse(hyperlinkEvent.getURL());
                     Tracking.projectTracking(project).trace(Events.linkClick(project, hyperlinkEvent.getURL()));
                 } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && HISTORY.equals(action)) {
-                    project.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnHistory();
+                    project.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnIntro();
                     Tracking.projectTracking(project).trace(Events.toolWindowOpen(project, categoryForTracking));
                 } else if (eventType == HyperlinkEvent.EventType.ACTIVATED && action.startsWith(SEARCH)) {
                     int searchId = Integer.parseInt(action.substring(SEARCH.length()));

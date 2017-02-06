@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.ProjectManager;
-import com.samebug.clients.idea.components.application.ClientService;
+import com.samebug.clients.common.services.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.resources.SamebugIcons;
@@ -34,13 +34,14 @@ final public class ConfigureAction extends AnAction implements DumbAware {
 
     @Override
     public void update(AnActionEvent e) {
-        ClientService connectionService = IdeaSamebugPlugin.getInstance().getClient();
-        if (connectionService.isConnected() && !connectionService.isAuthenticated()) {
-            e.getPresentation().setText(SamebugBundle.message("samebug.actions.configure.text.invalidApiKey"));
-            e.getPresentation().setIcon(SamebugIcons.cogwheelTodo);
-        } else {
-            e.getPresentation().setText(SamebugBundle.message("samebug.actions.configure.text.ok"));
-            e.getPresentation().setIcon(SamebugIcons.cogwheel);
-        }
+        // TODO
+//        ClientService connectionService = IdeaSamebugPlugin.getInstance().getClient();
+//        if (connectionService.isConnected() && !connectionService.isAuthenticated()) {
+//            e.getPresentation().setText(SamebugBundle.message("samebug.actions.configure.text.invalidApiKey"));
+//            e.getPresentation().setIcon(SamebugIcons.cogwheelTodo);
+//        } else {
+//            e.getPresentation().setText(SamebugBundle.message("samebug.actions.configure.text.ok"));
+//            e.getPresentation().setIcon(SamebugIcons.cogwheel);
+//        }
     }
 }

@@ -19,7 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.search.api.entities.Solutions;
-import com.samebug.clients.idea.messages.client.SearchModelListener;
+import com.samebug.clients.common.messages.SearchModelListener;
 import org.jetbrains.annotations.NotNull;
 
 final class ModelController implements SearchModelListener {
