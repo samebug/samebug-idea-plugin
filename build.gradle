@@ -41,6 +41,7 @@ intellij {
         password project.hasProperty('JETBRAINS_PASSWORD') ? project.getProperty('JETBRAINS_PASSWORD') : null
         channel project.hasProperty('JETBRAINS_CHANNEL') ? project.getProperty('JETBRAINS_CHANNEL') : null
     }
+    systemProperty("awt.useSystemAAFontSettings", "on")
 }
 
 repositories {
