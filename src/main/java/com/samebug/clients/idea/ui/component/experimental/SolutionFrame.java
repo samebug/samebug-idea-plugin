@@ -1,17 +1,28 @@
 package com.samebug.clients.idea.ui.component.experimental;
 
+import com.intellij.util.messages.MessageBus;
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class SolutionFrame extends JPanel {
-    JPanel exceptionHeader;
-    JTabbedPane tabs;
-    JPanel profilePanel;
+    Model model;
 
-    public SolutionFrame() {
+    @NotNull
+    final JPanel exceptionHeader;
+    @NotNull
+    final ResultTabs tabs;
+    @NotNull
+    final JPanel profilePanel;
+    @NotNull
+    final MessageBus messageBus;
+
+    public SolutionFrame(MessageBus messageBus) {
         exceptionHeader = new ExceptionHeaderPanel();
-        tabs = new ResultTabs();
-        profilePanel = new ProfilePanel(null);
+        tabs = new ResultTabs(messageBus);
+        profilePanel = new ProfilePanel();
+        this.messageBus = messageBus;
 
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         setLayout(new BorderLayout());
@@ -22,4 +33,23 @@ public class SolutionFrame extends JPanel {
         add(profilePanel, BorderLayout.SOUTH);
     }
 
+    public void setWarningLoading() {
+        // TODO
+    }
+
+    public void update(Model model) {
+        tabs.update(model.resultTabs);
+    }
+
+    public static final class Model {
+        public ResultTabs.Model resultTabs;
+
+        public Model(Model rhs) {
+            this(rhs.resultTabs);
+        }
+
+        public Model(ResultTabs.Model resultTabs) {
+            this.resultTabs = resultTabs;
+        }
+    }
 }

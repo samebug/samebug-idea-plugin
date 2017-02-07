@@ -23,12 +23,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-final public class SearchService {
+final public class DeprecatedSearchService {
     AtomicReference<Solutions> search;
 
     final int mySearchId;
 
-    public SearchService(final int searchId) {
+    public DeprecatedSearchService(final int searchId) {
         this.search = new AtomicReference<Solutions>(null);
         this.mySearchId = searchId;
     }

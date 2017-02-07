@@ -28,7 +28,9 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.HistoryService;
+import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.controller.CloseListener;
 import com.samebug.clients.idea.messages.view.FocusListener;
@@ -146,13 +148,23 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
 
     @NotNull
     SolutionFrameController getOrCreateSolutionFrame(final int searchId) {
+        IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
+        SolutionService solutionService = plugin.getSolutionService();
+
         ApplicationManager.getApplication().assertIsDispatchThread();
+        assert solutionService != null;
+
         if (solutionFrames.containsKey(searchId)) {
             return solutionFrames.get(searchId);
         } else {
-            final SolutionFrameController newSolutionFrame = new SolutionFrameController(this, project, searchId);
+            final SolutionFrameController newSolutionFrame = new SolutionFrameController(this, project, solutionService, searchId);
             solutionFrames.put(searchId, newSolutionFrame);
-            newSolutionFrame.reload();
+            try {
+                solutionService.getSolutions(searchId);
+            } catch (SamebugClientException e) {
+                // TODO
+                e.printStackTrace();
+            }
             return newSolutionFrame;
         }
     }

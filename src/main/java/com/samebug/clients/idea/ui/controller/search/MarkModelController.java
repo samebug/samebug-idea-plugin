@@ -21,7 +21,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.search.api.entities.MarkResponse;
 import com.samebug.clients.common.search.api.entities.RestHit;
 import com.samebug.clients.common.search.api.exceptions.BadRequest;
-import com.samebug.clients.common.services.SearchService;
+import com.samebug.clients.common.services.DeprecatedSearchService;
 import com.samebug.clients.common.messages.MarkModelListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.component.organism.MarkPanel;
@@ -50,7 +50,7 @@ final class MarkModelController implements MarkModelListener {
     @NotNull
     final SearchTabView view;
     @NotNull
-    final SearchService service;
+    final DeprecatedSearchService service;
     @NotNull
     final int mySearchId;
 

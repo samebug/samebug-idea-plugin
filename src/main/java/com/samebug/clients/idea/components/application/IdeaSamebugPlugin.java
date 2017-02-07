@@ -36,6 +36,8 @@ import com.samebug.clients.idea.notification.SamebugNotifications;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -130,6 +132,14 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
             newSettings.wereNotificationsDisabled = true;
             saveSettings(newSettings);
         }
+        try {
+            FontRegistry.registerFonts();
+        } catch (IOException e) {
+            // TODO
+            e.printStackTrace();
+        } catch (FontFormatException e) {
+            e.printStackTrace();
+        }
 
         MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
         connection = messageBus.connect();
@@ -168,12 +178,14 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public void saveSettings(final ApplicationSettings settings) {
         ApplicationSettings newSettings = new ApplicationSettings(settings);
         state.set(newSettings);
-        try {
-            clientService.configure(newSettings.getNetworkConfig());
-            urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
-        } finally {
-            // TODO change the event
+        if (clientService != null) {
+            try {
+                clientService.configure(newSettings.getNetworkConfig());
+                urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
+            } finally {
+                // TODO change the event
 //            Tracking.appTracking().trace(Events.apiKeySet());
+            }
         }
     }
 

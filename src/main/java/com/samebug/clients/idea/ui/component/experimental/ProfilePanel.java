@@ -25,8 +25,7 @@ public final class ProfilePanel extends JPanel {
 
     Model model;
 
-    public ProfilePanel(Model model) {
-        this.model = new Model(model);
+    public ProfilePanel() {
         avatarIcon = new AvatarIcon(null);
         name = new SamebugLabel("David", Constants.AvenirDemi, 14);
         glue = new JPanel() {
@@ -67,11 +66,11 @@ public final class ProfilePanel extends JPanel {
         add(thanksHint, "");
     }
 
-    public void updateMessages() {}
-    public void updateMarks() {}
-    public void updateTips() {}
-    public void updateThanks() {}
-    public void updateProfile() {}
+    public void update(Model model) {
+        this.model = new Model(model);
+
+        // TODO
+    }
 
     public static class Model {
         public int messages;
@@ -82,7 +81,7 @@ public final class ProfilePanel extends JPanel {
         public URL avatarUrl;
 
         public Model(Model rhs) {
-           // this(rhs.messages, rhs.marks, rhs.tips, rhs.thanks, rhs.name, rhs.avatarUrl);
+            this(rhs.messages, rhs.marks, rhs.tips, rhs.thanks, rhs.name, rhs.avatarUrl);
         }
 
         public Model(int messages, int marks, int tips, int thanks, String name, URL avatarUrl) {

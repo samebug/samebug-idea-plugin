@@ -1,14 +1,38 @@
 package com.samebug.clients.idea.ui.component.experimental;
 
+import com.intellij.util.messages.MessageBus;
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import java.awt.*;
 
 public class ResultTabs extends JTabbedPane {
-    public ResultTabs() {
-        WebResultsTab webResultsTab = new WebResultsTab();
-        TipResultsTab tipResultsTab = new TipResultsTab();
-        CrashDocTab crashDocTab = new CrashDocTab();
+    Model model;
+
+    @NotNull
+    final WebResultsTab webResultsTab;
+    @NotNull
+    final TipResultsTab tipResultsTab;
+    @NotNull
+    final CrashDocTab crashDocTab;
+    @NotNull
+    final SamebugTabHeader webResultsTabHeader;
+    @NotNull
+    final SamebugTabHeader tipResultsTabHeader;
+    @NotNull
+    final SamebugTabHeader crashDocTabHeader;
+    @NotNull
+    final MessageBus messageBus;
+
+    public ResultTabs(MessageBus messageBus) {
+        webResultsTab = new WebResultsTab(messageBus);
+        tipResultsTab = new TipResultsTab();
+        crashDocTab = new CrashDocTab();
+        webResultsTabHeader = new SamebugTabHeader("Solutions on the net");
+        tipResultsTabHeader = new SamebugTabHeader("Samebug Tips");
+        crashDocTabHeader = new SamebugTabHeader("CrashDoc");
+        this.messageBus = messageBus;
 
         setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
         setBackground(Color.white);
@@ -16,53 +40,94 @@ public class ResultTabs extends JTabbedPane {
         setTabLayoutPolicy(SCROLL_TAB_LAYOUT);
 
         setUI(new SamebugTabbedPaneUI());
+    }
 
-        addTab("Samebug tips", null, tipResultsTab);
-        addTab("Solutions on the net", null, webResultsTab);
-        addTab("CrashDoc", null, crashDocTab);
+    public void update(Model model) {
+        this.model = model;
 
-        setTabComponentAt(0, new JPanel() {
-            {
+        removeAll();
+        if (model.webResults.webhits.size() > 0) {
+            webResultsTab.update(model.webResults);
+            addTab(null, webResultsTab);
+            webResultsTabHeader.update(Integer.toString(model.webResults.webhits.size()));
+            setTabComponentAt(0, webResultsTabHeader);
+        }
+        // TODO add other tabs
+        // TODO show something when no solutions
 
-                setOpaque(false);
+    }
 
-                add(new JLabel("Samebug tips") {
-                    {
-                        setFont(new Font(Constants.AvenirRegular, Font.PLAIN, 16));
-                    }
-                });
-                add(new JLabel("999") {
-                    final Font font = new Font(Constants.AvenirDemi, Font.PLAIN, 10);
-                    {
-                        setBorder(BorderFactory.createEmptyBorder(2,6,2,6));
-                    }
-                    @Override
-                    public void paint(Graphics g) {
-                        Graphics2D g2 = (Graphics2D)g;
-                        g2.setRenderingHint(
-                                RenderingHints.KEY_TEXT_ANTIALIASING,
-                                RenderingHints.VALUE_TEXT_ANTIALIAS_ON
-                        );
-                        g2.setRenderingHint(
-                                RenderingHints.KEY_COLOR_RENDERING,
-                                RenderingHints.VALUE_COLOR_RENDER_QUALITY
-                        );
-                        g2.setRenderingHint(
-                                RenderingHints.KEY_ANTIALIASING,
-                                RenderingHints.VALUE_ANTIALIAS_ON
-                        );
-                        g.setColor(Constants.SamebugOrange);
-                        g.fillRoundRect(0, 0, getWidth() -1, getHeight() - 1, 18, 18);
-                        g2.setFont(font);
-                        g2.setColor(Color.white);
-                        g2.drawString("999", 8, 12);
-                    }
-                });
+    public static final class Model {
+        public WebResultsTab.Model webResults;
 
-            }
-        });
+        public Model(Model rhs) {
+            this(rhs.webResults);
+        }
+
+        public Model(WebResultsTab.Model webResults) {
+            this.webResults = webResults;
+        }
     }
 }
+
+final class SamebugTabHeader extends JPanel {
+    final TabLabel tabLabel;
+    final HitsLabel hitsLabel;
+
+    public SamebugTabHeader(String tabName){
+        tabLabel = new TabLabel();
+        tabLabel.setText(tabName);
+        hitsLabel = new HitsLabel();
+
+        setOpaque(false);
+        add(tabLabel);
+        add(hitsLabel);
+    }
+
+    public void update(String hits) {
+        hitsLabel.hits = hits;
+    }
+
+    final private static class TabLabel extends JLabel {
+        {
+            setFont(new Font(Constants.AvenirRegular, Font.PLAIN, 16));
+        }
+    }
+
+    final private static class HitsLabel extends JLabel {
+        String hits = "0";
+        final Font font = new Font(Constants.AvenirDemi, Font.PLAIN, 10);
+
+        {
+            setBorder(BorderFactory.createEmptyBorder(2,6,2,6));
+        }
+
+        @Override
+        public void paint(Graphics g) {
+            Graphics2D g2 = (Graphics2D)g;
+            g2.setRenderingHint(
+                    RenderingHints.KEY_TEXT_ANTIALIASING,
+                    RenderingHints.VALUE_TEXT_ANTIALIAS_ON
+            );
+            g2.setRenderingHint(
+                    RenderingHints.KEY_COLOR_RENDERING,
+                    RenderingHints.VALUE_COLOR_RENDER_QUALITY
+            );
+            g2.setRenderingHint(
+                    RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON
+            );
+            g.setColor(Constants.SamebugOrange);
+            g.fillRoundRect(0, 0, getWidth() -1, getHeight() - 1, 18, 18);
+            g2.setFont(font);
+            g2.setColor(Color.white);
+            g2.drawString(hits, 8, 12);
+        }
+    }
+
+}
+
+
 
 final class SamebugTabbedPaneUI extends BasicTabbedPaneUI {
     @Override

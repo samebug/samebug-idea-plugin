@@ -18,8 +18,8 @@ package com.samebug.clients.common.messages;
 import com.intellij.util.messages.Topic;
 import com.samebug.clients.common.search.api.entities.Solutions;
 
-public interface SearchModelListener {
-    Topic<SearchModelListener> TOPIC = Topic.create("solutions model changes", SearchModelListener.class);
+public interface SolutionModelListener {
+    Topic<SolutionModelListener> TOPIC = Topic.create("solution model changes", SolutionModelListener.class);
 
     void startLoadingSolutions(int searchId);
 

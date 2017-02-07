@@ -23,9 +23,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.search.api.entities.*;
-import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.ClientService;
-import com.samebug.clients.common.services.SearchService;
+import com.samebug.clients.common.services.DeprecatedSearchService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.components.project.ToolWindowController;
@@ -33,7 +32,6 @@ import com.samebug.clients.idea.messages.view.WriteTipListener;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.BrowserUtil;
-import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.component.tab.SearchTabView;
 import com.samebug.clients.idea.ui.controller.TabController;
 import com.samebug.clients.idea.ui.listeners.ConnectionStatusUpdater;
@@ -42,7 +40,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.net.URL;
-import java.util.ArrayList;
 
 final public class SearchTabController implements TabController, Disposable {
     final static Logger LOGGER = Logger.getInstance(SearchTabController.class);
@@ -56,7 +53,7 @@ final public class SearchTabController implements TabController, Disposable {
     final ConnectionStatusUpdater connectionStatusUpdater;
     final int mySearchId;
     @NotNull
-    final SearchService service;
+    final DeprecatedSearchService service;
 
     @NotNull
     final HitConverter hitConverter;
@@ -79,7 +76,7 @@ final public class SearchTabController implements TabController, Disposable {
         view = new SearchTabView();
         connectionStatusUpdater = new ConnectionStatusUpdater(view.statusIcon);
         this.mySearchId = searchId;
-        service = new SearchService(searchId);
+        service = new DeprecatedSearchService(searchId);
         hitConverter = new HitConverter(this);
         viewController = new ViewController(this);
         modelController = new ModelController(this);

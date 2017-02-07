@@ -19,10 +19,10 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.search.api.entities.Solutions;
-import com.samebug.clients.common.messages.SearchModelListener;
+import com.samebug.clients.common.messages.SolutionModelListener;
 import org.jetbrains.annotations.NotNull;
 
-final class ModelController implements SearchModelListener {
+final class ModelController implements SolutionModelListener {
     final static Logger LOGGER = Logger.getInstance(ModelController.class);
     @NotNull
     final SearchTabController controller;
@@ -33,7 +33,7 @@ final class ModelController implements SearchModelListener {
         this.mySearchId = controller.mySearchId;
 
         MessageBusConnection projectConnection = controller.project.getMessageBus().connect(controller);
-        projectConnection.subscribe(SearchModelListener.TOPIC, this);
+        projectConnection.subscribe(SolutionModelListener.TOPIC, this);
     }
 
     @Override

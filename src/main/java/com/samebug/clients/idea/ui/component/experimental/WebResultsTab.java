@@ -1,6 +1,8 @@
 package com.samebug.clients.idea.ui.component.experimental;
 
+import com.intellij.util.messages.MessageBus;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,52 +10,90 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WebResultsTab extends JPanel {
-    final JScrollPane scrollPane;
-    final JPanel contentPanel;
+    Model model;
 
-    public WebResultsTab() {
+    @NotNull
+    JScrollPane scrollPane;
+    @NotNull
+    final ContentPanel contentPanel;
+    @NotNull
+    final List<WebHit> webHits;
+    @NotNull
+    final MessageBus messageBus;
+
+    public WebResultsTab(MessageBus messageBus) {
         scrollPane = new JScrollPane();
         contentPanel = new ContentPanel();
-
-        scrollPane.setViewportView(contentPanel);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
-        scrollPane.getHorizontalScrollBar().setUnitIncrement(10);
-        scrollPane.setBorder(null);
+        webHits = new ArrayList<WebHit>();
+        this.messageBus = messageBus;
 
         setLayout(new BorderLayout());
+    }
+
+    public void update(Model model) {
+        this.model = new Model(model);
+
+        for (int i = 0; i < model.webhits.size(); i++) {
+            WebHit.Model m = model.webhits.get(i);
+            if (i != 0) add(Box.createRigidArea(new Dimension(0, 1)));
+            webHits.add(new WebHit(messageBus, m));
+        }
+        // TODO not sure why I have to reconstruct the scrollpane. Simple revalidate() did not work
+        scrollPane = new JScrollPane();
+        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
+        scrollPane.getHorizontalScrollBar().setUnitIncrement(10);
+        scrollPane.setViewportView(contentPanel);
+        scrollPane.setBorder(null);
+        contentPanel.update(webHits);
         add(scrollPane);
+    }
+
+    public static final class Model {
+        public List<WebHit.Model> webhits;
+
+        public Model(Model rhs) {
+            this(rhs.webhits);
+        }
+
+        public Model(List<WebHit.Model> webhits) {
+            this.webhits = webhits;
+        }
     }
 }
 
 final class ContentPanel extends JPanel {
-    public ContentPanel() {
-        JPanel l = new JPanel() {
-            {
-                List<WebHit> hits = new ArrayList<WebHit>();
-                hits.add(new WebHit());
-                hits.add(new WebHit());
-                hits.add(new WebHit());
-                hits.add(new WebHit());
+    final ListPanel listPanel;
+    final JButton more;
 
-                setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-
-                for (int i = 0; i < hits.size(); i++) {
-                    if (i != 0) add(Box.createRigidArea(new Dimension(0, 1)));
-                    add(hits.get(i));
-                }
-
-                setBackground(Constants.SeparatorColor);
-            }
-        };
-
-        JButton more = new JButton("more");
+    {
+        listPanel = new ListPanel();
+        more = new JButton("more");
 
         setBackground(Color.white);
-        setLayout(new MigLayout("fillx",
-                "0[fill]0",
-                "0[]10[]0"));
-        add(l, "cell 0 0");
+        setLayout(new MigLayout("fillx", "0[fill]0", "0[]10[]0"));
+
+        add(listPanel, "cell 0 0");
         add(more, "cell 0 1");
+    }
+
+    public void update(List<WebHit> webHits) {
+        listPanel.update(webHits);
+    }
+
+
+    private static final class ListPanel extends JPanel {
+        {
+            setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+            setBackground(Constants.SeparatorColor);
+        }
+
+        public void update(List<WebHit> webHits) {
+            removeAll();
+            for (WebHit hit : webHits) {
+                add(hit);
+            }
+        }
 
     }
+
 }

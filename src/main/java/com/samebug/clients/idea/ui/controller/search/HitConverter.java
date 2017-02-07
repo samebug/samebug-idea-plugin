@@ -17,7 +17,7 @@ package com.samebug.clients.idea.ui.controller.search;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.search.api.entities.*;
-import com.samebug.clients.common.services.SearchService;
+import com.samebug.clients.common.services.DeprecatedSearchService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.component.card.ExternalSolutionView;
 import com.samebug.clients.idea.ui.component.card.SamebugTipView;
@@ -104,17 +104,17 @@ final class HitConverter {
             @NotNull
             @Override
             public List<BreadCrumb> getMatchingBreadCrumb() {
-                return SearchService.getMatchingBreadCrumb(search, hit);
+                return DeprecatedSearchService.getMatchingBreadCrumb(search, hit);
             }
 
             @Override
             public boolean canBeMarked() {
-                return SearchService.canBeMarked(currentUserId(), search, hit);
+                return DeprecatedSearchService.canBeMarked(currentUserId(), search, hit);
             }
 
             @Override
             public boolean createdByCurrentUser() {
-                return SearchService.createdByUser(currentUserId(), hit);
+                return DeprecatedSearchService.createdByUser(currentUserId(), hit);
             }
         };
     }
@@ -136,18 +136,18 @@ final class HitConverter {
 
             @Override
             public boolean canBeMarked() {
-                return SearchService.canBeMarked(currentUserId(), search, hit);
+                return DeprecatedSearchService.canBeMarked(currentUserId(), search, hit);
             }
 
             @Override
             public boolean createdByCurrentUser() {
-                return SearchService.createdByUser(currentUserId(), hit);
+                return DeprecatedSearchService.createdByUser(currentUserId(), hit);
             }
 
             @NotNull
             @Override
             public List<BreadCrumb> getMatchingBreadCrumb() {
-                return SearchService.getMatchingBreadCrumb(search, hit);
+                return DeprecatedSearchService.getMatchingBreadCrumb(search, hit);
             }
         };
     }

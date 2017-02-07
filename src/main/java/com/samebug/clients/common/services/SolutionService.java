@@ -2,7 +2,7 @@ package com.samebug.clients.common.services;
 
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.messages.MarkModelListener;
-import com.samebug.clients.common.messages.SearchModelListener;
+import com.samebug.clients.common.messages.SolutionModelListener;
 import com.samebug.clients.common.messages.TipModelListener;
 import com.samebug.clients.common.search.api.client.ClientResponse;
 import com.samebug.clients.common.search.api.client.SamebugClient;
@@ -31,15 +31,15 @@ final public class SolutionService {
                     }
 
                     protected void start() {
-                        messageBus.syncPublisher(SearchModelListener.TOPIC).startLoadingSolutions(searchId);
+                        messageBus.syncPublisher(SolutionModelListener.TOPIC).startLoadingSolutions(searchId);
                     }
 
                     protected void success(Solutions result) {
-                        messageBus.syncPublisher(SearchModelListener.TOPIC).successLoadingSolutions(searchId, result);
+                        messageBus.syncPublisher(SolutionModelListener.TOPIC).successLoadingSolutions(searchId, result);
                     }
 
                     protected void fail(SamebugClientException e) {
-                        messageBus.syncPublisher(SearchModelListener.TOPIC).failLoadingSolutions(searchId, e);
+                        messageBus.syncPublisher(SolutionModelListener.TOPIC).failLoadingSolutions(searchId, e);
                     }
                 };
         return clientService.execute(requestHandler);
