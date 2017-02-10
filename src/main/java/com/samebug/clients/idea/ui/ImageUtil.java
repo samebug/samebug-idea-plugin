@@ -31,10 +31,11 @@ import java.util.Collection;
 import java.util.Hashtable;
 
 final public class ImageUtil {
-    static final Hashtable<URL, Image> cache = new Hashtable<URL, Image>();
-    static final Hashtable<ScaledKey, Image> scaledCache = new Hashtable<ScaledKey, Image>();
-    static final Logger LOGGER = Logger.getInstance(ImageUtil.class);
-    static final Image avatarPlaceholder;
+    private static final Logger LOGGER = Logger.getInstance(ImageUtil.class);
+    private static final Hashtable<URL, BufferedImage> cache = new Hashtable<URL, BufferedImage>();
+    private static final Hashtable<ScaledKey, BufferedImage> scaledCache = new Hashtable<ScaledKey, BufferedImage>();
+    private static final URL avatarPlaceholderUrl;
+    private static final BufferedImage avatarPlaceholder;
 
     @Nullable
     public static Image getAvatarPlaceholder() {
@@ -42,20 +43,29 @@ final public class ImageUtil {
     }
 
     @Nullable
-    public static Image get(@NotNull URL url) {
+    public static BufferedImage getAvatarPlaceholder(int width, int height) {
+        return getScaledThroughCache(avatarPlaceholderUrl, avatarPlaceholder, width, height);
+    }
+
+    @Nullable
+    public static BufferedImage get(@NotNull URL url) {
         return cache.get(url);
     }
 
     @Nullable
-    public static Image getScaled(@NotNull URL url, int width, int height) {
+    public static BufferedImage getScaled(@NotNull URL url, int width, int height) {
+        return getScaledThroughCache(url, cache.get(url), width, height);
+    }
+
+    @Nullable
+    private static BufferedImage getScaledThroughCache(@NotNull URL url, BufferedImage nonScaledImage, int width, int height) {
         ScaledKey key = new ScaledKey(url, width, height);
-        Image scaledImage = scaledCache.get(key);
+        BufferedImage scaledImage = scaledCache.get(key);
         if (scaledImage == null) {
-            Image nonScaledImage = cache.get(url);
             if (nonScaledImage == null) {
                 return null;
             } else {
-                scaledImage = nonScaledImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+                scaledImage = getScaledInstance(nonScaledImage, width, height, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR, true);
                 scaledCache.put(key, scaledImage);
                 return scaledImage;
             }
@@ -68,16 +78,16 @@ final public class ImageUtil {
         for (final URL url : sources) {
             if (url == null || cache.get(url) != null) continue;
             try {
-                Image image = ImageIO.read(url);
+                BufferedImage image = ImageIO.read(url);
                 if (image != null) cache.put(url, image);
             } catch (IOException e) {
-                LOGGER.warn("Failed to download image " + url);
+                e.printStackTrace();
             }
         }
     }
 
 
-    static final String[] cachedImages = {
+    private static final String[] cachedImages = {
             "images/sources/alfresco.png",
             "images/sources/apache.png",
             "images/sources/appcelerator.png",
@@ -137,14 +147,16 @@ final public class ImageUtil {
     };
 
     static {
-        BufferedImage tmpImage = null;
+        URL tmpAvatarUrl = null;
+        BufferedImage tmpAvatarImage = null;
         try {
-            final URL avatarPlaceholderUrl = ImageUtil.class.getClassLoader().getResource("/com/samebug/avatar-placeholder.png");
-            if (avatarPlaceholderUrl != null) tmpImage = ImageIO.read(avatarPlaceholderUrl);
+            tmpAvatarUrl = ImageUtil.class.getResource("/com/samebug/cache/images/avatar-placeholder.png");
+            if (tmpAvatarUrl != null) tmpAvatarImage = ImageIO.read(tmpAvatarUrl);
         } catch (IOException e) {
             LOGGER.warn("Failed to read avatar-placeholder.png as an image!", e);
         }
-        avatarPlaceholder = tmpImage;
+        avatarPlaceholderUrl = tmpAvatarUrl;
+        avatarPlaceholder = tmpAvatarImage;
 
         for (String imageUri : cachedImages) {
             InputStream imageBytes = IdeaSamebugPlugin.class.getResourceAsStream("/com/samebug/cache/" + imageUri);
@@ -153,7 +165,7 @@ final public class ImageUtil {
             } else {
                 try {
                     URL remoteUrl = IdeaSamebugPlugin.getInstance().getUrlBuilder().assets(imageUri);
-                    Image image = ImageIO.read(imageBytes);
+                    BufferedImage image = ImageIO.read(imageBytes);
                     cache.put(remoteUrl, image);
                 } catch (MalformedURLException e) {
                     LOGGER.warn("Url of image " + imageUri + " could not be resolved!", e);
@@ -164,10 +176,10 @@ final public class ImageUtil {
         }
     }
 
-    static class ScaledKey {
-        public URL src;
-        public int height;
-        public int width;
+    private static final class ScaledKey {
+        final URL src;
+        final int height;
+        final int width;
 
         public ScaledKey(URL src, int width, int height) {
             this.src = src;
@@ -191,5 +203,68 @@ final public class ImageUtil {
                         && rhs.height == height;
             }
         }
+    }
+
+    // TODO Image.getScaledComponent is told to be evil (slow and bad quality). Not sure if it still holds with Java 7
+    // copypasta from https://community.oracle.com/docs/DOC-983611
+    /**
+     * Convenience method that returns a scaled instance of the
+     * provided {@code BufferedImage}.
+     *
+     * @param img the original image to be scaled
+     * @param targetWidth the desired width of the scaled instance,
+     * in pixels
+     * @param targetHeight the desired height of the scaled instance,
+     * in pixels
+     * @param hint one of the rendering hints that corresponds to
+     * {@code RenderingHints.KEY_INTERPOLATION} (e.g.
+     * {@code RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR},
+     * {@code RenderingHints.VALUE_INTERPOLATION_BILINEAR},
+     * {@code RenderingHints.VALUE_INTERPOLATION_BICUBIC})
+     * @param higherQuality if true, this method will use a multi-step
+     * scaling technique that provides higher quality than the usual
+     * one-step technique (only useful in downscaling cases, where
+     * {@code targetWidth} or {@code targetHeight} is
+     * smaller than the original dimensions, and generally only when
+     * the {@code BILINEAR} hint is specified)
+     * @return a scaled version of the original {@code BufferedImage}
+     */
+    private static BufferedImage getScaledInstance(BufferedImage img, int targetWidth, int targetHeight, Object hint, boolean higherQuality) {
+        int type = (img.getTransparency() == Transparency.OPAQUE) ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
+        BufferedImage ret = (BufferedImage) img;
+        int w, h;
+        if (higherQuality) {
+            // Use multi-step technique: start with original size, then
+            // scale down in multiple passes with drawImage()
+            // until the target size is reached
+            w = img.getWidth();
+            h = img.getHeight();
+        } else {
+            // Use one-step technique: scale directly from original
+            // size to target size with a single drawImage() call
+            w = targetWidth;
+            h = targetHeight;
+        }
+        do {
+            if (higherQuality && w > targetWidth) {
+                w /= 2;
+                if (w < targetWidth) {
+                    w = targetWidth;
+                }
+            }
+            if (higherQuality && h > targetHeight) {
+                h /= 2;
+                if (h < targetHeight) {
+                    h = targetHeight;
+                }
+            }
+            BufferedImage tmp = new BufferedImage(w, h, type);
+            Graphics2D g2 = tmp.createGraphics();
+            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, hint);
+            g2.drawImage(ret, 0, 0, w, h, null);
+            g2.dispose();
+            ret = tmp;
+        } while (w != targetWidth || h != targetHeight);
+        return ret;
     }
 }

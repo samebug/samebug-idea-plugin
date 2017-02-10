@@ -20,7 +20,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.messages.SolutionModelListener;
 import com.samebug.clients.common.search.api.entities.Solutions;
-import com.samebug.clients.idea.ui.component.experimental.SolutionFrame;
+import com.samebug.clients.idea.ui.component.solutions.SolutionFrame;
 import org.jetbrains.annotations.NotNull;
 
 final class ModelController implements SolutionModelListener {
@@ -52,7 +52,7 @@ final class ModelController implements SolutionModelListener {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
-                controller.view.update(model);
+                controller.view.setContent(model);
             }
         });
     }

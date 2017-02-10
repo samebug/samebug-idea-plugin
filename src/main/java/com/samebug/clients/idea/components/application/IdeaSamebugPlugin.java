@@ -33,6 +33,7 @@ import com.samebug.clients.common.services.HistoryService;
 import com.samebug.clients.common.services.ProfileService;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.idea.notification.SamebugNotifications;
+import com.samebug.clients.idea.ui.FontRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

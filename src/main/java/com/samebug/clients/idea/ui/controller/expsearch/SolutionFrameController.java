@@ -24,12 +24,14 @@ import com.samebug.clients.common.search.api.entities.Solutions;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.project.ToolWindowController;
-import com.samebug.clients.idea.ui.component.experimental.*;
+import com.samebug.clients.idea.ui.component.profile.ProfilePanel;
+import com.samebug.clients.idea.ui.component.solutions.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 final public class SolutionFrameController implements Disposable {
@@ -77,13 +79,19 @@ final public class SolutionFrameController implements Disposable {
             final String sourceIconName = externalSolution.getSource().getIcon();
             final URL sourceIconUrl = IdeaSamebugPlugin.getInstance().getUrlBuilder().sourceIcon(sourceIconName);
 
-            WebHit.Model webhit = new WebHit.Model(externalSolution.getTitle(), externalSolution.getUrl(), externalSolution.getCreatedAt(), externalSolution.getSource().getName(), sourceIconUrl, mark);
+            String createdBy = null;
+            if (externalSolution.getAuthor() != null) createdBy = externalSolution.getAuthor().getName();
+            WebHit.Model webhit = new WebHit.Model(externalSolution.getTitle(), externalSolution.getUrl(), externalSolution.getCreatedAt(), createdBy, externalSolution.getSource().getName(), sourceIconUrl, mark);
             webhits.add(webhit);
         }
 
         WebResultsTab.Model webResults = new WebResultsTab.Model(webhits);
-        ResultTabs.Model resultTabs = new ResultTabs.Model(webResults);
-        SolutionFrame.Model model = new SolutionFrame.Model(resultTabs);
+        WriteTipCTA.Model cta = new WriteTipCTA.Model(0);
+        TipResultsTab.Model tipResults = new TipResultsTab.Model(Collections.<TipHit.Model>emptyList(), cta);
+        ResultTabs.Model resultTabs = new ResultTabs.Model(webResults, tipResults);
+        ExceptionHeaderPanel.Model header = new ExceptionHeaderPanel.Model("");
+        ProfilePanel.Model profile = new ProfilePanel.Model(0, 0, 0, 0, "", null);
+        SolutionFrame.Model model = new SolutionFrame.Model(resultTabs, header, profile);
 
         return model;
     }

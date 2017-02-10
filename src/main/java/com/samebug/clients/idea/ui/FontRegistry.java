@@ -1,10 +1,13 @@
-package com.samebug.clients.idea.components.application;
+package com.samebug.clients.idea.ui;
 
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class FontRegistry {
+public final class FontRegistry {
+    public static final String AvenirRegular = "AvenirNextLTPro-Regular";
+    public static final String AvenirDemi = "AvenirNextLTPro-Demi";
+
     public static void registerFonts() throws IOException, FontFormatException {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 
