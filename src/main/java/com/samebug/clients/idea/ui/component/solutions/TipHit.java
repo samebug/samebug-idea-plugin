@@ -63,7 +63,7 @@ public final class TipHit extends JPanel {
             timestamp.setForeground(ColorUtil.unemphasizedText());
 
             setOpaque(false);
-            setLayout(new MigLayout("", "0[]5[]0", "0[]0[]0"));
+            setLayout(new MigLayout("", "0[]5[]0", "0[14!]0[14!]0"));
 
             add(authorIcon, "cell 0 0, spany 2");
             add(name, "cell 1 0");

@@ -54,7 +54,15 @@ final public class ImageUtil {
 
     @Nullable
     public static BufferedImage getScaled(@NotNull URL url, int width, int height) {
-        return getScaledThroughCache(url, cache.get(url), width, height);
+        BufferedImage nonScaled = cache.get(url);
+        if (nonScaled == null) {
+            try {
+                nonScaled = ImageIO.read(url);
+            } catch (IOException e) {
+                LOGGER.warn("Failed to load image from " + url);
+            }
+        }
+        return getScaledThroughCache(url, nonScaled, width, height);
     }
 
     @Nullable

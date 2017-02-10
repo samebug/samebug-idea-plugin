@@ -28,10 +28,9 @@ public final class MarkPanel extends JPanel {
 
         setBorder(null);
         setOpaque(false);
-        setLayout(new MigLayout(
-                "",
-                "12[]9[]10[]8",
-                "8[]8"));
+        setLayout(new MigLayout("", "12[]9[]10[]8", "8[]8"));
+
+
         add(counter, ", h 16!");
         add(separator, "w 1!, h 16!");
         add(button, ", h 16!");

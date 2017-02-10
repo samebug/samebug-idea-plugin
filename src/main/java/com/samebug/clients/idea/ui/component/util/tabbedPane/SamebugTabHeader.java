@@ -21,8 +21,8 @@ public abstract class SamebugTabHeader extends JPanel {
         setOpaque(false);
         // NOTE the layout is specified in the derived classes, don't forget to introduce changes to both when necessary
 
-        add(tabLabel);
-        add(hitsLabel);
+        add(tabLabel, "cell 0 0");
+        add(hitsLabel, "cell 1 0");
     }
 
     public void setSelected(boolean selected) {
@@ -37,10 +37,23 @@ public abstract class SamebugTabHeader extends JPanel {
     }
 
     private final class HitsLabel extends JLabel {
+        private static final int Height = 20;
         private final Font font = new Font(FontRegistry.AvenirDemi, Font.PLAIN, 10);
 
-        {
-            setBorder(BorderFactory.createEmptyBorder(2, 6, 2, 6));
+        @Override
+        public Dimension getPreferredSize() {
+            // Override to guarantee size
+            String hits = getText();
+
+            if (hits.length() == 1) {
+                // the background is a circle
+                return new Dimension(Height, Height);
+            } else {
+                // the background is a rounded rect
+                FontMetrics fm = getFontMetrics(font);
+                int width = fm.stringWidth(hits);
+                return new Dimension(8 + width + 8, Height);
+            }
         }
 
         @Override
@@ -56,9 +69,9 @@ public abstract class SamebugTabHeader extends JPanel {
             // TODO: this is dirty, it would be better to draw only the background without the text
             g2.setColor(getBackground());
             if (hits.length() == 1) {
-                g.fillOval(0, 1, getWidth() - 1, getHeight() - 1);
+                g.fillOval(1, 1, getWidth() - 2, getHeight() - 2);
             } else {
-                g.fillRoundRect(0, 1, getWidth() - 1, getHeight() - 1, 20, 20);
+                g.fillRoundRect(1, 1, getWidth() - 2, getHeight() - 2, 20, 20);
             }
 
             g2.setColor(ColorUtil.background());
@@ -66,7 +79,7 @@ public abstract class SamebugTabHeader extends JPanel {
 
             // TODO this will break when changing the font
             if (hits.length() == 1) {
-                g2.drawString(getText(), 6, 13);
+                g2.drawString(getText(), 7, 13);
             } else {
                 g2.drawString(getText(), 8, 13);
             }

@@ -18,9 +18,7 @@ package com.samebug.clients.idea.ui.controller.expsearch;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.common.search.api.entities.RestHit;
-import com.samebug.clients.common.search.api.entities.SolutionReference;
-import com.samebug.clients.common.search.api.entities.Solutions;
+import com.samebug.clients.common.search.api.entities.*;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.project.ToolWindowController;
@@ -31,7 +29,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 final public class SolutionFrameController implements Disposable {
@@ -72,7 +69,7 @@ final public class SolutionFrameController implements Disposable {
     }
 
     SolutionFrame.Model convert(@NotNull Solutions solutions) {
-        final List<WebHit.Model> webhits = new ArrayList<WebHit.Model>(solutions.getReferences().size());
+        final List<WebHit.Model> webHits = new ArrayList<WebHit.Model>(solutions.getReferences().size());
         for (RestHit<SolutionReference> externalHit : solutions.getReferences()) {
             SolutionReference externalSolution = externalHit.getSolution();
             MarkPanel.Model mark = new MarkPanel.Model(externalHit.getScore(), externalHit.getMarkId(), true /*TODO*/);
@@ -81,15 +78,23 @@ final public class SolutionFrameController implements Disposable {
 
             String createdBy = null;
             if (externalSolution.getAuthor() != null) createdBy = externalSolution.getAuthor().getName();
-            WebHit.Model webhit = new WebHit.Model(externalSolution.getTitle(), externalSolution.getUrl(), externalSolution.getCreatedAt(), createdBy, externalSolution.getSource().getName(), sourceIconUrl, mark);
-            webhits.add(webhit);
+            WebHit.Model webHit = new WebHit.Model(externalSolution.getTitle(), externalSolution.getUrl(), externalSolution.getCreatedAt(), createdBy, externalSolution.getSource().getName(), sourceIconUrl, mark);
+            webHits.add(webHit);
         }
 
-        WebResultsTab.Model webResults = new WebResultsTab.Model(webhits);
+        WebResultsTab.Model webResults = new WebResultsTab.Model(webHits);
         WriteTipCTA.Model cta = new WriteTipCTA.Model(0);
-        TipResultsTab.Model tipResults = new TipResultsTab.Model(Collections.<TipHit.Model>emptyList(), cta);
+        final List<TipHit.Model> tipHits = new ArrayList<TipHit.Model>(solutions.getTips().size());
+        for (RestHit<Tip> tipSolution : solutions.getTips()) {
+            Tip tip = tipSolution.getSolution();
+            MarkPanel.Model mark = new MarkPanel.Model(tipSolution.getScore(), tipSolution.getMarkId(), true /*TODO*/);
+            UserReference author = tipSolution.getCreatedBy();
+            TipHit.Model tipHit = new TipHit.Model(tip.getTip(), tip.getCreatedAt(), author.getDisplayName(), author.getAvatarUrl(), mark);
+            tipHits.add(tipHit);
+        }
+        TipResultsTab.Model tipResults = new TipResultsTab.Model(tipHits, cta);
         ResultTabs.Model resultTabs = new ResultTabs.Model(webResults, tipResults);
-        ExceptionHeaderPanel.Model header = new ExceptionHeaderPanel.Model("");
+        ExceptionHeaderPanel.Model header = new ExceptionHeaderPanel.Model(SolutionService.headLine(solutions.getSearchGroup().getLastSearch()));
         ProfilePanel.Model profile = new ProfilePanel.Model(0, 0, 0, 0, "", null);
         SolutionFrame.Model model = new SolutionFrame.Model(resultTabs, header, profile);
 

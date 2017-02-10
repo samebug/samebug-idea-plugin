@@ -42,6 +42,7 @@ intellij {
         channel project.hasProperty('JETBRAINS_CHANNEL') ? project.getProperty('JETBRAINS_CHANNEL') : null
     }
     systemProperty("awt.useSystemAAFontSettings", "on")
+    systemProperty("swing.aatext", "true")
 }
 
 repositories {

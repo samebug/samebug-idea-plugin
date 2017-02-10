@@ -6,13 +6,11 @@ import com.samebug.clients.common.messages.SolutionModelListener;
 import com.samebug.clients.common.messages.TipModelListener;
 import com.samebug.clients.common.search.api.client.ClientResponse;
 import com.samebug.clients.common.search.api.client.SamebugClient;
-import com.samebug.clients.common.search.api.entities.MarkResponse;
-import com.samebug.clients.common.search.api.entities.RestHit;
-import com.samebug.clients.common.search.api.entities.Solutions;
-import com.samebug.clients.common.search.api.entities.Tip;
+import com.samebug.clients.common.search.api.entities.*;
+import com.samebug.clients.common.search.api.entities.Exception;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 
-final public class SolutionService {
+public final class SolutionService {
     final MessageBus messageBus;
     final ClientService clientService;
 
@@ -118,4 +116,18 @@ final public class SolutionService {
     }
 
 
+
+    public static String headLine(Search search) {
+        if (search instanceof TextSearch) {
+            return "Not parseable stacktrace";
+        } else {
+            StackTraceSearch s = (StackTraceSearch) search;
+            Exception trace = s.getStackTrace().getTrace();
+            String headLine = trace.getTypeName();
+            if (trace.getMessage() != null) {
+                headLine += ": " + trace.getMessage();
+            }
+            return headLine;
+        }
+    }
 }

@@ -18,7 +18,11 @@ public final class AvatarIcon extends JPanel {
         setOpaque(false);
         // TODO handle avatar loading problems (here or when creating the model)
         if (avatarUrl == null) this.avatar = ImageUtil.getAvatarPlaceholder(size, size);
-        else this.avatar = ImageUtil.getScaled(avatarUrl, size, size);
+        else {
+            BufferedImage imageFromUrl = ImageUtil.getScaled(avatarUrl, size, size);
+            if (imageFromUrl == null) this.avatar = ImageUtil.getAvatarPlaceholder(size, size);
+            else this.avatar = imageFromUrl;
+        }
         setPreferredSize(new Dimension(size, size));
     }
 

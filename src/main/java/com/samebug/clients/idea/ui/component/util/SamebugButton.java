@@ -5,12 +5,14 @@ import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 
 public class SamebugButton extends JButton {
     {
         setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 12));
         setContentAreaFilled(false);
+        setUI(new BasicButtonUI()); // override jetbrains custom UI
         setOpaque(false);
         setForeground(ColorUtil.samebug());
         setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 14));

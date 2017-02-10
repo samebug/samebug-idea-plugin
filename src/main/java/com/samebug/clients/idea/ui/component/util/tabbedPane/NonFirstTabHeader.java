@@ -6,7 +6,7 @@ public final class NonFirstTabHeader extends SamebugTabHeader {
     public NonFirstTabHeader(String tabName, int hits) {
         super(tabName, hits);
 
-        setLayout(new MigLayout("", "20[]7[]20", "0[]0"));
+        setLayout(new MigLayout("", "20[]7[]20", "0[20, fill]0"));
         setSelected(false);
     }
 }
