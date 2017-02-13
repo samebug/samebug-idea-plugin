@@ -34,11 +34,11 @@ public final class WebHit extends JPanel {
 
         add(titlePanel, "growx, cell 0 0");
         add(markPanel, "cell 0 1");
-
     }
 
     private final class TitlePanel extends JPanel {
         private final static int Size = 40;
+
         {
             final SourceIcon sourceIcon = new SourceIcon();
             final TitleLabel title = new TitleLabel();
@@ -76,9 +76,9 @@ public final class WebHit extends JPanel {
             setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 12));
             String sourceText;
             if (model.createdBy == null) {
-                sourceText=model.sourceName + " | " + String.format("%s", TextUtil.prettyTime(model.createdAt));
+                sourceText = model.sourceName + " | " + String.format("%s", TextUtil.prettyTime(model.createdAt));
             } else {
-                sourceText=model.sourceName + " by " + model.createdBy + " | " + String.format("%s", TextUtil.prettyTime(model.createdAt));
+                sourceText = model.sourceName + " by " + model.createdBy + " | " + String.format("%s", TextUtil.prettyTime(model.createdAt));
             }
             setText(sourceText);
         }

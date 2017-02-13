@@ -59,14 +59,20 @@ public final class WebResultsTab extends JPanel {
 
     private final class ListPanel extends JPanel {
         {
-            setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
             setOpaque(false);
+
+            // NOTE I intended to use BoxLayout, but somewhy the webHit did not fill the width of the panel
+            setLayout(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.weightx = 1;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.gridwidth = GridBagConstraints.REMAINDER;
 
             // webHits is required to be initialized here (the hit views are actually added to the list)
             for (int i = 0; i < webHits.size(); i++) {
-                if (i != 0) add(new Separator());
+                if (i != 0) add(new Separator(), gbc);
                 WebHit hit = webHits.get(i);
-                add(hit);
+                add(hit, gbc);
             }
         }
     }
@@ -74,7 +80,6 @@ public final class WebResultsTab extends JPanel {
     private final static class Separator extends JPanel {
         {
             setPreferredSize(new Dimension(0, 20 + 1 + 20));
-            setMaximumSize(new Dimension(Integer.MAX_VALUE, 20 + 1 + 20));
         }
 
         @Override
