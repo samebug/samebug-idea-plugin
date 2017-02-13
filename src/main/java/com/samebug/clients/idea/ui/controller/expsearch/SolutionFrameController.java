@@ -29,6 +29,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 final public class SolutionFrameController implements Disposable {
@@ -92,7 +94,8 @@ final public class SolutionFrameController implements Disposable {
             TipHit.Model tipHit = new TipHit.Model(tip.getTip(), tip.getCreatedAt(), author.getDisplayName(), author.getAvatarUrl(), mark);
             tipHits.add(tipHit);
         }
-        TipResultsTab.Model tipResults = new TipResultsTab.Model(tipHits, cta);
+        BugmateList.Model bugmateList = new BugmateList.Model(Collections.<BugmateHit.Model>emptyList(), 16, false);
+        TipResultsTab.Model tipResults = new TipResultsTab.Model(tipHits, cta, bugmateList);
         ResultTabs.Model resultTabs = new ResultTabs.Model(webResults, tipResults);
         ExceptionHeaderPanel.Model header = new ExceptionHeaderPanel.Model(SolutionService.headLine(solutions.getSearchGroup().getLastSearch()));
         ProfilePanel.Model profile = new ProfilePanel.Model(0, 0, 0, 0, "", null);

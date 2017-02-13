@@ -17,7 +17,7 @@ public class SamebugTabbedPane extends JTabbedPane {
     // TODO cover every input interface to make sure only SamebugTabHeader can be inserted as a tab component
     {
         tabs = new ArrayList<SamebugTabHeader>();
-        setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         setBackground(ColorUtil.background());
         setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 16));
         setTabLayoutPolicy(SCROLL_TAB_LAYOUT);

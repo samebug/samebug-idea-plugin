@@ -3,6 +3,7 @@ package com.samebug.clients.idea.ui.component.solutions;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
+import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.component.util.SamebugButton;
 import net.miginfocom.swing.MigLayout;
 
@@ -48,7 +49,7 @@ public final class WebResultsTab extends JPanel {
             final MoreButton more = new MoreButton();
 
             setBackground(ColorUtil.background());
-            setLayout(new MigLayout("fillx", "0[]0", "0[]10[]0"));
+            setLayout(new MigLayout("fillx", "20[]20", "0[]10[]20"));
 
             add(listPanel, "cell 0 0, growx");
             add(more, "cell 0 1, al center");
@@ -59,14 +60,30 @@ public final class WebResultsTab extends JPanel {
     private final class ListPanel extends JPanel {
         {
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-            setBackground(ColorUtil.separator());
+            setOpaque(false);
 
             // webHits is required to be initialized here (the hit views are actually added to the list)
             for (int i = 0; i < webHits.size(); i++) {
-                if (i != 0) add(Box.createRigidArea(new Dimension(0, 1)));
+                if (i != 0) add(new Separator());
                 WebHit hit = webHits.get(i);
                 add(hit);
             }
+        }
+    }
+
+    private final static class Separator extends JPanel {
+        {
+            setPreferredSize(new Dimension(0, 20 + 1 + 20));
+            setMaximumSize(new Dimension(Integer.MAX_VALUE, 20 + 1 + 20));
+        }
+
+        @Override
+        public void paint(Graphics g) {
+            Graphics2D g2 = DrawUtil.init(g);
+            g2.setColor(ColorUtil.background());
+            g2.fillRect(0,0, getWidth(), getHeight());
+            g2.setColor(ColorUtil.separator());
+            g2.drawLine(0,21, getWidth(), 21);
         }
     }
 

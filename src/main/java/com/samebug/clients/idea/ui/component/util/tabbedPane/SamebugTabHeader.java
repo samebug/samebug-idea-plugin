@@ -29,7 +29,7 @@ public abstract class SamebugTabHeader extends JPanel {
         this.selected = selected;
         if (selected) {
             tabLabel.setForeground(ColorUtil.text());
-            hitsLabel.setBackground(ColorUtil.text());
+            hitsLabel.setBackground(ColorUtil.selectedTab());
         } else {
             tabLabel.setForeground(ColorUtil.samebug());
             hitsLabel.setBackground(ColorUtil.samebug());

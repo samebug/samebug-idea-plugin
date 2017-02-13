@@ -30,7 +30,7 @@ public final class WebHit extends JPanel {
         final TitlePanel titlePanel = new TitlePanel();
 
         setBackground(ColorUtil.background());
-        setLayout(new MigLayout("fillx", "0[300]0", "30[]16[]30"));
+        setLayout(new MigLayout("fillx", "0[300]0", "0[]16[]0"));
 
         add(titlePanel, "growx, cell 0 0");
         add(markPanel, "cell 0 1");

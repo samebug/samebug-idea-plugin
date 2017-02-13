@@ -43,12 +43,14 @@ public final class TipResultsTab extends JPanel {
         {
             final ListPanel listPanel = new ListPanel();
             final WriteTipCTA writeTip = new WriteTipCTA(messageBus, model.writeTipHint);
+            final BugmateList bugmateList = new BugmateList(messageBus, model.bugmateList);
 
             setBackground(ColorUtil.background());
-            setLayout(new MigLayout("fillx", "0[fill]0", "0[]20[]0"));
+            setLayout(new MigLayout("fillx", "20[fill]20", "0[]20[]20[]20"));
 
             add(listPanel, "cell 0 0");
             add(writeTip, "cell 0 1");
+            add(bugmateList, "cell 0 2");
         }
     }
 
@@ -59,7 +61,7 @@ public final class TipResultsTab extends JPanel {
 
             // tipHits is required to be initialized here (the hit views are actually added to the list)
             for (int i = 0; i < tipHits.size(); i++) {
-                if (i == 0) add(Box.createRigidArea(new Dimension(0, 30)));
+                if (i == 0) add(Box.createRigidArea(new Dimension(0, 10)));
                 else add(Box.createRigidArea(new Dimension(0, 20)));
                 TipHit hit = tipHits.get(i);
                 add(hit);
@@ -71,14 +73,16 @@ public final class TipResultsTab extends JPanel {
     public static final class Model {
         private final List<TipHit.Model> tipHits;
         private final WriteTipCTA.Model writeTipHint;
+        private final BugmateList.Model bugmateList;
 
         public Model(Model rhs) {
-            this(rhs.tipHits, rhs.writeTipHint);
+            this(rhs.tipHits, rhs.writeTipHint, rhs.bugmateList);
         }
 
-        public Model(List<TipHit.Model> tipHits, WriteTipCTA.Model writeTipHint) {
+        public Model(List<TipHit.Model> tipHits, WriteTipCTA.Model writeTipHint, BugmateList.Model bugmateList) {
             this.tipHits = tipHits;
             this.writeTipHint = writeTipHint;
+            this.bugmateList = bugmateList;
         }
 
         public int getTipsSize() {

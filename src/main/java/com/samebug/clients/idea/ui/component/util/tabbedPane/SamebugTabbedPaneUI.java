@@ -11,7 +11,7 @@ public final class SamebugTabbedPaneUI extends BasicTabbedPaneUI {
         super.installDefaults();
         tabInsets = new Insets(0, 0, 0, 0);
         selectedTabPadInsets = new Insets(0, 0, 0, 0);
-        tabAreaInsets = new Insets(0, 0, 0, 0);
+        tabAreaInsets = new Insets(0, 20, 20, 0);
         contentBorderInsets = new Insets(0, 0, 0, 0);
     }
 
