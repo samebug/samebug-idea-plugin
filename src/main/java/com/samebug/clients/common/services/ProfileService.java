@@ -12,49 +12,20 @@ import com.samebug.clients.common.search.api.entities.UserInfo;
 import com.samebug.clients.common.search.api.entities.UserStats;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.concurrent.atomic.AtomicReference;
-
-final public class ProfileService {
+public final class ProfileService {
     @NotNull
     final MessageBus messageBus;
     @NotNull
     final ClientService clientService;
-
-    final AtomicReference<Integer> userId;
-    final AtomicReference<Integer> workspaceId;
-
     @NotNull
-    final AtomicReference<User> user;
+    final ProfileStore store;
 
-    @NotNull
-    final AtomicReference<Statistics> statistics;
 
-    public ProfileService(@NotNull MessageBus messageBus, @NotNull ClientService clientService) {
+    public ProfileService(@NotNull MessageBus messageBus, @NotNull ClientService clientService, @NotNull ProfileStore store) {
         this.messageBus = messageBus;
         this.clientService = clientService;
-
-        user = new AtomicReference<User>();
-        statistics = new AtomicReference<Statistics>();
-        this.userId = new AtomicReference<Integer>();
-        this.workspaceId = new AtomicReference<Integer>();
-    }
-
-    @Nullable
-    public User getUser() {
-        return user.get();
-    }
-
-    @Nullable
-    public Statistics getUserStats() {
-        return statistics.get();
-    }
-
-    // TODO Settings dialog should call this before it tries to authenticate
-    public void changeUserSettings(@Nullable Integer userId, @Nullable Integer workspaceId) {
-        this.userId.set(userId);
-        this.workspaceId.set(workspaceId);
+        this.store = store;
     }
 
     public UserInfo loadUserInfo(final String apiKey) throws SamebugClientException {
@@ -69,12 +40,12 @@ final public class ProfileService {
                     protected void success(UserInfo result) {
                         final User userResult;
                         if (result.getUserExist()) {
-                            userResult = new User(result.getUserId(), result.getDisplayName(), result.getAvatarUrl(), workspaceId.get());
+                            userResult = new User(result.getUserId(), result.getDisplayName(), result.getAvatarUrl(), store.workspaceId.get());
                         } else {
                             userResult = null;
                         }
-                        user.set(userResult);
-                        messageBus.syncPublisher(ProfileListener.TOPIC).profileChange(userResult, statistics.get());
+                        store.user.set(userResult);
+                        messageBus.syncPublisher(ProfileListener.TOPIC).profileChange(userResult, store.statistics.get());
 
                         // NOTE: this is a special case, we handle connection status by the result, not by the http status
                         boolean isUserAuthenticated = result.getUserExist();
@@ -83,8 +54,8 @@ final public class ProfileService {
                     }
 
                     protected void fail(SamebugClientException e) {
-                        user.set(null);
-                        messageBus.syncPublisher(ProfileListener.TOPIC).profileChange(null, statistics.get());
+                        store.user.set(null);
+                        messageBus.syncPublisher(ProfileListener.TOPIC).profileChange(null, store.statistics.get());
                     }
                 };
         return clientService.execute(requestHandler);
@@ -101,13 +72,13 @@ final public class ProfileService {
 
                     protected void success(UserStats result) {
                         final Statistics statisticsResult = new Statistics(result.getNumberOfTips(), result.getNumberOfMarks(), result.getNumberOfThanks());
-                        statistics.set(statisticsResult);
-                        messageBus.syncPublisher(ProfileListener.TOPIC).profileChange(user.get(), statisticsResult);
+                        store.statistics.set(statisticsResult);
+                        messageBus.syncPublisher(ProfileListener.TOPIC).profileChange(store.user.get(), statisticsResult);
                     }
 
                     protected void fail(SamebugClientException e) {
-                        statistics.set(null);
-                        messageBus.syncPublisher(ProfileListener.TOPIC).profileChange(user.get(), null);
+                        store.statistics.set(null);
+                        messageBus.syncPublisher(ProfileListener.TOPIC).profileChange(store.user.get(), null);
                     }
                 };
         return clientService.execute(requestHandler);

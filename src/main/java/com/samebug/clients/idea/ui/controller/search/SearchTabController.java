@@ -103,7 +103,7 @@ final public class SearchTabController implements TabController, Disposable {
                 ClientService client = IdeaSamebugPlugin.getInstance().getClient();
                 // TODO
 //                try {
-//                    final Solutions solutions = client.getSolutions(mySearchId);
+//                    final Solutions solutions = client.loadSolutions(mySearchId);
 //                    ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
 //                        @Override
 //                        public void run() {

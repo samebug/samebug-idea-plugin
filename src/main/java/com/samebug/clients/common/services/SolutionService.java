@@ -6,20 +6,22 @@ import com.samebug.clients.common.messages.SolutionModelListener;
 import com.samebug.clients.common.messages.TipModelListener;
 import com.samebug.clients.common.search.api.client.ClientResponse;
 import com.samebug.clients.common.search.api.client.SamebugClient;
-import com.samebug.clients.common.search.api.entities.*;
 import com.samebug.clients.common.search.api.entities.Exception;
+import com.samebug.clients.common.search.api.entities.*;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 
 public final class SolutionService {
     final MessageBus messageBus;
     final ClientService clientService;
+    final SolutionStore solutionStore;
 
-    public SolutionService(MessageBus messageBus, ClientService clientService) {
+    public SolutionService(MessageBus messageBus, ClientService clientService, SolutionStore solutionStore) {
         this.messageBus = messageBus;
         this.clientService = clientService;
+        this.solutionStore = solutionStore;
     }
 
-    public Solutions getSolutions(final int searchId) throws SamebugClientException {
+    public Solutions loadSolutions(final int searchId) throws SamebugClientException {
         final SamebugClient client = clientService.client;
 
         ClientService.ConnectionAwareHttpRequest<Solutions> requestHandler =
@@ -33,10 +35,12 @@ public final class SolutionService {
                     }
 
                     protected void success(Solutions result) {
+                        solutionStore.solutions.put(searchId, result);
                         messageBus.syncPublisher(SolutionModelListener.TOPIC).successLoadingSolutions(searchId, result);
                     }
 
                     protected void fail(SamebugClientException e) {
+                        solutionStore.solutions.remove(searchId);
                         messageBus.syncPublisher(SolutionModelListener.TOPIC).failLoadingSolutions(searchId, e);
                     }
                 };
@@ -114,7 +118,6 @@ public final class SolutionService {
                 };
         return clientService.execute(requestHandler);
     }
-
 
 
     public static String headLine(Search search) {

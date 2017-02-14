@@ -23,7 +23,7 @@ import com.samebug.clients.idea.ui.messages.HistoryCardListener;
 import org.jetbrains.annotations.NotNull;
 
 final class ViewController implements RefreshTimestampsListener, HistoryCardListener {
-    final static Logger LOGGER = Logger.getInstance(ModelController.class);
+    final static Logger LOGGER = Logger.getInstance(ViewController.class);
     @NotNull
     final SolutionFrameController controller;
 

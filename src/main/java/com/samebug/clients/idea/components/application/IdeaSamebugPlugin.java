@@ -27,11 +27,9 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.messages.AuthenticationListener;
 import com.samebug.clients.common.search.api.WebUrlBuilder;
+import com.samebug.clients.common.search.api.entities.UserInfo;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.services.ClientService;
-import com.samebug.clients.common.services.HistoryService;
-import com.samebug.clients.common.services.ProfileService;
-import com.samebug.clients.common.services.SolutionService;
+import com.samebug.clients.common.services.*;
 import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.ui.FontRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -58,8 +56,14 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     private ClientService clientService;
     @Nullable
     private HistoryService historyService;
+
+    @Nullable
+    private ProfileStore profileStore;
     @Nullable
     private ProfileService profileService;
+
+    @Nullable
+    private SolutionStore solutionStore;
     @Nullable
     private SolutionService solutionService;
 
@@ -74,11 +78,8 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     @NotNull
     public static IdeaSamebugPlugin getInstance() {
         IdeaSamebugPlugin instance = ApplicationManager.getApplication().getComponent(IdeaSamebugPlugin.class);
-        if (instance == null) {
-            throw new Error("No Samebug IDEA plugin available");
-        } else {
-            return instance;
-        }
+        assert instance != null : "Plugin is not initialized!";
+        return instance;
     }
 
     @NotNull
@@ -86,18 +87,33 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         return urlBuilder;
     }
 
-    @Nullable
+    @NotNull
     public ClientService getClient() {
+        assert clientService != null : "Plugin is not initialized!";
         return clientService;
     }
 
-    @Nullable
+    @NotNull
+    public ProfileStore getProfileStore() {
+        assert profileStore != null : "Plugin is not initialized!";
+        return profileStore;
+    }
+
+    @NotNull
     public ProfileService getProfileService() {
+        assert profileService != null : "Plugin is not initialized!";
         return profileService;
     }
 
-    @Nullable
+    @NotNull
+    public SolutionStore getSolutionStore() {
+        assert solutionStore != null : "Plugin is not initialized!";
+        return solutionStore;
+    }
+
+    @NotNull
     public SolutionService getSolutionService() {
+        assert solutionService != null : "Plugin is not initialized!";
         return solutionService;
     }
 
@@ -111,11 +127,12 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
-                ApplicationSettings newSettings = new ApplicationSettings(state.get());
-                String apiKey = newSettings.apiKey;
+                ApplicationSettings settings = state.get();
+                String apiKey = settings.apiKey;
                 if (apiKey != null) {
                     try {
-                        profileService.authenticate(apiKey);
+                        UserInfo profile = profileService.loadUserInfo(apiKey);
+                        if (profile.getUserExist()) { profileService.loadUserStats(); }
                     } catch (SamebugClientException ignored) {
                     }
                 }
@@ -146,9 +163,14 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         connection = messageBus.connect();
         clientService = new ClientService(messageBus);
         clientService.configure(state.get().getNetworkConfig());
+
         historyService = new HistoryService(messageBus, clientService);
-        profileService = new ProfileService(messageBus, clientService);
-        solutionService = new SolutionService(messageBus, clientService);
+        profileStore = new ProfileStore();
+        profileService = new ProfileService(messageBus, clientService, profileStore);
+
+        solutionStore = new SolutionStore();
+        solutionService = new SolutionService(messageBus, clientService, solutionStore);
+
         timedTasks = new TimedTasks(connection);
         authenticationListener = new AuthenticationListenerImpl();
 

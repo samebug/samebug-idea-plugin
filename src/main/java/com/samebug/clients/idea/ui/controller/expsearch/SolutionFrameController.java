@@ -16,10 +16,18 @@
 package com.samebug.clients.idea.ui.controller.expsearch;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.samebug.clients.common.entities.user.Statistics;
+import com.samebug.clients.common.entities.user.User;
+import com.samebug.clients.common.search.api.WebUrlBuilder;
 import com.samebug.clients.common.search.api.entities.*;
+import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.common.search.api.exceptions.SamebugTimeout;
+import com.samebug.clients.common.services.ProfileStore;
 import com.samebug.clients.common.services.SolutionService;
+import com.samebug.clients.common.services.SolutionStore;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.project.ToolWindowController;
 import com.samebug.clients.idea.ui.component.profile.ProfilePanel;
@@ -29,35 +37,69 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 final public class SolutionFrameController implements Disposable {
     final static Logger LOGGER = Logger.getInstance(SolutionFrameController.class);
-    @NotNull
     final ToolWindowController twc;
-    @NotNull
     final Project myProject;
+    final int searchId;
 
-    @NotNull
     final SolutionFrame view;
 
-    @NotNull
     final ViewController viewController;
-    @NotNull
-    final ModelController modelController;
 
-    public SolutionFrameController(@NotNull ToolWindowController twc, @NotNull Project project,
-                                   @NotNull SolutionService service,
-                                   final int searchId) {
+    private final WebUrlBuilder urlBuilder;
+    private final ProfileStore profileStore;
+    private final SolutionStore solutionStore;
+    private final SolutionService solutionService;
+
+    public SolutionFrameController(ToolWindowController twc, Project project, final int searchId) {
         this.twc = twc;
         this.myProject = project;
+        this.searchId = searchId;
 
         view = new SolutionFrame(myProject.getMessageBus());
 
         viewController = new ViewController(this);
-        modelController = new ModelController(this);
+
+        IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
+        urlBuilder = plugin.getUrlBuilder();
+        solutionStore = IdeaSamebugPlugin.getInstance().getSolutionStore();
+        profileStore = IdeaSamebugPlugin.getInstance().getProfileStore();
+        solutionService = plugin.getSolutionService();
+    }
+
+    public void init() {
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final Solutions solutions = solutionService.loadSolutions(searchId);
+                    final User user = profileStore.getUser();
+                    final Statistics statistics = profileStore.getUserStats();
+                    // TODO this is quite an edge case, when we could load the solutions but not the user, not sure how to handle it
+                    if (user == null || statistics == null) throw new SamebugClientException("");
+                    final SolutionFrame.Model model = convert(solutions, user, statistics);
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            view.setContent(model);
+                        }
+                    });
+
+                } catch (SamebugClientException e) {
+                    // TODO set error panel
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            view.setWarningLoading();
+                        }
+                    });
+                }
+            }
+        });
     }
 
     @NotNull
@@ -70,13 +112,13 @@ final public class SolutionFrameController implements Disposable {
 
     }
 
-    SolutionFrame.Model convert(@NotNull Solutions solutions) {
+    SolutionFrame.Model convert(@NotNull Solutions solutions, @NotNull User user, @NotNull Statistics statistics) {
         final List<WebHit.Model> webHits = new ArrayList<WebHit.Model>(solutions.getReferences().size());
         for (RestHit<SolutionReference> externalHit : solutions.getReferences()) {
             SolutionReference externalSolution = externalHit.getSolution();
             MarkPanel.Model mark = new MarkPanel.Model(externalHit.getScore(), externalHit.getMarkId(), true /*TODO*/);
             final String sourceIconName = externalSolution.getSource().getIcon();
-            final URL sourceIconUrl = IdeaSamebugPlugin.getInstance().getUrlBuilder().sourceIcon(sourceIconName);
+            final URL sourceIconUrl = urlBuilder.sourceIcon(sourceIconName);
 
             String createdBy = null;
             if (externalSolution.getAuthor() != null) createdBy = externalSolution.getAuthor().getName();
@@ -98,7 +140,7 @@ final public class SolutionFrameController implements Disposable {
         TipResultsTab.Model tipResults = new TipResultsTab.Model(tipHits, cta, bugmateList);
         ResultTabs.Model resultTabs = new ResultTabs.Model(webResults, tipResults);
         ExceptionHeaderPanel.Model header = new ExceptionHeaderPanel.Model(SolutionService.headLine(solutions.getSearchGroup().getLastSearch()));
-        ProfilePanel.Model profile = new ProfilePanel.Model(0, 0, 0, 0, "", null);
+        ProfilePanel.Model profile = new ProfilePanel.Model(0, statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(), user.getDisplayName(), user.getAvatarUrl());
         SolutionFrame.Model model = new SolutionFrame.Model(resultTabs, header, profile);
 
         return model;

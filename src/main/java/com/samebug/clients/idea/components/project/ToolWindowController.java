@@ -148,23 +148,14 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
 
     @NotNull
     SolutionFrameController getOrCreateSolutionFrame(final int searchId) {
-        IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-        SolutionService solutionService = plugin.getSolutionService();
-
         ApplicationManager.getApplication().assertIsDispatchThread();
-        assert solutionService != null;
 
         if (solutionFrames.containsKey(searchId)) {
             return solutionFrames.get(searchId);
         } else {
-            final SolutionFrameController newSolutionFrame = new SolutionFrameController(this, project, solutionService, searchId);
+            final SolutionFrameController newSolutionFrame = new SolutionFrameController(this, project, searchId);
+            newSolutionFrame.init();
             solutionFrames.put(searchId, newSolutionFrame);
-            try {
-                solutionService.getSolutions(searchId);
-            } catch (SamebugClientException e) {
-                // TODO
-                e.printStackTrace();
-            }
             return newSolutionFrame;
         }
     }
