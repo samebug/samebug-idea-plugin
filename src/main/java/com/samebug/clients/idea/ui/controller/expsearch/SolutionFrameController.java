@@ -24,7 +24,6 @@ import com.samebug.clients.common.entities.user.User;
 import com.samebug.clients.common.search.api.WebUrlBuilder;
 import com.samebug.clients.common.search.api.entities.*;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.search.api.exceptions.SamebugTimeout;
 import com.samebug.clients.common.services.ProfileStore;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.services.SolutionStore;
@@ -81,7 +80,7 @@ final public class SolutionFrameController implements Disposable {
                     final Statistics statistics = profileStore.getUserStats();
                     // TODO this is quite an edge case, when we could load the solutions but not the user, not sure how to handle it
                     if (user == null || statistics == null) throw new SamebugClientException("");
-                    final SolutionFrame.Model model = convert(solutions, user, statistics);
+                    final SolutionFrame.Model model = convertSolutionFrame(solutions, user, statistics);
                     ApplicationManager.getApplication().invokeLater(new Runnable() {
                         @Override
                         public void run() {
@@ -112,17 +111,29 @@ final public class SolutionFrameController implements Disposable {
 
     }
 
-    SolutionFrame.Model convert(@NotNull Solutions solutions, @NotNull User user, @NotNull Statistics statistics) {
+    MarkPanel.Model convertMarkResponse(MarkResponse response) {
+        return new MarkPanel.Model(response.getDocumentVotes(), response.getId(), true /*TODO*/);
+    }
+
+    MarkPanel.Model convertRetractedMarkResponse(MarkResponse response) {
+        return new MarkPanel.Model(response.getDocumentVotes(), null, true /*TODO*/);
+    }
+
+    MarkPanel.Model convertMarkPanel(RestHit hit) {
+        return new MarkPanel.Model(hit.getScore(), hit.getMarkId(), true /*TODO*/);
+    }
+
+    SolutionFrame.Model convertSolutionFrame(@NotNull Solutions solutions, @NotNull User user, @NotNull Statistics statistics) {
         final List<WebHit.Model> webHits = new ArrayList<WebHit.Model>(solutions.getReferences().size());
         for (RestHit<SolutionReference> externalHit : solutions.getReferences()) {
             SolutionReference externalSolution = externalHit.getSolution();
-            MarkPanel.Model mark = new MarkPanel.Model(externalHit.getScore(), externalHit.getMarkId(), true /*TODO*/);
+            MarkPanel.Model mark = convertMarkPanel(externalHit);
             final String sourceIconName = externalSolution.getSource().getIcon();
             final URL sourceIconUrl = urlBuilder.sourceIcon(sourceIconName);
 
             String createdBy = null;
             if (externalSolution.getAuthor() != null) createdBy = externalSolution.getAuthor().getName();
-            WebHit.Model webHit = new WebHit.Model(externalSolution.getTitle(), externalSolution.getUrl(), externalSolution.getCreatedAt(), createdBy, externalSolution.getSource().getName(), sourceIconUrl, mark);
+            WebHit.Model webHit = new WebHit.Model(externalSolution.getTitle(), externalSolution.getUrl(), externalHit.getSolutionId(), externalSolution.getCreatedAt(), createdBy, externalSolution.getSource().getName(), sourceIconUrl, mark);
             webHits.add(webHit);
         }
 
@@ -131,7 +142,7 @@ final public class SolutionFrameController implements Disposable {
         final List<TipHit.Model> tipHits = new ArrayList<TipHit.Model>(solutions.getTips().size());
         for (RestHit<Tip> tipSolution : solutions.getTips()) {
             Tip tip = tipSolution.getSolution();
-            MarkPanel.Model mark = new MarkPanel.Model(tipSolution.getScore(), tipSolution.getMarkId(), true /*TODO*/);
+            MarkPanel.Model mark = convertMarkPanel(tipSolution);
             UserReference author = tipSolution.getCreatedBy();
             TipHit.Model tipHit = new TipHit.Model(tip.getTip(), tip.getCreatedAt(), author.getDisplayName(), author.getAvatarUrl(), mark);
             tipHits.add(tipHit);

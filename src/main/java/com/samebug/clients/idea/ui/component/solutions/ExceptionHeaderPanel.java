@@ -1,6 +1,7 @@
 package com.samebug.clients.idea.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
+import com.intellij.util.messages.Topic;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.component.util.SamebugMultiLineLabel;
@@ -8,6 +9,8 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public final class ExceptionHeaderPanel extends JPanel {
     private final Model model;
@@ -30,6 +33,14 @@ public final class ExceptionHeaderPanel extends JPanel {
         {
             setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
             setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 24));
+
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    getListener().titleClicked();
+                }
+            });
         }
 
         @Override
@@ -43,6 +54,10 @@ public final class ExceptionHeaderPanel extends JPanel {
         }
     }
 
+    private Listener getListener() {
+        return messageBus.syncPublisher(Listener.TOPIC);
+    }
+
     public static final class Model {
         private final String title;
 
@@ -53,6 +68,12 @@ public final class ExceptionHeaderPanel extends JPanel {
         public Model(String title) {
             this.title = title;
         }
+    }
+
+    public interface Listener {
+        Topic<Listener> TOPIC = Topic.create("ExceptionHeaderPanel", Listener.class);
+
+        void titleClicked();
     }
 }
 

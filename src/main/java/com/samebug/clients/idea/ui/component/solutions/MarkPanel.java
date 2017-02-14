@@ -1,6 +1,9 @@
 package com.samebug.clients.idea.ui.component.solutions;
 
+import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.util.messages.MessageBus;
+import com.intellij.util.messages.Topic;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
@@ -10,6 +13,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public final class MarkPanel extends JPanel {
     private Model model;
@@ -35,14 +40,32 @@ public final class MarkPanel extends JPanel {
         add(separator, "w 1!, h 16!");
         add(button, ", h 16!");
 
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                getListener().markClicked(MarkPanel.this, getSolutionId(), MarkPanel.this.model.userMarkId);
+            }
+        });
+
         update(model);
     }
 
+    public void setLoading() {
+        MarkPanel.this.setEnabled(false);
+        button.setText("loading");
+    }
+
     public void update(Model model) {
+        MarkPanel.this.setEnabled(true);
         this.model = new Model(model);
 
         counter.update();
         button.update();
+    }
+
+    public void setError() {
+        update(model);
     }
 
     @Override
@@ -122,4 +145,17 @@ public final class MarkPanel extends JPanel {
             this.userCanMark = userCanMark;
         }
     }
+
+    private Integer getSolutionId() { return DataManager.getInstance().getDataContext(this).getData(SolutionId); }
+    private Listener getListener() {
+        return messageBus.syncPublisher(Listener.TOPIC);
+    }
+
+    public interface Listener {
+        Topic<Listener> TOPIC = Topic.create("MarkPanel", Listener.class);
+
+        void markClicked(MarkPanel markPanel, Integer solutionId, Integer currentMarkId);
+    }
+
+    public static final DataKey<Integer> SolutionId = DataKey.create("SolutionId");
 }
