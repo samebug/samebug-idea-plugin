@@ -12,9 +12,7 @@ public class SamebugButton extends JButton {
     {
         setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 12));
         setContentAreaFilled(false);
-        setUI(new BasicButtonUI()); // override jetbrains custom UI
         setOpaque(false);
-        setForeground(ColorUtil.samebug());
         setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 14));
     }
 
@@ -27,5 +25,11 @@ public class SamebugButton extends JButton {
         g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 5, 5);
         // the button content is drawed by the default implementation
         super.paint(g);
+    }
+
+    @Override
+    public void updateUI() {
+        setUI(new BasicButtonUI());
+        setForeground(ColorUtil.samebug());
     }
 }

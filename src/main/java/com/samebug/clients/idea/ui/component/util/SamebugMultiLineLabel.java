@@ -16,7 +16,12 @@ public class SamebugMultiLineLabel extends JTextArea {
         setLineWrap(true);
 
         setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 16));
-        setForeground(ColorUtil.text());
         setOpaque(false);
+    }
+
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        setForeground(ColorUtil.text());
     }
 }

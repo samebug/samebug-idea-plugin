@@ -31,13 +31,17 @@ public final class WebHit extends JPanel implements DataProvider {
         markPanel = new MarkPanel(messageBus, model.mark);
         final TitlePanel titlePanel = new TitlePanel();
 
-        setBackground(ColorUtil.background());
         setLayout(new MigLayout("fillx", "0[300]0", "0[]16[]0"));
 
         add(titlePanel, "growx, cell 0 0");
         add(markPanel, "cell 0 1");
     }
 
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        setBackground(ColorUtil.background());
+    }
     private final class TitlePanel extends JPanel {
         private final static int Size = 40;
 
@@ -56,11 +60,15 @@ public final class WebHit extends JPanel implements DataProvider {
 
     private final class TitleLabel extends SamebugMultiLineLabel {
         {
-            setForeground(ColorUtil.samebug());
             setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 16));
             setText(model.title);
         }
 
+        @Override
+        public void updateUI() {
+            super.updateUI();
+            setForeground(ColorUtil.samebug());
+        }
         @Override
         public Dimension getPreferredSize() {
             // TODO breaks when changing font
@@ -74,7 +82,6 @@ public final class WebHit extends JPanel implements DataProvider {
 
     private final class SourceLabel extends JLabel {
         {
-            setForeground(ColorUtil.unemphasizedText());
             setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 12));
             String sourceText;
             if (model.createdBy == null) {
@@ -83,6 +90,11 @@ public final class WebHit extends JPanel implements DataProvider {
                 sourceText = model.sourceName + " by " + model.createdBy + " | " + String.format("%s", TextUtil.prettyTime(model.createdAt));
             }
             setText(sourceText);
+        }
+        @Override
+        public void updateUI() {
+            super.updateUI();
+            setForeground(ColorUtil.unemphasizedText());
         }
     }
 

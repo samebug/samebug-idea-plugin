@@ -18,10 +18,8 @@ public class SamebugTabbedPane extends JTabbedPane {
     {
         tabs = new ArrayList<SamebugTabHeader>();
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        setBackground(ColorUtil.background());
         setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 16));
         setTabLayoutPolicy(SCROLL_TAB_LAYOUT);
-        setUI(new SamebugTabbedPaneUI());
         setOpaque(false);
 
         // TODO not sure if it is a good idea to listen to our own events
@@ -75,5 +73,11 @@ public class SamebugTabbedPane extends JTabbedPane {
             tabs.add(index, (SamebugTabHeader) component);
             firePropertyChange("indexForTabComponent", -1, index);
         }
+    }
+
+    @Override
+    public void updateUI() {
+        setBackground(ColorUtil.background());
+        setUI(new SamebugTabbedPaneUI());
     }
 }

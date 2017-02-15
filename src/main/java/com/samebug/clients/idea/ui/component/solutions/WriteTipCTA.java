@@ -34,7 +34,7 @@ public final class WriteTipCTA extends JPanel {
     public void paintBorder(Graphics g) {
         Graphics2D g2 = DrawUtil.init(g);
 
-        g2.setColor(ColorUtil.tip());
+        g2.setColor(ColorUtil.separator());
         g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 5, 5);
     }
 

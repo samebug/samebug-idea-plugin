@@ -28,24 +28,12 @@ final public class ColorUtil {
         return colorForCurrentTheme(SamebugOrange);
     }
 
-    public static Color mark() {
-        return colorForCurrentTheme(MarkPanelBackground);
-    }
-
-    public static Color markSeparator() {
-        return colorForCurrentTheme(MarkPanelSeparator);
-    }
-
-    public static Color markedSeparator() {
-        return colorForCurrentTheme(MarkedPanelSeparator);
+    public static Color emphasizedText() {
+        return colorForCurrentTheme(EmphasizedText);
     }
 
     public static Color text() {
         return colorForCurrentTheme(Text);
-    }
-
-    public static Color emphasizedText() {
-        return colorForCurrentTheme(EmphasizedText);
     }
 
     public static Color unemphasizedText() {
@@ -60,6 +48,14 @@ final public class ColorUtil {
         return colorForCurrentTheme(Separator);
     }
 
+    public static Color mark() {
+        return colorForCurrentTheme(MarkPanel);
+    }
+
+    public static Color markedSeparator() {
+        return colorForCurrentTheme(MarkedPanelSeparator);
+    }
+
     public static Color tip() {
         return colorForCurrentTheme(Tip);
     }
@@ -67,6 +63,16 @@ final public class ColorUtil {
     public static Color tipText() {
         return colorForCurrentTheme(TipText);
     }
+
+    public static Color scrollbarBackground() {
+        return colorForCurrentTheme(ScrollbarBackground);
+    }
+
+    public static Color scrollbarBubble() {
+        return colorForCurrentTheme(ScrollbarBubble);
+    }
+
+
 
     public static Color alertPanel() {
         return null;
@@ -105,16 +111,17 @@ final public class ColorUtil {
         }
     }
 
-    private final static Color[] Background = new Color[]{Color.white};
-    private final static Color[] MarkPanelBackground = new Color[]{new Color(0x3E85DE)};
-    private final static Color[] MarkPanelSeparator = new Color[]{new Color(0x3D85DD)};
-    private final static Color[] MarkedPanelSeparator = new Color[]{new Color(0x3373C3)};
-    private final static Color[] Text = new Color[]{new Color(0x333333)};
-    private final static Color[] UnemphasizedText = new Color[]{new Color(0xC3C3C3)};
-    private final static Color[] EmphasizedText = new Color[]{Color.black};
-    private final static Color[] Separator = new Color[]{new Color(0xE5E5E5)};
-    private final static Color[] SamebugOrange = new Color[]{new Color(0xFF8000)};
-    private final static Color[] SelectedTab = new Color[]{new Color(0x666666)};
-    private final static Color[] Tip = new Color[]{new Color(0xDFF2F8)};
-    private final static Color[] TipText = new Color[]{new Color(0x006A8D)};
+    private final static Color[] Background = new Color[]{new Color(0xFFFFFF), new Color(0x242526)};
+    private final static Color[] EmphasizedText = new Color[]{new Color(0x000000), new Color(0xCBCDCF)};
+    private final static Color[] Text = new Color[]{new Color(0x333333), new Color(0x8B8C8F)};
+    private final static Color[] UnemphasizedText = new Color[]{new Color(0x88BCCE), new Color(0x8AB0D6)};
+    private final static Color[] Separator = new Color[]{new Color(0xE5E5E5), new Color(0x454546)};
+    private final static Color[] SamebugOrange = new Color[]{new Color(0xFF8010), new Color(0xFF8820)};
+    private final static Color[] SelectedTab = new Color[]{new Color(0x666666), new Color(0xCBCDCF)};
+    private final static Color[] MarkPanel = new Color[]{new Color(0x4287DB), new Color(0x7CD2FF)};
+    private final static Color[] MarkedPanelSeparator = new Color[]{new Color(0x3373C3), new Color(0x8CE2FF) /*TODO*/};
+    private final static Color[] Tip = new Color[]{new Color(0xE0F2F8), new Color(0x0560A2)};
+    private final static Color[] TipText = new Color[]{new Color(0x086a8b), new Color(0xDBEFFF)};
+    private final static Color[] ScrollbarBackground = new Color[]{new Color(0xF5F5F5), new Color(0x2D2E2F)};
+    private final static Color[] ScrollbarBubble = new Color[]{new Color(0xD5D5D5), new Color(0x484A4B)};
 }

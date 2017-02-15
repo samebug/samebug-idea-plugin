@@ -64,6 +64,10 @@ public final class BugmateList extends JPanel {
     private final class SubheaderLabel extends JLabel {
         {
             setText(SamebugBundle.message("samebug.component.bugmate.list.title"));
+        }
+        @Override
+        public void updateUI() {
+            super.updateUI();
             setForeground(ColorUtil.text());
             setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 16));
         }
@@ -72,6 +76,10 @@ public final class BugmateList extends JPanel {
     private final class MoreLabel extends JLabel {
         {
             setText(SamebugBundle.message("samebug.component.bugmate.list.more", model.numberOfOtherBugmates));
+        }
+        @Override
+        public void updateUI() {
+            super.updateUI();
             setForeground(ColorUtil.text());
             setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 14));
         }

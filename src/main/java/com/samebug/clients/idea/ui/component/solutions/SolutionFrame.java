@@ -15,7 +15,6 @@ public final class SolutionFrame extends JPanel {
         this.messageBus = messageBus;
 
         setLayout(new BorderLayout());
-        setBackground(ColorUtil.background());
         setWarningLoading();
     }
 
@@ -32,6 +31,12 @@ public final class SolutionFrame extends JPanel {
         add(solutions.profilePanel, BorderLayout.SOUTH);
         revalidate();
         repaint();
+    }
+
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        setBackground(ColorUtil.background());
     }
 
     private final class Solutions {

@@ -5,6 +5,7 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.component.util.SamebugButton;
+import com.samebug.clients.idea.ui.component.util.SamebugScrollPane;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -32,11 +33,8 @@ public final class WebResultsTab extends JPanel {
         }
 
         contentPanel = new ContentPanel();
-        scrollPane = new JScrollPane();
-        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane = new SamebugScrollPane();
         scrollPane.setViewportView(contentPanel);
-        scrollPane.setBorder(null);
 
         setLayout(new BorderLayout());
         add(scrollPane);
@@ -48,11 +46,15 @@ public final class WebResultsTab extends JPanel {
             final ListPanel listPanel = new ListPanel();
             final MoreButton more = new MoreButton();
 
-            setBackground(ColorUtil.background());
             setLayout(new MigLayout("fillx", "20[]20", "0[]10[]20"));
 
             add(listPanel, "cell 0 0, growx");
             add(more, "cell 0 1, al center");
+        }
+        @Override
+        public void updateUI() {
+            super.updateUI();
+            setBackground(ColorUtil.background());
         }
     }
 

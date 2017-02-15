@@ -12,6 +12,7 @@ import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -96,11 +97,18 @@ public final class MarkPanel extends JPanel {
 
             setText(Integer.toString(model.marks));
         }
+
+        @Override
+        public void updateUI() {
+            super.updateUI();
+            update();
+        }
     }
 
+    // TODO this could be a simple label instead of button
     private final class MarkButton extends JButton {
         {
-            setBorder(null);
+            setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
             setContentAreaFilled(false);
             setOpaque(false);
             setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 14));
@@ -116,13 +124,19 @@ public final class MarkPanel extends JPanel {
                 setText(SamebugBundle.message("samebug.component.mark.marked"));
             }
         }
+
+        @Override
+        public void updateUI() {
+            setUI(new BasicButtonUI());
+            update();
+        }
     }
 
     private final class Separator extends JComponent {
         @Override
         public void paint(Graphics g) {
             Graphics2D g2 = DrawUtil.init(g);
-            if (model.userMarkId == null) g2.setColor(ColorUtil.markSeparator());
+            if (model.userMarkId == null) g2.setColor(ColorUtil.mark());
             else g2.setColor(ColorUtil.markedSeparator());
 
             g2.drawLine(0, 0, 0, 16);

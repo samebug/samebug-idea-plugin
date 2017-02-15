@@ -27,13 +27,25 @@ public abstract class SamebugTabHeader extends JPanel {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
-        if (selected) {
-            tabLabel.setForeground(ColorUtil.text());
-            hitsLabel.setBackground(ColorUtil.selectedTab());
-        } else {
-            tabLabel.setForeground(ColorUtil.samebug());
-            hitsLabel.setBackground(ColorUtil.samebug());
+        updateColors();
+    }
+
+    private void updateColors() {
+        if (tabLabel != null && hitsLabel != null) {
+            if (selected) {
+                tabLabel.setForeground(ColorUtil.text());
+                hitsLabel.setBackground(ColorUtil.selectedTab());
+            } else {
+                tabLabel.setForeground(ColorUtil.samebug());
+                hitsLabel.setBackground(ColorUtil.samebug());
+            }
         }
+    }
+
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        updateColors();
     }
 
     private final class HitsLabel extends JLabel {

@@ -23,10 +23,15 @@ public final class ExceptionHeaderPanel extends JPanel {
         final HeaderTextLabel title = new HeaderTextLabel();
         title.setText(model.title);
 
-        setBackground(ColorUtil.background());
         setLayout(new MigLayout("fillx, filly", "0[]0", "30[]30"));
 
         add(title, "wmin 0, hmax 56");
+    }
+
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        setBackground(ColorUtil.background());
     }
 
     final class HeaderTextLabel extends SamebugMultiLineLabel {

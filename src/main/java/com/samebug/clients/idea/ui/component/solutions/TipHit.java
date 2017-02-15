@@ -19,15 +19,16 @@ public final class TipHit extends JPanel {
     private final Model model;
     private final MessageBus messageBus;
 
+    private final SamebugLabel tipLabel;
+    private final MessageLabel tipMessage;
     private final MarkPanel mark;
 
     public TipHit(MessageBus messageBus, Model model) {
         this.model = new Model(model);
         this.messageBus = messageBus;
 
-        final SamebugLabel tipLabel = new SamebugLabel("TIP", FontRegistry.AvenirRegular, 14);
-        tipLabel.setForeground(ColorUtil.tipText());
-        final MessageLabel tipMessage = new MessageLabel();
+        tipLabel = new SamebugLabel("TIP", FontRegistry.AvenirRegular, 14);
+        tipMessage = new MessageLabel();
         mark = new MarkPanel(messageBus, model.mark);
         final JPanel filler = new JPanel() {
             {
@@ -47,6 +48,12 @@ public final class TipHit extends JPanel {
     }
 
     @Override
+    public void updateUI() {
+        super.updateUI();
+        tipLabel.setForeground(ColorUtil.tipText());
+    }
+
+    @Override
     public void paintBorder(Graphics g) {
         Graphics2D g2 = DrawUtil.init(g);
         g2.setColor(ColorUtil.tip());
@@ -56,20 +63,24 @@ public final class TipHit extends JPanel {
     private final class MessageLabel extends SamebugMultiLineLabel {
         {
             setText(TipHit.this.model.message);
+        }
+
+        @Override
+        public void updateUI() {
+            super.updateUI();
             setForeground(ColorUtil.tipText());
         }
     }
 
     private final class AuthorPanel extends JPanel {
         private final static int AvatarIconSize = 26;
+        private final SamebugLabel name;
+        private final SamebugLabel timestamp;
 
         {
             final AvatarIcon authorIcon = new AvatarIcon(model.createdByAvatarUrl, AvatarIconSize);
-            final SamebugLabel name = new SamebugLabel(model.createdBy, FontRegistry.AvenirRegular, 12);
-            final SamebugLabel timestamp = new SamebugLabel(TextUtil.prettyTime(model.createdAt), FontRegistry.AvenirRegular, 12);
-
-            name.setForeground(ColorUtil.unemphasizedText());
-            timestamp.setForeground(ColorUtil.unemphasizedText());
+            name = new SamebugLabel(model.createdBy, FontRegistry.AvenirRegular, 12);
+            timestamp = new SamebugLabel(TextUtil.prettyTime(model.createdAt), FontRegistry.AvenirRegular, 12);
 
             setOpaque(false);
             setLayout(new MigLayout("", "0[]5[]0", "0[14!]0[14!]0"));
@@ -77,6 +88,12 @@ public final class TipHit extends JPanel {
             add(authorIcon, "cell 0 0, spany 2");
             add(name, "cell 1 0");
             add(timestamp, "cell 1 1");
+        }
+        @Override
+        public void updateUI() {
+            super.updateUI();
+            name.setForeground(ColorUtil.unemphasizedText());
+            timestamp.setForeground(ColorUtil.unemphasizedText());
         }
     }
 

@@ -9,6 +9,7 @@ import com.samebug.clients.idea.ui.component.util.AvatarIcon;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.net.URL;
 import java.util.Date;
@@ -39,6 +40,11 @@ public final class BugmateHit extends JPanel {
     private final class NameLabel extends JLabel {
         {
             setText(model.displayName);
+        }
+
+        @Override
+        public void updateUI() {
+            super.updateUI();
             setForeground(ColorUtil.text());
             setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 14));
         }
@@ -47,6 +53,11 @@ public final class BugmateHit extends JPanel {
     private final class TimestampLabel extends JLabel {
         {
             setText(SamebugBundle.message("samebug.component.bugmate.hit.occurred", model.nSeen, TextUtil.prettyTime(model.lastSeen)));
+        }
+
+        @Override
+        public void updateUI() {
+            super.updateUI();
             setForeground(ColorUtil.text());
             setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 14));
         }

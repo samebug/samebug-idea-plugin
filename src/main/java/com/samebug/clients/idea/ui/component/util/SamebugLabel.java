@@ -8,7 +8,11 @@ import java.awt.*;
 public class SamebugLabel extends JLabel {
     public SamebugLabel(String text, String fontName, int fontSize) {
         super(text);
-        setForeground(ColorUtil.text());
         setFont(new Font(fontName, Font.PLAIN, fontSize));
+    }
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        setForeground(ColorUtil.text());
     }
 }
