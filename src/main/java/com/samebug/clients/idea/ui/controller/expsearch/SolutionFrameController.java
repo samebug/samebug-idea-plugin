@@ -33,6 +33,7 @@ import com.samebug.clients.idea.components.project.ToolWindowController;
 import com.samebug.clients.idea.ui.component.profile.ProfilePanel;
 import com.samebug.clients.idea.ui.component.solutions.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.swing.*;
 import java.lang.Exception;
@@ -78,13 +79,14 @@ final public class SolutionFrameController implements Disposable {
     }
 
     public void init() {
-        final Future<Solutions> solutionsTask = ApplicationManager.getApplication().executeOnPooledThread(new Callable<Solutions>() {
+        // NOTE I use PooledThreadExecutor.INSTANCE instead of executeOnPooledThread because that logs and swallows the error in the Future
+        final Future<Solutions> solutionsTask = PooledThreadExecutor.INSTANCE.submit(new Callable<Solutions>() {
             @Override
             public Solutions call() throws Exception {
                 return solutionService.loadSolutions(searchId);
             }
         });
-        final Future<BugmatesResult> bugmatesTask = ApplicationManager.getApplication().executeOnPooledThread(new Callable<BugmatesResult>() {
+        final Future<BugmatesResult> bugmatesTask = PooledThreadExecutor.INSTANCE.submit(new Callable<BugmatesResult>() {
             @Override
             public BugmatesResult call() throws Exception {
                 return bugmateService.loadBugmates(searchId);
@@ -95,38 +97,50 @@ final public class SolutionFrameController implements Disposable {
             @Override
             public void run() {
                 try {
-                    final Solutions solutions = solutionsTask.get();
-                    final BugmatesResult bugmates = bugmatesTask.get();
-                    final User user = profileStore.getUser();
-                    final Statistics statistics = profileStore.getUserStats();
-                    // TODO this is quite an edge case, when we could load the solutions but not the user, not sure how to handle it
-                    if (user == null || statistics == null) throw new SamebugClientException("");
-                    final SolutionFrame.Model model = convertSolutionFrame(solutions, bugmates, user, statistics);
-                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            view.setContent(model);
+                    try {
+                        final Solutions solutions = solutionsTask.get();
+                        final BugmatesResult bugmates = bugmatesTask.get();
+                        final User user = profileStore.getUser();
+                        final Statistics statistics = profileStore.getUserStats();
+                        // TODO this is quite an edge case, when we could load the solutions but not the user, not sure how to handle it
+                        if (user == null || statistics == null || solutions == null || bugmates == null) throw new IllegalStateException("");
+                        final SolutionFrame.Model model = convertSolutionFrame(solutions, bugmates, user, statistics);
+                        ApplicationManager.getApplication().invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.setContent(model);
+                            }
+                        });
+                    } catch (IllegalStateException e) {
+                        // TODO generic error, probably safe to retry
+                        ApplicationManager.getApplication().invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.setWarningLoading();
+                            }
+                        });
+                    } catch (InterruptedException e) {
+                        // TODO generic error, probably safe to retry
+                        ApplicationManager.getApplication().invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.setWarningLoading();
+                            }
+                        });
+                    } catch (ExecutionException e) {
+                        if (e.getCause() instanceof SamebugClientException) throw (SamebugClientException) e.getCause();
+                        else {
+                            // TODO generic error, probably safe to retry
+                            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.setWarningLoading();
+                                }
+                            });
                         }
-                    });
-
+                    }
                 } catch (SamebugClientException e) {
-                    // TODO set error panel
-                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            view.setWarningLoading();
-                        }
-                    });
-                } catch (InterruptedException e) {
-                    // TODO set error panel
-                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            view.setWarningLoading();
-                        }
-                    });
-                } catch (ExecutionException e) {
-                    // TODO set error panel
+                    // TODO error with loading, bad connection, bad apikey, server error, etc
                     ApplicationManager.getApplication().invokeLater(new Runnable() {
                         @Override
                         public void run() {
