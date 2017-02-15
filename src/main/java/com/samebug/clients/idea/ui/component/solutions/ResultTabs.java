@@ -18,8 +18,8 @@ public final class ResultTabs extends SamebugTabbedPane {
         this.model = new Model(model);
         this.messageBus = messageBus;
 
-        webResultsTab = new WebResultsTab(messageBus, model.webResults);
-        tipResultsTab = new TipResultsTab(messageBus, model.tipResults);
+        webResultsTab = new WebResultsTab(messageBus, model.webResults, model.cta);
+        tipResultsTab = new TipResultsTab(messageBus, model.tipResults, model.cta);
 
         tipResultsTabHeader = addTab(SamebugBundle.message("samebug.component.solutionFrame.tips.tabName"), model.tipResults.getTipsSize(), tipResultsTab);
         webResultsTabHeader = addTab(SamebugBundle.message("samebug.component.solutionFrame.webSolutions.tabName"), model.webResults.getHitsSize(), webResultsTab);
@@ -28,14 +28,16 @@ public final class ResultTabs extends SamebugTabbedPane {
     public static final class Model {
         private final WebResultsTab.Model webResults;
         private final TipResultsTab.Model tipResults;
+        private final HelpOthersCTA.Model cta;
 
         public Model(Model rhs) {
-            this(rhs.webResults, rhs.tipResults);
+            this(rhs.webResults, rhs.tipResults, rhs.cta);
         }
 
-        public Model(WebResultsTab.Model webResults, TipResultsTab.Model tipResults) {
+        public Model(WebResultsTab.Model webResults, TipResultsTab.Model tipResults, HelpOthersCTA.Model cta) {
             this.webResults = webResults;
             this.tipResults = tipResults;
+            this.cta = cta;
         }
     }
 }

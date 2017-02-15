@@ -6,21 +6,22 @@ import com.samebug.clients.idea.ui.component.util.SamebugScrollPane;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicScrollPaneUI;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public final class TipResultsTab extends JPanel {
     private final Model model;
+    private final HelpOthersCTA.Model ctaModel;
     private final MessageBus messageBus;
 
     private final JScrollPane scrollPane;
-    private final ContentPanel contentPanel;
+    private final JPanel contentPanel;
     private final List<TipHit> tipHits;
 
-    public TipResultsTab(MessageBus messageBus, Model model) {
+    public TipResultsTab(MessageBus messageBus, Model model, HelpOthersCTA.Model ctaModel) {
         this.model = new Model(model);
+        this.ctaModel = new HelpOthersCTA.Model(ctaModel);
         this.messageBus = messageBus;
 
         tipHits = new ArrayList<TipHit>();
@@ -29,7 +30,11 @@ public final class TipResultsTab extends JPanel {
             TipHit hit = new TipHit(messageBus, m);
             tipHits.add(hit);
         }
-        contentPanel = new ContentPanel();
+        if (model.getTipsSize() == 0) {
+            contentPanel = new EmptyContentPanel();
+        } else {
+            contentPanel = new ContentPanel();
+        }
         scrollPane = new SamebugScrollPane();
         scrollPane.setViewportView(contentPanel);
 
@@ -38,10 +43,25 @@ public final class TipResultsTab extends JPanel {
     }
 
 
+    private final class EmptyContentPanel extends JPanel {
+        {
+            final NoSolutionCTA cta = new NoSolutionCTA(messageBus, ctaModel);
+            cta.setTextForTips();
+            setLayout(new MigLayout("fillx", "20[fill]20", "20[]20"));
+            add(cta);
+        }
+
+        @Override
+        public void updateUI() {
+            super.updateUI();
+            setBackground(ColorUtil.background());
+        }
+    }
+
     private final class ContentPanel extends JPanel {
         {
             final ListPanel listPanel = new ListPanel();
-            final WriteTipCTA writeTip = new WriteTipCTA(messageBus, model.writeTipHint);
+            final WriteTipCTA writeTip = new WriteTipCTA(messageBus, ctaModel);
             final BugmateList bugmateList = new BugmateList(messageBus, model.bugmateList);
 
             setLayout(new MigLayout("fillx", "20[fill]20", "0[]20[]20[]20"));
@@ -80,16 +100,14 @@ public final class TipResultsTab extends JPanel {
 
     public static final class Model {
         private final List<TipHit.Model> tipHits;
-        private final WriteTipCTA.Model writeTipHint;
         private final BugmateList.Model bugmateList;
 
         public Model(Model rhs) {
-            this(rhs.tipHits, rhs.writeTipHint, rhs.bugmateList);
+            this(rhs.tipHits, rhs.bugmateList);
         }
 
-        public Model(List<TipHit.Model> tipHits, WriteTipCTA.Model writeTipHint, BugmateList.Model bugmateList) {
+        public Model(List<TipHit.Model> tipHits, BugmateList.Model bugmateList) {
             this.tipHits = tipHits;
-            this.writeTipHint = writeTipHint;
             this.bugmateList = bugmateList;
         }
 

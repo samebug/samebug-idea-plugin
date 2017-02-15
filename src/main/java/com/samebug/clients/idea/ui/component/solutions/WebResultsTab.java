@@ -15,14 +15,16 @@ import java.util.List;
 
 public final class WebResultsTab extends JPanel {
     private final Model model;
+    private final HelpOthersCTA.Model ctaModel;
     private final MessageBus messageBus;
 
     private final JScrollPane scrollPane;
-    private final ContentPanel contentPanel;
+    private final JPanel contentPanel;
     private final List<WebHit> webHits;
 
-    public WebResultsTab(MessageBus messageBus, Model model) {
+    public WebResultsTab(MessageBus messageBus, Model model, HelpOthersCTA.Model ctaModel) {
         this.model = new Model(model);
+        this.ctaModel = new HelpOthersCTA.Model(ctaModel);
         this.messageBus = messageBus;
 
         webHits = new ArrayList<WebHit>();
@@ -32,7 +34,11 @@ public final class WebResultsTab extends JPanel {
             webHits.add(hit);
         }
 
-        contentPanel = new ContentPanel();
+        if (model.getHitsSize() == 0) {
+            contentPanel = new EmptyContentPanel();
+        } else {
+            contentPanel = new ContentPanel();
+        }
         scrollPane = new SamebugScrollPane();
         scrollPane.setViewportView(contentPanel);
 
@@ -40,6 +46,20 @@ public final class WebResultsTab extends JPanel {
         add(scrollPane);
     }
 
+    private final class EmptyContentPanel extends JPanel {
+        {
+            final NoSolutionCTA cta = new NoSolutionCTA(messageBus, ctaModel);
+            cta.setTextForSolutions();
+            setLayout(new MigLayout("fillx", "20[fill]20", "20[]20"));
+            add(cta);
+        }
+
+        @Override
+        public void updateUI() {
+            super.updateUI();
+            setBackground(ColorUtil.background());
+        }
+    }
 
     private final class ContentPanel extends JPanel {
         {

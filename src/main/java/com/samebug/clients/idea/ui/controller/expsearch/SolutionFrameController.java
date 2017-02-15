@@ -39,7 +39,6 @@ import javax.swing.*;
 import java.lang.Exception;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -189,7 +188,7 @@ final public class SolutionFrameController implements Disposable {
         }
 
         WebResultsTab.Model webResults = new WebResultsTab.Model(webHits);
-        WriteTipCTA.Model cta = new WriteTipCTA.Model(0);
+        HelpOthersCTA.Model cta = new HelpOthersCTA.Model(0);
         final List<TipHit.Model> tipHits = new ArrayList<TipHit.Model>(solutions.getTips().size());
         for (RestHit<Tip> tipSolution : solutions.getTips()) {
             Tip tip = tipSolution.getSolution();
@@ -204,8 +203,8 @@ final public class SolutionFrameController implements Disposable {
             bugmateHits.add(model);
         }
         BugmateList.Model bugmateList = new BugmateList.Model(bugmateHits, bugmates.getNumberOfOtherBugmates(), bugmates.isEvenMoreExists());
-        TipResultsTab.Model tipResults = new TipResultsTab.Model(tipHits, cta, bugmateList);
-        ResultTabs.Model resultTabs = new ResultTabs.Model(webResults, tipResults);
+        TipResultsTab.Model tipResults = new TipResultsTab.Model(tipHits, bugmateList);
+        ResultTabs.Model resultTabs = new ResultTabs.Model(webResults, tipResults, cta);
         ExceptionHeaderPanel.Model header = new ExceptionHeaderPanel.Model(SolutionService.headLine(solutions.getSearchGroup().getLastSearch()));
         ProfilePanel.Model profile = new ProfilePanel.Model(0, statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(), user.getDisplayName(), user.getAvatarUrl());
         SolutionFrame.Model model = new SolutionFrame.Model(resultTabs, header, profile);
