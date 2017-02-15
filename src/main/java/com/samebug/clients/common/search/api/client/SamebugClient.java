@@ -103,6 +103,15 @@ final public class SamebugClient {
 
     public
     @NotNull
+    ClientResponse<BugmatesResult> getBugmates(@NotNull final Integer searchId) {
+        final URL url = urlBuilder.bugmates(searchId);
+        HttpGet request = new HttpGet(url.toString());
+
+        return rawClient.execute(request, new HandleAuthenticatedJsonRequest<BugmatesResult>(BugmatesResult.class));
+    }
+
+    public
+    @NotNull
     ClientResponse<RestHit<Tip>> postTip(@NotNull final Integer searchId, @NotNull final String tip, @Nullable final String source) {
         final URL url = urlBuilder.tip();
         HttpPost post = new HttpPost(url.toString());

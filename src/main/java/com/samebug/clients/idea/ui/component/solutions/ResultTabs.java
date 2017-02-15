@@ -21,19 +21,8 @@ public final class ResultTabs extends SamebugTabbedPane {
         webResultsTab = new WebResultsTab(messageBus, model.webResults);
         tipResultsTab = new TipResultsTab(messageBus, model.tipResults);
 
-        // TODO show something when no solutions?
-        if (model.tipResults.getTipsSize() > 0) {
-            tipResultsTabHeader = addTab(SamebugBundle.message("samebug.component.solutionFrame.tips.tabName"), model.tipResults.getTipsSize(), tipResultsTab);
-        } else {
-            tipResultsTabHeader = null;
-        }
-        if (model.webResults.getHitsSize() > 0) {
-            webResultsTabHeader = addTab(SamebugBundle.message("samebug.component.solutionFrame.webSolutions.tabName"), model.webResults.getHitsSize(), webResultsTab);
-        } else {
-            webResultsTabHeader = null;
-        }
-
-
+        tipResultsTabHeader = addTab(SamebugBundle.message("samebug.component.solutionFrame.tips.tabName"), model.tipResults.getTipsSize(), tipResultsTab);
+        webResultsTabHeader = addTab(SamebugBundle.message("samebug.component.solutionFrame.webSolutions.tabName"), model.webResults.getHitsSize(), webResultsTab);
     }
 
     public static final class Model {

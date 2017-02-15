@@ -68,6 +68,11 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     private SolutionService solutionService;
 
     @Nullable
+    private BugmateStore bugmateStore;
+    @Nullable
+    private BugmateService bugmateService;
+
+    @Nullable
     private TimedTasks timedTasks;
     @Nullable
     private AuthenticationListenerImpl authenticationListener;
@@ -115,6 +120,12 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public SolutionService getSolutionService() {
         assert solutionService != null : "Plugin is not initialized!";
         return solutionService;
+    }
+
+    @NotNull
+    public BugmateService getBugmateService() {
+        assert bugmateService != null : "Plugin is not initialized!";
+        return bugmateService;
     }
 
     @Nullable
@@ -170,6 +181,9 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
 
         solutionStore = new SolutionStore();
         solutionService = new SolutionService(messageBus, clientService, solutionStore);
+
+        bugmateStore = new BugmateStore();
+        bugmateService = new BugmateService(messageBus, clientService, bugmateStore);
 
         timedTasks = new TimedTasks(connection);
         authenticationListener = new AuthenticationListenerImpl();
