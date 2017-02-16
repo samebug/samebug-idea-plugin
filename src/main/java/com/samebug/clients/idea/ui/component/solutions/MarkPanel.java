@@ -4,6 +4,7 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
+import com.intellij.util.ui.Animator;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
@@ -24,6 +25,8 @@ public final class MarkPanel extends JPanel {
     private final CounterLabel counter;
     private final MarkButton button;
 
+    private final LoadingAnimation loadingAnimator;
+
     public MarkPanel(MessageBus messageBus, Model model) {
         this.model = new Model(model);
         this.messageBus = messageBus;
@@ -31,6 +34,8 @@ public final class MarkPanel extends JPanel {
         counter = new CounterLabel();
         final Separator separator = new Separator();
         button = new MarkButton();
+
+        loadingAnimator = new LoadingAnimation();
 
         setBorder(null);
         setOpaque(false);
@@ -54,12 +59,14 @@ public final class MarkPanel extends JPanel {
 
     public void setLoading() {
         MarkPanel.this.setEnabled(false);
-        button.setText("loading");
+        loadingAnimator.reset();
+        loadingAnimator.resume();
     }
 
     public void update(Model model) {
         MarkPanel.this.setEnabled(true);
         this.model = new Model(model);
+        loadingAnimator.suspend();
 
         counter.update();
         button.update();
@@ -80,7 +87,11 @@ public final class MarkPanel extends JPanel {
             g2.fillRoundRect(0, 0, getPreferredSize().width - 1, getPreferredSize().height - 1, 5, 5);
 
         }
-        super.paint(g);
+        if (loadingAnimator.isRunning()) {
+            loadingAnimator.paint(g2);
+        } else {
+            super.paint(g);
+        }
     }
 
 
@@ -142,6 +153,25 @@ public final class MarkPanel extends JPanel {
             g2.drawLine(0, 0, 0, 16);
         }
     }
+
+    private final class LoadingAnimation extends Animator {
+        private int currentFrame;
+
+        public LoadingAnimation() {
+            super("MarkPanelLoading", 100, 5000, true);
+        }
+
+        @Override
+        public void paintNow(int frame, int totalFrames, int cycle) {
+            currentFrame = frame;
+            repaint();
+        }
+
+        public void paint(Graphics2D g2) {
+            g2.setColor(Color.green);
+            g2.fillRect(10,10,currentFrame * 2, getHeight() - 10);
+        }
+    };
 
     public static final class Model {
         private final int marks;
