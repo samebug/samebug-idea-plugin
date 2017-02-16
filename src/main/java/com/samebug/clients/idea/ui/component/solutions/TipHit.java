@@ -50,7 +50,7 @@ public final class TipHit extends JPanel {
     @Override
     public void updateUI() {
         super.updateUI();
-        tipLabel.setForeground(ColorUtil.tipText());
+        if (tipLabel != null) tipLabel.setForeground(ColorUtil.tipText());
     }
 
     @Override
@@ -89,11 +89,15 @@ public final class TipHit extends JPanel {
             add(name, "cell 1 0");
             add(timestamp, "cell 1 1");
         }
+
+        // TODO this is really error prone. Handling updateUI this way is bad
         @Override
         public void updateUI() {
             super.updateUI();
-            name.setForeground(ColorUtil.unemphasizedText());
-            timestamp.setForeground(ColorUtil.unemphasizedText());
+            if (name != null && timestamp != null) {
+                name.setForeground(ColorUtil.unemphasizedText());
+                timestamp.setForeground(ColorUtil.unemphasizedText());
+            }
         }
     }
 

@@ -52,10 +52,6 @@ final public class ColorUtil {
         return colorForCurrentTheme(MarkPanel);
     }
 
-    public static Color markedSeparator() {
-        return colorForCurrentTheme(MarkedPanelSeparator);
-    }
-
     public static Color tip() {
         return colorForCurrentTheme(Tip);
     }
@@ -119,7 +115,6 @@ final public class ColorUtil {
     private final static Color[] SamebugOrange = new Color[]{new Color(0xFF8010), new Color(0xFF8820)};
     private final static Color[] SelectedTab = new Color[]{new Color(0x666666), new Color(0xCBCDCF)};
     private final static Color[] MarkPanel = new Color[]{new Color(0x4287DB), new Color(0x7CD2FF)};
-    private final static Color[] MarkedPanelSeparator = new Color[]{new Color(0x3373C3), new Color(0x8CE2FF) /*TODO*/};
     private final static Color[] Tip = new Color[]{new Color(0xE0F2F8), new Color(0x0560A2)};
     private final static Color[] TipText = new Color[]{new Color(0x086a8b), new Color(0xDBEFFF)};
     private final static Color[] ScrollbarTrack = new Color[]{new Color(0xF5F5F5), new Color(0x2D2E2F)};

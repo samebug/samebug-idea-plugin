@@ -137,7 +137,7 @@ public final class MarkPanel extends JPanel {
         public void paint(Graphics g) {
             Graphics2D g2 = DrawUtil.init(g);
             if (model.userMarkId == null) g2.setColor(ColorUtil.mark());
-            else g2.setColor(ColorUtil.markedSeparator());
+            else g2.setColor(ColorUtil.background());
 
             g2.drawLine(0, 0, 0, 16);
         }
