@@ -3,12 +3,11 @@ package com.samebug.clients.idea.ui.component.solutions;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
-import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
+import com.samebug.clients.idea.ui.component.util.button.SamebugButton;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -24,8 +23,7 @@ public final class NoSolutionCTA extends HelpOthersCTA {
         this.messageBus = messageBus;
         this.model = new HelpOthersCTA.Model(model);
 
-        final FilledButton button = new FilledButton();
-        button.setText(SamebugBundle.message("samebug.component.tip.write.cta.button"));
+        final SamebugButton button = new SamebugButton(SamebugBundle.message("samebug.component.tip.write.cta.button"), true);
         label = new CenteredMultiLineLabel();
 
         setLayout(new MigLayout("fillx, w 300", "40[]40", "40[]20[]40"));
@@ -62,35 +60,4 @@ public final class NoSolutionCTA extends HelpOthersCTA {
             setBackground(ColorUtil.text());
         }
     }
-
-    // TODO merge with SamebugButton
-    // TODO find out if it is simpler to use a custom ButtonUI
-    private final class FilledButton extends JButton {
-        {
-            setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 12));
-            setContentAreaFilled(false);
-            setOpaque(false);
-            setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 14));
-        }
-
-        @Override
-        public void paint(Graphics g) {
-            Graphics2D g2 = DrawUtil.init(g);
-
-            // draw the rounded border
-            g2.setColor(getBackground());
-            g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 5, 5);
-            // the button content is drawed by the default implementation
-            super.paint(g);
-        }
-
-        @Override
-        public void updateUI() {
-            setUI(new BasicButtonUI());
-            // TODO mimic transparent label
-            setForeground(ColorUtil.background());
-            setBackground(ColorUtil.samebug());
-        }
-    }
-
 }

@@ -95,14 +95,6 @@ final public class ColorUtil {
     }
 
 
-    private static Color colorForCurrentTheme(Color[] colors) {
-        if (UIUtil.isUnderDarcula() && colors.length > 1) {
-            return colors[1];
-        } else {
-            return colors[0];
-        }
-    }
-
     public static <T> T forCurrentTheme(T[] objects) {
         if (objects == null) return null;
         else if (UIUtil.isUnderDarcula() && objects.length > 1) return objects[1];

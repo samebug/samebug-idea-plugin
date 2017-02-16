@@ -7,15 +7,26 @@ import com.samebug.clients.idea.ui.component.util.interaction.Colors;
 import com.samebug.clients.idea.ui.component.util.interaction.InteractiveComponent;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 
 public class SamebugButton extends JButton {
     private InteractiveComponent interactiveComponent;
     private Colors[] foregroundColors;
     private Color[] backgroundColors;
+    private boolean filled;
 
-    {
+    public SamebugButton() {
+        this(null);
+    }
+
+    public SamebugButton(String text) {
+        this(text, false);
+    }
+
+    public SamebugButton(String text, boolean filled) {
+        super(text);
+        this.filled = filled;
+
         setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 12));
         setContentAreaFilled(false);
         setOpaque(false);
@@ -38,20 +49,30 @@ public class SamebugButton extends JButton {
         super.setBackground(ColorUtil.forCurrentTheme(backgroundColors));
     }
 
+    public void setFilled(boolean filled) {
+        this.filled = filled;
+        repaint();
+    }
+
+    public boolean getFilled() {
+        return filled;
+    }
+
     @Override
     public void paint(Graphics g) {
         Graphics2D g2 = DrawUtil.init(g);
 
         // draw the rounded border
         g2.setColor(getForeground());
-        g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 5, 5);
-        // the button content is drawed by the default implementation
+        if (filled) g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 5, 5);
+        else g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 5, 5);
+        // let the SamebugButtonUI paint the text
         super.paint(g);
     }
 
     @Override
     public void updateUI() {
-        setUI(new BasicButtonUI());
+        setUI(new SamebugButtonUI());
         if (foregroundColors != null) {
             if (interactiveComponent != null) interactiveComponent.uninstall();
             interactiveComponent = new InteractiveComponent(this, ColorUtil.forCurrentTheme(foregroundColors));
