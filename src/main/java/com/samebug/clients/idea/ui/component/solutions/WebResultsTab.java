@@ -5,7 +5,7 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.component.util.SamebugButton;
-import com.samebug.clients.idea.ui.component.util.SamebugScrollPane;
+import com.samebug.clients.idea.ui.component.util.scrollPane.SamebugScrollPane;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -40,6 +40,8 @@ public final class WebResultsTab extends JPanel {
             contentPanel = new ContentPanel();
         }
         scrollPane = new SamebugScrollPane();
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setViewportView(contentPanel);
 
         setLayout(new BorderLayout());
@@ -50,7 +52,7 @@ public final class WebResultsTab extends JPanel {
         {
             final NoSolutionCTA cta = new NoSolutionCTA(messageBus, ctaModel);
             cta.setTextForSolutions();
-            setLayout(new MigLayout("fillx", "20[fill]20", "20[]20"));
+            setLayout(new MigLayout("fillx", "20[fill]0", "20[]20"));
             add(cta);
         }
 
@@ -66,11 +68,12 @@ public final class WebResultsTab extends JPanel {
             final ListPanel listPanel = new ListPanel();
             final MoreButton more = new MoreButton();
 
-            setLayout(new MigLayout("fillx", "20[]20", "0[]10[]20"));
+            setLayout(new MigLayout("fillx", "20[]0", "0[]10[]20"));
 
             add(listPanel, "cell 0 0, growx");
             add(more, "cell 0 1, al center");
         }
+
         @Override
         public void updateUI() {
             super.updateUI();
@@ -108,9 +111,9 @@ public final class WebResultsTab extends JPanel {
         public void paint(Graphics g) {
             Graphics2D g2 = DrawUtil.init(g);
             g2.setColor(ColorUtil.background());
-            g2.fillRect(0,0, getWidth(), getHeight());
+            g2.fillRect(0, 0, getWidth(), getHeight());
             g2.setColor(ColorUtil.separator());
-            g2.drawLine(0,21, getWidth(), 21);
+            g2.drawLine(0, 21, getWidth(), 21);
         }
     }
 

@@ -2,7 +2,7 @@ package com.samebug.clients.idea.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.idea.ui.ColorUtil;
-import com.samebug.clients.idea.ui.component.util.SamebugScrollPane;
+import com.samebug.clients.idea.ui.component.util.scrollPane.SamebugScrollPane;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -36,6 +36,8 @@ public final class TipResultsTab extends JPanel {
             contentPanel = new ContentPanel();
         }
         scrollPane = new SamebugScrollPane();
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setViewportView(contentPanel);
 
         setLayout(new BorderLayout());
@@ -47,7 +49,7 @@ public final class TipResultsTab extends JPanel {
         {
             final NoSolutionCTA cta = new NoSolutionCTA(messageBus, ctaModel);
             cta.setTextForTips();
-            setLayout(new MigLayout("fillx", "20[fill]20", "20[]20"));
+            setLayout(new MigLayout("fillx", "20[fill]0", "20[]20"));
             add(cta);
         }
 
@@ -64,7 +66,7 @@ public final class TipResultsTab extends JPanel {
             final WriteTipCTA writeTip = new WriteTipCTA(messageBus, ctaModel);
             final BugmateList bugmateList = new BugmateList(messageBus, model.bugmateList);
 
-            setLayout(new MigLayout("fillx", "20[fill]20", "0[]20[]20[]20"));
+            setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]20[]20"));
 
             add(listPanel, "cell 0 0");
             add(writeTip, "cell 0 1");
@@ -90,6 +92,7 @@ public final class TipResultsTab extends JPanel {
                 add(hit);
             }
         }
+
         @Override
         public void updateUI() {
             super.updateUI();

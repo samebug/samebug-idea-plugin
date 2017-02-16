@@ -64,12 +64,12 @@ final public class ColorUtil {
         return colorForCurrentTheme(TipText);
     }
 
-    public static Color scrollbarBackground() {
-        return colorForCurrentTheme(ScrollbarBackground);
+    public static Color scrollbarTrack() {
+        return colorForCurrentTheme(ScrollbarTrack);
     }
 
-    public static Color scrollbarBubble() {
-        return colorForCurrentTheme(ScrollbarBubble);
+    public static Color scrollbarThumb() {
+        return colorForCurrentTheme(ScrollbarThumb);
     }
 
 
@@ -122,6 +122,6 @@ final public class ColorUtil {
     private final static Color[] MarkedPanelSeparator = new Color[]{new Color(0x3373C3), new Color(0x8CE2FF) /*TODO*/};
     private final static Color[] Tip = new Color[]{new Color(0xE0F2F8), new Color(0x0560A2)};
     private final static Color[] TipText = new Color[]{new Color(0x086a8b), new Color(0xDBEFFF)};
-    private final static Color[] ScrollbarBackground = new Color[]{new Color(0xF5F5F5), new Color(0x2D2E2F)};
-    private final static Color[] ScrollbarBubble = new Color[]{new Color(0xD5D5D5), new Color(0x484A4B)};
+    private final static Color[] ScrollbarTrack = new Color[]{new Color(0xF5F5F5), new Color(0x2D2E2F)};
+    private final static Color[] ScrollbarThumb = new Color[]{new Color(0xD5D5D5), new Color(0x484A4B)};
 }
