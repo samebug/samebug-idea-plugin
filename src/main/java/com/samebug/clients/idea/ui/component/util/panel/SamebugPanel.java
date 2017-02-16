@@ -5,12 +5,12 @@ import com.samebug.clients.idea.ui.ColorUtil;
 import javax.swing.*;
 import java.awt.*;
 
-public class Panel extends JPanel {
+public class SamebugPanel extends JPanel {
     private Color[] foregroundColors;
     private Color[] backgroundColors;
 
-    public Panel() {
-        backgroundColors = ColorUtil.Background;
+    public SamebugPanel() {
+        setBackground(ColorUtil.Background);
         updateUI();
     }
 

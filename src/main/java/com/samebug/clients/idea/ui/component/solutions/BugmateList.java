@@ -3,8 +3,8 @@ package com.samebug.clients.idea.ui.component.solutions;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.FontRegistry;
-import com.samebug.clients.idea.ui.component.util.SamebugButton;
-import com.samebug.clients.idea.ui.component.util.label.Label;
+import com.samebug.clients.idea.ui.component.util.button.SamebugButton;
+import com.samebug.clients.idea.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
 
@@ -59,14 +59,14 @@ public final class BugmateList extends TransparentPanel {
         }
     }
 
-    private final class SubheaderLabel extends Label {
+    private final class SubheaderLabel extends SamebugLabel {
         {
             setText(SamebugBundle.message("samebug.component.bugmate.list.title"));
             setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 16));
         }
     }
 
-    private final class MoreLabel extends Label {
+    private final class MoreLabel extends SamebugLabel {
         {
             setText(SamebugBundle.message("samebug.component.bugmate.list.more", model.numberOfOtherBugmates));
             setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 14));

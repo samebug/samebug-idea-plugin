@@ -6,8 +6,8 @@ import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.component.util.AvatarIcon;
-import com.samebug.clients.idea.ui.component.util.label.Label;
-import com.samebug.clients.idea.ui.component.util.multiline.MultiLineLabel;
+import com.samebug.clients.idea.ui.component.util.label.SamebugLabel;
+import com.samebug.clients.idea.ui.component.util.multiline.SamebugMultiLineLabel;
 import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
 
@@ -20,7 +20,7 @@ public final class TipHit extends TransparentPanel {
     private final Model model;
     private final MessageBus messageBus;
 
-    private final Label tipLabel;
+    private final SamebugLabel tipLabel;
     private final MessageLabel tipMessage;
     private final MarkPanel mark;
 
@@ -28,7 +28,7 @@ public final class TipHit extends TransparentPanel {
         this.model = new Model(model);
         this.messageBus = messageBus;
 
-        tipLabel = new Label("TIP", FontRegistry.AvenirRegular, 14);
+        tipLabel = new SamebugLabel("TIP", FontRegistry.AvenirRegular, 14);
         tipLabel.setForeground(ColorUtil.TipText);
         tipMessage = new MessageLabel();
         mark = new MarkPanel(messageBus, model.mark);
@@ -52,22 +52,23 @@ public final class TipHit extends TransparentPanel {
         g2.fillRoundRect(0, 0, getWidth(), getHeight(), 5, 5);
     }
 
-    private final class MessageLabel extends MultiLineLabel {
+    private final class MessageLabel extends SamebugMultiLineLabel {
         {
             setText(TipHit.this.model.message);
+            setForeground(ColorUtil.TipText);
         }
     }
 
     private final class AuthorPanel extends TransparentPanel {
         private final static int AvatarIconSize = 26;
-        private final Label name;
-        private final Label timestamp;
+        private final SamebugLabel name;
+        private final SamebugLabel timestamp;
 
         {
             final AvatarIcon authorIcon = new AvatarIcon(model.createdByAvatarUrl, AvatarIconSize);
-            name = new Label(model.createdBy, FontRegistry.AvenirRegular, 12);
+            name = new SamebugLabel(model.createdBy, FontRegistry.AvenirRegular, 12);
             name.setForeground(ColorUtil.UnemphasizedText);
-            timestamp = new Label(TextUtil.prettyTime(model.createdAt), FontRegistry.AvenirRegular, 12);
+            timestamp = new SamebugLabel(TextUtil.prettyTime(model.createdAt), FontRegistry.AvenirRegular, 12);
             timestamp.setForeground(ColorUtil.UnemphasizedText);
 
             setLayout(new MigLayout("", "0[]5[]0", "0[14!]0[14!]0"));

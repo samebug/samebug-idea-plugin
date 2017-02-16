@@ -5,7 +5,7 @@ import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.component.util.AvatarIcon;
-import com.samebug.clients.idea.ui.component.util.label.Label;
+import com.samebug.clients.idea.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
 
@@ -35,14 +35,14 @@ public final class BugmateHit extends TransparentPanel {
     }
 
 
-    private final class NameLabel extends Label {
+    private final class NameLabel extends SamebugLabel {
         {
             setText(model.displayName);
             setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 14));
         }
     }
 
-    private final class TimestampLabel extends Label {
+    private final class TimestampLabel extends SamebugLabel {
         {
             setText(SamebugBundle.message("samebug.component.bugmate.hit.occurred", model.nSeen, TextUtil.prettyTime(model.lastSeen)));
             setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 14));

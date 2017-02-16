@@ -6,19 +6,19 @@ import com.samebug.clients.idea.ui.FontRegistry;
 import javax.swing.*;
 import java.awt.*;
 
-public class Label extends JLabel {
+public class SamebugLabel extends JLabel {
     private Color[] foregroundColors;
     private Color[] backgroundColors;
 
-    public Label() {
+    public SamebugLabel() {
         this(null);
     }
 
-    public Label(String text) {
+    public SamebugLabel(String text) {
         this(text, FontRegistry.AvenirRegular, 16);
     }
 
-    public Label(String text, String fontName, int fontSize) {
+    public SamebugLabel(String text, String fontName, int fontSize) {
         super(text);
         setForeground(ColorUtil.Text);
         setFont(new Font(fontName, Font.PLAIN, fontSize));

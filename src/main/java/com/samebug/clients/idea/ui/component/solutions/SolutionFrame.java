@@ -2,12 +2,12 @@ package com.samebug.clients.idea.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.idea.ui.component.profile.ProfilePanel;
-import com.samebug.clients.idea.ui.component.util.panel.Panel;
+import com.samebug.clients.idea.ui.component.util.panel.SamebugPanel;
 
 import javax.swing.*;
 import java.awt.*;
 
-public final class SolutionFrame extends Panel {
+public final class SolutionFrame extends SamebugPanel {
     private Solutions solutions;
     private final MessageBus messageBus;
 

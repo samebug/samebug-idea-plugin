@@ -6,7 +6,7 @@ import com.samebug.clients.idea.ui.FontRegistry;
 import javax.swing.*;
 import java.awt.*;
 
-public class MultiLineLabel extends JTextArea {
+public class SamebugMultiLineLabel extends JTextArea {
     private Color[] foregroundColors;
     private Color[] backgroundColors;
 

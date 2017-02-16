@@ -1,7 +1,7 @@
 package com.samebug.clients.idea.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
-import com.samebug.clients.idea.ui.component.util.panel.Panel;
+import com.samebug.clients.idea.ui.component.util.panel.SamebugPanel;
 import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import com.samebug.clients.idea.ui.component.util.scrollPane.SamebugScrollPane;
 import net.miginfocom.swing.MigLayout;
@@ -46,16 +46,16 @@ public final class TipResultsTab extends TransparentPanel {
     }
 
 
-    private final class EmptyContentPanel extends Panel {
+    private final class EmptyContentPanel extends SamebugPanel {
         {
             final NoSolutionCTA cta = new NoSolutionCTA(messageBus, ctaModel);
             cta.setTextForTips();
-            setLayout(new MigLayout("fillx", "20[fill]0", "20[]20"));
+            setLayout(new MigLayout("fillx", "20[fill]0", "0[]20"));
             add(cta);
         }
     }
 
-    private final class ContentPanel extends Panel {
+    private final class ContentPanel extends SamebugPanel {
         {
             final ListPanel listPanel = new ListPanel();
             final WriteTipCTA writeTip = new WriteTipCTA(messageBus, ctaModel);
@@ -69,7 +69,7 @@ public final class TipResultsTab extends TransparentPanel {
         }
     }
 
-    private final class ListPanel extends Panel {
+    private final class ListPanel extends SamebugPanel {
         {
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 

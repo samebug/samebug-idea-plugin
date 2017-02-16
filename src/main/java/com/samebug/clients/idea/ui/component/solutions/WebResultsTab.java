@@ -4,9 +4,9 @@ import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
-import com.samebug.clients.idea.ui.component.util.SamebugButton;
+import com.samebug.clients.idea.ui.component.util.button.SamebugButton;
 import com.samebug.clients.idea.ui.component.util.scrollPane.SamebugScrollPane;
-import com.samebug.clients.idea.ui.component.util.panel.Panel;
+import com.samebug.clients.idea.ui.component.util.panel.SamebugPanel;
 import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
 
@@ -50,16 +50,16 @@ public final class WebResultsTab extends TransparentPanel {
         add(scrollPane);
     }
 
-    private final class EmptyContentPanel extends Panel {
+    private final class EmptyContentPanel extends SamebugPanel {
         {
             final NoSolutionCTA cta = new NoSolutionCTA(messageBus, ctaModel);
             cta.setTextForSolutions();
-            setLayout(new MigLayout("fillx", "20[fill]0", "20[]20"));
+            setLayout(new MigLayout("fillx", "20[fill]0", "0[]20"));
             add(cta);
         }
     }
 
-    private final class ContentPanel extends Panel {
+    private final class ContentPanel extends SamebugPanel {
         {
             final ListPanel listPanel = new ListPanel();
             final MoreButton more = new MoreButton();
@@ -90,9 +90,11 @@ public final class WebResultsTab extends TransparentPanel {
         }
     }
 
-    private final static class Separator extends Panel {
+    private final static class Separator extends SamebugPanel {
+        private static final int TopHeight = 20;
+        private static final int BottomHeight = 16;
         {
-            setPreferredSize(new Dimension(0, 20 + 1 + 20));
+            setPreferredSize(new Dimension(0, TopHeight + 1 + BottomHeight));
             setForeground(ColorUtil.Separator);
             setBackground(ColorUtil.Background);
         }
@@ -103,7 +105,7 @@ public final class WebResultsTab extends TransparentPanel {
             g2.setColor(getBackground());
             g2.fillRect(0, 0, getWidth(), getHeight());
             g2.setColor(getForeground());
-            g2.drawLine(0, 21, getWidth(), 21);
+            g2.drawLine(0, TopHeight + 1, getWidth(), TopHeight + 1);
         }
     }
 

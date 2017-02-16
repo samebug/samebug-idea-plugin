@@ -3,25 +3,23 @@ package com.samebug.clients.idea.ui.component.solutions;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.TextUtil;
-import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.ImageUtil;
 import com.samebug.clients.idea.ui.component.util.multiline.LinkMultilineLabel;
-import com.samebug.clients.idea.ui.component.util.label.Label;
+import com.samebug.clients.idea.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
-import com.samebug.clients.idea.ui.component.util.panel.Panel;
+import com.samebug.clients.idea.ui.component.util.panel.SamebugPanel;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Date;
 
-public final class WebHit extends Panel implements DataProvider {
+public final class WebHit extends SamebugPanel implements DataProvider {
     private final Model model;
     private final MessageBus messageBus;
 
@@ -72,7 +70,7 @@ public final class WebHit extends Panel implements DataProvider {
         }
     }
 
-    private final class SourceLabel extends Label {
+    private final class SourceLabel extends SamebugLabel {
         {
             setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 12));
             String sourceText;

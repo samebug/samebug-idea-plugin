@@ -11,7 +11,7 @@ import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Nullable;
-import com.samebug.clients.idea.ui.component.util.label.Label;
+import com.samebug.clients.idea.ui.component.util.label.SamebugLabel;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -97,7 +97,7 @@ public final class MarkPanel extends JPanel {
 
 
     // TODO handling pushed state, the whole panel should be the button
-    private final class CounterLabel extends Label {
+    private final class CounterLabel extends SamebugLabel {
         {
             setHorizontalAlignment(SwingConstants.CENTER);
             setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 14));
