@@ -1,7 +1,8 @@
 package com.samebug.clients.idea.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
-import com.samebug.clients.idea.ui.ColorUtil;
+import com.samebug.clients.idea.ui.component.util.panel.Panel;
+import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import com.samebug.clients.idea.ui.component.util.scrollPane.SamebugScrollPane;
 import net.miginfocom.swing.MigLayout;
 
@@ -10,7 +11,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class TipResultsTab extends JPanel {
+public final class TipResultsTab extends TransparentPanel {
     private final Model model;
     private final HelpOthersCTA.Model ctaModel;
     private final MessageBus messageBus;
@@ -45,22 +46,16 @@ public final class TipResultsTab extends JPanel {
     }
 
 
-    private final class EmptyContentPanel extends JPanel {
+    private final class EmptyContentPanel extends Panel {
         {
             final NoSolutionCTA cta = new NoSolutionCTA(messageBus, ctaModel);
             cta.setTextForTips();
             setLayout(new MigLayout("fillx", "20[fill]0", "20[]20"));
             add(cta);
         }
-
-        @Override
-        public void updateUI() {
-            super.updateUI();
-            setBackground(ColorUtil.background());
-        }
     }
 
-    private final class ContentPanel extends JPanel {
+    private final class ContentPanel extends Panel {
         {
             final ListPanel listPanel = new ListPanel();
             final WriteTipCTA writeTip = new WriteTipCTA(messageBus, ctaModel);
@@ -72,15 +67,9 @@ public final class TipResultsTab extends JPanel {
             add(writeTip, "cell 0 1");
             add(bugmateList, "cell 0 2");
         }
-
-        @Override
-        public void updateUI() {
-            super.updateUI();
-            setBackground(ColorUtil.background());
-        }
     }
 
-    private final class ListPanel extends JPanel {
+    private final class ListPanel extends Panel {
         {
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
@@ -91,12 +80,6 @@ public final class TipResultsTab extends JPanel {
                 TipHit hit = tipHits.get(i);
                 add(hit);
             }
-        }
-
-        @Override
-        public void updateUI() {
-            super.updateUI();
-            setBackground(ColorUtil.background());
         }
     }
 

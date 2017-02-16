@@ -6,8 +6,9 @@ import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.component.util.AvatarIcon;
-import com.samebug.clients.idea.ui.component.util.SamebugLabel;
-import com.samebug.clients.idea.ui.component.util.SamebugMultiLineLabel;
+import com.samebug.clients.idea.ui.component.util.label.Label;
+import com.samebug.clients.idea.ui.component.util.multiline.MultiLineLabel;
+import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -15,11 +16,11 @@ import java.awt.*;
 import java.net.URL;
 import java.util.Date;
 
-public final class TipHit extends JPanel {
+public final class TipHit extends TransparentPanel {
     private final Model model;
     private final MessageBus messageBus;
 
-    private final SamebugLabel tipLabel;
+    private final Label tipLabel;
     private final MessageLabel tipMessage;
     private final MarkPanel mark;
 
@@ -27,17 +28,13 @@ public final class TipHit extends JPanel {
         this.model = new Model(model);
         this.messageBus = messageBus;
 
-        tipLabel = new SamebugLabel("TIP", FontRegistry.AvenirRegular, 14);
+        tipLabel = new Label("TIP", FontRegistry.AvenirRegular, 14);
+        tipLabel.setForeground(ColorUtil.TipText);
         tipMessage = new MessageLabel();
         mark = new MarkPanel(messageBus, model.mark);
-        final JPanel filler = new JPanel() {
-            {
-                setOpaque(false);
-            }
-        };
+        final JPanel filler = new TransparentPanel();
         final AuthorPanel author = new AuthorPanel();
 
-        setOpaque(false);
         setLayout(new MigLayout("fillx", "20[fill, 300]20", "20[]15[]15[]20"));
 
         add(tipLabel, "cell 0 0");
@@ -48,56 +45,36 @@ public final class TipHit extends JPanel {
     }
 
     @Override
-    public void updateUI() {
-        super.updateUI();
-        if (tipLabel != null) tipLabel.setForeground(ColorUtil.tipText());
-    }
-
-    @Override
     public void paintBorder(Graphics g) {
         Graphics2D g2 = DrawUtil.init(g);
+        // TODO background
         g2.setColor(ColorUtil.tip());
-        g2.fillRoundRect(0,0, getWidth(), getHeight(), 5, 5);
+        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 5, 5);
     }
 
-    private final class MessageLabel extends SamebugMultiLineLabel {
+    private final class MessageLabel extends MultiLineLabel {
         {
             setText(TipHit.this.model.message);
         }
-
-        @Override
-        public void updateUI() {
-            super.updateUI();
-            setForeground(ColorUtil.tipText());
-        }
     }
 
-    private final class AuthorPanel extends JPanel {
+    private final class AuthorPanel extends TransparentPanel {
         private final static int AvatarIconSize = 26;
-        private final SamebugLabel name;
-        private final SamebugLabel timestamp;
+        private final Label name;
+        private final Label timestamp;
 
         {
             final AvatarIcon authorIcon = new AvatarIcon(model.createdByAvatarUrl, AvatarIconSize);
-            name = new SamebugLabel(model.createdBy, FontRegistry.AvenirRegular, 12);
-            timestamp = new SamebugLabel(TextUtil.prettyTime(model.createdAt), FontRegistry.AvenirRegular, 12);
+            name = new Label(model.createdBy, FontRegistry.AvenirRegular, 12);
+            name.setForeground(ColorUtil.UnemphasizedText);
+            timestamp = new Label(TextUtil.prettyTime(model.createdAt), FontRegistry.AvenirRegular, 12);
+            timestamp.setForeground(ColorUtil.UnemphasizedText);
 
-            setOpaque(false);
             setLayout(new MigLayout("", "0[]5[]0", "0[14!]0[14!]0"));
 
             add(authorIcon, "cell 0 0, spany 2");
             add(name, "cell 1 0");
             add(timestamp, "cell 1 1");
-        }
-
-        // TODO this is really error prone. Handling updateUI this way is bad
-        @Override
-        public void updateUI() {
-            super.updateUI();
-            if (name != null && timestamp != null) {
-                name.setForeground(ColorUtil.unemphasizedText());
-                timestamp.setForeground(ColorUtil.unemphasizedText());
-            }
         }
     }
 

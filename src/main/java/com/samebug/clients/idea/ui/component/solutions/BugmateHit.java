@@ -3,18 +3,17 @@ package com.samebug.clients.idea.ui.component.solutions;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.component.util.AvatarIcon;
+import com.samebug.clients.idea.ui.component.util.label.Label;
+import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
 
-import javax.swing.*;
-import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.net.URL;
 import java.util.Date;
 
-public final class BugmateHit extends JPanel {
+public final class BugmateHit extends TransparentPanel {
     private final static int AvatarSize = 44;
 
     private final Model model;
@@ -28,7 +27,6 @@ public final class BugmateHit extends JPanel {
         final TimestampLabel timestamp = new TimestampLabel();
         final AvatarIcon avatar = new AvatarIcon(model.avatarUrl, AvatarSize);
 
-        setOpaque(false);
         setLayout(new MigLayout("", "0[]10[]0", "0[]0[]0"));
 
         add(avatar, "cell 0 0, spany 2");
@@ -37,28 +35,16 @@ public final class BugmateHit extends JPanel {
     }
 
 
-    private final class NameLabel extends JLabel {
+    private final class NameLabel extends Label {
         {
             setText(model.displayName);
-        }
-
-        @Override
-        public void updateUI() {
-            super.updateUI();
-            setForeground(ColorUtil.text());
             setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 14));
         }
     }
 
-    private final class TimestampLabel extends JLabel {
+    private final class TimestampLabel extends Label {
         {
             setText(SamebugBundle.message("samebug.component.bugmate.hit.occurred", model.nSeen, TextUtil.prettyTime(model.lastSeen)));
-        }
-
-        @Override
-        public void updateUI() {
-            super.updateUI();
-            setForeground(ColorUtil.text());
             setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 14));
         }
     }

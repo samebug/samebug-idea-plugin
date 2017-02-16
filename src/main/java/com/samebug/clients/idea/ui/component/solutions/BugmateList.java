@@ -2,17 +2,17 @@ package com.samebug.clients.idea.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.component.util.SamebugButton;
+import com.samebug.clients.idea.ui.component.util.label.Label;
+import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class BugmateList extends JPanel {
+public final class BugmateList extends TransparentPanel {
     private final Model model;
     private final MessageBus messageBus;
 
@@ -25,7 +25,6 @@ public final class BugmateList extends JPanel {
         final MoreLabel more = new MoreLabel();
         final AskButton askButton = new AskButton();
 
-        setOpaque(false);
         setLayout(new MigLayout("fillx", "0[]0", "0[]25[]25[]10[]0"));
 
         add(subheader, "cell 0 0");
@@ -34,7 +33,7 @@ public final class BugmateList extends JPanel {
         add(askButton, "cell 0 3, align center");
     }
 
-    private final class BugmateGrid extends JPanel {
+    private final class BugmateGrid extends TransparentPanel {
         private final List<BugmateHit> bugmateHits;
 
         {
@@ -44,7 +43,6 @@ public final class BugmateList extends JPanel {
                 bugmateHits.add(hit);
             }
 
-            setOpaque(false);
             // TODO generalize it if necessary, for 4 items it's fine
             if (bugmateHits.size() <= 2) {
                 setLayout(new MigLayout("fillx", "0[]20[]0", "0[]0"));
@@ -61,26 +59,16 @@ public final class BugmateList extends JPanel {
         }
     }
 
-    private final class SubheaderLabel extends JLabel {
+    private final class SubheaderLabel extends Label {
         {
             setText(SamebugBundle.message("samebug.component.bugmate.list.title"));
-        }
-        @Override
-        public void updateUI() {
-            super.updateUI();
-            setForeground(ColorUtil.text());
             setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 16));
         }
     }
 
-    private final class MoreLabel extends JLabel {
+    private final class MoreLabel extends Label {
         {
             setText(SamebugBundle.message("samebug.component.bugmate.list.more", model.numberOfOtherBugmates));
-        }
-        @Override
-        public void updateUI() {
-            super.updateUI();
-            setForeground(ColorUtil.text());
             setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 14));
         }
     }

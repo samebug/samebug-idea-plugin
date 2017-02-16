@@ -6,6 +6,8 @@ import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.component.util.SamebugButton;
 import com.samebug.clients.idea.ui.component.util.scrollPane.SamebugScrollPane;
+import com.samebug.clients.idea.ui.component.util.panel.Panel;
+import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -13,7 +15,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class WebResultsTab extends JPanel {
+public final class WebResultsTab extends TransparentPanel {
     private final Model model;
     private final HelpOthersCTA.Model ctaModel;
     private final MessageBus messageBus;
@@ -48,22 +50,16 @@ public final class WebResultsTab extends JPanel {
         add(scrollPane);
     }
 
-    private final class EmptyContentPanel extends JPanel {
+    private final class EmptyContentPanel extends Panel {
         {
             final NoSolutionCTA cta = new NoSolutionCTA(messageBus, ctaModel);
             cta.setTextForSolutions();
             setLayout(new MigLayout("fillx", "20[fill]0", "20[]20"));
             add(cta);
         }
-
-        @Override
-        public void updateUI() {
-            super.updateUI();
-            setBackground(ColorUtil.background());
-        }
     }
 
-    private final class ContentPanel extends JPanel {
+    private final class ContentPanel extends Panel {
         {
             final ListPanel listPanel = new ListPanel();
             final MoreButton more = new MoreButton();
@@ -73,19 +69,11 @@ public final class WebResultsTab extends JPanel {
             add(listPanel, "cell 0 0, growx");
             add(more, "cell 0 1, al center");
         }
-
-        @Override
-        public void updateUI() {
-            super.updateUI();
-            setBackground(ColorUtil.background());
-        }
     }
 
 
-    private final class ListPanel extends JPanel {
+    private final class ListPanel extends TransparentPanel {
         {
-            setOpaque(false);
-
             // NOTE I intended to use BoxLayout, but somewhy the webHit did not fill the width of the panel
             setLayout(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
@@ -102,17 +90,19 @@ public final class WebResultsTab extends JPanel {
         }
     }
 
-    private final static class Separator extends JPanel {
+    private final static class Separator extends Panel {
         {
             setPreferredSize(new Dimension(0, 20 + 1 + 20));
+            setForeground(ColorUtil.Separator);
+            setBackground(ColorUtil.Background);
         }
 
         @Override
         public void paint(Graphics g) {
             Graphics2D g2 = DrawUtil.init(g);
-            g2.setColor(ColorUtil.background());
+            g2.setColor(getBackground());
             g2.fillRect(0, 0, getWidth(), getHeight());
-            g2.setColor(ColorUtil.separator());
+            g2.setColor(getForeground());
             g2.drawLine(0, 21, getWidth(), 21);
         }
     }

@@ -4,7 +4,8 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
-import com.samebug.clients.idea.ui.component.util.SamebugMultiLineLabel;
+import com.samebug.clients.idea.ui.component.util.multiline.MultiLineLabel;
+import com.samebug.clients.idea.ui.component.util.panel.Panel;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -12,7 +13,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public final class ExceptionHeaderPanel extends JPanel {
+public final class ExceptionHeaderPanel extends Panel {
     private final Model model;
     private final MessageBus messageBus;
 
@@ -28,16 +29,11 @@ public final class ExceptionHeaderPanel extends JPanel {
         add(title, "wmin 0, hmax 56");
     }
 
-    @Override
-    public void updateUI() {
-        super.updateUI();
-        setBackground(ColorUtil.background());
-    }
-
-    final class HeaderTextLabel extends SamebugMultiLineLabel {
+    final class HeaderTextLabel extends MultiLineLabel {
         {
             setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
             setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 24));
+            setForeground(ColorUtil.EmphasizedText);
 
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             addMouseListener(new MouseAdapter() {

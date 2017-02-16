@@ -16,58 +16,54 @@
 package com.samebug.clients.idea.ui;
 
 import com.intellij.util.ui.UIUtil;
+import com.samebug.clients.idea.ui.component.util.interaction.Colors;
 
 import java.awt.*;
 
 final public class ColorUtil {
     public static Color background() {
-        return colorForCurrentTheme(Background);
+        return forCurrentTheme(Background);
     }
 
     public static Color samebug() {
-        return colorForCurrentTheme(SamebugOrange);
+        return forCurrentTheme(SamebugOrange);
     }
 
     public static Color emphasizedText() {
-        return colorForCurrentTheme(EmphasizedText);
+        return forCurrentTheme(EmphasizedText);
     }
 
     public static Color text() {
-        return colorForCurrentTheme(Text);
+        return forCurrentTheme(Text);
     }
 
     public static Color unemphasizedText() {
-        return colorForCurrentTheme(UnemphasizedText);
+        return forCurrentTheme(UnemphasizedText);
     }
 
     public static Color selectedTab() {
-        return colorForCurrentTheme(SelectedTab);
+        return forCurrentTheme(SelectedTab);
     }
 
     public static Color separator() {
-        return colorForCurrentTheme(Separator);
+        return forCurrentTheme(Separator);
     }
 
     public static Color mark() {
-        return colorForCurrentTheme(MarkPanel);
+        return forCurrentTheme(MarkPanel);
     }
 
     public static Color tip() {
-        return colorForCurrentTheme(Tip);
-    }
-
-    public static Color tipText() {
-        return colorForCurrentTheme(TipText);
+        return forCurrentTheme(Tip);
     }
 
     public static Color scrollbarTrack() {
-        return colorForCurrentTheme(ScrollbarTrack);
+        return forCurrentTheme(ScrollbarTrack);
     }
 
     public static Color scrollbarThumb() {
-        return colorForCurrentTheme(ScrollbarThumb);
+        return forCurrentTheme(ScrollbarThumb);
     }
-
 
 
     public static Color alertPanel() {
@@ -107,16 +103,55 @@ final public class ColorUtil {
         }
     }
 
-    private final static Color[] Background = new Color[]{new Color(0xFFFFFF), new Color(0x242526)};
-    private final static Color[] EmphasizedText = new Color[]{new Color(0x000000), new Color(0xCBCDCF)};
-    private final static Color[] Text = new Color[]{new Color(0x333333), new Color(0x8B8C8F)};
-    private final static Color[] UnemphasizedText = new Color[]{new Color(0x88BCCE), new Color(0x8AB0D6)};
-    private final static Color[] Separator = new Color[]{new Color(0xE5E5E5), new Color(0x454546)};
-    private final static Color[] SamebugOrange = new Color[]{new Color(0xFF8010), new Color(0xFF8820)};
-    private final static Color[] SelectedTab = new Color[]{new Color(0x666666), new Color(0xCBCDCF)};
-    private final static Color[] MarkPanel = new Color[]{new Color(0x4287DB), new Color(0x7CD2FF)};
-    private final static Color[] Tip = new Color[]{new Color(0xE0F2F8), new Color(0x0560A2)};
-    private final static Color[] TipText = new Color[]{new Color(0x086a8b), new Color(0xDBEFFF)};
-    private final static Color[] ScrollbarTrack = new Color[]{new Color(0xF5F5F5), new Color(0x2D2E2F)};
-    private final static Color[] ScrollbarThumb = new Color[]{new Color(0xD5D5D5), new Color(0x484A4B)};
+    public static <T> T forCurrentTheme(T[] objects) {
+        if (objects == null) return null;
+        else if (UIUtil.isUnderDarcula() && objects.length > 1) return objects[1];
+        else return objects[0];
+    }
+
+    public final static Color[] Background = new Color[]{new Color(0xFFFFFF), new Color(0x242526)};
+    public final static Color[] EmphasizedText = new Color[]{new Color(0x000000), new Color(0xCBCDCF)};
+    public final static Color[] Text = new Color[]{new Color(0x333333), new Color(0x8B8C8F)};
+    public final static Color[] UnemphasizedText = new Color[]{new Color(0x88BCCE), new Color(0x8AB0D6)};
+    public final static Color[] Separator = new Color[]{new Color(0xE5E5E5), new Color(0x454546)};
+    public final static Color[] SamebugOrange = new Color[]{new Color(0xFF8010), new Color(0xFF8820)};
+    public final static Color[] SelectedTab = new Color[]{new Color(0x666666), new Color(0xCBCDCF)};
+    public final static Color[] MarkPanel = new Color[]{new Color(0x4287DB), new Color(0x7CD2FF)};
+    public final static Color[] Tip = new Color[]{new Color(0xE0F2F8), new Color(0x0560A2)};
+    public final static Color[] TipText = new Color[]{new Color(0x086a8b), new Color(0xDBEFFF)};
+    public final static Color[] ScrollbarTrack = new Color[]{new Color(0xF5F5F5), new Color(0x2D2E2F)};
+    public final static Color[] ScrollbarThumb = new Color[]{new Color(0xD5D5D5), new Color(0x484A4B)};
+
+    public final static Colors[] LinkInteraction = new Colors[]{
+            new Colors(new Color(0xFF8000), new Color(0xFEA144), new Color(0xED7700)),
+            new Colors(new Color(0xFF8820), new Color(0xFEA144), new Color(0xED7700))
+    };
+
+    public final static Colors[] SecondaryLinkInteraction = new Colors[]{
+            new Colors(new Color(0x333333), new Color(0xFEA144), new Color(0xED7700)),
+            new Colors(new Color(0xCBCDCF), new Color(0xFEA144), new Color(0xED7700))
+    };
+
+    public final static Colors[] MarkInteraction = new Colors[]{
+            new Colors(new Color(0x3E85DE), new Color(0x66A6F6), new Color(0x3E85DE)),
+            new Colors(new Color(0x7CD2FF), new Color(0xBBE8FF), new Color(0x7CD2FF))
+    };
+
+    public final static Color[] Link = new Color[LinkInteraction.length];
+
+    public final static Color[] SecondaryLink = new Color[SecondaryLinkInteraction.length];
+
+    public final static Color[] Mark = new Color[MarkInteraction.length];
+
+    static {
+        for (int i = 0; i < LinkInteraction.length; ++i) {
+            Link[i] = LinkInteraction[i].normal;
+        }
+        for (int i = 0; i < SecondaryLinkInteraction.length; ++i) {
+            SecondaryLink[i] = SecondaryLinkInteraction[i].normal;
+        }
+        for (int i = 0; i < MarkInteraction.length; ++i) {
+            Mark[i] = MarkInteraction[i].normal;
+        }
+    }
 }

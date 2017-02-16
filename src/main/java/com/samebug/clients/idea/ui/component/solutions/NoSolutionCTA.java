@@ -5,8 +5,6 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
-import com.samebug.clients.idea.ui.component.util.SamebugButton;
-import com.samebug.clients.idea.ui.component.util.SamebugMultiLineLabel;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -30,7 +28,6 @@ public final class NoSolutionCTA extends HelpOthersCTA {
         button.setText(SamebugBundle.message("samebug.component.tip.write.cta.button"));
         label = new CenteredMultiLineLabel();
 
-        setOpaque(false);
         setLayout(new MigLayout("fillx, w 300", "40[]40", "40[]20[]40"));
         add(label, "cell 0 0, wmin 0, growx");
         add(button, "cell 0 1, align center");

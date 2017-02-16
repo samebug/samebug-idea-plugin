@@ -3,18 +3,18 @@ package com.samebug.clients.idea.ui.component.util.tabbedPane;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
-import com.samebug.clients.idea.ui.component.util.SamebugLabel;
+import com.samebug.clients.idea.ui.component.util.label.Label;
 
 import javax.swing.*;
 import java.awt.*;
 
 public abstract class SamebugTabHeader extends JPanel {
-    protected final SamebugLabel tabLabel;
+    protected final Label tabLabel;
     protected final HitsLabel hitsLabel;
     protected boolean selected;
 
     public SamebugTabHeader(String tabName, int hits) {
-        tabLabel = new SamebugLabel(tabName, FontRegistry.AvenirDemi, 16);
+        tabLabel = new Label(tabName, FontRegistry.AvenirDemi, 16);
         hitsLabel = new HitsLabel();
         hitsLabel.setText(Integer.toString(hits));
 

@@ -7,7 +7,10 @@ import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.ImageUtil;
-import com.samebug.clients.idea.ui.component.util.SamebugMultiLineLabel;
+import com.samebug.clients.idea.ui.component.util.multiline.LinkMultilineLabel;
+import com.samebug.clients.idea.ui.component.util.label.Label;
+import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
+import com.samebug.clients.idea.ui.component.util.panel.Panel;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +21,7 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Date;
 
-public final class WebHit extends JPanel implements DataProvider {
+public final class WebHit extends Panel implements DataProvider {
     private final Model model;
     private final MessageBus messageBus;
 
@@ -37,12 +40,7 @@ public final class WebHit extends JPanel implements DataProvider {
         add(markPanel, "cell 0 1");
     }
 
-    @Override
-    public void updateUI() {
-        super.updateUI();
-        setBackground(ColorUtil.background());
-    }
-    private final class TitlePanel extends JPanel {
+    private final class TitlePanel extends TransparentPanel {
         private final static int Size = 40;
 
         {
@@ -50,7 +48,6 @@ public final class WebHit extends JPanel implements DataProvider {
             final TitleLabel title = new TitleLabel();
             final SourceLabel source = new SourceLabel();
 
-            setOpaque(false);
             setLayout(new MigLayout("", "0[]9[]0", "0[]0[]0"));
             add(sourceIcon, MessageFormat.format("w {0}!, h {0}!, cell 0 0, span 1 2, ay top", Size));
             add(title, MessageFormat.format("wmin 0, hmax {0}, growx, cell 1 0", Size));
@@ -58,17 +55,12 @@ public final class WebHit extends JPanel implements DataProvider {
         }
     }
 
-    private final class TitleLabel extends SamebugMultiLineLabel {
+    private final class TitleLabel extends LinkMultilineLabel {
         {
             setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 16));
             setText(model.title);
         }
 
-        @Override
-        public void updateUI() {
-            super.updateUI();
-            setForeground(ColorUtil.samebug());
-        }
         @Override
         public Dimension getPreferredSize() {
             // TODO breaks when changing font
@@ -80,7 +72,7 @@ public final class WebHit extends JPanel implements DataProvider {
         }
     }
 
-    private final class SourceLabel extends JLabel {
+    private final class SourceLabel extends Label {
         {
             setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 12));
             String sourceText;
@@ -91,18 +83,12 @@ public final class WebHit extends JPanel implements DataProvider {
             }
             setText(sourceText);
         }
-        @Override
-        public void updateUI() {
-            super.updateUI();
-            setForeground(ColorUtil.unemphasizedText());
-        }
     }
 
-    private final class SourceIcon extends JPanel {
+    private final class SourceIcon extends TransparentPanel {
         private final Image sourceIcon;
 
         {
-            setOpaque(false);
             sourceIcon = ImageUtil.getScaled(model.sourceIconUrl, TitlePanel.Size, TitlePanel.Size);
         }
 
