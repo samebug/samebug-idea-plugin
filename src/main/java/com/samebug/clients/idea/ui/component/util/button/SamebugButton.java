@@ -73,10 +73,6 @@ public class SamebugButton extends JButton {
     @Override
     public void updateUI() {
         setUI(new SamebugButtonUI());
-        if (foregroundColors != null) {
-            if (interactiveComponent != null) interactiveComponent.uninstall();
-            interactiveComponent = new InteractiveComponent(this, ColorUtil.forCurrentTheme(foregroundColors));
-            super.setForeground(ColorUtil.forCurrentTheme(foregroundColors).normal);
-        }
+        interactiveComponent = InteractiveComponent.updateForegroundInteraction(interactiveComponent, ColorUtil.forCurrentTheme(foregroundColors), this);
     }
 }

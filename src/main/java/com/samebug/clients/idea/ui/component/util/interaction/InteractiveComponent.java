@@ -1,5 +1,8 @@
 package com.samebug.clients.idea.ui.component.util.interaction;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -75,5 +78,16 @@ public final class InteractiveComponent {
             onExit();
             super.mouseExited(e);
         }
+    }
+
+    @Nullable
+    public static InteractiveComponent updateForegroundInteraction(@Nullable InteractiveComponent currentInteractiveComponent, @Nullable Colors interationColors, @NotNull JComponent component) {
+        InteractiveComponent newIC = null;
+        if (interationColors != null) {
+            if (currentInteractiveComponent != null) currentInteractiveComponent.uninstall();
+            newIC = new InteractiveComponent(component, interationColors);
+            component.setForeground(interationColors.normal);
+        }
+        return newIC;
     }
 }
