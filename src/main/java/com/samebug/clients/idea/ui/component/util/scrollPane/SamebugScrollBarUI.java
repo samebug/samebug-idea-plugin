@@ -1,9 +1,5 @@
 package com.samebug.clients.idea.ui.component.util.scrollPane;
 
-import com.intellij.ui.components.JBScrollPane;
-import com.intellij.ui.paint.RectanglePainter;
-import com.intellij.util.ui.MouseEventAdapter;
-import com.intellij.util.ui.UIUtil;
 import com.samebug.clients.idea.ui.ColorUtil;
 
 import javax.swing.*;
@@ -20,7 +16,7 @@ import static java.awt.Adjustable.VERTICAL;
 // NOTE most of this code is lifted from com.intellij.ui.components.DefaultScrollBarUI
 public final class SamebugScrollBarUI extends ScrollBarUI {
     private final SamebugScrollBarUI.Listener myListener = new SamebugScrollBarUI.Listener();
-    private final Timer myScrollTimer = UIUtil.createNamedTimer("ScrollBarThumbScrollTimer", 60, myListener);
+    private final Timer myScrollTimer = new Timer(60, myListener);
 
     private final Rectangle myThumbBounds = new Rectangle();
     private final Rectangle myTrackBounds = new Rectangle();
@@ -68,12 +64,14 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
 
     private void paintTrack(Graphics2D g, int x, int y, int width, int height, JComponent c) {
         g.setColor(ColorUtil.scrollbarTrack());
-        RectanglePainter.FILL.paint(g, x, y, width, height, Math.min(width, height));
+        int arc = Math.min(width, height);
+        g.fillRoundRect(x, y, width, height, arc, arc);
     }
 
     private void paintThumb(Graphics2D g, int x, int y, int width, int height, JComponent c) {
         g.setColor(ColorUtil.scrollbarThumb());
-        RectanglePainter.FILL.paint(g, x, y, width, height, Math.min(width, height));
+        int arc = Math.min(width, height);
+        g.fillRoundRect(x, y, width, height, arc, arc);
     }
 
     private void onThumbMove() {
@@ -90,8 +88,6 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
     @Override
     public void installUI(JComponent c) {
         myScrollBar = (JScrollBar)c;
-        ScrollColorProducer.setBackground(c);
-        ScrollColorProducer.setForeground(c);
         myScrollBar.setFocusable(false);
         myScrollBar.addMouseListener(myListener);
         myScrollBar.addMouseMotionListener(myListener);
@@ -117,16 +113,13 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
     @Override
     public Dimension getPreferredSize(JComponent c) {
         int thickness = getThickness();
-        JBScrollPane.Alignment alignment = JBScrollPane.Alignment.get(c);
-        return alignment == JBScrollPane.Alignment.LEFT || alignment == JBScrollPane.Alignment.RIGHT
-                ? new Dimension(thickness, thickness * 2)
-                : new Dimension(thickness * 2, thickness);
+        // TODO Lift JBScrollPane.Alignment.get implementation? Now we just assume scrollbar is on the right.
+        return new Dimension(thickness, thickness * 2);
     }
 
     @Override
     public void paint(Graphics g, JComponent c) {
-        JBScrollPane.Alignment alignment = JBScrollPane.Alignment.get(c);
-        if (alignment != null && g instanceof Graphics2D) {
+        if (g instanceof Graphics2D) {
             // add padding to the track and the thumb, depending on the scrollbar orientation
             Rectangle bounds;
             final int padding = 6;
@@ -241,7 +234,7 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
             if (parent instanceof JScrollPane) {
                 JScrollPane pane = (JScrollPane)parent;
                 Component view = pane.getViewport().getView();
-                if (view != null) view.dispatchEvent(MouseEventAdapter.convert(event, view));
+//                if (view != null) view.dispatchEvent(MouseEventAdapter.convert(event, view));
             }
             return true;
         }

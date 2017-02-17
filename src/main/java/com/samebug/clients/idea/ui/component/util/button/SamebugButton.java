@@ -41,12 +41,12 @@ public class SamebugButton extends JButton {
 
     public void setForeground(Colors[] c) {
         foregroundColors = c;
-        super.setForeground(ColorUtil.forCurrentTheme(foregroundColors).normal);
+        setForeground(ColorUtil.forCurrentTheme(foregroundColors).normal);
     }
 
     public void setBackground(Color[] c) {
         backgroundColors = c;
-        super.setBackground(ColorUtil.forCurrentTheme(backgroundColors));
+        setBackground(ColorUtil.forCurrentTheme(backgroundColors));
     }
 
     public void setFilled(boolean filled) {
@@ -54,20 +54,28 @@ public class SamebugButton extends JButton {
         repaint();
     }
 
-    public boolean getFilled() {
+    public boolean isFilled() {
         return filled;
     }
 
     @Override
     public void paint(Graphics g) {
         Graphics2D g2 = DrawUtil.init(g);
+        paintBorder(g2);
+        paintContent(g2);
+    }
 
+    protected void paintBorder(Graphics2D g2) {
         // draw the rounded border
         g2.setColor(getForeground());
         if (filled) g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 5, 5);
         else g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 5, 5);
+    }
+
+    protected void paintContent(Graphics2D g2) {
         // let the SamebugButtonUI paint the text
-        super.paint(g);
+        super.paint(g2);
+
     }
 
     @Override

@@ -5,9 +5,9 @@ import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.component.util.button.SamebugButton;
-import com.samebug.clients.idea.ui.component.util.scrollPane.SamebugScrollPane;
 import com.samebug.clients.idea.ui.component.util.panel.SamebugPanel;
 import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
+import com.samebug.clients.idea.ui.component.util.scrollPane.SamebugScrollPane;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;

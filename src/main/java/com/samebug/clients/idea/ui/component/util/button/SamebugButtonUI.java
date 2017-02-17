@@ -12,7 +12,7 @@ public class SamebugButtonUI extends BasicButtonUI {
         SamebugButton b = (SamebugButton) c;
         FontMetrics fm = b.getFontMetrics(b.getFont());
 
-        if (b.getFilled()) g.setColor(b.getBackground());
+        if (b.isFilled()) g.setColor(b.getBackground());
         else g.setColor(b.getForeground());
 
         sun.swing.SwingUtilities2.drawString(c, g, text, textRect.x + getTextShiftOffset(), textRect.y + fm.getAscent() + getTextShiftOffset());

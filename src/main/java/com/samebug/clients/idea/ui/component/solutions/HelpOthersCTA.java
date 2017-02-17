@@ -4,7 +4,6 @@ import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class HelpOthersCTA extends TransparentPanel {

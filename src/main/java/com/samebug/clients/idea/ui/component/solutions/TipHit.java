@@ -22,7 +22,7 @@ public final class TipHit extends TransparentPanel {
 
     private final SamebugLabel tipLabel;
     private final MessageLabel tipMessage;
-    private final MarkPanel mark;
+    private final MarkButton mark;
 
     public TipHit(MessageBus messageBus, Model model) {
         this.model = new Model(model);
@@ -31,7 +31,7 @@ public final class TipHit extends TransparentPanel {
         tipLabel = new SamebugLabel("TIP", FontRegistry.AvenirRegular, 14);
         tipLabel.setForeground(ColorUtil.TipText);
         tipMessage = new MessageLabel();
-        mark = new MarkPanel(messageBus, model.mark);
+        mark = new MarkButton(messageBus, model.mark);
         final JPanel filler = new TransparentPanel();
         final AuthorPanel author = new AuthorPanel();
 
@@ -84,13 +84,13 @@ public final class TipHit extends TransparentPanel {
         private final Date createdAt;
         private final String createdBy;
         private final URL createdByAvatarUrl;
-        private final MarkPanel.Model mark;
+        private final MarkButton.Model mark;
 
         public Model(Model rhs) {
             this(rhs.message, rhs.createdAt, rhs.createdBy, rhs.createdByAvatarUrl, rhs.mark);
         }
 
-        public Model(String message, Date createdAt, String createdBy, URL createdByAvatarUrl, MarkPanel.Model mark) {
+        public Model(String message, Date createdAt, String createdBy, URL createdByAvatarUrl, MarkButton.Model mark) {
             this.message = message;
             this.createdAt = createdAt;
             this.createdBy = createdBy;

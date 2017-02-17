@@ -6,10 +6,10 @@ import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.ImageUtil;
-import com.samebug.clients.idea.ui.component.util.multiline.LinkMultilineLabel;
 import com.samebug.clients.idea.ui.component.util.label.SamebugLabel;
-import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
+import com.samebug.clients.idea.ui.component.util.multiline.LinkMultilineLabel;
 import com.samebug.clients.idea.ui.component.util.panel.SamebugPanel;
+import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
@@ -23,19 +23,19 @@ public final class WebHit extends SamebugPanel implements DataProvider {
     private final Model model;
     private final MessageBus messageBus;
 
-    private final MarkPanel markPanel;
+    private final MarkButton markButton;
 
     public WebHit(MessageBus messageBus, Model model) {
         this.model = new Model(model);
         this.messageBus = messageBus;
 
-        markPanel = new MarkPanel(messageBus, model.mark);
+        markButton = new MarkButton(messageBus, model.mark);
         final TitlePanel titlePanel = new TitlePanel();
 
         setLayout(new MigLayout("fillx", "0[300]0", "0[]16[]0"));
 
         add(titlePanel, "growx, cell 0 0");
-        add(markPanel, "cell 0 1");
+        add(markButton, "cell 0 1");
     }
 
     private final class TitlePanel extends TransparentPanel {
@@ -106,13 +106,13 @@ public final class WebHit extends SamebugPanel implements DataProvider {
         @Nullable
         private final String sourceName;
         private final URL sourceIconUrl;
-        private final MarkPanel.Model mark;
+        private final MarkButton.Model mark;
 
         public Model(Model rhs) {
             this(rhs.title, rhs.url, rhs.solutionId, rhs.createdAt, rhs.createdBy, rhs.sourceName, rhs.sourceIconUrl, rhs.mark);
         }
 
-        public Model(String title, URL url, int solutionId, Date createdAt, String createdBy, @Nullable String sourceName, URL sourceIconUrl, MarkPanel.Model mark) {
+        public Model(String title, URL url, int solutionId, Date createdAt, String createdBy, @Nullable String sourceName, URL sourceIconUrl, MarkButton.Model mark) {
             this.title = title;
             this.url = url;
             this.solutionId = solutionId;
@@ -127,7 +127,7 @@ public final class WebHit extends SamebugPanel implements DataProvider {
     @Nullable
     @Override
     public Object getData(@NonNls String dataId) {
-        if (MarkPanel.SolutionId.is(dataId)) return model.solutionId;
+        if (MarkButton.SolutionId.is(dataId)) return model.solutionId;
         else return null;
     }
 }
