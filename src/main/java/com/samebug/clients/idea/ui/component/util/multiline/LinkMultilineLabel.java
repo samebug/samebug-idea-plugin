@@ -3,14 +3,14 @@ package com.samebug.clients.idea.ui.component.util.multiline;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.component.util.interaction.Colors;
-import com.samebug.clients.idea.ui.component.util.interaction.InteractiveComponent;
+import com.samebug.clients.idea.ui.component.util.interaction.ForegroundColorChanger;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class LinkMultilineLabel extends JTextArea {
     private Colors[] foregroundColors;
-    private InteractiveComponent interactiveComponent;
+    private ForegroundColorChanger interactionListener;
 
     {
         setEditable(false);
@@ -28,12 +28,12 @@ public class LinkMultilineLabel extends JTextArea {
 
     public void setForeground(Colors[] c) {
         foregroundColors = c;
-        super.setForeground(ColorUtil.forCurrentTheme(foregroundColors).normal);
+        setForeground(ColorUtil.forCurrentTheme(foregroundColors).normal);
     }
 
     @Override
     public void updateUI() {
         super.updateUI();
-        interactiveComponent = InteractiveComponent.updateForegroundInteraction(interactiveComponent, ColorUtil.forCurrentTheme(foregroundColors), this);
+        interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, ColorUtil.forCurrentTheme(foregroundColors), this);
     }
 }

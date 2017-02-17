@@ -3,14 +3,14 @@ package com.samebug.clients.idea.ui.component.util.label;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.component.util.interaction.Colors;
-import com.samebug.clients.idea.ui.component.util.interaction.InteractiveComponent;
+import com.samebug.clients.idea.ui.component.util.interaction.ForegroundColorChanger;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class LinkLabel extends JLabel {
     private Colors[] foregroundColors;
-    private InteractiveComponent interactiveComponent;
+    private ForegroundColorChanger interactionListener;
 
     public LinkLabel() {
         this(null);
@@ -37,6 +37,6 @@ public class LinkLabel extends JLabel {
     @Override
     public void updateUI() {
         super.updateUI();
-        interactiveComponent = InteractiveComponent.updateForegroundInteraction(interactiveComponent, ColorUtil.forCurrentTheme(foregroundColors), this);
+        interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, ColorUtil.forCurrentTheme(foregroundColors), this);
     }
 }

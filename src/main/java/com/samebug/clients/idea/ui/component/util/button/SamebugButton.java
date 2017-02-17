@@ -4,13 +4,13 @@ import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.component.util.interaction.Colors;
-import com.samebug.clients.idea.ui.component.util.interaction.InteractiveComponent;
+import com.samebug.clients.idea.ui.component.util.interaction.ForegroundColorChanger;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class SamebugButton extends JButton {
-    private InteractiveComponent interactiveComponent;
+    private ForegroundColorChanger interactionListener;
     private Colors[] foregroundColors;
     private Color[] backgroundColors;
     private boolean filled;
@@ -81,6 +81,6 @@ public class SamebugButton extends JButton {
     @Override
     public void updateUI() {
         setUI(new SamebugButtonUI());
-        interactiveComponent = InteractiveComponent.updateForegroundInteraction(interactiveComponent, ColorUtil.forCurrentTheme(foregroundColors), this);
+        interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, ColorUtil.forCurrentTheme(foregroundColors), this);
     }
 }

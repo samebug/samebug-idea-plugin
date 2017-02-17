@@ -161,23 +161,23 @@ final public class SolutionFrameController implements Disposable {
 
     }
 
-    MarkPanel.Model convertMarkResponse(MarkResponse response) {
-        return new MarkPanel.Model(response.getDocumentVotes(), response.getId(), true /*TODO*/);
+    MarkButton.Model convertMarkResponse(MarkResponse response) {
+        return new MarkButton.Model(response.getDocumentVotes(), response.getId(), true /*TODO*/);
     }
 
-    MarkPanel.Model convertRetractedMarkResponse(MarkResponse response) {
-        return new MarkPanel.Model(response.getDocumentVotes(), null, true /*TODO*/);
+    MarkButton.Model convertRetractedMarkResponse(MarkResponse response) {
+        return new MarkButton.Model(response.getDocumentVotes(), null, true /*TODO*/);
     }
 
-    MarkPanel.Model convertMarkPanel(RestHit hit) {
-        return new MarkPanel.Model(hit.getScore(), hit.getMarkId(), true /*TODO*/);
+    MarkButton.Model convertMarkPanel(RestHit hit) {
+        return new MarkButton.Model(hit.getScore(), hit.getMarkId(), true /*TODO*/);
     }
 
     SolutionFrame.Model convertSolutionFrame(@NotNull Solutions solutions, @NotNull BugmatesResult bugmates, @NotNull User user, @NotNull Statistics statistics) {
         final List<WebHit.Model> webHits = new ArrayList<WebHit.Model>(solutions.getReferences().size());
         for (RestHit<SolutionReference> externalHit : solutions.getReferences()) {
             SolutionReference externalSolution = externalHit.getSolution();
-            MarkPanel.Model mark = convertMarkPanel(externalHit);
+            MarkButton.Model mark = convertMarkPanel(externalHit);
             final String sourceIconName = externalSolution.getSource().getIcon();
             final URL sourceIconUrl = urlBuilder.sourceIcon(sourceIconName);
 
@@ -192,7 +192,7 @@ final public class SolutionFrameController implements Disposable {
         final List<TipHit.Model> tipHits = new ArrayList<TipHit.Model>(solutions.getTips().size());
         for (RestHit<Tip> tipSolution : solutions.getTips()) {
             Tip tip = tipSolution.getSolution();
-            MarkPanel.Model mark = convertMarkPanel(tipSolution);
+            MarkButton.Model mark = convertMarkPanel(tipSolution);
             UserReference author = tipSolution.getCreatedBy();
             TipHit.Model tipHit = new TipHit.Model(tip.getTip(), tip.getCreatedAt(), author.getDisplayName(), author.getAvatarUrl(), mark);
             tipHits.add(tipHit);

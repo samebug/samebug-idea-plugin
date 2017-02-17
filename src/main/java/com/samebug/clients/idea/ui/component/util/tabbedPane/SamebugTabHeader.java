@@ -3,6 +3,7 @@ package com.samebug.clients.idea.ui.component.util.tabbedPane;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
+import com.samebug.clients.idea.ui.component.util.interaction.Colors;
 import com.samebug.clients.idea.ui.component.util.label.SamebugLabel;
 
 import javax.swing.*;
@@ -12,43 +13,74 @@ public abstract class SamebugTabHeader extends JPanel {
     protected final SamebugLabel tabLabel;
     protected final HitsLabel hitsLabel;
     protected boolean selected;
+    protected TabColorChanger interactionListener;
+    private Colors[] clickableColors;
+    private Color[] selectedColor;
+    private Color[] selectedHitColor;
 
     public SamebugTabHeader(String tabName, int hits) {
         tabLabel = new SamebugLabel(tabName, FontRegistry.AvenirDemi, 16);
         hitsLabel = new HitsLabel();
         hitsLabel.setText(Integer.toString(hits));
+        clickableColors = ColorUtil.LinkInteraction;
+        selectedColor = ColorUtil.Text;
+        selectedHitColor = ColorUtil.SelectedTab;
 
         setOpaque(false);
         // NOTE the layout is specified in the derived classes, don't forget to introduce changes to both when necessary
 
         add(tabLabel, "cell 0 0");
         add(hitsLabel, "cell 1 0");
+        updateUI();
     }
 
     public void setSelected(boolean selected) {
+        boolean wasSelected = this.selected;
         this.selected = selected;
+
+        if (!wasSelected && selected && interactionListener != null) {
+            this.removeMouseListener(interactionListener);
+            interactionListener = null;
+        } else if (wasSelected && !selected) {
+            interactionListener = TabColorChanger.createTabColorChanger(this, ColorUtil.forCurrentTheme(clickableColors));
+            addMouseListener(interactionListener);
+            setForeground(ColorUtil.forCurrentTheme(clickableColors).normal);
+            hitsLabel.setForeground(ColorUtil.selectedTab());
+        }
         updateColors();
     }
 
     private void updateColors() {
-        if (tabLabel != null && hitsLabel != null) {
+        for (Component c : getComponents()) c.setForeground(getForeground());
+        if (hitsLabel != null) {
             if (selected) {
-                tabLabel.setForeground(ColorUtil.text());
-                hitsLabel.setBackground(ColorUtil.selectedTab());
+                tabLabel.setForeground(ColorUtil.forCurrentTheme(selectedColor));
+                hitsLabel.setForeground(ColorUtil.forCurrentTheme(selectedHitColor));
             } else {
-                tabLabel.setForeground(ColorUtil.samebug());
-                hitsLabel.setBackground(ColorUtil.samebug());
+                Color unselectedTabColor = ColorUtil.forCurrentTheme(clickableColors).normal;
+                for (Component c : getComponents()) c.setForeground(unselectedTabColor);
             }
         }
     }
 
     @Override
+    public void setForeground(Color color) {
+        super.setForeground(color);
+        for (Component c : getComponents()) c.setForeground(getForeground());
+    }
+
+    @Override
     public void updateUI() {
         super.updateUI();
+        if (!selected && clickableColors != null) {
+            if (interactionListener != null) removeMouseListener(interactionListener);
+            interactionListener = TabColorChanger.createTabColorChanger(this, ColorUtil.forCurrentTheme(clickableColors));
+            addMouseListener(interactionListener);
+        }
         updateColors();
     }
 
-    private final class HitsLabel extends JLabel {
+    private final class HitsLabel extends SamebugLabel {
         private static final int Height = 20;
         private final Font font = new Font(FontRegistry.AvenirDemi, Font.PLAIN, 10);
 
@@ -77,16 +109,14 @@ public abstract class SamebugTabHeader extends JPanel {
             // For more digit, we have a rounded rectangle, and push the number to the right (to be in the center of the rectangle
             String hits = getText();
 
-
-            // TODO: this is dirty, it would be better to draw only the background without the text
-            g2.setColor(getBackground());
+            g2.setColor(getForeground());
             if (hits.length() == 1) {
                 g.fillOval(1, 1, getWidth() - 2, getHeight() - 2);
             } else {
                 g.fillRoundRect(1, 1, getWidth() - 2, getHeight() - 2, 20, 20);
             }
 
-            g2.setColor(ColorUtil.background());
+            g2.setColor(SamebugTabHeader.this.getBackground());
             g2.setFont(font);
 
             // TODO this will break when changing the font

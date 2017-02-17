@@ -3,14 +3,14 @@ package com.samebug.clients.idea.ui.component.util.label;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.component.util.interaction.Colors;
-import com.samebug.clients.idea.ui.component.util.interaction.InteractiveComponent;
+import com.samebug.clients.idea.ui.component.util.interaction.ForegroundColorChanger;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class SecondaryLinkLabel extends JLabel {
     private Colors[] foregroundColors;
-    private InteractiveComponent interactiveComponent;
+    private ForegroundColorChanger interactionListener;
 
     public SecondaryLinkLabel() {
         this(null);
@@ -31,12 +31,12 @@ public class SecondaryLinkLabel extends JLabel {
 
     public void setForeground(Colors[] c) {
         foregroundColors = c;
-        super.setForeground(ColorUtil.forCurrentTheme(foregroundColors).normal);
+        setForeground(ColorUtil.forCurrentTheme(foregroundColors).normal);
     }
 
     @Override
     public void updateUI() {
         super.updateUI();
-        interactiveComponent = InteractiveComponent.updateForegroundInteraction(interactiveComponent, ColorUtil.forCurrentTheme(foregroundColors), this);
+        interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, ColorUtil.forCurrentTheme(foregroundColors), this);
     }
 }

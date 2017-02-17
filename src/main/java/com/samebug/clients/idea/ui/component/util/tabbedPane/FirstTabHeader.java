@@ -7,6 +7,5 @@ public final class FirstTabHeader extends SamebugTabHeader {
         super(tabName, hits);
 
         setLayout(new MigLayout("", "0[]7[]20", "0[20, fill]0"));
-        setSelected(true);
     }
 }

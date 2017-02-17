@@ -23,6 +23,7 @@ public final class ResultTabs extends SamebugTabbedPane {
 
         tipResultsTabHeader = addTab(SamebugBundle.message("samebug.component.solutionFrame.tips.tabName"), model.tipResults.getTipsSize(), tipResultsTab);
         webResultsTabHeader = addTab(SamebugBundle.message("samebug.component.solutionFrame.webSolutions.tabName"), model.webResults.getHitsSize(), webResultsTab);
+        tipResultsTabHeader.setSelected(true);
     }
 
     public static final class Model {

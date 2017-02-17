@@ -25,7 +25,7 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.view.RefreshTimestampsListener;
 import com.samebug.clients.idea.ui.BrowserUtil;
 import com.samebug.clients.idea.ui.component.solutions.ExceptionHeaderPanel;
-import com.samebug.clients.idea.ui.component.solutions.MarkPanel;
+import com.samebug.clients.idea.ui.component.solutions.MarkButton;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
@@ -41,7 +41,7 @@ final class ViewController implements RefreshTimestampsListener {
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
         projectConnection.subscribe(RefreshTimestampsListener.TOPIC, this);
         projectConnection.subscribe(ExceptionHeaderPanel.Listener.TOPIC, new ExceptionHeaderPanelController());
-        projectConnection.subscribe(MarkPanel.Listener.TOPIC, new MarkPanelController());
+        projectConnection.subscribe(MarkButton.Listener.TOPIC, new MarkPanelController());
     }
 
     @Override
@@ -56,16 +56,16 @@ final class ViewController implements RefreshTimestampsListener {
         }
     }
 
-    private final class MarkPanelController implements MarkPanel.Listener {
+    private final class MarkPanelController implements MarkButton.Listener {
         @Override
-        public void markClicked(final MarkPanel markPanel, final Integer solutionId, final Integer markId) {
-            markPanel.setLoading();
+        public void markClicked(final MarkButton markButton, final Integer solutionId, final Integer markId) {
+            markButton.setLoading();
             ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
                 @Override
                 public void run() {
                     SolutionService solutionService = IdeaSamebugPlugin.getInstance().getSolutionService();
                     try {
-                        final MarkPanel.Model newModel;
+                        final MarkButton.Model newModel;
                         if (markId == null) {
                             final MarkResponse response = solutionService.postMark(controller.searchId, solutionId);
                             newModel = controller.convertMarkResponse(response);
@@ -77,11 +77,11 @@ final class ViewController implements RefreshTimestampsListener {
                             @Override
                             public void run() {
 
-                                markPanel.update(newModel);
+                                markButton.update(newModel);
                             }
                         });
                     } catch (SamebugClientException e) {
-                        markPanel.setError();
+                        markButton.setError();
                     }
                 }
             });
