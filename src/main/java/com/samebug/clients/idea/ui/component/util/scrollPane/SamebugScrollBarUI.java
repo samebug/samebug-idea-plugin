@@ -18,6 +18,9 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
     private final SamebugScrollBarUI.Listener myListener = new SamebugScrollBarUI.Listener();
     private final Timer myScrollTimer = new Timer(60, myListener);
 
+    private Color[] ThumbColor = ColorUtil.ScrollbarThumb;
+    private Color[] TrackColor = ColorUtil.ScrollbarTrack;
+
     private final Rectangle myThumbBounds = new Rectangle();
     private final Rectangle myTrackBounds = new Rectangle();
     private final int myThickness;
@@ -63,13 +66,13 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
     }
 
     private void paintTrack(Graphics2D g, int x, int y, int width, int height, JComponent c) {
-        g.setColor(ColorUtil.scrollbarTrack());
+        g.setColor(ColorUtil.forCurrentTheme(TrackColor));
         int arc = Math.min(width, height);
         g.fillRoundRect(x, y, width, height, arc, arc);
     }
 
     private void paintThumb(Graphics2D g, int x, int y, int width, int height, JComponent c) {
-        g.setColor(ColorUtil.scrollbarThumb());
+        g.setColor(ColorUtil.forCurrentTheme(ThumbColor));
         int arc = Math.min(width, height);
         g.fillRoundRect(x, y, width, height, arc, arc);
     }

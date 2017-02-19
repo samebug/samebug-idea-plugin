@@ -77,7 +77,7 @@ public class SamebugTabbedPane extends JTabbedPane {
 
     @Override
     public void updateUI() {
-        setBackground(ColorUtil.background());
+        setBackground(ColorUtil.forCurrentTheme(ColorUtil.Background));
         setUI(new SamebugTabbedPaneUI());
     }
 }

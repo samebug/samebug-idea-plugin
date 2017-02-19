@@ -6,6 +6,13 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SamebugScrollPane extends JScrollPane {
+    private final Color[] Background = ColorUtil.Background;
+
+    {
+        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        updateUI();
+    }
+
     @Override
     public JScrollBar createVerticalScrollBar() {
         return new SamebugScrollBar(Adjustable.VERTICAL);
@@ -19,7 +26,6 @@ public class SamebugScrollPane extends JScrollPane {
     @Override
     public void updateUI() {
         super.updateUI();
-        setBackground(ColorUtil.background());
-        setBorder(null);
+        setBackground(ColorUtil.forCurrentTheme(Background));
     }
 }

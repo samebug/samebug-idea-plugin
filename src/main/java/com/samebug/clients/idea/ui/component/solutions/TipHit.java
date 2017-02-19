@@ -7,7 +7,7 @@ import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.component.util.AvatarIcon;
 import com.samebug.clients.idea.ui.component.util.label.SamebugLabel;
-import com.samebug.clients.idea.ui.component.util.multiline.SamebugMultiLineLabel;
+import com.samebug.clients.idea.ui.component.util.multiline.SamebugMultilineLabel;
 import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
 
@@ -28,6 +28,7 @@ public final class TipHit extends TransparentPanel {
         this.model = new Model(model);
         this.messageBus = messageBus;
 
+        setBackground(ColorUtil.Tip);
         tipLabel = new SamebugLabel("TIP", FontRegistry.AvenirRegular, 14);
         tipLabel.setForeground(ColorUtil.TipText);
         tipMessage = new MessageLabel();
@@ -47,12 +48,11 @@ public final class TipHit extends TransparentPanel {
     @Override
     public void paintBorder(Graphics g) {
         Graphics2D g2 = DrawUtil.init(g);
-        // TODO background
-        g2.setColor(ColorUtil.tip());
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 5, 5);
+        g2.setColor(getBackground());
+        g2.fillRoundRect(0, 0, getWidth(), getHeight(), DrawUtil.RoundingDiameter, DrawUtil.RoundingDiameter);
     }
 
-    private final class MessageLabel extends SamebugMultiLineLabel {
+    private final class MessageLabel extends SamebugMultilineLabel {
         {
             setText(TipHit.this.model.message);
             setForeground(ColorUtil.TipText);

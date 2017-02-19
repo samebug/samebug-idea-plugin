@@ -44,40 +44,51 @@ public abstract class SamebugTabHeader extends JPanel {
         } else if (wasSelected && !selected) {
             interactionListener = TabColorChanger.createTabColorChanger(this, ColorUtil.forCurrentTheme(clickableColors));
             addMouseListener(interactionListener);
-            setForeground(ColorUtil.forCurrentTheme(clickableColors).normal);
-            hitsLabel.setForeground(ColorUtil.selectedTab());
         }
         updateColors();
     }
 
+    /**
+     * Update foreground and background color of this component based on the current theme
+     */
     private void updateColors() {
-        for (Component c : getComponents()) c.setForeground(getForeground());
-        if (hitsLabel != null) {
-            if (selected) {
-                tabLabel.setForeground(ColorUtil.forCurrentTheme(selectedColor));
-                hitsLabel.setForeground(ColorUtil.forCurrentTheme(selectedHitColor));
-            } else {
-                Color unselectedTabColor = ColorUtil.forCurrentTheme(clickableColors).normal;
-                for (Component c : getComponents()) c.setForeground(unselectedTabColor);
-            }
-        }
+        Color foreground;
+        if (selected) foreground = ColorUtil.forCurrentTheme(selectedColor);
+        else foreground = ColorUtil.forCurrentTheme(clickableColors).normal;
+        setForeground(foreground);
+        setBackground(ColorUtil.forCurrentTheme(ColorUtil.Background));
+
+        // hit label in selected state has a visually corrected color
+        if (hitsLabel != null && selected) hitsLabel.setForeground(ColorUtil.forCurrentTheme(selectedHitColor));
     }
 
+    /**
+     * Update the current foreground color for this and child components.
+     * NOTE: this is mostly for the interaction listener, to handle color change from rollover and pressed events
+     */
     @Override
     public void setForeground(Color color) {
         super.setForeground(color);
-        for (Component c : getComponents()) c.setForeground(getForeground());
+        for (Component c : getComponents()) c.setForeground(color);
+    }
+
+    @Override
+    public void setBackground(Color color) {
+        super.setBackground(color);
+        for (Component c : getComponents()) c.setBackground(color);
     }
 
     @Override
     public void updateUI() {
         super.updateUI();
-        if (!selected && clickableColors != null) {
-            if (interactionListener != null) removeMouseListener(interactionListener);
-            interactionListener = TabColorChanger.createTabColorChanger(this, ColorUtil.forCurrentTheme(clickableColors));
-            addMouseListener(interactionListener);
+        if (clickableColors != null) {
+            if (!selected) {
+                if (interactionListener != null) removeMouseListener(interactionListener);
+                interactionListener = TabColorChanger.createTabColorChanger(this, ColorUtil.forCurrentTheme(clickableColors));
+                addMouseListener(interactionListener);
+            }
+            updateColors();
         }
-        updateColors();
     }
 
     private final class HitsLabel extends SamebugLabel {

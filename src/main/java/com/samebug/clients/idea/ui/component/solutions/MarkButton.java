@@ -9,6 +9,7 @@ import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.component.util.button.SamebugButton;
+import com.samebug.clients.idea.ui.component.util.interaction.Colors;
 import com.samebug.clients.idea.ui.component.util.label.SamebugLabel;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Nullable;
@@ -25,6 +26,9 @@ public final class MarkButton extends SamebugButton {
     private final CounterLabel counter;
     private final Separator separator;
     private final MarkLabel markLabel;
+
+    private static final Colors[] ForegroundInteraction = ColorUtil.MarkInteraction;
+    private static final Color[] Background = ColorUtil.Background;
 
     public MarkButton(MessageBus messageBus, Model model) {
         super();
@@ -43,7 +47,8 @@ public final class MarkButton extends SamebugButton {
         add(markLabel, ", h 16!");
 
         setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 14));
-        setForeground(ColorUtil.MarkInteraction);
+        setForeground(ForegroundInteraction);
+        setBackground(Background);
 
         addMouseListener(new MouseAdapter() {
             @Override

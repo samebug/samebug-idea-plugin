@@ -10,10 +10,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SamebugButton extends JButton {
-    private ForegroundColorChanger interactionListener;
-    private Colors[] foregroundColors;
-    private Color[] backgroundColors;
-    private boolean filled;
+    protected ForegroundColorChanger interactionListener;
+    protected Colors[] foregroundColors;
+    protected Color[] backgroundColors;
+    protected boolean filled;
 
     public SamebugButton() {
         this(null);
@@ -68,14 +68,13 @@ public class SamebugButton extends JButton {
     protected void paintBorder(Graphics2D g2) {
         // draw the rounded border
         g2.setColor(getForeground());
-        if (filled) g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 5, 5);
-        else g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 5, 5);
+        if (filled) g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, DrawUtil.RoundingDiameter, DrawUtil.RoundingDiameter);
+        else g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, DrawUtil.RoundingDiameter, DrawUtil.RoundingDiameter);
     }
 
     protected void paintContent(Graphics2D g2) {
         // let the SamebugButtonUI paint the text
         super.paint(g2);
-
     }
 
     @Override

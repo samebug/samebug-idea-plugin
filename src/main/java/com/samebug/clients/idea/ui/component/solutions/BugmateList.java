@@ -45,16 +45,16 @@ public final class BugmateList extends TransparentPanel {
 
             // TODO generalize it if necessary, for 4 items it's fine
             if (bugmateHits.size() <= 2) {
-                setLayout(new MigLayout("fillx", "0[]20[]0", "0[]0"));
+                setLayout(new MigLayout("fillx", "0[]20:push[]0", "0[]0"));
             } else {
-                setLayout(new MigLayout("fillx", "0[]20[]0", "0[]20[]0"));
+                setLayout(new MigLayout("fillx", "0[]20:push[]0", "0[]20[]0"));
             }
 
             for (int i = 0; i < bugmateHits.size(); ++i) {
                 BugmateHit hit = bugmateHits.get(i);
-                if (i % 2 == 0) add(hit, "align left");
-                else if (i == bugmateHits.size() - 1) add(hit, "align right");
-                else add(hit, "align right, wrap");
+                if (i % 2 == 0) add(hit, "");
+                else if (i == bugmateHits.size() - 1) add(hit, "");
+                else add(hit, "wrap");
             }
         }
     }

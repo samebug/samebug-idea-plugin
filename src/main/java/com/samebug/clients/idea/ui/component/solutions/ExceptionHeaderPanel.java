@@ -4,7 +4,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
-import com.samebug.clients.idea.ui.component.util.multiline.SamebugMultiLineLabel;
+import com.samebug.clients.idea.ui.component.util.multiline.SamebugMultilineLabel;
 import com.samebug.clients.idea.ui.component.util.panel.SamebugPanel;
 import net.miginfocom.swing.MigLayout;
 
@@ -22,18 +22,18 @@ public final class ExceptionHeaderPanel extends SamebugPanel {
         this.messageBus = messageBus;
 
         final HeaderTextLabel title = new HeaderTextLabel();
-        title.setText(model.title);
-
         setLayout(new MigLayout("fillx, filly", "0[]0", "30[]30"));
 
         add(title, "wmin 0, hmax 56");
     }
 
-    final class HeaderTextLabel extends SamebugMultiLineLabel {
+    final class HeaderTextLabel extends SamebugMultilineLabel {
         {
             setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
             setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 24));
             setForeground(ColorUtil.EmphasizedText);
+
+            setText(model.title);
 
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             addMouseListener(new MouseAdapter() {
