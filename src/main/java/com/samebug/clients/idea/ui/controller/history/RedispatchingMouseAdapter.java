@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.listeners;
+package com.samebug.clients.idea.ui.controller.history;
 
 import javax.swing.*;
 import java.awt.*;

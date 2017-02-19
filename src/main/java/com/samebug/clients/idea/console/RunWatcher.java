@@ -23,7 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.entities.search.Saved;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.messages.view.FocusListener;
-import com.samebug.clients.idea.resources.SamebugIcons;
+import com.samebug.clients.idea.ui.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,4 +1,4 @@
-package com.samebug.clients.idea.ui.messages;
+package com.samebug.clients.idea.ui.controller.history;
 
 import com.intellij.util.messages.Topic;
 

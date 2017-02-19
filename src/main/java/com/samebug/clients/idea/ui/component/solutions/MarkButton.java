@@ -4,7 +4,7 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.IMarkButton;
-import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.ui.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.FontRegistry;

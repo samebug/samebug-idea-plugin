@@ -21,80 +21,6 @@ import com.samebug.clients.idea.ui.component.util.interaction.Colors;
 import java.awt.*;
 
 final public class ColorUtil {
-    public static Color background() {
-        return forCurrentTheme(Background);
-    }
-
-    public static Color samebug() {
-        return forCurrentTheme(SamebugOrange);
-    }
-
-    public static Color emphasizedText() {
-        return forCurrentTheme(EmphasizedText);
-    }
-
-    public static Color text() {
-        return forCurrentTheme(Text);
-    }
-
-    public static Color unemphasizedText() {
-        return forCurrentTheme(UnemphasizedText);
-    }
-
-    public static Color selectedTab() {
-        return forCurrentTheme(SelectedTab);
-    }
-
-    public static Color separator() {
-        return forCurrentTheme(Separator);
-    }
-
-    public static Color mark() {
-        return forCurrentTheme(MarkPanel);
-    }
-
-    public static Color tip() {
-        return forCurrentTheme(Tip);
-    }
-
-    public static Color scrollbarTrack() {
-        return forCurrentTheme(ScrollbarTrack);
-    }
-
-    public static Color scrollbarThumb() {
-        return forCurrentTheme(ScrollbarThumb);
-    }
-
-
-    public static Color alertPanel() {
-        return null;
-    }
-
-    public static Color highlightPanel() {
-        return null;
-    }
-
-    public static Color writeTipPanel() {
-        return null;
-    }
-
-    public static Color sourceIconBackground() {
-        return null;
-    }
-
-    public static Color ctaButton() {
-        return null;
-    }
-
-    public static Color button() {
-        return null;
-    }
-
-    public static Color componentColors(int color) {
-        return null;
-    }
-
-
     public static <T> T forCurrentTheme(T[] objects) {
         if (objects == null) return null;
         else if (UIUtil.isUnderDarcula() && objects.length > 1) return objects[1];
@@ -106,9 +32,7 @@ final public class ColorUtil {
     public final static Color[] Text = new Color[]{new Color(0x333333), new Color(0x8B8C8F)};
     public final static Color[] UnemphasizedText = new Color[]{new Color(0x88BCCE), new Color(0x8AB0D6)};
     public final static Color[] Separator = new Color[]{new Color(0xE5E5E5), new Color(0x454546)};
-    public final static Color[] SamebugOrange = new Color[]{new Color(0xFF8010), new Color(0xFF8820)};
     public final static Color[] SelectedTab = new Color[]{new Color(0x666666), new Color(0xCBCDCF)};
-    public final static Color[] MarkPanel = new Color[]{new Color(0x4287DB), new Color(0x7CD2FF)};
     public final static Color[] Tip = new Color[]{new Color(0xE0F2F8), new Color(0x0560A2)};
     public final static Color[] TipText = new Color[]{new Color(0x086a8b), new Color(0xDBEFFF)};
     public final static Color[] ScrollbarTrack = new Color[]{new Color(0xF5F5F5), new Color(0x2D2E2F)};

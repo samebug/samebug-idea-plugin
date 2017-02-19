@@ -15,29 +15,23 @@
  */
 package com.samebug.clients.idea.components.project;
 
-import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.wm.IdeFrame;
-import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.entities.ExceptionType;
 import com.samebug.clients.common.search.api.entities.Exception;
 import com.samebug.clients.common.search.api.entities.SearchResults;
 import com.samebug.clients.common.search.api.entities.StackTraceSearchGroup;
 import com.samebug.clients.common.services.HistoryService;
-import com.samebug.clients.common.ui.Colors;
 import com.samebug.clients.idea.components.application.TutorialApplicationComponent;
 import com.samebug.clients.idea.components.application.TutorialSettings;
 import com.samebug.clients.idea.messages.model.BatchStackTraceSearchListener;
-import com.samebug.clients.idea.notification.SamebugNotifications;
 import com.samebug.clients.idea.notification.SearchResultsNotification;
-import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.idea.resources.SamebugIcons;
+import com.samebug.clients.idea.ui.SamebugBundle;
+import com.samebug.clients.idea.ui.SamebugIcons;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -285,7 +279,7 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
         }
 
         private void showTutorialNotification(final String message) {
-            TutorialProjectComponent.createTutorialBalloon(project, new JEditorPane() {
+            /*TutorialProjectComponent.createTutorialBalloon(project, new JEditorPane() {
                 {
                     setEditable(false);
                     setOpaque(false);
@@ -295,7 +289,7 @@ final class SearchResultNotifier implements BatchStackTraceSearchListener, Dispo
                     setForeground(Colors.samebugWhite);
                     addHyperlinkListener(SamebugNotifications.basicHyperlinkListener(project, "tutorial"));
                 }
-            }).show(RelativePoint.getNorthEastOf(((IdeFrame) NotificationsManagerImpl.findWindowForBalloon(project)).getComponent()), Balloon.Position.atLeft);
+            }).show(RelativePoint.getNorthEastOf(((IdeFrame) NotificationsManagerImpl.findWindowForBalloon(project)).getComponent()), Balloon.Position.atLeft);*/
         }
 
         private void changeToolwindowIcon(boolean hasNew) {

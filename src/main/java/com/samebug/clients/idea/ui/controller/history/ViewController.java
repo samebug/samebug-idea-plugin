@@ -18,7 +18,6 @@ package com.samebug.clients.idea.ui.controller.history;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.messages.view.RefreshTimestampsListener;
-import com.samebug.clients.idea.ui.messages.HistoryCardListener;
 import org.jetbrains.annotations.NotNull;
 
 final class ViewController implements RefreshTimestampsListener, HistoryCardListener {

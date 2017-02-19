@@ -2,7 +2,7 @@ package com.samebug.clients.idea.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
-import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.ui.SamebugBundle;
 import com.samebug.clients.idea.ui.component.util.button.SamebugButton;
 import com.samebug.clients.idea.ui.component.util.multiline.CenteredMultilineLabel;
 import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.component.tab;
+package com.samebug.clients.idea.ui.component.history;
 
 import com.intellij.openapi.ui.ex.MultiLineLabel;
 import com.intellij.util.messages.MessageBus;
-import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.idea.ui.messages.HistoryCardListener;
+import com.samebug.clients.idea.ui.SamebugBundle;
+import com.samebug.clients.idea.ui.controller.history.HistoryCardListener;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 

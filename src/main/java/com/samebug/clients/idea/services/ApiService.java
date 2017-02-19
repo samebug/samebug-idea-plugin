@@ -23,7 +23,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.search.api.client.ConnectionStatus;
 import com.samebug.clients.common.messages.ConnectionStatusListener;
-import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.ui.SamebugBundle;
 
 final public class ApiService implements ConnectionStatusListener {
     private final Project myProject;

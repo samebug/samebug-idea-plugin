@@ -20,7 +20,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.messages.HistoryModelListener;
 import com.samebug.clients.common.search.api.entities.SearchHistory;
-import com.samebug.clients.idea.ui.component.tab.HistoryTabView;
+import com.samebug.clients.idea.ui.component.history.HistoryTabView;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

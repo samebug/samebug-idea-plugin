@@ -2,7 +2,7 @@ package com.samebug.clients.idea.ui.component.profile;
 
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
-import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.ui.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.component.util.AvatarIcon;

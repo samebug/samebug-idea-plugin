@@ -25,7 +25,7 @@ import com.samebug.clients.common.search.api.entities.StackTraceSearch;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.HistoryService;
 import com.samebug.clients.idea.components.project.ToolWindowController;
-import com.samebug.clients.idea.ui.component.tab.HistoryTabView;
+import com.samebug.clients.idea.ui.component.history.HistoryTabView;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

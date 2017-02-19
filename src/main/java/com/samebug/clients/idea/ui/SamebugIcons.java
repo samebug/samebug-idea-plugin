@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.resources;
+package com.samebug.clients.idea.ui;
 
 import com.intellij.openapi.util.IconLoader;
 

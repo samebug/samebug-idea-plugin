@@ -3,7 +3,7 @@ package com.samebug.clients.idea.ui.component.solutions;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.common.ui.component.solutions.IBugmateHit;
-import com.samebug.clients.idea.resources.SamebugBundle;
+import com.samebug.clients.idea.ui.SamebugBundle;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.component.util.AvatarIcon;
 import com.samebug.clients.idea.ui.component.util.label.SamebugLabel;

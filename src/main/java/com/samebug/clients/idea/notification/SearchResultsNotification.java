@@ -18,8 +18,8 @@ package com.samebug.clients.idea.notification;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.idea.resources.SamebugIcons;
+import com.samebug.clients.idea.ui.SamebugBundle;
+import com.samebug.clients.idea.ui.SamebugIcons;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
