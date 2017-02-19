@@ -15,6 +15,7 @@ public class StyledMultilineLabel extends JTextPane {
         setCursor(null);
         setFocusable(false);
         setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 16));
+        setForeground(ColorUtil.Text);
         setOpaque(false);
     }
 

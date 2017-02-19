@@ -5,14 +5,14 @@ import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
 import com.samebug.clients.idea.ui.SamebugBundle;
 import com.samebug.clients.idea.ui.component.util.button.SamebugButton;
 import com.samebug.clients.idea.ui.component.util.multiline.SamebugMultilineLabel;
-import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
+import com.samebug.clients.idea.ui.component.util.panel.EmphasizedPanel;
 import net.miginfocom.swing.MigLayout;
 
-public final class WriteTipCTA extends TransparentPanel implements IHelpOthersCTA {
+public final class SmallWriteTipCTA extends EmphasizedPanel implements IHelpOthersCTA {
     private final IHelpOthersCTA.Model model;
     private final MessageBus messageBus;
 
-    public WriteTipCTA(MessageBus messageBus, IHelpOthersCTA.Model model) {
+    public SmallWriteTipCTA(MessageBus messageBus, IHelpOthersCTA.Model model) {
         this.messageBus = messageBus;
         this.model = new IHelpOthersCTA.Model(model);
 

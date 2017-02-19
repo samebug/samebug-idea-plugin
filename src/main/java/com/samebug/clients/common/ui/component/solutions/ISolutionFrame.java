@@ -3,9 +3,14 @@ package com.samebug.clients.common.ui.component.solutions;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 
 public interface ISolutionFrame {
-    void setWarningLoading();
-
     void setContent(Model model);
+    void setLoading();
+    void setGenericError();
+    void setRetriableError();
+    void setServerError();
+    void setAuthenticationError();
+    void setAuthorizationError();
+
 
 
     final class Model {

@@ -3,6 +3,7 @@ package com.samebug.clients.idea.ui.component.solutions;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.solutions.ITipResultsTab;
+import com.samebug.clients.idea.ui.SamebugBundle;
 import com.samebug.clients.idea.ui.component.util.panel.SamebugPanel;
 import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import com.samebug.clients.idea.ui.component.util.scrollPane.SamebugScrollPane;
@@ -19,7 +20,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
     private final MessageBus messageBus;
 
     private final JScrollPane scrollPane;
-    private final JPanel contentPanel;
+    private final SamebugPanel contentPanel;
     private final List<TipHit> tipHits;
 
     public TipResultsTab(MessageBus messageBus, Model model, IHelpOthersCTA.Model ctaModel) {
@@ -50,8 +51,11 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
 
     private final class EmptyContentPanel extends SamebugPanel {
         {
-            final NoSolutionCTA cta = new NoSolutionCTA(messageBus, ctaModel);
-            cta.setTextForTips();
+            final LargeWriteTipCTA cta = new LargeWriteTipCTA(messageBus, ctaModel) {
+                {
+                    label.setText(SamebugBundle.message("samebug.component.cta.writeTip.noTipHits.label", model.usersWaitingHelp));
+                }
+            };
             setLayout(new MigLayout("fillx", "20[fill]0", "0[]20"));
             add(cta);
         }
@@ -60,7 +64,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
     private final class ContentPanel extends SamebugPanel {
         {
             final ListPanel listPanel = new ListPanel();
-            final WriteTipCTA writeTip = new WriteTipCTA(messageBus, ctaModel);
+            final SmallWriteTipCTA writeTip = new SmallWriteTipCTA(messageBus, ctaModel);
             final BugmateList bugmateList = new BugmateList(messageBus, model.bugmateList);
 
             setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]20[]20"));

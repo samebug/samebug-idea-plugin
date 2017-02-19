@@ -23,7 +23,7 @@ import com.samebug.clients.common.entities.user.Statistics;
 import com.samebug.clients.common.entities.user.User;
 import com.samebug.clients.common.search.api.WebUrlBuilder;
 import com.samebug.clients.common.search.api.entities.*;
-import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.common.search.api.exceptions.*;
 import com.samebug.clients.common.services.BugmateService;
 import com.samebug.clients.common.services.ProfileStore;
 import com.samebug.clients.common.services.SolutionService;
@@ -113,38 +113,46 @@ final public class SolutionFrameController implements Disposable {
                         });
                     } catch (IllegalStateException e) {
                         // TODO generic error, probably safe to retry
+                        LOGGER.warn("Failed to load user beforehand", e);
                         ApplicationManager.getApplication().invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                view.setWarningLoading();
+                                view.setGenericError();
                             }
                         });
                     } catch (InterruptedException e) {
                         // TODO generic error, probably safe to retry
+                        LOGGER.warn("Loading solutions frame interrupted", e);
                         ApplicationManager.getApplication().invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                view.setWarningLoading();
+                                view.setGenericError();
                             }
                         });
                     } catch (ExecutionException e) {
                         if (e.getCause() instanceof SamebugClientException) throw (SamebugClientException) e.getCause();
                         else {
                             // TODO generic error, probably safe to retry
+                            LOGGER.warn("Plugin-side error during loading solutions", e);
                             ApplicationManager.getApplication().invokeLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    view.setWarningLoading();
+                                    view.setGenericError();
                                 }
                             });
                         }
                     }
-                } catch (SamebugClientException e) {
+                } catch (final SamebugClientException e) {
                     // TODO error with loading, bad connection, bad apikey, server error, etc
+                    LOGGER.warn("Error during loading solutions", e);
                     ApplicationManager.getApplication().invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            view.setWarningLoading();
+                            if (e instanceof SamebugTimeout) view.setRetriableError();
+                            else if (e instanceof UserUnauthenticated) view.setAuthenticationError();
+                            else if (e instanceof UserUnauthorized) view.setAuthorizationError();
+                            else if (e instanceof UnsuccessfulResponseStatus && ((UnsuccessfulResponseStatus) e).statusCode == 500) view.setServerError();
+                            else view.setGenericError();
                         }
                     });
                 }

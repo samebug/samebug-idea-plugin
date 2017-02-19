@@ -54,8 +54,11 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
 
     private final class EmptyContentPanel extends SamebugPanel {
         {
-            final NoSolutionCTA cta = new NoSolutionCTA(messageBus, ctaModel);
-            cta.setTextForSolutions();
+            final LargeWriteTipCTA cta = new LargeWriteTipCTA(messageBus, ctaModel) {
+                {
+                    label.setText(SamebugBundle.message("samebug.component.cta.writeTip.noWebHits.label", model.usersWaitingHelp));
+                }
+            };
             setLayout(new MigLayout("fillx", "20[fill]0", "0[]20"));
             add(cta);
         }

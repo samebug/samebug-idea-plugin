@@ -5,16 +5,16 @@ import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
 import com.samebug.clients.idea.ui.SamebugBundle;
 import com.samebug.clients.idea.ui.component.util.button.SamebugButton;
 import com.samebug.clients.idea.ui.component.util.multiline.CenteredMultilineLabel;
-import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
+import com.samebug.clients.idea.ui.component.util.panel.EmphasizedPanel;
 import net.miginfocom.swing.MigLayout;
 
-public final class NoSolutionCTA extends TransparentPanel implements IHelpOthersCTA {
-    private final Model model;
-    private final MessageBus messageBus;
+public class LargeWriteTipCTA extends EmphasizedPanel implements IHelpOthersCTA {
+    protected final Model model;
+    protected final MessageBus messageBus;
 
-    private final CenteredMultilineLabel label;
+    protected final CenteredMultilineLabel label;
 
-    public NoSolutionCTA(MessageBus messageBus, Model model) {
+    public LargeWriteTipCTA(MessageBus messageBus, Model model) {
         this.messageBus = messageBus;
         this.model = new Model(model);
 
@@ -24,15 +24,5 @@ public final class NoSolutionCTA extends TransparentPanel implements IHelpOthers
         setLayout(new MigLayout("fillx, w 300", "40[]40", "40[]20[]40"));
         add(label, "cell 0 0, wmin 0, growx");
         add(button, "cell 0 1, align center");
-    }
-
-    // TODO this is not a good way to reuse this component
-    public void setTextForSolutions() {
-        label.setText(SamebugBundle.message("samebug.component.cta.writeTip.noWebHits.label", model.usersWaitingHelp));
-    }
-
-    // TODO this is not a good way to reuse this component
-    public void setTextForTips() {
-        label.setText(SamebugBundle.message("samebug.component.cta.writeTip.noTipHits.label", model.usersWaitingHelp));
     }
 }
