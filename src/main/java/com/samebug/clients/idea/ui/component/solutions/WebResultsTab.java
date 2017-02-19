@@ -1,6 +1,8 @@
 package com.samebug.clients.idea.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
+import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
+import com.samebug.clients.common.ui.component.solutions.IWebResultsTab;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
@@ -15,18 +17,18 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class WebResultsTab extends TransparentPanel {
+public final class WebResultsTab extends TransparentPanel implements IWebResultsTab {
     private final Model model;
-    private final HelpOthersCTA.Model ctaModel;
+    private final IHelpOthersCTA.Model ctaModel;
     private final MessageBus messageBus;
 
     private final JScrollPane scrollPane;
     private final JPanel contentPanel;
     private final List<WebHit> webHits;
 
-    public WebResultsTab(MessageBus messageBus, Model model, HelpOthersCTA.Model ctaModel) {
+    public WebResultsTab(MessageBus messageBus, Model model, IHelpOthersCTA.Model ctaModel) {
         this.model = new Model(model);
-        this.ctaModel = new HelpOthersCTA.Model(ctaModel);
+        this.ctaModel = new IHelpOthersCTA.Model(ctaModel);
         this.messageBus = messageBus;
 
         webHits = new ArrayList<WebHit>();
@@ -112,22 +114,6 @@ public final class WebResultsTab extends TransparentPanel {
     private final class MoreButton extends SamebugButton {
         {
             setText(SamebugBundle.message("samebug.component.webResults.more"));
-        }
-    }
-
-    public static final class Model {
-        private final List<WebHit.Model> webHits;
-
-        public Model(Model rhs) {
-            this(rhs.webHits);
-        }
-
-        public Model(List<WebHit.Model> webHits) {
-            this.webHits = webHits;
-        }
-
-        public int getHitsSize() {
-            return webHits.size();
         }
     }
 }

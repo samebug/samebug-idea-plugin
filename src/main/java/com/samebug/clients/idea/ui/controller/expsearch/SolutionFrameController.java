@@ -28,10 +28,11 @@ import com.samebug.clients.common.services.BugmateService;
 import com.samebug.clients.common.services.ProfileStore;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.services.SolutionStore;
+import com.samebug.clients.common.ui.component.profile.IProfilePanel;
+import com.samebug.clients.common.ui.component.solutions.*;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.project.ToolWindowController;
-import com.samebug.clients.idea.ui.component.profile.ProfilePanel;
-import com.samebug.clients.idea.ui.component.solutions.*;
+import com.samebug.clients.idea.ui.component.solutions.SolutionFrame;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.ide.PooledThreadExecutor;
 
@@ -50,7 +51,7 @@ final public class SolutionFrameController implements Disposable {
     final Project myProject;
     final int searchId;
 
-    final SolutionFrame view;
+    final ISolutionFrame view;
 
     final ViewController viewController;
 
@@ -153,7 +154,7 @@ final public class SolutionFrameController implements Disposable {
 
     @NotNull
     public JPanel getControlPanel() {
-        return view;
+        return (SolutionFrame) view;
     }
 
     @Override
@@ -161,53 +162,53 @@ final public class SolutionFrameController implements Disposable {
 
     }
 
-    MarkButton.Model convertMarkResponse(MarkResponse response) {
-        return new MarkButton.Model(response.getDocumentVotes(), response.getId(), true /*TODO*/);
+    IMarkButton.Model convertMarkResponse(MarkResponse response) {
+        return new IMarkButton.Model(response.getDocumentVotes(), response.getId(), true /*TODO*/);
     }
 
-    MarkButton.Model convertRetractedMarkResponse(MarkResponse response) {
-        return new MarkButton.Model(response.getDocumentVotes(), null, true /*TODO*/);
+    IMarkButton.Model convertRetractedMarkResponse(MarkResponse response) {
+        return new IMarkButton.Model(response.getDocumentVotes(), null, true /*TODO*/);
     }
 
-    MarkButton.Model convertMarkPanel(RestHit hit) {
-        return new MarkButton.Model(hit.getScore(), hit.getMarkId(), true /*TODO*/);
+    IMarkButton.Model convertMarkPanel(RestHit hit) {
+        return new IMarkButton.Model(hit.getScore(), hit.getMarkId(), true /*TODO*/);
     }
 
-    SolutionFrame.Model convertSolutionFrame(@NotNull Solutions solutions, @NotNull BugmatesResult bugmates, @NotNull User user, @NotNull Statistics statistics) {
-        final List<WebHit.Model> webHits = new ArrayList<WebHit.Model>(solutions.getReferences().size());
+    ISolutionFrame.Model convertSolutionFrame(@NotNull Solutions solutions, @NotNull BugmatesResult bugmates, @NotNull User user, @NotNull Statistics statistics) {
+        final List<IWebHit.Model> webHits = new ArrayList<IWebHit.Model>(solutions.getReferences().size());
         for (RestHit<SolutionReference> externalHit : solutions.getReferences()) {
             SolutionReference externalSolution = externalHit.getSolution();
-            MarkButton.Model mark = convertMarkPanel(externalHit);
+            IMarkButton.Model mark = convertMarkPanel(externalHit);
             final String sourceIconName = externalSolution.getSource().getIcon();
             final URL sourceIconUrl = urlBuilder.sourceIcon(sourceIconName);
 
             String createdBy = null;
             if (externalSolution.getAuthor() != null) createdBy = externalSolution.getAuthor().getName();
-            WebHit.Model webHit = new WebHit.Model(externalSolution.getTitle(), externalSolution.getUrl(), externalHit.getSolutionId(), externalSolution.getCreatedAt(), createdBy, externalSolution.getSource().getName(), sourceIconUrl, mark);
+            IWebHit.Model webHit = new IWebHit.Model(externalSolution.getTitle(), externalSolution.getUrl(), externalHit.getSolutionId(), externalSolution.getCreatedAt(), createdBy, externalSolution.getSource().getName(), sourceIconUrl, mark);
             webHits.add(webHit);
         }
 
-        WebResultsTab.Model webResults = new WebResultsTab.Model(webHits);
-        HelpOthersCTA.Model cta = new HelpOthersCTA.Model(0);
-        final List<TipHit.Model> tipHits = new ArrayList<TipHit.Model>(solutions.getTips().size());
+        IWebResultsTab.Model webResults = new IWebResultsTab.Model(webHits);
+        IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(0);
+        final List<ITipHit.Model> tipHits = new ArrayList<ITipHit.Model>(solutions.getTips().size());
         for (RestHit<Tip> tipSolution : solutions.getTips()) {
             Tip tip = tipSolution.getSolution();
-            MarkButton.Model mark = convertMarkPanel(tipSolution);
+            IMarkButton.Model mark = convertMarkPanel(tipSolution);
             UserReference author = tipSolution.getCreatedBy();
-            TipHit.Model tipHit = new TipHit.Model(tip.getTip(), tip.getCreatedAt(), author.getDisplayName(), author.getAvatarUrl(), mark);
+            ITipHit.Model tipHit = new ITipHit.Model(tip.getTip(), tip.getCreatedAt(), author.getDisplayName(), author.getAvatarUrl(), mark);
             tipHits.add(tipHit);
         }
-        final List<BugmateHit.Model> bugmateHits = new ArrayList<BugmateHit.Model>(bugmates.getBugmates().size());
+        final List<IBugmateHit.Model> bugmateHits = new ArrayList<IBugmateHit.Model>(bugmates.getBugmates().size());
         for (Bugmate b : bugmates.getBugmates()) {
-            BugmateHit.Model model = new BugmateHit.Model(b.getUserId(), b.getDisplayName(), b.getAvatarUrl(), b.getNumberOfSearches(), b.getLastSeen());
+            IBugmateHit.Model model = new IBugmateHit.Model(b.getUserId(), b.getDisplayName(), b.getAvatarUrl(), b.getNumberOfSearches(), b.getLastSeen());
             bugmateHits.add(model);
         }
-        BugmateList.Model bugmateList = new BugmateList.Model(bugmateHits, bugmates.getNumberOfOtherBugmates(), bugmates.isEvenMoreExists());
-        TipResultsTab.Model tipResults = new TipResultsTab.Model(tipHits, bugmateList);
-        ResultTabs.Model resultTabs = new ResultTabs.Model(webResults, tipResults, cta);
-        ExceptionHeaderPanel.Model header = new ExceptionHeaderPanel.Model(SolutionService.headLine(solutions.getSearchGroup().getLastSearch()));
-        ProfilePanel.Model profile = new ProfilePanel.Model(0, statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(), user.getDisplayName(), user.getAvatarUrl());
-        SolutionFrame.Model model = new SolutionFrame.Model(resultTabs, header, profile);
+        IBugmateList.Model bugmateList = new IBugmateList.Model(bugmateHits, bugmates.getNumberOfOtherBugmates(), bugmates.isEvenMoreExists());
+        ITipResultsTab.Model tipResults = new ITipResultsTab.Model(tipHits, bugmateList);
+        IResultTabs.Model resultTabs = new IResultTabs.Model(webResults, tipResults, cta);
+        IExceptionHeaderPanel.Model header = new IExceptionHeaderPanel.Model(SolutionService.headLine(solutions.getSearchGroup().getLastSearch()));
+        IProfilePanel.Model profile = new IProfilePanel.Model(0, statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(), user.getDisplayName(), user.getAvatarUrl());
+        ISolutionFrame.Model model = new ISolutionFrame.Model(resultTabs, header, profile);
 
         return model;
     }

@@ -1,6 +1,8 @@
 package com.samebug.clients.idea.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
+import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
+import com.samebug.clients.common.ui.component.solutions.ITipResultsTab;
 import com.samebug.clients.idea.ui.component.util.panel.SamebugPanel;
 import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import com.samebug.clients.idea.ui.component.util.scrollPane.SamebugScrollPane;
@@ -11,18 +13,18 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class TipResultsTab extends TransparentPanel {
+public final class TipResultsTab extends TransparentPanel implements ITipResultsTab {
     private final Model model;
-    private final HelpOthersCTA.Model ctaModel;
+    private final IHelpOthersCTA.Model ctaModel;
     private final MessageBus messageBus;
 
     private final JScrollPane scrollPane;
     private final JPanel contentPanel;
     private final List<TipHit> tipHits;
 
-    public TipResultsTab(MessageBus messageBus, Model model, HelpOthersCTA.Model ctaModel) {
+    public TipResultsTab(MessageBus messageBus, Model model, IHelpOthersCTA.Model ctaModel) {
         this.model = new Model(model);
-        this.ctaModel = new HelpOthersCTA.Model(ctaModel);
+        this.ctaModel = new IHelpOthersCTA.Model(ctaModel);
         this.messageBus = messageBus;
 
         tipHits = new ArrayList<TipHit>();
@@ -80,25 +82,6 @@ public final class TipResultsTab extends TransparentPanel {
                 TipHit hit = tipHits.get(i);
                 add(hit);
             }
-        }
-    }
-
-
-    public static final class Model {
-        private final List<TipHit.Model> tipHits;
-        private final BugmateList.Model bugmateList;
-
-        public Model(Model rhs) {
-            this(rhs.tipHits, rhs.bugmateList);
-        }
-
-        public Model(List<TipHit.Model> tipHits, BugmateList.Model bugmateList) {
-            this.tipHits = tipHits;
-            this.bugmateList = bugmateList;
-        }
-
-        public int getTipsSize() {
-            return tipHits.size();
         }
     }
 }

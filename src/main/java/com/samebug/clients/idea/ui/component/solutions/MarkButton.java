@@ -3,7 +3,7 @@ package com.samebug.clients.idea.ui.component.solutions;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.util.messages.MessageBus;
-import com.intellij.util.messages.Topic;
+import com.samebug.clients.common.ui.component.solutions.IMarkButton;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
@@ -12,14 +12,13 @@ import com.samebug.clients.idea.ui.component.util.button.SamebugButton;
 import com.samebug.clients.idea.ui.component.util.interaction.Colors;
 import com.samebug.clients.idea.ui.component.util.label.SamebugLabel;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public final class MarkButton extends SamebugButton {
+public final class MarkButton extends SamebugButton implements IMarkButton {
     private Model model;
     private final MessageBus messageBus;
 
@@ -39,7 +38,7 @@ public final class MarkButton extends SamebugButton {
         separator = new Separator();
         markLabel = new MarkLabel();
 
-        setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         setLayout(new MigLayout("", "12[]9[]10[]8", "8[]8"));
 
         add(counter, ", h 16!");
@@ -133,32 +132,12 @@ public final class MarkButton extends SamebugButton {
         }
     }
 
-    public static final class Model {
-        private final int marks;
-        @Nullable
-        private final Integer userMarkId;
-        private final boolean userCanMark;
-
-        public Model(Model rhs) {
-            this(rhs.marks, rhs.userMarkId, rhs.userCanMark);
-        }
-
-        public Model(int marks, @Nullable Integer userMarkId, boolean userCanMark) {
-            this.marks = marks;
-            this.userMarkId = userMarkId;
-            this.userCanMark = userCanMark;
-        }
+    private Integer getSolutionId() {
+        return DataManager.getInstance().getDataContext(this).getData(SolutionId);
     }
 
-    private Integer getSolutionId() { return DataManager.getInstance().getDataContext(this).getData(SolutionId); }
     private Listener getListener() {
         return messageBus.syncPublisher(Listener.TOPIC);
-    }
-
-    public interface Listener {
-        Topic<Listener> TOPIC = Topic.create("MarkPanel", Listener.class);
-
-        void markClicked(MarkButton markButton, Integer solutionId, Integer currentMarkId);
     }
 
     public static final DataKey<Integer> SolutionId = DataKey.create("SolutionId");

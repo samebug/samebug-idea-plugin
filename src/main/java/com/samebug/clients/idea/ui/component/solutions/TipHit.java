@@ -2,6 +2,7 @@ package com.samebug.clients.idea.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.TextUtil;
+import com.samebug.clients.common.ui.component.solutions.ITipHit;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
@@ -13,10 +14,8 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.URL;
-import java.util.Date;
 
-public final class TipHit extends TransparentPanel {
+public final class TipHit extends TransparentPanel implements ITipHit {
     private final Model model;
     private final MessageBus messageBus;
 
@@ -76,26 +75,6 @@ public final class TipHit extends TransparentPanel {
             add(authorIcon, "cell 0 0, spany 2");
             add(name, "cell 1 0");
             add(timestamp, "cell 1 1");
-        }
-    }
-
-    public static final class Model {
-        private final String message;
-        private final Date createdAt;
-        private final String createdBy;
-        private final URL createdByAvatarUrl;
-        private final MarkButton.Model mark;
-
-        public Model(Model rhs) {
-            this(rhs.message, rhs.createdAt, rhs.createdBy, rhs.createdByAvatarUrl, rhs.mark);
-        }
-
-        public Model(String message, Date createdAt, String createdBy, URL createdByAvatarUrl, MarkButton.Model mark) {
-            this.message = message;
-            this.createdAt = createdAt;
-            this.createdBy = createdBy;
-            this.createdByAvatarUrl = createdByAvatarUrl;
-            this.mark = mark;
         }
     }
 }

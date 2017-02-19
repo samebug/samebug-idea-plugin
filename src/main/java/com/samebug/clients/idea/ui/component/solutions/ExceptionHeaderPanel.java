@@ -1,7 +1,7 @@
 package com.samebug.clients.idea.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
-import com.intellij.util.messages.Topic;
+import com.samebug.clients.common.ui.component.solutions.IExceptionHeaderPanel;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.component.util.multiline.SamebugMultilineLabel;
@@ -13,7 +13,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public final class ExceptionHeaderPanel extends SamebugPanel {
+public final class ExceptionHeaderPanel extends SamebugPanel implements IExceptionHeaderPanel {
     private final Model model;
     private final MessageBus messageBus;
 
@@ -57,24 +57,6 @@ public final class ExceptionHeaderPanel extends SamebugPanel {
 
     private Listener getListener() {
         return messageBus.syncPublisher(Listener.TOPIC);
-    }
-
-    public static final class Model {
-        private final String title;
-
-        public Model(Model rhs) {
-            this(rhs.title);
-        }
-
-        public Model(String title) {
-            this.title = title;
-        }
-    }
-
-    public interface Listener {
-        Topic<Listener> TOPIC = Topic.create("ExceptionHeaderPanel", Listener.class);
-
-        void titleClicked();
     }
 }
 

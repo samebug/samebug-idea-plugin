@@ -1,11 +1,12 @@
 package com.samebug.clients.idea.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
+import com.samebug.clients.common.ui.component.solutions.IResultTabs;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.component.util.tabbedPane.SamebugTabHeader;
 import com.samebug.clients.idea.ui.component.util.tabbedPane.SamebugTabbedPane;
 
-public final class ResultTabs extends SamebugTabbedPane {
+public final class ResultTabs extends SamebugTabbedPane implements IResultTabs {
     private final MessageBus messageBus;
     private final Model model;
 
@@ -24,21 +25,5 @@ public final class ResultTabs extends SamebugTabbedPane {
         tipResultsTabHeader = addTab(SamebugBundle.message("samebug.component.solutionFrame.tips.tabName"), model.tipResults.getTipsSize(), tipResultsTab);
         webResultsTabHeader = addTab(SamebugBundle.message("samebug.component.solutionFrame.webSolutions.tabName"), model.webResults.getHitsSize(), webResultsTab);
         tipResultsTabHeader.setSelected(true);
-    }
-
-    public static final class Model {
-        private final WebResultsTab.Model webResults;
-        private final TipResultsTab.Model tipResults;
-        private final HelpOthersCTA.Model cta;
-
-        public Model(Model rhs) {
-            this(rhs.webResults, rhs.tipResults, rhs.cta);
-        }
-
-        public Model(WebResultsTab.Model webResults, TipResultsTab.Model tipResults, HelpOthersCTA.Model cta) {
-            this.webResults = webResults;
-            this.tipResults = tipResults;
-            this.cta = cta;
-        }
     }
 }

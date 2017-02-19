@@ -1,6 +1,7 @@
 package com.samebug.clients.idea.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
+import com.samebug.clients.common.ui.component.solutions.IBugmateList;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.component.util.button.SamebugButton;
@@ -12,7 +13,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class BugmateList extends TransparentPanel {
+public final class BugmateList extends TransparentPanel implements IBugmateList {
     private final Model model;
     private final MessageBus messageBus;
 
@@ -76,22 +77,6 @@ public final class BugmateList extends TransparentPanel {
     private final class AskButton extends SamebugButton {
         {
             setText(SamebugBundle.message("samebug.component.bugmate.list.ask"));
-        }
-    }
-
-    public static final class Model {
-        private final List<BugmateHit.Model> bugmateHits;
-        private final int numberOfOtherBugmates;
-        private final boolean evenMoreExists;
-
-        public Model(Model rhs) {
-            this(rhs.bugmateHits, rhs.numberOfOtherBugmates, rhs.evenMoreExists);
-        }
-
-        public Model(List<BugmateHit.Model> bugmateHits, int numberOfOtherBugmates, boolean evenMoreExists) {
-            this.bugmateHits = bugmateHits;
-            this.numberOfOtherBugmates = numberOfOtherBugmates;
-            this.evenMoreExists = evenMoreExists;
         }
     }
 }

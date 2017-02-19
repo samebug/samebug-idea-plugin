@@ -3,6 +3,7 @@ package com.samebug.clients.idea.ui.component.solutions;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.TextUtil;
+import com.samebug.clients.common.ui.component.solutions.IWebHit;
 import com.samebug.clients.idea.ui.DrawUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 import com.samebug.clients.idea.ui.ImageUtil;
@@ -15,11 +16,9 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
-import java.net.URL;
 import java.text.MessageFormat;
-import java.util.Date;
 
-public final class WebHit extends SamebugPanel implements DataProvider {
+public final class WebHit extends SamebugPanel implements IWebHit, DataProvider {
     private final Model model;
     private final MessageBus messageBus;
 
@@ -94,33 +93,6 @@ public final class WebHit extends SamebugPanel implements DataProvider {
         public void paintComponent(Graphics g) {
             Graphics2D g2 = DrawUtil.init(g);
             g2.drawImage(sourceIcon, 0, 0, null, null);
-        }
-    }
-
-    public static final class Model {
-        private final String title;
-        private final URL url;
-        private final int solutionId;
-        private final Date createdAt;
-        private final String createdBy;
-        @Nullable
-        private final String sourceName;
-        private final URL sourceIconUrl;
-        private final MarkButton.Model mark;
-
-        public Model(Model rhs) {
-            this(rhs.title, rhs.url, rhs.solutionId, rhs.createdAt, rhs.createdBy, rhs.sourceName, rhs.sourceIconUrl, rhs.mark);
-        }
-
-        public Model(String title, URL url, int solutionId, Date createdAt, String createdBy, @Nullable String sourceName, URL sourceIconUrl, MarkButton.Model mark) {
-            this.title = title;
-            this.url = url;
-            this.solutionId = solutionId;
-            this.createdAt = createdAt;
-            this.createdBy = createdBy;
-            this.sourceName = sourceName;
-            this.sourceIconUrl = sourceIconUrl;
-            this.mark = mark;
         }
     }
 

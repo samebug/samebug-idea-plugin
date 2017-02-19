@@ -1,20 +1,22 @@
 package com.samebug.clients.idea.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
+import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.component.util.button.SamebugButton;
 import com.samebug.clients.idea.ui.component.util.multiline.CenteredMultilineLabel;
+import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
 
-public final class NoSolutionCTA extends HelpOthersCTA {
-    private final HelpOthersCTA.Model model;
+public final class NoSolutionCTA extends TransparentPanel implements IHelpOthersCTA {
+    private final Model model;
     private final MessageBus messageBus;
 
     private final CenteredMultilineLabel label;
 
-    public NoSolutionCTA(MessageBus messageBus, HelpOthersCTA.Model model) {
+    public NoSolutionCTA(MessageBus messageBus, Model model) {
         this.messageBus = messageBus;
-        this.model = new HelpOthersCTA.Model(model);
+        this.model = new Model(model);
 
         final SamebugButton button = new SamebugButton(SamebugBundle.message("samebug.component.tip.write.cta.button"), true);
         label = new CenteredMultilineLabel();

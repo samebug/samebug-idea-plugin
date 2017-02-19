@@ -1,13 +1,14 @@
 package com.samebug.clients.idea.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
+import com.samebug.clients.common.ui.component.solutions.ISolutionFrame;
 import com.samebug.clients.idea.ui.component.profile.ProfilePanel;
 import com.samebug.clients.idea.ui.component.util.panel.SamebugPanel;
 
 import javax.swing.*;
 import java.awt.*;
 
-public final class SolutionFrame extends SamebugPanel {
+public final class SolutionFrame extends SamebugPanel implements ISolutionFrame {
     private Solutions solutions;
     private final MessageBus messageBus;
 
@@ -44,22 +45,6 @@ public final class SolutionFrame extends SamebugPanel {
             tabs = new ResultTabs(messageBus, model.resultTabs);
             profilePanel = new ProfilePanel(messageBus, model.profilePanel);
             this.model = model;
-        }
-    }
-
-    public static final class Model {
-        private final ExceptionHeaderPanel.Model header;
-        private final ResultTabs.Model resultTabs;
-        private final ProfilePanel.Model profilePanel;
-
-        public Model(Model rhs) {
-            this(rhs.resultTabs, rhs.header, rhs.profilePanel);
-        }
-
-        public Model(ResultTabs.Model resultTabs, ExceptionHeaderPanel.Model header, ProfilePanel.Model profilePanel) {
-            this.resultTabs = resultTabs;
-            this.header = header;
-            this.profilePanel = profilePanel;
         }
     }
 }

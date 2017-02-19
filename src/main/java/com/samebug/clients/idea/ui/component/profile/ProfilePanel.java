@@ -1,6 +1,7 @@
 package com.samebug.clients.idea.ui.component.profile;
 
 import com.intellij.util.messages.MessageBus;
+import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
@@ -12,9 +13,8 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.URL;
 
-public final class ProfilePanel extends TransparentPanel {
+public final class ProfilePanel extends TransparentPanel implements IProfilePanel {
     private final static int AvatarIconSize = 26;
 
     private final Model model;
@@ -66,28 +66,6 @@ public final class ProfilePanel extends TransparentPanel {
                 BorderFactory.createMatteBorder(1, 0, 0, 0, borderColor),
                 BorderFactory.createEmptyBorder(0, 20, 0, 20)
         ));
-    }
-
-    public static final class Model {
-        private final int messages;
-        private final int marks;
-        private final int tips;
-        private final int thanks;
-        private final String name;
-        private final URL avatarUrl;
-
-        public Model(Model rhs) {
-            this(rhs.messages, rhs.marks, rhs.tips, rhs.thanks, rhs.name, rhs.avatarUrl);
-        }
-
-        public Model(int messages, int marks, int tips, int thanks, String name, URL avatarUrl) {
-            this.messages = messages;
-            this.marks = marks;
-            this.tips = tips;
-            this.thanks = thanks;
-            this.name = name;
-            this.avatarUrl = avatarUrl;
-        }
     }
 }
 

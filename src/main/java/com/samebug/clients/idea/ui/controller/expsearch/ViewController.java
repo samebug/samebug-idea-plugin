@@ -21,6 +21,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.search.api.entities.MarkResponse;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.SolutionService;
+import com.samebug.clients.common.ui.component.solutions.IMarkButton;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.view.RefreshTimestampsListener;
 import com.samebug.clients.idea.ui.BrowserUtil;
@@ -56,16 +57,16 @@ final class ViewController implements RefreshTimestampsListener {
         }
     }
 
-    private final class MarkPanelController implements MarkButton.Listener {
+    private final class MarkPanelController implements IMarkButton.Listener {
         @Override
-        public void markClicked(final MarkButton markButton, final Integer solutionId, final Integer markId) {
+        public void markClicked(final IMarkButton markButton, final Integer solutionId, final Integer markId) {
             markButton.setLoading();
             ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
                 @Override
                 public void run() {
                     SolutionService solutionService = IdeaSamebugPlugin.getInstance().getSolutionService();
                     try {
-                        final MarkButton.Model newModel;
+                        final IMarkButton.Model newModel;
                         if (markId == null) {
                             final MarkResponse response = solutionService.postMark(controller.searchId, solutionId);
                             newModel = controller.convertMarkResponse(response);
