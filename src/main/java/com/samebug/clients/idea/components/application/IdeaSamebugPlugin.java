@@ -68,6 +68,11 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     private SolutionService solutionService;
 
     @Nullable
+    private SearchStore searchStore;
+    @Nullable
+    private SearchService searchService;
+
+    @Nullable
     private BugmateStore bugmateStore;
     @Nullable
     private BugmateService bugmateService;
@@ -108,6 +113,18 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public ProfileService getProfileService() {
         assert profileService != null : "Plugin is not initialized!";
         return profileService;
+    }
+
+    @NotNull
+    public SearchStore getSearchStore() {
+        assert searchStore != null : "Plugin is not initialized!";
+        return searchStore;
+    }
+
+    @NotNull
+    public SearchService getSearchService() {
+        assert searchService != null : "Plugin is not initialized!";
+        return searchService;
     }
 
     @NotNull
@@ -181,6 +198,9 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
 
         solutionStore = new SolutionStore();
         solutionService = new SolutionService(messageBus, clientService, solutionStore);
+
+        searchStore = new SearchStore();
+        searchService = new SearchService(messageBus, clientService, searchStore);
 
         bugmateStore = new BugmateStore();
         bugmateService = new BugmateService(messageBus, clientService, bugmateStore);

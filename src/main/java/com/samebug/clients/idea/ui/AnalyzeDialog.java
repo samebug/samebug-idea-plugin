@@ -22,11 +22,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.unscramble.AnalyzeStacktraceUtil;
 import com.samebug.clients.common.search.api.StackTraceListener;
+import com.samebug.clients.common.search.api.entities.SearchResults;
+import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.search.matcher.StackTraceMatcher;
 import com.samebug.clients.common.services.ClientService;
+import com.samebug.clients.common.services.SearchService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.idea.ui.controller.history.HistoryCardListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -101,25 +105,30 @@ final public class AnalyzeDialog extends DialogWrapper {
         protected void doAction(ActionEvent e) {
             Tracking.appTracking().trace(Events.searchInSearchDialog());
             final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-            final ClientService client = plugin.getClient();
+            final SearchService searchService = plugin.getSearchService();
             final String trace = myEditorPanel.getText();
             ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
                 @Override
                 public void run() {
-                    // TODO
-//                    try {
-//                        SearchResults result = client.searchSolutions(trace);
-//                        try {
-//                            int searchId = result.getSearchId();
-//                            URL url = plugin.getUrlBuilder().search(searchId);
-//                            BrowserUtil.browse(url);
-//                            Tracking.appTracking().trace(Events.searchSucceedInSearchDialog(searchId));
-//                        } catch (java.lang.Exception e1) {
-//                            LOGGER.warn("Failed to open browser for search " + result.getSearchId(), e1);
-//                        }
-//                    } catch (SamebugClientException e1) {
-//                        LOGGER.warn("Failed to execute search", e1);
-//                    }
+                    // TODO find out what does searchService do
+                    try {
+                        SearchResults result = searchService.search(trace);
+                        try {
+                            final int searchId = result.getSearchId();
+                            // TODO of course history listener has nothing to do here
+                            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ApplicationManager.getApplication().getMessageBus().syncPublisher(HistoryCardListener.TOPIC).titleClick(searchId);
+                                }
+                            });
+
+                        } catch (java.lang.Exception e1) {
+                            LOGGER.warn("Failed to open browser for search " + result.getSearchId(), e1);
+                        }
+                    } catch (SamebugClientException e1) {
+                        LOGGER.warn("Failed to execute search", e1);
+                    }
                 }
             });
         }
