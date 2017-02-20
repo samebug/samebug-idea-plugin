@@ -16,6 +16,8 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
 
 public final class WebHit extends SamebugPanel implements IWebHit, DataProvider {
@@ -49,6 +51,13 @@ public final class WebHit extends SamebugPanel implements IWebHit, DataProvider 
             add(sourceIcon, MessageFormat.format("w {0}!, h {0}!, cell 0 0, span 1 2, ay top", Size));
             add(title, MessageFormat.format("wmin 0, hmax {0}, growx, cell 1 0", Size));
             add(source, "wmin 0, growx, cell 1 1");
+
+            title.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    getListener().urlClicked(model.url);
+                }
+            });
         }
     }
 
@@ -102,4 +111,9 @@ public final class WebHit extends SamebugPanel implements IWebHit, DataProvider 
         if (MarkButton.SolutionId.is(dataId)) return model.solutionId;
         else return null;
     }
+
+    private Listener getListener() {
+        return messageBus.syncPublisher(Listener.TOPIC);
+    }
+
 }

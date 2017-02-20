@@ -27,7 +27,7 @@ public interface IMarkButton {
     }
 
     interface Listener {
-        Topic<Listener> TOPIC = Topic.create("MarkPanel", Listener.class);
+        Topic<Listener> TOPIC = Topic.create("IMarkButton", Listener.class);
 
         void markClicked(IMarkButton markButton, Integer solutionId, Integer currentMarkId);
     }

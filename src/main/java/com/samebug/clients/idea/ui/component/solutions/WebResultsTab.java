@@ -14,6 +14,8 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,13 +71,12 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
             final ListPanel listPanel = new ListPanel();
             final MoreButton more = new MoreButton();
 
-            setLayout(new MigLayout("fillx", "20[]0", "0[]10[]20"));
+            setLayout(new MigLayout("fillx", "20[]0", "0[]20[]20"));
 
             add(listPanel, "cell 0 0, growx");
             add(more, "cell 0 1, al center");
         }
     }
-
 
     private final class ListPanel extends TransparentPanel {
         {
@@ -117,6 +118,16 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
     private final class MoreButton extends SamebugButton {
         {
             setText(SamebugBundle.message("samebug.component.webResults.more"));
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    getListener().moreClicked();
+                }
+            });
         }
+    }
+
+    private Listener getListener() {
+        return messageBus.syncPublisher(Listener.TOPIC);
     }
 }

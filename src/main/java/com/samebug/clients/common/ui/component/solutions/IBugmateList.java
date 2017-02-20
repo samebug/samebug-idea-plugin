@@ -1,5 +1,6 @@
 package com.samebug.clients.common.ui.component.solutions;
 
+import com.intellij.util.messages.Topic;
 import com.samebug.clients.idea.ui.component.solutions.BugmateHit;
 
 import java.util.List;
@@ -19,5 +20,11 @@ public interface IBugmateList {
             this.numberOfOtherBugmates = numberOfOtherBugmates;
             this.evenMoreExists = evenMoreExists;
         }
+    }
+
+    interface Listener {
+        Topic<Listener> TOPIC = Topic.create("IBugmateList", Listener.class);
+
+        void askBugmates(IBugmateList source);
     }
 }

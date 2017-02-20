@@ -8,6 +8,9 @@ import com.samebug.clients.idea.ui.component.util.multiline.SamebugMultilineLabe
 import com.samebug.clients.idea.ui.component.util.panel.EmphasizedPanel;
 import net.miginfocom.swing.MigLayout;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 public final class SmallWriteTipCTA extends EmphasizedPanel implements IHelpOthersCTA {
     private final IHelpOthersCTA.Model model;
     private final MessageBus messageBus;
@@ -24,5 +27,16 @@ public final class SmallWriteTipCTA extends EmphasizedPanel implements IHelpOthe
         setLayout(new MigLayout("fillx, w 300", "20[fill]50[fill]10", "20[fill]20"));
         add(button, "cell 0 0");
         add(label, "cell 1 0, wmin 0");
+
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                getListener().ctaClicked(SmallWriteTipCTA.this);
+            }
+        });
+    }
+
+    private Listener getListener() {
+        return messageBus.syncPublisher(Listener.TOPIC);
     }
 }

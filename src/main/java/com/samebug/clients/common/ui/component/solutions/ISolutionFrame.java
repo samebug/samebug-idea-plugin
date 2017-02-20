@@ -11,8 +11,6 @@ public interface ISolutionFrame {
     void setAuthenticationError();
     void setAuthorizationError();
 
-
-
     final class Model {
         public final IExceptionHeaderPanel.Model header;
         public final IResultTabs.Model resultTabs;

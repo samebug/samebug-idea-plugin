@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.idea.components.project;
 
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
@@ -35,10 +34,9 @@ import com.samebug.clients.idea.messages.view.FocusListener;
 import com.samebug.clients.idea.messages.view.RefreshTimestampsListener;
 import com.samebug.clients.idea.ui.SamebugBundle;
 import com.samebug.clients.idea.ui.SamebugIcons;
-import com.samebug.clients.idea.ui.controller.TabController;
-import com.samebug.clients.idea.ui.controller.search.SolutionFrameController;
 import com.samebug.clients.idea.ui.controller.history.HistoryFrameController;
 import com.samebug.clients.idea.ui.controller.intro.IntroFrameController;
+import com.samebug.clients.idea.ui.controller.solution.SolutionFrameController;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,7 +48,6 @@ import java.util.concurrent.ConcurrentMap;
 
 final public class ToolWindowController extends AbstractProjectComponent implements FocusListener, CloseListener {
     final static Logger LOGGER = Logger.getInstance(ToolWindowController.class);
-    public static final DataKey<TabController> DATA_KEY = DataKey.create("samebugTabController");
 
     @NotNull
     final Project project;

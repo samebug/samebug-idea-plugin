@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.controller.search;
+package com.samebug.clients.idea.ui.controller.solution;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
@@ -54,6 +54,13 @@ final public class SolutionFrameController implements Disposable {
     final ISolutionFrame view;
 
     final ViewController viewController;
+    final ExceptionHeaderController exceptionHeaderController;
+    final WebResultsTabController webResultsTabController;
+    final BugmateListController bugmateListController;
+    final HelpOthersCTAController helpOthersCTAController;
+    final WebHitController webHitController;
+    final MarkController markController;
+    final ProfileController profileController;
 
     private final WebUrlBuilder urlBuilder;
     private final ProfileStore profileStore;
@@ -69,6 +76,13 @@ final public class SolutionFrameController implements Disposable {
         view = new SolutionFrame(myProject.getMessageBus());
 
         viewController = new ViewController(this);
+        exceptionHeaderController = new ExceptionHeaderController(this);
+        webResultsTabController = new WebResultsTabController(this);
+        bugmateListController = new BugmateListController(this);
+        helpOthersCTAController = new HelpOthersCTAController(this);
+        profileController = new ProfileController(this);
+        markController = new MarkController(this);
+        webHitController = new WebHitController(this);
 
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
         urlBuilder = plugin.getUrlBuilder();
@@ -203,7 +217,7 @@ final public class SolutionFrameController implements Disposable {
             Tip tip = tipSolution.getSolution();
             IMarkButton.Model mark = convertMarkPanel(tipSolution);
             UserReference author = tipSolution.getCreatedBy();
-            ITipHit.Model tipHit = new ITipHit.Model(tip.getTip(), tip.getCreatedAt(), author.getDisplayName(), author.getAvatarUrl(), mark);
+            ITipHit.Model tipHit = new ITipHit.Model(tip.getTip(), tipSolution.getSolutionId(), tip.getCreatedAt(), author.getDisplayName(), author.getAvatarUrl(), mark);
             tipHits.add(tipHit);
         }
         final List<IBugmateHit.Model> bugmateHits = new ArrayList<IBugmateHit.Model>(bugmates.getBugmates().size());

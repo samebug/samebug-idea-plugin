@@ -1,5 +1,7 @@
 package com.samebug.clients.common.ui.component.solutions;
 
+import com.intellij.util.messages.Topic;
+
 import java.util.List;
 
 public interface ITipResultsTab {
@@ -19,5 +21,9 @@ public interface ITipResultsTab {
         public int getTipsSize() {
             return tipHits.size();
         }
+    }
+
+    interface Listener {
+        Topic<Listener> TOPIC = Topic.create("ITipResultsTab", Listener.class);
     }
 }

@@ -1,5 +1,7 @@
 package com.samebug.clients.common.ui.component.solutions;
 
+import com.intellij.util.messages.Topic;
+
 import java.util.List;
 
 public interface IWebResultsTab {
@@ -17,5 +19,11 @@ public interface IWebResultsTab {
         public int getHitsSize() {
             return webHits.size();
         }
+    }
+
+    interface Listener {
+        Topic<Listener> TOPIC = Topic.create("IWebResultsTab", Listener.class);
+
+        void moreClicked();
     }
 }

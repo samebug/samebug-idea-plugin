@@ -2,17 +2,18 @@ package com.samebug.clients.idea.ui.component.profile;
 
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
-import com.samebug.clients.idea.ui.SamebugBundle;
 import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
+import com.samebug.clients.idea.ui.SamebugBundle;
 import com.samebug.clients.idea.ui.component.util.AvatarIcon;
 import com.samebug.clients.idea.ui.component.util.label.SamebugLabel;
-import com.samebug.clients.idea.ui.component.util.label.SecondaryLinkLabel;
 import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public final class ProfilePanel extends TransparentPanel implements IProfilePanel {
     private final static int AvatarIconSize = 26;
@@ -47,6 +48,14 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
         add(marks, "");
         add(tips, "");
         add(thanks, "");
+
+        messages.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                getListener().messagesClicked();
+            }
+        });
+
     }
 
     @Override
@@ -59,5 +68,11 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
                 BorderFactory.createEmptyBorder(0, 20, 0, 20)
         ));
     }
+
+
+    private Listener getListener() {
+        return messageBus.syncPublisher(Listener.TOPIC);
+    }
+
 }
 

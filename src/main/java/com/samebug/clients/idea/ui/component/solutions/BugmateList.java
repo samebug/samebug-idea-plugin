@@ -10,6 +10,8 @@ import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +79,16 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
     private final class AskButton extends SamebugButton {
         {
             setText(SamebugBundle.message("samebug.component.bugmate.list.ask"));
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    getListener().askBugmates(BugmateList.this);
+                }
+            });
         }
+    }
+
+    private Listener getListener() {
+        return messageBus.syncPublisher(Listener.TOPIC);
     }
 }

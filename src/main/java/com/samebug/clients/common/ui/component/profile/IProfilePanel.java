@@ -1,5 +1,7 @@
 package com.samebug.clients.common.ui.component.profile;
 
+import com.intellij.util.messages.Topic;
+
 import java.net.URL;
 
 public interface IProfilePanel {
@@ -23,5 +25,11 @@ public interface IProfilePanel {
             this.name = name;
             this.avatarUrl = avatarUrl;
         }
+    }
+
+    interface Listener {
+        Topic<Listener> TOPIC = Topic.create("IProfilePanel", Listener.class);
+
+        void messagesClicked();
     }
 }

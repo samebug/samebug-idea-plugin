@@ -1,5 +1,7 @@
 package com.samebug.clients.common.ui.component.solutions;
 
+import com.intellij.util.messages.Topic;
+
 public interface IResultTabs {
     final class Model {
         public final IWebResultsTab.Model webResults;
@@ -15,5 +17,9 @@ public interface IResultTabs {
             this.tipResults = tipResults;
             this.cta = cta;
         }
+    }
+
+    interface Listener {
+        Topic<Listener> TOPIC = Topic.create("IResultTabs", Listener.class);
     }
 }

@@ -1,5 +1,6 @@
 package com.samebug.clients.idea.ui.component.solutions;
 
+import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.common.ui.component.solutions.ITipHit;
@@ -11,11 +12,13 @@ import com.samebug.clients.idea.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.idea.ui.component.util.multiline.SamebugMultilineLabel;
 import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
-public final class TipHit extends TransparentPanel implements ITipHit {
+public final class TipHit extends TransparentPanel implements ITipHit, DataProvider {
     private final Model model;
     private final MessageBus messageBus;
 
@@ -76,5 +79,12 @@ public final class TipHit extends TransparentPanel implements ITipHit {
             add(name, "cell 1 0");
             add(timestamp, "cell 1 1");
         }
+    }
+
+    @Nullable
+    @Override
+    public Object getData(@NonNls String dataId) {
+        if (MarkButton.SolutionId.is(dataId)) return model.solutionId;
+        else return null;
     }
 }
