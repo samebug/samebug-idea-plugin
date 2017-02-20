@@ -4,6 +4,7 @@ import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicTextAreaUI;
 import java.awt.*;
 
 public class SamebugMultilineLabel extends JTextArea {
@@ -34,7 +35,7 @@ public class SamebugMultilineLabel extends JTextArea {
 
     @Override
     public void updateUI() {
-        super.updateUI();
+        setUI(new BasicTextAreaUI());
         setForeground(ColorUtil.forCurrentTheme(foregroundColors));
         setBackground(ColorUtil.forCurrentTheme(backgroundColors));
     }

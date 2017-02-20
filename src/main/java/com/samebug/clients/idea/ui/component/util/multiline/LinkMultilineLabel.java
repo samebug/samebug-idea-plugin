@@ -6,6 +6,7 @@ import com.samebug.clients.idea.ui.component.util.interaction.Colors;
 import com.samebug.clients.idea.ui.component.util.interaction.ForegroundColorChanger;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicTextAreaUI;
 import java.awt.*;
 
 public class LinkMultilineLabel extends JTextArea {
@@ -33,7 +34,7 @@ public class LinkMultilineLabel extends JTextArea {
 
     @Override
     public void updateUI() {
-        super.updateUI();
+        setUI(new BasicTextAreaUI());
         interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, ColorUtil.forCurrentTheme(foregroundColors), this);
     }
 }

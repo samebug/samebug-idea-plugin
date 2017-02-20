@@ -4,6 +4,7 @@ import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicLabelUI;
 import java.awt.*;
 
 public class SamebugLabel extends JLabel {
@@ -36,7 +37,7 @@ public class SamebugLabel extends JLabel {
 
     @Override
     public void updateUI() {
-        super.updateUI();
+        setUI(new BasicLabelUI());
         super.setForeground(ColorUtil.forCurrentTheme(foregroundColors));
         super.setBackground(ColorUtil.forCurrentTheme(backgroundColors));
     }

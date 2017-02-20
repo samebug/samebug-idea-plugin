@@ -4,6 +4,7 @@ import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicTextPaneUI;
 import java.awt.*;
 
 public class StyledMultilineLabel extends JTextPane {
@@ -31,7 +32,7 @@ public class StyledMultilineLabel extends JTextPane {
 
     @Override
     public void updateUI() {
-        super.updateUI();
+        setUI(new BasicTextPaneUI());
         setForeground(ColorUtil.forCurrentTheme(foregroundColors));
         setBackground(ColorUtil.forCurrentTheme(backgroundColors));
     }

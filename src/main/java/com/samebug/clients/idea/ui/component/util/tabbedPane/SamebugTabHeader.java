@@ -7,6 +7,7 @@ import com.samebug.clients.idea.ui.component.util.interaction.Colors;
 import com.samebug.clients.idea.ui.component.util.label.SamebugLabel;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicPanelUI;
 import java.awt.*;
 
 public abstract class SamebugTabHeader extends JPanel {
@@ -80,7 +81,7 @@ public abstract class SamebugTabHeader extends JPanel {
 
     @Override
     public void updateUI() {
-        super.updateUI();
+        setUI(new BasicPanelUI());
         if (clickableColors != null) {
             if (!selected) {
                 if (interactionListener != null) removeMouseListener(interactionListener);

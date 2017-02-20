@@ -6,6 +6,7 @@ import com.samebug.clients.idea.ui.component.util.interaction.Colors;
 import com.samebug.clients.idea.ui.component.util.interaction.ForegroundColorChanger;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicLabelUI;
 import java.awt.*;
 
 public class SecondaryLinkLabel extends JLabel {
@@ -36,7 +37,7 @@ public class SecondaryLinkLabel extends JLabel {
 
     @Override
     public void updateUI() {
-        super.updateUI();
+        setUI(new BasicLabelUI());
         interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, ColorUtil.forCurrentTheme(foregroundColors), this);
     }
 }

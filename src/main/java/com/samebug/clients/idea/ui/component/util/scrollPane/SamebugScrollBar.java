@@ -16,7 +16,6 @@ public class SamebugScrollBar extends JScrollBar {
 
     @Override
     public void updateUI() {
-        super.updateUI();
         setUI(new SamebugScrollBarUI());
         setBackground(ColorUtil.forCurrentTheme(Background));
     }
