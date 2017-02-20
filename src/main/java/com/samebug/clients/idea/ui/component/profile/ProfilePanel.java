@@ -21,10 +21,10 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
     private final MessageBus messageBus;
 
     private final AvatarIcon avatarIcon;
-    private final SamebugLabel messages;
-    private final SamebugLabel marks;
-    private final SamebugLabel tips;
-    private final SamebugLabel thanks;
+    private final MessageLabel messages;
+    private final NumberLabel marks;
+    private final NumberLabel tips;
+    private final NumberLabel thanks;
 
     public ProfilePanel(MessageBus messageBus, Model model) {
         this.model = new Model(model);
@@ -33,28 +33,20 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
         avatarIcon = new AvatarIcon(model.avatarUrl, AvatarIconSize);
         SamebugLabel name = new SamebugLabel(model.name, FontRegistry.AvenirDemi, 14);
         final JPanel glue = new TransparentPanel();
-        messages = new SamebugLabel(Integer.toString(model.messages), FontRegistry.AvenirDemi, 14);
-        final JLabel messagesHint = new SecondaryLinkLabel(SamebugBundle.message("samebug.component.profile.messages.label"), FontRegistry.AvenirDemi, 12);
-        marks = new SamebugLabel(Integer.toString(model.marks), FontRegistry.AvenirRegular, 14);
-        final SamebugLabel marksHint = new SamebugLabel(SamebugBundle.message("samebug.component.profile.marks.label"), FontRegistry.AvenirRegular, 12);
-        tips = new SamebugLabel(Integer.toString(model.tips), FontRegistry.AvenirRegular, 14);
-        final SamebugLabel tipsHint = new SamebugLabel(SamebugBundle.message("samebug.component.profile.tips.label"), FontRegistry.AvenirRegular, 12);
-        thanks = new SamebugLabel(Integer.toString(model.thanks), FontRegistry.AvenirRegular, 14);
-        final SamebugLabel thanksHint = new SamebugLabel(SamebugBundle.message("samebug.component.profile.thanks.label"), FontRegistry.AvenirRegular, 12);
+        messages = new MessageLabel(model.messages);
+        marks = new NumberLabel(model.marks, SamebugBundle.message("samebug.component.profile.marks.label"));
+        tips = new NumberLabel(model.tips, SamebugBundle.message("samebug.component.profile.tips.label"));
+        thanks = new NumberLabel(model.thanks, SamebugBundle.message("samebug.component.profile.thanks.label"));
 
-        setLayout(new MigLayout("fillx", "0[]8[]0[grow]0[]4[]19[]4[]19[]4[]19[]4[]0", "10[]10"));
+        setLayout(new MigLayout("fillx", "0[]8[]0[grow]0[]19[]19[]19[]0", "10[]10"));
 
         add(avatarIcon, "");
         add(name, "");
         add(glue, "");
         add(messages, "");
-        add(messagesHint, "");
         add(marks, "");
-        add(marksHint, "");
         add(tips, "");
-        add(tipsHint, "");
         add(thanks, "");
-        add(thanksHint, "");
     }
 
     @Override
