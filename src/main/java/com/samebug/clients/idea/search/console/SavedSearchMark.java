@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.console;
+package com.samebug.clients.idea.search.console;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.common.entities.search.Saved;
+import com.samebug.clients.common.entities.search.SavedSearch;
 import com.samebug.clients.idea.components.application.Tracking;
-import com.samebug.clients.idea.messages.view.FocusListener;
+import com.samebug.clients.idea.messages.FocusListener;
 import com.samebug.clients.idea.ui.SamebugIcons;
 import com.samebug.clients.idea.tracking.Events;
 import org.jetbrains.annotations.NotNull;
@@ -30,9 +30,9 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 class SavedSearchMark extends GutterIconRenderer implements DumbAware {
-    private final Saved search;
+    private final SavedSearch search;
 
-    public SavedSearchMark(Saved search) {
+    public SavedSearchMark(SavedSearch search) {
         this.search = search;
     }
 

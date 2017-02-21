@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages.view;
+package com.samebug.clients.idea.messages;
 
 import com.intellij.util.messages.Topic;
 
-public interface RefreshTimestampsListener {
-    Topic<RefreshTimestampsListener> TOPIC = Topic.create("refreshDateLabels timestamp labels", RefreshTimestampsListener.class);
+public interface RefreshUserStatsListener {
+    Topic<RefreshUserStatsListener> TOPIC = Topic.create("requesting user stats update", RefreshUserStatsListener.class);
 
-    void refreshDateLabels();
+    void requestRefresh();
 }

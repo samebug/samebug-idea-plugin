@@ -13,23 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.search.api.entities.tracking;
+package com.samebug.clients.idea.messages;
 
-import java.util.UUID;
+import com.intellij.util.messages.Topic;
 
-final public class DebugSessionInfo {
-    private final UUID id = UUID.randomUUID();
-    private final String sessionType;
+public interface FocusListener {
+    Topic<FocusListener> TOPIC = Topic.create("tool window focus", FocusListener.class);
 
-    public DebugSessionInfo(String sessionType) {
-        this.sessionType = sessionType;
-    }
+    void focusOnIntro();
 
-    public UUID getId() {
-        return id;
-    }
-
-    public String getSessionType() {
-        return sessionType;
-    }
+    void focusOnSearch(int searchId);
 }

@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages.view;
+package com.samebug.clients.idea.messages;
 
 import com.intellij.util.messages.Topic;
 
-public interface FocusListener {
-    Topic<FocusListener> TOPIC = Topic.create("tool window focus", FocusListener.class);
+public interface CloseListener {
+    Topic<CloseListener> TOPIC = Topic.create("tool window focus", CloseListener.class);
 
-    void focusOnIntro();
-
-    void focusOnSearch(int searchId);
+    void closeSolutionFrame(int searchId);
 }

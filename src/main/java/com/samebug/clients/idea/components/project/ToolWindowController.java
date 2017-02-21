@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.components.project;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
@@ -29,9 +30,9 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.services.HistoryService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.messages.controller.CloseListener;
-import com.samebug.clients.idea.messages.view.FocusListener;
-import com.samebug.clients.idea.messages.view.RefreshTimestampsListener;
+import com.samebug.clients.idea.messages.CloseListener;
+import com.samebug.clients.idea.messages.FocusListener;
+import com.samebug.clients.idea.messages.RefreshTimestampsListener;
 import com.samebug.clients.idea.ui.SamebugBundle;
 import com.samebug.clients.idea.ui.SamebugIcons;
 import com.samebug.clients.idea.ui.controller.history.HistoryFrameController;
@@ -46,7 +47,7 @@ import java.awt.event.ActionListener;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-final public class ToolWindowController extends AbstractProjectComponent implements FocusListener, CloseListener {
+final public class ToolWindowController implements FocusListener, CloseListener, Disposable {
     final static Logger LOGGER = Logger.getInstance(ToolWindowController.class);
 
     @NotNull
@@ -66,7 +67,6 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
 
 
     protected ToolWindowController(@NotNull final Project project) {
-        super(project);
         this.project = project;
         solutionFrames = new ConcurrentHashMap<Integer, SolutionFrameController>();
 
@@ -156,7 +156,7 @@ final public class ToolWindowController extends AbstractProjectComponent impleme
     }
 
     @Override
-    public void disposeComponent() {
+    public void dispose() {
         if (introFrame != null) Disposer.dispose(introFrame);
         if (historyFrame != null) Disposer.dispose(historyFrame);
 

@@ -51,9 +51,6 @@
             <implementation-class>com.samebug.clients.idea.components.application.IdeaSamebugPlugin</implementation-class>
         </component>
         <component>
-            <implementation-class>com.samebug.clients.idea.components.application.StackTraceSearch</implementation-class>
-        </component>
-        <component>
             <implementation-class>com.samebug.clients.idea.components.application.Tracking</implementation-class>
         </component>
         <component>
@@ -61,18 +58,6 @@
         </component>
     </application-components>
     <project-components>
-        <component>
-            <implementation-class>com.samebug.clients.idea.components.project.RunDebugWatcher</implementation-class>
-        </component>
-        <component>
-            <implementation-class>com.samebug.clients.idea.components.project.SearchResultNotifier</implementation-class>
-        </component>
-        <component>
-            <implementation-class>com.samebug.clients.idea.components.project.BatchStackTraceSearchNotifier</implementation-class>
-        </component>
-        <component>
-            <implementation-class>com.samebug.clients.idea.components.project.ToolWindowController</implementation-class>
-        </component>
         <component>
             <implementation-class>com.samebug.clients.idea.components.project.SamebugProjectComponent</implementation-class>
         </component>

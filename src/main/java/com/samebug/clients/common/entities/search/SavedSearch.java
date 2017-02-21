@@ -18,11 +18,13 @@ package com.samebug.clients.common.entities.search;
 import com.samebug.clients.common.search.api.entities.SearchResults;
 import org.jetbrains.annotations.NotNull;
 
-public class Saved implements SearchRequest {
+public class SavedSearch implements SearchRequest {
     private final String trace;
+    private final SearchInfo searchInfo;
     private final SearchResults savedSearch;
 
-    public Saved(String trace, SearchResults savedSearch) {
+    public SavedSearch(SearchInfo searchInfo, String trace, SearchResults savedSearch) {
+        this.searchInfo = searchInfo;
         this.savedSearch = savedSearch;
         Integer lineOffset = savedSearch.getFirstLine();
         if (lineOffset != null) {
@@ -40,6 +42,11 @@ public class Saved implements SearchRequest {
     @NotNull
     public String getTrace() {
         return trace;
+    }
+
+    @Override
+    public SearchInfo getSearchInfo() {
+        return searchInfo;
     }
 
     @NotNull

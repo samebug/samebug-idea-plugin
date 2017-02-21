@@ -13,12 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages.model;
+package com.samebug.clients.common.entities.search;
 
-import com.intellij.util.messages.Topic;
+import java.util.UUID;
 
-public interface RefreshUserStatsListener {
-    Topic<RefreshUserStatsListener> TOPIC = Topic.create("requesting user stats update", RefreshUserStatsListener.class);
+public final class SearchInfo {
+    public final DebugSessionInfo sessionInfo;
+    public final UUID requestId = UUID.randomUUID();
 
-    void requestRefresh();
+    public SearchInfo(DebugSessionInfo sessionInfo) {
+        this.sessionInfo = sessionInfo;
+    }
+
+    public DebugSessionInfo getSessionInfo() {
+        return sessionInfo;
+    }
+
+    public UUID getRequestId() {
+        return requestId;
+    }
 }

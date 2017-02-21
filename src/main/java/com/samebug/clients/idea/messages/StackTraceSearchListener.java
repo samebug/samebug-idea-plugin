@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages.model;
+package com.samebug.clients.idea.messages;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
 import com.samebug.clients.common.search.api.entities.SearchResults;
-import com.samebug.clients.common.search.api.entities.tracking.SearchInfo;
+import com.samebug.clients.common.entities.search.SearchInfo;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 
 public interface StackTraceSearchListener {
-    Topic<StackTraceSearchListener> TOPIC = Topic.create("stacktrace search", StackTraceSearchListener.class);
+    Topic<StackTraceSearchListener> TOPIC = Topic.create("stacktrace search", StackTraceSearchListener.class, Topic.BroadcastDirection.TO_PARENT);
 
-    void searchStart(SearchInfo searchInfo, String stackTrace);
+    void searchStart(Project project, SearchInfo searchInfo, String stackTrace);
 
-    void searchSucceeded(SearchInfo searchInfo, SearchResults results);
+    void searchSucceeded(Project project, SearchInfo searchInfo, SearchResults results);
 
-    void timeout(SearchInfo searchInfo);
+    void searchFailed(Project project, SearchInfo searchInfo, SamebugClientException error);
 
-    void unauthorized(SearchInfo searchInfo);
-
-    void searchFailed(SearchInfo searchInfo, SamebugClientException error);
+    void searchError(Project project, SearchInfo searchInfo, Throwable error);
 }

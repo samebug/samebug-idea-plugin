@@ -17,31 +17,33 @@ package com.samebug.clients.idea.components.project;
 
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.idea.services.ApiService;
-import com.samebug.clients.idea.services.SessionService;
+import com.samebug.clients.idea.controllers.ApiService;
 
 public class SamebugProjectComponent extends AbstractProjectComponent {
-    private final SessionService sessionService;
-    private final ApiService apiService;
+    private ToolWindowController toolWindowController;
+    private RunDebugWatcher runDebugWatcher;
+    private ApiService apiService;
 
     public SamebugProjectComponent(Project project) {
         super(project);
-        this.sessionService = new SessionService(project);
-        this.apiService = new ApiService(project);
     }
 
-    public SessionService getSessionService() {
-        return sessionService;
+    public ToolWindowController getToolWindowController() {
+        assert toolWindowController != null : "Project is not opened";
+        return toolWindowController;
     }
 
     @Override
     public void projectOpened() {
-        apiService.projectOpened();
+        this.toolWindowController = new ToolWindowController(myProject);
+        this.runDebugWatcher = new RunDebugWatcher(myProject);
+        this.apiService = new ApiService(myProject);
     }
 
     @Override
     public void projectClosed() {
-        apiService.projectClosed();
+        apiService.dispose();
+        toolWindowController.dispose();
     }
 
 }

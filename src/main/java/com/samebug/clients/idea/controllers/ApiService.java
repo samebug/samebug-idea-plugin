@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.services;
+package com.samebug.clients.idea.controllers;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
@@ -25,20 +26,13 @@ import com.samebug.clients.common.search.api.client.ConnectionStatus;
 import com.samebug.clients.common.messages.ConnectionStatusListener;
 import com.samebug.clients.idea.ui.SamebugBundle;
 
-final public class ApiService implements ConnectionStatusListener {
+final public class ApiService implements ConnectionStatusListener, Disposable {
     private final Project myProject;
 
     public ApiService(Project project) {
         myProject = project;
-    }
-
-    public void projectOpened() {
-        MessageBusConnection projectConnection = myProject.getMessageBus().connect(myProject);
+        MessageBusConnection projectConnection = myProject.getMessageBus().connect(this);
         projectConnection.subscribe(ConnectionStatusListener.TOPIC, this);
-    }
-
-    public void projectClosed() {
-
     }
 
     @Override
@@ -87,6 +81,11 @@ final public class ApiService implements ConnectionStatusListener {
 
     @Override
     public void finishRequest(ConnectionStatus status) {
+
+    }
+
+    @Override
+    public void dispose() {
 
     }
 }

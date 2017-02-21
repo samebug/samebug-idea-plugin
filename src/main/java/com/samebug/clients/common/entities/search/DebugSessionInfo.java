@@ -13,19 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages.console;
-
-import com.intellij.util.messages.Topic;
-import com.samebug.clients.common.entities.search.Saved;
+package com.samebug.clients.common.entities.search;
 
 import java.util.UUID;
 
-public interface SearchRequestListener {
-    Topic<SearchRequestListener> TOPIC = Topic.create("Request stacktrace search", SearchRequestListener.class);
+public final class DebugSessionInfo {
+    public final UUID id = UUID.randomUUID();
+    public final String sessionType;
 
-    void failed(UUID requestId);
+    public DebugSessionInfo(String sessionType) {
+        this.sessionType = sessionType;
+    }
 
-    void saved(UUID requestId, Saved savedSearch);
+    public UUID getId() {
+        return id;
+    }
 
-    void searched(UUID requestId);
+    public String getSessionType() {
+        return sessionType;
+    }
 }

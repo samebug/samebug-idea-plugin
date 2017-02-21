@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages.model;
+package com.samebug.clients.idea.messages;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
+import com.samebug.clients.common.search.api.entities.tracking.TrackEvent;
 
-public interface StackTraceMatcherListener {
-    Topic<StackTraceMatcherListener> TOPIC = Topic.create("stacktrace found", StackTraceMatcherListener.class, Topic.BroadcastDirection.TO_PARENT);
+public interface TrackingListener {
+    Topic<TrackingListener> TOPIC = Topic.create("tracking", TrackingListener.class, Topic.BroadcastDirection.TO_PARENT);
 
-    void stackTraceFound(Project project, DebugSessionInfo sessionInfo, String stackTrace);
+    void trace(TrackEvent event);
+
 }

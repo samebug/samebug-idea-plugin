@@ -15,8 +15,7 @@
  */
 package com.samebug.clients.idea.components.application;
 
-import com.intellij.notification.NotificationDisplayType;
-import com.intellij.notification.impl.NotificationsConfigurationImpl;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -30,7 +29,9 @@ import com.samebug.clients.common.search.api.WebUrlBuilder;
 import com.samebug.clients.common.search.api.entities.UserInfo;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.*;
-import com.samebug.clients.idea.notification.SamebugNotifications;
+import com.samebug.clients.idea.controllers.ConsoleSearchController;
+import com.samebug.clients.idea.controllers.SessionsController;
+import com.samebug.clients.idea.controllers.TimedTasks;
 import com.samebug.clients.idea.ui.FontRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +47,7 @@ import java.util.concurrent.atomic.AtomicReference;
                 @Storage(id = "SamebugClient", file = "$APP_CONFIG$/SamebugClient.xml")
         }
 )
-final public class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<ApplicationSettings> {
+final public class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<ApplicationSettings>, Disposable {
     final private static Logger LOGGER = Logger.getInstance(IdeaSamebugPlugin.class);
     private AtomicReference<ApplicationSettings> state = new AtomicReference<ApplicationSettings>(new ApplicationSettings());
 
@@ -68,6 +69,11 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     private SolutionService solutionService;
 
     @Nullable
+    private SearchRequestStore searchRequestStore;
+    @Nullable
+    private SearchRequestService searchRequestService;
+
+    @Nullable
     private SearchStore searchStore;
     @Nullable
     private SearchService searchService;
@@ -76,9 +82,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     private BugmateStore bugmateStore;
     @Nullable
     private BugmateService bugmateService;
-
-    @Nullable
-    private TimedTasks timedTasks;
+    
     @Nullable
     private AuthenticationListenerImpl authenticationListener;
 
@@ -128,6 +132,18 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     }
 
     @NotNull
+    public SearchRequestStore getSearchRequestStore() {
+        assert searchRequestStore != null : "Plugin is not initialized!";
+        return searchRequestStore;
+    }
+
+    @NotNull
+    public SearchRequestService getSearchRequestService() {
+        assert searchRequestService != null : "Plugin is not initialized!";
+        return searchRequestService;
+    }
+
+    @NotNull
     public SolutionStore getSolutionStore() {
         assert solutionStore != null : "Plugin is not initialized!";
         return solutionStore;
@@ -160,7 +176,9 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
                 if (apiKey != null) {
                     try {
                         UserInfo profile = profileService.loadUserInfo(apiKey);
-                        if (profile.getUserExist()) { profileService.loadUserStats(); }
+                        if (profile.getUserExist()) {
+                            profileService.loadUserStats();
+                        }
                     } catch (SamebugClientException ignored) {
                     }
                 }
@@ -168,27 +186,18 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         });
     }
 
-    // ApplicationComponent overrides
     @Override
     public void initComponent() {
-        SamebugNotifications.registerNotificationGroups();
-        if (!state.get().wereNotificationsDisabled) {
-            NotificationsConfigurationImpl.getInstanceImpl().changeSettings(SamebugNotifications.SAMEBUG_SEARCH_NOTIFICATIONS, NotificationDisplayType.NONE, false, false);
-            ApplicationSettings newSettings = new ApplicationSettings(state.get());
-            newSettings.wereNotificationsDisabled = true;
-            saveSettings(newSettings);
-        }
         try {
             FontRegistry.registerFonts();
         } catch (IOException e) {
-            // TODO
-            e.printStackTrace();
+           LOGGER.error("Failed to read custom fonts file", e);
         } catch (FontFormatException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to read custom fonts file", e);
         }
 
         MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
-        connection = messageBus.connect();
+        connection = messageBus.connect(this);
         clientService = new ClientService(messageBus);
         clientService.configure(state.get().getNetworkConfig());
 
@@ -202,10 +211,16 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         searchStore = new SearchStore();
         searchService = new SearchService(messageBus, clientService, searchStore);
 
+        searchRequestStore = new SearchRequestStore();
+        searchRequestService = new SearchRequestService(searchRequestStore);
+
         bugmateStore = new BugmateStore();
         bugmateService = new BugmateService(messageBus, clientService, bugmateStore);
 
-        timedTasks = new TimedTasks(connection);
+        TimedTasks timedTasks = new TimedTasks(messageBus.connect(this));
+        ConsoleSearchController consoleSearchController = new ConsoleSearchController(messageBus.connect(this));
+        SessionsController sessionsController = new SessionsController(messageBus.connect(this), searchRequestService, searchRequestStore);
+
         authenticationListener = new AuthenticationListenerImpl();
 
         connection.subscribe(AuthenticationListener.TOPIC, authenticationListener);
@@ -218,6 +233,11 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         if (connection != null) {
             connection.disconnect();
         }
+    }
+
+    @Override
+    public void dispose() {
+        disposeComponent();
     }
 
     @Override

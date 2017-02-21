@@ -1,19 +1,19 @@
 /**
  * Copyright 2017 Samebug, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.console;
+package com.samebug.clients.idea.search.console;
 
 import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.openapi.application.ApplicationManager;
@@ -29,15 +29,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.ArrayListSet;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.entities.search.Requested;
-import com.samebug.clients.common.entities.search.Saved;
-import com.samebug.clients.common.entities.search.SearchRequest;
-import com.samebug.clients.common.entities.search.Searched;
-import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
+import com.samebug.clients.common.entities.search.*;
+import com.samebug.clients.common.services.SearchRequestStore;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
-import com.samebug.clients.idea.components.project.SamebugProjectComponent;
-import com.samebug.clients.idea.messages.console.SearchRequestListener;
-import com.samebug.clients.idea.services.SessionService;
+import com.samebug.clients.idea.search.SearchRequestListener;
 import com.samebug.clients.idea.tracking.Events;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,17 +47,16 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
 
     private final DebugSessionInfo sessionInfo;
     private final Editor editor;
-    private final SessionService sessionService;
+    private final SearchRequestStore searchRequestStore;
     private final Map<UUID, RangeHighlighter> highlights;
 
-    public ConsoleWatcher(ConsoleViewImpl console, DebugSessionInfo sessionInfo) {
+    public ConsoleWatcher(Project project, ConsoleViewImpl console, DebugSessionInfo sessionInfo) {
         this.sessionInfo = sessionInfo;
         this.editor = console.getEditor();
-        Project project = editor.getProject();
-        this.sessionService = project.getComponent(SamebugProjectComponent.class).getSessionService();
+        this.searchRequestStore = IdeaSamebugPlugin.getInstance().getSearchRequestStore();
         this.highlights = new ConcurrentHashMap<UUID, RangeHighlighter>();
-
         LOGGER.info("Watcher constructed for " + editor.toString());
+
         editor.getDocument().addDocumentListener(this, console);
         MessageBusConnection messageBusConnection = project.getMessageBus().connect(console);
         messageBusConnection.subscribe(SearchRequestListener.TOPIC, this);
@@ -73,7 +68,7 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
     }
 
     @Override
-    public void saved(final UUID requestId, final Saved savedSearch) {
+    public void saved(final UUID requestId, final SavedSearch savedSearch) {
         final Document document = editor.getDocument();
         if (highlights.get(requestId) == null) {
             rebuildMarkers();
@@ -131,7 +126,7 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
 
         // Try to find traces requested for search in the document
         StringBuilder text = new StringBuilder(document.getText());
-        for (Map.Entry<UUID, SearchRequest> traceEntry : sessionService.getRequests(sessionInfo).entrySet()) {
+        for (Map.Entry<UUID, SearchRequest> traceEntry : searchRequestStore.getRequests(sessionInfo).entrySet()) {
             final SearchRequest request = traceEntry.getValue();
             if (request != null) {
                 final String trace = request.getTrace();
@@ -164,9 +159,9 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
                     final RangeHighlighter highlight;
                     int line = foundRequest.getKey();
                     UUID requestId = foundRequest.getValue();
-                    SearchRequest request = sessionService.getRequest(requestId);
+                    SearchRequest request = searchRequestStore.getRequest(requestId);
                     if (request instanceof Requested) highlight = addRequestedSearchMarker(line, (Requested) request);
-                    else if (request instanceof Saved) highlight = addSavedSearchMarker(line, (Saved) request);
+                    else if (request instanceof SavedSearch) highlight = addSavedSearchMarker(line, (SavedSearch) request);
                     else if (request instanceof Searched) highlight = addSearchedSearchMarker(line, (Searched) request);
                     else highlight = null;
                     if (highlight != null) highlights.put(requestId, highlight);
@@ -192,7 +187,7 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
 
 
     @Nullable
-    private RangeHighlighter addSavedSearchMarker(int line, Saved request) {
+    private RangeHighlighter addSavedSearchMarker(int line, SavedSearch request) {
         LOGGER.info("Add saved search marker for editor " + editor.toString() + " to line " + line + " for request " + request.toString());
         ApplicationManager.getApplication().assertIsDispatchThread();
         editor.getSettings().setLineMarkerAreaShown(true);

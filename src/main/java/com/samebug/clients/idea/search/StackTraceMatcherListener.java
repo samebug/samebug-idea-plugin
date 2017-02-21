@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages.controller;
+package com.samebug.clients.idea.search;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
+import com.samebug.clients.common.entities.search.DebugSessionInfo;
 
-public interface CloseListener {
-    Topic<CloseListener> TOPIC = Topic.create("tool window focus", CloseListener.class);
+public interface StackTraceMatcherListener {
+    Topic<StackTraceMatcherListener> TOPIC = Topic.create("stacktrace found", StackTraceMatcherListener.class, Topic.BroadcastDirection.TO_PARENT);
 
-    void closeSolutionFrame(int searchId);
+    void stackTraceFound(Project project, DebugSessionInfo sessionInfo, String stackTrace);
 }

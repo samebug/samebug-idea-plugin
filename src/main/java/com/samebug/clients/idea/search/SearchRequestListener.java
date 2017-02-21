@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.search.api.entities.tracking;
+package com.samebug.clients.idea.search;
+
+import com.intellij.util.messages.Topic;
+import com.samebug.clients.common.entities.search.SavedSearch;
 
 import java.util.UUID;
 
-final public class SearchInfo {
-    private final DebugSessionInfo sessionInfo;
-    private final UUID requestId = UUID.randomUUID();
+// TODO extend this interface to introduce more detailed search results, like text search, tip/bugmate results, etc.
+public interface SearchRequestListener {
+    Topic<SearchRequestListener> TOPIC = Topic.create("Request stacktrace search", SearchRequestListener.class);
 
-    public SearchInfo(DebugSessionInfo sessionInfo) {
-        this.sessionInfo = sessionInfo;
-    }
+    void failed(UUID requestId);
 
-    public DebugSessionInfo getSessionInfo() {
-        return sessionInfo;
-    }
+    void saved(UUID requestId, SavedSearch savedSearch);
 
-    public UUID getRequestId() {
-        return requestId;
-    }
+    void searched(UUID requestId);
 }

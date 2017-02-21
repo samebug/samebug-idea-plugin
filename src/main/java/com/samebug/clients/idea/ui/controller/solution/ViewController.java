@@ -17,7 +17,7 @@ package com.samebug.clients.idea.ui.controller.solution;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.messages.view.RefreshTimestampsListener;
+import com.samebug.clients.idea.messages.RefreshTimestampsListener;
 import org.jetbrains.annotations.NotNull;
 
 final class ViewController implements RefreshTimestampsListener {

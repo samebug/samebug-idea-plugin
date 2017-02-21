@@ -17,13 +17,20 @@ package com.samebug.clients.common.entities.search;
 
 public class Requested implements SearchRequest {
     private final String trace;
+    private final SearchInfo searchInfo;
 
-    public Requested(String trace) {
+    public Requested(SearchInfo searchInfo, String trace) {
         this.trace = trace;
+        this.searchInfo = searchInfo;
     }
 
     @Override
     public String getTrace() {
         return trace;
+    }
+
+    @Override
+    public SearchInfo getSearchInfo() {
+        return searchInfo;
     }
 }

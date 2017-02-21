@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.messages.tracking;
+package com.samebug.clients.idea.messages;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.common.search.api.entities.tracking.TrackEvent;
 
-public interface TrackingListener {
-    Topic<TrackingListener> TOPIC = Topic.create("tracking", TrackingListener.class, Topic.BroadcastDirection.TO_PARENT);
+public interface RefreshTimestampsListener {
+    Topic<RefreshTimestampsListener> TOPIC = Topic.create("refreshDateLabels timestamp labels", RefreshTimestampsListener.class);
 
-    void trace(TrackEvent event);
-
+    void refreshDateLabels();
 }

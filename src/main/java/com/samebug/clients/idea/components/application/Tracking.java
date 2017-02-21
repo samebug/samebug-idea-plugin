@@ -23,7 +23,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.ClientService;
-import com.samebug.clients.idea.messages.tracking.TrackingListener;
+import com.samebug.clients.idea.messages.TrackingListener;
 import org.jetbrains.annotations.NotNull;
 
 public class Tracking implements ApplicationComponent, TrackingListener {
