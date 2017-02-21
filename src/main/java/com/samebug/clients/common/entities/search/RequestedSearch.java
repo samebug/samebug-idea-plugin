@@ -15,11 +15,11 @@
  */
 package com.samebug.clients.common.entities.search;
 
-public class Requested implements SearchRequest {
+public class RequestedSearch implements SearchRequest {
     private final String trace;
     private final SearchInfo searchInfo;
 
-    public Requested(SearchInfo searchInfo, String trace) {
+    public RequestedSearch(SearchInfo searchInfo, String trace) {
         this.trace = trace;
         this.searchInfo = searchInfo;
     }

@@ -1,6 +1,6 @@
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.entities.search.Requested;
+import com.samebug.clients.common.entities.search.RequestedSearch;
 import com.samebug.clients.common.entities.search.SavedSearch;
 import com.samebug.clients.common.entities.search.SearchInfo;
 import com.samebug.clients.common.entities.search.SearchRequest;
@@ -18,8 +18,8 @@ public final class SearchRequestService {
     }
 
     @NotNull
-    public Requested searchStart(SearchInfo searchInfo, String stackTrace) {
-        Requested request = new Requested(searchInfo, stackTrace);
+    public RequestedSearch searchStart(SearchInfo searchInfo, String stackTrace) {
+        RequestedSearch request = new RequestedSearch(searchInfo, stackTrace);
         store.addRequest(request);
         return request;
     }
@@ -32,14 +32,14 @@ public final class SearchRequestService {
         if (previousRequest == null) {
             // We don't know this search. It succeeded, but was not requested. Just ignore it.
             request = null;
-        } else if (!(previousRequest instanceof Requested)) {
+        } else if (!(previousRequest instanceof RequestedSearch)) {
             // This search request seems to be in an illegal state, it should be a Requested.
             store.removeRequest(requestId);
             request = null;
         } else {
             // promote from Requested to Saved
-            Requested requested = (Requested) previousRequest;
-            request = new SavedSearch(searchInfo, requested.getTrace(), result);
+            RequestedSearch requestedSearch = (RequestedSearch) previousRequest;
+            request = new SavedSearch(searchInfo, requestedSearch.getTrace(), result);
             store.addRequest(request);
         }
 

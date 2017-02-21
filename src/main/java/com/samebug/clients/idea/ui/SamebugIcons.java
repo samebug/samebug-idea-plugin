@@ -29,7 +29,7 @@ final public class SamebugIcons {
     public final static Icon twBolt = IconLoader.getIcon("/com/samebug/toolwindow/bolt.png");
 
     public final static Icon gutterSamebug = IconLoader.getIcon("/com/samebug/icons/gutter/samebug-15x15.png");
-
+    public final static Icon gutterLoading = IconLoader.getIcon("/com/samebug/icons/gutter/loading.gif");
 
     public final static Icon cogwheel = IconLoader.getIcon("/com/samebug/icons/cogwheel.png");
     public final static Icon cogwheelTodo = IconLoader.getIcon("/com/samebug/icons/cogwheel-todo.png");

@@ -18,7 +18,7 @@ package com.samebug.clients.idea.controllers;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.entities.search.Requested;
+import com.samebug.clients.common.entities.search.RequestedSearch;
 import com.samebug.clients.common.entities.search.SavedSearch;
 import com.samebug.clients.common.entities.search.SearchInfo;
 import com.samebug.clients.common.search.api.entities.SearchResults;
@@ -45,34 +45,30 @@ public final class SessionsController implements StackTraceSearchListener {
 
     @Override
     public void searchStart(Project project, SearchInfo searchInfo, String stackTrace) {
-        UUID requestId = searchInfo.getRequestId();
-        Requested requested = service.searchStart(searchInfo, stackTrace);
-        project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).searched(requestId);
+        RequestedSearch requestedSearch = service.searchStart(searchInfo, stackTrace);
+        project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).newSearchRequest(requestedSearch);
     }
 
     @Override
     public void searchSucceeded(Project project, SearchInfo searchInfo, SearchResults result) {
-        UUID requestId = searchInfo.getRequestId();
         SavedSearch savedSearchRequest = service.searchSucceeded(searchInfo, result);
         if (savedSearchRequest != null) {
-            project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).saved(requestId, savedSearchRequest);
+            project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).savedSearch(savedSearchRequest);
         } else {
-            project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failed(requestId);
+            project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failedSearch(searchInfo);
         }
     }
 
     @Override
     public void searchFailed(Project project, SearchInfo searchInfo, SamebugClientException error) {
-        UUID requestId = searchInfo.getRequestId();
         service.searchFailed(searchInfo);
-        project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failed(requestId);
+        project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failedSearch(searchInfo);
     }
 
     @Override
     public void searchError(Project project, SearchInfo searchInfo, Throwable error) {
-        UUID requestId = searchInfo.getRequestId();
         service.searchFailed(searchInfo);
-        project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failed(requestId);
+        project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failedSearch(searchInfo);
         LOGGER.warn("Unexpected error happened during search", error);
     }
 }

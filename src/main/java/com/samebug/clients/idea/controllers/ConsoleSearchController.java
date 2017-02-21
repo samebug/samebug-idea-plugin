@@ -44,8 +44,8 @@ public class ConsoleSearchController implements StackTraceMatcherListener {
             public void run() {
                 final SearchService service = IdeaSamebugPlugin.getInstance().getSearchService();
                 final SearchInfo searchInfo = new SearchInfo(sessionInfo);
-                if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.TOPIC).searchStart(project, searchInfo, stackTrace);
 
+                if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.TOPIC).searchStart(project, searchInfo, stackTrace);
                 try {
                     SearchResults result = service.search(stackTrace);
                     if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.TOPIC).searchSucceeded(project, searchInfo, result);

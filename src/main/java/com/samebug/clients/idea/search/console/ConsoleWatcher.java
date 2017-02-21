@@ -26,18 +26,14 @@ import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.containers.ArrayListSet;
 import com.intellij.util.containers.HashMap;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.entities.search.*;
 import com.samebug.clients.common.services.SearchRequestStore;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.search.SearchRequestListener;
-import com.samebug.clients.idea.tracking.Events;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -68,17 +64,51 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
     }
 
     @Override
-    public void saved(final UUID requestId, final SavedSearch savedSearch) {
+    public void newSearchRequest(final RequestedSearch requestedSearch) {
+        final UUID requestId = requestedSearch.getSearchInfo().requestId;
         final Document document = editor.getDocument();
-        if (highlights.get(requestId) == null) {
+        final StringBuilder consoleContent = new StringBuilder(document.getText());
+        final int traceOffset = findStacktraceOffset(consoleContent, requestedSearch.getTrace());
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                RangeHighlighter newHighlighter;
+                // TODO hide this offset -- line rangecheck somewhere
+                if (0 <= traceOffset && traceOffset < document.getTextLength()) {
+                    int traceLine = document.getLineNumber(traceOffset);
+                    newHighlighter = addRequestedSearchMarker(traceLine, requestedSearch);
+                } else {
+                    newHighlighter = null;
+                }
+                if (newHighlighter != null) {
+                    // new trace is found in the console, add the marker
+                    highlights.put(requestId, newHighlighter);
+                } else {
+                    // this trace is not found, so we could remove it from request store
+                    // However in practice a frequent case is that the document is not yet updated with the new content.
+                    // Not deleting won't hurt anything, as a documentUpdate will rebuild every marker, and remove the request if the trace is still not found.
+                }
+            }
+        });
+    }
+
+    @Override
+    public void savedSearch(final SavedSearch savedSearch) {
+        final UUID requestId = savedSearch.getSearchInfo().requestId;
+        final Document document = editor.getDocument();
+        final RangeHighlighter highlightForRequest = highlights.get(requestId);
+
+        if (highlightForRequest == null) {
+            // not sure if this can happen, but after rebuilding we surely have a clean and consistent state
             rebuildMarkers();
         } else {
+            // if there is a marker for the requested search, we might have to correct it,
+            // i.e. move a few lines down if it turns out that the stacktrace starts not exactly in that line.
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    RangeHighlighter highlightForRequest = highlights.get(requestId);
-                    if (highlightForRequest != null) {
-                        int originalStartOffset = highlightForRequest.getStartOffset();
+                    int originalStartOffset = highlightForRequest.getStartOffset();
+                    if (0 <= originalStartOffset && originalStartOffset < document.getTextLength()) {
                         int originalStartLine = document.getLineNumber(originalStartOffset);
                         Integer correction = savedSearch.getSavedSearch().getFirstLine();
                         int correctedStartLine = originalStartLine;
@@ -94,12 +124,9 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
     }
 
     @Override
-    public void searched(UUID requestId) {
-
-    }
-
-    @Override
-    public void failed(final UUID requestId) {
+    public void failedSearch(final SearchInfo searchInfo) {
+        // TODO this can be the last mark. if it is, we should hide the empty gutter
+        final UUID requestId = searchInfo.requestId;
         LOGGER.info("Failed search from editor " + editor.toString());
 
         final RangeHighlighter highlightForRequest = highlights.get(requestId);
@@ -117,34 +144,9 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
     private synchronized void rebuildMarkers() {
         LOGGER.info("Replace markers for editor " + editor.toString());
 
-        Document document = editor.getDocument();
-        final Collection<UUID> lostRequests = new ArrayListSet<UUID>();
-        final Map<Integer, UUID> foundRequests = new HashMap<Integer, UUID>();
-
-        // Remove current highlights, and pretend that all traces are lost from the current document
-        lostRequests.addAll(highlights.keySet());
-
-        // Try to find traces requested for search in the document
-        StringBuilder text = new StringBuilder(document.getText());
-        for (Map.Entry<UUID, SearchRequest> traceEntry : searchRequestStore.getRequests(sessionInfo).entrySet()) {
-            final SearchRequest request = traceEntry.getValue();
-            if (request != null) {
-                final String trace = request.getTrace();
-                final int traceStartsAt = text.indexOf(trace);
-                final UUID requestId = traceEntry.getKey();
-                if (traceStartsAt >= 0) {
-                    final int traceLine = document.getLineNumber(traceStartsAt);
-
-                    // Save to cache that this request was found at that line
-                    foundRequests.put(traceLine, requestId);
-                    lostRequests.remove(requestId);
-
-                    // Make sure we will not find this part of the document again
-                    String blank = new String(new char[trace.length()]);
-                    text = text.replace(traceStartsAt, traceStartsAt + trace.length(), blank);
-                }
-            }
-        }
+        final Document document = editor.getDocument();
+        final Map<UUID, SearchRequest> currentRequests = searchRequestStore.getRequests(sessionInfo);
+        final Map<UUID, Integer> requestOffsets = findStacktraceOffsets(document.getText(), currentRequests);
 
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
@@ -155,65 +157,87 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
                 highlights.clear();
                 editor.getSettings().setLineMarkerAreaShown(false);
 
-                for (Map.Entry<Integer, UUID> foundRequest : foundRequests.entrySet()) {
+                final int documentLenght = document.getTextLength();
+                for (Map.Entry<UUID, Integer> requestOffsetEntry : requestOffsets.entrySet()) {
+                    final UUID requestId = requestOffsetEntry.getKey();
+                    final SearchRequest request = currentRequests.get(requestId);
                     final RangeHighlighter highlight;
-                    int line = foundRequest.getKey();
-                    UUID requestId = foundRequest.getValue();
-                    SearchRequest request = searchRequestStore.getRequest(requestId);
-                    if (request instanceof Requested) highlight = addRequestedSearchMarker(line, (Requested) request);
-                    else if (request instanceof SavedSearch) highlight = addSavedSearchMarker(line, (SavedSearch) request);
-                    else if (request instanceof Searched) highlight = addSearchedSearchMarker(line, (Searched) request);
-                    else highlight = null;
-                    if (highlight != null) highlights.put(requestId, highlight);
+                    final int offset = requestOffsetEntry.getValue();
+                    assert request != null : "currentRequests and requestOffsets should contain the same keys";
+                    if (0 <= offset && offset < documentLenght) {
+                        // We found the stacktrace in the content of the console
+                        final int line = document.getLineNumber(offset);
+                        if (request instanceof RequestedSearch) highlight = addRequestedSearchMarker(line, (RequestedSearch) request);
+                        else if (request instanceof SavedSearch) highlight = addSavedSearchMarker(line, (SavedSearch) request);
+                        else if (request instanceof Searched) highlight = addSearchedSearchMarker(line, (Searched) request);
+                        else highlight = null;
+                        if (highlight != null) highlights.put(requestId, highlight);
+                    } else {
+                        // We have not found the stacktrace in the content of the console.
+                        // Probably an other process wrote something in between the lines of the trace, or it was rolled over when exceeding console buffer capacity.
+                        searchRequestStore.removeRequest(requestId);
+                    }
                 }
             }
         });
     }
 
-    @Nullable
-    private RangeHighlighter addRequestedSearchMarker(int line, Requested request) {
-        LOGGER.info("Add request marker for editor " + editor.toString() + " to line " + line + " for request " + request.toString());
-        ApplicationManager.getApplication().assertIsDispatchThread();
+    private Map<UUID, Integer> findStacktraceOffsets(String document, Map<UUID, SearchRequest> requests) {
+        final Map<UUID, Integer> requestOffsets = new HashMap<UUID, Integer>();
 
-        if (editor.getDocument().getLineCount() >= line) {
-            final MarkupModel markupModel = editor.getMarkupModel();
-            RangeHighlighter highlighter;
-            highlighter = markupModel.addLineHighlighter(line, HighlighterLayer.ADDITIONAL_SYNTAX, null);
-            return highlighter;
-        } else {
-            return null;
+        StringBuilder text = new StringBuilder(document);
+        for (Map.Entry<UUID, SearchRequest> requestEntry : requests.entrySet()) {
+            final SearchRequest request = requestEntry.getValue();
+            final String trace = request.getTrace();
+            final UUID requestId = requestEntry.getKey();
+            assert requestId == request.getSearchInfo().requestId;
+
+            final int traceStartsAt = findStacktraceOffset(text, trace);
+            requestOffsets.put(requestId, traceStartsAt);
+            if (traceStartsAt >= 0) {
+                // Make sure we will not find this part of the document again
+                String blank = new String(new char[trace.length()]);
+                text = text.replace(traceStartsAt, traceStartsAt + trace.length(), blank);
+            }
         }
+        return requestOffsets;
+    }
+
+    // NOTE using StringBuilder as a parameter to avoid copying the array when it is called in findStacktraceOffsets
+    private int findStacktraceOffset(StringBuilder document, String trace) {
+        return document.indexOf(trace);
+    }
+
+    @Nullable
+    private RangeHighlighter addRequestedSearchMarker(int line, RequestedSearch request) {
+        SearchMark mark = new RequestedSearchMark(request);
+        return addMarker(line, mark);
     }
 
 
     @Nullable
     private RangeHighlighter addSavedSearchMarker(int line, SavedSearch request) {
         LOGGER.info("Add saved search marker for editor " + editor.toString() + " to line " + line + " for request " + request.toString());
+        SearchMark mark = new SavedSearchMark(request);
+        return addMarker(line, mark);
+    }
+
+    private RangeHighlighter addSearchedSearchMarker(int line, Searched request) {
+        return null;
+    }
+
+    private RangeHighlighter addMarker(int line, SearchMark mark) {
         ApplicationManager.getApplication().assertIsDispatchThread();
         editor.getSettings().setLineMarkerAreaShown(true);
 
-        if (editor.getDocument().getLineCount() >= line) {
+        if (0 <= line && line <= editor.getDocument().getLineCount()) {
             final MarkupModel markupModel = editor.getMarkupModel();
             RangeHighlighter highlighter;
             highlighter = markupModel.addLineHighlighter(line, HighlighterLayer.ADDITIONAL_SYNTAX, null);
-            highlighter.setGutterIconRenderer(new SavedSearchMark(request));
-
-            Project project = editor.getProject();
-            if (project != null) {
-                Tracking.projectTracking(project).trace(Events.gutterIconForSavedSearch(request.getSavedSearch().getSearchId()));
-            }
-
+            highlighter.setGutterIconRenderer(mark);
             return highlighter;
         } else {
             return null;
         }
-    }
-
-    private RangeHighlighter addSearchedSearchMarker(int line, Searched request) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
-
-        final MarkupModel markupModel = editor.getMarkupModel();
-        RangeHighlighter highlighter = null;
-        return highlighter;
     }
 }
