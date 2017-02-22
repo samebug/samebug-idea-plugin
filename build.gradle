@@ -31,7 +31,7 @@ intellij {
 //    alternativeIdePath '/opt/idea-IU-143.382.35'
 //    alternativeIdePath '/opt/idea-IU-145.972.3'
 //    alternativeIdePath '/opt/idea-IC-162.2228.15'
-    alternativeIdePath '/opt/idea-IU-163.7743.44'
+//    alternativeIdePath '/opt/idea-IU-163.7743.44'
 //    alternativeIdePath '/opt/idea-IU-171.2272.14'
     pluginName 'samebug-idea-plugin'
     updateSinceUntilBuild false
@@ -41,8 +41,7 @@ intellij {
         password project.hasProperty('JETBRAINS_PASSWORD') ? project.getProperty('JETBRAINS_PASSWORD') : null
         channel project.hasProperty('JETBRAINS_CHANNEL') ? project.getProperty('JETBRAINS_CHANNEL') : null
     }
-    systemProperty("awt.useSystemAAFontSettings", "on")
-    systemProperty("swing.aatext", "true")
+    systemProperty("awt.useSystemAAFontSettings", "lcd")
 }
 
 repositories {

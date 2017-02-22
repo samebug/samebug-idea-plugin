@@ -27,7 +27,7 @@ public class SamebugPanel extends JPanel {
 
     @Override
     public void updateUI() {
-        setUI(new BasicPanelUI());
+        setUI(new SamebugPanelUI());
         super.setForeground(ColorUtil.forCurrentTheme(foregroundColors));
         super.setBackground(ColorUtil.forCurrentTheme(backgroundColors));
     }

@@ -37,7 +37,7 @@ public class SamebugLabel extends JLabel {
 
     @Override
     public void updateUI() {
-        setUI(new BasicLabelUI());
+        setUI(new SamebugLabelUI());
         super.setForeground(ColorUtil.forCurrentTheme(foregroundColors));
         super.setBackground(ColorUtil.forCurrentTheme(backgroundColors));
     }

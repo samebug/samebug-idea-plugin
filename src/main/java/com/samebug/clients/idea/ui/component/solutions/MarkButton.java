@@ -87,6 +87,8 @@ public final class MarkButton extends SamebugButton implements IMarkButton {
 
     @Override
     protected void paintContent(Graphics2D g2) {
+        Font x = markLabel.getFont();
+        markLabel.getFontMetrics(x);
         super.paintChildren(g2);
     }
 
@@ -119,6 +121,11 @@ public final class MarkButton extends SamebugButton implements IMarkButton {
         void update() {
             if (MarkButton.this.model.userMarkId == null) setText(SamebugBundle.message("samebug.component.mark.mark"));
             else setText(SamebugBundle.message("samebug.component.mark.marked"));
+        }
+
+        @Override
+        public void paint(Graphics g) {
+            super.paint(g);
         }
     }
 

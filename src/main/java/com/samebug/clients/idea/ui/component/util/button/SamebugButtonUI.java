@@ -17,4 +17,9 @@ public class SamebugButtonUI extends BasicButtonUI {
 
         sun.swing.SwingUtilities2.drawString(c, g, text, textRect.x + getTextShiftOffset(), textRect.y + fm.getAscent() + getTextShiftOffset());
     }
+
+    @Override
+    protected void installDefaults(AbstractButton b) {
+        super.installDefaults(b);
+    }
 }

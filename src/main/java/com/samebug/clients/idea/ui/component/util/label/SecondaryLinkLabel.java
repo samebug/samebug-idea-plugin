@@ -37,7 +37,7 @@ public class SecondaryLinkLabel extends JLabel {
 
     @Override
     public void updateUI() {
-        setUI(new BasicLabelUI());
+        setUI(new SamebugLabelUI());
         interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, ColorUtil.forCurrentTheme(foregroundColors), this);
     }
 }
