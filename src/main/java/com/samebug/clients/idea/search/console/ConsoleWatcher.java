@@ -48,7 +48,7 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
     public ConsoleWatcher(Project project, ConsoleViewImpl console, DebugSessionInfo sessionInfo) {
         this.sessionInfo = sessionInfo;
         this.editor = console.getEditor();
-        this.searchRequestStore = IdeaSamebugPlugin.getInstance().getSearchRequestStore();
+        this.searchRequestStore = IdeaSamebugPlugin.getInstance().searchRequestStore;
         this.highlights = new ConcurrentHashMap<UUID, RangeHighlighter>();
         LOGGER.info("Watcher constructed for " + editor.toString());
 

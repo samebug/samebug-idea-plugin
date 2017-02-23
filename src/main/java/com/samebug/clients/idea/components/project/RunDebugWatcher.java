@@ -62,7 +62,7 @@ public class RunDebugWatcher implements RunContentWithExecutorListener, Disposab
             if (sessionInfo != null) {
                 Tracking.projectTracking(myProject).trace(Events.debugStop(myProject, sessionInfo));
                 debugSessionIds.remove(descriptorHashCode);
-                IdeaSamebugPlugin.getInstance().getSearchRequestStore().removeSession(sessionInfo);
+                IdeaSamebugPlugin.getInstance().searchRequestStore.removeSession(sessionInfo);
             }
         }
     }

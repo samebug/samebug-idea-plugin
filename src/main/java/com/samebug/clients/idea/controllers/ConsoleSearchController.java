@@ -42,7 +42,7 @@ public class ConsoleSearchController implements StackTraceMatcherListener {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
-                final SearchService service = IdeaSamebugPlugin.getInstance().getSearchService();
+                final SearchService service = IdeaSamebugPlugin.getInstance().searchService;
                 final SearchInfo searchInfo = new SearchInfo(sessionInfo);
 
                 if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.TOPIC).searchStart(project, searchInfo, stackTrace);

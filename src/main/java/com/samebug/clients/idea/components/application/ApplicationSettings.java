@@ -26,7 +26,7 @@ public class ApplicationSettings {
     @Nullable
     public String apiKey;
     @Nullable
-    public Long workspaceId = defaultWorkspaceId;
+    public Integer workspaceId = defaultWorkspaceId;
     public String instanceId = UUID.randomUUID().toString();
     public int userId;
     // TODO remove it
@@ -38,13 +38,15 @@ public class ApplicationSettings {
     public int connectTimeout = defaultConnectTimeout;
     public int requestTimeout = defaultRequestTimeout;
     public boolean isApacheLoggingEnabled = defaultIsApacheLoggingEnabled;
+    // TODO remove it
     public boolean showZeroSolutions = defaultShowZeroSolutions;
+    // TODO remove it
     public boolean showRecurring = defaultShowRecurring;
     public boolean wereNotificationsDisabled = defaultWereNotificationsDisabled;
 
     //=========================================================================
 
-    public static final Long defaultWorkspaceId = null;
+    public static final Integer defaultWorkspaceId = null;
     public static final String defaultServerRoot = "https://samebug.io";
     public static final String defaultTrackingRoot = defaultServerRoot + "/track/trace";
     public static final boolean defaultIsTrackingEnabled = true;

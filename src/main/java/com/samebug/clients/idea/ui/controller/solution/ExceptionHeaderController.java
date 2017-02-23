@@ -22,7 +22,7 @@ final class ExceptionHeaderController implements IExceptionHeaderPanel.Listener 
 
     @Override
     public void titleClicked() {
-        final URL searchUrl = IdeaSamebugPlugin.getInstance().getUrlBuilder().search(controller.searchId);
+        final URL searchUrl = IdeaSamebugPlugin.getInstance().urlBuilder.search(controller.searchId);
         BrowserUtil.browse(searchUrl);
     }
 }

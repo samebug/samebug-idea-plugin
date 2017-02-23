@@ -24,9 +24,7 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.messages.AuthenticationListener;
 import com.samebug.clients.common.search.api.WebUrlBuilder;
-import com.samebug.clients.common.search.api.entities.UserInfo;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.*;
 import com.samebug.clients.idea.controllers.ConsoleSearchController;
@@ -51,40 +49,20 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     final private static Logger LOGGER = Logger.getInstance(IdeaSamebugPlugin.class);
     private AtomicReference<ApplicationSettings> state = new AtomicReference<ApplicationSettings>(new ApplicationSettings());
 
-    private WebUrlBuilder urlBuilder = new WebUrlBuilder(state.get().serverRoot);
-
-    @Nullable
-    private ClientService clientService;
-    @Nullable
-    private HistoryService historyService;
-
-    @Nullable
-    private ProfileStore profileStore;
-    @Nullable
-    private ProfileService profileService;
-
-    @Nullable
-    private SolutionStore solutionStore;
-    @Nullable
-    private SolutionService solutionService;
-
-    @Nullable
-    private SearchRequestStore searchRequestStore;
-    @Nullable
-    private SearchRequestService searchRequestService;
-
-    @Nullable
-    private SearchStore searchStore;
-    @Nullable
-    private SearchService searchService;
-
-    @Nullable
-    private BugmateStore bugmateStore;
-    @Nullable
-    private BugmateService bugmateService;
-    
-    @Nullable
-    private AuthenticationListenerImpl authenticationListener;
+    public WebUrlBuilder urlBuilder = new WebUrlBuilder(state.get().serverRoot);
+    public ClientService clientService;
+    public HistoryService historyService;
+    public ProfileStore profileStore;
+    public ProfileService profileService;
+    public SolutionStore solutionStore;
+    public SolutionService solutionService;
+    public SearchRequestStore searchRequestStore;
+    public SearchRequestService searchRequestService;
+    public SearchStore searchStore;
+    public SearchService searchService;
+    public BugmateStore bugmateStore;
+    public BugmateService bugmateService;
+    public AuthenticationService authenticationService;
 
     @Nullable
     private MessageBusConnection connection;
@@ -96,89 +74,15 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         return instance;
     }
 
-    @NotNull
-    public WebUrlBuilder getUrlBuilder() {
-        return urlBuilder;
-    }
-
-    @NotNull
-    public ClientService getClient() {
-        assert clientService != null : "Plugin is not initialized!";
-        return clientService;
-    }
-
-    @NotNull
-    public ProfileStore getProfileStore() {
-        assert profileStore != null : "Plugin is not initialized!";
-        return profileStore;
-    }
-
-    @NotNull
-    public ProfileService getProfileService() {
-        assert profileService != null : "Plugin is not initialized!";
-        return profileService;
-    }
-
-    @NotNull
-    public SearchStore getSearchStore() {
-        assert searchStore != null : "Plugin is not initialized!";
-        return searchStore;
-    }
-
-    @NotNull
-    public SearchService getSearchService() {
-        assert searchService != null : "Plugin is not initialized!";
-        return searchService;
-    }
-
-    @NotNull
-    public SearchRequestStore getSearchRequestStore() {
-        assert searchRequestStore != null : "Plugin is not initialized!";
-        return searchRequestStore;
-    }
-
-    @NotNull
-    public SearchRequestService getSearchRequestService() {
-        assert searchRequestService != null : "Plugin is not initialized!";
-        return searchRequestService;
-    }
-
-    @NotNull
-    public SolutionStore getSolutionStore() {
-        assert solutionStore != null : "Plugin is not initialized!";
-        return solutionStore;
-    }
-
-    @NotNull
-    public SolutionService getSolutionService() {
-        assert solutionService != null : "Plugin is not initialized!";
-        return solutionService;
-    }
-
-    @NotNull
-    public BugmateService getBugmateService() {
-        assert bugmateService != null : "Plugin is not initialized!";
-        return bugmateService;
-    }
-
-    @Nullable
-    public HistoryService getHistoryService() {
-        return historyService;
-    }
-
-    public void authenticate() {
-        assert profileService != null;
+    public void checkAuthenticationInTheBackgroundWithCurrentConfig() {
+        assert authenticationService != null;
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
                 ApplicationSettings settings = state.get();
-                String apiKey = settings.apiKey;
-                if (apiKey != null) {
+                if (settings.apiKey != null) {
                     try {
-                        UserInfo profile = profileService.loadUserInfo(apiKey);
-                        if (profile.getUserExist()) {
-                            profileService.loadUserStats();
-                        }
+                        authenticationService.apiKeyAuthentication(settings.apiKey, settings.workspaceId);
                     } catch (SamebugClientException ignored) {
                     }
                 }
@@ -191,7 +95,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         try {
             FontRegistry.registerFonts();
         } catch (IOException e) {
-           LOGGER.error("Failed to read custom fonts file", e);
+            LOGGER.error("Failed to read custom fonts file", e);
         } catch (FontFormatException e) {
             LOGGER.error("Failed to read custom fonts file", e);
         }
@@ -200,32 +104,24 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         connection = messageBus.connect(this);
         clientService = new ClientService(messageBus);
         clientService.configure(state.get().getNetworkConfig());
-
         historyService = new HistoryService(messageBus, clientService);
         profileStore = new ProfileStore();
         profileService = new ProfileService(messageBus, clientService, profileStore);
-
         solutionStore = new SolutionStore();
         solutionService = new SolutionService(messageBus, clientService, solutionStore);
-
         searchStore = new SearchStore();
         searchService = new SearchService(messageBus, clientService, searchStore);
-
         searchRequestStore = new SearchRequestStore();
         searchRequestService = new SearchRequestService(searchRequestStore);
-
         bugmateStore = new BugmateStore();
         bugmateService = new BugmateService(messageBus, clientService, bugmateStore);
+        authenticationService = new AuthenticationService(messageBus, clientService);
 
         TimedTasks timedTasks = new TimedTasks(messageBus.connect(this));
         ConsoleSearchController consoleSearchController = new ConsoleSearchController(messageBus.connect(this));
         SessionsController sessionsController = new SessionsController(messageBus.connect(this), searchRequestService, searchRequestStore);
 
-        authenticationListener = new AuthenticationListenerImpl();
-
-        connection.subscribe(AuthenticationListener.TOPIC, authenticationListener);
-
-        authenticate();
+        checkAuthenticationInTheBackgroundWithCurrentConfig();
     }
 
     @Override
@@ -274,22 +170,5 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
             clientService.configure(newSettings.getNetworkConfig());
         }
         urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
-    }
-
-    final class AuthenticationListenerImpl implements AuthenticationListener {
-
-        @Override
-        public void success(String apiKey) {
-            // TODO save workspaceId to application settings when necessary
-            ApplicationSettings newSettings = new ApplicationSettings(state.get());
-            newSettings.apiKey = apiKey;
-            saveSettings(newSettings);
-        }
-
-        @Override
-        public void fail() {
-            // TODO we should notify the user that he has to change the apikey, or else plugin will not work.
-            LOGGER.warn("Failed to authenticate");
-        }
     }
 }

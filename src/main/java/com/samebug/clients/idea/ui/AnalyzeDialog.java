@@ -105,7 +105,7 @@ final public class AnalyzeDialog extends DialogWrapper {
         protected void doAction(ActionEvent e) {
             Tracking.appTracking().trace(Events.searchInSearchDialog());
             final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-            final SearchService searchService = plugin.getSearchService();
+            final SearchService searchService = plugin.searchService;
             final String trace = myEditorPanel.getText();
             ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
                 @Override

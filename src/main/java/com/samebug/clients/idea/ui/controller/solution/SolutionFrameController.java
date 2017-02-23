@@ -19,15 +19,11 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.common.entities.user.Statistics;
-import com.samebug.clients.common.entities.user.User;
+import com.intellij.util.concurrency.FixedFuture;
 import com.samebug.clients.common.search.api.WebUrlBuilder;
 import com.samebug.clients.common.search.api.entities.*;
 import com.samebug.clients.common.search.api.exceptions.*;
-import com.samebug.clients.common.services.BugmateService;
-import com.samebug.clients.common.services.ProfileStore;
-import com.samebug.clients.common.services.SolutionService;
-import com.samebug.clients.common.services.SolutionStore;
+import com.samebug.clients.common.services.*;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.component.solutions.*;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
@@ -64,6 +60,7 @@ final public class SolutionFrameController implements Disposable {
 
     private final WebUrlBuilder urlBuilder;
     private final ProfileStore profileStore;
+    private final ProfileService profileService;
     private final SolutionStore solutionStore;
     private final SolutionService solutionService;
     private final BugmateService bugmateService;
@@ -85,14 +82,15 @@ final public class SolutionFrameController implements Disposable {
         webHitController = new WebHitController(this);
 
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-        urlBuilder = plugin.getUrlBuilder();
-        solutionStore = IdeaSamebugPlugin.getInstance().getSolutionStore();
-        profileStore = IdeaSamebugPlugin.getInstance().getProfileStore();
-        solutionService = plugin.getSolutionService();
-        bugmateService = plugin.getBugmateService();
+        urlBuilder = plugin.urlBuilder;
+        solutionStore = plugin.solutionStore;
+        profileStore = plugin.profileStore;
+        profileService = plugin.profileService;
+        solutionService = plugin.solutionService;
+        bugmateService = plugin.bugmateService;
     }
 
-    public void init() {
+    public void loadAll() {
         // NOTE I use PooledThreadExecutor.INSTANCE instead of executeOnPooledThread because that logs and swallows the error in the Future
         final Future<Solutions> solutionsTask = PooledThreadExecutor.INSTANCE.submit(new Callable<Solutions>() {
             @Override
@@ -106,7 +104,49 @@ final public class SolutionFrameController implements Disposable {
                 return bugmateService.loadBugmates(searchId);
             }
         });
+        final Future<UserInfo> userInfoTask = PooledThreadExecutor.INSTANCE.submit(new Callable<UserInfo>() {
+            @Override
+            public UserInfo call() throws Exception {
+                return profileService.loadUserInfo();
+            }
+        });
+        final Future<UserStats> userStatsTask = PooledThreadExecutor.INSTANCE.submit(new Callable<UserStats>() {
+            @Override
+            public UserStats call() throws Exception {
+                return profileService.loadUserStats();
+            }
+        });
 
+        load(solutionsTask, bugmatesTask, userInfoTask, userStatsTask);
+    }
+
+    public void loadLazy() {
+        final Future<Solutions> solutionsTask = PooledThreadExecutor.INSTANCE.submit(new Callable<Solutions>() {
+            @Override
+            public Solutions call() throws Exception {
+                return solutionService.loadSolutions(searchId);
+            }
+        });
+        final Future<BugmatesResult> bugmatesTask = PooledThreadExecutor.INSTANCE.submit(new Callable<BugmatesResult>() {
+            @Override
+            public BugmatesResult call() throws Exception {
+                return bugmateService.loadBugmates(searchId);
+            }
+        });
+
+        final Future<UserInfo> userInfoTask;
+        final Future<UserStats> userStatsTask;
+        final UserInfo userInfo = profileStore.getUser();
+        final UserStats userStats = profileStore.getUserStats();
+        if (userInfo != null) userInfoTask = new FixedFuture<UserInfo>(userInfo);
+        else userInfoTask = FixedFuture.completeExceptionally(new IllegalStateException(""));
+        if (userStats != null) userStatsTask = new FixedFuture<UserStats>(userStats);
+        else userStatsTask = FixedFuture.completeExceptionally(new IllegalStateException(""));
+
+        load(solutionsTask, bugmatesTask, userInfoTask, userStatsTask);
+    }
+
+    private void load(final Future<Solutions> solutionsTask, final Future<BugmatesResult> bugmatesTask, final Future<UserInfo> userInfoTask, final Future<UserStats> userStatsTask) {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
@@ -114,10 +154,8 @@ final public class SolutionFrameController implements Disposable {
                     try {
                         final Solutions solutions = solutionsTask.get();
                         final BugmatesResult bugmates = bugmatesTask.get();
-                        final User user = profileStore.getUser();
-                        final Statistics statistics = profileStore.getUserStats();
-                        // TODO this is quite an edge case, when we could load the solutions but not the user, not sure how to handle it
-                        if (user == null || statistics == null || solutions == null || bugmates == null) throw new IllegalStateException("");
+                        final UserInfo user = userInfoTask.get();
+                        final UserStats statistics = userStatsTask.get();
                         final SolutionFrame.Model model = convertSolutionFrame(solutions, bugmates, user, statistics);
                         ApplicationManager.getApplication().invokeLater(new Runnable() {
                             @Override
@@ -126,7 +164,7 @@ final public class SolutionFrameController implements Disposable {
                             }
                         });
                     } catch (IllegalStateException e) {
-                        // TODO generic error, probably safe to retry
+                        // TODO generic error, probably safe to retry (loadAll)
                         LOGGER.warn("Failed to load user beforehand", e);
                         ApplicationManager.getApplication().invokeLater(new Runnable() {
                             @Override
@@ -135,7 +173,7 @@ final public class SolutionFrameController implements Disposable {
                             }
                         });
                     } catch (InterruptedException e) {
-                        // TODO generic error, probably safe to retry
+                        // TODO generic error, probably safe to retry (loadLazy)
                         LOGGER.warn("Loading solutions frame interrupted", e);
                         ApplicationManager.getApplication().invokeLater(new Runnable() {
                             @Override
@@ -146,7 +184,7 @@ final public class SolutionFrameController implements Disposable {
                     } catch (ExecutionException e) {
                         if (e.getCause() instanceof SamebugClientException) throw (SamebugClientException) e.getCause();
                         else {
-                            // TODO generic error, probably safe to retry
+                            // TODO generic error, probably safe to retry (loadLazy)
                             LOGGER.warn("Plugin-side error during loading solutions", e);
                             ApplicationManager.getApplication().invokeLater(new Runnable() {
                                 @Override
@@ -157,7 +195,7 @@ final public class SolutionFrameController implements Disposable {
                         }
                     }
                 } catch (final SamebugClientException e) {
-                    // TODO error with loading, bad connection, bad apikey, server error, etc
+                    // TODO error with loading, bad connection, bad apikey, server error, etc (loadAll)
                     LOGGER.warn("Error during loading solutions", e);
                     ApplicationManager.getApplication().invokeLater(new Runnable() {
                         @Override
@@ -196,7 +234,7 @@ final public class SolutionFrameController implements Disposable {
         return new IMarkButton.Model(hit.getScore(), hit.getMarkId(), true /*TODO*/);
     }
 
-    ISolutionFrame.Model convertSolutionFrame(@NotNull Solutions solutions, @NotNull BugmatesResult bugmates, @NotNull User user, @NotNull Statistics statistics) {
+    ISolutionFrame.Model convertSolutionFrame(@NotNull Solutions solutions, @NotNull BugmatesResult bugmates, @NotNull UserInfo user, @NotNull UserStats statistics) {
         final List<IWebHit.Model> webHits = new ArrayList<IWebHit.Model>(solutions.getReferences().size());
         for (RestHit<SolutionReference> externalHit : solutions.getReferences()) {
             SolutionReference externalSolution = externalHit.getSolution();

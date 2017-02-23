@@ -1,17 +1,14 @@
 package com.samebug.clients.common.services;
 
 import com.intellij.util.messages.MessageBus;
-import com.samebug.clients.common.entities.user.Statistics;
-import com.samebug.clients.common.entities.user.User;
-import com.samebug.clients.common.messages.AuthenticationListener;
-import com.samebug.clients.common.messages.ConnectionStatusListener;
-import com.samebug.clients.common.messages.ProfileListener;
 import com.samebug.clients.common.search.api.client.ClientResponse;
 import com.samebug.clients.common.search.api.client.SamebugClient;
 import com.samebug.clients.common.search.api.entities.UserInfo;
 import com.samebug.clients.common.search.api.entities.UserStats;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class ProfileService {
     @NotNull
@@ -28,37 +25,33 @@ public final class ProfileService {
         this.store = store;
     }
 
-    public UserInfo loadUserInfo(final String apiKey) throws SamebugClientException {
+    // TODO this is a bit different from other services, as ClientService.getUserInfo has two different purpose currently
+    // - check if an apiKey is valid
+    // - return profile information about the user
+    // When it will be separated, this method won't have to read the application settings.
+    @Nullable
+    public UserInfo loadUserInfo() throws SamebugClientException {
         final SamebugClient client = clientService.client;
+        final String apiKey = IdeaSamebugPlugin.getInstance().getState().apiKey;
 
-        ClientService.ConnectionAwareHttpRequest<UserInfo> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<UserInfo>() {
-                    ClientResponse<UserInfo> request() {
-                        return client.getUserInfo(apiKey);
-                    }
-
-                    protected void success(UserInfo result) {
-                        final User userResult;
-                        if (result.getUserExist()) {
-                            userResult = new User(result.getUserId(), result.getDisplayName(), result.getAvatarUrl(), store.workspaceId.get());
-                        } else {
-                            userResult = null;
+        if (apiKey == null) return null;
+        else {
+            ClientService.ConnectionAwareHttpRequest<UserInfo> requestHandler =
+                    new ClientService.ConnectionAwareHttpRequest<UserInfo>() {
+                        ClientResponse<UserInfo> request() {
+                            return client.getUserInfo(apiKey);
                         }
-                        store.user.set(userResult);
-                        messageBus.syncPublisher(ProfileListener.TOPIC).profileChange(userResult, store.statistics.get());
 
-                        // NOTE: this is a special case, we handle connection status by the result, not by the http status
-                        boolean isUserAuthenticated = result.getUserExist();
-                        clientService.authenticated.set(isUserAuthenticated);
-                        messageBus.syncPublisher(ConnectionStatusListener.TOPIC).authenticationChange(isUserAuthenticated);
-                    }
+                        protected void success(UserInfo result) {
+                            store.user.set(result);
+                        }
 
-                    protected void fail(SamebugClientException e) {
-                        store.user.set(null);
-                        messageBus.syncPublisher(ProfileListener.TOPIC).profileChange(null, store.statistics.get());
-                    }
-                };
-        return clientService.execute(requestHandler);
+                        protected void fail(SamebugClientException e) {
+                            store.user.set(null);
+                        }
+                    };
+            return clientService.execute(requestHandler);
+        }
     }
 
     public UserStats loadUserStats() throws SamebugClientException {
@@ -71,41 +64,11 @@ public final class ProfileService {
                     }
 
                     protected void success(UserStats result) {
-                        final Statistics statisticsResult = new Statistics(result.getNumberOfTips(), result.getNumberOfMarks(), result.getNumberOfThanks());
-                        store.statistics.set(statisticsResult);
-                        messageBus.syncPublisher(ProfileListener.TOPIC).profileChange(store.user.get(), statisticsResult);
+                        store.statistics.set(result);
                     }
 
                     protected void fail(SamebugClientException e) {
                         store.statistics.set(null);
-                        messageBus.syncPublisher(ProfileListener.TOPIC).profileChange(store.user.get(), null);
-                    }
-                };
-        return clientService.execute(requestHandler);
-    }
-
-    public UserInfo authenticate(final String apiKey) throws SamebugClientException {
-        final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<UserInfo> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<UserInfo>() {
-                    ClientResponse<UserInfo> request() {
-                        return client.getUserInfo(apiKey);
-                    }
-
-                    protected void success(UserInfo result) {
-                        // TODO save authentication response?
-                        // TODO rest api should accept the workspaceId, and tell if it is valid or not
-                        // TODO rest api should return the default workspace id if not specified
-                        if (result.getUserExist()) {
-                            messageBus.syncPublisher(AuthenticationListener.TOPIC).success(apiKey);
-                        } else {
-                            messageBus.syncPublisher(AuthenticationListener.TOPIC).fail();
-                        }
-                    }
-
-                    protected void fail(SamebugClientException e) {
-                        messageBus.syncPublisher(AuthenticationListener.TOPIC).fail();
                     }
                 };
         return clientService.execute(requestHandler);

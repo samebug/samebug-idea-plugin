@@ -12,10 +12,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- *
  * NOTE: these services use idea MessageBus only for convenience, any other observer implementation would do.
  */
-final public class ClientService {
+public final class ClientService {
     final MessageBus messageBus;
     SamebugClient client;
     AtomicBoolean connected;
@@ -66,23 +65,9 @@ final public class ClientService {
         response = c.request();
 
         ConnectionStatus connectionStatus = response.getConnectionStatus();
-        if (connectionStatus.attemptToConnect && connected.get() != connectionStatus.successfullyConnected) {
-            connected.set(connectionStatus.successfullyConnected);
-            messageBus.syncPublisher(ConnectionStatusListener.TOPIC).connectionChange(connectionStatus.successfullyConnected);
-        }
-        if (connectionStatus.attemptToAuthenticate && authenticated.get() != connectionStatus.successfullyAuthenticated) {
-            authenticated.set(connectionStatus.successfullyAuthenticated);
-            messageBus.syncPublisher(ConnectionStatusListener.TOPIC).authenticationChange(connectionStatus.successfullyAuthenticated);
-        }
-        if (connectionStatus.apiStatus != null && !connectionStatus.apiStatus.equals(apiStatus.get())) {
-            apiStatus.set(connectionStatus.apiStatus);
-            if (ConnectionStatus.API_TO_BE_DEPRECATED.equals(connectionStatus.apiStatus)) {
-                messageBus.syncPublisher(ConnectionStatusListener.TOPIC).apiToBeDeprecated();
-            } else if (ConnectionStatus.API_DEPRECATED.equals(connectionStatus.apiStatus)) {
-                messageBus.syncPublisher(ConnectionStatusListener.TOPIC).apiDeprecated();
-            }
-        }
-
+        if (connectionStatus.attemptToConnect) updateConnected(connectionStatus.successfullyConnected);
+        if (connectionStatus.attemptToAuthenticate) updateAuthenticated(connectionStatus.successfullyAuthenticated);
+        if (connectionStatus.apiStatus != null) updateApiStatus(connectionStatus.apiStatus);
         try {
             if (response instanceof Success) {
                 T result = ((Success<T>) response).getResponse();
@@ -98,7 +83,31 @@ final public class ClientService {
             messageBus.syncPublisher(ConnectionStatusListener.TOPIC).finishRequest(connectionStatus);
             c.finish(response);
         }
+    }
 
+    void updateAuthenticated(boolean isAuthenticated) {
+        if (authenticated.get() != isAuthenticated) {
+            authenticated.set(isAuthenticated);
+            messageBus.syncPublisher(ConnectionStatusListener.TOPIC).authenticationChange(isAuthenticated);
+        }
+    }
+
+    private void updateConnected(boolean isConnected) {
+        if (connected.get() != isConnected) {
+            connected.set(isConnected);
+            messageBus.syncPublisher(ConnectionStatusListener.TOPIC).connectionChange(isConnected);
+        }
+    }
+
+    private void updateApiStatus(String apiStatus) {
+        if (!apiStatus.equals(this.apiStatus.get())) {
+            this.apiStatus.set(apiStatus);
+            if (ConnectionStatus.API_TO_BE_DEPRECATED.equals(apiStatus)) {
+                messageBus.syncPublisher(ConnectionStatusListener.TOPIC).apiToBeDeprecated();
+            } else if (ConnectionStatus.API_DEPRECATED.equals(apiStatus)) {
+                messageBus.syncPublisher(ConnectionStatusListener.TOPIC).apiDeprecated();
+            }
+        }
     }
 
     public static abstract class ConnectionAwareHttpRequest<T> {

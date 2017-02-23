@@ -32,7 +32,7 @@ public class Tracking implements ApplicationComponent, TrackingListener {
             @Override
             public void run() {
                 try {
-                    ClientService client = IdeaSamebugPlugin.getInstance().getClient();
+                    ClientService client = IdeaSamebugPlugin.getInstance().clientService;
                     client.trace(event);
                 } catch (SamebugClientException e) {
                     LOGGER.debug("Failed to send a track event to server", e);

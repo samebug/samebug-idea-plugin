@@ -90,7 +90,7 @@ final public class ToolWindowController implements FocusListener, CloseListener,
 
     public void initToolWindow(@NotNull ToolWindow toolWindow) {
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-        HistoryService historyService = plugin.getHistoryService();
+        HistoryService historyService = plugin.historyService;
 
         if (historyService == null) {
             LOGGER.error("HistoryService was not initialized!");
@@ -149,7 +149,7 @@ final public class ToolWindowController implements FocusListener, CloseListener,
             return solutionFrames.get(searchId);
         } else {
             final SolutionFrameController newSolutionFrame = new SolutionFrameController(this, project, searchId);
-            newSolutionFrame.init();
+            newSolutionFrame.loadLazy();
             solutionFrames.put(searchId, newSolutionFrame);
             return newSolutionFrame;
         }

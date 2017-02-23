@@ -26,7 +26,7 @@ final class MarkController implements IMarkButton.Listener {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
-                SolutionService solutionService = IdeaSamebugPlugin.getInstance().getSolutionService();
+                SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
                 try {
                     final IMarkButton.Model newModel;
                     if (markId == null) {

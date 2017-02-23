@@ -25,7 +25,7 @@ public final class UserInfo {
     private Integer userId;
     private String displayName;
     private URL avatarUrl;
-    private Long defaultWorkspaceId;
+    private Integer defaultWorkspaceId;
 
     @NotNull
     public Boolean getUserExist() {
@@ -44,7 +44,7 @@ public final class UserInfo {
         return avatarUrl;
     }
 
-    public Long getDefaultWorkspaceId() {
+    public Integer getDefaultWorkspaceId() {
         return defaultWorkspaceId;
     }
 }

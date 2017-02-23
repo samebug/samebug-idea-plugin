@@ -1,12 +1,12 @@
 /**
  * Copyright 2017 Samebug, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,12 +17,11 @@ package com.samebug.clients.idea.components.project;
 
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.idea.controllers.ApiService;
 
 public class SamebugProjectComponent extends AbstractProjectComponent {
     private ToolWindowController toolWindowController;
     private RunDebugWatcher runDebugWatcher;
-    private ApiService apiService;
+    private DeprecationNotifier deprecationNotifier;
 
     public SamebugProjectComponent(Project project) {
         super(project);
@@ -37,12 +36,11 @@ public class SamebugProjectComponent extends AbstractProjectComponent {
     public void projectOpened() {
         this.toolWindowController = new ToolWindowController(myProject);
         this.runDebugWatcher = new RunDebugWatcher(myProject);
-        this.apiService = new ApiService(myProject);
+        this.deprecationNotifier = new DeprecationNotifier(myProject);
     }
 
     @Override
     public void projectClosed() {
-        apiService.dispose();
         toolWindowController.dispose();
     }
 

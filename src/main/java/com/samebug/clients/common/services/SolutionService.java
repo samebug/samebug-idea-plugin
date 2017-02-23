@@ -1,9 +1,6 @@
 package com.samebug.clients.common.services;
 
 import com.intellij.util.messages.MessageBus;
-import com.samebug.clients.common.messages.MarkModelListener;
-import com.samebug.clients.common.messages.SolutionModelListener;
-import com.samebug.clients.common.messages.TipModelListener;
 import com.samebug.clients.common.search.api.client.ClientResponse;
 import com.samebug.clients.common.search.api.client.SamebugClient;
 import com.samebug.clients.common.search.api.entities.Exception;
@@ -30,18 +27,12 @@ public final class SolutionService {
                         return client.getSolutions(searchId);
                     }
 
-                    protected void start() {
-                        messageBus.syncPublisher(SolutionModelListener.TOPIC).startLoadingSolutions(searchId);
-                    }
-
                     protected void success(Solutions result) {
                         solutionStore.solutions.put(searchId, result);
-                        messageBus.syncPublisher(SolutionModelListener.TOPIC).successLoadingSolutions(searchId, result);
                     }
 
                     protected void fail(SamebugClientException e) {
                         solutionStore.solutions.remove(searchId);
-                        messageBus.syncPublisher(SolutionModelListener.TOPIC).failLoadingSolutions(searchId, e);
                     }
                 };
         return clientService.execute(requestHandler);
@@ -55,18 +46,6 @@ public final class SolutionService {
                     ClientResponse<RestHit<Tip>> request() {
                         return client.postTip(searchId, tip, sourceUrl);
                     }
-
-                    protected void start() {
-                        messageBus.syncPublisher(TipModelListener.TOPIC).startPostTip(searchId);
-                    }
-
-                    protected void success(RestHit<Tip> result) {
-                        messageBus.syncPublisher(TipModelListener.TOPIC).successPostTip(searchId, result);
-                    }
-
-                    protected void fail(SamebugClientException e) {
-                        messageBus.syncPublisher(TipModelListener.TOPIC).failPostTip(searchId, e);
-                    }
                 };
         return clientService.execute(requestHandler);
     }
@@ -79,18 +58,6 @@ public final class SolutionService {
                     ClientResponse<MarkResponse> request() {
                         return client.postMark(searchId, solutionId);
                     }
-
-                    protected void start() {
-                        messageBus.syncPublisher(MarkModelListener.TOPIC).startPostingMark(searchId, solutionId);
-                    }
-
-                    protected void success(MarkResponse result) {
-                        messageBus.syncPublisher(MarkModelListener.TOPIC).successPostingMark(searchId, solutionId, result);
-                    }
-
-                    protected void fail(SamebugClientException e) {
-                        messageBus.syncPublisher(MarkModelListener.TOPIC).failPostingMark(searchId, solutionId, e);
-                    }
                 };
         return clientService.execute(requestHandler);
     }
@@ -102,18 +69,6 @@ public final class SolutionService {
                 new ClientService.ConnectionAwareHttpRequest<MarkResponse>() {
                     ClientResponse<MarkResponse> request() {
                         return client.retractMark(voteId);
-                    }
-
-                    protected void start() {
-                        messageBus.syncPublisher(MarkModelListener.TOPIC).startRetractMark(voteId);
-                    }
-
-                    protected void success(MarkResponse result) {
-                        messageBus.syncPublisher(MarkModelListener.TOPIC).successRetractMark(voteId, result);
-                    }
-
-                    protected void fail(SamebugClientException e) {
-                        messageBus.syncPublisher(MarkModelListener.TOPIC).failRetractMark(voteId, e);
                     }
                 };
         return clientService.execute(requestHandler);
