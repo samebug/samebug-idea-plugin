@@ -16,7 +16,7 @@
 package com.samebug.clients.common.services;
 
 import com.intellij.util.messages.MessageBus;
-import com.samebug.clients.common.messages.HistoryModelListener;
+import com.samebug.clients.idea.messages.HistoryModelListener;
 import com.samebug.clients.common.search.api.client.ClientResponse;
 import com.samebug.clients.common.search.api.client.SamebugClient;
 import com.samebug.clients.common.search.api.entities.SearchGroup;

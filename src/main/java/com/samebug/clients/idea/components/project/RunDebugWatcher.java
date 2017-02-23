@@ -68,15 +68,6 @@ public class RunDebugWatcher implements RunContentWithExecutorListener, Disposab
     }
 
     private void createListener(@NotNull RunContentDescriptor descriptor, Integer descriptorHashCode) {
-        // TODO do something meaningfule when starting a run/debug session?
-//        ApplicationManager.getApplication().invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                ToolWindowController twc = myProject.getComponent(SamebugProjectComponent.class).getToolWindowController();
-//                twc.changeToolwindowIcon(false);
-//            }
-//        });
-
         DebugSessionInfo sessionInfo = new DebugSessionInfo("run/debug");
 
         ProcessHandler processHandler = descriptor.getProcessHandler();
@@ -85,7 +76,6 @@ public class RunDebugWatcher implements RunContentWithExecutorListener, Disposab
             if (console instanceof ConsoleView) {
                 ConsoleViewImpl impl = extractConsoleImpl((ConsoleView) console);
                 if (impl != null) {
-                    // do we have to keep this reference?
                     new ConsoleWatcher(myProject, impl, sessionInfo);
                 }
             }

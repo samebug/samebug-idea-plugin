@@ -6,18 +6,17 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.messages.ConnectionStatusListener;
 import com.samebug.clients.common.search.api.client.ConnectionStatus;
+import com.samebug.clients.common.services.ClientService;
 import com.samebug.clients.idea.ui.SamebugBundle;
 
-// TODO make sure these notifications pop up at most once per idea startup
-public final class DeprecationNotifier implements ConnectionStatusListener {
+public final class DeprecationNotifier implements ClientService.ConnectionStatusListener {
     private final Project myProject;
 
     public DeprecationNotifier(Project project) {
         myProject = project;
         MessageBusConnection projectConnection = myProject.getMessageBus().connect(project);
-        projectConnection.subscribe(ConnectionStatusListener.TOPIC, this);
+        projectConnection.subscribe(ClientService.ConnectionStatusListener.TOPIC, this);
     }
 
     @Override

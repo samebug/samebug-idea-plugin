@@ -18,7 +18,7 @@ package com.samebug.clients.idea.ui.controller.history;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.messages.HistoryModelListener;
+import com.samebug.clients.idea.messages.HistoryModelListener;
 import com.samebug.clients.common.search.api.entities.SearchHistory;
 import com.samebug.clients.idea.ui.component.history.HistoryTabView;
 import org.jetbrains.annotations.NotNull;
