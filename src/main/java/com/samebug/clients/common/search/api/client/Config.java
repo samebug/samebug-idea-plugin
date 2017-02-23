@@ -18,6 +18,7 @@ package com.samebug.clients.common.search.api.client;
 import org.jetbrains.annotations.Nullable;
 
 public class Config {
+    @Nullable
     public String apiKey;
     @Nullable
     public Long workspaceId;
