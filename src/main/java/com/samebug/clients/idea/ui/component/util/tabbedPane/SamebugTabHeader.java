@@ -20,7 +20,7 @@ public abstract class SamebugTabHeader extends JPanel {
     private Color[] selectedHitColor;
 
     public SamebugTabHeader(String tabName, int hits) {
-        tabLabel = new SamebugLabel(tabName, FontRegistry.AvenirDemi, 16);
+        tabLabel = new SamebugLabel(tabName, FontRegistry.demi(16));
         hitsLabel = new HitsLabel();
         hitsLabel.setText(Integer.toString(hits));
         clickableColors = ColorUtil.LinkInteraction;
@@ -94,7 +94,7 @@ public abstract class SamebugTabHeader extends JPanel {
 
     private final class HitsLabel extends SamebugLabel {
         private static final int Height = 20;
-        private final Font font = new Font(FontRegistry.AvenirDemi, Font.PLAIN, 10);
+        private final Font font = FontRegistry.demi(10);
 
         @Override
         public Dimension getPreferredSize() {

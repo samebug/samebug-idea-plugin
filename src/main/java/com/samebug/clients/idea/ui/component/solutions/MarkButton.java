@@ -45,7 +45,7 @@ public final class MarkButton extends SamebugButton implements IMarkButton {
         add(separator, "w 1!, h 16!");
         add(markLabel, ", h 16!");
 
-        setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 14));
+        setFont(FontRegistry.demi(14));
         setForeground(ForegroundInteraction);
         setBackground(Background);
 

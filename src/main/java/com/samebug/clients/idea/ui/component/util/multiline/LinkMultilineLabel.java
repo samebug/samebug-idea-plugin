@@ -20,7 +20,7 @@ public class LinkMultilineLabel extends JTextArea {
         setLineWrap(true);
 
         setForeground(ColorUtil.LinkInteraction);
-        setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 16));
+        setFont(FontRegistry.regular(16));
         setOpaque(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 

@@ -19,7 +19,7 @@ public class SamebugMultilineLabel extends JTextArea {
         setLineWrap(true);
 
         setForeground(ColorUtil.Text);
-        setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 16));
+        setFont(FontRegistry.regular(16));
         setOpaque(false);
     }
 

@@ -63,7 +63,7 @@ public final class WebHit extends SamebugPanel implements IWebHit, DataProvider 
 
     private final class TitleLabel extends LinkMultilineLabel {
         {
-            setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 16));
+            setFont(FontRegistry.demi(16));
             setText(model.title);
         }
 
@@ -80,7 +80,7 @@ public final class WebHit extends SamebugPanel implements IWebHit, DataProvider 
 
     private final class SourceLabel extends SamebugLabel {
         {
-            setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 12));
+            setFont(FontRegistry.regular(12));
             String sourceText;
             if (model.createdBy == null) {
                 sourceText = model.sourceName + " | " + String.format("%s", TextUtil.prettyTime(model.createdAt));

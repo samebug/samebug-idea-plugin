@@ -6,7 +6,6 @@ import com.samebug.clients.idea.ui.component.util.interaction.Colors;
 import com.samebug.clients.idea.ui.component.util.interaction.ForegroundColorChanger;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicLabelUI;
 import java.awt.*;
 
 public class SecondaryLinkLabel extends JLabel {
@@ -18,13 +17,13 @@ public class SecondaryLinkLabel extends JLabel {
     }
 
     public SecondaryLinkLabel(String text) {
-        this(text, FontRegistry.AvenirRegular, 16);
+        this(text, FontRegistry.regular(16));
     }
 
-    public SecondaryLinkLabel(String text, String fontName, int fontSize) {
+    public SecondaryLinkLabel(String text, Font font) {
         super(text);
         setForeground(ColorUtil.SecondaryLinkInteraction);
-        setFont(new Font(fontName, Font.PLAIN, fontSize));
+        setFont(font);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         updateUI();

@@ -18,7 +18,7 @@ public class SamebugTabbedPane extends JTabbedPane {
     {
         tabs = new ArrayList<SamebugTabHeader>();
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 16));
+        setFont(FontRegistry.regular(16));
         setTabLayoutPolicy(SCROLL_TAB_LAYOUT);
         setOpaque(false);
 

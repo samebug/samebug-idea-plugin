@@ -32,7 +32,7 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
         this.messageBus = messageBus;
 
         avatarIcon = new AvatarIcon(model.avatarUrl, AvatarIconSize);
-        SamebugLabel name = new SamebugLabel(model.name, FontRegistry.AvenirDemi, 14);
+        SamebugLabel name = new SamebugLabel(model.name, FontRegistry.demi(14));
         final JPanel glue = new TransparentPanel();
         messages = new MessageLabel(model.messages);
         marks = new NumberLabel(model.marks, SamebugBundle.message("samebug.component.profile.marks.label"));

@@ -30,7 +30,7 @@ public class SamebugButton extends JButton {
         setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 12));
         setContentAreaFilled(false);
         setOpaque(false);
-        setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 14));
+        setFont(FontRegistry.demi( 14));
 
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         setForeground(ColorUtil.LinkInteraction);

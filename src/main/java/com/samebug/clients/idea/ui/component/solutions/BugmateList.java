@@ -2,14 +2,13 @@ package com.samebug.clients.idea.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.IBugmateList;
-import com.samebug.clients.idea.ui.SamebugBundle;
 import com.samebug.clients.idea.ui.FontRegistry;
+import com.samebug.clients.idea.ui.SamebugBundle;
 import com.samebug.clients.idea.ui.component.util.button.SamebugButton;
 import com.samebug.clients.idea.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
 
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -65,14 +64,14 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
     private final class SubheaderLabel extends SamebugLabel {
         {
             setText(SamebugBundle.message("samebug.component.bugmate.list.title"));
-            setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 16));
+            setFont(FontRegistry.demi(16));
         }
     }
 
     private final class MoreLabel extends SamebugLabel {
         {
             setText(SamebugBundle.message("samebug.component.bugmate.list.more", model.numberOfOtherBugmates));
-            setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 14));
+            setFont(FontRegistry.regular(14));
         }
     }
 

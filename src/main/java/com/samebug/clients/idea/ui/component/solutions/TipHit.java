@@ -31,7 +31,7 @@ public final class TipHit extends TransparentPanel implements ITipHit, DataProvi
         this.messageBus = messageBus;
 
         setBackground(ColorUtil.Tip);
-        tipLabel = new SamebugLabel("TIP", FontRegistry.AvenirRegular, 14);
+        tipLabel = new SamebugLabel("TIP", FontRegistry.regular( 14));
         tipLabel.setForeground(ColorUtil.TipText);
         tipMessage = new MessageLabel();
         mark = new MarkButton(messageBus, model.mark);
@@ -68,9 +68,9 @@ public final class TipHit extends TransparentPanel implements ITipHit, DataProvi
 
         {
             final AvatarIcon authorIcon = new AvatarIcon(model.createdByAvatarUrl, AvatarIconSize);
-            name = new SamebugLabel(model.createdBy, FontRegistry.AvenirRegular, 12);
+            name = new SamebugLabel(model.createdBy, FontRegistry.regular( 12));
             name.setForeground(ColorUtil.UnemphasizedText);
-            timestamp = new SamebugLabel(TextUtil.prettyTime(model.createdAt), FontRegistry.AvenirRegular, 12);
+            timestamp = new SamebugLabel(TextUtil.prettyTime(model.createdAt), FontRegistry.regular(12));
             timestamp.setForeground(ColorUtil.UnemphasizedText);
 
             setLayout(new MigLayout("", "0[]5[]0", "0[14!]0[14!]0"));

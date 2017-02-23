@@ -13,8 +13,8 @@ public class NumberLabel extends TransparentPanel {
     protected final SamebugLabel hintLabel;
 
     public NumberLabel(int number, String hint) {
-        numberLabel = new SamebugLabel(Integer.toString(number), FontRegistry.AvenirDemi, 14);
-        hintLabel = new SamebugLabel(hint, FontRegistry.AvenirDemi, 12);
+        numberLabel = new SamebugLabel(Integer.toString(number), FontRegistry.demi(14));
+        hintLabel = new SamebugLabel(hint, FontRegistry.demi(12));
 
         setLayout(new MigLayout("fillx", "0[]4[]0", "0[]0"));
 

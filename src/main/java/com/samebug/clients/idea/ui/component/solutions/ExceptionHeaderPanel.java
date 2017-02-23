@@ -30,7 +30,7 @@ public final class ExceptionHeaderPanel extends SamebugPanel implements IExcepti
     final class HeaderTextLabel extends SamebugMultilineLabel {
         {
             setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-            setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 24));
+            setFont(FontRegistry.demi(24));
             setForeground(ColorUtil.EmphasizedText);
 
             setText(model.title);

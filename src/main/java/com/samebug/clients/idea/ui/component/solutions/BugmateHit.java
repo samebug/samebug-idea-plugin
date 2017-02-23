@@ -3,14 +3,12 @@ package com.samebug.clients.idea.ui.component.solutions;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.common.ui.component.solutions.IBugmateHit;
-import com.samebug.clients.idea.ui.SamebugBundle;
 import com.samebug.clients.idea.ui.FontRegistry;
+import com.samebug.clients.idea.ui.SamebugBundle;
 import com.samebug.clients.idea.ui.component.util.AvatarIcon;
 import com.samebug.clients.idea.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
-
-import java.awt.*;
 
 public final class BugmateHit extends TransparentPanel implements IBugmateHit {
     private final static int AvatarSize = 44;
@@ -37,14 +35,14 @@ public final class BugmateHit extends TransparentPanel implements IBugmateHit {
     private final class NameLabel extends SamebugLabel {
         {
             setText(model.displayName);
-            setFont(new Font(FontRegistry.AvenirDemi, Font.PLAIN, 14));
+            setFont(FontRegistry.demi(14));
         }
     }
 
     private final class TimestampLabel extends SamebugLabel {
         {
             setText(SamebugBundle.message("samebug.component.bugmate.hit.occurred", model.nSeen, TextUtil.prettyTime(model.lastSeen)));
-            setFont(new Font(FontRegistry.AvenirRegular, Font.PLAIN, 14));
+            setFont(FontRegistry.regular(14));
         }
     }
 }

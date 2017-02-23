@@ -4,7 +4,6 @@ import com.samebug.clients.idea.ui.ColorUtil;
 import com.samebug.clients.idea.ui.FontRegistry;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicLabelUI;
 import java.awt.*;
 
 public class SamebugLabel extends JLabel {
@@ -16,13 +15,13 @@ public class SamebugLabel extends JLabel {
     }
 
     public SamebugLabel(String text) {
-        this(text, FontRegistry.AvenirRegular, 16);
+        this(text, FontRegistry.regular(16));
     }
 
-    public SamebugLabel(String text, String fontName, int fontSize) {
+    public SamebugLabel(String text, Font font) {
         super(text);
         setForeground(ColorUtil.Text);
-        setFont(new Font(fontName, Font.PLAIN, fontSize));
+        setFont(font);
     }
 
     public void setForeground(Color[] c) {
