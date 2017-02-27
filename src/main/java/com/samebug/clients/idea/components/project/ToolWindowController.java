@@ -149,7 +149,7 @@ final public class ToolWindowController implements FocusListener, CloseListener,
             return solutionFrames.get(searchId);
         } else {
             final SolutionFrameController newSolutionFrame = new SolutionFrameController(this, project, searchId);
-            newSolutionFrame.loadLazy();
+            newSolutionFrame.loadAll();
             solutionFrames.put(searchId, newSolutionFrame);
             return newSolutionFrame;
         }
