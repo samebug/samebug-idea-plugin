@@ -23,9 +23,9 @@ import org.jetbrains.annotations.NotNull;
 final class ViewController implements RefreshTimestampsListener {
     final static Logger LOGGER = Logger.getInstance(ViewController.class);
     @NotNull
-    final SolutionFrameController controller;
+    final SolutionsController controller;
 
-    public ViewController(@NotNull final SolutionFrameController controller) {
+    public ViewController(@NotNull final SolutionsController controller) {
         this.controller = controller;
 
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);

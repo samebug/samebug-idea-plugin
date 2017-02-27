@@ -18,12 +18,9 @@ package com.samebug.clients.idea.ui;
 import com.intellij.openapi.util.IconLoader;
 
 import javax.swing.*;
-import java.net.URL;
 
 final public class SamebugIcons {
-    public final static Icon notification = IconLoader.getIcon("/com/samebug/icons/samebug-notification.png");
-    public final static Icon tutorial = IconLoader.getIcon("/com/samebug/icons/tutorial.png");
-    public final static Icon info = IconLoader.getIcon("/com/samebug/icons/info.png");
+    public final static Icon alert = IconLoader.getIcon("/com/samebug/images/alert.png");
 
     public final static Icon twSamebug = IconLoader.getIcon("/com/samebug/toolwindow/samebug.png");
     public final static Icon twBolt = IconLoader.getIcon("/com/samebug/toolwindow/bolt.png");
@@ -33,19 +30,4 @@ final public class SamebugIcons {
 
     public final static Icon cogwheel = IconLoader.getIcon("/com/samebug/icons/cogwheel.png");
     public final static Icon cogwheelTodo = IconLoader.getIcon("/com/samebug/icons/cogwheel-todo.png");
-    public final static Icon linkError = IconLoader.getIcon("/com/samebug/icons/link-error.png");
-    public final static Icon linkActive = IconLoader.getIcon("/com/samebug/icons/link-active.png");
-    public final static Icon reload = IconLoader.getIcon("/com/samebug/icons/reload.png");
-    public final static Icon lightbulb = IconLoader.getIcon("/com/samebug/icons/filter-unknown.png");
-    public final static Icon calendar = IconLoader.getIcon("/com/samebug/icons/filter-old.png");
-    public final static Icon back = IconLoader.getIcon("/com/samebug/icons/back.png");
-
-    public final static Icon breadcrumbEnd = IconLoader.getIcon("/com/samebug/icons/bolt.png");
-    public final static Icon breadcrumbDelimeter = IconLoader.getIcon("/com/samebug/icons/prev.png");
-
-    public final static Icon tickMark = IconLoader.getIcon("/com/samebug/icons/check.png");
-
-    public final static URL cogwheelTodoUrl = SamebugIcons.class.getClassLoader().getResource("/com/samebug/icons/cogwheel-todo.png");
-    public final static URL lightbulbUrl = SamebugIcons.class.getClassLoader().getResource("/com/samebug/icons/filter-unknown.png");
-    public final static URL calendarUrl = SamebugIcons.class.getClassLoader().getResource("/com/samebug/icons/filter-old.png");
 }

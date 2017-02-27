@@ -6,9 +6,9 @@ import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
 
 final class HelpOthersCTAController implements IHelpOthersCTA.Listener {
     final static Logger LOGGER = Logger.getInstance(HelpOthersCTAController.class);
-    final SolutionFrameController controller;
+    final SolutionsController controller;
 
-    public HelpOthersCTAController(final SolutionFrameController controller) {
+    public HelpOthersCTAController(final SolutionsController controller) {
         this.controller = controller;
 
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);

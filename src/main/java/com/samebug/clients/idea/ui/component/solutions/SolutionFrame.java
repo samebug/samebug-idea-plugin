@@ -2,16 +2,21 @@ package com.samebug.clients.idea.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.ISolutionFrame;
+import com.samebug.clients.idea.ui.SamebugBundle;
+import com.samebug.clients.idea.ui.SamebugIcons;
 import com.samebug.clients.idea.ui.component.profile.ProfilePanel;
 import com.samebug.clients.idea.ui.component.util.button.SamebugButton;
 import com.samebug.clients.idea.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.idea.ui.component.util.multiline.CenteredMultilineLabel;
-import com.samebug.clients.idea.ui.component.util.panel.EmphasizedPanel;
 import com.samebug.clients.idea.ui.component.util.panel.SamebugPanel;
+import com.samebug.clients.idea.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public final class SolutionFrame extends SamebugPanel implements ISolutionFrame {
     private Solutions solutions;
@@ -24,46 +29,48 @@ public final class SolutionFrame extends SamebugPanel implements ISolutionFrame 
         setLoading();
     }
 
-    public void setGenericError() {
-        removeAll();
-        add(new ReloadableErrorPanel("some generic error happened"));
-        revalidate();
-        repaint();
-    }
-
-    @Override
-    public void setRetriableError() {
-        removeAll();
-        add(new ReloadableErrorPanel("probably timeout"));
-        revalidate();
-        repaint();
-    }
-
-    @Override
-    public void setServerError() {
-        removeAll();
-        add(new ReloadableErrorPanel("internal server error"));
-        revalidate();
-        repaint();
-    }
-
-    @Override
     public void setAuthenticationError() {
         removeAll();
-        add(new ReloadableErrorPanel("bad api key"));
+        add(new AuthenticationErrorPanel());
         revalidate();
         repaint();
     }
 
-    @Override
     public void setAuthorizationError() {
         removeAll();
-        add(new ReloadableErrorPanel("access denied"));
+        add(new GeneralErrorPanel());
         revalidate();
         repaint();
     }
 
-    @Override
+    public void setRetriableError() {
+        removeAll();
+        add(new ConnectionErrorPanel());
+        revalidate();
+        repaint();
+    }
+
+    public void setNetworkError() {
+        removeAll();
+        add(new NetworkErrorPanel());
+        revalidate();
+        repaint();
+    }
+
+    public void setServerError() {
+        removeAll();
+        add(new GeneralErrorPanel());
+        revalidate();
+        repaint();
+    }
+
+    public void setGenericError() {
+        removeAll();
+        add(new GeneralErrorPanel());
+        revalidate();
+        repaint();
+    }
+
     public void setLoading() {
         removeAll();
         add(new SamebugLabel("loading"));
@@ -82,7 +89,6 @@ public final class SolutionFrame extends SamebugPanel implements ISolutionFrame 
     }
 
     private final class Solutions {
-        private final Model model;
         private final JPanel exceptionHeader;
         private final ResultTabs tabs;
         private final JPanel profilePanel;
@@ -91,22 +97,77 @@ public final class SolutionFrame extends SamebugPanel implements ISolutionFrame 
             exceptionHeader = new ExceptionHeaderPanel(messageBus, model.header);
             tabs = new ResultTabs(messageBus, model.resultTabs);
             profilePanel = new ProfilePanel(messageBus, model.profilePanel);
-            this.model = model;
         }
     }
 
-    private final class ReloadableErrorPanel extends EmphasizedPanel {
-        protected final CenteredMultilineLabel label;
+    private class ErrorPanel extends TransparentPanel {
+        public ErrorPanel(String description, String buttonLabel, MouseListener mouseListener) {
+            final JLabel alertImage = new JLabel(SamebugIcons.alert);
+            final CenteredMultilineLabel label = new CenteredMultilineLabel();
+            final SamebugButton button = new SamebugButton(buttonLabel, false);
+            label.setText(description);
+            button.addMouseListener(mouseListener);
 
-        public ReloadableErrorPanel(String text) {
-            final SamebugButton button = new SamebugButton("Reload", true);
-            label = new CenteredMultilineLabel();
-            label.setText(text);
-
-            setLayout(new MigLayout("fillx, w 300", "40[]40", "40[]20[]40"));
-            add(label, "cell 0 0, wmin 0, growx");
-            add(button, "cell 0 1, align center");
+            setLayout(new MigLayout("fillx, al center center", "0[]0", "0:push[]30[]30[]0:push"));
+            add(alertImage, "cell 0 0, wmin 0, growx");
+            add(label, "cell 0 1, wmin 0, growx");
+            add(button, "cell 0 2, align center");
         }
+    }
 
+    private final class ConnectionErrorPanel extends ErrorPanel {
+        public ConnectionErrorPanel() {
+            super(SamebugBundle.message("samebug.component.error.connection.description"),
+                    SamebugBundle.message("samebug.component.error.connection.button"),
+                    new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            getListener().reload();
+                        }
+                    });
+        }
+    }
+
+    private final class NetworkErrorPanel extends ErrorPanel {
+        public NetworkErrorPanel() {
+            super(SamebugBundle.message("samebug.component.error.network.description"),
+                    SamebugBundle.message("samebug.component.error.network.button"),
+                    new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            getListener().openNetworkSettings();
+                        }
+                    });
+        }
+    }
+
+    private final class AuthenticationErrorPanel extends ErrorPanel {
+        public AuthenticationErrorPanel() {
+            super(SamebugBundle.message("samebug.component.error.authentication.description"),
+                    SamebugBundle.message("samebug.component.error.authentication.button"),
+                    new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            getListener().openSamebugSettings();
+                        }
+                    });
+        }
+    }
+
+    private final class GeneralErrorPanel extends ErrorPanel {
+        public GeneralErrorPanel() {
+            super(SamebugBundle.message("samebug.component.error.general.description"),
+                    SamebugBundle.message("samebug.component.error.general.button"),
+                    new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            getListener().reload();
+                        }
+                    });
+        }
+    }
+
+    private Listener getListener() {
+        return messageBus.syncPublisher(Listener.TOPIC);
     }
 }

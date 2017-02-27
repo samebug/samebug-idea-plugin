@@ -6,9 +6,9 @@ import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 
 final class ProfileController implements IProfilePanel.Listener {
     final static Logger LOGGER = Logger.getInstance(ProfileController.class);
-    final SolutionFrameController controller;
+    final SolutionsController controller;
 
-    public ProfileController(final SolutionFrameController controller) {
+    public ProfileController(final SolutionsController controller) {
         this.controller = controller;
 
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);

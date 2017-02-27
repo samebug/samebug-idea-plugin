@@ -11,9 +11,9 @@ import java.net.URL;
 final class ExceptionHeaderController implements IExceptionHeaderPanel.Listener {
     final static Logger LOGGER = Logger.getInstance(ExceptionHeaderController.class);
 
-    final SolutionFrameController controller;
+    final SolutionsController controller;
 
-    public ExceptionHeaderController(final SolutionFrameController controller) {
+    public ExceptionHeaderController(final SolutionsController controller) {
         this.controller = controller;
 
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);

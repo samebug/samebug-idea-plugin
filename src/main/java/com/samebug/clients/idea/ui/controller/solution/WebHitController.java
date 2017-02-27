@@ -9,9 +9,9 @@ import java.net.URL;
 
 final class WebHitController implements IWebHit.Listener {
     final static Logger LOGGER = Logger.getInstance(WebHitController.class);
-    final SolutionFrameController controller;
+    final SolutionsController controller;
 
-    public WebHitController(final SolutionFrameController controller) {
+    public WebHitController(final SolutionsController controller) {
         this.controller = controller;
 
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);

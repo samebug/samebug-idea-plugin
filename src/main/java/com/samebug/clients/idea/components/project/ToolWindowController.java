@@ -17,7 +17,6 @@ package com.samebug.clients.idea.components.project;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
@@ -37,7 +36,7 @@ import com.samebug.clients.idea.ui.SamebugBundle;
 import com.samebug.clients.idea.ui.SamebugIcons;
 import com.samebug.clients.idea.ui.controller.history.HistoryFrameController;
 import com.samebug.clients.idea.ui.controller.intro.IntroFrameController;
-import com.samebug.clients.idea.ui.controller.solution.SolutionFrameController;
+import com.samebug.clients.idea.ui.controller.solution.SolutionsController;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +56,7 @@ final public class ToolWindowController implements FocusListener, CloseListener,
     @Nullable
     HistoryFrameController historyFrame;
     @NotNull
-    final ConcurrentMap<Integer, SolutionFrameController> solutionFrames;
+    final ConcurrentMap<Integer, SolutionsController> solutionFrames;
 
     @NotNull
     final Timer dateLabelRefresher;
@@ -68,7 +67,7 @@ final public class ToolWindowController implements FocusListener, CloseListener,
 
     protected ToolWindowController(@NotNull final Project project) {
         this.project = project;
-        solutionFrames = new ConcurrentHashMap<Integer, SolutionFrameController>();
+        solutionFrames = new ConcurrentHashMap<Integer, SolutionsController>();
 
         MessageBusConnection connection = project.getMessageBus().connect(project);
         connection.subscribe(FocusListener.TOPIC, this);
@@ -128,7 +127,7 @@ final public class ToolWindowController implements FocusListener, CloseListener,
             focusedSearch = null;
         }
 
-        final SolutionFrameController tab = getOrCreateSolutionFrame(searchId);
+        final SolutionsController tab = getOrCreateSolutionFrame(searchId);
         focusedSearch = searchId;
         Content toolWindowTab = toolwindowCM.getContent(tab.getControlPanel());
         if (toolWindowTab != null) toolwindowCM.setSelectedContent(toolWindowTab);
@@ -142,13 +141,13 @@ final public class ToolWindowController implements FocusListener, CloseListener,
     }
 
     @NotNull
-    SolutionFrameController getOrCreateSolutionFrame(final int searchId) {
+    SolutionsController getOrCreateSolutionFrame(final int searchId) {
         ApplicationManager.getApplication().assertIsDispatchThread();
 
         if (solutionFrames.containsKey(searchId)) {
             return solutionFrames.get(searchId);
         } else {
-            final SolutionFrameController newSolutionFrame = new SolutionFrameController(this, project, searchId);
+            final SolutionsController newSolutionFrame = new SolutionsController(this, project, searchId);
             newSolutionFrame.loadAll();
             solutionFrames.put(searchId, newSolutionFrame);
             return newSolutionFrame;
@@ -167,7 +166,7 @@ final public class ToolWindowController implements FocusListener, CloseListener,
 
     @Override
     public void closeSolutionFrame(final int searchId) {
-        SolutionFrameController tab = solutionFrames.get(searchId);
+        SolutionsController tab = solutionFrames.get(searchId);
         if (tab != null) Disposer.dispose(tab);
         solutionFrames.remove(searchId);
     }

@@ -7,9 +7,9 @@ import com.samebug.clients.common.ui.component.solutions.IBugmateList;
 final class BugmateListController implements IBugmateList.Listener {
     final static Logger LOGGER = Logger.getInstance(BugmateListController.class);
 
-    final SolutionFrameController controller;
+    final SolutionsController controller;
 
-    public BugmateListController(final SolutionFrameController controller) {
+    public BugmateListController(final SolutionsController controller) {
         this.controller = controller;
 
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);

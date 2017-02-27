@@ -11,9 +11,9 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 
 final class MarkController implements IMarkButton.Listener {
     final static Logger LOGGER = Logger.getInstance(MarkController.class);
-    final SolutionFrameController controller;
+    final SolutionsController controller;
 
-    public MarkController(final SolutionFrameController controller) {
+    public MarkController(final SolutionsController controller) {
         this.controller = controller;
 
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
