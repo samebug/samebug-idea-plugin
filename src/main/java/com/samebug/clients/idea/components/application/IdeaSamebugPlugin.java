@@ -33,6 +33,7 @@ import com.samebug.clients.idea.controllers.TimedTasks;
 import com.samebug.clients.swing.ui.ColorUtil;
 import com.samebug.clients.swing.ui.FontRegistry;
 import com.samebug.clients.swing.ui.ImageUtil;
+import com.samebug.clients.swing.ui.SamebugIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -125,6 +126,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
 
         ColorUtil.install(new IdeaColorUtil());
         ImageUtil.install(new IdeaImageUtil(urlBuilder));
+        SamebugIcons.install(new IdeaSamebugIcons());
 
         checkAuthenticationInTheBackgroundWithCurrentConfig();
     }

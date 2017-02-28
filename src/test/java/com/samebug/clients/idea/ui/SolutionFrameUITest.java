@@ -5,6 +5,7 @@ import com.samebug.clients.common.ui.component.solutions.ISolutionFrame;
 import com.samebug.clients.swing.ui.ColorUtil;
 import com.samebug.clients.swing.ui.FontRegistry;
 import com.samebug.clients.swing.ui.ImageUtil;
+import com.samebug.clients.swing.ui.SamebugIcons;
 import com.samebug.clients.swing.ui.component.solutions.SolutionFrame;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -36,6 +37,7 @@ public class SolutionFrameUITest extends JDialog {
         FontRegistry.registerFonts();
         ColorUtil.install(new TestColorUtil());
         ImageUtil.install(new TestImageUtil());
+        SamebugIcons.install(new TestSamebugIcons());
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {

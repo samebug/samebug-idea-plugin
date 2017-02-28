@@ -19,9 +19,26 @@ import com.intellij.openapi.util.IconLoader;
 
 import javax.swing.*;
 
-final public class SamebugIcons {
-    public final static Icon alert = IconLoader.getIcon("/com/samebug/images/alert.png");
-    public final static Icon alertErrorBar = IconLoader.getIcon("/com/samebug/images/alertErrorBar.png");
+public abstract class SamebugIcons {
+    protected static SamebugIcons INSTANCE;
+
+    protected final static String alertPath = "/com/samebug/images/alert.png";
+    protected final static String alertErrorBarPath = "/com/samebug/images/alertErrorBar.png";
+
+    public static void install(SamebugIcons instance) {
+        assert INSTANCE == null : "SamebugIcons has already been installed";
+        INSTANCE = instance;
+    }
+
+    public static Icon alert() {
+        return INSTANCE.getImage(alertPath);
+    }
+
+    public static Icon alertErrorBar() {
+        return INSTANCE.getImage(alertErrorBarPath);
+    }
+
+    protected abstract Icon getImage(String path);
 
     public final static Icon twSamebug = IconLoader.getIcon("/com/samebug/toolwindow/samebug.png");
     public final static Icon twBolt = IconLoader.getIcon("/com/samebug/toolwindow/bolt.png");

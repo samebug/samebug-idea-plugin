@@ -103,7 +103,7 @@ public final class SolutionFrame extends ErrorBarPane implements ISolutionFrame 
 
     private class ErrorPanel extends TransparentPanel {
         public ErrorPanel(String description, String buttonLabel, MouseListener mouseListener) {
-            final JLabel alertImage = new JLabel(SamebugIcons.alert);
+            final JLabel alertImage = new JLabel(SamebugIcons.alert());
             final CenteredMultilineLabel label = new CenteredMultilineLabel();
             final SamebugButton button = new SamebugButton(buttonLabel, false);
             label.setText(description);

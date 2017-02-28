@@ -13,7 +13,7 @@ public class ErrorBar extends SamebugPanel {
 
         // TODO shadow border
         setLayout(new MigLayout("", "20[]10[]20", "15[]15"));
-        final JLabel alertIcon = new JLabel(SamebugIcons.alertErrorBar);
+        final JLabel alertIcon = new JLabel(SamebugIcons.alertErrorBar());
         final JLabel message = new JLabel(text);
         add(alertIcon, "cell 0 0");
         add(message, "cell 1 0");
