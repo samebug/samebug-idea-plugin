@@ -25,12 +25,12 @@ import com.samebug.clients.common.search.api.StackTraceListener;
 import com.samebug.clients.common.search.api.entities.SearchResults;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.search.matcher.StackTraceMatcher;
-import com.samebug.clients.common.services.ClientService;
 import com.samebug.clients.common.services.SearchService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.history.HistoryCardListener;
+import com.samebug.clients.swing.ui.SamebugBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

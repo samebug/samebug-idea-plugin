@@ -1,7 +1,7 @@
 package com.samebug.clients.idea.search.console;
 
 import com.samebug.clients.common.entities.search.RequestedSearch;
-import com.samebug.clients.idea.ui.SamebugIcons;
+import com.samebug.clients.swing.ui.SamebugIcons;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

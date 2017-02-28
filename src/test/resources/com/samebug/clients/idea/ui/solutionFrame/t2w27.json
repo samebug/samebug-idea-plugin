@@ -1,0 +1,433 @@
+{
+  "resultTabs": {
+    "cta": {
+      "usersWaitingHelp": 234
+    },
+    "webResults": {
+      "webHits": [
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 2,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Sqlite select statement results in an error when i open the intent",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 3,
+            "userMarkId": 1,
+            "userCanMark": false
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        }
+      ]
+    },
+    "tipResults": {
+      "tipHits": [
+        {
+          "message": "Download and insert the newest chrome driver to the lib folder",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Petra",
+          "createdByAvatarUrl": null,
+          "mark": {
+            "marks": 2,
+            "userMarkId": 1,
+            "userCanMark": true
+          }
+        },
+        {
+          "message": "Node package 'protractor' with selenium overrides the existring environment therefore we have to set the chromedriver's path explicitly",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "ZsoltVad",
+          "createdByAvatarUrl": null,
+          "mark": {
+            "marks": 1,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        }
+      ],
+      "bugmateList": {
+        "bugmateHits": [
+          {
+            "userId": 1,
+            "displayName": "Petra",
+            "avatarUrl": null,
+            "nSeen":11,
+            "lastSeen":"2017-01-01T00:00:00"
+          },
+          {
+            "userId": 1,
+            "displayName": "ZsoltVad",
+            "avatarUrl": null,
+            "nSeen":21,
+            "lastSeen":"2017-01-01T00:00:00"
+          },
+          {
+            "userId": 1,
+            "displayName": "rp",
+            "avatarUrl": null,
+            "nSeen":1,
+            "lastSeen":"2017-01-01T00:00:00"
+          },
+          {
+            "userId": 1,
+            "displayName": "devidegiannico",
+            "avatarUrl": null,
+            "nSeen":6,
+            "lastSeen":"2016-12-01T00:00:00"
+          }
+        ],
+        "numberOfOtherBugmates": 16,
+        "evenMoreExists": false
+      }
+    }
+  },
+  "profilePanel": {
+    "messages": 2,
+    "marks": 16,
+    "tips": 48,
+    "thanks": 15,
+    "name": "Adam",
+    "avatarUrl": null
+  },
+  "header": {
+    "title": "UnsupportedDriverException: Could not instantiate class"
+  }
+}

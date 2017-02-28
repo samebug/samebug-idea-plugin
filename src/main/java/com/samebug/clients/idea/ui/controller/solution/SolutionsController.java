@@ -28,7 +28,7 @@ import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.component.solutions.*;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.project.ToolWindowController;
-import com.samebug.clients.idea.ui.component.solutions.SolutionFrame;
+import com.samebug.clients.swing.ui.component.solutions.SolutionFrame;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.ide.PooledThreadExecutor;
 

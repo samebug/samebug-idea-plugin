@@ -22,8 +22,8 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.ProjectManager;
 import com.samebug.clients.common.services.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.ui.SamebugBundle;
-import com.samebug.clients.idea.ui.SamebugIcons;
+import com.samebug.clients.swing.ui.SamebugBundle;
+import com.samebug.clients.swing.ui.SamebugIcons;
 import com.samebug.clients.idea.ui.controller.ConfigDialog;
 
 final public class ConfigureAction extends AnAction implements DumbAware {

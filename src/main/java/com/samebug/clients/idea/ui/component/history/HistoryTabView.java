@@ -17,7 +17,7 @@ package com.samebug.clients.idea.ui.component.history;
 
 import com.intellij.openapi.ui.ex.MultiLineLabel;
 import com.intellij.util.messages.MessageBus;
-import com.samebug.clients.idea.ui.SamebugBundle;
+import com.samebug.clients.swing.ui.SamebugBundle;
 import com.samebug.clients.idea.ui.controller.history.HistoryCardListener;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
