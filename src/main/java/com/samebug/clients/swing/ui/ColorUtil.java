@@ -41,6 +41,8 @@ public abstract class ColorUtil  {
     public final static Color[] TipText = new Color[]{new Color(0x086a8b), new Color(0xDBEFFF)};
     public final static Color[] ScrollbarTrack = new Color[]{new Color(0xF5F5F5), new Color(0x2D2E2F)};
     public final static Color[] ScrollbarThumb = new Color[]{new Color(0xD5D5D5), new Color(0x484A4B)};
+    public final static Color[] FieldError = new Color[]{new Color(0xEA0200), new Color(0xF9241A)};
+    public final static Color[] ErrorBar = new Color[]{new Color(0xF8F4C8), new Color(0xF2EBAB)};
 
     public final static Colors[] LinkInteraction = new Colors[]{
             new Colors(new Color(0xFF8000), new Color(0xFEA144), new Color(0xED7700)),

@@ -1,6 +1,7 @@
 package com.samebug.clients.idea.components.application;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.samebug.clients.common.search.api.WebUrlBuilder;
 import com.samebug.clients.swing.ui.ImageUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,6 +22,8 @@ final class IdeaImageUtil extends ImageUtil {
     private final Hashtable<ScaledKey, BufferedImage> scaledCache = new Hashtable<ScaledKey, BufferedImage>();
     private final URL avatarPlaceholderUrl;
     private final BufferedImage avatarPlaceholder;
+
+    private final WebUrlBuilder urlBuilder;
 
     @Override
     @Nullable
@@ -84,7 +87,8 @@ final class IdeaImageUtil extends ImageUtil {
         }
     }
 
-    {
+    public IdeaImageUtil(WebUrlBuilder urlBuilder) {
+        this.urlBuilder = urlBuilder;
         URL tmpAvatarUrl = null;
         BufferedImage tmpAvatarImage = null;
         try {
@@ -102,7 +106,7 @@ final class IdeaImageUtil extends ImageUtil {
                 LOGGER.warn("Image " + imageUri + " was not found!");
             } else {
                 try {
-                    URL remoteUrl = IdeaSamebugPlugin.getInstance().urlBuilder.assets(imageUri);
+                    URL remoteUrl = urlBuilder.assets(imageUri);
                     BufferedImage image = ImageIO.read(imageBytes);
                     cache.put(remoteUrl, image);
                 } catch (MalformedURLException e) {

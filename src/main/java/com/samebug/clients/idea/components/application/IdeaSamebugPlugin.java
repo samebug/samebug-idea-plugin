@@ -24,18 +24,18 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.intellij.util.ui.UIUtil;
 import com.samebug.clients.common.search.api.WebUrlBuilder;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.*;
 import com.samebug.clients.idea.controllers.ConsoleSearchController;
 import com.samebug.clients.idea.controllers.SessionsController;
 import com.samebug.clients.idea.controllers.TimedTasks;
-import com.samebug.clients.swing.ui.*;
+import com.samebug.clients.swing.ui.ColorUtil;
+import com.samebug.clients.swing.ui.FontRegistry;
+import com.samebug.clients.swing.ui.ImageUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
@@ -124,7 +124,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         SessionsController sessionsController = new SessionsController(messageBus.connect(this), searchRequestService, searchRequestStore);
 
         ColorUtil.install(new IdeaColorUtil());
-        ImageUtil.install(new IdeaImageUtil());
+        ImageUtil.install(new IdeaImageUtil(urlBuilder));
 
         checkAuthenticationInTheBackgroundWithCurrentConfig();
     }

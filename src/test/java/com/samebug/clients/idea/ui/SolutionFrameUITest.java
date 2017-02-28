@@ -1,7 +1,6 @@
 package com.samebug.clients.idea.ui;
 
 import com.google.gson.*;
-import com.intellij.util.ui.UIUtil;
 import com.samebug.clients.common.ui.component.solutions.ISolutionFrame;
 import com.samebug.clients.swing.ui.ColorUtil;
 import com.samebug.clients.swing.ui.FontRegistry;
@@ -26,7 +25,8 @@ public class SolutionFrameUITest extends JDialog {
         stream.close();
 
         SolutionFrame sf = new SolutionFrame(null);
-        sf.setContent(model);
+        sf.loadingSucceeded(model);
+        sf.popupError("Bang!");
         JComponent contentPane = sf;
 
         setContentPane(contentPane);

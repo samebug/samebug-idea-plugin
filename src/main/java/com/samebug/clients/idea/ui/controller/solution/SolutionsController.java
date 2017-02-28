@@ -162,7 +162,7 @@ public final class SolutionsController implements Disposable {
                         ApplicationManager.getApplication().invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                view.setContent(model);
+                                view.loadingSucceeded(model);
                             }
                         });
                     } catch (IllegalStateException e) {
@@ -171,7 +171,7 @@ public final class SolutionsController implements Disposable {
                         ApplicationManager.getApplication().invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                view.setGenericError();
+                                view.loadingFailedWithGenericError();
                             }
                         });
                     } catch (InterruptedException e) {
@@ -180,7 +180,7 @@ public final class SolutionsController implements Disposable {
                         ApplicationManager.getApplication().invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                view.setGenericError();
+                                view.loadingFailedWithGenericError();
                             }
                         });
                     } catch (ExecutionException e) {
@@ -191,7 +191,7 @@ public final class SolutionsController implements Disposable {
                             ApplicationManager.getApplication().invokeLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    view.setGenericError();
+                                    view.loadingFailedWithGenericError();
                                 }
                             });
                         }
@@ -202,12 +202,12 @@ public final class SolutionsController implements Disposable {
                     ApplicationManager.getApplication().invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            if (e instanceof SamebugTimeout) view.setRetriableError();
-                            else if (e instanceof UserUnauthenticated) view.setAuthenticationError();
-                            else if (e instanceof UserUnauthorized) view.setAuthorizationError();
-                            else if (e instanceof UnsuccessfulResponseStatus && ((UnsuccessfulResponseStatus) e).statusCode == 500) view.setServerError();
-                            else if (e instanceof HttpError) view.setNetworkError();
-                            else view.setGenericError();
+                            if (e instanceof SamebugTimeout) view.loadingFailedWithRetriableError();
+                            else if (e instanceof UserUnauthenticated) view.loadingFailedWithAuthenticationError();
+                            else if (e instanceof UserUnauthorized) view.loadingFailedWithAuthorizationError();
+                            else if (e instanceof UnsuccessfulResponseStatus && ((UnsuccessfulResponseStatus) e).statusCode == 500) view.loadingFailedWithServerError();
+                            else if (e instanceof HttpError) view.loadingFailedWithNetworkError();
+                            else view.loadingFailedWithGenericError();
                         }
                     });
                 }
@@ -216,7 +216,7 @@ public final class SolutionsController implements Disposable {
     }
 
     @NotNull
-    public JPanel getControlPanel() {
+    public JComponent getControlPanel() {
         return (SolutionFrame) view;
     }
 

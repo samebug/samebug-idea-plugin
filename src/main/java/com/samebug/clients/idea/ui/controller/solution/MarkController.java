@@ -45,7 +45,13 @@ final class MarkController implements IMarkButton.Listener {
                     });
                 } catch (SamebugClientException e) {
                     LOGGER.warn("Mark failed", e);
-                    markButton.setError();
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            // TODO
+                            controller.view.popupError("Mark failed!");
+                        }
+                    });
                 }
             }
         });

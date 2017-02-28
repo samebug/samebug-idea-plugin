@@ -6,6 +6,8 @@ import com.samebug.clients.swing.ui.SamebugBundle;
 import com.samebug.clients.swing.ui.SamebugIcons;
 import com.samebug.clients.swing.ui.component.profile.ProfilePanel;
 import com.samebug.clients.swing.ui.component.util.button.SamebugButton;
+import com.samebug.clients.swing.ui.component.util.errorBarPane.ErrorBar;
+import com.samebug.clients.swing.ui.component.util.errorBarPane.ErrorBarPane;
 import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.swing.ui.component.util.multiline.CenteredMultilineLabel;
 import com.samebug.clients.swing.ui.component.util.panel.SamebugPanel;
@@ -18,77 +20,71 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public final class SolutionFrame extends SamebugPanel implements ISolutionFrame {
+public final class SolutionFrame extends ErrorBarPane implements ISolutionFrame {
     private Solutions solutions;
+    private final ErrorBar networkErrorBar;
+    private final ErrorBar authenticationErrorBar;
     private final MessageBus messageBus;
 
     public SolutionFrame(MessageBus messageBus) {
         this.messageBus = messageBus;
+        networkErrorBar = new ErrorBar(SamebugBundle.message("samebug.component.errorBar.network"));
+        authenticationErrorBar = new ErrorBar(SamebugBundle.message("samebug.component.errorBar.authentication"));
 
-        setLayout(new BorderLayout());
         setLoading();
     }
 
-    public void setAuthenticationError() {
-        removeAll();
-        add(new AuthenticationErrorPanel());
-        revalidate();
-        repaint();
+    public void loadingFailedWithAuthenticationError() {
+        addMainComponent(new AuthenticationErrorPanel());
     }
 
-    public void setAuthorizationError() {
-        removeAll();
-        add(new GeneralErrorPanel());
-        revalidate();
-        repaint();
+    public void loadingFailedWithAuthorizationError() {
+        addMainComponent(new GeneralErrorPanel());
     }
 
-    public void setRetriableError() {
-        removeAll();
-        add(new ConnectionErrorPanel());
-        revalidate();
-        repaint();
+    public void loadingFailedWithRetriableError() {
+        addMainComponent(new ConnectionErrorPanel());
     }
 
-    public void setNetworkError() {
-        removeAll();
-        add(new NetworkErrorPanel());
-        revalidate();
-        repaint();
+    public void loadingFailedWithNetworkError() {
+        addMainComponent(new NetworkErrorPanel());
     }
 
-    public void setServerError() {
-        removeAll();
-        add(new GeneralErrorPanel());
-        revalidate();
-        repaint();
+    public void loadingFailedWithServerError() {
+        addMainComponent(new GeneralErrorPanel());
     }
 
-    public void setGenericError() {
-        removeAll();
-        add(new GeneralErrorPanel());
-        revalidate();
-        repaint();
+    public void loadingFailedWithGenericError() {
+        addMainComponent(new GeneralErrorPanel());
     }
 
     public void setLoading() {
-        removeAll();
-        add(new SamebugLabel("loading"));
-        revalidate();
-        repaint();
+        addMainComponent(new SamebugLabel("loading"));
     }
 
-    public void setContent(Model model) {
+    public void loadingSucceeded(Model model) {
         solutions = new Solutions(model);
-        removeAll();
-        add(solutions.exceptionHeader, BorderLayout.NORTH);
-        add(solutions.tabs, BorderLayout.CENTER);
-        add(solutions.profilePanel, BorderLayout.SOUTH);
-        revalidate();
-        repaint();
+        addMainComponent(solutions);
     }
 
-    private final class Solutions {
+    public void showNetworkError() {
+        addErrorBar(networkErrorBar);
+    }
+
+    public void hideNetworkError() {
+        removeErrorBar(networkErrorBar);
+    }
+    public void showAuthenticationError() {
+        addErrorBar(authenticationErrorBar);
+    }
+    public void hideAuthenticationError() {
+        removeErrorBar(authenticationErrorBar);
+    }
+    public void popupError(String message) {
+        popupErrorBar(new ErrorBar(message));
+    }
+
+    private final class Solutions extends SamebugPanel {
         private final JPanel exceptionHeader;
         private final ResultTabs tabs;
         private final JPanel profilePanel;
@@ -97,6 +93,11 @@ public final class SolutionFrame extends SamebugPanel implements ISolutionFrame 
             exceptionHeader = new ExceptionHeaderPanel(messageBus, model.header);
             tabs = new ResultTabs(messageBus, model.resultTabs);
             profilePanel = new ProfilePanel(messageBus, model.profilePanel);
+
+            setLayout(new BorderLayout());
+            add(exceptionHeader, BorderLayout.NORTH);
+            add(tabs, BorderLayout.CENTER);
+            add(profilePanel, BorderLayout.SOUTH);
         }
     }
 

@@ -21,6 +21,7 @@ import javax.swing.*;
 
 final public class SamebugIcons {
     public final static Icon alert = IconLoader.getIcon("/com/samebug/images/alert.png");
+    public final static Icon alertErrorBar = IconLoader.getIcon("/com/samebug/images/alertErrorBar.png");
 
     public final static Icon twSamebug = IconLoader.getIcon("/com/samebug/toolwindow/samebug.png");
     public final static Icon twBolt = IconLoader.getIcon("/com/samebug/toolwindow/bolt.png");
