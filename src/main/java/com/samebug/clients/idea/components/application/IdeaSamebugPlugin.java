@@ -54,7 +54,6 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
 
     public WebUrlBuilder urlBuilder = new WebUrlBuilder(state.get().serverRoot);
     public ClientService clientService;
-    public HistoryService historyService;
     public ProfileStore profileStore;
     public ProfileService profileService;
     public SolutionStore solutionStore;
@@ -107,7 +106,6 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         connection = messageBus.connect(this);
         clientService = new ClientService(messageBus);
         clientService.configure(state.get().getNetworkConfig());
-        historyService = new HistoryService(messageBus, clientService);
         profileStore = new ProfileStore();
         profileService = new ProfileService(messageBus, clientService, profileStore);
         solutionStore = new SolutionStore();

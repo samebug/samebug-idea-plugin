@@ -1,12 +1,12 @@
 /**
  * Copyright 2017 Samebug, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,7 +29,6 @@ import com.samebug.clients.common.services.SearchService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.idea.ui.controller.history.HistoryCardListener;
 import com.samebug.clients.swing.ui.SamebugBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -111,18 +110,13 @@ final public class AnalyzeDialog extends DialogWrapper {
                 @Override
                 public void run() {
                     // TODO find out what does searchService do
+                    // TODO show some progress during the search, and close the dialog and open the tool window if the search was successful.
                     try {
                         SearchResults result = searchService.search(trace);
                         try {
                             final int searchId = result.getSearchId();
-                            // TODO of course history listener has nothing to do here
-                            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ApplicationManager.getApplication().getMessageBus().syncPublisher(HistoryCardListener.TOPIC).titleClick(searchId);
-                                }
-                            });
-
+                            // TODO open solutions tab
+                            BrowserUtil.browse(IdeaSamebugPlugin.getInstance().urlBuilder.search(searchId));
                         } catch (java.lang.Exception e1) {
                             LOGGER.warn("Failed to open browser for search " + result.getSearchId(), e1);
                         }

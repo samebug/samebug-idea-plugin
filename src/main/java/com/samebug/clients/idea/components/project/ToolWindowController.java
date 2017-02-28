@@ -27,16 +27,14 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.services.HistoryService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.CloseListener;
 import com.samebug.clients.idea.messages.FocusListener;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
-import com.samebug.clients.swing.ui.SamebugBundle;
-import com.samebug.clients.swing.ui.SamebugIcons;
-import com.samebug.clients.idea.ui.controller.history.HistoryFrameController;
+import com.samebug.clients.idea.ui.controller.authentication.AuthenticationController;
 import com.samebug.clients.idea.ui.controller.intro.IntroFrameController;
 import com.samebug.clients.idea.ui.controller.solution.SolutionsController;
+import com.samebug.clients.swing.ui.SamebugBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,7 +52,7 @@ final public class ToolWindowController implements FocusListener, CloseListener,
     @Nullable
     IntroFrameController introFrame;
     @Nullable
-    HistoryFrameController historyFrame;
+    AuthenticationController authenticationFrame;
     @NotNull
     final ConcurrentMap<Integer, SolutionsController> solutionFrames;
 
@@ -89,28 +87,18 @@ final public class ToolWindowController implements FocusListener, CloseListener,
 
     public void initToolWindow(@NotNull ToolWindow toolWindow) {
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-        HistoryService historyService = plugin.historyService;
 
-        if (historyService == null) {
-            LOGGER.error("HistoryService was not initialized!");
+        introFrame = new IntroFrameController(this, project);
+        authenticationFrame = new AuthenticationController(this, project);
+
+        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+        Content content;
+        if (plugin.getState().apiKey == null) {
+            content = contentFactory.createContent(authenticationFrame.getControlPanel(), SamebugBundle.message("samebug.toolwindow.authentication.tabName"), false);
         } else {
-            introFrame = new IntroFrameController(this, project);
-            historyFrame = new HistoryFrameController(this, project, historyService);
-            ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-            Content content = contentFactory.createContent(historyFrame.getControlPanel(), SamebugBundle.message("samebug.toolwindow.history.tabName"), false);
-            toolWindow.getContentManager().addContent(content);
+            content = contentFactory.createContent(introFrame.getControlPanel(), SamebugBundle.message("samebug.toolwindow.intro.tabName"), false);
         }
-    }
-
-    @Override
-    public void focusOnIntro() {
-        ApplicationManager.getApplication().assertIsDispatchThread();
-        final ToolWindow toolWindow = getToolWindow();
-        final ContentManager toolwindowCM = toolWindow.getContentManager();
-        assert introFrame != null;
-        final Content content = toolwindowCM.getContent(introFrame.getControlPanel());
-        if (content != null) toolwindowCM.setSelectedContent(content);
-        toolWindow.show(null);
+        toolWindow.getContentManager().addContent(content);
     }
 
     @Override
@@ -157,7 +145,7 @@ final public class ToolWindowController implements FocusListener, CloseListener,
     @Override
     public void dispose() {
         if (introFrame != null) Disposer.dispose(introFrame);
-        if (historyFrame != null) Disposer.dispose(historyFrame);
+        if (authenticationFrame != null) Disposer.dispose(authenticationFrame);
 
         for (Integer searchId : solutionFrames.keySet()) {
             closeSolutionFrame(searchId);
@@ -169,18 +157,6 @@ final public class ToolWindowController implements FocusListener, CloseListener,
         SolutionsController tab = solutionFrames.get(searchId);
         if (tab != null) Disposer.dispose(tab);
         solutionFrames.remove(searchId);
-    }
-
-    public void changeToolwindowIcon(boolean hasNewExceptions) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
-        ToolWindow toolWindow = getToolWindow();
-        if (toolWindow != null) {
-            if (hasNewExceptions) {
-                toolWindow.setIcon(SamebugIcons.twBolt);
-            } else {
-                toolWindow.setIcon(SamebugIcons.twSamebug);
-            }
-        }
     }
 
     private ToolWindow getToolWindow() {
