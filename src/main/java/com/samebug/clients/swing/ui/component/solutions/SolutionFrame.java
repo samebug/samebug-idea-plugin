@@ -6,6 +6,7 @@ import com.samebug.clients.swing.ui.SamebugBundle;
 import com.samebug.clients.swing.ui.SamebugIcons;
 import com.samebug.clients.swing.ui.component.profile.ProfilePanel;
 import com.samebug.clients.swing.ui.component.util.button.SamebugButton;
+import com.samebug.clients.swing.ui.component.util.errorBarPane.BasicFrame;
 import com.samebug.clients.swing.ui.component.util.errorBarPane.ErrorBar;
 import com.samebug.clients.swing.ui.component.util.errorBarPane.ErrorBarPane;
 import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
@@ -20,16 +21,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public final class SolutionFrame extends ErrorBarPane implements ISolutionFrame {
+public final class SolutionFrame extends BasicFrame implements ISolutionFrame {
     private Solutions solutions;
-    private final ErrorBar networkErrorBar;
-    private final ErrorBar authenticationErrorBar;
     private final MessageBus messageBus;
 
     public SolutionFrame(MessageBus messageBus) {
         this.messageBus = messageBus;
-        networkErrorBar = new ErrorBar(SamebugBundle.message("samebug.component.errorBar.network"));
-        authenticationErrorBar = new ErrorBar(SamebugBundle.message("samebug.component.errorBar.authentication"));
 
         setLoading();
     }
@@ -65,23 +62,6 @@ public final class SolutionFrame extends ErrorBarPane implements ISolutionFrame 
     public void loadingSucceeded(Model model) {
         solutions = new Solutions(model);
         addMainComponent(solutions);
-    }
-
-    public void showNetworkError() {
-        addErrorBar(networkErrorBar);
-    }
-
-    public void hideNetworkError() {
-        removeErrorBar(networkErrorBar);
-    }
-    public void showAuthenticationError() {
-        addErrorBar(authenticationErrorBar);
-    }
-    public void hideAuthenticationError() {
-        removeErrorBar(authenticationErrorBar);
-    }
-    public void popupError(String message) {
-        popupErrorBar(new ErrorBar(message));
     }
 
     private final class Solutions extends SamebugPanel {

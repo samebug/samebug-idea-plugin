@@ -3,8 +3,11 @@ package com.samebug.clients.idea.ui.controller.intro;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.messages.MessageBus;
+import com.samebug.clients.common.ui.component.intro.IIntroFrame;
 import com.samebug.clients.idea.components.project.ToolWindowController;
-import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
+import com.samebug.clients.idea.ui.controller.ConnectionStatusController;
+import com.samebug.clients.swing.ui.component.intro.IntroFrame;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -12,27 +15,29 @@ import javax.swing.*;
 // TODO
 public class IntroFrameController implements Disposable {
     final static Logger LOGGER = Logger.getInstance(IntroFrameController.class);
-    @NotNull
     final ToolWindowController twc;
-    @NotNull
-    final Project project;
+    final Project myProject;
+    final ConnectionStatusController connectionStatusController;
 
     @NotNull
-    final JComponent view;
+    final IIntroFrame view;
 
-    public IntroFrameController(@NotNull ToolWindowController twc, @NotNull Project project) {
+    public IntroFrameController(ToolWindowController twc, Project project) {
         this.twc = twc;
-        this.project = project;
-        this.view = new SamebugLabel("TODO intro panel");
+        this.myProject = project;
+        this.view = new IntroFrame();
+
+        MessageBus messageBus = myProject.getMessageBus();
+        connectionStatusController = new ConnectionStatusController(view, messageBus);
     }
 
     @NotNull
     public JComponent getControlPanel() {
-        return view;
+        return (IntroFrame) view;
     }
 
     @Override
     public void dispose() {
-
+        connectionStatusController.dispose();
     }
 }

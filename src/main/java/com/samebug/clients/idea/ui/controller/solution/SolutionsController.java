@@ -20,6 +20,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.concurrency.FixedFuture;
+import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.search.api.WebUrlBuilder;
 import com.samebug.clients.common.search.api.entities.*;
 import com.samebug.clients.common.search.api.exceptions.*;
@@ -28,6 +29,7 @@ import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.component.solutions.*;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.project.ToolWindowController;
+import com.samebug.clients.idea.ui.controller.ConnectionStatusController;
 import com.samebug.clients.swing.ui.component.solutions.SolutionFrame;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.ide.PooledThreadExecutor;
@@ -46,6 +48,7 @@ public final class SolutionsController implements Disposable {
     final ToolWindowController twc;
     final Project myProject;
     final int searchId;
+    final ConnectionStatusController connectionStatusController;
 
     final ISolutionFrame view;
 
@@ -71,7 +74,9 @@ public final class SolutionsController implements Disposable {
         this.myProject = project;
         this.searchId = searchId;
 
-        view = new SolutionFrame(myProject.getMessageBus());
+        MessageBus messageBus = myProject.getMessageBus();
+        view = new SolutionFrame(messageBus);
+        connectionStatusController = new ConnectionStatusController(view, messageBus);
 
         viewController = new ViewController(this);
         exceptionHeaderController = new ExceptionHeaderController(this);
@@ -222,7 +227,7 @@ public final class SolutionsController implements Disposable {
 
     @Override
     public void dispose() {
-
+        connectionStatusController.dispose();
     }
 
     IMarkButton.Model convertMarkResponse(MarkResponse response) {

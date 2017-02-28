@@ -27,7 +27,7 @@ public class SolutionFrameUITest extends JDialog {
 
         SolutionFrame sf = new SolutionFrame(null);
         sf.loadingSucceeded(model);
-        sf.popupError("Bang!");
+        sf.showAuthenticationError();
         JComponent contentPane = sf;
 
         setContentPane(contentPane);

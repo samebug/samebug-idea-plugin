@@ -2,8 +2,9 @@ package com.samebug.clients.common.ui.component.solutions;
 
 import com.intellij.util.messages.Topic;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
+import com.samebug.clients.common.ui.component.util.IFrame;
 
-public interface ISolutionFrame {
+public interface ISolutionFrame extends IFrame {
     void setLoading();
     void loadingSucceeded(Model model);
     void loadingFailedWithAuthenticationError();
@@ -12,12 +13,6 @@ public interface ISolutionFrame {
     void loadingFailedWithNetworkError();
     void loadingFailedWithServerError();
     void loadingFailedWithGenericError();
-
-    void showNetworkError();
-    void hideNetworkError();
-    void showAuthenticationError();
-    void hideAuthenticationError();
-    void popupError(String message);
 
     final class Model {
         public final IExceptionHeaderPanel.Model header;
