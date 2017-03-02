@@ -17,7 +17,8 @@ public class ErrorBarPane extends JLayeredPane {
 
     protected Component mainComponent;
     // TODO probably we will need multiple error bars in a vertical flow
-    protected Component errorBar;
+    protected ErrorBar errorBar;
+    protected Timer timer;
 
     private Color[] backgroundColors;
 
@@ -33,6 +34,13 @@ public class ErrorBarPane extends JLayeredPane {
             }
         });
 
+        timer = new Timer(ShowPopupForMillis, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeErrorBar(errorBar);
+            }
+        });
+        timer.setRepeats(false);
         updateUI();
     }
 
@@ -56,16 +64,16 @@ public class ErrorBarPane extends JLayeredPane {
     }
 
     public void popupErrorBar(final ErrorBar c) {
-        addErrorBar(c);
-        // TODO not sure if it will be garbage collected properly, or if there is any side effects
-        Timer timer = new Timer(ShowPopupForMillis, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                removeErrorBar(c);
-            }
-        });
-        timer.setRepeats(false);
-        timer.start();
+        if (errorBar != null && !timer.isRunning()) {
+            // if there is a non-temporary popup, keep that
+            return;
+        } else {
+            // if there is already a temporary popup, remove that and show this new one
+            // if there is no popup, also show the new one
+            timer.stop();
+            addErrorBar(c);
+            timer.restart();
+        }
     }
 
     public void removeErrorBar() {
@@ -74,6 +82,7 @@ public class ErrorBarPane extends JLayeredPane {
             revalidate();
             repaint();
         }
+        errorBar = null;
     }
 
     public void removeErrorBar(ErrorBar c) {
@@ -82,6 +91,7 @@ public class ErrorBarPane extends JLayeredPane {
             revalidate();
             repaint();
         }
+        errorBar = null;
     }
 
     protected void repositionMainComponent() {

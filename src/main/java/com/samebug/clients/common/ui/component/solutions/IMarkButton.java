@@ -6,7 +6,6 @@ import org.jetbrains.annotations.Nullable;
 public interface IMarkButton {
 
     void setLoading();
-    void setError();
     void update(Model model);
 
     final class Model {

@@ -81,10 +81,6 @@ public final class MarkButton extends SamebugButton implements IMarkButton {
         markLabel.update();
     }
 
-    public void setError() {
-        update(model);
-    }
-
     @Override
     protected void paintContent(Graphics2D g2) {
         Font x = markLabel.getFont();
