@@ -389,29 +389,29 @@
             "userId": 1,
             "displayName": "Petra",
             "avatarUrl": null,
-            "nSeen":11,
-            "lastSeen":"2017-01-01T00:00:00"
+            "nSeen": 11,
+            "lastSeen": "2017-01-01T00:00:00"
           },
           {
             "userId": 1,
             "displayName": "ZsoltVad",
             "avatarUrl": null,
-            "nSeen":21,
-            "lastSeen":"2017-01-01T00:00:00"
+            "nSeen": 21,
+            "lastSeen": "2017-01-01T00:00:00"
           },
           {
             "userId": 1,
             "displayName": "rp",
             "avatarUrl": null,
-            "nSeen":1,
-            "lastSeen":"2017-01-01T00:00:00"
+            "nSeen": 1,
+            "lastSeen": "2017-01-01T00:00:00"
           },
           {
             "userId": 1,
             "displayName": "devidegiannico",
             "avatarUrl": null,
-            "nSeen":6,
-            "lastSeen":"2016-12-01T00:00:00"
+            "nSeen": 6,
+            "lastSeen": "2016-12-01T00:00:00"
           }
         ],
         "numberOfOtherBugmates": 16,

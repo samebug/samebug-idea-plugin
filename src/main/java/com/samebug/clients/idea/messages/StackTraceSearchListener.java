@@ -17,8 +17,8 @@ package com.samebug.clients.idea.messages;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.common.search.api.entities.SearchResults;
 import com.samebug.clients.common.entities.search.SearchInfo;
+import com.samebug.clients.common.search.api.entities.SearchResults;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 
 public interface StackTraceSearchListener {

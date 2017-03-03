@@ -1,3 +1,18 @@
+/**
+ * Copyright 2017 Samebug, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.samebug.clients.swing.ui.component.util.scrollPane;
 
 import com.samebug.clients.swing.ui.ColorUtil;
@@ -90,7 +105,7 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
 
     @Override
     public void installUI(JComponent c) {
-        myScrollBar = (JScrollBar)c;
+        myScrollBar = (JScrollBar) c;
         myScrollBar.setFocusable(false);
         myScrollBar.addMouseListener(myListener);
         myScrollBar.addMouseMotionListener(myListener);
@@ -134,7 +149,7 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
 
             // showing the track only when the area is actually scrollable (not the whole content is showed)
             if (myThumbBounds.width > 0 && myThumbBounds.height > 0) {
-                paintTrack((Graphics2D)g, bounds.x, bounds.y, bounds.width, bounds.height, c);
+                paintTrack((Graphics2D) g, bounds.x, bounds.y, bounds.width, bounds.height, c);
             }
 
             myTrackBounds.setBounds(bounds);
@@ -142,7 +157,7 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
 
             // show the thumb only when the area is actually scrollable (not the whole content is showed)
             if (myThumbBounds.width > 0 && myThumbBounds.height > 0) {
-                paintThumb((Graphics2D)g, myThumbBounds.x, myThumbBounds.y, myThumbBounds.width, myThumbBounds.height, c);
+                paintThumb((Graphics2D) g, myThumbBounds.x, myThumbBounds.y, myThumbBounds.width, myThumbBounds.height, c);
             }
         }
     }
@@ -157,28 +172,24 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
         int range = max - min;
         if (range <= 0) {
             myThumbBounds.setBounds(0, 0, 0, 0);
-        }
-        else if (VERTICAL == myScrollBar.getOrientation()) {
+        } else if (VERTICAL == myScrollBar.getOrientation()) {
             int extent = myScrollBar.getVisibleAmount();
             int height = Math.max(convert(myTrackBounds.height, extent, range), 2 * getThickness());
             if (myTrackBounds.height <= height) {
                 myThumbBounds.setBounds(0, 0, 0, 0);
-            }
-            else {
+            } else {
                 value = getValue();
                 int maxY = myTrackBounds.y + myTrackBounds.height - height;
                 int y = (value < max - extent) ? convert(myTrackBounds.height - height, value - min, range - extent) : maxY;
                 myThumbBounds.setBounds(myTrackBounds.x, adjust(y, myTrackBounds.y, maxY), myTrackBounds.width, height);
                 if (myOldValue != value) onThumbMove();
             }
-        }
-        else {
+        } else {
             int extent = myScrollBar.getVisibleAmount();
             int width = Math.max(convert(myTrackBounds.width, extent, range), 2 * getThickness());
             if (myTrackBounds.width <= width) {
                 myThumbBounds.setBounds(0, 0, 0, 0);
-            }
-            else {
+            } else {
                 value = getValue();
                 int maxX = myTrackBounds.x + myTrackBounds.width - width;
                 int x = (value < max - extent) ? convert(myTrackBounds.width - width, value - min, range - extent) : maxX;
@@ -199,7 +210,7 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
      * It is necessary to use floating point calculation to avoid integer overflow.
      */
     private static int convert(double newRange, double oldValue, double oldRange) {
-        return (int)(.5 + newRange * oldValue / oldRange);
+        return (int) (.5 + newRange * oldValue / oldRange);
     }
 
     private static int adjust(int value, int min, int max) {
@@ -219,8 +230,7 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
                 if (!isOverTrack) onTrackHover(isOverTrack = true);
                 boolean hover = isThumbContains(x, y);
                 if (isOverThumb != hover) onThumbHover(isOverThumb = hover);
-            }
-            else {
+            } else {
                 updateMouseExit();
             }
         }
@@ -235,7 +245,7 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
             // redispatch current event to the view
             Container parent = myScrollBar.getParent();
             if (parent instanceof JScrollPane) {
-                JScrollPane pane = (JScrollPane)parent;
+                JScrollPane pane = (JScrollPane) parent;
                 Component view = pane.getViewport().getView();
 //                if (view != null) view.dispatchEvent(MouseEventAdapter.convert(event, view));
             }
@@ -260,22 +270,19 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
                 // pressed on the thumb
                 myOffset = vertical ? (myMouseY - myThumbBounds.y) : (myMouseX - myThumbBounds.x);
                 isDragging = true;
-            }
-            else if (isTrackContains(myMouseX, myMouseY)) {
+            } else if (isTrackContains(myMouseX, myMouseY)) {
                 // pressed on the track
                 if (isAbsolutePositioning(event)) {
                     myOffset = (vertical ? myThumbBounds.height : myThumbBounds.width) / 2;
                     isDragging = true;
                     setValueFrom(event);
-                }
-                else {
+                } else {
                     myScrollTimer.stop();
                     isDragging = false;
                     if (VERTICAL == myScrollBar.getOrientation()) {
                         int y = myThumbBounds.isEmpty() ? myScrollBar.getHeight() / 2 : myThumbBounds.y;
                         isReversed = myMouseY < y;
-                    }
-                    else {
+                    } else {
                         int x = myThumbBounds.isEmpty() ? myScrollBar.getWidth() / 2 : myThumbBounds.x;
                         isReversed = myMouseX < x;
                         if (!myScrollBar.getComponentOrientation().isLeftToRight()) {
@@ -309,8 +316,7 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
             if (myThumbBounds.isEmpty() || SwingUtilities.isRightMouseButton(event)) return;
             if (isDragging) {
                 setValueFrom(event);
-            }
-            else {
+            } else {
                 myMouseX = event.getX();
                 myMouseY = event.getY();
                 updateMouse(myMouseX, myMouseY);
@@ -335,8 +341,7 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
         public void actionPerformed(ActionEvent event) {
             if (myScrollBar == null) {
                 myScrollTimer.stop();
-            }
-            else {
+            } else {
                 scroll(isReversed);
                 if (!myThumbBounds.isEmpty()) {
                     if (isReversed ? !isMouseBeforeThumb() : !isMouseAfterThumb()) {
@@ -372,8 +377,8 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
         public void propertyChange(PropertyChangeEvent event) {
             String name = event.getPropertyName();
             if ("model" == name) {
-                BoundedRangeModel oldModel = (BoundedRangeModel)event.getOldValue();
-                BoundedRangeModel newModel = (BoundedRangeModel)event.getNewValue();
+                BoundedRangeModel oldModel = (BoundedRangeModel) event.getOldValue();
+                BoundedRangeModel newModel = (BoundedRangeModel) event.getNewValue();
                 oldModel.removeChangeListener(this);
                 newModel.addChangeListener(this);
             }
@@ -402,8 +407,7 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
                     onThumbMove();
                     repaint(myThumbBounds.x, minY, myThumbBounds.width, maxY - minY);
                 }
-            }
-            else {
+            } else {
                 thumbMin = myTrackBounds.x;
                 thumbMax = myTrackBounds.x + myTrackBounds.width - myThumbBounds.width;
                 thumbPos = Math.min(thumbMax, Math.max(thumbMin, (x - myOffset)));
@@ -422,8 +426,7 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
             boolean isDefaultOrientation = VERTICAL == myScrollBar.getOrientation() || myScrollBar.getComponentOrientation().isLeftToRight();
             if (thumbPos == thumbMax) {
                 myScrollBar.setValue(isDefaultOrientation ? valueMax : valueMin);
-            }
-            else {
+            } else {
                 int valueRange = valueMax - valueMin;
                 int thumbRange = thumbMax - thumbMin;
                 int thumbValue = isDefaultOrientation
@@ -485,8 +488,7 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
 
             if (delta > 0 && newValue < oldValue) {
                 newValue = myScrollBar.getMaximum();
-            }
-            else if (delta < 0 && newValue > oldValue) {
+            } else if (delta < 0 && newValue > oldValue) {
                 newValue = myScrollBar.getMinimum();
             }
             if (oldValue != newValue) {

@@ -46,4 +46,9 @@ public final class DebugSessionInfo {
             return id.equals(rhs.id);
         } else return false;
     }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

@@ -1,12 +1,12 @@
 /**
  * Copyright 2017 Samebug, Inc.
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,8 +42,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
     As there are multiple threads involved in this story, take extreme care when you modify something.
     The most important thing is to make sure that if you are on the EDT, that code must be able to execute fast (under 100 millis).
-    This means e.g. that you can't search for the stacktraces in the document text in the EDT. On the other hand, when you create the markers on the gutter on the EDT, you cannot assume
-    that the content of the document is still the same.
+    This means e.g. that you can't search for the stacktraces in the document text in the EDT. On the other hand, when you create the markers on the gutter on the EDT,
+    you cannot assume that the content of the document is still the same.
 
     There are a few assumptions safe to make:
      - documentChanged is called on the Event Dispatcher Thread
@@ -51,13 +51,15 @@ import java.util.concurrent.ConcurrentHashMap;
      - when newSearchRequest is called, the SearchRequestService is already called, so this request was inserted to the SearchRequestStore already. However, it does not mean that
      this request is PRESENT in the SearchRequestStore, as it can be already deleted by an other thread.
      - the same is true for the rest of the search related methods (first the service is called, than this ConsoleWatcher
-     - documentChange is called relatively rare. When a lot of things are written to the console, it will not trigger for every character or every line, but only for a few times for chunck of new text.
+     - documentChange is called relatively rare. When a lot of things are written to the console, it will not trigger for every character or every line,
+      but only for a few times for chunck of new text.
 
     There are a few assumptions you would think to be safe, but are actually not true:
      - the content of the document is not append-only. It has a buffer with limited size, and the first characters are getting removed when the limit is reached (rotating).
      - the content of the console is updated on the EDT, but the searches are parsed in a background thread from an other stream. It means that when newSearchRequest is triggered
      with a stacktrace, that stacktrace might or might not be present on the console
-     - nothing guarantees that newSearchRequest will be triggered before savedSearch for the same request. Under higher load (50+ stacktrace) it happens to be out of order quite frequently.
+     - nothing guarantees that newSearchRequest will be triggered before savedSearch for the same request.
+      Under higher load (50+ stacktrace) it happens to be out of order quite frequently.
 
 
      TODO: it has bugs because it assumes the order of search-related calls.
@@ -223,7 +225,8 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
                         // We have not found the stacktrace in the content of the console.
                         // Probably an other process wrote something in between the lines of the trace, or it was rolled over when exceeding console buffer capacity.
                         //searchRequestStore.removeRequest(requestId);
-                        // UPDATE console content can change due to filters. If we remove the search just because if was not found once, we will fail to find it later, when the filter is turned off.
+                        // UPDATE console content can change due to filters.
+                        // If we remove the search just because if was not found once, we will fail to find it later, when the filter is turned off.
                     }
                 }
             }
@@ -263,6 +266,7 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
         else mark = null;
         return mark;
     }
+
     private RangeHighlighter addMarkerAtOffset(int offset, SearchMark mark) {
         ApplicationManager.getApplication().assertIsDispatchThread();
         final Document document = editor.getDocument();
@@ -276,8 +280,7 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
             highlighter = markupModel.addLineHighlighter(line, HighlighterLayer.ADDITIONAL_SYNTAX, null);
             highlighter.setGutterIconRenderer(mark);
             return highlighter;
-        }
-        else {
+        } else {
             return null;
         }
     }

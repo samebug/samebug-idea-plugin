@@ -33,7 +33,8 @@ public final class Source {
         return icon;
     }
 
-    public Source() {}
+    public Source() {
+    }
 
     public Source(@NotNull Source rhs) {
         this(rhs.name, rhs.icon);

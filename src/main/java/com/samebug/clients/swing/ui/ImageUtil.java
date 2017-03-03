@@ -1,12 +1,12 @@
 /**
  * Copyright 2017 Samebug, Inc.
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,37 +33,37 @@ public abstract class ImageUtil {
 
     @Nullable
     public static Image getAvatarPlaceholder() {
-        return INSTANCE._getAvatarPlaceholder();
+        return INSTANCE.internalGetAvatarPlaceholder();
     }
 
     @Nullable
     public static BufferedImage getAvatarPlaceholder(int width, int height) {
-        return INSTANCE._getAvatarPlaceholder(width, height);
+        return INSTANCE.internalGetAvatarPlaceholder(width, height);
     }
 
     @Nullable
     public static BufferedImage get(@NotNull URL url) {
-        return INSTANCE._get(url);
+        return INSTANCE.internalGet(url);
     }
 
     @Nullable
     public static BufferedImage getScaled(@NotNull URL url, int width, int height) {
-        return INSTANCE._getScaled(url, width, height);
+        return INSTANCE.internalGetScaled(url, width, height);
     }
 
     public static void loadImages(@NotNull final Collection<URL> sources) {
-        INSTANCE._loadImages(sources);
+        INSTANCE.internalLoadImages(sources);
     }
 
-    protected abstract void _loadImages(@NotNull final Collection<URL> sources);
+    protected abstract void internalLoadImages(@NotNull final Collection<URL> sources);
 
-    protected abstract BufferedImage _getScaled(@NotNull URL url, int width, int height);
+    protected abstract BufferedImage internalGetScaled(@NotNull URL url, int width, int height);
 
-    protected abstract BufferedImage _get(@NotNull URL url);
+    protected abstract BufferedImage internalGet(@NotNull URL url);
 
-    protected abstract BufferedImage _getAvatarPlaceholder(int width, int height);
+    protected abstract BufferedImage internalGetAvatarPlaceholder(int width, int height);
 
-    protected abstract Image _getAvatarPlaceholder();
+    protected abstract Image internalGetAvatarPlaceholder();
 
     protected static final String[] cachedImages = {
             "images/sources/alfresco.png",
@@ -160,22 +160,22 @@ public abstract class ImageUtil {
      * Convenience method that returns a scaled instance of the
      * provided {@code BufferedImage}.
      *
-     * @param img the original image to be scaled
-     * @param targetWidth the desired width of the scaled instance,
-     * in pixels
-     * @param targetHeight the desired height of the scaled instance,
-     * in pixels
-     * @param hint one of the rendering hints that corresponds to
-     * {@code RenderingHints.KEY_INTERPOLATION} (e.g.
-     * {@code RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR},
-     * {@code RenderingHints.VALUE_INTERPOLATION_BILINEAR},
-     * {@code RenderingHints.VALUE_INTERPOLATION_BICUBIC})
+     * @param img           the original image to be scaled
+     * @param targetWidth   the desired width of the scaled instance,
+     *                      in pixels
+     * @param targetHeight  the desired height of the scaled instance,
+     *                      in pixels
+     * @param hint          one of the rendering hints that corresponds to
+     *                      {@code RenderingHints.KEY_INTERPOLATION} (e.g.
+     *                      {@code RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR},
+     *                      {@code RenderingHints.VALUE_INTERPOLATION_BILINEAR},
+     *                      {@code RenderingHints.VALUE_INTERPOLATION_BICUBIC})
      * @param higherQuality if true, this method will use a multi-step
-     * scaling technique that provides higher quality than the usual
-     * one-step technique (only useful in downscaling cases, where
-     * {@code targetWidth} or {@code targetHeight} is
-     * smaller than the original dimensions, and generally only when
-     * the {@code BILINEAR} hint is specified)
+     *                      scaling technique that provides higher quality than the usual
+     *                      one-step technique (only useful in downscaling cases, where
+     *                      {@code targetWidth} or {@code targetHeight} is
+     *                      smaller than the original dimensions, and generally only when
+     *                      the {@code BILINEAR} hint is specified)
      * @return a scaled version of the original {@code BufferedImage}
      */
     protected static BufferedImage getScaledInstance(BufferedImage img, int targetWidth, int targetHeight, Object hint, boolean higherQuality) {

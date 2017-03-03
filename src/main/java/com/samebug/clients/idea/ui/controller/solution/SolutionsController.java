@@ -1,12 +1,12 @@
 /**
  * Copyright 2017 Samebug, Inc.
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,7 +35,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.swing.*;
-import java.lang.Exception;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,25 +100,25 @@ public final class SolutionsController implements Disposable {
         // NOTE I use PooledThreadExecutor.INSTANCE instead of executeOnPooledThread because that logs and swallows the error in the Future
         final Future<Solutions> solutionsTask = PooledThreadExecutor.INSTANCE.submit(new Callable<Solutions>() {
             @Override
-            public Solutions call() throws Exception {
+            public Solutions call() throws SamebugClientException {
                 return solutionService.loadSolutions(searchId);
             }
         });
         final Future<BugmatesResult> bugmatesTask = PooledThreadExecutor.INSTANCE.submit(new Callable<BugmatesResult>() {
             @Override
-            public BugmatesResult call() throws Exception {
+            public BugmatesResult call() throws SamebugClientException {
                 return bugmateService.loadBugmates(searchId);
             }
         });
         final Future<UserInfo> userInfoTask = PooledThreadExecutor.INSTANCE.submit(new Callable<UserInfo>() {
             @Override
-            public UserInfo call() throws Exception {
+            public UserInfo call() throws SamebugClientException {
                 return profileService.loadUserInfo();
             }
         });
         final Future<UserStats> userStatsTask = PooledThreadExecutor.INSTANCE.submit(new Callable<UserStats>() {
             @Override
-            public UserStats call() throws Exception {
+            public UserStats call() throws SamebugClientException {
                 return profileService.loadUserStats();
             }
         });
@@ -130,13 +129,13 @@ public final class SolutionsController implements Disposable {
     public void loadLazy() {
         final Future<Solutions> solutionsTask = PooledThreadExecutor.INSTANCE.submit(new Callable<Solutions>() {
             @Override
-            public Solutions call() throws Exception {
+            public Solutions call() throws SamebugClientException {
                 return solutionService.loadSolutions(searchId);
             }
         });
         final Future<BugmatesResult> bugmatesTask = PooledThreadExecutor.INSTANCE.submit(new Callable<BugmatesResult>() {
             @Override
-            public BugmatesResult call() throws Exception {
+            public BugmatesResult call() throws SamebugClientException {
                 return bugmateService.loadBugmates(searchId);
             }
         });
@@ -153,7 +152,10 @@ public final class SolutionsController implements Disposable {
         load(solutionsTask, bugmatesTask, userInfoTask, userStatsTask);
     }
 
-    private void load(final Future<Solutions> solutionsTask, final Future<BugmatesResult> bugmatesTask, final Future<UserInfo> userInfoTask, final Future<UserStats> userStatsTask) {
+    private void load(final Future<Solutions> solutionsTask,
+                      final Future<BugmatesResult> bugmatesTask,
+                      final Future<UserInfo> userInfoTask,
+                      final Future<UserStats> userStatsTask) {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
@@ -252,7 +254,11 @@ public final class SolutionsController implements Disposable {
 
             String createdBy = null;
             if (externalSolution.getAuthor() != null) createdBy = externalSolution.getAuthor().getName();
-            IWebHit.Model webHit = new IWebHit.Model(externalSolution.getTitle(), externalSolution.getUrl(), externalHit.getSolutionId(), externalSolution.getCreatedAt(), createdBy, externalSolution.getSource().getName(), sourceIconUrl, mark);
+            IWebHit.Model webHit =
+                    new IWebHit.Model(externalSolution.getTitle(), externalSolution.getUrl(), externalHit.getSolutionId(),
+                            externalSolution.getCreatedAt(), createdBy,
+                            externalSolution.getSource().getName(), sourceIconUrl,
+                            mark);
             webHits.add(webHit);
         }
 
@@ -275,7 +281,9 @@ public final class SolutionsController implements Disposable {
         ITipResultsTab.Model tipResults = new ITipResultsTab.Model(tipHits, bugmateList);
         IResultTabs.Model resultTabs = new IResultTabs.Model(webResults, tipResults, cta);
         IExceptionHeaderPanel.Model header = new IExceptionHeaderPanel.Model(SolutionService.headLine(solutions.getSearchGroup().getLastSearch()));
-        IProfilePanel.Model profile = new IProfilePanel.Model(0, statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(), user.getDisplayName(), user.getAvatarUrl());
+        IProfilePanel.Model profile =
+                new IProfilePanel.Model(0, statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(),
+                        user.getDisplayName(), user.getAvatarUrl());
         ISolutionFrame.Model model = new ISolutionFrame.Model(resultTabs, header, profile);
 
         return model;
