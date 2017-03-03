@@ -15,99 +15,42 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.search.api.entities.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.util.messages.MessageBus;
+import com.samebug.clients.common.search.api.client.ClientResponse;
+import com.samebug.clients.common.search.api.client.SamebugClient;
+import com.samebug.clients.common.search.api.entities.SearchResults;
+import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+public final class SearchService {
+    final ClientService clientService;
+    final SearchStore searchStore;
 
-final public class SearchService {
-    AtomicReference<Solutions> search;
-
-    final int mySearchId;
-
-    public SearchService(final int searchId) {
-        this.search = new AtomicReference<Solutions>(null);
-        this.mySearchId = searchId;
+    public SearchService(MessageBus messageBus, ClientService clientService, SearchStore searchStore) {
+        this.clientService = clientService;
+        this.searchStore = searchStore;
     }
 
-    public void setSolutions(@Nullable final Solutions solutions) {
-        this.search.set(solutions);
+    public SearchResults search(final String trace) throws SamebugClientException {
+        final SamebugClient client = clientService.client;
+
+        // TODO
+        ClientService.ConnectionAwareHttpRequest<SearchResults> requestHandler =
+                new ClientService.ConnectionAwareHttpRequest<SearchResults>() {
+                    ClientResponse<SearchResults> request() {
+                        return client.searchSolutions(trace);
+                    }
+
+                    protected void start() {
+                    }
+
+                    protected void success(SearchResults result) {
+                    }
+
+                    protected void fail(SamebugClientException e) {
+                    }
+                };
+        return clientService.execute(requestHandler);
     }
 
-    @Nullable
-    public Solutions getSolutions() {
-        return search.get();
-    }
 
-    @Nullable
-    public RestHit marked(final int solutionId, @NotNull final MarkResponse mark) {
-        @Nullable Solutions currentSearch = search.get();
-        if (currentSearch == null) return null;
-        else {
-            Solutions updatedModel = currentSearch.asMarked(solutionId, mark);
-            search.set(updatedModel);
-            return updatedModel.getHitForSolutionId(solutionId);
-        }
-    }
-
-    @Nullable
-    public RestHit unmarked(final int solutionId, @NotNull final MarkResponse mark) {
-        @Nullable Solutions currentModel = search.get();
-        if (currentModel == null) return null;
-        else {
-            Solutions updatedModel = currentModel.asUnmarked(solutionId, mark);
-            search.set(updatedModel);
-            return updatedModel.getHitForSolutionId(solutionId);
-        }
-    }
-
-    public void addTip(@NotNull final RestHit<Tip> tip) {
-        @Nullable Solutions currentModel = search.get();
-        if (currentModel != null) {
-            Solutions updatedModel = currentModel.addTip(tip);
-            search.set(updatedModel);
-        }
-    }
-
-    @Nullable
-    public RestHit getHit(@NotNull final Integer searchId, @NotNull final Integer solutionId) {
-        @Nullable Solutions currentSearch = search.get();
-        if (searchId.equals(mySearchId) && currentSearch != null) return currentSearch.getHitForSolutionId(solutionId);
-        else return null;
-    }
-
-    @Nullable
-    public RestHit getHitForVote(@NotNull final Integer voteId) {
-        @Nullable Solutions currentSearch = search.get();
-        if (currentSearch == null) return null;
-        for (RestHit<SolutionReference> s : currentSearch.getReferences()) {
-            if (voteId.equals(s.getMarkId())) return s;
-        }
-        for (RestHit<Tip> t : currentSearch.getTips()) {
-            if (voteId.equals(t.getMarkId())) return t;
-        }
-        return null;
-    }
-
-    public static boolean createdByUser(final int userId, @NotNull final RestHit hit) {
-        return hit.getCreatedBy().getId().equals(userId);
-    }
-
-    public static boolean canBeMarked(final int userId, @NotNull final SearchGroup searchGroup, @NotNull final RestHit hit) {
-        return hit.getMarkId() == null
-                && !(hit.getCreatedBy().getId().equals(userId)
-                && (searchGroup instanceof StackTraceSearchGroup)
-                && hit.getStackTraceId().equals(((StackTraceSearchGroup) searchGroup).getId()));
-    }
-
-    public static List<BreadCrumb> getMatchingBreadCrumb(@NotNull final SearchGroup search, @NotNull final RestHit hit) {
-        if (search instanceof StackTraceSearchGroup) {
-            return ((StackTraceSearchGroup) search).getLastSearch().getStackTrace().getBreadCrumbs().subList(0, hit.getMatchLevel());
-        } else {
-            return Collections.emptyList();
-        }
-    }
 }

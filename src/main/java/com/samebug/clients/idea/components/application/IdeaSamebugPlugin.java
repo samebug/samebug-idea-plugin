@@ -15,25 +15,30 @@
  */
 package com.samebug.clients.idea.components.application;
 
-import com.intellij.notification.NotificationDisplayType;
-import com.intellij.notification.impl.NotificationsConfigurationImpl;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.search.api.WebUrlBuilder;
-import com.samebug.clients.common.search.api.entities.UserInfo;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.search.api.exceptions.UnknownApiKey;
-import com.samebug.clients.idea.notification.SamebugNotifications;
-import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.idea.ui.SettingsDialog;
+import com.samebug.clients.common.services.*;
+import com.samebug.clients.idea.controllers.ConsoleSearchController;
+import com.samebug.clients.idea.controllers.SessionsController;
+import com.samebug.clients.idea.controllers.TimedTasks;
+import com.samebug.clients.swing.ui.ColorUtil;
+import com.samebug.clients.swing.ui.FontRegistry;
+import com.samebug.clients.swing.ui.ImageUtil;
+import com.samebug.clients.swing.ui.SamebugIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -43,115 +48,85 @@ import java.util.concurrent.atomic.AtomicReference;
                 @Storage(id = "SamebugClient", file = "$APP_CONFIG$/SamebugClient.xml")
         }
 )
-final public class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<ApplicationSettings> {
+final public class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<ApplicationSettings>, Disposable {
     final private static Logger LOGGER = Logger.getInstance(IdeaSamebugPlugin.class);
     private AtomicReference<ApplicationSettings> state = new AtomicReference<ApplicationSettings>(new ApplicationSettings());
 
-    final ClientService client = ApplicationManager.getApplication().getComponent(ClientService.class);
-
-    {
-        client.configure(state.get().getNetworkConfig());
-    }
-
-    private WebUrlBuilder urlBuilder = new WebUrlBuilder(state.get().serverRoot);
-
-    @Nullable
-    private TimedTasks timedTasks;
-
-    @Nullable
-    private ApplicationCache cache;
+    public WebUrlBuilder urlBuilder = new WebUrlBuilder(state.get().serverRoot);
+    public ClientService clientService;
+    public ProfileStore profileStore;
+    public ProfileService profileService;
+    public SolutionStore solutionStore;
+    public SolutionService solutionService;
+    public SearchRequestStore searchRequestStore;
+    public SearchRequestService searchRequestService;
+    public SearchStore searchStore;
+    public SearchService searchService;
+    public BugmateStore bugmateStore;
+    public BugmateService bugmateService;
+    public AuthenticationService authenticationService;
 
     @Nullable
     private MessageBusConnection connection;
 
-    // NOTE should not be called from UI thread
-    public void setApiKey(@NotNull String apiKey) throws SamebugClientException, UnknownApiKey {
-        ApplicationSettings currentState = state.get();
-        UserInfo userInfo = null;
-        currentState.apiKey = apiKey;
-        client.configure(currentState.getNetworkConfig());
-        userInfo = client.getUserInfo(apiKey);
-        if (!userInfo.getUserExist()) {
-            throw new UnknownApiKey(apiKey);
-        } else {
-            currentState.userId = userInfo.getUserId();
-            currentState.avatarUrl = userInfo.getAvatarUrl().toString();
-            currentState.workspaceId = userInfo.getDefaultWorkspaceId();
-            saveSettings(currentState);
-        }
-    }
-
-    public void saveSettings(final ApplicationSettings settings) {
-        ApplicationSettings newSettings = new ApplicationSettings(settings);
-        state.set(newSettings);
-        try {
-            client.configure(newSettings.getNetworkConfig());
-            urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
-        } finally {
-            Tracking.appTracking().trace(Events.apiKeySet());
-        }
-    }
-
     @NotNull
     public static IdeaSamebugPlugin getInstance() {
         IdeaSamebugPlugin instance = ApplicationManager.getApplication().getComponent(IdeaSamebugPlugin.class);
-        if (instance == null) {
-            throw new Error("No Samebug IDEA plugin available");
-        } else {
-            return instance;
-        }
+        assert instance != null : "Plugin is not initialized!";
+        return instance;
     }
 
-    @NotNull
-    public ClientService getClient() {
-        return client;
-    }
-
-    @NotNull
-    public WebUrlBuilder getUrlBuilder() {
-        return urlBuilder;
-    }
-
-    @Nullable
-    public ApplicationCache getCache() {
-        return cache;
-    }
-
-    // ApplicationComponent overrides
-    @Override
-    public void initComponent() {
-        SamebugNotifications.registerNotificationGroups();
-        if (!state.get().wereNotificationsDisabled) {
-            NotificationsConfigurationImpl.getInstanceImpl().changeSettings(SamebugNotifications.SAMEBUG_SEARCH_NOTIFICATIONS, NotificationDisplayType.NONE, false, false);
-            ApplicationSettings newSettings = new ApplicationSettings(state.get());
-            newSettings.wereNotificationsDisabled = true;
-            saveSettings(newSettings);
-        }
-
+    public void checkAuthenticationInTheBackgroundWithCurrentConfig() {
+        assert authenticationService != null;
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
-                ApplicationSettings newSettings = new ApplicationSettings(state.get());
-                if (newSettings.apiKey == null) {
-                    SettingsDialog.setup(null);
-                } else {
+                ApplicationSettings settings = state.get();
+                if (settings.apiKey != null) {
                     try {
-                        UserInfo userInfo = client.getUserInfo(newSettings.apiKey);
-                        if (userInfo.getUserExist()) {
-                            newSettings.userId = userInfo.getUserId();
-                            newSettings.avatarUrl = userInfo.getAvatarUrl().toString();
-                            saveSettings(newSettings);
-                        }
-                    } catch (SamebugClientException e) {
-                        LOGGER.warn("Failed to get user info", e);
+                        authenticationService.apiKeyAuthentication(settings.apiKey, settings.workspaceId);
+                    } catch (SamebugClientException ignored) {
                     }
                 }
             }
         });
+    }
 
-        connection = ApplicationManager.getApplication().getMessageBus().connect();
-        timedTasks = new TimedTasks(connection);
-        cache = new ApplicationCache(connection);
+    @Override
+    public void initComponent() {
+        try {
+            FontRegistry.registerFonts();
+        } catch (IOException e) {
+            LOGGER.error("Failed to read custom fonts file", e);
+        } catch (FontFormatException e) {
+            LOGGER.error("Failed to read custom fonts file", e);
+        }
+
+        MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
+        connection = messageBus.connect(this);
+        clientService = new ClientService(messageBus);
+        clientService.configure(state.get().getNetworkConfig());
+        profileStore = new ProfileStore();
+        profileService = new ProfileService(messageBus, clientService, profileStore);
+        solutionStore = new SolutionStore();
+        solutionService = new SolutionService(messageBus, clientService, solutionStore);
+        searchStore = new SearchStore();
+        searchService = new SearchService(messageBus, clientService, searchStore);
+        searchRequestStore = new SearchRequestStore();
+        searchRequestService = new SearchRequestService(searchRequestStore);
+        bugmateStore = new BugmateStore();
+        bugmateService = new BugmateService(messageBus, clientService, bugmateStore);
+        authenticationService = new AuthenticationService(messageBus, clientService);
+
+        TimedTasks timedTasks = new TimedTasks(messageBus.connect(this));
+        ConsoleSearchController consoleSearchController = new ConsoleSearchController(messageBus.connect(this));
+        SessionsController sessionsController = new SessionsController(messageBus.connect(this), searchRequestService, searchRequestStore);
+
+        ColorUtil.install(new IdeaColorUtil());
+        ImageUtil.install(new IdeaImageUtil(urlBuilder));
+        SamebugIcons.install(new IdeaSamebugIcons());
+
+        checkAuthenticationInTheBackgroundWithCurrentConfig();
     }
 
     @Override
@@ -162,23 +137,43 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     }
 
     @Override
+    public void dispose() {
+        disposeComponent();
+    }
+
+    @Override
     @NotNull
     public String getComponentName() {
         return getClass().getSimpleName();
     }
 
-    // PersistentStateComponent overrides
-    @NotNull
     @Override
+    @NotNull
     public ApplicationSettings getState() {
         return new ApplicationSettings(state.get());
+    }
+
+    public void saveSettings(final ApplicationSettings settings) {
+        ApplicationSettings newSettings = new ApplicationSettings(settings);
+        state.set(newSettings);
+        if (clientService != null) {
+            try {
+                clientService.configure(newSettings.getNetworkConfig());
+                urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
+            } finally {
+                // TODO change the event
+//            Tracking.appTracking().trace(Events.apiKeySet());
+            }
+        }
     }
 
     @Override
     public void loadState(ApplicationSettings state) {
         ApplicationSettings newSettings = new ApplicationSettings(state);
         this.state.set(newSettings);
-        client.configure(newSettings.getNetworkConfig());
+        if (clientService != null) {
+            clientService.configure(newSettings.getNetworkConfig());
+        }
         urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
     }
 }

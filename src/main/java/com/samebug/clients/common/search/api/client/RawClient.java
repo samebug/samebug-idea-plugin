@@ -79,6 +79,7 @@ final class RawClient {
         trackingConfig = requestConfigBuilder.setSocketTimeout(TrackingRequestTimeout_Millis).build();
         List<BasicHeader> defaultHeaders = new ArrayList<BasicHeader>();
         defaultHeaders.add(new BasicHeader("User-Agent", USER_AGENT));
+        // NOTE identification headers are always posted. They are necessary only for authenticated requests, but probably doesn't hurt to post anyway, and it's simpler this way
         if (config.apiKey != null) defaultHeaders.add(new BasicHeader("X-Samebug-ApiKey", config.apiKey));
         if (config.workspaceId != null) defaultHeaders.add(new BasicHeader("X-Samebug-WorkspaceId", config.workspaceId.toString()));
 
@@ -90,19 +91,28 @@ final class RawClient {
         if (config.isApacheLoggingEnabled) enableApacheLogging();
     }
 
-    <T> ClientResponse<T> execute(final HttpRequestBase request, final HandleRequest<T> handler) {
-        handler.modifyRequest(request);
+    <T> ClientResponse<T> executeAuthenticated(final HttpRequestBase request, final HandleRequest<T> handler) {
+        ConnectionStatus connectionStatus = ConnectionStatus.authenticatedConnection();
+        return executeRequest(request, handler, connectionStatus);
+    }
 
-        ConnectionStatus connectionStatus = new ConnectionStatus();
-        connectionStatus.attemptToAuthenticate = handler.isAuthenticated();
-        connectionStatus.attemptToConnect = true;
+    <T> ClientResponse<T> executeUnauthenticated(final HttpRequestBase request, final HandleRequest<T> handler) {
+        ConnectionStatus connectionStatus = ConnectionStatus.unauthenticatedConnection();
+        return executeRequest(request, handler, connectionStatus);
+    }
+
+    private <T> ClientResponse<T> executeRequest(final HttpRequestBase request, final HandleRequest<T> handler, final ConnectionStatus connectionStatus) {
+        handler.modifyRequest(request);
         final HttpResponse httpResponse;
         try {
             httpResponse = httpClient.execute(request);
         } catch (IOException e) {
             return new Failure<T>(connectionStatus, new HttpError(e));
         }
+        return processResponse(httpResponse, handler, connectionStatus);
+    }
 
+    private <T> ClientResponse<T> processResponse(final HttpResponse httpResponse, final HandleRequest<T> handler, final ConnectionStatus connectionStatus) {
         final Header apiStatus = httpResponse.getFirstHeader("X-Samebug-ApiStatus");
         connectionStatus.apiStatus = apiStatus == null ? null : apiStatus.getValue();
         connectionStatus.successfullyConnected = true;
@@ -207,8 +217,6 @@ abstract class HandleRequest<T> {
     abstract T onSuccess(final HttpResponse response) throws ProcessResponseException;
 
     abstract RestError onBadRequest(final HttpResponse response) throws ProcessResponseException;
-
-    abstract boolean isAuthenticated();
 
     abstract void modifyRequest(HttpRequestBase request);
 

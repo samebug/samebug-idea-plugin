@@ -16,7 +16,7 @@
 package com.samebug.clients.common.search.api.exceptions;
 
 public class UnsuccessfulResponseStatus extends SamebugClientException {
-    private final int statusCode;
+    public final int statusCode;
 
     public UnsuccessfulResponseStatus(int statusCode) {
         this.statusCode = statusCode;

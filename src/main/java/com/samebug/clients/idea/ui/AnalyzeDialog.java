@@ -25,11 +25,11 @@ import com.samebug.clients.common.search.api.StackTraceListener;
 import com.samebug.clients.common.search.api.entities.SearchResults;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.search.matcher.StackTraceMatcher;
-import com.samebug.clients.idea.components.application.ClientService;
+import com.samebug.clients.common.services.SearchService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
-import com.samebug.clients.idea.resources.SamebugBundle;
 import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.swing.ui.SamebugBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -104,18 +104,19 @@ final public class AnalyzeDialog extends DialogWrapper {
         protected void doAction(ActionEvent e) {
             Tracking.appTracking().trace(Events.searchInSearchDialog());
             final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-            final ClientService client = plugin.getClient();
+            final SearchService searchService = plugin.searchService;
             final String trace = myEditorPanel.getText();
             ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
                 @Override
                 public void run() {
+                    // TODO find out what does searchService do
+                    // TODO show some progress during the search, and close the dialog and open the tool window if the search was successful.
                     try {
-                        SearchResults result = client.searchSolutions(trace);
+                        SearchResults result = searchService.search(trace);
                         try {
-                            int searchId = result.getSearchId();
-                            URL url = plugin.getUrlBuilder().search(searchId);
-                            BrowserUtil.browse(url);
-                            Tracking.appTracking().trace(Events.searchSucceedInSearchDialog(searchId));
+                            final int searchId = result.getSearchId();
+                            // TODO open solutions tab
+                            BrowserUtil.browse(IdeaSamebugPlugin.getInstance().urlBuilder.search(searchId));
                         } catch (java.lang.Exception e1) {
                             LOGGER.warn("Failed to open browser for search " + result.getSearchId(), e1);
                         }

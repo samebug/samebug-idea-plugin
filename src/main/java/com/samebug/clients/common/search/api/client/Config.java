@@ -18,9 +18,10 @@ package com.samebug.clients.common.search.api.client;
 import org.jetbrains.annotations.Nullable;
 
 public class Config {
+    @Nullable
     public String apiKey;
     @Nullable
-    public Long workspaceId;
+    public Integer workspaceId;
     public String serverRoot;
     public String trackingRoot;
     public boolean isTrackingEnabled;

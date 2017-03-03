@@ -32,4 +32,16 @@ public final class Source {
     public String getIcon() {
         return icon;
     }
+
+    public Source() {
+    }
+
+    public Source(@NotNull Source rhs) {
+        this(rhs.name, rhs.icon);
+    }
+
+    public Source(@NotNull String name, @NotNull String icon) {
+        this.name = name;
+        this.icon = icon;
+    }
 }

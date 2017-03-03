@@ -95,23 +95,6 @@ public final class RestHit<T extends RestSolution> {
         return tagged;
     }
 
-    // TODO these should not be part of the entity?
-    @NotNull
-    public RestHit<T> asMarked() {
-        RestHit<T> marked = new RestHit<T>(this);
-        marked.score = marked.getScore() + 1;
-        marked.markId = -1;
-        return marked;
-    }
-
-    @NotNull
-    public RestHit<T> asUnmarked() {
-        RestHit<T> marked = new RestHit<T>(this);
-        marked.score = marked.getScore() - 1;
-        marked.markId = null;
-        return marked;
-    }
-
     @NotNull
     public RestHit<T> asMarked(@NotNull final MarkResponse mark) {
         RestHit<T> marked = new RestHit<T>(this);

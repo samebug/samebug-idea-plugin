@@ -26,32 +26,26 @@ public class ApplicationSettings {
     @Nullable
     public String apiKey;
     @Nullable
-    public Long workspaceId = defaultWorkspaceId;
+    public Integer workspaceId = defaultWorkspaceId;
     public String instanceId = UUID.randomUUID().toString();
     public int userId;
-    @Nullable
-    public String avatarUrl;
     public String serverRoot = defaultServerRoot;
     public String trackingRoot = defaultTrackingRoot;
     public boolean isTrackingEnabled = defaultIsTrackingEnabled;
     public int connectTimeout = defaultConnectTimeout;
     public int requestTimeout = defaultRequestTimeout;
     public boolean isApacheLoggingEnabled = defaultIsApacheLoggingEnabled;
-    public boolean showZeroSolutions = defaultShowZeroSolutions;
-    public boolean showRecurring = defaultShowRecurring;
     public boolean wereNotificationsDisabled = defaultWereNotificationsDisabled;
 
     //=========================================================================
 
-    public static final Long defaultWorkspaceId = null;
+    public static final Integer defaultWorkspaceId = null;
     public static final String defaultServerRoot = "https://samebug.io";
     public static final String defaultTrackingRoot = defaultServerRoot + "/track/trace";
     public static final boolean defaultIsTrackingEnabled = true;
     public static final int defaultConnectTimeout = 5000;
     public static final int defaultRequestTimeout = 10000;
     public static final boolean defaultIsApacheLoggingEnabled = false;
-    public static final boolean defaultShowZeroSolutions = true;
-    public static final boolean defaultShowRecurring = true;
     public static final boolean defaultWereNotificationsDisabled = false;
 
     public ApplicationSettings() {
@@ -62,15 +56,12 @@ public class ApplicationSettings {
         this.workspaceId = rhs.workspaceId;
         this.instanceId = rhs.instanceId;
         this.userId = rhs.userId;
-        this.avatarUrl = rhs.avatarUrl;
         this.serverRoot = rhs.serverRoot;
         this.trackingRoot = rhs.trackingRoot;
         this.isTrackingEnabled = rhs.isTrackingEnabled;
         this.connectTimeout = rhs.connectTimeout;
         this.requestTimeout = rhs.requestTimeout;
         this.isApacheLoggingEnabled = rhs.isApacheLoggingEnabled;
-        this.showZeroSolutions = rhs.showZeroSolutions;
-        this.showRecurring = rhs.showRecurring;
         this.wereNotificationsDisabled = rhs.wereNotificationsDisabled;
     }
 
@@ -90,15 +81,12 @@ public class ApplicationSettings {
                     && ((rhs.workspaceId == null && workspaceId == null) || (rhs.workspaceId != null && rhs.workspaceId.equals(workspaceId)))
                     && rhs.instanceId.equals(instanceId)
                     && rhs.userId == userId
-                    && ((rhs.avatarUrl == null && avatarUrl == null) || (rhs.avatarUrl != null && rhs.avatarUrl.equals(avatarUrl)))
                     && rhs.serverRoot.equals(serverRoot)
                     && rhs.trackingRoot.equals(trackingRoot)
                     && rhs.isTrackingEnabled == isTrackingEnabled
                     && rhs.connectTimeout == connectTimeout
                     && rhs.requestTimeout == requestTimeout
                     && rhs.isApacheLoggingEnabled == isApacheLoggingEnabled
-                    && rhs.showZeroSolutions == showZeroSolutions
-                    && rhs.showRecurring == showRecurring
                     && rhs.wereNotificationsDisabled == wereNotificationsDisabled;
         }
     }

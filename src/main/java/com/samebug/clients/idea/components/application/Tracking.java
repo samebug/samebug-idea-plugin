@@ -22,7 +22,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.search.api.entities.tracking.TrackEvent;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
-import com.samebug.clients.idea.messages.tracking.TrackingListener;
+import com.samebug.clients.common.services.ClientService;
+import com.samebug.clients.idea.messages.TrackingListener;
 import org.jetbrains.annotations.NotNull;
 
 public class Tracking implements ApplicationComponent, TrackingListener {
@@ -31,7 +32,7 @@ public class Tracking implements ApplicationComponent, TrackingListener {
             @Override
             public void run() {
                 try {
-                    ClientService client = IdeaSamebugPlugin.getInstance().getClient();
+                    ClientService client = IdeaSamebugPlugin.getInstance().clientService;
                     client.trace(event);
                 } catch (SamebugClientException e) {
                     LOGGER.debug("Failed to send a track event to server", e);

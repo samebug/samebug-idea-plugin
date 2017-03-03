@@ -46,6 +46,11 @@ final public class RestUrlBuilder {
     }
 
     @NotNull
+    public URL bugmates(@NotNull final Integer searchId) {
+        return resolve("search/" + searchId + "/bugmates");
+    }
+
+    @NotNull
     public URL checkApiKey(@NotNull final String apiKey) throws UnableToPrepareUrl {
         try {
             final String uri = "checkApiKey?apiKey=" + URLEncoder.encode(apiKey, "UTF-8");

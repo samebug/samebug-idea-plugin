@@ -66,7 +66,7 @@ final public class SamebugClient {
             final URL url = urlBuilder.checkApiKey(apiKey);
             HttpGet request = new HttpGet(url.toString());
 
-            return rawClient.execute(request, new HandleUnauthenticatedJsonRequest<UserInfo>(UserInfo.class));
+            return rawClient.executeUnauthenticated(request, new HandleJsonRequest<UserInfo>(UserInfo.class));
         } catch (UnableToPrepareUrl unableToPrepareUrl) {
             ConnectionStatus connectionStatus = new ConnectionStatus();
             return new Failure<UserInfo>(connectionStatus, unableToPrepareUrl);
@@ -80,7 +80,7 @@ final public class SamebugClient {
         HttpPost post = new HttpPost(url.toString());
         post.setEntity(new UrlEncodedFormEntity(Collections.singletonList(new BasicNameValuePair("exception", stacktrace)), Consts.UTF_8));
 
-        return rawClient.execute(post, new HandleAuthenticatedJsonRequest<SearchResults>(SearchResults.class));
+        return rawClient.executeAuthenticated(post, new HandleJsonRequest<SearchResults>(SearchResults.class));
     }
 
     public
@@ -89,7 +89,7 @@ final public class SamebugClient {
         final URL url = urlBuilder.history();
         HttpGet request = new HttpGet(url.toString());
 
-        return rawClient.execute(request, new HandleAuthenticatedJsonRequest<SearchHistory>(SearchHistory.class));
+        return rawClient.executeAuthenticated(request, new HandleJsonRequest<SearchHistory>(SearchHistory.class));
     }
 
     public
@@ -98,7 +98,16 @@ final public class SamebugClient {
         final URL url = urlBuilder.search(searchId);
         HttpGet request = new HttpGet(url.toString());
 
-        return rawClient.execute(request, new HandleAuthenticatedJsonRequest<Solutions>(Solutions.class));
+        return rawClient.executeAuthenticated(request, new HandleJsonRequest<Solutions>(Solutions.class));
+    }
+
+    public
+    @NotNull
+    ClientResponse<BugmatesResult> getBugmates(@NotNull final Integer searchId) {
+        final URL url = urlBuilder.bugmates(searchId);
+        HttpGet request = new HttpGet(url.toString());
+
+        return rawClient.executeAuthenticated(request, new HandleJsonRequest<BugmatesResult>(BugmatesResult.class));
     }
 
     public
@@ -107,16 +116,15 @@ final public class SamebugClient {
         final URL url = urlBuilder.tip();
         HttpPost post = new HttpPost(url.toString());
         List<BasicNameValuePair> form = new ArrayList<BasicNameValuePair>();
-        // TODO checkstyle fails if there are only spaces before the next two lines
-        if (tip != null) form.add(new BasicNameValuePair("message", tip));
-        if (searchId != null) form.add(new BasicNameValuePair("searchId", searchId.toString()));
+        form.add(new BasicNameValuePair("message", tip));
+        form.add(new BasicNameValuePair("searchId", searchId.toString()));
         if (source != null) form.add(new BasicNameValuePair("sourceUrl", source));
         post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
         // NOTE: posting a tip includes downloading the source on the server side, which might take a while, hence we let it work a bit more.
         post.setConfig(rawClient.requestConfigBuilder.setSocketTimeout(config.requestTimeout + TipSourceLoadingTime_Handicap_Millis).build());
         Type typeToken = new TypeToken<RestHit<Tip>>() {
         }.getType();
-        return rawClient.execute(post, new HandleAuthenticatedJsonRequest<RestHit<Tip>>(typeToken));
+        return rawClient.executeAuthenticated(post, new HandleJsonRequest<RestHit<Tip>>(typeToken));
     }
 
     public
@@ -128,7 +136,7 @@ final public class SamebugClient {
                 new BasicNameValuePair("search", searchId.toString()));
         post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
 
-        return rawClient.execute(post, new HandleAuthenticatedJsonRequest<MarkResponse>(MarkResponse.class));
+        return rawClient.executeAuthenticated(post, new HandleJsonRequest<MarkResponse>(MarkResponse.class));
     }
 
     public
@@ -139,7 +147,7 @@ final public class SamebugClient {
         List<BasicNameValuePair> form = Collections.singletonList(new BasicNameValuePair("mark", voteId.toString()));
         post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
 
-        return rawClient.execute(post, new HandleAuthenticatedJsonRequest<MarkResponse>(MarkResponse.class));
+        return rawClient.executeAuthenticated(post, new HandleJsonRequest<MarkResponse>(MarkResponse.class));
     }
 
     public
@@ -148,7 +156,7 @@ final public class SamebugClient {
         final URL url = urlBuilder.userStats();
         HttpGet get = new HttpGet(url.toString());
 
-        return rawClient.execute(get, new HandleAuthenticatedJsonRequest<UserStats>(UserStats.class));
+        return rawClient.executeAuthenticated(get, new HandleJsonRequest<UserStats>(UserStats.class));
     }
 
     public void trace(@NotNull final TrackEvent event) throws SamebugClientException {
@@ -161,29 +169,7 @@ final public class SamebugClient {
         }
     }
 
-    final class HandleAuthenticatedJsonRequest<T> extends HandleJsonRequest<T> {
-        HandleAuthenticatedJsonRequest(Type classOfT) {
-            super(classOfT);
-        }
-
-        @Override
-        boolean isAuthenticated() {
-            return true;
-        }
-    }
-
-    final class HandleUnauthenticatedJsonRequest<T> extends HandleJsonRequest<T> {
-        HandleUnauthenticatedJsonRequest(Type classOfT) {
-            super(classOfT);
-        }
-
-        @Override
-        boolean isAuthenticated() {
-            return false;
-        }
-    }
-
-    abstract class HandleJsonRequest<T> extends HandleRequest<T> {
+    final class HandleJsonRequest<T> extends HandleRequest<T> {
         private Type classOfT;
 
         HandleJsonRequest(Type classOfT) {

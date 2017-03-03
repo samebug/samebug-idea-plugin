@@ -21,7 +21,7 @@
 
   <!-- Space after 'for' and 'if' -->
   <module name="RegexpSingleline">
-    <property name="format" value="^\s*(for|if)[^ ]"/>
+    <property name="format" value="^\s*(for|if)[^ a-zA-Z0-9]"/>
     <property name="message" value="Space needed before opening parenthesis."/>
   </module>
 

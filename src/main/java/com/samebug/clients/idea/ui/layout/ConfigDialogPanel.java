@@ -69,6 +69,7 @@ public class ConfigDialogPanel {
             }
             IdeaSamebugPlugin.getInstance().saveSettings(settings);
             currentConfig = settings;
+            IdeaSamebugPlugin.getInstance().checkAuthenticationInTheBackgroundWithCurrentConfig();
         } catch (Exception e) {
             throw new ConfigurationException("Failed to save configuration: " + e.getMessage());
         }
@@ -94,7 +95,7 @@ public class ConfigDialogPanel {
     ApplicationSettings fromUI() {
         final ApplicationSettings settings = new ApplicationSettings(currentConfig);
         settings.apiKey = apiKey.getText();
-        settings.workspaceId = (Integer) workspaceId.getValue() <= 0 ? null : ((Integer) workspaceId.getValue()).longValue();
+        settings.workspaceId = (Integer) workspaceId.getValue() <= 0 ? null : ((Integer) workspaceId.getValue());
         settings.serverRoot = serverRoot.getText();
         settings.trackingRoot = trackingRoot.getText();
         settings.connectTimeout = (Integer) connectTimeout.getValue();
@@ -106,7 +107,7 @@ public class ConfigDialogPanel {
 
     void toUI(final ApplicationSettings settings) {
         apiKey.setText(settings.apiKey);
-        workspaceId.setValue(settings.workspaceId == null ? 0 : settings.workspaceId.intValue());
+        workspaceId.setValue(settings.workspaceId == null ? 0 : settings.workspaceId);
         serverRoot.setText(settings.serverRoot);
         trackingRoot.setText(settings.trackingRoot);
         connectTimeout.setValue(settings.connectTimeout);

@@ -24,4 +24,18 @@ final public class ConnectionStatus {
 
     public static final String API_TO_BE_DEPRECATED = "TO_BE_DEPRECATED";
     public static final String API_DEPRECATED = "DEPRECATED";
+
+    public static ConnectionStatus authenticatedConnection() {
+        ConnectionStatus connectionStatus = new ConnectionStatus();
+        connectionStatus.attemptToAuthenticate = true;
+        connectionStatus.attemptToConnect = true;
+        return connectionStatus;
+    }
+
+    public static ConnectionStatus unauthenticatedConnection() {
+        ConnectionStatus connectionStatus = new ConnectionStatus();
+        connectionStatus.attemptToAuthenticate = false;
+        connectionStatus.attemptToConnect = true;
+        return connectionStatus;
+    }
 }
