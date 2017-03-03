@@ -32,4 +32,18 @@ public final class DebugSessionInfo {
     public String getSessionType() {
         return sessionType;
     }
+
+
+    @Override
+    public String toString() {
+        return "Session " + sessionType + "/" + id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof DebugSessionInfo) {
+            DebugSessionInfo rhs = (DebugSessionInfo) o;
+            return id.equals(rhs.id);
+        } else return false;
+    }
 }

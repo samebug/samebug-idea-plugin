@@ -53,6 +53,7 @@ public class ConsoleSearchController implements StackTraceMatcherListener {
                 } catch (SamebugClientException e) {
                     if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.TOPIC).searchFailed(project, searchInfo, e);
                 } catch (Throwable e) {
+                    // TODO I don't see why would we need this branch
                     if (!project.isDisposed()) project.getMessageBus().syncPublisher(StackTraceSearchListener.TOPIC).searchError(project, searchInfo, e);
                 }
             }

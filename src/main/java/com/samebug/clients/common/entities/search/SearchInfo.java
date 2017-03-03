@@ -32,4 +32,9 @@ public final class SearchInfo {
     public UUID getRequestId() {
         return requestId;
     }
+
+    @Override
+    public String toString() {
+        return "Request " + requestId + " in session " + sessionInfo.sessionType + "/" + sessionInfo.id;
+    }
 }

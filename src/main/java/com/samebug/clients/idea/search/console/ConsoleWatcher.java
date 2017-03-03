@@ -37,6 +37,31 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+/*
+    Handling the gutter icon on the console view.
+
+    As there are multiple threads involved in this story, take extreme care when you modify something.
+    The most important thing is to make sure that if you are on the EDT, that code must be able to execute fast (under 100 millis).
+    This means e.g. that you can't search for the stacktraces in the document text in the EDT. On the other hand, when you create the markers on the gutter on the EDT, you cannot assume
+    that the content of the document is still the same.
+
+    There are a few assumptions safe to make:
+     - documentChanged is called on the Event Dispatcher Thread
+     - the rest of the public methods are called on background threads
+     - when newSearchRequest is called, the SearchRequestService is already called, so this request was inserted to the SearchRequestStore already. However, it does not mean that
+     this request is PRESENT in the SearchRequestStore, as it can be already deleted by an other thread.
+     - the same is true for the rest of the search related methods (first the service is called, than this ConsoleWatcher
+     - documentChange is called relatively rare. When a lot of things are written to the console, it will not trigger for every character or every line, but only for a few times for chunck of new text.
+
+    There are a few assumptions you would think to be safe, but are actually not true:
+     - the content of the document is not append-only. It has a buffer with limited size, and the first characters are getting removed when the limit is reached (rotating).
+     - the content of the console is updated on the EDT, but the searches are parsed in a background thread from an other stream. It means that when newSearchRequest is triggered
+     with a stacktrace, that stacktrace might or might not be present on the console
+     - nothing guarantees that newSearchRequest will be triggered before savedSearch for the same request. Under higher load (50+ stacktrace) it happens to be out of order quite frequently.
+
+
+     TODO: it has bugs because it assumes the order of search-related calls.
+ */
 public class ConsoleWatcher extends DocumentAdapter implements SearchRequestListener {
     private final Logger LOGGER = Logger.getInstance(ConsoleWatcher.class);
 
@@ -59,11 +84,17 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
 
     @Override
     public void documentChanged(DocumentEvent e) {
-        rebuildMarkers();
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                rebuildMarkers();
+            }
+        });
     }
 
     @Override
     public void newSearchRequest(final RequestedSearch requestedSearch) {
+        if (!sessionInfo.equals(requestedSearch.getSearchInfo().sessionInfo)) return;
         final UUID requestId = requestedSearch.getSearchInfo().requestId;
         final Document document = editor.getDocument();
         final StringBuilder consoleContent = new StringBuilder(document.getText());
@@ -72,14 +103,17 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
             @Override
             public void run() {
                 RangeHighlighter newHighlighter;
-                newHighlighter = addMarkerAtOffset(traceOffset, createMarker(requestedSearch));
-                if (newHighlighter != null) {
-                    // new trace is found in the console, add the marker
-                    highlights.put(requestId, newHighlighter);
-                } else {
-                    // this trace is not found, so we could remove it from request store
-                    // However in practice a frequent case is that the document is not yet updated with the new content.
-                    // Not deleting won't hurt anything, as a documentUpdate will rebuild every marker, and remove the request if the trace is still not found.
+                // NOTE it happens that this method gets called for the same requestId multiple times. Make sure we don't create multiple marker for the same request
+                if (highlights.get(requestId) == null) {
+                    newHighlighter = addMarkerAtOffset(traceOffset, createMarker(requestedSearch));
+                    if (newHighlighter != null) {
+                        // new trace is found in the console, add the marker
+                        highlights.put(requestId, newHighlighter);
+                    } else {
+                        // this trace is not found, so we could remove it from request store
+                        // However in practice a frequent case is that the document is not yet updated with the new content.
+                        // Not deleting won't hurt anything, as a documentUpdate will rebuild every marker, and remove the request if the trace is still not found.
+                    }
                 }
             }
         });
@@ -87,6 +121,7 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
 
     @Override
     public void savedSearch(final SavedSearch savedSearch) {
+        if (!sessionInfo.equals(savedSearch.getSearchInfo().sessionInfo)) return;
         final UUID requestId = savedSearch.getSearchInfo().requestId;
         final Document document = editor.getDocument();
         final RangeHighlighter highlightForRequest = highlights.get(requestId);
@@ -98,21 +133,30 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    highlightForRequest.dispose();
                     RangeHighlighter newHighlighter;
-                    // if there is a marker for the requested search, we might have to correct it,
-                    // i.e. move a few lines down if it turns out that the stacktrace starts not exactly in that line.
-                    int originalStartOffset = highlightForRequest.getStartOffset();
-                    if (0 <= originalStartOffset && originalStartOffset < document.getTextLength()) {
-                        int originalStartLine = document.getLineNumber(originalStartOffset);
-                        Integer correction = savedSearch.getSavedSearch().getFirstLine();
-                        int correctedStartLine = originalStartLine;
-                        if (correction != null) correctedStartLine += correction;
-                        int correctedOffset = document.getLineStartOffset(correctedStartLine);
-                        newHighlighter = addMarkerAtOffset(correctedOffset, createMarker(savedSearch));
+                    // NOTE actualHighlightForRequest might be different from highlightForRequest, as we are on a different thread since the previous get.
+                    RangeHighlighter actualHighlightForRequest = highlights.get(requestId);
+                    if (actualHighlightForRequest != null) {
+                        int originalStartOffset = actualHighlightForRequest.getStartOffset();
+                        // If there was a highlight previously, remove it from the gutter.
+                        actualHighlightForRequest.dispose();
+
+                        // if there is a marker for the requested search, we might have to correct it,
+                        // i.e. move a few lines down if it turns out that the stacktrace starts not exactly in that line.
+                        if (0 <= originalStartOffset && originalStartOffset < document.getTextLength()) {
+                            int originalStartLine = document.getLineNumber(originalStartOffset);
+                            Integer correction = savedSearch.getSavedSearch().getFirstLine();
+                            int correctedStartLine = originalStartLine;
+                            if (correction != null) correctedStartLine += correction;
+                            int correctedOffset = document.getLineStartOffset(correctedStartLine);
+                            newHighlighter = addMarkerAtOffset(correctedOffset, createMarker(savedSearch));
+                        } else {
+                            newHighlighter = null;
+                        }
                     } else {
                         newHighlighter = null;
                     }
+
                     if (newHighlighter != null) {
                         highlights.put(requestId, newHighlighter);
                     } else {
@@ -127,6 +171,7 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
 
     @Override
     public void failedSearch(final SearchInfo searchInfo) {
+        if (!sessionInfo.equals(searchInfo.sessionInfo)) return;
         final UUID requestId = searchInfo.requestId;
         LOGGER.info("Failed search from editor " + editor.toString());
 
@@ -146,10 +191,8 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
         }
     }
 
-    private synchronized void rebuildMarkers() {
-        LOGGER.info("Replace markers for editor " + editor.toString());
-
-        final Document document = editor.getDocument();
+    private void rebuildMarkers() {
+        Document document = editor.getDocument();
         final Map<UUID, SearchRequest> currentRequests = searchRequestStore.getRequests(sessionInfo);
         final Map<UUID, Integer> requestOffsets = findStacktraceOffsets(document.getText(), currentRequests);
 
@@ -179,7 +222,8 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
                     } else {
                         // We have not found the stacktrace in the content of the console.
                         // Probably an other process wrote something in between the lines of the trace, or it was rolled over when exceeding console buffer capacity.
-                        searchRequestStore.removeRequest(requestId);
+                        //searchRequestStore.removeRequest(requestId);
+                        // UPDATE console content can change due to filters. If we remove the search just because if was not found once, we will fail to find it later, when the filter is turned off.
                     }
                 }
             }

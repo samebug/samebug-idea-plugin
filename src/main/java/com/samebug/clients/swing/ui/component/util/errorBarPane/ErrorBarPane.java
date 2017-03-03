@@ -45,6 +45,7 @@ public class ErrorBarPane extends JLayeredPane {
     }
 
     public void addMainComponent(Component c) {
+        assert EventQueue.isDispatchThread();
         if (mainComponent != null) remove(mainComponent);
         mainComponent = c;
         add(mainComponent, MainLayer);
@@ -54,6 +55,7 @@ public class ErrorBarPane extends JLayeredPane {
     }
 
     public void addErrorBar(ErrorBar c) {
+        assert EventQueue.isDispatchThread();
         // TODO animate
         if (errorBar != null) remove(errorBar);
         errorBar = c;
@@ -64,6 +66,7 @@ public class ErrorBarPane extends JLayeredPane {
     }
 
     public void popupErrorBar(final ErrorBar c) {
+        assert EventQueue.isDispatchThread();
         if (errorBar != null && !timer.isRunning()) {
             // if there is a non-temporary popup, keep that
             return;
@@ -77,21 +80,18 @@ public class ErrorBarPane extends JLayeredPane {
     }
 
     public void removeErrorBar() {
+        assert EventQueue.isDispatchThread();
         if (errorBar != null) {
             remove(errorBar);
+            errorBar = null;
             revalidate();
             repaint();
         }
-        errorBar = null;
     }
 
     public void removeErrorBar(ErrorBar c) {
-        if (errorBar == c) {
-            remove(errorBar);
-            revalidate();
-            repaint();
-        }
-        errorBar = null;
+        assert EventQueue.isDispatchThread();
+        if (errorBar == c) removeErrorBar();
     }
 
     protected void repositionMainComponent() {

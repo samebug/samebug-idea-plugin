@@ -1,6 +1,7 @@
 package com.samebug.clients.idea.ui.controller;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.search.api.client.ConnectionStatus;
@@ -34,19 +35,29 @@ public final class ConnectionStatusController implements ClientService.Connectio
     }
 
     @Override
-    public void connectionChange(boolean isConnected) {
-        if (!isConnected) frame.showNetworkError();
-        else frame.hideNetworkError();
+    public void connectionChange(final boolean isConnected) {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if (!isConnected) frame.showNetworkError();
+                else frame.hideNetworkError();
+            }
+        });
     }
 
     @Override
-    public void authenticationChange(boolean isAuthenticated) {
-        ClientService clientService = IdeaSamebugPlugin.getInstance().clientService;
+    public void authenticationChange(final boolean isAuthenticated) {
+        final ClientService clientService = IdeaSamebugPlugin.getInstance().clientService;
         // NOTE being unauthenticated is only a problem when we are at least connected to the server
-        if (clientService.isConnected()) {
-            if (!isAuthenticated) frame.showAuthenticationError();
-            else frame.hideAuthenticationError();
-        }
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if (clientService.isConnected()) {
+                    if (!isAuthenticated) frame.showAuthenticationError();
+                    else frame.hideAuthenticationError();
+                }
+            }
+        });
     }
 
     @Override
