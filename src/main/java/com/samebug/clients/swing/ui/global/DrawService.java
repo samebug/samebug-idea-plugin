@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui;
+package com.samebug.clients.swing.ui.global;
 
 import java.awt.*;
 
-public final class DrawUtil {
+public final class DrawService {
     public static final int RoundingDiameter = 4;
 
     public static Graphics2D init(Graphics g) {

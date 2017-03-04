@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.swing.ui.component.util;
 
-import com.samebug.clients.swing.ui.DrawUtil;
-import com.samebug.clients.swing.ui.ImageUtil;
+import com.samebug.clients.swing.ui.global.DrawService;
+import com.samebug.clients.swing.ui.global.WebImageService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,10 +32,10 @@ public final class AvatarIcon extends JPanel {
         this.size = size;
         setOpaque(false);
         // TODO handle avatar loading problems (here or when creating the model)
-        if (avatarUrl == null) this.avatar = ImageUtil.getAvatarPlaceholder(size, size);
+        if (avatarUrl == null) this.avatar = WebImageService.getAvatarPlaceholder(size, size);
         else {
-            BufferedImage imageFromUrl = ImageUtil.getScaled(avatarUrl, size, size);
-            if (imageFromUrl == null) this.avatar = ImageUtil.getAvatarPlaceholder(size, size);
+            BufferedImage imageFromUrl = WebImageService.getScaled(avatarUrl, size, size);
+            if (imageFromUrl == null) this.avatar = WebImageService.getAvatarPlaceholder(size, size);
             else this.avatar = imageFromUrl;
         }
         setPreferredSize(new Dimension(size, size));
@@ -43,7 +43,7 @@ public final class AvatarIcon extends JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
-        Graphics2D g2 = DrawUtil.init(g);
+        Graphics2D g2 = DrawService.init(g);
         // NOTE while we want to clip the images to circle shape, Graphics2D.clip does not handle anti-aliasing, so we use texture filling
         Shape clip = new Ellipse2D.Float(0, 0, size, size);
         Rectangle patternRect = new Rectangle(0, 0, size, size);

@@ -30,10 +30,11 @@ import com.samebug.clients.common.services.*;
 import com.samebug.clients.idea.controllers.ConsoleSearchController;
 import com.samebug.clients.idea.controllers.SessionsController;
 import com.samebug.clients.idea.controllers.TimedTasks;
-import com.samebug.clients.swing.ui.ColorUtil;
-import com.samebug.clients.swing.ui.FontRegistry;
-import com.samebug.clients.swing.ui.ImageUtil;
-import com.samebug.clients.swing.ui.SamebugIcons;
+import com.samebug.clients.idea.ui.global.IdeaColorService;
+import com.samebug.clients.idea.ui.global.IdeaIconService;
+import com.samebug.clients.idea.ui.global.IdeaListenerService;
+import com.samebug.clients.idea.ui.global.IdeaWebImageService;
+import com.samebug.clients.swing.ui.global.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,7 +96,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     @Override
     public void initComponent() {
         try {
-            FontRegistry.registerFonts();
+            FontService.registerFonts();
         } catch (IOException e) {
             LOGGER.error("Failed to read custom fonts file", e);
         } catch (FontFormatException e) {
@@ -122,9 +123,10 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         ConsoleSearchController consoleSearchController = new ConsoleSearchController(messageBus.connect(this));
         SessionsController sessionsController = new SessionsController(messageBus.connect(this), searchRequestService, searchRequestStore);
 
-        ColorUtil.install(new IdeaColorUtil());
-        ImageUtil.install(new IdeaImageUtil(urlBuilder));
-        SamebugIcons.install(new IdeaSamebugIcons());
+        ColorService.install(new IdeaColorService());
+        WebImageService.install(new IdeaWebImageService(urlBuilder));
+        IconService.install(new IdeaIconService());
+        ListenerService.install(new IdeaListenerService());
 
         checkAuthenticationInTheBackgroundWithCurrentConfig();
     }

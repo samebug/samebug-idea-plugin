@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.components.application;
+package com.samebug.clients.idea.ui;
 
-import com.intellij.openapi.util.IconLoader;
-import com.samebug.clients.swing.ui.SamebugIcons;
+import com.samebug.clients.swing.ui.global.ColorService;
 
-import javax.swing.*;
+final class TestColorService extends ColorService {
+    final boolean isUnderDarcula = false;
 
-final class IdeaSamebugIcons extends SamebugIcons {
     @Override
-    protected Icon getImage(String path) {
-        return IconLoader.getIcon(path);
+    protected <T> T internalForCurrentTheme(T[] objects) {
+        if (objects == null) return null;
+        else if (isUnderDarcula && objects.length > 1) return objects[1];
+        else return objects[0];
     }
 }

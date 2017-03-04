@@ -19,9 +19,9 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.common.ui.component.solutions.IWebHit;
-import com.samebug.clients.swing.ui.DrawUtil;
-import com.samebug.clients.swing.ui.FontRegistry;
-import com.samebug.clients.swing.ui.ImageUtil;
+import com.samebug.clients.swing.ui.global.DrawService;
+import com.samebug.clients.swing.ui.global.FontService;
+import com.samebug.clients.swing.ui.global.WebImageService;
 import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.swing.ui.component.util.multiline.LinkMultilineLabel;
 import com.samebug.clients.swing.ui.component.util.panel.SamebugPanel;
@@ -78,7 +78,7 @@ public final class WebHit extends SamebugPanel implements IWebHit, DataProvider 
 
     private final class TitleLabel extends LinkMultilineLabel {
         {
-            setFont(FontRegistry.demi(16));
+            setFont(FontService.demi(16));
             setText(model.title);
         }
 
@@ -95,7 +95,7 @@ public final class WebHit extends SamebugPanel implements IWebHit, DataProvider 
 
     private final class SourceLabel extends SamebugLabel {
         {
-            setFont(FontRegistry.regular(12));
+            setFont(FontService.regular(12));
             String sourceText;
             if (model.createdBy == null) {
                 sourceText = model.sourceName + " | " + String.format("%s", TextUtil.prettyTime(model.createdAt));
@@ -110,12 +110,12 @@ public final class WebHit extends SamebugPanel implements IWebHit, DataProvider 
         private final Image sourceIcon;
 
         {
-            sourceIcon = ImageUtil.getScaled(model.sourceIconUrl, TitlePanel.Size, TitlePanel.Size);
+            sourceIcon = WebImageService.getScaled(model.sourceIconUrl, TitlePanel.Size, TitlePanel.Size);
         }
 
         @Override
         public void paintComponent(Graphics g) {
-            Graphics2D g2 = DrawUtil.init(g);
+            Graphics2D g2 = DrawService.init(g);
             g2.drawImage(sourceIcon, 0, 0, null, null);
         }
     }

@@ -29,7 +29,7 @@ import com.samebug.clients.common.services.SearchService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.swing.ui.SamebugBundle;
+import com.samebug.clients.swing.ui.global.MessageService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,7 +52,7 @@ final public class AnalyzeDialog extends DialogWrapper {
         myProject = project;
         panel = new JPanel();
         warningPanel = new JPanel();
-        setTitle(SamebugBundle.message("samebug.menu.analyze.dialog.title"));
+        setTitle(MessageService.message("samebug.menu.analyze.dialog.title"));
         init();
     }
 
@@ -60,7 +60,7 @@ final public class AnalyzeDialog extends DialogWrapper {
     @Override
     protected JComponent createCenterPanel() {
         panel.setLayout(new BorderLayout());
-        panel.add(new JLabel(SamebugBundle.message("samebug.menu.analyze.dialog.description")), BorderLayout.NORTH);
+        panel.add(new JLabel(MessageService.message("samebug.menu.analyze.dialog.description")), BorderLayout.NORTH);
         myEditorPanel = AnalyzeStacktraceUtil.createEditorPanel(myProject, myProject);
         myEditorPanel.pasteTextFromClipboard();
         panel.add(myEditorPanel, BorderLayout.CENTER);
@@ -81,7 +81,7 @@ final public class AnalyzeDialog extends DialogWrapper {
         boolean hasStackTrace = new Parser().hasStackTrace(trace);
         warningPanel.removeAll();
         if (!hasStackTrace) {
-            JLabel warn = new JLabel(SamebugBundle.message("samebug.menu.analyze.dialog.warn"));
+            JLabel warn = new JLabel(MessageService.message("samebug.menu.analyze.dialog.warn"));
             warningPanel.add(warn);
         }
         panel.revalidate();
@@ -97,7 +97,7 @@ final public class AnalyzeDialog extends DialogWrapper {
     final protected class SamebugSearch extends DialogWrapperAction implements DumbAware {
 
         public SamebugSearch() {
-            super(SamebugBundle.message("samebug.menu.analyze.dialog.samebugButton"));
+            super(MessageService.message("samebug.menu.analyze.dialog.samebugButton"));
         }
 
         @Override
@@ -132,7 +132,7 @@ final public class AnalyzeDialog extends DialogWrapper {
     final protected class GoogleSearch extends DialogWrapperAction implements DumbAware {
 
         public GoogleSearch() {
-            super(SamebugBundle.message("samebug.menu.analyze.dialog.googleButton"));
+            super(MessageService.message("samebug.menu.analyze.dialog.googleButton"));
         }
 
         @Override

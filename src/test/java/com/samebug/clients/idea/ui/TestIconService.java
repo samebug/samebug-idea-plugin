@@ -15,12 +15,12 @@
  */
 package com.samebug.clients.idea.ui;
 
-import com.samebug.clients.swing.ui.SamebugIcons;
+import com.samebug.clients.swing.ui.global.IconService;
 
 import javax.swing.*;
 import java.net.URL;
 
-public final class TestSamebugIcons extends SamebugIcons {
+public final class TestIconService extends IconService {
     @Override
     protected Icon getImage(String path) {
         URL url = getClass().getResource(path);

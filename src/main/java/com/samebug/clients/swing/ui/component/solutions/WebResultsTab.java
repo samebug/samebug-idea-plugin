@@ -18,9 +18,9 @@ package com.samebug.clients.swing.ui.component.solutions;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.solutions.IWebResultsTab;
-import com.samebug.clients.swing.ui.ColorUtil;
-import com.samebug.clients.swing.ui.DrawUtil;
-import com.samebug.clients.swing.ui.SamebugBundle;
+import com.samebug.clients.swing.ui.global.ColorService;
+import com.samebug.clients.swing.ui.global.DrawService;
+import com.samebug.clients.swing.ui.global.MessageService;
 import com.samebug.clients.swing.ui.component.util.button.SamebugButton;
 import com.samebug.clients.swing.ui.component.util.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
@@ -73,7 +73,7 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
         {
             final LargeWriteTipCTA cta = new LargeWriteTipCTA(messageBus, ctaModel) {
                 {
-                    label.setText(SamebugBundle.message("samebug.component.cta.writeTip.noWebHits.label", model.usersWaitingHelp));
+                    label.setText(MessageService.message("samebug.component.cta.writeTip.noWebHits.label", model.usersWaitingHelp));
                 }
             };
             setLayout(new MigLayout("fillx", "20[fill]0", "0[]20"));
@@ -117,13 +117,13 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
 
         {
             setPreferredSize(new Dimension(0, TopHeight + 1 + BottomHeight));
-            setForeground(ColorUtil.Separator);
-            setBackground(ColorUtil.Background);
+            setForeground(ColorService.Separator);
+            setBackground(ColorService.Background);
         }
 
         @Override
         public void paint(Graphics g) {
-            Graphics2D g2 = DrawUtil.init(g);
+            Graphics2D g2 = DrawService.init(g);
             g2.setColor(getBackground());
             g2.fillRect(0, 0, getWidth(), getHeight());
             g2.setColor(getForeground());
@@ -133,7 +133,7 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
 
     private final class MoreButton extends SamebugButton {
         {
-            setText(SamebugBundle.message("samebug.component.webResults.more"));
+            setText(MessageService.message("samebug.component.webResults.more"));
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {

@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.swing.ui.component.util.multiline;
 
-import com.samebug.clients.swing.ui.ColorUtil;
-import com.samebug.clients.swing.ui.FontRegistry;
+import com.samebug.clients.swing.ui.global.ColorService;
+import com.samebug.clients.swing.ui.global.FontService;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTextPaneUI;
@@ -30,25 +30,25 @@ public class StyledMultilineLabel extends JTextPane {
         setEditable(false);
         setCursor(null);
         setFocusable(false);
-        setFont(FontRegistry.regular(16));
-        setForeground(ColorUtil.Text);
+        setFont(FontService.regular(16));
+        setForeground(ColorService.Text);
         setOpaque(false);
     }
 
     public void setForeground(Color[] c) {
         foregroundColors = c;
-        setForeground(ColorUtil.forCurrentTheme(foregroundColors));
+        setForeground(ColorService.forCurrentTheme(foregroundColors));
     }
 
     public void setBackground(Color[] c) {
         backgroundColors = c;
-        setBackground(ColorUtil.forCurrentTheme(backgroundColors));
+        setBackground(ColorService.forCurrentTheme(backgroundColors));
     }
 
     @Override
     public void updateUI() {
         setUI(new BasicTextPaneUI());
-        setForeground(ColorUtil.forCurrentTheme(foregroundColors));
-        setBackground(ColorUtil.forCurrentTheme(backgroundColors));
+        setForeground(ColorService.forCurrentTheme(foregroundColors));
+        setBackground(ColorService.forCurrentTheme(backgroundColors));
     }
 }

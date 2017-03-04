@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.util.scrollPane;
 
-import com.samebug.clients.swing.ui.ColorUtil;
+import com.samebug.clients.swing.ui.global.ColorService;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -33,8 +33,8 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
     private final SamebugScrollBarUI.Listener myListener = new SamebugScrollBarUI.Listener();
     private final Timer myScrollTimer = new Timer(60, myListener);
 
-    private Color[] ThumbColor = ColorUtil.ScrollbarThumb;
-    private Color[] TrackColor = ColorUtil.ScrollbarTrack;
+    private Color[] ThumbColor = ColorService.ScrollbarThumb;
+    private Color[] TrackColor = ColorService.ScrollbarTrack;
 
     private final Rectangle myThumbBounds = new Rectangle();
     private final Rectangle myTrackBounds = new Rectangle();
@@ -81,13 +81,13 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
     }
 
     private void paintTrack(Graphics2D g, int x, int y, int width, int height, JComponent c) {
-        g.setColor(ColorUtil.forCurrentTheme(TrackColor));
+        g.setColor(ColorService.forCurrentTheme(TrackColor));
         int arc = Math.min(width, height);
         g.fillRoundRect(x, y, width, height, arc, arc);
     }
 
     private void paintThumb(Graphics2D g, int x, int y, int width, int height, JComponent c) {
-        g.setColor(ColorUtil.forCurrentTheme(ThumbColor));
+        g.setColor(ColorService.forCurrentTheme(ThumbColor));
         int arc = Math.min(width, height);
         g.fillRoundRect(x, y, width, height, arc, arc);
     }

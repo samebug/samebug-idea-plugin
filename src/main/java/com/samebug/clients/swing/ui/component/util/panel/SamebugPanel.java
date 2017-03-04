@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.util.panel;
 
-import com.samebug.clients.swing.ui.ColorUtil;
+import com.samebug.clients.swing.ui.global.ColorService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,24 +25,24 @@ public class SamebugPanel extends JPanel {
     private Color[] backgroundColors;
 
     public SamebugPanel() {
-        setBackground(ColorUtil.Background);
+        setBackground(ColorService.Background);
         updateUI();
     }
 
     public void setBackground(Color[] c) {
         backgroundColors = c;
-        super.setBackground(ColorUtil.forCurrentTheme(backgroundColors));
+        super.setBackground(ColorService.forCurrentTheme(backgroundColors));
     }
 
     public void setForeground(Color[] c) {
         foregroundColors = c;
-        super.setForeground(ColorUtil.forCurrentTheme(foregroundColors));
+        super.setForeground(ColorService.forCurrentTheme(foregroundColors));
     }
 
     @Override
     public void updateUI() {
         setUI(new SamebugPanelUI());
-        super.setForeground(ColorUtil.forCurrentTheme(foregroundColors));
-        super.setBackground(ColorUtil.forCurrentTheme(backgroundColors));
+        super.setForeground(ColorService.forCurrentTheme(foregroundColors));
+        super.setBackground(ColorService.forCurrentTheme(backgroundColors));
     }
 }

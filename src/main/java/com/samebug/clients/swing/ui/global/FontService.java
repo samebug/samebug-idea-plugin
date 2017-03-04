@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui;
+package com.samebug.clients.swing.ui.global;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 
-public final class FontRegistry {
+public final class FontService {
     private static final String AvenirRegular = "AvenirNextLTPro-Regular";
     private static final String AvenirDemi = "AvenirNextLTPro-Demi";
     private static final float ExpectedAscentOfAvenirRegular = 0.848999f;
@@ -31,8 +31,8 @@ public final class FontRegistry {
     public static void registerFonts() throws IOException, FontFormatException {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 
-        final InputStream isDemi = FontRegistry.class.getResourceAsStream("/com/samebug/fonts/AvenirNextLTPro-Demi.ttf");
-        final InputStream isRegular = FontRegistry.class.getResourceAsStream("/com/samebug/fonts/AvenirNextLTPro-Regular.ttf");
+        final InputStream isDemi = FontService.class.getResourceAsStream("/com/samebug/fonts/AvenirNextLTPro-Demi.ttf");
+        final InputStream isRegular = FontService.class.getResourceAsStream("/com/samebug/fonts/AvenirNextLTPro-Regular.ttf");
 
         final Font demi = Font.createFont(Font.TRUETYPE_FONT, isDemi);
         final Font regular = Font.createFont(Font.TRUETYPE_FONT, isRegular);

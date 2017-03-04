@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui;
+package com.samebug.clients.swing.ui.global;
 
 import com.intellij.openapi.util.IconLoader;
 
 import javax.swing.*;
 
-public abstract class SamebugIcons {
-    protected static SamebugIcons INSTANCE;
+public abstract class IconService {
+    protected static IconService INSTANCE;
 
     protected final static String alertPath = "/com/samebug/images/alert.png";
     protected final static String alertErrorBarPath = "/com/samebug/images/alertErrorBar.png";
 
-    public static void install(SamebugIcons instance) {
-        assert INSTANCE == null : "SamebugIcons has already been installed";
+    public static void install(IconService instance) {
+        assert INSTANCE == null : "IconService has already been installed";
         INSTANCE = instance;
     }
 

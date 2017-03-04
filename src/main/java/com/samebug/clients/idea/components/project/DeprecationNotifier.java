@@ -23,7 +23,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.search.api.client.ConnectionStatus;
 import com.samebug.clients.common.services.ClientService;
-import com.samebug.clients.swing.ui.SamebugBundle;
+import com.samebug.clients.swing.ui.global.MessageService;
 
 public final class DeprecationNotifier implements ClientService.ConnectionStatusListener {
     private final Project myProject;
@@ -57,7 +57,7 @@ public final class DeprecationNotifier implements ClientService.ConnectionStatus
                 ToolWindowManager.getInstance(myProject).notifyByBalloon(
                         "Samebug",
                         MessageType.WARNING,
-                        SamebugBundle.message("samebug.notification.apiStatus.toBeDeprecated"),
+                        MessageService.message("samebug.notification.apiStatus.toBeDeprecated"),
                         Messages.getWarningIcon(),
                         null);
             }
@@ -71,7 +71,7 @@ public final class DeprecationNotifier implements ClientService.ConnectionStatus
             public void run() {
                 ToolWindowManager.getInstance(myProject).notifyByBalloon(
                         "Samebug",
-                        MessageType.ERROR, SamebugBundle.message("samebug.notification.apiStatus.deprecated"),
+                        MessageType.ERROR, MessageService.message("samebug.notification.apiStatus.deprecated"),
                         Messages.getErrorIcon(),
                         null);
             }

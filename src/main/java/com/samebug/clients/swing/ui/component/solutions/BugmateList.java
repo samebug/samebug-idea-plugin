@@ -17,8 +17,8 @@ package com.samebug.clients.swing.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.IBugmateList;
-import com.samebug.clients.swing.ui.FontRegistry;
-import com.samebug.clients.swing.ui.SamebugBundle;
+import com.samebug.clients.swing.ui.global.FontService;
+import com.samebug.clients.swing.ui.global.MessageService;
 import com.samebug.clients.swing.ui.component.util.button.SamebugButton;
 import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
@@ -78,21 +78,21 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
 
     private final class SubheaderLabel extends SamebugLabel {
         {
-            setText(SamebugBundle.message("samebug.component.bugmate.list.title"));
-            setFont(FontRegistry.demi(16));
+            setText(MessageService.message("samebug.component.bugmate.list.title"));
+            setFont(FontService.demi(16));
         }
     }
 
     private final class MoreLabel extends SamebugLabel {
         {
-            setText(SamebugBundle.message("samebug.component.bugmate.list.more", model.numberOfOtherBugmates));
-            setFont(FontRegistry.regular(14));
+            setText(MessageService.message("samebug.component.bugmate.list.more", model.numberOfOtherBugmates));
+            setFont(FontService.regular(14));
         }
     }
 
     private final class AskButton extends SamebugButton {
         {
-            setText(SamebugBundle.message("samebug.component.bugmate.list.ask"));
+            setText(MessageService.message("samebug.component.bugmate.list.ask"));
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {

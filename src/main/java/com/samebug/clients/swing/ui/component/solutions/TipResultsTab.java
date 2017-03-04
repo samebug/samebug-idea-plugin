@@ -18,7 +18,7 @@ package com.samebug.clients.swing.ui.component.solutions;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.solutions.ITipResultsTab;
-import com.samebug.clients.swing.ui.SamebugBundle;
+import com.samebug.clients.swing.ui.global.MessageService;
 import com.samebug.clients.swing.ui.component.util.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.component.util.scrollPane.SamebugScrollPane;
@@ -68,7 +68,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
         {
             final LargeWriteTipCTA cta = new LargeWriteTipCTA(messageBus, ctaModel) {
                 {
-                    label.setText(SamebugBundle.message("samebug.component.cta.writeTip.noTipHits.label", model.usersWaitingHelp));
+                    label.setText(MessageService.message("samebug.component.cta.writeTip.noTipHits.label", model.usersWaitingHelp));
                 }
             };
             setLayout(new MigLayout("fillx", "20[fill]0", "0[]20"));

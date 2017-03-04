@@ -15,8 +15,6 @@
  */
 package com.samebug.clients.common.ui.component.profile;
 
-import com.intellij.util.messages.Topic;
-
 import java.net.URL;
 
 public interface IProfilePanel {
@@ -43,8 +41,6 @@ public interface IProfilePanel {
     }
 
     interface Listener {
-        Topic<Listener> TOPIC = Topic.create("IProfilePanel", Listener.class);
-
         void messagesClicked();
     }
 }

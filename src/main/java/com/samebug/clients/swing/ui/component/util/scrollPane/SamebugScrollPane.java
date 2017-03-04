@@ -15,13 +15,13 @@
  */
 package com.samebug.clients.swing.ui.component.util.scrollPane;
 
-import com.samebug.clients.swing.ui.ColorUtil;
+import com.samebug.clients.swing.ui.global.ColorService;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class SamebugScrollPane extends JScrollPane {
-    private final Color[] Background = ColorUtil.Background;
+    private final Color[] Background = ColorService.Background;
 
     {
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -41,6 +41,6 @@ public class SamebugScrollPane extends JScrollPane {
     @Override
     public void updateUI() {
         super.updateUI();
-        setBackground(ColorUtil.forCurrentTheme(Background));
+        setBackground(ColorService.forCurrentTheme(Background));
     }
 }

@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.util.errorBarPane;
 
-import com.samebug.clients.swing.ui.ColorUtil;
+import com.samebug.clients.swing.ui.global.ColorService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +39,7 @@ public class ErrorBarPane extends JLayeredPane {
 
     public ErrorBarPane() {
         setOpaque(true);
-        setBackground(ColorUtil.Background);
+        setBackground(ColorService.Background);
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -122,13 +122,13 @@ public class ErrorBarPane extends JLayeredPane {
 
     public void setBackground(Color[] c) {
         backgroundColors = c;
-        super.setBackground(ColorUtil.forCurrentTheme(backgroundColors));
+        super.setBackground(ColorService.forCurrentTheme(backgroundColors));
     }
 
     @Override
     public void updateUI() {
         // JLayeredPane does not have default UI
-        super.setBackground(ColorUtil.forCurrentTheme(backgroundColors));
+        super.setBackground(ColorService.forCurrentTheme(backgroundColors));
     }
 
 }

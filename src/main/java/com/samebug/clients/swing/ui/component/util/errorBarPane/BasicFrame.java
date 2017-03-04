@@ -15,15 +15,15 @@
  */
 package com.samebug.clients.swing.ui.component.util.errorBarPane;
 
-import com.samebug.clients.swing.ui.SamebugBundle;
+import com.samebug.clients.swing.ui.global.MessageService;
 
 public class BasicFrame extends ErrorBarPane {
     protected final ErrorBar networkErrorBar;
     protected final ErrorBar authenticationErrorBar;
 
     public BasicFrame() {
-        networkErrorBar = new ErrorBar(SamebugBundle.message("samebug.component.errorBar.network"));
-        authenticationErrorBar = new ErrorBar(SamebugBundle.message("samebug.component.errorBar.authentication"));
+        networkErrorBar = new ErrorBar(MessageService.message("samebug.component.errorBar.network"));
+        authenticationErrorBar = new ErrorBar(MessageService.message("samebug.component.errorBar.authentication"));
     }
 
     public void showNetworkError() {

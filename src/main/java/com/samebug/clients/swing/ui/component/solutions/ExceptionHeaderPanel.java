@@ -17,8 +17,8 @@ package com.samebug.clients.swing.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.IExceptionHeaderPanel;
-import com.samebug.clients.swing.ui.ColorUtil;
-import com.samebug.clients.swing.ui.FontRegistry;
+import com.samebug.clients.swing.ui.global.ColorService;
+import com.samebug.clients.swing.ui.global.FontService;
 import com.samebug.clients.swing.ui.component.util.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.component.util.panel.SamebugPanel;
 import net.miginfocom.swing.MigLayout;
@@ -45,8 +45,8 @@ public final class ExceptionHeaderPanel extends SamebugPanel implements IExcepti
     final class HeaderTextLabel extends SamebugMultilineLabel {
         {
             setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-            setFont(FontRegistry.demi(24));
-            setForeground(ColorUtil.EmphasizedText);
+            setFont(FontService.demi(24));
+            setForeground(ColorService.EmphasizedText);
 
             setText(model.title);
 

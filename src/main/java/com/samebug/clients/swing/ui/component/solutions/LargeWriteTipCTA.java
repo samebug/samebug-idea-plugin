@@ -17,7 +17,7 @@ package com.samebug.clients.swing.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
-import com.samebug.clients.swing.ui.SamebugBundle;
+import com.samebug.clients.swing.ui.global.MessageService;
 import com.samebug.clients.swing.ui.component.util.button.SamebugButton;
 import com.samebug.clients.swing.ui.component.util.multiline.CenteredMultilineLabel;
 import com.samebug.clients.swing.ui.component.util.panel.EmphasizedPanel;
@@ -36,7 +36,7 @@ public class LargeWriteTipCTA extends EmphasizedPanel implements IHelpOthersCTA 
         this.messageBus = messageBus;
         this.model = new Model(model);
 
-        final SamebugButton button = new SamebugButton(SamebugBundle.message("samebug.component.tip.write.cta.button"), true);
+        final SamebugButton button = new SamebugButton(MessageService.message("samebug.component.tip.write.cta.button"), true);
         label = new CenteredMultilineLabel();
 
         setLayout(new MigLayout("fillx, w 300", "40[]40", "40[]20[]40"));

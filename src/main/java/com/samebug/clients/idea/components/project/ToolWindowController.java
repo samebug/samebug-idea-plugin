@@ -27,6 +27,7 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.idea.ui.global.IdeaDataService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.CloseListener;
 import com.samebug.clients.idea.messages.FocusListener;
@@ -34,7 +35,8 @@ import com.samebug.clients.idea.messages.RefreshTimestampsListener;
 import com.samebug.clients.idea.ui.controller.authentication.AuthenticationController;
 import com.samebug.clients.idea.ui.controller.intro.IntroFrameController;
 import com.samebug.clients.idea.ui.controller.solution.SolutionsController;
-import com.samebug.clients.swing.ui.SamebugBundle;
+import com.samebug.clients.swing.ui.global.DataService;
+import com.samebug.clients.swing.ui.global.MessageService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -89,14 +91,16 @@ final public class ToolWindowController implements FocusListener, CloseListener,
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
 
         introFrame = new IntroFrameController(this, project);
+        DataService.putData(introFrame.getControlPanel(), IdeaDataService.Project, project);
+
         authenticationFrame = new AuthenticationController(this, project);
 
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content;
         if (plugin.getState().apiKey == null) {
-            content = contentFactory.createContent(authenticationFrame.getControlPanel(), SamebugBundle.message("samebug.toolwindow.authentication.tabName"), false);
+            content = contentFactory.createContent(authenticationFrame.getControlPanel(), MessageService.message("samebug.toolwindow.authentication.tabName"), false);
         } else {
-            content = contentFactory.createContent(introFrame.getControlPanel(), SamebugBundle.message("samebug.toolwindow.intro.tabName"), false);
+            content = contentFactory.createContent(introFrame.getControlPanel(), MessageService.message("samebug.toolwindow.intro.tabName"), false);
         }
         toolWindow.getContentManager().addContent(content);
     }
@@ -121,7 +125,9 @@ final public class ToolWindowController implements FocusListener, CloseListener,
         if (toolWindowTab != null) toolwindowCM.setSelectedContent(toolWindowTab);
         else {
             ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-            Content newToolWindowTab = contentFactory.createContent(tab.getControlPanel(), SamebugBundle.message("samebug.toolwindow.search.tabName"), false);
+            JComponent solutionFrame = tab.getControlPanel();
+            Content newToolWindowTab = contentFactory.createContent(solutionFrame, MessageService.message("samebug.toolwindow.search.tabName"), false);
+            DataService.putData(solutionFrame, IdeaDataService.Project, project);
             toolwindowCM.addContent(newToolWindowTab);
             toolwindowCM.setSelectedContent(newToolWindowTab);
         }

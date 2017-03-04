@@ -13,17 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui;
+package com.samebug.clients.swing.ui.global;
 
 import com.samebug.clients.swing.ui.component.util.interaction.Colors;
 
 import java.awt.*;
 
-public abstract class ColorUtil {
-    private static ColorUtil INSTANCE = null;
+public abstract class ColorService {
+    /**
+     * Poor man's dependency injection for singletons.
+     *
+     * In the swing implementation of the UI there are some things that we cannot implement barely in swing.
+     * E.g. how do we load the images, how do we decide which color theme to use, etc.
+     * I do not want to hardcode IntelliJ code here, because that would make it impossible to run separate tests
+     * for the UI (which makes the implementation of new component much easier).
+     *
+     * These parts are implemented in the following structure:
+     *  - the whole public interface of the class is actually static, and should be used as a singleton
+     *  - we have an abstract class, that has a private static instance member
+     *  - the class has the necessary interface as protected abstract methods
+     *  - the class has the necessary interface also as public static methods, that calls the respective method of the private instance
+     *  - the class has a public static 'install' method to set the private instance field.
+     *  - install can be called only once
+     *
+     *  It has all the drawbacks of using singleton instances, but it makes the UI components code more clean an easier to use and test.
+     */
+    private static ColorService INSTANCE = null;
 
-    public static void install(ColorUtil instance) {
-        assert INSTANCE == null : "ColorUtil has already been installed";
+    public static void install(ColorService instance) {
+        assert INSTANCE == null : "ColorService has already been installed";
         INSTANCE = instance;
     }
 

@@ -17,8 +17,8 @@ package com.samebug.clients.swing.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.ISolutionFrame;
-import com.samebug.clients.swing.ui.SamebugBundle;
-import com.samebug.clients.swing.ui.SamebugIcons;
+import com.samebug.clients.swing.ui.global.MessageService;
+import com.samebug.clients.swing.ui.global.IconService;
 import com.samebug.clients.swing.ui.component.profile.ProfilePanel;
 import com.samebug.clients.swing.ui.component.util.button.SamebugButton;
 import com.samebug.clients.swing.ui.component.util.errorBarPane.BasicFrame;
@@ -96,7 +96,7 @@ public final class SolutionFrame extends BasicFrame implements ISolutionFrame {
 
     private class ErrorPanel extends TransparentPanel {
         public ErrorPanel(String description, String buttonLabel, MouseListener mouseListener) {
-            final JLabel alertImage = new JLabel(SamebugIcons.alert());
+            final JLabel alertImage = new JLabel(IconService.alert());
             final CenteredMultilineLabel label = new CenteredMultilineLabel();
             final SamebugButton button = new SamebugButton(buttonLabel, false);
             label.setText(description);
@@ -111,8 +111,8 @@ public final class SolutionFrame extends BasicFrame implements ISolutionFrame {
 
     private final class ConnectionErrorPanel extends ErrorPanel {
         public ConnectionErrorPanel() {
-            super(SamebugBundle.message("samebug.component.error.connection.description"),
-                    SamebugBundle.message("samebug.component.error.connection.button"),
+            super(MessageService.message("samebug.component.error.connection.description"),
+                    MessageService.message("samebug.component.error.connection.button"),
                     new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
@@ -124,8 +124,8 @@ public final class SolutionFrame extends BasicFrame implements ISolutionFrame {
 
     private final class NetworkErrorPanel extends ErrorPanel {
         public NetworkErrorPanel() {
-            super(SamebugBundle.message("samebug.component.error.network.description"),
-                    SamebugBundle.message("samebug.component.error.network.button"),
+            super(MessageService.message("samebug.component.error.network.description"),
+                    MessageService.message("samebug.component.error.network.button"),
                     new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
@@ -137,8 +137,8 @@ public final class SolutionFrame extends BasicFrame implements ISolutionFrame {
 
     private final class AuthenticationErrorPanel extends ErrorPanel {
         public AuthenticationErrorPanel() {
-            super(SamebugBundle.message("samebug.component.error.authentication.description"),
-                    SamebugBundle.message("samebug.component.error.authentication.button"),
+            super(MessageService.message("samebug.component.error.authentication.description"),
+                    MessageService.message("samebug.component.error.authentication.button"),
                     new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
@@ -150,8 +150,8 @@ public final class SolutionFrame extends BasicFrame implements ISolutionFrame {
 
     private final class GeneralErrorPanel extends ErrorPanel {
         public GeneralErrorPanel() {
-            super(SamebugBundle.message("samebug.component.error.general.description"),
-                    SamebugBundle.message("samebug.component.error.general.button"),
+            super(MessageService.message("samebug.component.error.general.description"),
+                    MessageService.message("samebug.component.error.general.button"),
                     new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {

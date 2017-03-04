@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui;
+package com.samebug.clients.swing.ui.global;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,11 +23,11 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.Collection;
 
-public abstract class ImageUtil {
-    private static ImageUtil INSTANCE;
+public abstract class WebImageService {
+    private static WebImageService INSTANCE;
 
-    public static void install(ImageUtil instance) {
-        assert INSTANCE == null : "ImageUtil has already been initialized";
+    public static void install(WebImageService instance) {
+        assert INSTANCE == null : "WebImageService has already been initialized";
         INSTANCE = instance;
     }
 

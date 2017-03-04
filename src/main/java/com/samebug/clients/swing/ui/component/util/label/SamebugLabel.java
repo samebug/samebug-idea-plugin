@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.swing.ui.component.util.label;
 
-import com.samebug.clients.swing.ui.ColorUtil;
-import com.samebug.clients.swing.ui.FontRegistry;
+import com.samebug.clients.swing.ui.global.ColorService;
+import com.samebug.clients.swing.ui.global.FontService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,29 +30,29 @@ public class SamebugLabel extends JLabel {
     }
 
     public SamebugLabel(String text) {
-        this(text, FontRegistry.regular(16));
+        this(text, FontService.regular(16));
     }
 
     public SamebugLabel(String text, Font font) {
         super(text);
-        setForeground(ColorUtil.Text);
+        setForeground(ColorService.Text);
         setFont(font);
     }
 
     public void setForeground(Color[] c) {
         foregroundColors = c;
-        super.setForeground(ColorUtil.forCurrentTheme(foregroundColors));
+        super.setForeground(ColorService.forCurrentTheme(foregroundColors));
     }
 
     public void setBackground(Color[] c) {
         backgroundColors = c;
-        super.setBackground(ColorUtil.forCurrentTheme(backgroundColors));
+        super.setBackground(ColorService.forCurrentTheme(backgroundColors));
     }
 
     @Override
     public void updateUI() {
         setUI(new SamebugLabelUI());
-        super.setForeground(ColorUtil.forCurrentTheme(foregroundColors));
-        super.setBackground(ColorUtil.forCurrentTheme(backgroundColors));
+        super.setForeground(ColorService.forCurrentTheme(foregroundColors));
+        super.setBackground(ColorService.forCurrentTheme(backgroundColors));
     }
 }

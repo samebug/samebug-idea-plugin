@@ -15,9 +15,9 @@
  */
 package com.samebug.clients.swing.ui.component.util.button;
 
-import com.samebug.clients.swing.ui.ColorUtil;
-import com.samebug.clients.swing.ui.DrawUtil;
-import com.samebug.clients.swing.ui.FontRegistry;
+import com.samebug.clients.swing.ui.global.ColorService;
+import com.samebug.clients.swing.ui.global.DrawService;
+import com.samebug.clients.swing.ui.global.FontService;
 import com.samebug.clients.swing.ui.component.util.interaction.Colors;
 import com.samebug.clients.swing.ui.component.util.interaction.ForegroundColorChanger;
 
@@ -45,23 +45,23 @@ public class SamebugButton extends JButton {
         setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 12));
         setContentAreaFilled(false);
         setOpaque(false);
-        setFont(FontRegistry.demi(14));
+        setFont(FontService.demi(14));
 
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        setForeground(ColorUtil.LinkInteraction);
-        setBackground(ColorUtil.Background);
+        setForeground(ColorService.LinkInteraction);
+        setBackground(ColorService.Background);
 
         updateUI();
     }
 
     public void setForeground(Colors[] c) {
         foregroundColors = c;
-        setForeground(ColorUtil.forCurrentTheme(foregroundColors).normal);
+        setForeground(ColorService.forCurrentTheme(foregroundColors).normal);
     }
 
     public void setBackground(Color[] c) {
         backgroundColors = c;
-        setBackground(ColorUtil.forCurrentTheme(backgroundColors));
+        setBackground(ColorService.forCurrentTheme(backgroundColors));
     }
 
     public void setFilled(boolean filled) {
@@ -75,7 +75,7 @@ public class SamebugButton extends JButton {
 
     @Override
     public void paint(Graphics g) {
-        Graphics2D g2 = DrawUtil.init(g);
+        Graphics2D g2 = DrawService.init(g);
         paintBorder(g2);
         paintContent(g2);
     }
@@ -83,8 +83,8 @@ public class SamebugButton extends JButton {
     protected void paintBorder(Graphics2D g2) {
         // draw the rounded border
         g2.setColor(getForeground());
-        if (filled) g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, DrawUtil.RoundingDiameter, DrawUtil.RoundingDiameter);
-        else g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, DrawUtil.RoundingDiameter, DrawUtil.RoundingDiameter);
+        if (filled) g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, DrawService.RoundingDiameter, DrawService.RoundingDiameter);
+        else g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, DrawService.RoundingDiameter, DrawService.RoundingDiameter);
     }
 
     protected void paintContent(Graphics2D g2) {
@@ -95,6 +95,6 @@ public class SamebugButton extends JButton {
     @Override
     public void updateUI() {
         setUI(new SamebugButtonUI());
-        interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, ColorUtil.forCurrentTheme(foregroundColors), this);
+        interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, ColorService.forCurrentTheme(foregroundColors), this);
     }
 }

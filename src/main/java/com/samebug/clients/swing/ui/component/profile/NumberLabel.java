@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.swing.ui.component.profile;
 
-import com.samebug.clients.swing.ui.ColorUtil;
-import com.samebug.clients.swing.ui.FontRegistry;
+import com.samebug.clients.swing.ui.global.ColorService;
+import com.samebug.clients.swing.ui.global.FontService;
 import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
@@ -28,8 +28,8 @@ public class NumberLabel extends TransparentPanel {
     protected final SamebugLabel hintLabel;
 
     public NumberLabel(int number, String hint) {
-        numberLabel = new SamebugLabel(Integer.toString(number), FontRegistry.demi(14));
-        hintLabel = new SamebugLabel(hint, FontRegistry.demi(12));
+        numberLabel = new SamebugLabel(Integer.toString(number), FontService.demi(14));
+        hintLabel = new SamebugLabel(hint, FontService.demi(12));
 
         setLayout(new MigLayout("fillx", "0[]4[]0", "0[]0"));
 
@@ -48,6 +48,6 @@ public class NumberLabel extends TransparentPanel {
     @Override
     public void updateUI() {
         super.updateUI();
-        setForeground(ColorUtil.forCurrentTheme(ColorUtil.Text));
+        setForeground(ColorService.forCurrentTheme(ColorService.Text));
     }
 }

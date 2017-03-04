@@ -19,10 +19,10 @@ import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.IMarkButton;
-import com.samebug.clients.swing.ui.ColorUtil;
-import com.samebug.clients.swing.ui.DrawUtil;
-import com.samebug.clients.swing.ui.FontRegistry;
-import com.samebug.clients.swing.ui.SamebugBundle;
+import com.samebug.clients.swing.ui.global.ColorService;
+import com.samebug.clients.swing.ui.global.DrawService;
+import com.samebug.clients.swing.ui.global.FontService;
+import com.samebug.clients.swing.ui.global.MessageService;
 import com.samebug.clients.swing.ui.component.util.button.SamebugButton;
 import com.samebug.clients.swing.ui.component.util.interaction.Colors;
 import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
@@ -41,8 +41,8 @@ public final class MarkButton extends SamebugButton implements IMarkButton {
     private final Separator separator;
     private final MarkLabel markLabel;
 
-    private static final Colors[] ForegroundInteraction = ColorUtil.MarkInteraction;
-    private static final Color[] Background = ColorUtil.Background;
+    private static final Colors[] ForegroundInteraction = ColorService.MarkInteraction;
+    private static final Color[] Background = ColorService.Background;
 
     public MarkButton(MessageBus messageBus, Model model) {
         super();
@@ -60,7 +60,7 @@ public final class MarkButton extends SamebugButton implements IMarkButton {
         add(separator, "w 1!, h 16!");
         add(markLabel, ", h 16!");
 
-        setFont(FontRegistry.demi(14));
+        setFont(FontService.demi(14));
         setForeground(ForegroundInteraction);
         setBackground(Background);
 
@@ -130,8 +130,8 @@ public final class MarkButton extends SamebugButton implements IMarkButton {
         }
 
         void update() {
-            if (MarkButton.this.model.userMarkId == null) setText(SamebugBundle.message("samebug.component.mark.mark"));
-            else setText(SamebugBundle.message("samebug.component.mark.marked"));
+            if (MarkButton.this.model.userMarkId == null) setText(MessageService.message("samebug.component.mark.mark"));
+            else setText(MessageService.message("samebug.component.mark.marked"));
         }
 
         @Override
@@ -143,7 +143,7 @@ public final class MarkButton extends SamebugButton implements IMarkButton {
     private final class Separator extends JComponent {
         @Override
         public void paint(Graphics g) {
-            Graphics2D g2 = DrawUtil.init(g);
+            Graphics2D g2 = DrawService.init(g);
             g2.setColor(getForeground());
 
             g2.drawLine(0, 0, 0, 16);

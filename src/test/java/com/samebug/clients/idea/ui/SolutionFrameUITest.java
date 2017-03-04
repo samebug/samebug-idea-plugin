@@ -2,10 +2,10 @@ package com.samebug.clients.idea.ui;
 
 import com.google.gson.*;
 import com.samebug.clients.common.ui.component.solutions.ISolutionFrame;
-import com.samebug.clients.swing.ui.ColorUtil;
-import com.samebug.clients.swing.ui.FontRegistry;
-import com.samebug.clients.swing.ui.ImageUtil;
-import com.samebug.clients.swing.ui.SamebugIcons;
+import com.samebug.clients.swing.ui.global.ColorService;
+import com.samebug.clients.swing.ui.global.FontService;
+import com.samebug.clients.swing.ui.global.WebImageService;
+import com.samebug.clients.swing.ui.global.IconService;
 import com.samebug.clients.swing.ui.component.solutions.SolutionFrame;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -34,10 +34,10 @@ public class SolutionFrameUITest extends JDialog {
     }
 
     public static void main(String[] args) throws IOException, FontFormatException {
-        FontRegistry.registerFonts();
-        ColorUtil.install(new TestColorUtil());
-        ImageUtil.install(new TestImageUtil());
-        SamebugIcons.install(new TestSamebugIcons());
+        FontService.registerFonts();
+        ColorService.install(new TestColorService());
+        WebImageService.install(new TestWebImageService());
+        IconService.install(new TestIconService());
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {

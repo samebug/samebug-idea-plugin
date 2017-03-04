@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui;
+package com.samebug.clients.swing.ui.global;
 
 
 import com.intellij.AbstractBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
 
-final public class SamebugBundle extends AbstractBundle {
-    private static final SamebugBundle BUNDLE = new SamebugBundle();
+final public class MessageService extends AbstractBundle {
+    private static final MessageService BUNDLE = new MessageService();
 
-    private SamebugBundle() {
+    private MessageService() {
         super(PATH_TO_BUNDLE);
     }
 

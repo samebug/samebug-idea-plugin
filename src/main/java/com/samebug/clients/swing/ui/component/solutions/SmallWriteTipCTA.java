@@ -17,7 +17,7 @@ package com.samebug.clients.swing.ui.component.solutions;
 
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
-import com.samebug.clients.swing.ui.SamebugBundle;
+import com.samebug.clients.swing.ui.global.MessageService;
 import com.samebug.clients.swing.ui.component.util.button.SamebugButton;
 import com.samebug.clients.swing.ui.component.util.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.component.util.panel.EmphasizedPanel;
@@ -35,9 +35,9 @@ public final class SmallWriteTipCTA extends EmphasizedPanel implements IHelpOthe
         this.model = new IHelpOthersCTA.Model(model);
 
         final SamebugButton button = new SamebugButton();
-        button.setText(SamebugBundle.message("samebug.component.tip.write.cta.button"));
+        button.setText(MessageService.message("samebug.component.tip.write.cta.button"));
         final SamebugMultilineLabel label = new SamebugMultilineLabel();
-        label.setText(SamebugBundle.message("samebug.component.cta.writeTip.tips.label", model.usersWaitingHelp));
+        label.setText(MessageService.message("samebug.component.cta.writeTip.tips.label", model.usersWaitingHelp));
 
         setLayout(new MigLayout("fillx, w 300", "20[fill]50[fill]10", "20[fill]20"));
         add(button, "cell 0 0");

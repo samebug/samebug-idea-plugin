@@ -22,7 +22,7 @@ import com.samebug.clients.common.entities.search.SavedSearch;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.messages.FocusListener;
 import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.swing.ui.SamebugIcons;
+import com.samebug.clients.swing.ui.global.IconService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -37,7 +37,7 @@ final class SavedSearchMark extends SearchMark {
     @NotNull
     @Override
     public Icon getIcon() {
-        return SamebugIcons.gutterSamebug;
+        return IconService.gutterSamebug;
     }
 
     @Override

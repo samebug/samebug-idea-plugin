@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.swing.ui.component.util.tabbedPane;
 
-import com.samebug.clients.swing.ui.ColorUtil;
-import com.samebug.clients.swing.ui.FontRegistry;
+import com.samebug.clients.swing.ui.global.ColorService;
+import com.samebug.clients.swing.ui.global.FontService;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -33,7 +33,7 @@ public class SamebugTabbedPane extends JTabbedPane {
     {
         tabs = new ArrayList<SamebugTabHeader>();
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        setFont(FontRegistry.regular(16));
+        setFont(FontService.regular(16));
         setTabLayoutPolicy(SCROLL_TAB_LAYOUT);
         setOpaque(false);
 
@@ -92,7 +92,7 @@ public class SamebugTabbedPane extends JTabbedPane {
 
     @Override
     public void updateUI() {
-        setBackground(ColorUtil.forCurrentTheme(ColorUtil.Background));
+        setBackground(ColorService.forCurrentTheme(ColorService.Background));
         setUI(new SamebugTabbedPaneUI());
     }
 }

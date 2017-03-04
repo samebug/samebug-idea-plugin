@@ -15,9 +15,9 @@
  */
 package com.samebug.clients.swing.ui.component.util.tabbedPane;
 
-import com.samebug.clients.swing.ui.ColorUtil;
-import com.samebug.clients.swing.ui.DrawUtil;
-import com.samebug.clients.swing.ui.FontRegistry;
+import com.samebug.clients.swing.ui.global.ColorService;
+import com.samebug.clients.swing.ui.global.DrawService;
+import com.samebug.clients.swing.ui.global.FontService;
 import com.samebug.clients.swing.ui.component.util.interaction.Colors;
 import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
 
@@ -35,12 +35,12 @@ public abstract class SamebugTabHeader extends JPanel {
     private Color[] selectedHitColor;
 
     public SamebugTabHeader(String tabName, int hits) {
-        tabLabel = new SamebugLabel(tabName, FontRegistry.demi(16));
+        tabLabel = new SamebugLabel(tabName, FontService.demi(16));
         hitsLabel = new HitsLabel();
         hitsLabel.setText(Integer.toString(hits));
-        clickableColors = ColorUtil.LinkInteraction;
-        selectedColor = ColorUtil.Text;
-        selectedHitColor = ColorUtil.SelectedTab;
+        clickableColors = ColorService.LinkInteraction;
+        selectedColor = ColorService.Text;
+        selectedHitColor = ColorService.SelectedTab;
 
         setOpaque(false);
         // NOTE the layout is specified in the derived classes, don't forget to introduce changes to both when necessary
@@ -58,7 +58,7 @@ public abstract class SamebugTabHeader extends JPanel {
             this.removeMouseListener(interactionListener);
             interactionListener = null;
         } else if (wasSelected && !selected) {
-            interactionListener = TabColorChanger.createTabColorChanger(this, ColorUtil.forCurrentTheme(clickableColors));
+            interactionListener = TabColorChanger.createTabColorChanger(this, ColorService.forCurrentTheme(clickableColors));
             addMouseListener(interactionListener);
         }
         updateColors();
@@ -69,13 +69,13 @@ public abstract class SamebugTabHeader extends JPanel {
      */
     private void updateColors() {
         Color foreground;
-        if (selected) foreground = ColorUtil.forCurrentTheme(selectedColor);
-        else foreground = ColorUtil.forCurrentTheme(clickableColors).normal;
+        if (selected) foreground = ColorService.forCurrentTheme(selectedColor);
+        else foreground = ColorService.forCurrentTheme(clickableColors).normal;
         setForeground(foreground);
-        setBackground(ColorUtil.forCurrentTheme(ColorUtil.Background));
+        setBackground(ColorService.forCurrentTheme(ColorService.Background));
 
         // hit label in selected state has a visually corrected color
-        if (hitsLabel != null && selected) hitsLabel.setForeground(ColorUtil.forCurrentTheme(selectedHitColor));
+        if (hitsLabel != null && selected) hitsLabel.setForeground(ColorService.forCurrentTheme(selectedHitColor));
     }
 
     /**
@@ -100,7 +100,7 @@ public abstract class SamebugTabHeader extends JPanel {
         if (clickableColors != null) {
             if (!selected) {
                 if (interactionListener != null) removeMouseListener(interactionListener);
-                interactionListener = TabColorChanger.createTabColorChanger(this, ColorUtil.forCurrentTheme(clickableColors));
+                interactionListener = TabColorChanger.createTabColorChanger(this, ColorService.forCurrentTheme(clickableColors));
                 addMouseListener(interactionListener);
             }
             updateColors();
@@ -109,7 +109,7 @@ public abstract class SamebugTabHeader extends JPanel {
 
     private final class HitsLabel extends SamebugLabel {
         private static final int Height = 20;
-        private final Font font = FontRegistry.demi(10);
+        private final Font font = FontService.demi(10);
 
         @Override
         public Dimension getPreferredSize() {
@@ -129,7 +129,7 @@ public abstract class SamebugTabHeader extends JPanel {
 
         @Override
         public void paint(Graphics g) {
-            Graphics2D g2 = DrawUtil.init(g);
+            Graphics2D g2 = DrawService.init(g);
 
             // NOTE different behaviour for one and for more digits
             // For one digit, we have a disk as background, and show the number in the center

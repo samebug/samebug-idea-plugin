@@ -19,9 +19,9 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.common.ui.component.solutions.ITipHit;
-import com.samebug.clients.swing.ui.ColorUtil;
-import com.samebug.clients.swing.ui.DrawUtil;
-import com.samebug.clients.swing.ui.FontRegistry;
+import com.samebug.clients.swing.ui.global.ColorService;
+import com.samebug.clients.swing.ui.global.DrawService;
+import com.samebug.clients.swing.ui.global.FontService;
 import com.samebug.clients.swing.ui.component.util.AvatarIcon;
 import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.swing.ui.component.util.multiline.SamebugMultilineLabel;
@@ -45,9 +45,9 @@ public final class TipHit extends TransparentPanel implements ITipHit, DataProvi
         this.model = new Model(model);
         this.messageBus = messageBus;
 
-        setBackground(ColorUtil.Tip);
-        tipLabel = new SamebugLabel("TIP", FontRegistry.regular(14));
-        tipLabel.setForeground(ColorUtil.TipText);
+        setBackground(ColorService.Tip);
+        tipLabel = new SamebugLabel("TIP", FontService.regular(14));
+        tipLabel.setForeground(ColorService.TipText);
         tipMessage = new MessageLabel();
         mark = new MarkButton(messageBus, model.mark);
         final JPanel filler = new TransparentPanel();
@@ -64,15 +64,15 @@ public final class TipHit extends TransparentPanel implements ITipHit, DataProvi
 
     @Override
     public void paintBorder(Graphics g) {
-        Graphics2D g2 = DrawUtil.init(g);
+        Graphics2D g2 = DrawService.init(g);
         g2.setColor(getBackground());
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), DrawUtil.RoundingDiameter, DrawUtil.RoundingDiameter);
+        g2.fillRoundRect(0, 0, getWidth(), getHeight(), DrawService.RoundingDiameter, DrawService.RoundingDiameter);
     }
 
     private final class MessageLabel extends SamebugMultilineLabel {
         {
             setText(TipHit.this.model.message);
-            setForeground(ColorUtil.TipText);
+            setForeground(ColorService.TipText);
         }
     }
 
@@ -83,10 +83,10 @@ public final class TipHit extends TransparentPanel implements ITipHit, DataProvi
 
         {
             final AvatarIcon authorIcon = new AvatarIcon(model.createdByAvatarUrl, AvatarIconSize);
-            name = new SamebugLabel(model.createdBy, FontRegistry.regular(12));
-            name.setForeground(ColorUtil.UnemphasizedText);
-            timestamp = new SamebugLabel(TextUtil.prettyTime(model.createdAt), FontRegistry.regular(12));
-            timestamp.setForeground(ColorUtil.UnemphasizedText);
+            name = new SamebugLabel(model.createdBy, FontService.regular(12));
+            name.setForeground(ColorService.UnemphasizedText);
+            timestamp = new SamebugLabel(TextUtil.prettyTime(model.createdAt), FontService.regular(12));
+            timestamp.setForeground(ColorService.UnemphasizedText);
 
             setLayout(new MigLayout("", "0[]5[]0", "0[14!]0[14!]0"));
 

@@ -13,7 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui;
+package com.samebug.clients.idea.ui.global;
 
-public interface WebImageUtil {
+import com.intellij.util.ui.UIUtil;
+import com.samebug.clients.swing.ui.global.ColorService;
+
+public final class IdeaColorService extends ColorService {
+    @Override
+    protected <T> T internalForCurrentTheme(T[] objects) {
+        if (objects == null) return null;
+        else if (UIUtil.isUnderDarcula() && objects.length > 1) return objects[1];
+        else return objects[0];
+    }
+
 }
