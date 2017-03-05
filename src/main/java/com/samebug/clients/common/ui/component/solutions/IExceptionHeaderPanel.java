@@ -15,8 +15,6 @@
  */
 package com.samebug.clients.common.ui.component.solutions;
 
-import com.intellij.util.messages.Topic;
-
 public interface IExceptionHeaderPanel {
     final class Model {
         public final String title;
@@ -31,8 +29,6 @@ public interface IExceptionHeaderPanel {
     }
 
     interface Listener {
-        Topic<Listener> TOPIC = Topic.create("ExceptionHeaderPanel", Listener.class);
-
         void titleClicked();
     }
 }

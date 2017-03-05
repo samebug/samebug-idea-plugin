@@ -15,10 +15,10 @@
  */
 package com.samebug.clients.swing.ui.component.profile;
 
-import com.samebug.clients.swing.ui.global.ColorService;
-import com.samebug.clients.swing.ui.global.MessageService;
 import com.samebug.clients.swing.ui.component.util.interaction.Colors;
 import com.samebug.clients.swing.ui.component.util.interaction.ForegroundColorChanger;
+import com.samebug.clients.swing.ui.global.ColorService;
+import com.samebug.clients.swing.ui.global.MessageService;
 
 import java.awt.*;
 

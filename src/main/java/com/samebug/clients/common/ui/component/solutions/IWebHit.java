@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.ui.component.solutions;
 
-import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URL;
@@ -50,8 +49,6 @@ public interface IWebHit {
     }
 
     interface Listener {
-        Topic<Listener> TOPIC = Topic.create("IWebHit", Listener.class);
-
         void urlClicked(URL url);
     }
 }

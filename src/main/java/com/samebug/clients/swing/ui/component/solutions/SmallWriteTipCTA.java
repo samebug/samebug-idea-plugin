@@ -15,12 +15,12 @@
  */
 package com.samebug.clients.swing.ui.component.solutions;
 
-import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
-import com.samebug.clients.swing.ui.global.MessageService;
 import com.samebug.clients.swing.ui.component.util.button.SamebugButton;
 import com.samebug.clients.swing.ui.component.util.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.component.util.panel.EmphasizedPanel;
+import com.samebug.clients.swing.ui.global.ListenerService;
+import com.samebug.clients.swing.ui.global.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.event.MouseAdapter;
@@ -28,10 +28,8 @@ import java.awt.event.MouseEvent;
 
 public final class SmallWriteTipCTA extends EmphasizedPanel implements IHelpOthersCTA {
     private final IHelpOthersCTA.Model model;
-    private final MessageBus messageBus;
 
-    public SmallWriteTipCTA(MessageBus messageBus, IHelpOthersCTA.Model model) {
-        this.messageBus = messageBus;
+    public SmallWriteTipCTA(IHelpOthersCTA.Model model) {
         this.model = new IHelpOthersCTA.Model(model);
 
         final SamebugButton button = new SamebugButton();
@@ -52,6 +50,6 @@ public final class SmallWriteTipCTA extends EmphasizedPanel implements IHelpOthe
     }
 
     private Listener getListener() {
-        return messageBus.syncPublisher(Listener.TOPIC);
+        return ListenerService.getListener(this, IHelpOthersCTA.Listener.class);
     }
 }

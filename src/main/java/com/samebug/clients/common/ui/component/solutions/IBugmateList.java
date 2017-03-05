@@ -15,8 +15,6 @@
  */
 package com.samebug.clients.common.ui.component.solutions;
 
-import com.intellij.util.messages.Topic;
-
 import java.util.List;
 
 public interface IBugmateList {
@@ -37,8 +35,6 @@ public interface IBugmateList {
     }
 
     interface Listener {
-        Topic<Listener> TOPIC = Topic.create("IBugmateList", Listener.class);
-
         void askBugmates(IBugmateList source);
     }
 }

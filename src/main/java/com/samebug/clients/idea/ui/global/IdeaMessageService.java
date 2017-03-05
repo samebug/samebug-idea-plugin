@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui.global;
+package com.samebug.clients.idea.ui.global;
 
-import javax.swing.*;
+import com.intellij.AbstractBundle;
+import com.samebug.clients.swing.ui.global.MessageService;
 
-public abstract class ListenerService {
-    private static ListenerService INSTANCE = null;
+public final class IdeaMessageService extends MessageService {
+    private static final MessageBundle BUNDLE = new MessageBundle();
 
-    public static void install(ListenerService instance) {
-        assert INSTANCE == null : "ListenerService has already been installed";
-        INSTANCE = instance;
+    public String internalMessage(String key, Object... params) {
+        return BUNDLE.getMessage(key, params);
     }
 
-    public static <T> T getListener(JComponent component, Class<T> listenerClass) {
-        return INSTANCE.internalGetListener(component, listenerClass);
-    }
 
-    protected abstract <T> T internalGetListener(JComponent component, Class<T> listenerClass);
+    private static final class MessageBundle extends AbstractBundle {
+        MessageBundle() {
+            super(PATH_TO_BUNDLE);
+        }
+    }
 }
+

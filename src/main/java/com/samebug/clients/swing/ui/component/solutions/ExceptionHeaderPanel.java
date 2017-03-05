@@ -15,12 +15,12 @@
  */
 package com.samebug.clients.swing.ui.component.solutions;
 
-import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.IExceptionHeaderPanel;
-import com.samebug.clients.swing.ui.global.ColorService;
-import com.samebug.clients.swing.ui.global.FontService;
 import com.samebug.clients.swing.ui.component.util.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.component.util.panel.SamebugPanel;
+import com.samebug.clients.swing.ui.global.ColorService;
+import com.samebug.clients.swing.ui.global.FontService;
+import com.samebug.clients.swing.ui.global.ListenerService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -30,11 +30,9 @@ import java.awt.event.MouseEvent;
 
 public final class ExceptionHeaderPanel extends SamebugPanel implements IExceptionHeaderPanel {
     private final Model model;
-    private final MessageBus messageBus;
 
-    public ExceptionHeaderPanel(MessageBus messageBus, Model model) {
+    public ExceptionHeaderPanel(Model model) {
         this.model = new Model(model);
-        this.messageBus = messageBus;
 
         final HeaderTextLabel title = new HeaderTextLabel();
         setLayout(new MigLayout("fillx, filly", "0[]0", "30[]30"));
@@ -71,7 +69,7 @@ public final class ExceptionHeaderPanel extends SamebugPanel implements IExcepti
     }
 
     private Listener getListener() {
-        return messageBus.syncPublisher(Listener.TOPIC);
+        return ListenerService.getListener(this, IExceptionHeaderPanel.Listener.class);
     }
 }
 

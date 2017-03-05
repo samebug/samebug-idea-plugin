@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.ui.component.solutions;
 
-import com.intellij.util.messages.Topic;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.component.util.IFrame;
 
@@ -53,8 +52,6 @@ public interface ISolutionFrame extends IFrame {
     }
 
     interface Listener {
-        Topic<Listener> TOPIC = Topic.create("ISolutionFrame", Listener.class);
-
         void reload();
 
         void openSamebugSettings();

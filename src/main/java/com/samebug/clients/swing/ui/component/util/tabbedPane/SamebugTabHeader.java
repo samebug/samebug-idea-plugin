@@ -15,11 +15,11 @@
  */
 package com.samebug.clients.swing.ui.component.util.tabbedPane;
 
+import com.samebug.clients.swing.ui.component.util.interaction.Colors;
+import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.swing.ui.global.ColorService;
 import com.samebug.clients.swing.ui.global.DrawService;
 import com.samebug.clients.swing.ui.global.FontService;
-import com.samebug.clients.swing.ui.component.util.interaction.Colors;
-import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicPanelUI;

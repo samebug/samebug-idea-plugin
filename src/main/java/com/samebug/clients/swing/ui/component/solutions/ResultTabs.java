@@ -15,14 +15,12 @@
  */
 package com.samebug.clients.swing.ui.component.solutions;
 
-import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.IResultTabs;
-import com.samebug.clients.swing.ui.global.MessageService;
 import com.samebug.clients.swing.ui.component.util.tabbedPane.SamebugTabHeader;
 import com.samebug.clients.swing.ui.component.util.tabbedPane.SamebugTabbedPane;
+import com.samebug.clients.swing.ui.global.MessageService;
 
 public final class ResultTabs extends SamebugTabbedPane implements IResultTabs {
-    private final MessageBus messageBus;
     private final Model model;
 
     private final WebResultsTab webResultsTab;
@@ -30,12 +28,11 @@ public final class ResultTabs extends SamebugTabbedPane implements IResultTabs {
     private final SamebugTabHeader webResultsTabHeader;
     private final SamebugTabHeader tipResultsTabHeader;
 
-    public ResultTabs(MessageBus messageBus, Model model) {
+    public ResultTabs(Model model) {
         this.model = new Model(model);
-        this.messageBus = messageBus;
 
-        webResultsTab = new WebResultsTab(messageBus, model.webResults, model.cta);
-        tipResultsTab = new TipResultsTab(messageBus, model.tipResults, model.cta);
+        webResultsTab = new WebResultsTab(model.webResults, model.cta);
+        tipResultsTab = new TipResultsTab(model.tipResults, model.cta);
 
         tipResultsTabHeader = addTab(MessageService.message("samebug.component.solutionFrame.tips.tabName"), model.tipResults.getTipsSize(), tipResultsTab);
         webResultsTabHeader = addTab(MessageService.message("samebug.component.solutionFrame.webSolutions.tabName"), model.webResults.getHitsSize(), webResultsTab);

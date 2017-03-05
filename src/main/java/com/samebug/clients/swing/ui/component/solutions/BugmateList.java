@@ -15,13 +15,13 @@
  */
 package com.samebug.clients.swing.ui.component.solutions;
 
-import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.IBugmateList;
-import com.samebug.clients.swing.ui.global.FontService;
-import com.samebug.clients.swing.ui.global.MessageService;
 import com.samebug.clients.swing.ui.component.util.button.SamebugButton;
 import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
+import com.samebug.clients.swing.ui.global.FontService;
+import com.samebug.clients.swing.ui.global.ListenerService;
+import com.samebug.clients.swing.ui.global.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.event.MouseAdapter;
@@ -31,11 +31,9 @@ import java.util.List;
 
 public final class BugmateList extends TransparentPanel implements IBugmateList {
     private final Model model;
-    private final MessageBus messageBus;
 
-    public BugmateList(MessageBus messageBus, Model model) {
+    public BugmateList(Model model) {
         this.model = new Model(model);
-        this.messageBus = messageBus;
 
         final SubheaderLabel subheader = new SubheaderLabel();
         final BugmateGrid bugmateGrid = new BugmateGrid();
@@ -56,7 +54,7 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
         {
             bugmateHits = new ArrayList<BugmateHit>(model.bugmateHits.size());
             for (int i = 0; i < model.bugmateHits.size(); ++i) {
-                BugmateHit hit = new BugmateHit(messageBus, model.bugmateHits.get(i));
+                BugmateHit hit = new BugmateHit(model.bugmateHits.get(i));
                 bugmateHits.add(hit);
             }
 
@@ -103,6 +101,6 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
     }
 
     private Listener getListener() {
-        return messageBus.syncPublisher(Listener.TOPIC);
+        return ListenerService.getListener(this, IBugmateList.Listener.class);
     }
 }

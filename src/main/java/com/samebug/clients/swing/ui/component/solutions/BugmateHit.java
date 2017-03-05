@@ -15,25 +15,22 @@
  */
 package com.samebug.clients.swing.ui.component.solutions;
 
-import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.common.ui.component.solutions.IBugmateHit;
-import com.samebug.clients.swing.ui.global.FontService;
-import com.samebug.clients.swing.ui.global.MessageService;
 import com.samebug.clients.swing.ui.component.util.AvatarIcon;
 import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
+import com.samebug.clients.swing.ui.global.FontService;
+import com.samebug.clients.swing.ui.global.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 public final class BugmateHit extends TransparentPanel implements IBugmateHit {
     private final static int AvatarSize = 44;
 
     private final Model model;
-    private final MessageBus messageBus;
 
-    public BugmateHit(MessageBus messageBus, Model model) {
+    public BugmateHit(Model model) {
         this.model = new Model(model);
-        this.messageBus = messageBus;
 
         final NameLabel name = new NameLabel();
         final TimestampLabel timestamp = new TimestampLabel();

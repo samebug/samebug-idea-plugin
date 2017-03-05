@@ -28,7 +28,7 @@ final class ProfileController implements IProfilePanel.Listener {
         this.controller = controller;
 
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
-        projectConnection.subscribe(IdeaListenerService.PROFILE_PANEL, this);
+        projectConnection.subscribe(IdeaListenerService.ProfilePanel, this);
     }
 
     @Override

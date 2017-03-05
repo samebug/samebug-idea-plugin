@@ -15,15 +15,14 @@
  */
 package com.samebug.clients.swing.ui.component.profile;
 
-import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
+import com.samebug.clients.swing.ui.component.util.AvatarIcon;
+import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
+import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.global.ColorService;
 import com.samebug.clients.swing.ui.global.FontService;
 import com.samebug.clients.swing.ui.global.ListenerService;
 import com.samebug.clients.swing.ui.global.MessageService;
-import com.samebug.clients.swing.ui.component.util.AvatarIcon;
-import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
-import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -35,7 +34,6 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
     private final static int AvatarIconSize = 26;
 
     private final Model model;
-    private final MessageBus messageBus;
 
     private final AvatarIcon avatarIcon;
     private final MessageLabel messages;
@@ -43,9 +41,8 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
     private final NumberLabel tips;
     private final NumberLabel thanks;
 
-    public ProfilePanel(MessageBus messageBus, Model model) {
+    public ProfilePanel(Model model) {
         this.model = new Model(model);
-        this.messageBus = messageBus;
 
         avatarIcon = new AvatarIcon(model.avatarUrl, AvatarIconSize);
         SamebugLabel name = new SamebugLabel(model.name, FontService.demi(14));

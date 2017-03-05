@@ -2,11 +2,11 @@ package com.samebug.clients.idea.ui;
 
 import com.google.gson.*;
 import com.samebug.clients.common.ui.component.solutions.ISolutionFrame;
+import com.samebug.clients.swing.ui.component.solutions.SolutionFrame;
 import com.samebug.clients.swing.ui.global.ColorService;
 import com.samebug.clients.swing.ui.global.FontService;
-import com.samebug.clients.swing.ui.global.WebImageService;
 import com.samebug.clients.swing.ui.global.IconService;
-import com.samebug.clients.swing.ui.component.solutions.SolutionFrame;
+import com.samebug.clients.swing.ui.global.WebImageService;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 

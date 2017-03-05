@@ -15,8 +15,6 @@
  */
 package com.samebug.clients.common.ui.component.solutions;
 
-import com.intellij.util.messages.Topic;
-
 import java.net.URL;
 import java.util.Date;
 
@@ -42,6 +40,5 @@ public interface IBugmateHit {
     }
 
     interface Listener {
-        Topic<Listener> TOPIC = Topic.create("IBugmateHit", Listener.class);
     }
 }

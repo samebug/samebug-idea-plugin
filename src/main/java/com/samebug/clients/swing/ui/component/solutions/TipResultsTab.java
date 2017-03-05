@@ -15,13 +15,12 @@
  */
 package com.samebug.clients.swing.ui.component.solutions;
 
-import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.solutions.ITipResultsTab;
-import com.samebug.clients.swing.ui.global.MessageService;
 import com.samebug.clients.swing.ui.component.util.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.component.util.scrollPane.SamebugScrollPane;
+import com.samebug.clients.swing.ui.global.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -32,21 +31,19 @@ import java.util.List;
 public final class TipResultsTab extends TransparentPanel implements ITipResultsTab {
     private final Model model;
     private final IHelpOthersCTA.Model ctaModel;
-    private final MessageBus messageBus;
 
     private final JScrollPane scrollPane;
     private final SamebugPanel contentPanel;
     private final List<TipHit> tipHits;
 
-    public TipResultsTab(MessageBus messageBus, Model model, IHelpOthersCTA.Model ctaModel) {
+    public TipResultsTab(Model model, IHelpOthersCTA.Model ctaModel) {
         this.model = new Model(model);
         this.ctaModel = new IHelpOthersCTA.Model(ctaModel);
-        this.messageBus = messageBus;
 
         tipHits = new ArrayList<TipHit>();
         for (int i = 0; i < model.tipHits.size(); i++) {
             TipHit.Model m = model.tipHits.get(i);
-            TipHit hit = new TipHit(messageBus, m);
+            TipHit hit = new TipHit(m);
             tipHits.add(hit);
         }
         if (model.getTipsSize() == 0) {
@@ -66,7 +63,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
 
     private final class EmptyContentPanel extends SamebugPanel {
         {
-            final LargeWriteTipCTA cta = new LargeWriteTipCTA(messageBus, ctaModel) {
+            final LargeWriteTipCTA cta = new LargeWriteTipCTA(ctaModel) {
                 {
                     label.setText(MessageService.message("samebug.component.cta.writeTip.noTipHits.label", model.usersWaitingHelp));
                 }
@@ -79,8 +76,8 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
     private final class ContentPanel extends SamebugPanel {
         {
             final ListPanel listPanel = new ListPanel();
-            final SmallWriteTipCTA writeTip = new SmallWriteTipCTA(messageBus, ctaModel);
-            final BugmateList bugmateList = new BugmateList(messageBus, model.bugmateList);
+            final SmallWriteTipCTA writeTip = new SmallWriteTipCTA(ctaModel);
+            final BugmateList bugmateList = new BugmateList(model.bugmateList);
 
             setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]20[]20"));
 

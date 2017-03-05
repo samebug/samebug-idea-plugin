@@ -18,6 +18,7 @@ package com.samebug.clients.idea.ui.controller.solution;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
+import com.samebug.clients.idea.ui.global.IdeaListenerService;
 
 final class HelpOthersCTAController implements IHelpOthersCTA.Listener {
     final static Logger LOGGER = Logger.getInstance(HelpOthersCTAController.class);
@@ -27,7 +28,7 @@ final class HelpOthersCTAController implements IHelpOthersCTA.Listener {
         this.controller = controller;
 
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
-        projectConnection.subscribe(IHelpOthersCTA.Listener.TOPIC, this);
+        projectConnection.subscribe(IdeaListenerService.HelpOthersCTA, this);
     }
 
     @Override

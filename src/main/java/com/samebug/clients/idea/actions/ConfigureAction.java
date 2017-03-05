@@ -23,8 +23,8 @@ import com.intellij.openapi.project.ProjectManager;
 import com.samebug.clients.common.services.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.controller.ConfigDialog;
-import com.samebug.clients.swing.ui.global.MessageService;
 import com.samebug.clients.swing.ui.global.IconService;
+import com.samebug.clients.swing.ui.global.MessageService;
 
 final public class ConfigureAction extends AnAction implements DumbAware {
     @Override

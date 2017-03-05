@@ -15,17 +15,11 @@
  */
 package com.samebug.clients.swing.ui.component.solutions;
 
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.DataKey;
-import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.IMarkButton;
-import com.samebug.clients.swing.ui.global.ColorService;
-import com.samebug.clients.swing.ui.global.DrawService;
-import com.samebug.clients.swing.ui.global.FontService;
-import com.samebug.clients.swing.ui.global.MessageService;
 import com.samebug.clients.swing.ui.component.util.button.SamebugButton;
 import com.samebug.clients.swing.ui.component.util.interaction.Colors;
 import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
+import com.samebug.clients.swing.ui.global.*;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -35,7 +29,6 @@ import java.awt.event.MouseEvent;
 
 public final class MarkButton extends SamebugButton implements IMarkButton {
     private Model model;
-    private final MessageBus messageBus;
 
     private final CounterLabel counter;
     private final Separator separator;
@@ -44,10 +37,9 @@ public final class MarkButton extends SamebugButton implements IMarkButton {
     private static final Colors[] ForegroundInteraction = ColorService.MarkInteraction;
     private static final Color[] Background = ColorService.Background;
 
-    public MarkButton(MessageBus messageBus, Model model) {
+    public MarkButton(Model model) {
         super();
         this.model = new Model(model);
-        this.messageBus = messageBus;
 
         counter = new CounterLabel();
         separator = new Separator();
@@ -151,12 +143,10 @@ public final class MarkButton extends SamebugButton implements IMarkButton {
     }
 
     private Integer getSolutionId() {
-        return DataManager.getInstance().getDataContext(this).getData(SolutionId);
+        return DataService.getData(this, DataService.SolutionId);
     }
 
     private Listener getListener() {
-        return messageBus.syncPublisher(Listener.TOPIC);
+        return ListenerService.getListener(this, IMarkButton.Listener.class);
     }
-
-    public static final DataKey<Integer> SolutionId = DataKey.create("SolutionId");
 }

@@ -19,6 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.ui.component.solutions.IWebHit;
 import com.samebug.clients.idea.ui.BrowserUtil;
+import com.samebug.clients.idea.ui.global.IdeaListenerService;
 
 import java.net.URL;
 
@@ -30,7 +31,7 @@ final class WebHitController implements IWebHit.Listener {
         this.controller = controller;
 
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
-        projectConnection.subscribe(IWebHit.Listener.TOPIC, this);
+        projectConnection.subscribe(IdeaListenerService.WebHit, this);
     }
 
     @Override

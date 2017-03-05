@@ -1,3 +1,18 @@
+/**
+ * Copyright 2017 Samebug, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.samebug.clients.idea.ui.global;
 
 import com.intellij.openapi.diagnostic.Logger;
@@ -5,6 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
+import com.samebug.clients.common.ui.component.solutions.*;
 import com.samebug.clients.swing.ui.global.DataService;
 import com.samebug.clients.swing.ui.global.ListenerService;
 
@@ -16,13 +32,28 @@ import java.util.Map;
 public final class IdeaListenerService extends ListenerService {
     final static Logger LOGGER = Logger.getInstance(IdeaListenerService.class);
 
-    public static final Topic<IProfilePanel.Listener> PROFILE_PANEL = Topic.create("", IProfilePanel.Listener.class);
+    public static final Topic<IProfilePanel.Listener> ProfilePanel = Topic.create("IProfilePanel", IProfilePanel.Listener.class);
+    public static final Topic<IBugmateHit.Listener> BugmateHit = Topic.create("IBugmateHit", IBugmateHit.Listener.class);
+    public static final Topic<IBugmateList.Listener> BugmateList = Topic.create("IBugmateList", IBugmateList.Listener.class);
+    public static final Topic<IExceptionHeaderPanel.Listener> ExceptionHeaderPanel = Topic.create("IExceptionHeaderPanel", IExceptionHeaderPanel.Listener.class);
+    public static final Topic<IHelpOthersCTA.Listener> HelpOthersCTA = Topic.create("IHelpOthersCTA", IHelpOthersCTA.Listener.class);
+    public static final Topic<ISolutionFrame.Listener> SolutionFrame = Topic.create("ISolutionFrame", ISolutionFrame.Listener.class);
+    public static final Topic<IWebHit.Listener> WebHit = Topic.create("IWebHit", IWebHit.Listener.class);
+    public static final Topic<IWebResultsTab.Listener> WebResultsTab = Topic.create("IWebResultsTab", IWebResultsTab.Listener.class);
 
     private static final Topic[] topics = {
-            PROFILE_PANEL
+            ProfilePanel,
+            BugmateHit,
+            BugmateList,
+            ExceptionHeaderPanel,
+            HelpOthersCTA,
+            SolutionFrame,
+            WebHit,
+            WebResultsTab
     };
 
     private static final Map<Class, Topic> topicMap = new HashMap<Class, Topic>();
+
     static {
         for (Topic t : topics) {
             topicMap.put(t.getListenerClass(), t);

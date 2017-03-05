@@ -15,16 +15,16 @@
  */
 package com.samebug.clients.swing.ui.component.solutions;
 
-import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.solutions.IWebResultsTab;
-import com.samebug.clients.swing.ui.global.ColorService;
-import com.samebug.clients.swing.ui.global.DrawService;
-import com.samebug.clients.swing.ui.global.MessageService;
 import com.samebug.clients.swing.ui.component.util.button.SamebugButton;
 import com.samebug.clients.swing.ui.component.util.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.component.util.scrollPane.SamebugScrollPane;
+import com.samebug.clients.swing.ui.global.ColorService;
+import com.samebug.clients.swing.ui.global.DrawService;
+import com.samebug.clients.swing.ui.global.ListenerService;
+import com.samebug.clients.swing.ui.global.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -37,21 +37,19 @@ import java.util.List;
 public final class WebResultsTab extends TransparentPanel implements IWebResultsTab {
     private final Model model;
     private final IHelpOthersCTA.Model ctaModel;
-    private final MessageBus messageBus;
 
     private final JScrollPane scrollPane;
     private final JPanel contentPanel;
     private final List<WebHit> webHits;
 
-    public WebResultsTab(MessageBus messageBus, Model model, IHelpOthersCTA.Model ctaModel) {
+    public WebResultsTab(Model model, IHelpOthersCTA.Model ctaModel) {
         this.model = new Model(model);
         this.ctaModel = new IHelpOthersCTA.Model(ctaModel);
-        this.messageBus = messageBus;
 
         webHits = new ArrayList<WebHit>();
         for (int i = 0; i < model.webHits.size(); i++) {
             WebHit.Model m = model.webHits.get(i);
-            WebHit hit = new WebHit(messageBus, m);
+            WebHit hit = new WebHit(m);
             webHits.add(hit);
         }
 
@@ -71,7 +69,7 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
 
     private final class EmptyContentPanel extends SamebugPanel {
         {
-            final LargeWriteTipCTA cta = new LargeWriteTipCTA(messageBus, ctaModel) {
+            final LargeWriteTipCTA cta = new LargeWriteTipCTA(ctaModel) {
                 {
                     label.setText(MessageService.message("samebug.component.cta.writeTip.noWebHits.label", model.usersWaitingHelp));
                 }
@@ -144,6 +142,6 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
     }
 
     private Listener getListener() {
-        return messageBus.syncPublisher(Listener.TOPIC);
+        return ListenerService.getListener(this, IWebResultsTab.Listener.class);
     }
 }

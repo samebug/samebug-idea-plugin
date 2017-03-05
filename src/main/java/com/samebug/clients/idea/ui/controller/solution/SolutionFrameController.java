@@ -22,6 +22,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.net.HttpProxyConfigurable;
 import com.samebug.clients.common.ui.component.solutions.ISolutionFrame;
 import com.samebug.clients.idea.ui.controller.ConfigDialog;
+import com.samebug.clients.idea.ui.global.IdeaListenerService;
 
 final class SolutionFrameController implements ISolutionFrame.Listener {
     final static Logger LOGGER = Logger.getInstance(WebHitController.class);
@@ -31,7 +32,7 @@ final class SolutionFrameController implements ISolutionFrame.Listener {
         this.controller = controller;
 
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
-        projectConnection.subscribe(ISolutionFrame.Listener.TOPIC, this);
+        projectConnection.subscribe(IdeaListenerService.SolutionFrame, this);
     }
 
     @Override

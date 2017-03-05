@@ -15,10 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.solutions;
 
-import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.component.solutions.ISolutionFrame;
-import com.samebug.clients.swing.ui.global.MessageService;
-import com.samebug.clients.swing.ui.global.IconService;
 import com.samebug.clients.swing.ui.component.profile.ProfilePanel;
 import com.samebug.clients.swing.ui.component.util.button.SamebugButton;
 import com.samebug.clients.swing.ui.component.util.errorBarPane.BasicFrame;
@@ -26,6 +23,9 @@ import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.swing.ui.component.util.multiline.CenteredMultilineLabel;
 import com.samebug.clients.swing.ui.component.util.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
+import com.samebug.clients.swing.ui.global.IconService;
+import com.samebug.clients.swing.ui.global.ListenerService;
+import com.samebug.clients.swing.ui.global.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -36,11 +36,8 @@ import java.awt.event.MouseListener;
 
 public final class SolutionFrame extends BasicFrame implements ISolutionFrame {
     private Solutions solutions;
-    private final MessageBus messageBus;
 
-    public SolutionFrame(MessageBus messageBus) {
-        this.messageBus = messageBus;
-
+    public SolutionFrame() {
         setLoading();
     }
 
@@ -83,9 +80,9 @@ public final class SolutionFrame extends BasicFrame implements ISolutionFrame {
         private final JPanel profilePanel;
 
         Solutions(Model model) {
-            exceptionHeader = new ExceptionHeaderPanel(messageBus, model.header);
-            tabs = new ResultTabs(messageBus, model.resultTabs);
-            profilePanel = new ProfilePanel(messageBus, model.profilePanel);
+            exceptionHeader = new ExceptionHeaderPanel(model.header);
+            tabs = new ResultTabs(model.resultTabs);
+            profilePanel = new ProfilePanel(model.profilePanel);
 
             setLayout(new BorderLayout());
             add(exceptionHeader, BorderLayout.NORTH);
@@ -162,6 +159,6 @@ public final class SolutionFrame extends BasicFrame implements ISolutionFrame {
     }
 
     private Listener getListener() {
-        return messageBus.syncPublisher(Listener.TOPIC);
+        return ListenerService.getListener(this, ISolutionFrame.Listener.class);
     }
 }

@@ -15,9 +15,9 @@
  */
 package com.samebug.clients.swing.ui.component.util.errorBarPane;
 
+import com.samebug.clients.swing.ui.component.util.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.global.ColorService;
 import com.samebug.clients.swing.ui.global.IconService;
-import com.samebug.clients.swing.ui.component.util.panel.SamebugPanel;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;

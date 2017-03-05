@@ -20,6 +20,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.ui.component.solutions.IExceptionHeaderPanel;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.BrowserUtil;
+import com.samebug.clients.idea.ui.global.IdeaListenerService;
 
 import java.net.URL;
 
@@ -32,7 +33,7 @@ final class ExceptionHeaderController implements IExceptionHeaderPanel.Listener 
         this.controller = controller;
 
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
-        projectConnection.subscribe(IExceptionHeaderPanel.Listener.TOPIC, this);
+        projectConnection.subscribe(IdeaListenerService.ExceptionHeaderPanel, this);
     }
 
     @Override

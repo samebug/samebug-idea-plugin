@@ -74,7 +74,7 @@ public final class SolutionsController implements Disposable {
         this.searchId = searchId;
 
         MessageBus messageBus = myProject.getMessageBus();
-        view = new SolutionFrame(messageBus);
+        view = new SolutionFrame();
         connectionStatusController = new ConnectionStatusController(view, messageBus);
 
         viewController = new ViewController(this);

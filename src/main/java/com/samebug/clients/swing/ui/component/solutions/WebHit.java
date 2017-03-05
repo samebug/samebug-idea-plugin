@@ -15,37 +15,30 @@
  */
 package com.samebug.clients.swing.ui.component.solutions;
 
-import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.common.ui.component.solutions.IWebHit;
-import com.samebug.clients.swing.ui.global.DrawService;
-import com.samebug.clients.swing.ui.global.FontService;
-import com.samebug.clients.swing.ui.global.WebImageService;
 import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.swing.ui.component.util.multiline.LinkMultilineLabel;
 import com.samebug.clients.swing.ui.component.util.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
+import com.samebug.clients.swing.ui.global.*;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
 
-public final class WebHit extends SamebugPanel implements IWebHit, DataProvider {
+public final class WebHit extends SamebugPanel implements IWebHit {
     private final Model model;
-    private final MessageBus messageBus;
 
     private final MarkButton markButton;
 
-    public WebHit(MessageBus messageBus, Model model) {
+    public WebHit(Model model) {
         this.model = new Model(model);
-        this.messageBus = messageBus;
 
-        markButton = new MarkButton(messageBus, model.mark);
+        DataService.putData(this, DataService.SolutionId, model.solutionId);
+        markButton = new MarkButton(model.mark);
         final TitlePanel titlePanel = new TitlePanel();
 
         setLayout(new MigLayout("fillx", "0[300]0", "0[]16[]0"));
@@ -120,15 +113,8 @@ public final class WebHit extends SamebugPanel implements IWebHit, DataProvider 
         }
     }
 
-    @Nullable
-    @Override
-    public Object getData(@NonNls String dataId) {
-        if (MarkButton.SolutionId.is(dataId)) return model.solutionId;
-        else return null;
-    }
-
     private Listener getListener() {
-        return messageBus.syncPublisher(Listener.TOPIC);
+        return ListenerService.getListener(this, IWebHit.Listener.class);
     }
 
 }

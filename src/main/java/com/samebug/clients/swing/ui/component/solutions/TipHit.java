@@ -15,41 +15,37 @@
  */
 package com.samebug.clients.swing.ui.component.solutions;
 
-import com.intellij.openapi.actionSystem.DataProvider;
-import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.TextUtil;
 import com.samebug.clients.common.ui.component.solutions.ITipHit;
-import com.samebug.clients.swing.ui.global.ColorService;
-import com.samebug.clients.swing.ui.global.DrawService;
-import com.samebug.clients.swing.ui.global.FontService;
 import com.samebug.clients.swing.ui.component.util.AvatarIcon;
 import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.swing.ui.component.util.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
+import com.samebug.clients.swing.ui.global.ColorService;
+import com.samebug.clients.swing.ui.global.DataService;
+import com.samebug.clients.swing.ui.global.DrawService;
+import com.samebug.clients.swing.ui.global.FontService;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
-public final class TipHit extends TransparentPanel implements ITipHit, DataProvider {
+public final class TipHit extends TransparentPanel implements ITipHit {
     private final Model model;
-    private final MessageBus messageBus;
 
     private final SamebugLabel tipLabel;
     private final MessageLabel tipMessage;
     private final MarkButton mark;
 
-    public TipHit(MessageBus messageBus, Model model) {
+    public TipHit(Model model) {
         this.model = new Model(model);
-        this.messageBus = messageBus;
 
         setBackground(ColorService.Tip);
+        DataService.putData(this, DataService.SolutionId, model.solutionId);
         tipLabel = new SamebugLabel("TIP", FontService.regular(14));
         tipLabel.setForeground(ColorService.TipText);
         tipMessage = new MessageLabel();
-        mark = new MarkButton(messageBus, model.mark);
+        mark = new MarkButton(model.mark);
         final JPanel filler = new TransparentPanel();
         final AuthorPanel author = new AuthorPanel();
 
@@ -94,12 +90,5 @@ public final class TipHit extends TransparentPanel implements ITipHit, DataProvi
             add(name, "cell 1 0");
             add(timestamp, "cell 1 1");
         }
-    }
-
-    @Nullable
-    @Override
-    public Object getData(@NonNls String dataId) {
-        if (MarkButton.SolutionId.is(dataId)) return model.solutionId;
-        else return null;
     }
 }

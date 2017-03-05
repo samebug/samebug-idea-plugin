@@ -16,20 +16,22 @@
 package com.samebug.clients.swing.ui.global;
 
 
-import com.intellij.AbstractBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
 
-final public class MessageService extends AbstractBundle {
-    private static final MessageService BUNDLE = new MessageService();
+public abstract class MessageService {
+    private static MessageService INSTANCE = null;
+    // NOTE we can slice it to parts, e.g. one for component labels, one for intro texts, etc.
+    protected static final String PATH_TO_BUNDLE = "com.samebug.messages.Messages";
 
-    private MessageService() {
-        super(PATH_TO_BUNDLE);
+    public static void install(MessageService instance) {
+        assert INSTANCE == null : "MessageService has already been installed";
+        INSTANCE = instance;
     }
-
-    public static final String PATH_TO_BUNDLE = "messages.SamebugBundle";
 
     public static String message(@NotNull @PropertyKey(resourceBundle = PATH_TO_BUNDLE) String key, @NotNull Object... params) {
-        return BUNDLE.getMessage(key, params);
+        return INSTANCE.internalMessage(key, params);
     }
+
+    protected abstract String internalMessage(String key, Object... params);
 }
