@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui;
+package com.samebug.clients.swing.ui.globalService;
 
 import com.samebug.clients.swing.ui.global.WebImageService;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +30,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Hashtable;
 
-final class TestWebImageService extends WebImageService {
+public final class TestWebImageService extends WebImageService {
     private final Hashtable<URL, BufferedImage> cache = new Hashtable<URL, BufferedImage>();
     private final Hashtable<ScaledKey, BufferedImage> scaledCache = new Hashtable<ScaledKey, BufferedImage>();
     private final URL avatarPlaceholderUrl;

@@ -1,12 +1,13 @@
-package com.samebug.clients.idea.ui;
+package com.samebug.clients.swing.ui;
 
 import com.google.gson.*;
 import com.samebug.clients.common.ui.component.solutions.ISolutionFrame;
+import com.samebug.clients.idea.ui.global.IdeaMessageService;
 import com.samebug.clients.swing.ui.component.solutions.SolutionFrame;
-import com.samebug.clients.swing.ui.global.ColorService;
-import com.samebug.clients.swing.ui.global.FontService;
-import com.samebug.clients.swing.ui.global.IconService;
-import com.samebug.clients.swing.ui.global.WebImageService;
+import com.samebug.clients.swing.ui.global.*;
+import com.samebug.clients.swing.ui.globalService.TestColorService;
+import com.samebug.clients.swing.ui.globalService.TestIconService;
+import com.samebug.clients.swing.ui.globalService.TestWebImageService;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -25,9 +26,8 @@ public class SolutionFrameUITest extends JDialog {
         ISolutionFrame.Model model = gson.fromJson(new InputStreamReader(stream), SolutionFrame.Model.class);
         stream.close();
 
-        SolutionFrame sf = new SolutionFrame(null);
+        SolutionFrame sf = new SolutionFrame();
         sf.loadingSucceeded(model);
-        sf.showAuthenticationError();
         JComponent contentPane = sf;
 
         setContentPane(contentPane);
@@ -38,6 +38,7 @@ public class SolutionFrameUITest extends JDialog {
         ColorService.install(new TestColorService());
         WebImageService.install(new TestWebImageService());
         IconService.install(new TestIconService());
+        MessageService.install(new IdeaMessageService());
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
