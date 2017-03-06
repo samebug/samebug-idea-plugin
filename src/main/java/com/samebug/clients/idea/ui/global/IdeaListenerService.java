@@ -36,6 +36,7 @@ public final class IdeaListenerService extends ListenerService {
     public static final Topic<IBugmateHit.Listener> BugmateHit = Topic.create("IBugmateHit", IBugmateHit.Listener.class);
     public static final Topic<IBugmateList.Listener> BugmateList = Topic.create("IBugmateList", IBugmateList.Listener.class);
     public static final Topic<IExceptionHeaderPanel.Listener> ExceptionHeaderPanel = Topic.create("IExceptionHeaderPanel", IExceptionHeaderPanel.Listener.class);
+    public static final Topic<IMarkButton.Listener> MarkButton = Topic.create("IMarkButton", IMarkButton.Listener.class);
     public static final Topic<IHelpOthersCTA.Listener> HelpOthersCTA = Topic.create("IHelpOthersCTA", IHelpOthersCTA.Listener.class);
     public static final Topic<ISolutionFrame.Listener> SolutionFrame = Topic.create("ISolutionFrame", ISolutionFrame.Listener.class);
     public static final Topic<IWebHit.Listener> WebHit = Topic.create("IWebHit", IWebHit.Listener.class);
@@ -46,6 +47,7 @@ public final class IdeaListenerService extends ListenerService {
             BugmateHit,
             BugmateList,
             ExceptionHeaderPanel,
+            MarkButton,
             HelpOthersCTA,
             SolutionFrame,
             WebHit,

@@ -24,6 +24,7 @@ public abstract class IconService {
 
     protected final static String alertPath = "/com/samebug/images/alert.png";
     protected final static String alertErrorBarPath = "/com/samebug/images/alertErrorBar.png";
+    protected final static String loadingPath = "/com/samebug/images/loading.gif";
 
     public static void install(IconService instance) {
         assert INSTANCE == null : "IconService has already been installed";
@@ -36,6 +37,10 @@ public abstract class IconService {
 
     public static Icon alertErrorBar() {
         return INSTANCE.getImage(alertErrorBarPath);
+    }
+
+    public static Icon loading() {
+        return INSTANCE.getImage(loadingPath);
     }
 
     protected abstract Icon getImage(String path);

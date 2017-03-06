@@ -49,6 +49,17 @@ public abstract class ColorService {
         return INSTANCE.internalForCurrentTheme(objects);
     }
 
+    public static <T> T forLightTheme(T[] objects) {
+        if (objects == null) return null;
+        else return objects[0];
+    }
+
+    public static <T> T forDarkTheme(T[] objects) {
+        if (objects == null) return null;
+        else if (objects.length > 1) return objects[1];
+        else return objects[0];
+    }
+
     public final static Color[] Background = new Color[]{new Color(0xFFFFFF), new Color(0x242526)};
     public final static Color[] EmphasizedText = new Color[]{new Color(0x000000), new Color(0xCBCDCF)};
     public final static Color[] Text = new Color[]{new Color(0x333333), new Color(0x8B8C8F)};

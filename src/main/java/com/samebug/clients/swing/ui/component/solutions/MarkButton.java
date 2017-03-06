@@ -27,118 +27,163 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public final class MarkButton extends SamebugButton implements IMarkButton {
+public final class MarkButton extends JComponent implements IMarkButton {
     private Model model;
-
-    private final CounterLabel counter;
-    private final Separator separator;
-    private final MarkLabel markLabel;
+    private NormalMarkButton normalMarkButton;
+    private LoadingButton loadingButton;
 
     private static final Colors[] ForegroundInteraction = ColorService.MarkInteraction;
+    private static final Color[] Foreground = ColorService.Mark;
     private static final Color[] Background = ColorService.Background;
 
+
     public MarkButton(Model model) {
-        super();
-        this.model = new Model(model);
-
-        counter = new CounterLabel();
-        separator = new Separator();
-        markLabel = new MarkLabel();
-
-        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        setLayout(new MigLayout("", "12[]9[]10[]8", "8[]8"));
-
-        add(counter, ", h 16!");
-        add(separator, "w 1!, h 16!");
-        add(markLabel, ", h 16!");
-
-        setFont(FontService.demi(14));
-        setForeground(ForegroundInteraction);
-        setBackground(Background);
-
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                getListener().markClicked(MarkButton.this, getSolutionId(), MarkButton.this.model.userMarkId);
-            }
-        });
-
+        setLayout(new MigLayout("fillx", "0[fill]0", "0[fill]0"));
         update(model);
-        updateUI();
     }
 
     public void setLoading() {
-        MarkButton.this.setEnabled(false);
+        removeAll();
+        // NOTE do not null normalButton, because when loading fails, we have to revert to the previous state
+        // TODO it would be cleaner to get the necessary model in interruptLoading as a parameter
+        loadingButton = new LoadingButton();
+        loadingButton.setPreferredSize(normalMarkButton.getPreferredSize());
+        add(loadingButton);
+
+        revalidate();
+        repaint();
+    }
+
+    public void interruptLoading() {
+        // TODO some better way to handle state change?
+        removeAll();
+        loadingButton = null;
+        add(normalMarkButton);
+
+        revalidate();
+        repaint();
     }
 
     public void update(Model model) {
-        MarkButton.this.setEnabled(true);
         this.model = new Model(model);
 
-        if (model.userMarkId == null) setFilled(false);
-        else setFilled(true);
+        removeAll();
+        loadingButton = null;
+        normalMarkButton = new NormalMarkButton();
+        add(normalMarkButton);
 
-        // Cheat. If the button is filled, we use the background color of the button as foreground color of the child components
-        Color childrenForeground;
-        if (MarkButton.this.isFilled()) childrenForeground = getBackground();
-        else childrenForeground = getForeground();
-        for (Component c : getComponents()) c.setForeground(childrenForeground);
-
-        counter.update();
-        markLabel.update();
+        revalidate();
+        repaint();
     }
 
-    @Override
-    protected void paintContent(Graphics2D g2) {
-        Font x = markLabel.getFont();
-        markLabel.getFontMetrics(x);
-        super.paintChildren(g2);
-    }
 
-    @Override
-    public void setForeground(Color color) {
-        super.setForeground(color);
-        // when the button is not filled, we have to change the foreground of the children
-        if (!isFilled()) {
-            for (Component c : getComponents()) c.setForeground(color);
-        }
-    }
+    private final class NormalMarkButton extends SamebugButton {
+        public NormalMarkButton() {
+            final CounterLabel counter = new CounterLabel();
+            final Separator separator = new Separator();
+            final MarkLabel markLabel = new MarkLabel();
 
-    private final class CounterLabel extends SamebugLabel {
-        {
-            setHorizontalAlignment(SwingConstants.CENTER);
-            setFont(MarkButton.this.getFont());
-        }
+            setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+            setLayout(new MigLayout("", "12[]9[]10[]8", "8[]8"));
 
-        void update() {
-            setText(Integer.toString(model.marks));
-        }
-    }
+            add(counter, ", h 16!");
+            add(separator, "w 1!, h 16!");
+            add(markLabel, ", h 16!");
 
-    private final class MarkLabel extends SamebugLabel {
-        {
-            setHorizontalAlignment(SwingConstants.CENTER);
-            setFont(MarkButton.this.getFont());
-        }
+            setFont(FontService.demi(14));
+            setForeground(ForegroundInteraction);
+            setBackground(Background);
 
-        void update() {
-            if (MarkButton.this.model.userMarkId == null) setText(MessageService.message("samebug.component.mark.mark"));
-            else setText(MessageService.message("samebug.component.mark.marked"));
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    getListener().markClicked(MarkButton.this, getSolutionId(), MarkButton.this.model.userMarkId);
+                }
+            });
+
+            Color childrenForeground;
+            if (MarkButton.this.model.userMarkId == null) {
+                setFilled(false);
+                childrenForeground = getForeground();
+            } else {
+                setFilled(true);
+                childrenForeground = getBackground();
+            }
+            // Cheat. If the button is filled, we use the background color of the button as foreground color of the child components
+            for (Component c : getComponents()) c.setForeground(childrenForeground);
+
+            updateUI();
         }
 
         @Override
-        public void paint(Graphics g) {
-            super.paint(g);
+        protected void paintContent(Graphics2D g2) {
+            // we paint the background on our own
+            super.paintChildren(g2);
         }
+
+        @Override
+        public void setForeground(Color color) {
+            super.setForeground(color);
+            // when the button is not filled, we have to change the foreground of the children
+            if (!isFilled()) {
+                for (Component c : getComponents()) c.setForeground(color);
+            }
+        }
+
+        private final class CounterLabel extends SamebugLabel {
+            {
+                setHorizontalAlignment(SwingConstants.CENTER);
+                setFont(NormalMarkButton.this.getFont());
+
+                setText(Integer.toString(MarkButton.this.model.marks));
+            }
+        }
+
+        private final class MarkLabel extends SamebugLabel {
+            {
+                setHorizontalAlignment(SwingConstants.CENTER);
+                setFont(NormalMarkButton.this.getFont());
+
+                if (MarkButton.this.model.userMarkId == null) setText(MessageService.message("samebug.component.mark.mark"));
+                else setText(MessageService.message("samebug.component.mark.marked"));
+            }
+
+            @Override
+            public void paint(Graphics g) {
+                super.paint(g);
+            }
+        }
+
+        private final class Separator extends JComponent {
+            @Override
+            public void paint(Graphics g) {
+                Graphics2D g2 = DrawService.init(g);
+                g2.setColor(getForeground());
+
+                g2.drawLine(0, 0, 0, 16);
+            }
+        }
+
     }
 
-    private final class Separator extends JComponent {
-        @Override
-        public void paint(Graphics g) {
-            Graphics2D g2 = DrawService.init(g);
-            g2.setColor(getForeground());
+    private final class LoadingButton extends SamebugButton {
+        public LoadingButton() {
+            setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+            setLayout(new MigLayout("", ":push[]:push", "6[]6"));
 
-            g2.drawLine(0, 0, 0, 16);
+            JLabel icon = new JLabel(IconService.loading());
+
+            add(icon, "align center, h 20!");
+
+            setForeground(ForegroundInteraction);
+            setBackground(Background);
+            updateUI();
+        }
+
+        @Override
+        protected void paintContent(Graphics2D g2) {
+            // we paint the background on our own
+            super.paintChildren(g2);
         }
     }
 

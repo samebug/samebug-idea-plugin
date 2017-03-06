@@ -23,6 +23,7 @@ import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.solutions.IMarkButton;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.ui.global.IdeaListenerService;
 
 final class MarkController implements IMarkButton.Listener {
     final static Logger LOGGER = Logger.getInstance(MarkController.class);
@@ -32,7 +33,7 @@ final class MarkController implements IMarkButton.Listener {
         this.controller = controller;
 
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
-        projectConnection.subscribe(IMarkButton.Listener.TOPIC, this);
+        projectConnection.subscribe(IdeaListenerService.MarkButton, this);
     }
 
     @Override
@@ -63,6 +64,7 @@ final class MarkController implements IMarkButton.Listener {
                     ApplicationManager.getApplication().invokeLater(new Runnable() {
                         @Override
                         public void run() {
+                            markButton.interruptLoading();
                             controller.view.popupError("Mark failed");
                         }
                     });

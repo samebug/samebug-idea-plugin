@@ -23,6 +23,6 @@ import javax.swing.*;
 public final class IdeaIconService extends IconService {
     @Override
     protected Icon getImage(String path) {
-        return IconLoader.getIcon(path);
+        return IconLoader.getIconSnapshot(IconLoader.getIcon(path));
     }
 }

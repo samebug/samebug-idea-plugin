@@ -15,12 +15,13 @@
  */
 package com.samebug.clients.common.ui.component.solutions;
 
-import com.intellij.util.messages.Topic;
 import org.jetbrains.annotations.Nullable;
 
 public interface IMarkButton {
 
     void setLoading();
+
+    void interruptLoading();
 
     void update(Model model);
 
@@ -42,8 +43,6 @@ public interface IMarkButton {
     }
 
     interface Listener {
-        Topic<Listener> TOPIC = Topic.create("IMarkButton", Listener.class);
-
         void markClicked(IMarkButton markButton, Integer solutionId, Integer currentMarkId);
     }
 

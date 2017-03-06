@@ -30,6 +30,8 @@ public class ErrorBar extends SamebugPanel {
         setLayout(new MigLayout("", "20[]10[]20", "15[]15"));
         final JLabel alertIcon = new JLabel(IconService.alertErrorBar());
         final JLabel message = new JLabel(text);
+        // The color of this text is the samebug under both theme
+        message.setForeground(ColorService.forLightTheme(ColorService.Text));
         add(alertIcon, "cell 0 0");
         add(message, "cell 1 0");
     }

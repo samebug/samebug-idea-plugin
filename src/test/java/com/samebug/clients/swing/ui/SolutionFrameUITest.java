@@ -7,6 +7,7 @@ import com.samebug.clients.swing.ui.component.solutions.SolutionFrame;
 import com.samebug.clients.swing.ui.global.*;
 import com.samebug.clients.swing.ui.globalService.TestColorService;
 import com.samebug.clients.swing.ui.globalService.TestIconService;
+import com.samebug.clients.swing.ui.globalService.TestListenerService;
 import com.samebug.clients.swing.ui.globalService.TestWebImageService;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -38,7 +39,9 @@ public class SolutionFrameUITest extends JDialog {
         ColorService.install(new TestColorService());
         WebImageService.install(new TestWebImageService());
         IconService.install(new TestIconService());
+        IconService.install(new TestIconService());
         MessageService.install(new IdeaMessageService());
+        ListenerService.install(new TestListenerService());
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
