@@ -17,10 +17,10 @@ package com.samebug.clients.swing.ui.component.solutions;
 
 import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.solutions.ITipResultsTab;
+import com.samebug.clients.swing.ui.component.solutions.writeTip.WriteTip;
 import com.samebug.clients.swing.ui.component.util.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.component.util.scrollPane.SamebugScrollPane;
-import com.samebug.clients.swing.ui.global.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -63,11 +63,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
 
     private final class EmptyContentPanel extends SamebugPanel {
         {
-            final LargeWriteTipCTA cta = new LargeWriteTipCTA(ctaModel) {
-                {
-                    label.setText(MessageService.message("samebug.component.cta.writeTip.noTipHits.label", model.usersWaitingHelp));
-                }
-            };
+            final WriteTip cta = new WriteTip(ctaModel, WriteTip.CTA_TYPE.LARGE_FOR_TIP_HITS);
             setLayout(new MigLayout("fillx", "20[fill]0", "0[]20"));
             add(cta);
         }
@@ -76,7 +72,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
     private final class ContentPanel extends SamebugPanel {
         {
             final ListPanel listPanel = new ListPanel();
-            final SmallWriteTipCTA writeTip = new SmallWriteTipCTA(ctaModel);
+            final WriteTip writeTip = new WriteTip(ctaModel, WriteTip.CTA_TYPE.SMALL);
             final BugmateList bugmateList = new BugmateList(model.bugmateList);
 
             setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]20[]20"));

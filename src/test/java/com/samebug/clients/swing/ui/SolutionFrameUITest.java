@@ -17,28 +17,33 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
 public class SolutionFrameUITest extends JDialog {
     private static final String resourceJson = "/com/samebug/clients/idea/ui/solutionFrame/t2w27.json";
 
-    public SolutionFrameUITest(Gson gson) throws IOException {
+    public SolutionFrameUITest(Gson gson) throws IOException, InvocationTargetException, InterruptedException {
         InputStream stream = getClass().getResourceAsStream(resourceJson);
-        ISolutionFrame.Model model = gson.fromJson(new InputStreamReader(stream), SolutionFrame.Model.class);
+        final ISolutionFrame.Model model = gson.fromJson(new InputStreamReader(stream), SolutionFrame.Model.class);
         stream.close();
 
-        SolutionFrame sf = new SolutionFrame();
-        sf.loadingSucceeded(model);
-        JComponent contentPane = sf;
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                SolutionFrame sf = new SolutionFrame();
+                sf.loadingSucceeded(model);
+                setContentPane(sf);
+            }
+        });
 
-        setContentPane(contentPane);
+
     }
 
-    public static void main(String[] args) throws IOException, FontFormatException {
+    public static void main(String[] args) throws IOException, FontFormatException, InvocationTargetException, InterruptedException {
         FontService.registerFonts();
         ColorService.install(new TestColorService());
         WebImageService.install(new TestWebImageService());
-        IconService.install(new TestIconService());
         IconService.install(new TestIconService());
         MessageService.install(new IdeaMessageService());
         ListenerService.install(new TestListenerService());

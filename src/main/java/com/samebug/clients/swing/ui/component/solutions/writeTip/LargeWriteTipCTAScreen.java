@@ -13,43 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui.component.solutions;
+package com.samebug.clients.swing.ui.component.solutions.writeTip;
 
-import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
 import com.samebug.clients.swing.ui.component.util.button.SamebugButton;
 import com.samebug.clients.swing.ui.component.util.multiline.CenteredMultilineLabel;
 import com.samebug.clients.swing.ui.component.util.panel.EmphasizedPanel;
-import com.samebug.clients.swing.ui.global.ListenerService;
 import com.samebug.clients.swing.ui.global.MessageService;
 import net.miginfocom.swing.MigLayout;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.*;
 
-public class LargeWriteTipCTA extends EmphasizedPanel implements IHelpOthersCTA {
-    protected final Model model;
+final class LargeWriteTipCTAScreen extends EmphasizedPanel implements WriteTipCTAScreen {
+    final SamebugButton button;
+    final CenteredMultilineLabel label;
 
-    protected final CenteredMultilineLabel label;
-
-    public LargeWriteTipCTA(Model model) {
-        this.model = new Model(model);
-
-        final SamebugButton button = new SamebugButton(MessageService.message("samebug.component.tip.write.cta.button"), true);
+    public LargeWriteTipCTAScreen() {
+        button = new SamebugButton(MessageService.message("samebug.component.tip.write.cta.button"), true);
         label = new CenteredMultilineLabel();
 
         setLayout(new MigLayout("fillx, w 300", "40[]40", "40[]20[]40"));
         add(label, "cell 0 0, wmin 0, growx");
         add(button, "cell 0 1, align center");
-
-        button.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                getListener().ctaClicked(LargeWriteTipCTA.this);
-            }
-        });
     }
 
-    private Listener getListener() {
-        return ListenerService.getListener(this, IHelpOthersCTA.Listener.class);
+    @Override
+    public JComponent getCTAScreen() {
+        return this;
+    }
+
+    @Override
+    public JComponent getCTAButton() {
+        return button;
     }
 }

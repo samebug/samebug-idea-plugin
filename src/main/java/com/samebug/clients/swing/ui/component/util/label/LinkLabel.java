@@ -40,18 +40,16 @@ public class LinkLabel extends JLabel {
         setForeground(ColorService.LinkInteraction);
         setFont(font);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-        updateUI();
     }
 
     public void setForeground(Colors[] c) {
         foregroundColors = c;
         super.setForeground(ColorService.forCurrentTheme(foregroundColors).normal);
+        interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, ColorService.forCurrentTheme(foregroundColors), this);
     }
 
     @Override
     public void updateUI() {
         setUI(new SamebugLabelUI());
-        interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, ColorService.forCurrentTheme(foregroundColors), this);
     }
 }

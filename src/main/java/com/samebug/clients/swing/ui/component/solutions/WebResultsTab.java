@@ -17,6 +17,7 @@ package com.samebug.clients.swing.ui.component.solutions;
 
 import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.solutions.IWebResultsTab;
+import com.samebug.clients.swing.ui.component.solutions.writeTip.WriteTip;
 import com.samebug.clients.swing.ui.component.util.button.SamebugButton;
 import com.samebug.clients.swing.ui.component.util.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
@@ -69,11 +70,7 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
 
     private final class EmptyContentPanel extends SamebugPanel {
         {
-            final LargeWriteTipCTA cta = new LargeWriteTipCTA(ctaModel) {
-                {
-                    label.setText(MessageService.message("samebug.component.cta.writeTip.noWebHits.label", model.usersWaitingHelp));
-                }
-            };
+            final WriteTip cta = new WriteTip(ctaModel, WriteTip.CTA_TYPE.LARGE_FOR_WEB_HITS);
             setLayout(new MigLayout("fillx", "20[fill]0", "0[]20"));
             add(cta);
         }

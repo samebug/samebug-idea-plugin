@@ -13,43 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui.component.solutions;
+package com.samebug.clients.swing.ui.component.solutions.writeTip;
 
-import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
 import com.samebug.clients.swing.ui.component.util.button.SamebugButton;
 import com.samebug.clients.swing.ui.component.util.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.component.util.panel.EmphasizedPanel;
-import com.samebug.clients.swing.ui.global.ListenerService;
 import com.samebug.clients.swing.ui.global.MessageService;
 import net.miginfocom.swing.MigLayout;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.*;
 
-public final class SmallWriteTipCTA extends EmphasizedPanel implements IHelpOthersCTA {
-    private final IHelpOthersCTA.Model model;
+final class SmallWriteTipCTAScreen extends EmphasizedPanel implements WriteTipCTAScreen {
+    final SamebugButton button;
+    final SamebugMultilineLabel label;
 
-    public SmallWriteTipCTA(IHelpOthersCTA.Model model) {
-        this.model = new IHelpOthersCTA.Model(model);
-
-        final SamebugButton button = new SamebugButton();
+    SmallWriteTipCTAScreen(int usersWaitingHelp) {
+        button = new SamebugButton();
         button.setText(MessageService.message("samebug.component.tip.write.cta.button"));
-        final SamebugMultilineLabel label = new SamebugMultilineLabel();
-        label.setText(MessageService.message("samebug.component.cta.writeTip.tips.label", model.usersWaitingHelp));
+        label = new SamebugMultilineLabel();
+        label.setText(MessageService.message("samebug.component.cta.writeTip.tips.label", usersWaitingHelp));
 
         setLayout(new MigLayout("fillx, w 300", "20[fill]50[fill]10", "20[fill]20"));
         add(button, "cell 0 0");
         add(label, "cell 1 0, wmin 0");
-
-        button.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                getListener().ctaClicked(SmallWriteTipCTA.this);
-            }
-        });
     }
 
-    private Listener getListener() {
-        return ListenerService.getListener(this, IHelpOthersCTA.Listener.class);
+    @Override
+    public JComponent getCTAScreen() {
+        return this;
+    }
+
+    @Override
+    public JComponent getCTAButton() {
+        return button;
     }
 }

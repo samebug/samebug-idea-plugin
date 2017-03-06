@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui.globalService;
+package com.samebug.clients.swing.ui.component.solutions.writeTip;
 
-import com.samebug.clients.swing.ui.global.ColorService;
+import javax.swing.*;
 
-public final class TestColorService extends ColorService {
-    final boolean isUnderDarcula = true;
+public interface WriteTipCTAScreen {
+    JComponent getCTAScreen();
 
-    @Override
-    protected <T> T internalForCurrentTheme(T[] objects) {
-        if (objects == null) return null;
-        else if (isUnderDarcula && objects.length > 1) return objects[1];
-        else return objects[0];
-    }
+    JComponent getCTAButton();
 }
