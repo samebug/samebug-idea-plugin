@@ -16,6 +16,7 @@
 package com.samebug.clients.swing.ui.component.solutions;
 
 import com.samebug.clients.common.ui.component.solutions.IBugmateList;
+import com.samebug.clients.swing.ui.component.solutions.requestTip.RequestTip;
 import com.samebug.clients.swing.ui.component.util.button.SamebugButton;
 import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
@@ -38,14 +39,14 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
         final SubheaderLabel subheader = new SubheaderLabel();
         final BugmateGrid bugmateGrid = new BugmateGrid();
         final MoreLabel more = new MoreLabel();
-        final AskButton askButton = new AskButton();
+        final RequestTip requestTip = new RequestTip();
 
         setLayout(new MigLayout("fillx", "0[]0", "0[]25[]25[]10[]0"));
 
         add(subheader, "cell 0 0");
         add(bugmateGrid, "cell 0 1, growx");
         add(more, "cell 0 2, align center");
-        add(askButton, "cell 0 3, align center");
+        add(requestTip, "cell 0 3, align center");
     }
 
     private final class BugmateGrid extends TransparentPanel {
@@ -85,18 +86,6 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
         {
             setText(MessageService.message("samebug.component.bugmate.list.more", model.numberOfOtherBugmates));
             setFont(FontService.regular(14));
-        }
-    }
-
-    private final class AskButton extends SamebugButton {
-        {
-            setText(MessageService.message("samebug.component.bugmate.list.ask"));
-            addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    getListener().askBugmates(BugmateList.this);
-                }
-            });
         }
     }
 

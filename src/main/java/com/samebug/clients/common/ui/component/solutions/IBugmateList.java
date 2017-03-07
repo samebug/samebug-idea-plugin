@@ -35,6 +35,5 @@ public interface IBugmateList {
     }
 
     interface Listener {
-        void askBugmates(IBugmateList source);
     }
 }
