@@ -24,7 +24,6 @@ import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.global.*;
 import net.miginfocom.swing.MigLayout;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class WriteTipScreen extends SamebugPanel {
@@ -34,14 +33,14 @@ public class WriteTipScreen extends SamebugPanel {
 
     public WriteTipScreen(int peopleToHelp) {
         setOpaque(false);
+        setBackground(ColorService.Tip);
+
         titleLabel = new SamebugLabel(MessageService.message("samebug.component.tip.write.title"), FontService.regular(14));
         titleLabel.setForeground(ColorService.TipText);
         tipArea = new WriteTipArea(peopleToHelp);
         actionRow = new ActionRow();
 
         setLayout(new MigLayout("fillx", "20[fill]20", "18[]13[]10[]20"));
-        setBackground(ColorService.Tip);
-
         add(titleLabel, "cell 0 0");
         add(tipArea, "cell 0 1");
         add(actionRow, "cell 0 2");
@@ -65,7 +64,7 @@ public class WriteTipScreen extends SamebugPanel {
             sendButton.setFont(FontService.demi(14));
 
             cancelButton = new LinkLabel(MessageService.message("samebug.component.tip.write.cancel"));
-            cancelButton.setForeground(ColorService.MarkInteraction);
+            cancelButton.setInteractionColors(ColorService.MarkInteraction);
             cancelButton.setFont(FontService.demi(14));
 
             setLayout(new MigLayout("", "0[]20[]:push", "0[]0"));

@@ -70,8 +70,24 @@ public abstract class ColorService {
     public final static Color[] TipText = new Color[]{new Color(0x086a8b), new Color(0xDBEFFF)};
     public final static Color[] ScrollbarTrack = new Color[]{new Color(0xF5F5F5), new Color(0x2D2E2F)};
     public final static Color[] ScrollbarThumb = new Color[]{new Color(0xD5D5D5), new Color(0x484A4B)};
-    public final static Color[] FieldError = new Color[]{new Color(0xEA0200), new Color(0xF9241A)};
     public final static Color[] ErrorBar = new Color[]{new Color(0xF8F4C8), new Color(0xF2EBAB)};
+
+    public final static Color[] FieldName = new Color[]{new Color(0x333333), new Color(0x8B8C8E)};
+    public final static Color[] FieldNormalBorder = new Color[]{new Color(0xB2B2B2), new Color(0x666768)};
+    public final static Color[] FieldFocusBorder = new Color[]{new Color(0x333333), new Color(0xC8C8C9)};
+    public final static Color[] FieldErrorBorder = new Color[]{new Color(0xE80D0D), new Color(0xFF1B1B)};
+    public final static Color[] FieldPlaceholder = new Color[]{new Color(0xAAAAAA), new Color(0xCBCDCF)};
+    public final static Color[] FieldError = new Color[]{new Color(0xE80D0D), new Color(0xFF1B1B)};
+
+    public final static Color[] TipFieldNormalBorder = new Color[]{new Color(0xB5D7E2), new Color(0x2072AE)};
+    public final static Color[] TipFieldFocusBorder = new Color[]{new Color(0x3379A1), new Color(0x61B6E7)};
+    public final static Color[] TipFieldErrorBorder = new Color[]{new Color(0xE80D0D), new Color(0xFF5644)};
+    public final static Color[] TipFieldPlaceholder = new Color[]{new Color(0xAAAAAA), new Color(0x3682BE)};
+    public final static Color[] TipFieldError = new Color[]{new Color(0xE80D0D), new Color(0xFF5644)};
+    public final static Color[] TipFieldBackground = new Color[]{new Color(0xFFFFFF), new Color(0x083960)};
+    public final static Color[] TipFieldText = new Color[]{new Color(0x000000), new Color(0xDBEFFF)};
+
+
 
     public final static Colors[] LinkInteraction = new Colors[]{
             new Colors(new Color(0xFF8000), new Color(0xFEA144), new Color(0xED7700)),

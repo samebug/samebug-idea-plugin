@@ -24,7 +24,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class LinkLabel extends JLabel {
-    private Colors[] foregroundColors;
+    private Colors[] interactionColors;
     private ForegroundColorChanger interactionListener;
 
     public LinkLabel() {
@@ -37,19 +37,25 @@ public class LinkLabel extends JLabel {
 
     public LinkLabel(String text, Font font) {
         super(text);
-        setForeground(ColorService.LinkInteraction);
+        setInteractionColors(ColorService.LinkInteraction);
         setFont(font);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
-    public void setForeground(Colors[] c) {
-        foregroundColors = c;
-        super.setForeground(ColorService.forCurrentTheme(foregroundColors).normal);
-        interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, ColorService.forCurrentTheme(foregroundColors), this);
+    public void setInteractionColors(Colors[] c) {
+        interactionColors = c;
+        updateColors();
+    }
+
+    public void updateColors() {
+        Colors currentColors = ColorService.forCurrentTheme(interactionColors);
+        interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, currentColors, this);
+        super.setForeground(currentColors.normal);
     }
 
     @Override
     public void updateUI() {
         setUI(new SamebugLabelUI());
+        if (interactionColors != null) updateColors();
     }
 }
