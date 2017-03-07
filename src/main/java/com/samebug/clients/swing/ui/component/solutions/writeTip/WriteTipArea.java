@@ -110,7 +110,7 @@ public final class WriteTipArea extends SamebugPanel {
             editableArea = new EditableArea();
             lengthCounter = new LengthCounter();
 
-            setLayout(new MigLayout("fillx", "10[]10", "10[]10[]10"));
+            setLayout(new MigLayout("fillx", "10[]10", "10[]10[]6"));
             add(editableArea, "cell 0 0, wmin 0, growx");
             add(lengthCounter, "cell 0 1, align right");
 

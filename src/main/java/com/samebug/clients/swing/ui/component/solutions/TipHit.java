@@ -49,7 +49,7 @@ public final class TipHit extends TransparentPanel implements ITipHit {
         final JPanel filler = new TransparentPanel();
         final AuthorPanel author = new AuthorPanel();
 
-        setLayout(new MigLayout("fillx", "20[fill, 300]20", "20[]15[]15[]20"));
+        setLayout(new MigLayout("fillx", "20[fill, 300]20", "18[]13[]15[]20"));
 
         add(tipLabel, "cell 0 0");
         add(tipMessage, "cell 0 1, wmin 0, growx");

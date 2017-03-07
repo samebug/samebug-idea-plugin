@@ -21,10 +21,7 @@ import com.samebug.clients.swing.ui.component.util.label.LinkLabel;
 import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.swing.ui.component.util.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
-import com.samebug.clients.swing.ui.global.ColorService;
-import com.samebug.clients.swing.ui.global.DrawService;
-import com.samebug.clients.swing.ui.global.FontService;
-import com.samebug.clients.swing.ui.global.ListenerService;
+import com.samebug.clients.swing.ui.global.*;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -36,12 +33,13 @@ public class WriteTipScreen extends SamebugPanel {
     final ActionRow actionRow;
 
     public WriteTipScreen(int peopleToHelp) {
-        // TODO texts
-        titleLabel = new SamebugLabel("WRITE TIP");
+        setOpaque(false);
+        titleLabel = new SamebugLabel(MessageService.message("samebug.component.tip.write.title"), FontService.regular(14));
+        titleLabel.setForeground(ColorService.TipText);
         tipArea = new WriteTipArea(peopleToHelp);
         actionRow = new ActionRow();
 
-        setLayout(new MigLayout("fillx", "20[fill]20", "20[]20[]10[]20"));
+        setLayout(new MigLayout("fillx", "20[fill]20", "18[]13[]10[]20"));
         setBackground(ColorService.Tip);
 
         add(titleLabel, "cell 0 0");
@@ -62,15 +60,15 @@ public class WriteTipScreen extends SamebugPanel {
         final LinkLabel cancelButton;
 
         {
-            sendButton = new SamebugButton("Send tip", true);
+            sendButton = new SamebugButton(MessageService.message("samebug.component.tip.write.send"), true);
             sendButton.setForeground(ColorService.MarkInteraction);
             sendButton.setFont(FontService.demi(14));
 
-            cancelButton = new LinkLabel("Cancel");
+            cancelButton = new LinkLabel(MessageService.message("samebug.component.tip.write.cancel"));
             cancelButton.setForeground(ColorService.MarkInteraction);
             cancelButton.setFont(FontService.demi(14));
 
-            setLayout(new MigLayout("", "0[]20[]:push"));
+            setLayout(new MigLayout("", "0[]20[]:push", "0[]0"));
             add(sendButton);
             add(cancelButton);
         }
