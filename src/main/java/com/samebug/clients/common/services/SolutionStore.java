@@ -27,4 +27,9 @@ public final class SolutionStore {
         this.solutions = new ConcurrentHashMap<Integer, Solutions>();
     }
 
+    public Solutions get(int searchId) {
+        // TODO def copy?
+        return solutions.get(searchId);
+    }
+
 }

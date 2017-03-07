@@ -26,4 +26,9 @@ public final class BugmateStore {
     public BugmateStore() {
         this.bugmates = new ConcurrentHashMap<Integer, BugmatesResult>();
     }
+
+    public BugmatesResult get(int searchId) {
+        // TODO def copy
+        return bugmates.get(searchId);
+    }
 }

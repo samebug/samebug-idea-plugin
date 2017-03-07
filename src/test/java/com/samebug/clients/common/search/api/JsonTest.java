@@ -3,6 +3,7 @@ package com.samebug.clients.common.search.api;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.samebug.clients.common.search.api.client.RestError;
 import com.samebug.clients.common.search.api.entities.*;
 import com.samebug.clients.common.search.api.entities.Exception;
@@ -71,6 +72,16 @@ public class JsonTest {
         Assert.assertTrue(x.getSearchGroup().getLastSearch().getId() > 0);
         Assert.assertTrue(x.getTips().size() >= 0);
         Assert.assertTrue(x.getReferences().size() > 0);
+    }
+
+    // curl -XPOST 'http://nightly.samebug.com/rest/0.11/tip' -H'X-Samebug-ApiKey: 355be195-c10b-11e5-a334-000d3a317492' -H'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H'Accept: application/json' -H'User-Agent: Samebug-Idea-Client/2.0.0' -d'searchId=5510034&message=good_job_curl' |\
+    // jq . > src/test/resources/com/samebug/clients/common/search/api/jsontest/post-tip-1.json
+    @Test
+    public void postTip() {
+        TypeToken<RestHit<Tip>> typeToken = new TypeToken<RestHit<Tip>>() {};
+        RestHit<Tip> x = gson.fromJson(stream("post-tip-1"), typeToken.getType());
+        checkFields(x);
+        Assert.assertTrue(x.getCreatedBy().getId() == 1);
     }
 
     void checkFields(@NotNull Object o) {

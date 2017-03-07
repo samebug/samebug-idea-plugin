@@ -22,7 +22,7 @@ import org.jetbrains.annotations.PropertyKey;
 public abstract class MessageService {
     private static MessageService INSTANCE = null;
     // NOTE we can slice it to parts, e.g. one for component labels, one for intro texts, etc.
-    protected static final String PATH_TO_BUNDLE = "com.samebug.messages.Messages";
+    public static final String PATH_TO_BUNDLE = "com.samebug.messages.Messages";
 
     public static void install(MessageService instance) {
         assert INSTANCE == null : "MessageService has already been installed";

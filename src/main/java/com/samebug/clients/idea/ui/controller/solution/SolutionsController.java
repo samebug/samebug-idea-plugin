@@ -66,6 +66,7 @@ public final class SolutionsController implements Disposable {
     private final ProfileService profileService;
     private final SolutionStore solutionStore;
     private final SolutionService solutionService;
+    private final BugmateStore bugmateStore;
     private final BugmateService bugmateService;
 
     public SolutionsController(ToolWindowController twc, Project project, final int searchId) {
@@ -93,6 +94,7 @@ public final class SolutionsController implements Disposable {
         profileStore = plugin.profileStore;
         profileService = plugin.profileService;
         solutionService = plugin.solutionService;
+        bugmateStore = plugin.bugmateStore;
         bugmateService = plugin.bugmateService;
     }
 
@@ -127,27 +129,10 @@ public final class SolutionsController implements Disposable {
     }
 
     public void loadLazy() {
-        final Future<Solutions> solutionsTask = PooledThreadExecutor.INSTANCE.submit(new Callable<Solutions>() {
-            @Override
-            public Solutions call() throws SamebugClientException {
-                return solutionService.loadSolutions(searchId);
-            }
-        });
-        final Future<BugmatesResult> bugmatesTask = PooledThreadExecutor.INSTANCE.submit(new Callable<BugmatesResult>() {
-            @Override
-            public BugmatesResult call() throws SamebugClientException {
-                return bugmateService.loadBugmates(searchId);
-            }
-        });
-
-        final Future<UserInfo> userInfoTask;
-        final Future<UserStats> userStatsTask;
-        final UserInfo userInfo = profileStore.getUser();
-        final UserStats userStats = profileStore.getUserStats();
-        if (userInfo != null) userInfoTask = new FixedFuture<UserInfo>(userInfo);
-        else userInfoTask = FixedFuture.completeExceptionally(new IllegalStateException(""));
-        if (userStats != null) userStatsTask = new FixedFuture<UserStats>(userStats);
-        else userStatsTask = FixedFuture.completeExceptionally(new IllegalStateException(""));
+        final Future<UserInfo> userInfoTask = new FixedFuture<UserInfo>(profileStore.getUser());
+        final Future<UserStats> userStatsTask = new FixedFuture<UserStats>(profileStore.getUserStats());
+        final Future<Solutions> solutionsTask = new FixedFuture<Solutions>(solutionStore.get(searchId));
+        final Future<BugmatesResult> bugmatesTask = new FixedFuture<BugmatesResult>(bugmateStore.get(searchId));
 
         load(solutionsTask, bugmatesTask, userInfoTask, userStatsTask);
     }
@@ -165,13 +150,19 @@ public final class SolutionsController implements Disposable {
                         final BugmatesResult bugmates = bugmatesTask.get();
                         final UserInfo user = userInfoTask.get();
                         final UserStats statistics = userStatsTask.get();
-                        final SolutionFrame.Model model = convertSolutionFrame(solutions, bugmates, user, statistics);
-                        ApplicationManager.getApplication().invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.loadingSucceeded(model);
-                            }
-                        });
+                        if (solutions == null) throw new IllegalStateException("solutions was null");
+                        else if (bugmates == null) throw new IllegalStateException("bugmates was null");
+                        else if (user == null) throw new IllegalStateException("user was null");
+                        else if (statistics == null) throw new IllegalStateException("statistics was null");
+                        else {
+                            final SolutionFrame.Model model = convertSolutionFrame(solutions, bugmates, user, statistics);
+                            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.loadingSucceeded(model);
+                                }
+                            });
+                        }
                     } catch (IllegalStateException e) {
                         // TODO generic error, probably safe to retry (loadAll)
                         LOGGER.warn("Failed to load user beforehand", e);
@@ -244,6 +235,14 @@ public final class SolutionsController implements Disposable {
         return new IMarkButton.Model(hit.getScore(), hit.getMarkId(), true /*TODO*/);
     }
 
+    ITipHit.Model convertTipHit(RestHit<Tip> hit) {
+        Tip tip = hit.getSolution();
+        IMarkButton.Model mark = convertMarkPanel(hit);
+        UserReference author = hit.getCreatedBy();
+        ITipHit.Model tipHit = new ITipHit.Model(tip.getTip(), hit.getSolutionId(), tip.getCreatedAt(), author.getDisplayName(), author.getAvatarUrl(), mark);
+        return tipHit;
+    }
+
     ISolutionFrame.Model convertSolutionFrame(@NotNull Solutions solutions, @NotNull BugmatesResult bugmates, @NotNull UserInfo user, @NotNull UserStats statistics) {
         final List<IWebHit.Model> webHits = new ArrayList<IWebHit.Model>(solutions.getReferences().size());
         for (RestHit<SolutionReference> externalHit : solutions.getReferences()) {
@@ -266,10 +265,7 @@ public final class SolutionsController implements Disposable {
         IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(0);
         final List<ITipHit.Model> tipHits = new ArrayList<ITipHit.Model>(solutions.getTips().size());
         for (RestHit<Tip> tipSolution : solutions.getTips()) {
-            Tip tip = tipSolution.getSolution();
-            IMarkButton.Model mark = convertMarkPanel(tipSolution);
-            UserReference author = tipSolution.getCreatedBy();
-            ITipHit.Model tipHit = new ITipHit.Model(tip.getTip(), tipSolution.getSolutionId(), tip.getCreatedAt(), author.getDisplayName(), author.getAvatarUrl(), mark);
+            ITipHit.Model tipHit = convertTipHit(tipSolution);
             tipHits.add(tipHit);
         }
         final List<IBugmateHit.Model> bugmateHits = new ArrayList<IBugmateHit.Model>(bugmates.getBugmates().size());

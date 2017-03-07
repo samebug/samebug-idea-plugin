@@ -50,8 +50,8 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
         tipScreen.actionRow.sendButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // TODO post
-                getListener().ctaClicked(WriteTip.this);
+                // TODO ugh
+                getListener().postTip(WriteTip.this, tipScreen.tipArea.borderedArea.editableArea.getText());
             }
         });
         tipScreen.actionRow.cancelButton.addMouseListener(new MouseAdapter() {
@@ -81,6 +81,22 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
 
         revalidate();
         repaint();
+    }
+
+    @Override
+    public void startPostTip() {
+        tipScreen.actionRow.sendButton.setText("loading...");
+    }
+
+    @Override
+    public void interruptPostTip() {
+        tipScreen.actionRow.sendButton.setText("Post tip");
+
+    }
+
+    @Override
+    public void successPostTip() {
+        changeToClosedState();
     }
 
     public enum CTA_TYPE {

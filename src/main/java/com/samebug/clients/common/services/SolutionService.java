@@ -61,6 +61,11 @@ public final class SolutionService {
                     ClientResponse<RestHit<Tip>> request() {
                         return client.postTip(searchId, tip, sourceUrl);
                     }
+
+                    protected void success(RestHit<Tip> response) {
+                        // TODO thread safety
+                        solutionStore.solutions.get(searchId).getTips().add(0, response);
+                    }
                 };
         return clientService.execute(requestHandler);
     }

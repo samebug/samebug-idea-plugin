@@ -1,0 +1,30 @@
+{
+  "solutionId": 2960498,
+  "solution": {
+    "type": "tip",
+    "author": {
+      "name": "poroszd",
+      "url": "https://samebug.io/user/1/poroszd",
+      "avatarUrl": "https://samebug.io/avatars/1/3"
+    },
+    "createdAt": 1488879574514,
+    "tip": "good_job_curl",
+    "via": null
+  },
+  "stackTraceId": "a18f1bd4be909c86632055b755101ab9",
+  "matchLevel": 4,
+  "score": 0,
+  "markId": null,
+  "createdBy": {
+    "id": 1,
+    "slug": "poroszd",
+    "displayName": "poroszd",
+    "avatarUrl": "https://samebug.io/avatars/1/3",
+    "defaultWorkspaceId": 1
+  },
+  "exception": {
+    "typeName": "com.samebug.clients.search.api.exceptions.UserUnauthenticated",
+    "message": "User is unauthenticated"
+  },
+  "tagged": true
+}

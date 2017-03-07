@@ -16,6 +16,10 @@
 package com.samebug.clients.common.ui.component.solutions;
 
 public interface IHelpOthersCTA {
+    void startPostTip();
+    void interruptPostTip();
+    void successPostTip();
+
     final class Model {
         public final int usersWaitingHelp;
 
@@ -29,6 +33,6 @@ public interface IHelpOthersCTA {
     }
 
     interface Listener {
-        void ctaClicked(IHelpOthersCTA source);
+        void postTip(IHelpOthersCTA source, String tipBody);
     }
 }
