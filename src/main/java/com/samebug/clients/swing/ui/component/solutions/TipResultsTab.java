@@ -17,6 +17,7 @@ package com.samebug.clients.swing.ui.component.solutions;
 
 import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.solutions.ITipResultsTab;
+import com.samebug.clients.swing.ui.component.solutions.requestTip.BugmateList;
 import com.samebug.clients.swing.ui.component.solutions.writeTip.WriteTip;
 import com.samebug.clients.swing.ui.component.util.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;

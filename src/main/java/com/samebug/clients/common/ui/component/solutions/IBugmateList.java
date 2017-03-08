@@ -18,22 +18,31 @@ package com.samebug.clients.common.ui.component.solutions;
 import java.util.List;
 
 public interface IBugmateList {
+    void startRequestTip();
+
+    void interruptRequestTip();
+
+    void successRequestTip(/*TODO param*/);
+
     final class Model {
         public final List<IBugmateHit.Model> bugmateHits;
         public final int numberOfOtherBugmates;
         public final boolean evenMoreExists;
+        public final String exceptionTitle;
 
         public Model(Model rhs) {
-            this(rhs.bugmateHits, rhs.numberOfOtherBugmates, rhs.evenMoreExists);
+            this(rhs.bugmateHits, rhs.numberOfOtherBugmates, rhs.evenMoreExists, rhs.exceptionTitle);
         }
 
-        public Model(List<IBugmateHit.Model> bugmateHits, int numberOfOtherBugmates, boolean evenMoreExists) {
+        public Model(List<IBugmateHit.Model> bugmateHits, int numberOfOtherBugmates, boolean evenMoreExists, String exceptionTitle) {
             this.bugmateHits = bugmateHits;
             this.numberOfOtherBugmates = numberOfOtherBugmates;
             this.evenMoreExists = evenMoreExists;
+            this.exceptionTitle = exceptionTitle;
         }
     }
 
     interface Listener {
+        void askBugmates(IBugmateList source, String description);
     }
 }

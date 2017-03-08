@@ -1,16 +1,12 @@
-package com.samebug.clients.swing.ui.component.solutions.writeTip;
+package com.samebug.clients.swing.ui.component.solutions.requestTip;
 
-import com.samebug.clients.common.ui.TextUtil;
-import com.samebug.clients.swing.ui.component.util.interaction.Colors;
 import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.swing.ui.component.util.panel.SamebugPanel;
-import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.global.ColorService;
 import com.samebug.clients.swing.ui.global.DrawService;
 import com.samebug.clients.swing.ui.global.FontService;
 import com.samebug.clients.swing.ui.global.MessageService;
 import net.miginfocom.swing.MigLayout;
-import org.apache.commons.lang.StringUtils;
 import org.jdesktop.swingx.prompt.PromptSupport;
 
 import javax.swing.*;
@@ -27,26 +23,27 @@ import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public final class WriteTipArea extends JComponent {
+// TODO extract common parts with WriteTipArea
+public final class WriteRequestArea extends JComponent {
     // TODO is it necessary? anyway, it can still be bypassed by pasting large text
     public static final int MaxOvershootCharacters = 200;
     public static final int MaxCharacters = 140;
     public static final int MinCharacters = 5;
     public static final int DefaultLines = 4;
-    public static final int MaxLines = 7;
 
-    final int peopleToHelp;
     final BorderedArea borderedArea;
 
-    public WriteTipArea(int peopleToHelp) {
-        this.peopleToHelp = peopleToHelp;
+    final BugmateList bugmateList;
+
+    public WriteRequestArea(BugmateList bugmateList) {
+        this.bugmateList = bugmateList;
         borderedArea = new BorderedArea();
 
         setLayout(new MigLayout("fillx", "0[fill]0", "0[]0"));
         add(borderedArea);
     }
 
-    final class TipConstraints extends DocumentFilter {
+    final class TipRequestConstraints extends DocumentFilter {
         @Override
         public void replace(FilterBypass fb, int offs, int length, String str, AttributeSet a) throws BadLocationException {
             super.replace(fb, offs, length, str, a);
@@ -54,11 +51,6 @@ public final class WriteTipArea extends JComponent {
             String text = fb.getDocument().getText(0, textSize);
             assert text.length() == textSize;
 
-            int lineBreaks = StringUtils.countMatches(text, TextUtil.lineSeparator);
-            if (lineBreaks >= MaxLines) {
-                int lastLineBreakIndex = StringUtils.ordinalIndexOf(text, TextUtil.lineSeparator, MaxLines);
-                remove(fb, lastLineBreakIndex, textSize - lastLineBreakIndex);
-            }
             if (textSize >= MaxOvershootCharacters) {
                 remove(fb, MaxOvershootCharacters, textSize - MaxOvershootCharacters);
             }
@@ -72,12 +64,13 @@ public final class WriteTipArea extends JComponent {
             setRows(DefaultLines);
             setLineWrap(true);
             setWrapStyleWord(true);
-            PromptSupport.setPrompt(MessageService.message("samebug.component.tip.write.placeholder", peopleToHelp), this);
+            PromptSupport.setPrompt(MessageService.message("samebug.component.bugmate.ask.placeholder"), this);
 
             setBorder(BorderFactory.createEmptyBorder());
             setOpaque(false);
-            promptColors = ColorService.TipFieldPlaceholder;
-            setForeground(ColorService.TipFieldText);
+            // TODO this is not really good, promptColors must be set before setInteractionColors as that will call updateColors...
+            promptColors = ColorService.FieldPlaceholder;
+            setForeground(ColorService.EmphasizedText);
             setFont(FontService.regular(16));
         }
         public void setForeground(Color[] c) {
@@ -113,22 +106,36 @@ public final class WriteTipArea extends JComponent {
             setText(String.format("%d", MaxCharacters - length));
         }
     }
+    final class ExceptionPreview extends SamebugLabel {
+        {
+            setOpaque(true);
+            setBackground(ColorService.Tip);
+            setForeground(ColorService.TipText);
+            setText(bugmateList.model.exceptionTitle);
+            setFont(FontService.regular(14));
+            setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        }
+
+    }
     final class BorderedArea extends SamebugPanel {
         final EditableArea editableArea;
         final LengthCounter lengthCounter;
+        final ExceptionPreview exceptionPreview;
 
         {
             editableArea = new EditableArea();
             lengthCounter = new LengthCounter();
+            exceptionPreview = new ExceptionPreview();
 
-            setLayout(new MigLayout("fillx", "10[]10", "10[]10[]6"));
+            setLayout(new MigLayout("fillx", "10[]10", "10[]10[]6[]10"));
             add(editableArea, "cell 0 0, wmin 0, growx");
             add(lengthCounter, "cell 0 1, align right");
+            add(exceptionPreview, "cell 0 2, growx");
 
-            setBackground(ColorService.TipFieldBackground);
+            setBackground(ColorService.Background);
 
 
-            ((AbstractDocument) editableArea.getDocument()).setDocumentFilter(new TipConstraints());
+            ((AbstractDocument) editableArea.getDocument()).setDocumentFilter(new TipRequestConstraints());
             editableArea.getDocument().addDocumentListener(new TipEditorListener());
             editableArea.addFocusListener(new FocusAdapter() {
                 @Override
@@ -157,8 +164,8 @@ public final class WriteTipArea extends JComponent {
 
             Color borderColor;
             // TODO error
-            if (editableArea.hasFocus()) borderColor = ColorService.forCurrentTheme(ColorService.TipFieldFocusBorder);
-            else borderColor = ColorService.forCurrentTheme(ColorService.TipFieldNormalBorder);
+            if (editableArea.hasFocus()) borderColor = ColorService.forCurrentTheme(ColorService.FieldFocusBorder);
+            else borderColor = ColorService.forCurrentTheme(ColorService.FieldNormalBorder);
             g2.setColor(borderColor);
             g2.drawRect(0,0,getWidth() - 1, getHeight() - 1);
         }

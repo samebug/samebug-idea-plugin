@@ -46,6 +46,7 @@ public final class TipHit extends TransparentPanel implements ITipHit {
         tipLabel.setForeground(ColorService.TipText);
         tipMessage = new MessageLabel();
         mark = new MarkButton(model.mark);
+        mark.setBackgroundColors(ColorService.Tip);
         final JPanel filler = new TransparentPanel();
         final AuthorPanel author = new AuthorPanel();
 

@@ -31,4 +31,9 @@ final class BugmateListController implements IBugmateList.Listener {
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
         projectConnection.subscribe(IdeaListenerService.BugmateList, this);
     }
+
+    @Override
+    public void askBugmates(IBugmateList source, String description) {
+
+    }
 }

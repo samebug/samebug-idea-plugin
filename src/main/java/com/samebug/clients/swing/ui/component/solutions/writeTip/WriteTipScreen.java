@@ -60,7 +60,8 @@ public class WriteTipScreen extends SamebugPanel {
 
         {
             sendButton = new SamebugButton(MessageService.message("samebug.component.tip.write.send"), true);
-            sendButton.setForeground(ColorService.MarkInteraction);
+            sendButton.setInteractionColors(ColorService.MarkInteraction);
+            sendButton.setBackgroundColors(ColorService.Tip);
             sendButton.setFont(FontService.demi(14));
 
             cancelButton = new LinkLabel(MessageService.message("samebug.component.tip.write.cancel"));

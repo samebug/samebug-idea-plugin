@@ -48,17 +48,17 @@ public class SamebugButton extends JButton {
         setFont(FontService.demi(14));
 
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        setForeground(ColorService.LinkInteraction);
-        setBackground(ColorService.Background);
+        setInteractionColors(ColorService.LinkInteraction);
+        setBackgroundColors(ColorService.Background);
     }
 
-    public void setForeground(Colors[] c) {
+    public void setInteractionColors(Colors[] c) {
         foregroundColors = c;
         setForeground(ColorService.forCurrentTheme(foregroundColors).normal);
         interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, ColorService.forCurrentTheme(foregroundColors), this);
     }
 
-    public void setBackground(Color[] c) {
+    public void setBackgroundColors(Color[] c) {
         backgroundColors = c;
         setBackground(ColorService.forCurrentTheme(backgroundColors));
     }

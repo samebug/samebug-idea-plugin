@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui.component.solutions;
+package com.samebug.clients.swing.ui.component.solutions.requestTip;
 
 import com.samebug.clients.common.ui.component.solutions.IBugmateList;
-import com.samebug.clients.swing.ui.component.solutions.requestTip.RequestTip;
-import com.samebug.clients.swing.ui.component.util.button.SamebugButton;
 import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
 import com.samebug.clients.swing.ui.component.util.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.global.FontService;
@@ -25,13 +23,12 @@ import com.samebug.clients.swing.ui.global.ListenerService;
 import com.samebug.clients.swing.ui.global.MessageService;
 import net.miginfocom.swing.MigLayout;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 public final class BugmateList extends TransparentPanel implements IBugmateList {
-    private final Model model;
+    final Model model;
+    final RequestTip requestTip;
 
     public BugmateList(Model model) {
         this.model = new Model(model);
@@ -39,15 +36,31 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
         final SubheaderLabel subheader = new SubheaderLabel();
         final BugmateGrid bugmateGrid = new BugmateGrid();
         final MoreLabel more = new MoreLabel();
-        final RequestTip requestTip = new RequestTip();
+        requestTip = new RequestTip(this);
 
         setLayout(new MigLayout("fillx", "0[]0", "0[]25[]25[]10[]0"));
 
         add(subheader, "cell 0 0");
         add(bugmateGrid, "cell 0 1, growx");
         add(more, "cell 0 2, align center");
-        add(requestTip, "cell 0 3, align center");
+        add(requestTip, "cell 0 3, align center, growx");
     }
+
+    @Override
+    public void startRequestTip() {
+        requestTip.startRequestTip();
+    }
+
+    @Override
+    public void interruptRequestTip() {
+        requestTip.interruptRequestTip();
+    }
+
+    @Override
+    public void successRequestTip() {
+        requestTip.successRequestTip();
+    }
+
 
     private final class BugmateGrid extends TransparentPanel {
         private final List<BugmateHit> bugmateHits;
@@ -89,7 +102,7 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
         }
     }
 
-    private Listener getListener() {
+    Listener getListener() {
         return ListenerService.getListener(this, IBugmateList.Listener.class);
     }
 }

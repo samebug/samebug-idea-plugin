@@ -31,13 +31,12 @@ public final class MarkButton extends JComponent implements IMarkButton {
     private Model model;
     private NormalMarkButton normalMarkButton;
     private LoadingButton loadingButton;
-
-    private static final Colors[] ForegroundInteraction = ColorService.MarkInteraction;
-    private static final Color[] Foreground = ColorService.Mark;
-    private static final Color[] Background = ColorService.Background;
-
+    protected Colors[] interactionColors;
+    protected Color[] backgroundColors;
 
     public MarkButton(Model model) {
+        interactionColors = ColorService.MarkInteraction;
+        backgroundColors = ColorService.Background;
         setLayout(new MigLayout("fillx", "0[fill]0", "0[fill]0"));
         update(model);
     }
@@ -76,6 +75,16 @@ public final class MarkButton extends JComponent implements IMarkButton {
         repaint();
     }
 
+    // TODO this color handling is way too fragile and complicated
+    public void setBackgroundColors(Color[] c) {
+        backgroundColors = c;
+        for (Component child : getComponents()) {
+            if (child instanceof SamebugButton) {
+                ((SamebugButton)child).setBackgroundColors(backgroundColors);
+            }
+        }
+    }
+
 
     private final class NormalMarkButton extends SamebugButton {
         public NormalMarkButton() {
@@ -91,8 +100,8 @@ public final class MarkButton extends JComponent implements IMarkButton {
             add(markLabel, ", h 16!");
 
             setFont(FontService.demi(14));
-            setForeground(ForegroundInteraction);
-            setBackground(Background);
+            setInteractionColors(MarkButton.this.interactionColors);
+            setBackgroundColors(MarkButton.this.backgroundColors);
 
             addMouseListener(new MouseAdapter() {
                 @Override
@@ -126,6 +135,15 @@ public final class MarkButton extends JComponent implements IMarkButton {
             super.setForeground(color);
             // when the button is not filled, we have to change the foreground of the children
             if (!isFilled()) {
+                for (Component c : getComponents()) c.setForeground(color);
+            }
+        }
+
+        @Override
+        public void setBackground(Color color) {
+            super.setBackground(color);
+            // when the button is filled, we have to change the foreground of the children
+            if (isFilled()) {
                 for (Component c : getComponents()) c.setForeground(color);
             }
         }
@@ -175,8 +193,8 @@ public final class MarkButton extends JComponent implements IMarkButton {
 
             add(icon, "align center, h 20!");
 
-            setForeground(ForegroundInteraction);
-            setBackground(Background);
+            setInteractionColors(MarkButton.this.interactionColors);
+            setBackgroundColors(MarkButton.this.backgroundColors);
             updateUI();
         }
 

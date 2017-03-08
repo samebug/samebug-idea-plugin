@@ -76,7 +76,7 @@ public abstract class ColorService {
     public final static Color[] FieldNormalBorder = new Color[]{new Color(0xB2B2B2), new Color(0x666768)};
     public final static Color[] FieldFocusBorder = new Color[]{new Color(0x333333), new Color(0xC8C8C9)};
     public final static Color[] FieldErrorBorder = new Color[]{new Color(0xE80D0D), new Color(0xFF1B1B)};
-    public final static Color[] FieldPlaceholder = new Color[]{new Color(0xAAAAAA), new Color(0xCBCDCF)};
+    public final static Color[] FieldPlaceholder = new Color[]{new Color(0xAAAAAA), new Color(0x666768)};
     public final static Color[] FieldError = new Color[]{new Color(0xE80D0D), new Color(0xFF1B1B)};
 
     public final static Color[] TipFieldNormalBorder = new Color[]{new Color(0xB5D7E2), new Color(0x2072AE)};

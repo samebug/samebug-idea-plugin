@@ -273,10 +273,11 @@ public final class SolutionsController implements Disposable {
             IBugmateHit.Model model = new IBugmateHit.Model(b.getUserId(), b.getDisplayName(), b.getAvatarUrl(), b.getNumberOfSearches(), b.getLastSeen());
             bugmateHits.add(model);
         }
-        IBugmateList.Model bugmateList = new IBugmateList.Model(bugmateHits, bugmates.getNumberOfOtherBugmates(), bugmates.isEvenMoreExists());
+        String exceptionTitle = SolutionService.headLine(solutions.getSearchGroup().getLastSearch());
+        IBugmateList.Model bugmateList = new IBugmateList.Model(bugmateHits, bugmates.getNumberOfOtherBugmates(), bugmates.isEvenMoreExists(), exceptionTitle);
         ITipResultsTab.Model tipResults = new ITipResultsTab.Model(tipHits, bugmateList);
         IResultTabs.Model resultTabs = new IResultTabs.Model(webResults, tipResults, cta);
-        IExceptionHeaderPanel.Model header = new IExceptionHeaderPanel.Model(SolutionService.headLine(solutions.getSearchGroup().getLastSearch()));
+        IExceptionHeaderPanel.Model header = new IExceptionHeaderPanel.Model(exceptionTitle);
         IProfilePanel.Model profile =
                 new IProfilePanel.Model(0, statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(),
                         user.getDisplayName(), user.getAvatarUrl());
