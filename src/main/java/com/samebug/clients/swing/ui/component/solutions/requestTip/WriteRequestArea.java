@@ -1,6 +1,7 @@
 package com.samebug.clients.swing.ui.component.solutions.requestTip;
 
 import com.samebug.clients.swing.ui.component.util.label.SamebugLabel;
+import com.samebug.clients.swing.ui.component.util.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.component.util.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.global.ColorService;
 import com.samebug.clients.swing.ui.global.DrawService;
@@ -115,7 +116,6 @@ public final class WriteRequestArea extends JComponent {
             setFont(FontService.regular(14));
             setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         }
-
     }
     final class BorderedArea extends SamebugPanel {
         final EditableArea editableArea;
@@ -127,10 +127,10 @@ public final class WriteRequestArea extends JComponent {
             lengthCounter = new LengthCounter();
             exceptionPreview = new ExceptionPreview();
 
-            setLayout(new MigLayout("fillx", "10[]10", "10[]10[]6[]10"));
+            setLayout(new MigLayout("fillx", "10[300]10", "10[]10[]6[]10"));
             add(editableArea, "cell 0 0, wmin 0, growx");
             add(lengthCounter, "cell 0 1, align right");
-            add(exceptionPreview, "cell 0 2, growx");
+            add(exceptionPreview, "cell 0 2, wmin 0, growx");
 
             setBackground(ColorService.Background);
 
