@@ -71,12 +71,15 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
     private final Editor editor;
     private final SearchRequestStore searchRequestStore;
     private final Map<UUID, RangeHighlighter> highlights;
+    // TODO it needs further refinements
+    private StringBuilder unsafeDocumentText;
 
     public ConsoleWatcher(Project project, ConsoleViewImpl console, DebugSessionInfo sessionInfo) {
         this.sessionInfo = sessionInfo;
         this.editor = console.getEditor();
         this.searchRequestStore = IdeaSamebugPlugin.getInstance().searchRequestStore;
         this.highlights = new ConcurrentHashMap<UUID, RangeHighlighter>();
+        this.unsafeDocumentText = new StringBuilder("");
         LOGGER.info("Watcher constructed for " + editor.toString());
 
         editor.getDocument().addDocumentListener(this, console);
@@ -86,6 +89,7 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
 
     @Override
     public void documentChanged(DocumentEvent e) {
+        unsafeDocumentText = new StringBuilder(editor.getDocument().getText());
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
@@ -98,9 +102,7 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
     public void newSearchRequest(final RequestedSearch requestedSearch) {
         if (!sessionInfo.equals(requestedSearch.getSearchInfo().sessionInfo)) return;
         final UUID requestId = requestedSearch.getSearchInfo().requestId;
-        final Document document = editor.getDocument();
-        final StringBuilder consoleContent = new StringBuilder(document.getText());
-        final int traceOffset = findStacktraceOffset(consoleContent, requestedSearch.getTrace());
+        final int traceOffset = findStacktraceOffset(unsafeDocumentText, requestedSearch.getTrace());
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -245,21 +247,25 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
 
             final int traceStartsAt = findStacktraceOffset(text, trace);
             requestOffsets.put(requestId, traceStartsAt);
-            if (traceStartsAt >= 0) {
-                // Make sure we will not find this part of the document again
-                String blank = new String(new char[trace.length()]);
-                text = text.replace(traceStartsAt, traceStartsAt + trace.length(), blank);
-            }
         }
         return requestOffsets;
     }
 
     // NOTE using StringBuilder as a parameter to avoid copying the array when it is called in findStacktraceOffsets
-    private int findStacktraceOffset(StringBuilder document, String trace) {
-        return document.indexOf(trace);
+    // TODO modifies input parameter!
+    private static int findStacktraceOffset(StringBuilder document, String trace) {
+        synchronized (document) {
+            final int traceStartsAt = document.indexOf(trace);
+            if (traceStartsAt >= 0) {
+                // Make sure we will not find this part of the document again
+                String blank = new String(new char[trace.length()]);
+                document.replace(traceStartsAt, traceStartsAt + trace.length(), blank);
+            }
+            return traceStartsAt;
+        }
     }
 
-    private SearchMark createMarker(SearchRequest request) {
+    private static SearchMark createMarker(SearchRequest request) {
         final SearchMark mark;
         if (request instanceof RequestedSearch) mark = new RequestedSearchMark((RequestedSearch) request);
         else if (request instanceof SavedSearch) mark = new SavedSearchMark((SavedSearch) request);

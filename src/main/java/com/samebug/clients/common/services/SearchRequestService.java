@@ -40,23 +40,11 @@ public final class SearchRequestService {
     }
 
     @Nullable
-    public SavedSearch searchSucceeded(SearchInfo searchInfo, SearchResults result) {
-        UUID requestId = searchInfo.requestId;
-        SearchRequest previousRequest = store.getRequest(requestId);
-        SavedSearch request;
-        if (previousRequest == null) {
-            // We don't know this search. It succeeded, but was not requested. Just ignore it.
-            request = null;
-        } else if (!(previousRequest instanceof RequestedSearch)) {
-            // This search request seems to be in an illegal state, it should be a Requested.
-            store.removeRequest(requestId);
-            request = null;
-        } else {
-            // promote from Requested to Saved
-            RequestedSearch requestedSearch = (RequestedSearch) previousRequest;
-            request = new SavedSearch(searchInfo, requestedSearch.getTrace(), result);
-            store.addRequest(request);
-        }
+    public SavedSearch searchSucceeded(SearchInfo searchInfo, RequestedSearch requestedSearch, SearchResults result) {
+        assert store.getRequest(searchInfo.requestId) == requestedSearch : "Promoting an illegal RequestedSearch";
+        // promote from Requested to Saved
+        SavedSearch request = new SavedSearch(searchInfo, requestedSearch.getTrace(), result);
+        store.addRequest(request);
 
         return request;
     }

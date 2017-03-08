@@ -28,7 +28,6 @@ import com.samebug.clients.common.search.api.WebUrlBuilder;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.*;
 import com.samebug.clients.idea.controllers.ConsoleSearchController;
-import com.samebug.clients.idea.controllers.SessionsController;
 import com.samebug.clients.idea.controllers.TimedTasks;
 import com.samebug.clients.idea.ui.global.*;
 import com.samebug.clients.swing.ui.global.*;
@@ -118,7 +117,6 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
 
         TimedTasks timedTasks = new TimedTasks(messageBus.connect(this));
         ConsoleSearchController consoleSearchController = new ConsoleSearchController(messageBus.connect(this));
-        SessionsController sessionsController = new SessionsController(messageBus.connect(this), searchRequestService, searchRequestStore);
 
         ColorService.install(new IdeaColorService());
         WebImageService.install(new IdeaWebImageService(urlBuilder));
