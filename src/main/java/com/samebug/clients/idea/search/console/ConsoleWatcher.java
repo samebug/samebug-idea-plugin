@@ -32,8 +32,11 @@ import com.samebug.clients.common.entities.search.*;
 import com.samebug.clients.common.services.SearchRequestStore;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.search.SearchRequestListener;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -58,28 +61,26 @@ import java.util.concurrent.ConcurrentHashMap;
      - the content of the document is not append-only. It has a buffer with limited size, and the first characters are getting removed when the limit is reached (rotating).
      - the content of the console is updated on the EDT, but the searches are parsed in a background thread from an other stream. It means that when newSearchRequest is triggered
      with a stacktrace, that stacktrace might or might not be present on the console
-     - nothing guarantees that newSearchRequest will be triggered before savedSearch for the same request.
-      Under higher load (50+ stacktrace) it happens to be out of order quite frequently.
-
-
-     TODO: it has bugs because it assumes the order of search-related calls.
  */
 public class ConsoleWatcher extends DocumentAdapter implements SearchRequestListener {
     private final Logger LOGGER = Logger.getInstance(ConsoleWatcher.class);
+    private final int REBUILD_MARKERS_DELAY_IN_MS = 100;
 
     private final DebugSessionInfo sessionInfo;
     private final Editor editor;
     private final SearchRequestStore searchRequestStore;
     private final Map<UUID, RangeHighlighter> highlights;
-    // TODO it needs further refinements
-    private StringBuilder unsafeDocumentText;
+    private final Timer timer;
+    @Nullable
+    private RebuildMarkersTask currentTask;
 
     public ConsoleWatcher(Project project, ConsoleViewImpl console, DebugSessionInfo sessionInfo) {
         this.sessionInfo = sessionInfo;
         this.editor = console.getEditor();
         this.searchRequestStore = IdeaSamebugPlugin.getInstance().searchRequestStore;
         this.highlights = new ConcurrentHashMap<UUID, RangeHighlighter>();
-        this.unsafeDocumentText = new StringBuilder("");
+        this.timer = new Timer("Samebug-ConsoleWatcher-" + sessionInfo.id);
+        currentTask = null;
         LOGGER.info("Watcher constructed for " + editor.toString());
 
         editor.getDocument().addDocumentListener(this, console);
@@ -89,188 +90,44 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
 
     @Override
     public void documentChanged(DocumentEvent e) {
-        unsafeDocumentText = new StringBuilder(editor.getDocument().getText());
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-            @Override
-            public void run() {
-                rebuildMarkers();
-            }
-        });
+        initiateRebuildingMarkers();
     }
 
     @Override
     public void newSearchRequest(final RequestedSearch requestedSearch) {
-        if (!sessionInfo.equals(requestedSearch.getSearchInfo().sessionInfo)) return;
-        final UUID requestId = requestedSearch.getSearchInfo().requestId;
-        final int traceOffset = findStacktraceOffset(unsafeDocumentText, requestedSearch.getTrace());
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                RangeHighlighter newHighlighter;
-                // NOTE it happens that this method gets called for the same requestId multiple times. Make sure we don't create multiple marker for the same request
-                if (highlights.get(requestId) == null) {
-                    newHighlighter = addMarkerAtOffset(traceOffset, createMarker(requestedSearch));
-                    if (newHighlighter != null) {
-                        // new trace is found in the console, add the marker
-                        highlights.put(requestId, newHighlighter);
-                    } else {
-                        // this trace is not found, so we could remove it from request store
-                        // However in practice a frequent case is that the document is not yet updated with the new content.
-                        // Not deleting won't hurt anything, as a documentUpdate will rebuild every marker, and remove the request if the trace is still not found.
-                    }
-                }
-            }
-        });
+        if (sessionInfo.equals(requestedSearch.getSearchInfo().sessionInfo)) initiateRebuildingMarkers();
     }
 
     @Override
     public void savedSearch(final SavedSearch savedSearch) {
-        if (!sessionInfo.equals(savedSearch.getSearchInfo().sessionInfo)) return;
-        final UUID requestId = savedSearch.getSearchInfo().requestId;
-        final Document document = editor.getDocument();
-        final RangeHighlighter highlightForRequest = highlights.get(requestId);
-
-        if (highlightForRequest == null) {
-            // not sure if this can happen, but after rebuilding we surely have a clean and consistent state
-            rebuildMarkers();
-        } else {
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    RangeHighlighter newHighlighter;
-                    // NOTE actualHighlightForRequest might be different from highlightForRequest, as we are on a different thread since the previous get.
-                    RangeHighlighter actualHighlightForRequest = highlights.get(requestId);
-                    if (actualHighlightForRequest != null) {
-                        int originalStartOffset = actualHighlightForRequest.getStartOffset();
-                        // If there was a highlight previously, remove it from the gutter.
-                        actualHighlightForRequest.dispose();
-
-                        // if there is a marker for the requested search, we might have to correct it,
-                        // i.e. move a few lines down if it turns out that the stacktrace starts not exactly in that line.
-                        if (0 <= originalStartOffset && originalStartOffset < document.getTextLength()) {
-                            int originalStartLine = document.getLineNumber(originalStartOffset);
-                            Integer correction = savedSearch.getSavedSearch().getFirstLine();
-                            int correctedStartLine = originalStartLine;
-                            if (correction != null) correctedStartLine += correction;
-                            int correctedOffset = document.getLineStartOffset(correctedStartLine);
-                            newHighlighter = addMarkerAtOffset(correctedOffset, createMarker(savedSearch));
-                        } else {
-                            newHighlighter = null;
-                        }
-                    } else {
-                        newHighlighter = null;
-                    }
-
-                    if (newHighlighter != null) {
-                        highlights.put(requestId, newHighlighter);
-                    } else {
-                        highlights.remove(requestId);
-                        // if the stacktrace is not found in the console, we have to notify the searchRequestStore that this request is no longer interesting
-                        searchRequestStore.removeRequest(requestId);
-                    }
-                }
-            });
-        }
+        if (sessionInfo.equals(savedSearch.getSearchInfo().sessionInfo)) initiateRebuildingMarkers();
     }
 
     @Override
     public void failedSearch(final SearchInfo searchInfo) {
-        if (!sessionInfo.equals(searchInfo.sessionInfo)) return;
-        final UUID requestId = searchInfo.requestId;
-        LOGGER.info("Failed search from editor " + editor.toString());
-
-        final RangeHighlighter highlightForRequest = highlights.get(requestId);
-        if (highlightForRequest != null) {
-            ApplicationManager.getApplication().invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    highlightForRequest.dispose();
-                    highlights.remove(requestId);
-                    // We do not have to remove it from searchRequestStore, in this case the controller noticed it and is already removed
-
-                    // If this was the last mark, hide the gutter area
-                    if (highlights.isEmpty()) editor.getSettings().setLineMarkerAreaShown(false);
-                }
-            });
-        }
+        if (sessionInfo.equals(searchInfo.sessionInfo)) initiateRebuildingMarkers();
     }
 
-    private void rebuildMarkers() {
-        Document document = editor.getDocument();
-        final Map<UUID, SearchRequest> currentRequests = searchRequestStore.getRequests(sessionInfo);
-        final Map<UUID, Integer> requestOffsets = findStacktraceOffsets(document.getText(), currentRequests);
-
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                for (RangeHighlighter h : highlights.values()) {
-                    h.dispose();
-                }
-                highlights.clear();
-                editor.getSettings().setLineMarkerAreaShown(false);
-
-                for (Map.Entry<UUID, Integer> requestOffsetEntry : requestOffsets.entrySet()) {
-                    final UUID requestId = requestOffsetEntry.getKey();
-                    final SearchRequest request = currentRequests.get(requestId);
-                    final RangeHighlighter highlight;
-                    final int offset = requestOffsetEntry.getValue();
-                    assert request != null : "currentRequests and requestOffsets should contain the same keys";
-
-                    final SearchMark mark = createMarker(request);
-                    if (mark != null) highlight = addMarkerAtOffset(offset, mark);
-                    else highlight = null;
-
-                    if (highlight != null) {
-                        // We found the stacktrace in the content of the console
-                        highlights.put(requestId, highlight);
-                    } else {
-                        // We have not found the stacktrace in the content of the console.
-                        // Probably an other process wrote something in between the lines of the trace, or it was rolled over when exceeding console buffer capacity.
-                        //searchRequestStore.removeRequest(requestId);
-                        // UPDATE console content can change due to filters.
-                        // If we remove the search just because if was not found once, we will fail to find it later, when the filter is turned off.
-                    }
-                }
-            }
-        });
-    }
-
-    private Map<UUID, Integer> findStacktraceOffsets(String document, Map<UUID, SearchRequest> requests) {
-        final Map<UUID, Integer> requestOffsets = new HashMap<UUID, Integer>();
-
-        StringBuilder text = new StringBuilder(document);
-        for (Map.Entry<UUID, SearchRequest> requestEntry : requests.entrySet()) {
-            final SearchRequest request = requestEntry.getValue();
-            final String trace = request.getTrace();
-            final UUID requestId = requestEntry.getKey();
-            assert requestId == request.getSearchInfo().requestId;
-
-            final int traceStartsAt = findStacktraceOffset(text, trace);
-            requestOffsets.put(requestId, traceStartsAt);
-        }
-        return requestOffsets;
-    }
-
-    // NOTE using StringBuilder as a parameter to avoid copying the array when it is called in findStacktraceOffsets
-    // TODO modifies input parameter!
-    private static int findStacktraceOffset(StringBuilder document, String trace) {
-        synchronized (document) {
-            final int traceStartsAt = document.indexOf(trace);
-            if (traceStartsAt >= 0) {
-                // Make sure we will not find this part of the document again
-                String blank = new String(new char[trace.length()]);
-                document.replace(traceStartsAt, traceStartsAt + trace.length(), blank);
-            }
-            return traceStartsAt;
-        }
-    }
-
-    private static SearchMark createMarker(SearchRequest request) {
-        final SearchMark mark;
-        if (request instanceof RequestedSearch) mark = new RequestedSearchMark((RequestedSearch) request);
-        else if (request instanceof SavedSearch) mark = new SavedSearchMark((SavedSearch) request);
-        else mark = null;
-        return mark;
+    /**
+     * Schedule a task to remove all gutter icons and create them from scratch.
+     *
+     * This is called something changes that might influence the gutter icons:
+     *  - the content of the console (the editor's document) is changed
+     *  - there is a new information about a search (e.g. a stack trace is found and posted to Samebug, or the solutions for a search are available)
+     *
+     *  The short delay before executing the rebuild is kind of an optimization. When the application logs a stack trace, the console watcher will be
+     *  triggered at least three times:
+     *   - a document update
+     *   - new search request
+     *   - search saved/failed
+     *
+     *   The first two of these usually happens close together in time (few millis), and it would be wasteful to make the full rebuild each time.
+     *   Also, when there is a burst of exceptions, we don't have to rebuild the whole console every time.
+     */
+    private synchronized void initiateRebuildingMarkers() {
+        if (currentTask != null) currentTask.cancel();
+        currentTask = new RebuildMarkersTask();
+        timer.schedule(currentTask, REBUILD_MARKERS_DELAY_IN_MS);
     }
 
     private RangeHighlighter addMarkerAtOffset(int offset, SearchMark mark) {
@@ -288,6 +145,92 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
             return highlighter;
         } else {
             return null;
+        }
+    }
+
+    private static Map<UUID, Integer> findStacktraceOffsets(String document, Map<UUID, SearchRequest> requests) {
+        final Map<UUID, Integer> requestOffsets = new HashMap<UUID, Integer>();
+
+        StringBuilder text = new StringBuilder(document);
+        for (Map.Entry<UUID, SearchRequest> requestEntry : requests.entrySet()) {
+            final SearchRequest request = requestEntry.getValue();
+            final String trace = request.getTrace();
+            final UUID requestId = requestEntry.getKey();
+            assert requestId == request.getSearchInfo().requestId;
+
+            final int traceStartsAt = findStackTraceOffset(text, trace);
+            // Make sure we will not find this part of the document again
+            if (traceStartsAt >= 0) text = eliminateTrace(text, traceStartsAt, trace.length());
+            requestOffsets.put(requestId, traceStartsAt);
+        }
+        return requestOffsets;
+    }
+
+    private static int findStackTraceOffset(StringBuilder text, String trace) {
+            return text.indexOf(trace);
+    }
+    private static StringBuilder eliminateTrace(StringBuilder text, int traceStartOffset, int traceLength) {
+        String blank = new String(new char[traceLength]);
+        text.replace(traceStartOffset, traceStartOffset + traceLength, blank);
+        return text;
+    }
+
+    private static SearchMark createMarker(SearchRequest request) {
+        final SearchMark mark;
+        if (request instanceof RequestedSearch) mark = new RequestedSearchMark((RequestedSearch) request);
+        else if (request instanceof SavedSearch) mark = new SavedSearchMark((SavedSearch) request);
+        else mark = null;
+        return mark;
+    }
+
+    /**
+     * Start a background task to find the stack traces in the console. Then start a task on the UI thread to show these markers
+     */
+    final class RebuildMarkersTask extends TimerTask {
+        @Override
+        public void run() {
+            ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+                @Override
+                public void run() {
+                    Document document = editor.getDocument();
+                    final Map<UUID, SearchRequest> currentRequests = searchRequestStore.getRequests(sessionInfo);
+                    final Map<UUID, Integer> requestOffsets = findStacktraceOffsets(document.getText(), currentRequests);
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (RangeHighlighter h : highlights.values()) {
+                                h.dispose();
+                            }
+                            highlights.clear();
+                            editor.getSettings().setLineMarkerAreaShown(false);
+
+                            for (Map.Entry<UUID, Integer> requestOffsetEntry : requestOffsets.entrySet()) {
+                                final UUID requestId = requestOffsetEntry.getKey();
+                                final SearchRequest request = currentRequests.get(requestId);
+                                final RangeHighlighter highlight;
+                                final int offset = requestOffsetEntry.getValue();
+                                assert request != null : "currentRequests and requestOffsets should contain the same keys";
+
+                                final SearchMark mark = createMarker(request);
+                                if (mark != null) highlight = addMarkerAtOffset(offset, mark);
+                                else highlight = null;
+
+                                if (highlight != null) {
+                                    // We found the stacktrace in the content of the console
+                                    highlights.put(requestId, highlight);
+                                } else {
+                                    // We have not found the stacktrace in the content of the console.
+                                    // Probably an other process wrote something in between the lines of the trace, or it was rolled over when exceeding console buffer capacity.
+                                    //searchRequestStore.removeRequest(requestId);
+                                    // UPDATE console content can change due to filters.
+                                    // If we remove the search just because if was not found once, we will fail to find it later, when the filter is turned off.
+                                }
+                            }
+                        }
+                    });
+
+                }
+            });
         }
     }
 }
