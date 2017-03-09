@@ -38,7 +38,9 @@ public final class AvatarIcon extends JPanel {
             if (imageFromUrl == null) this.avatar = WebImageService.getAvatarPlaceholder(size, size);
             else this.avatar = imageFromUrl;
         }
+        setMinimumSize(new Dimension(size, size));
         setPreferredSize(new Dimension(size, size));
+        setMaximumSize(new Dimension(size, size));
     }
 
     @Override

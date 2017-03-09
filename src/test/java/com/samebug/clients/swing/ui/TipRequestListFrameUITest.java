@@ -2,8 +2,10 @@ package com.samebug.clients.swing.ui;
 
 import com.google.gson.*;
 import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
+import com.samebug.clients.common.ui.frame.tipRequestList.ITipRequestListFrame;
 import com.samebug.clients.idea.ui.modules.IdeaMessageService;
 import com.samebug.clients.swing.ui.frame.solution.SolutionFrame;
+import com.samebug.clients.swing.ui.frame.tipRequestList.TipRequestListFrame;
 import com.samebug.clients.swing.ui.modules.*;
 import com.samebug.clients.swing.ui.testModules.TestColorService;
 import com.samebug.clients.swing.ui.testModules.TestIconService;
@@ -20,24 +22,21 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
-/**
- * Please use the following jvm arguments when running the test:
- * -ea -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true
- */
-public class SolutionFrameUITest extends JDialog {
-    private static final String resourceJson = "/com/samebug/clients/idea/ui/solutionFrame/t2w27.json";
+// TODO extract common ui test code
+public class TipRequestListFrameUITest extends JDialog {
+    private static final String resourceJson = "/com/samebug/clients/idea/ui/frame/tipRequestList/2.json";
 
-    public SolutionFrameUITest(Gson gson) throws IOException, InvocationTargetException, InterruptedException {
+    public TipRequestListFrameUITest(Gson gson) throws IOException, InvocationTargetException, InterruptedException {
         InputStream stream = getClass().getResourceAsStream(resourceJson);
-        final ISolutionFrame.Model model = gson.fromJson(new InputStreamReader(stream), SolutionFrame.Model.class);
+        final ITipRequestListFrame.Model model = gson.fromJson(new InputStreamReader(stream), ITipRequestListFrame.Model.class);
         stream.close();
 
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
-                SolutionFrame sf = new SolutionFrame();
-                sf.loadingSucceeded(model);
-                setContentPane(sf);
+                TipRequestListFrame f = new TipRequestListFrame();
+                f.loadingSucceeded(model);
+                setContentPane(f);
             }
         });
 
@@ -64,7 +63,7 @@ public class SolutionFrameUITest extends JDialog {
         Gson gson = gsonBuilder.create();
 
 
-        SolutionFrameUITest dialog = new SolutionFrameUITest(gson);
+        TipRequestListFrameUITest dialog = new TipRequestListFrameUITest(gson);
 
         dialog.setPreferredSize(new Dimension(580, 600));
         dialog.setMinimumSize(new Dimension(200, 400));

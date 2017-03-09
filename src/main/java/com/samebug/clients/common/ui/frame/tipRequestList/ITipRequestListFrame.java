@@ -15,5 +15,34 @@
  */
 package com.samebug.clients.common.ui.frame.tipRequestList;
 
+import com.samebug.clients.common.ui.component.profile.IProfilePanel;
+
 public interface ITipRequestListFrame {
+    void loadingSucceeded(Model model);
+    void setLoading();
+
+    final class Model {
+        public final ITipRequestListHeader.Model header;
+        public final ITipRequestList.Model requestList;
+        public final IProfilePanel.Model profilePanel;
+
+        public Model(Model rhs) {
+            this(rhs.header, rhs.requestList, rhs.profilePanel);
+        }
+
+        public Model(ITipRequestListHeader.Model header, ITipRequestList.Model requestList, IProfilePanel.Model profilePanel) {
+            this.header = header;
+            this.requestList = requestList;
+            this.profilePanel = profilePanel;
+        }
+    }
+
+    interface Listener {
+        void reload();
+
+        void openSamebugSettings();
+
+        void openNetworkSettings();
+    }
+
 }

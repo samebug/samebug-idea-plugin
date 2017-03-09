@@ -55,7 +55,7 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
             webHits.add(hit);
         }
 
-        if (model.getHitsSize() == 0) {
+        if (model.webHits.size() == 0) {
             contentPanel = new EmptyContentPanel();
         } else {
             contentPanel = new ContentPanel();

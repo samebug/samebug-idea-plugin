@@ -30,10 +30,6 @@ public interface IWebResultsTab {
         public Model(List<IWebHit.Model> webHits) {
             this.webHits = webHits;
         }
-
-        public int getHitsSize() {
-            return webHits.size();
-        }
     }
 
     interface Listener {

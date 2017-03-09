@@ -15,8 +15,46 @@
  */
 package com.samebug.clients.swing.ui.frame.tipRequestList;
 
-import com.samebug.clients.common.ui.frame.tipRequest.ITipRequestFrame;
+import com.samebug.clients.common.ui.frame.tipRequestList.ITipRequestListFrame;
 import com.samebug.clients.swing.ui.base.errorBarPane.BasicFrame;
+import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
+import com.samebug.clients.swing.ui.component.profile.ProfilePanel;
 
-public final class TipRequestListFrame extends BasicFrame implements ITipRequestFrame {
+import java.awt.*;
+
+public final class TipRequestListFrame extends BasicFrame implements ITipRequestListFrame {
+    private TipRequests tipRequests;
+
+    public TipRequestListFrame() {
+        setLoading();
+    }
+
+    public void loadingSucceeded(Model model) {
+        tipRequests = new TipRequests(model);
+        addMainComponent(tipRequests);
+    }
+
+    public void setLoading() {
+        addMainComponent(new SamebugLabel("loading"));
+    }
+
+    private final class TipRequests extends SamebugPanel {
+        private final TipRequestListHeader header;
+        private final TipRequestList list;
+        private final ProfilePanel profilePanel;
+
+        TipRequests(Model model) {
+            header = new TipRequestListHeader(model.header);
+            list = new TipRequestList(model.requestList);
+            profilePanel = new ProfilePanel(model.profilePanel);
+
+            setLayout(new BorderLayout());
+            add(header, BorderLayout.NORTH);
+            add(list, BorderLayout.CENTER);
+            add(profilePanel, BorderLayout.SOUTH);
+        }
+    }
+
+
 }

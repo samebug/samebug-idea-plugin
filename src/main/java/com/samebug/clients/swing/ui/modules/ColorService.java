@@ -68,6 +68,8 @@ public abstract class ColorService {
     public final static Color[] SelectedTab = new Color[]{new Color(0x666666), new Color(0xCBCDCF)};
     public final static Color[] Tip = new Color[]{new Color(0xE0F2F8), new Color(0x0560A2)};
     public final static Color[] TipText = new Color[]{new Color(0x086a8b), new Color(0xDBEFFF)};
+    public final static Color[] ExceptionPreviewText = new Color[]{new Color(0x2985A4), new Color(0x80BEEF)};
+    public final static Color[] ExceptionPreviewBackground = new Color[]{new Color(0xC1E7F3), new Color(0x094778)};
     public final static Color[] ScrollbarTrack = new Color[]{new Color(0xF5F5F5), new Color(0x2D2E2F)};
     public final static Color[] ScrollbarThumb = new Color[]{new Color(0xD5D5D5), new Color(0x484A4B)};
     public final static Color[] ErrorBar = new Color[]{new Color(0xF8F4C8), new Color(0xF2EBAB)};

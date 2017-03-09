@@ -15,5 +15,32 @@
  */
 package com.samebug.clients.common.ui.component.tipRequest;
 
+import java.net.URL;
+import java.util.Date;
+
 public interface ITipRequestPreview {
+
+    final class Model {
+        public final String displayName;
+        public final URL avatarUrl;
+        public final Date createdAt;
+        public final String tipRequestBody;
+        public final String exceptionBody;
+
+        public Model(Model rhs) {
+            this(rhs.displayName, rhs.avatarUrl, rhs.createdAt, rhs.tipRequestBody, rhs.exceptionBody);
+        }
+
+        public Model(String displayName, URL avatarUrl, Date createdAt, String tipRequestBody, String exceptionBody) {
+            this.displayName = displayName;
+            this.avatarUrl = avatarUrl;
+            this.createdAt = createdAt;
+            this.tipRequestBody = tipRequestBody;
+            this.exceptionBody = exceptionBody;
+        }
+    }
+
+    interface Listener {
+        void previewClicked(ITipRequestPreview source);
+    }
 }

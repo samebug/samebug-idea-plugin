@@ -15,16 +15,7 @@
  */
 package com.samebug.clients.common.ui.frame.tipRequest;
 
+import com.samebug.clients.common.ui.component.profile.IProfilePanel;
+
 public interface ITipRequestFrame {
-    final class Model {
-    }
-
-    interface Listener {
-        void reload();
-
-        void openSamebugSettings();
-
-        void openNetworkSettings();
-    }
-
 }

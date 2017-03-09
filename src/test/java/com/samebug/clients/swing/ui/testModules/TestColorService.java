@@ -18,7 +18,7 @@ package com.samebug.clients.swing.ui.testModules;
 import com.samebug.clients.swing.ui.modules.ColorService;
 
 public final class TestColorService extends ColorService {
-    final boolean isUnderDarcula = false;
+    final boolean isUnderDarcula = true;
 
     @Override
     protected <T> T internalForCurrentTheme(T[] objects) {
