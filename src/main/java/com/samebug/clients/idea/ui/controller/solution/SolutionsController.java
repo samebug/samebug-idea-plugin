@@ -25,12 +25,18 @@ import com.samebug.clients.common.search.api.WebUrlBuilder;
 import com.samebug.clients.common.search.api.entities.*;
 import com.samebug.clients.common.search.api.exceptions.*;
 import com.samebug.clients.common.services.*;
+import com.samebug.clients.common.ui.component.bugmate.IBugmateHit;
+import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
+import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
+import com.samebug.clients.common.ui.component.hit.IMarkButton;
+import com.samebug.clients.common.ui.component.hit.ITipHit;
+import com.samebug.clients.common.ui.component.hit.IWebHit;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
-import com.samebug.clients.common.ui.component.solutions.*;
+import com.samebug.clients.common.ui.frame.solution.*;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.project.ToolWindowController;
 import com.samebug.clients.idea.ui.controller.ConnectionStatusController;
-import com.samebug.clients.swing.ui.component.solutions.SolutionFrame;
+import com.samebug.clients.swing.ui.frame.solution.SolutionFrame;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.ide.PooledThreadExecutor;
 
@@ -277,7 +283,7 @@ public final class SolutionsController implements Disposable {
         IBugmateList.Model bugmateList = new IBugmateList.Model(bugmateHits, bugmates.getNumberOfOtherBugmates(), bugmates.isEvenMoreExists(), exceptionTitle);
         ITipResultsTab.Model tipResults = new ITipResultsTab.Model(tipHits, bugmateList);
         IResultTabs.Model resultTabs = new IResultTabs.Model(webResults, tipResults, cta);
-        IExceptionHeaderPanel.Model header = new IExceptionHeaderPanel.Model(exceptionTitle);
+        ISearchHeaderPanel.Model header = new ISearchHeaderPanel.Model(exceptionTitle);
         IProfilePanel.Model profile =
                 new IProfilePanel.Model(0, statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(),
                         user.getDisplayName(), user.getAvatarUrl());

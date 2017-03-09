@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.services;
 
-import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.search.api.client.ClientResponse;
 import com.samebug.clients.common.search.api.client.SamebugClient;
 import com.samebug.clients.common.search.api.entities.Exception;
@@ -23,12 +22,10 @@ import com.samebug.clients.common.search.api.entities.*;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 
 public final class SolutionService {
-    final MessageBus messageBus;
     final ClientService clientService;
     final SolutionStore solutionStore;
 
-    public SolutionService(MessageBus messageBus, ClientService clientService, SolutionStore solutionStore) {
-        this.messageBus = messageBus;
+    public SolutionService(ClientService clientService, SolutionStore solutionStore) {
         this.clientService = clientService;
         this.solutionStore = solutionStore;
     }

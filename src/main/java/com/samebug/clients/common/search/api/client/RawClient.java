@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO extract interface and make a separate intellij-specific implementation
 final class RawClient {
     final static String USER_AGENT = "Samebug-Idea-Client/2.0.0";
     public static final int TrackingRequestTimeout_Millis = 3000;

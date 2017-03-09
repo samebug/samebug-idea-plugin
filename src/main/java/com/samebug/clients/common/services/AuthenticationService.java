@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.services;
 
-import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.search.api.client.ClientResponse;
 import com.samebug.clients.common.search.api.client.SamebugClient;
 import com.samebug.clients.common.search.api.entities.UserInfo;
@@ -23,11 +22,9 @@ import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.Nullable;
 
 public final class AuthenticationService {
-    final MessageBus messageBus;
     final ClientService clientService;
 
-    public AuthenticationService(MessageBus messageBus, ClientService clientService) {
-        this.messageBus = messageBus;
+    public AuthenticationService(ClientService clientService) {
         this.clientService = clientService;
     }
 

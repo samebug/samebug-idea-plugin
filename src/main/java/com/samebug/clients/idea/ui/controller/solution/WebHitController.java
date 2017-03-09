@@ -17,9 +17,9 @@ package com.samebug.clients.idea.ui.controller.solution;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.ui.component.solutions.IWebHit;
+import com.samebug.clients.common.ui.component.hit.IWebHit;
 import com.samebug.clients.idea.ui.BrowserUtil;
-import com.samebug.clients.idea.ui.global.IdeaListenerService;
+import com.samebug.clients.idea.ui.modules.IdeaListenerService;
 
 import java.net.URL;
 

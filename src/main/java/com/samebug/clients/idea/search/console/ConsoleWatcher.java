@@ -167,8 +167,9 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
     }
 
     private static int findStackTraceOffset(StringBuilder text, String trace) {
-            return text.indexOf(trace);
+        return text.indexOf(trace);
     }
+
     private static StringBuilder eliminateTrace(StringBuilder text, int traceStartOffset, int traceLength) {
         String blank = new String(new char[traceLength]);
         text.replace(traceStartOffset, traceStartOffset + traceLength, blank);

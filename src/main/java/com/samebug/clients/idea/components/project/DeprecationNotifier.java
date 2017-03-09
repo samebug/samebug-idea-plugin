@@ -23,7 +23,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.search.api.client.ConnectionStatus;
 import com.samebug.clients.common.services.ClientService;
-import com.samebug.clients.swing.ui.global.MessageService;
+import com.samebug.clients.swing.ui.modules.MessageService;
 
 public final class DeprecationNotifier implements ClientService.ConnectionStatusListener {
     private final Project myProject;

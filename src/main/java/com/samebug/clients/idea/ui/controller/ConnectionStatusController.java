@@ -21,7 +21,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.search.api.client.ConnectionStatus;
 import com.samebug.clients.common.services.ClientService;
-import com.samebug.clients.common.ui.component.util.IFrame;
+import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 
 public final class ConnectionStatusController implements ClientService.ConnectionStatusListener, Disposable {

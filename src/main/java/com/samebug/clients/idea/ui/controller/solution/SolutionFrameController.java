@@ -20,9 +20,9 @@ import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.net.HttpProxyConfigurable;
-import com.samebug.clients.common.ui.component.solutions.ISolutionFrame;
+import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
 import com.samebug.clients.idea.ui.controller.ConfigDialog;
-import com.samebug.clients.idea.ui.global.IdeaListenerService;
+import com.samebug.clients.idea.ui.modules.IdeaListenerService;
 
 final class SolutionFrameController implements ISolutionFrame.Listener {
     final static Logger LOGGER = Logger.getInstance(WebHitController.class);

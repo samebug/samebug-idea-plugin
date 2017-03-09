@@ -17,14 +17,14 @@ package com.samebug.clients.idea.ui.controller.solution;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.ui.component.solutions.IExceptionHeaderPanel;
+import com.samebug.clients.common.ui.frame.solution.ISearchHeaderPanel;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.BrowserUtil;
-import com.samebug.clients.idea.ui.global.IdeaListenerService;
+import com.samebug.clients.idea.ui.modules.IdeaListenerService;
 
 import java.net.URL;
 
-final class ExceptionHeaderController implements IExceptionHeaderPanel.Listener {
+final class ExceptionHeaderController implements ISearchHeaderPanel.Listener {
     final static Logger LOGGER = Logger.getInstance(ExceptionHeaderController.class);
 
     final SolutionsController controller;

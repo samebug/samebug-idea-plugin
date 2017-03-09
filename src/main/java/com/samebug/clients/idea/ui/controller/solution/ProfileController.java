@@ -18,7 +18,7 @@ package com.samebug.clients.idea.ui.controller.solution;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
-import com.samebug.clients.idea.ui.global.IdeaListenerService;
+import com.samebug.clients.idea.ui.modules.IdeaListenerService;
 
 final class ProfileController implements IProfilePanel.Listener {
     final static Logger LOGGER = Logger.getInstance(ProfileController.class);

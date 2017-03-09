@@ -78,7 +78,8 @@ public class JsonTest {
     // jq . > src/test/resources/com/samebug/clients/common/search/api/jsontest/post-tip-1.json
     @Test
     public void postTip() {
-        TypeToken<RestHit<Tip>> typeToken = new TypeToken<RestHit<Tip>>() {};
+        TypeToken<RestHit<Tip>> typeToken = new TypeToken<RestHit<Tip>>() {
+        };
         RestHit<Tip> x = gson.fromJson(stream("post-tip-1"), typeToken.getType());
         checkFields(x);
         Assert.assertTrue(x.getCreatedBy().getId() == 1);

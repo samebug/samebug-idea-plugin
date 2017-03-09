@@ -1,14 +1,14 @@
 package com.samebug.clients.swing.ui;
 
 import com.google.gson.*;
-import com.samebug.clients.common.ui.component.solutions.ISolutionFrame;
-import com.samebug.clients.idea.ui.global.IdeaMessageService;
-import com.samebug.clients.swing.ui.component.solutions.SolutionFrame;
-import com.samebug.clients.swing.ui.global.*;
-import com.samebug.clients.swing.ui.globalService.TestColorService;
-import com.samebug.clients.swing.ui.globalService.TestIconService;
-import com.samebug.clients.swing.ui.globalService.TestListenerService;
-import com.samebug.clients.swing.ui.globalService.TestWebImageService;
+import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
+import com.samebug.clients.idea.ui.modules.IdeaMessageService;
+import com.samebug.clients.swing.ui.frame.solution.SolutionFrame;
+import com.samebug.clients.swing.ui.modules.*;
+import com.samebug.clients.swing.ui.testModules.TestColorService;
+import com.samebug.clients.swing.ui.testModules.TestIconService;
+import com.samebug.clients.swing.ui.testModules.TestListenerService;
+import com.samebug.clients.swing.ui.testModules.TestWebImageService;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 

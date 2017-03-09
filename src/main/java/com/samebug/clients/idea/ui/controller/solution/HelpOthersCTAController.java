@@ -1,12 +1,12 @@
 /**
  * Copyright 2017 Samebug, Inc.
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,10 +23,10 @@ import com.samebug.clients.common.search.api.entities.Tip;
 import com.samebug.clients.common.search.api.exceptions.BadRequest;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.SolutionService;
-import com.samebug.clients.common.ui.component.solutions.IHelpOthersCTA;
+import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.ui.global.IdeaListenerService;
-import com.samebug.clients.swing.ui.global.MessageService;
+import com.samebug.clients.idea.ui.modules.IdeaListenerService;
+import com.samebug.clients.swing.ui.modules.MessageService;
 
 final class HelpOthersCTAController implements IHelpOthersCTA.Listener {
     final static Logger LOGGER = Logger.getInstance(HelpOthersCTAController.class);

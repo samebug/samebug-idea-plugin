@@ -416,7 +416,7 @@
         ],
         "numberOfOtherBugmates": 16,
         "evenMoreExists": false,
-        "exceptionTitle": "UnsupportedDriverException: Could not instantiate class mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm mmmmmmmmmmmmmmmmmmmmmm"
+        "exceptionTitle": "UnsupportedDriverException: Could not instantiate class"
       }
     }
   },

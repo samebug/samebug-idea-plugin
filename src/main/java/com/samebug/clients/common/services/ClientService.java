@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * NOTE: these services use idea MessageBus only for convenience, any other observer implementation would do.
+ * NOTE: this service uses idea MessageBus only for convenience, any other observer implementation would do.
  */
 public final class ClientService {
     final MessageBus messageBus;

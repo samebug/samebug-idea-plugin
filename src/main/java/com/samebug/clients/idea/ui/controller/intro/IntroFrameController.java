@@ -19,10 +19,10 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
-import com.samebug.clients.common.ui.component.intro.IIntroFrame;
+import com.samebug.clients.common.ui.frame.IIntroFrame;
 import com.samebug.clients.idea.components.project.ToolWindowController;
 import com.samebug.clients.idea.ui.controller.ConnectionStatusController;
-import com.samebug.clients.swing.ui.component.intro.IntroFrame;
+import com.samebug.clients.swing.ui.frame.intro.IntroFrame;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

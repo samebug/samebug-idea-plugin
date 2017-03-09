@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.services;
 
-import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.search.api.client.ClientResponse;
 import com.samebug.clients.common.search.api.client.SamebugClient;
 import com.samebug.clients.common.search.api.entities.SearchResults;
@@ -25,7 +24,7 @@ public final class SearchService {
     final ClientService clientService;
     final SearchStore searchStore;
 
-    public SearchService(MessageBus messageBus, ClientService clientService, SearchStore searchStore) {
+    public SearchService(ClientService clientService, SearchStore searchStore) {
         this.clientService = clientService;
         this.searchStore = searchStore;
     }

@@ -15,19 +15,16 @@
  */
 package com.samebug.clients.common.services;
 
-import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.search.api.client.ClientResponse;
 import com.samebug.clients.common.search.api.client.SamebugClient;
 import com.samebug.clients.common.search.api.entities.BugmatesResult;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 
 public final class BugmateService {
-    final MessageBus messageBus;
     final ClientService clientService;
     final BugmateStore bugmateStore;
 
-    public BugmateService(MessageBus messageBus, ClientService clientService, BugmateStore bugmateStore) {
-        this.messageBus = messageBus;
+    public BugmateService(ClientService clientService, BugmateStore bugmateStore) {
         this.clientService = clientService;
         this.bugmateStore = bugmateStore;
     }

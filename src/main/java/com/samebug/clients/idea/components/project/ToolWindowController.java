@@ -34,9 +34,9 @@ import com.samebug.clients.idea.messages.RefreshTimestampsListener;
 import com.samebug.clients.idea.ui.controller.authentication.AuthenticationController;
 import com.samebug.clients.idea.ui.controller.intro.IntroFrameController;
 import com.samebug.clients.idea.ui.controller.solution.SolutionsController;
-import com.samebug.clients.idea.ui.global.IdeaDataService;
-import com.samebug.clients.swing.ui.global.DataService;
-import com.samebug.clients.swing.ui.global.MessageService;
+import com.samebug.clients.idea.ui.modules.IdeaDataService;
+import com.samebug.clients.swing.ui.modules.DataService;
+import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

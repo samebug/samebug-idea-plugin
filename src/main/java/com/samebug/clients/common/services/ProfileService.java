@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.services;
 
-import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.search.api.client.ClientResponse;
 import com.samebug.clients.common.search.api.client.SamebugClient;
 import com.samebug.clients.common.search.api.entities.UserInfo;
@@ -27,15 +26,12 @@ import org.jetbrains.annotations.Nullable;
 
 public final class ProfileService {
     @NotNull
-    final MessageBus messageBus;
-    @NotNull
     final ClientService clientService;
     @NotNull
     final ProfileStore store;
 
 
-    public ProfileService(@NotNull MessageBus messageBus, @NotNull ClientService clientService, @NotNull ProfileStore store) {
-        this.messageBus = messageBus;
+    public ProfileService(@NotNull ClientService clientService, @NotNull ProfileStore store) {
         this.clientService = clientService;
         this.store = store;
     }

@@ -29,8 +29,8 @@ import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.*;
 import com.samebug.clients.idea.controllers.ConsoleSearchController;
 import com.samebug.clients.idea.controllers.TimedTasks;
-import com.samebug.clients.idea.ui.global.*;
-import com.samebug.clients.swing.ui.global.*;
+import com.samebug.clients.idea.ui.modules.*;
+import com.samebug.clients.swing.ui.modules.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -104,16 +104,16 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         clientService = new ClientService(messageBus);
         clientService.configure(state.get().getNetworkConfig());
         profileStore = new ProfileStore();
-        profileService = new ProfileService(messageBus, clientService, profileStore);
+        profileService = new ProfileService(clientService, profileStore);
         solutionStore = new SolutionStore();
-        solutionService = new SolutionService(messageBus, clientService, solutionStore);
+        solutionService = new SolutionService(clientService, solutionStore);
         searchStore = new SearchStore();
-        searchService = new SearchService(messageBus, clientService, searchStore);
+        searchService = new SearchService(clientService, searchStore);
         searchRequestStore = new SearchRequestStore();
         searchRequestService = new SearchRequestService(searchRequestStore);
         bugmateStore = new BugmateStore();
-        bugmateService = new BugmateService(messageBus, clientService, bugmateStore);
-        authenticationService = new AuthenticationService(messageBus, clientService);
+        bugmateService = new BugmateService(clientService, bugmateStore);
+        authenticationService = new AuthenticationService(clientService);
 
         TimedTasks timedTasks = new TimedTasks(messageBus.connect(this));
         ConsoleSearchController consoleSearchController = new ConsoleSearchController(messageBus.connect(this));

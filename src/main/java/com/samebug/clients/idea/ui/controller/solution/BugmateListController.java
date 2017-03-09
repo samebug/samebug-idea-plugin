@@ -17,8 +17,8 @@ package com.samebug.clients.idea.ui.controller.solution;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.ui.component.solutions.IBugmateList;
-import com.samebug.clients.idea.ui.global.IdeaListenerService;
+import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
+import com.samebug.clients.idea.ui.modules.IdeaListenerService;
 
 final class BugmateListController implements IBugmateList.Listener {
     final static Logger LOGGER = Logger.getInstance(BugmateListController.class);

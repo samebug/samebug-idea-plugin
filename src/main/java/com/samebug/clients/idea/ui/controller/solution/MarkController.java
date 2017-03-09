@@ -21,9 +21,9 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.search.api.entities.MarkResponse;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.SolutionService;
-import com.samebug.clients.common.ui.component.solutions.IMarkButton;
+import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.ui.global.IdeaListenerService;
+import com.samebug.clients.idea.ui.modules.IdeaListenerService;
 
 final class MarkController implements IMarkButton.Listener {
     final static Logger LOGGER = Logger.getInstance(MarkController.class);
