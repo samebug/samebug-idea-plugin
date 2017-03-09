@@ -15,5 +15,26 @@
  */
 package com.samebug.clients.common.ui.frame.tipRequest;
 
+import java.net.URL;
+
 public interface ITipRequestHeader {
+    final class Model {
+        public final String title;
+        public final String displayName;
+        public final URL avatarUrl;
+
+        public Model(Model rhs) {
+            this(rhs.title, rhs.displayName, rhs.avatarUrl);
+        }
+
+        public Model(String title, String displayName, URL avatarUrl) {
+            this.title = title;
+            this.displayName = displayName;
+            this.avatarUrl = avatarUrl;
+        }
+    }
+
+    interface Listener {
+        void clickViewStackTrace();
+    }
 }

@@ -15,5 +15,18 @@
  */
 package com.samebug.clients.swing.ui.frame.tipRequest;
 
-public class TipRequestFrame {
+import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
+import com.samebug.clients.common.ui.frame.tipRequest.ITipRequestFrame;
+import com.samebug.clients.swing.ui.base.errorBarPane.BasicFrame;
+
+public final class TipRequestFrame extends BasicFrame implements ITipRequestFrame {
+    @Override
+    public void setLoading() {
+
+    }
+
+    @Override
+    public void loadingSucceeded(Model model) {
+
+    }
 }
