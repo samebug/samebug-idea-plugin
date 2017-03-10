@@ -1,0 +1,30 @@
+{
+  "resultTabs": {
+    "cta": {
+      "usersWaitingHelp": 0
+    },
+    "webResults": {
+      "webHits": []
+    },
+    "tipResults": {
+      "tipHits": [],
+      "bugmateList": {
+        "bugmateHits": [],
+        "numberOfOtherBugmates": 0,
+        "evenMoreExists": false,
+        "exceptionTitle": "UnsupportedDriverException: Could not instantiate class"
+      }
+    }
+  },
+  "profilePanel": {
+    "messages": 2,
+    "marks": 16,
+    "tips": 48,
+    "thanks": 15,
+    "name": "Adam",
+    "avatarUrl": null
+  },
+  "header": {
+    "title": "UnsupportedDriverException: Could not instantiate class"
+  }
+}

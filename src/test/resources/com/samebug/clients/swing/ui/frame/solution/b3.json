@@ -1,0 +1,52 @@
+{
+  "resultTabs": {
+    "cta": {
+      "usersWaitingHelp": 234
+    },
+    "webResults": {
+      "webHits": []
+    },
+    "tipResults": {
+      "tipHits": [],
+      "bugmateList": {
+        "bugmateHits": [
+          {
+            "userId": 1,
+            "displayName": "Petra",
+            "avatarUrl": null,
+            "nSeen": 11,
+            "lastSeen": "2017-01-01T00:00:00"
+          },
+          {
+            "userId": 1,
+            "displayName": "ZsoltVad",
+            "avatarUrl": null,
+            "nSeen": 21,
+            "lastSeen": "2017-01-01T00:00:00"
+          },
+          {
+            "userId": 1,
+            "displayName": "rp",
+            "avatarUrl": null,
+            "nSeen": 1,
+            "lastSeen": "2017-01-01T00:00:00"
+          }
+        ],
+        "numberOfOtherBugmates": 0,
+        "evenMoreExists": false,
+        "exceptionTitle": "UnsupportedDriverException: Could not instantiate class"
+      }
+    }
+  },
+  "profilePanel": {
+    "messages": 2,
+    "marks": 16,
+    "tips": 48,
+    "thanks": 15,
+    "name": "Adam",
+    "avatarUrl": null
+  },
+  "header": {
+    "title": "UnsupportedDriverException: Could not instantiate class"
+  }
+}

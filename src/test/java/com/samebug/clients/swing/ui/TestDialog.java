@@ -1,9 +1,7 @@
 package com.samebug.clients.swing.ui;
 
 import com.google.gson.*;
-import com.samebug.clients.common.ui.frame.tipRequest.ITipRequestFrame;
 import com.samebug.clients.idea.ui.modules.IdeaMessageService;
-import com.samebug.clients.swing.ui.frame.tipRequest.TipRequestFrame;
 import com.samebug.clients.swing.ui.modules.*;
 import com.samebug.clients.swing.ui.testModules.TestColorService;
 import com.samebug.clients.swing.ui.testModules.TestIconService;
@@ -17,37 +15,69 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
-public class TipRequestFrameUITest extends JDialog {
-    private static final String resourceJson = "/com/samebug/clients/idea/ui/frame/tipRequest/1.json";
+public abstract class TestDialog extends JDialog {
+    private static final Gson gson;
+    static {
+        gson = createGson();
 
-    public TipRequestFrameUITest(Gson gson) throws IOException, InvocationTargetException, InterruptedException {
-        InputStream stream = getClass().getResourceAsStream(resourceJson);
-        final ITipRequestFrame.Model model = gson.fromJson(new InputStreamReader(stream), ITipRequestFrame.Model.class);
-        stream.close();
-
-        SwingUtilities.invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                TipRequestFrame f = new TipRequestFrame();
-                f.loadingSucceeded(model);
-                setContentPane(f);
-            }
-        });
-
-
+        try {
+            installModules();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void main(String[] args) throws IOException, FontFormatException, InvocationTargetException, InterruptedException {
+    protected TestDialog() {
+        setPreferredSize(new Dimension(580, 600));
+        setModal(true);
+    }
+
+    protected abstract void initializeUI(String resource) throws Exception;
+
+    public TestDialog waitToInitializeUI(final String resource) {
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        TestDialog.this.initializeUI(resource);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return this;
+    }
+
+    public void showDialog() {
+        pack();
+        setVisible(true);
+    }
+
+    protected <T> T readJson(String resourceUrl, Class<T> classOfT) throws IOException {
+        InputStream stream = getClass().getResourceAsStream(resourceUrl);
+        try {
+            return gson.fromJson(new InputStreamReader(stream), classOfT);
+        } finally {
+            stream.close();
+        }
+    }
+
+    private static void installModules() throws Exception {
         FontService.registerFonts();
         ColorService.install(new TestColorService());
         WebImageService.install(new TestWebImageService());
         IconService.install(new TestIconService());
         MessageService.install(new IdeaMessageService());
         ListenerService.install(new TestListenerService());
+    }
 
+    private static Gson createGson() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
                     @Override
@@ -57,16 +87,6 @@ public class TipRequestFrameUITest extends JDialog {
                     }
                 }
         );
-        Gson gson = gsonBuilder.create();
-
-
-        TipRequestFrameUITest dialog = new TipRequestFrameUITest(gson);
-
-        dialog.setPreferredSize(new Dimension(580, 600));
-        dialog.setMinimumSize(new Dimension(200, 400));
-        dialog.setModal(true);
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
+        return gsonBuilder.create();
     }
 }

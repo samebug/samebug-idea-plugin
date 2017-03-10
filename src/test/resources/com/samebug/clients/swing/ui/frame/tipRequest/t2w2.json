@@ -1,0 +1,83 @@
+{
+  "header": {
+    "title": "UnsupportedDriverException: Could not instantiate class",
+    "displayName": "Petra",
+    "avatarUrl": null
+  },
+  "resultTabs": {
+    "cta": {
+      "usersWaitingHelp": 234
+    },
+    "webResults": {
+      "webHits": [
+        {
+          "title": "Android rawQuery result check",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 2,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "Sqlite select statement results in an error when i open the intent",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Dimitrov",
+          "sourceName": "Stack Overflow",
+          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "mark": {
+            "marks": 3,
+            "userMarkId": 1,
+            "userCanMark": false
+          }
+        }
+      ]
+    },
+    "tipRequest": {
+      "tipRequest": {
+        "displayName": "Petra",
+        "avatarUrl": null,
+        "createdAt": "2017-03-09T05:00:00",
+        "tipRequestBody": "When trying to run serenity script in IE im facing with the following error. In my \"serenity.properties\" file have added webdriver.ie.driver=C:\\Automation\\Resources\\IODriverServer.exe -Dwebdriver.driver = iexplorer but still getting the following error. While trying to run in normal selenium Code the IE works fine. Can you guys help me on it.",
+        "stacktrace": "UnsupportedDriverException: Could not instantiate class\n\tat x.x.X.x\n\tat x.x.X.x"
+      },
+      "tipHits": [
+        {
+          "message": "Download and insert the newest chrome driver to the lib folder",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Petra",
+          "createdByAvatarUrl": null,
+          "mark": {
+            "marks": 2,
+            "userMarkId": 1,
+            "userCanMark": true
+          }
+        },
+        {
+          "message": "Node package 'protractor' with selenium overrides the existring environment therefore we have to set the chromedriver's path explicitly",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "ZsoltVad",
+          "createdByAvatarUrl": null,
+          "mark": {
+            "marks": 1,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        }
+      ]
+    }
+  },
+  "profilePanel": {
+    "messages": 2,
+    "marks": 16,
+    "tips": 48,
+    "thanks": 15,
+    "name": "Adam",
+    "avatarUrl": null
+  }
+}
