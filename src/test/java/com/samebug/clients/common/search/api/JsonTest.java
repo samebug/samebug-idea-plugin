@@ -74,7 +74,9 @@ public class JsonTest {
         Assert.assertTrue(x.getReferences().size() > 0);
     }
 
-    // curl -XPOST 'http://nightly.samebug.com/rest/0.11/tip' -H'X-Samebug-ApiKey: 355be195-c10b-11e5-a334-000d3a317492' -H'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H'Accept: application/json' -H'User-Agent: Samebug-Idea-Client/2.0.0' -d'searchId=5510034&message=good_job_curl' |\
+    // curl -XPOST 'http://nightly.samebug.com/rest/0.11/tip' -H'X-Samebug-ApiKey: 355be195-c10b-11e5-a334-000d3a317492' \
+    // -H'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H'Accept: application/json' -H'User-Agent: Samebug-Idea-Client/2.0.0' \
+    // -d'searchId=5510034&message=good_job_curl' |\
     // jq . > src/test/resources/com/samebug/clients/common/search/api/jsontest/post-tip-1.json
     @Test
     public void postTip() {

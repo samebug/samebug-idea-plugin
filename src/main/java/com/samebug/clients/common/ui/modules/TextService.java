@@ -19,7 +19,6 @@ import org.ocpsoft.prettytime.PrettyTime;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -45,9 +44,11 @@ public final class TextService {
         if (Math.abs(now - then) >= 1000 * 60 * 60 * 12) return olderTimestamp(date);
         else return recentTimestamp(date);
     }
+
     public static String recentTimestamp(Date date) {
         return recent.format(date);
     }
+
     public static String olderTimestamp(Date date) {
         return older.format(date);
     }

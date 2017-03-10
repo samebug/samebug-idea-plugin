@@ -1,10 +1,8 @@
 package com.samebug.clients.swing.ui;
 
 import com.google.gson.*;
-import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
 import com.samebug.clients.common.ui.frame.tipRequestList.ITipRequestListFrame;
 import com.samebug.clients.idea.ui.modules.IdeaMessageService;
-import com.samebug.clients.swing.ui.frame.solution.SolutionFrame;
 import com.samebug.clients.swing.ui.frame.tipRequestList.TipRequestListFrame;
 import com.samebug.clients.swing.ui.modules.*;
 import com.samebug.clients.swing.ui.testModules.TestColorService;

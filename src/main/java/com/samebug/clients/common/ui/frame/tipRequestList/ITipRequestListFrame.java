@@ -19,6 +19,7 @@ import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 
 public interface ITipRequestListFrame {
     void loadingSucceeded(Model model);
+
     void setLoading();
 
     final class Model {

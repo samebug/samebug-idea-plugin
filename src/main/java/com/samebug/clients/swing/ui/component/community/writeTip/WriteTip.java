@@ -120,6 +120,7 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
                 String l2 = MessageService.message("samebug.component.cta.writeTip.noWebHits.label", model.usersWaitingHelp);
                 ((LargeWriteTipCTAScreen) s).label.setText(l2);
                 break;
+            default:
         }
         return s;
     }
