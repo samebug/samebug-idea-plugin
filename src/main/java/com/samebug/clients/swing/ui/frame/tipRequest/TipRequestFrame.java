@@ -15,18 +15,49 @@
  */
 package com.samebug.clients.swing.ui.frame.tipRequest;
 
-import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
 import com.samebug.clients.common.ui.frame.tipRequest.ITipRequestFrame;
 import com.samebug.clients.swing.ui.base.errorBarPane.BasicFrame;
+import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
+import com.samebug.clients.swing.ui.component.profile.ProfilePanel;
+
+import javax.swing.*;
+import java.awt.*;
 
 public final class TipRequestFrame extends BasicFrame implements ITipRequestFrame {
+    private TipRequest tipRequest;
+
+    public TipRequestFrame() {
+        setLoading();
+    }
+
     @Override
     public void setLoading() {
-
+        addMainComponent(new SamebugLabel("loading"));
     }
 
     @Override
     public void loadingSucceeded(Model model) {
-
+        tipRequest = new TipRequest(model);
+        addMainComponent(tipRequest);
     }
+
+    private final class TipRequest extends SamebugPanel {
+        private final JComponent exceptionHeader;
+        private final JComponent tabs;
+        private final JComponent profilePanel;
+
+        TipRequest(Model model) {
+            exceptionHeader = new TipRequestHeader(model.header);
+            tabs = new TipRequestTabs(model.resultTabs);
+            profilePanel = new ProfilePanel(model.profilePanel);
+
+            setLayout(new BorderLayout());
+            add(exceptionHeader, BorderLayout.NORTH);
+            add(tabs, BorderLayout.CENTER);
+            add(profilePanel, BorderLayout.SOUTH);
+        }
+    }
+
+
 }

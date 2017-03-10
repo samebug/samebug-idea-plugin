@@ -1,8 +1,93 @@
 package com.samebug.clients.swing.ui.component.tipRequest;
 
 import com.samebug.clients.common.ui.component.tipRequest.ITipRequest;
+import com.samebug.clients.swing.ui.base.button.SamebugButton;
+import com.samebug.clients.swing.ui.base.label.LinkLabel;
+import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
+import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
+import com.samebug.clients.swing.ui.component.community.writeTip.WriteTipArea;
+import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
+import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.DrawService;
+import com.samebug.clients.swing.ui.modules.FontService;
+import com.samebug.clients.swing.ui.modules.MessageService;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
 
-public final class TipRequest extends JComponent implements ITipRequest {
+// TODO colors, write tip area prompt, etc
+public final class TipRequest extends TransparentPanel implements ITipRequest {
+    public TipRequest(Model model) {
+        final SamebugLabel titleLabel = new TitleLabel();
+        final AvatarIcon avatar = new AvatarIcon(model.avatarUrl, 40);
+        final SamebugLabel displayName = new DisplayName(model.displayName);
+        final TipRequestBody tipRequestBody = new TipRequestBody(model.tipRequestBody);
+        final WriteTipArea writeTipArea = new WriteTipArea(1);
+        final ActionRow actions = new ActionRow();
+
+        setBackground(ColorService.Tip);
+        setLayout(new MigLayout("fillx", "20[40!]10[300, fill]20", "20[]20[]0[]30[]10[]20"));
+        add(titleLabel, "cell 0 0, spanx 2");
+        add(avatar, "cell 0 1, spany 2, top");
+        add(displayName, "cell 1 1, growx");
+        add(tipRequestBody, "cell 1 2, wmin 0");
+        add(writeTipArea, "cell 0 3, wmin 0, spanx 2, growx");
+        add(actions, "cell 0 4, spanx 2, growx");
+
+    }
+
+    @Override
+    public void paintBorder(Graphics g) {
+        Graphics2D g2 = DrawService.init(g);
+        g2.setColor(getBackground());
+        g2.fillRoundRect(0, 0, getWidth(), getHeight(), DrawService.RoundingDiameter, DrawService.RoundingDiameter);
+    }
+
+    final class TitleLabel extends SamebugLabel {
+        public TitleLabel() {
+            setText("TIP REQUEST");
+            setFont(FontService.regular(16));
+            setForeground(ColorService.TipText);
+        }
+    }
+    final class DisplayName extends SamebugLabel {
+        public DisplayName(String name) {
+            super(name);
+            setFont(FontService.demi(16));
+            setForeground(ColorService.TipText);
+        }
+    }
+
+    final class TipRequestBody extends SamebugMultilineLabel {
+        public TipRequestBody(String body) {
+            setText(body);
+            setFont(FontService.regular(16));
+            setForeground(ColorService.TipText);
+        }
+    }
+    final class SendButton extends SamebugButton {
+        public SendButton() {
+            setText(MessageService.message("samebug.component.tip.write.send"));
+            setFilled(true);
+            setInteractionColors(ColorService.MarkInteraction);
+            setBackgroundColors(ColorService.Tip);
+            setFont(FontService.demi(14));
+        }
+    }
+
+    final class ActionRow extends TransparentPanel {
+        {
+            final SamebugButton sendButton = new SendButton();
+            final SamebugLabel why = new SamebugLabel("Why did I receive this message?");
+            why.setHorizontalAlignment(SwingConstants.RIGHT);
+
+            setLayout(new MigLayout("fillx", "0[]:push[]0", "0[]0"));
+            add(sendButton);
+            add(why);
+        }
+
+    }
+
 }

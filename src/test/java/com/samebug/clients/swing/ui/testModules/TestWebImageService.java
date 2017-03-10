@@ -43,7 +43,15 @@ public final class TestWebImageService extends WebImageService {
 
     @Override
     protected BufferedImage internalGetScaled(@NotNull URL url, int width, int height) {
-        return getScaledThroughCache(avatarPlaceholderUrl, avatarPlaceholder, width, height);
+        BufferedImage nonScaled = cache.get(url);
+        if (nonScaled == null) {
+            try {
+                nonScaled = ImageIO.read(url);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return getScaledThroughCache(url, nonScaled, width, height);
     }
 
     @Override
