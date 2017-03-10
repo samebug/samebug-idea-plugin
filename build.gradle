@@ -13,11 +13,11 @@ allprojects {
 
 sourceSets {
     main {
-        java.srcDirs 'src/main/java'
+        java.srcDir 'src/main/java'
         resources.srcDir 'src/main/resources'
     }
     test {
-        java.srcDirs 'src/test/java'
+        java.srcDir 'src/test/java'
         resources.srcDir 'src/test/resources'
     }
 }
@@ -70,6 +70,7 @@ license {
     }
     mapping {
         form = 'XML_STYLE'
+        java='SLASHSTAR_STYLE'
     }
 
     include "**/*.java"

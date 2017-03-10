@@ -1,11 +1,11 @@
-/**
+/*
  * Copyright 2017 Samebug, Inc.
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,23 +15,20 @@
  */
 package com.samebug.clients.swing.ui.frame.intro;
 
-import com.intellij.openapi.ui.popup.*;
+import com.intellij.openapi.ui.popup.Balloon;
+import com.intellij.openapi.ui.popup.BalloonBuilder;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
-import com.intellij.ui.popup.AbstractPopup;
-import com.intellij.ui.popup.FramelessNotificationPopup;
 import com.samebug.clients.common.ui.frame.IIntroFrame;
 import com.samebug.clients.swing.ui.base.errorBarPane.BasicFrame;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
-import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.modules.DrawService;
 import net.miginfocom.swing.MigLayout;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.RoundRectangle2D;
 
 // TODO
 public final class IntroFrame extends BasicFrame implements IIntroFrame {
@@ -47,6 +44,7 @@ public final class IntroFrame extends BasicFrame implements IIntroFrame {
                         setLayout(new MigLayout());
                         add(new SamebugLabel("hello"));
                     }
+
                     @Override
                     public void paintBorder(Graphics g) {
                         Graphics2D g2 = DrawService.init(g);
@@ -56,7 +54,7 @@ public final class IntroFrame extends BasicFrame implements IIntroFrame {
                 };
                 BalloonBuilder bb = JBPopupFactory.getInstance().createBalloonBuilder(c);
                 bb.setFillColor(Color.blue);
-                bb.setContentInsets(new Insets(10,10,10,10));
+                bb.setContentInsets(new Insets(10, 10, 10, 10));
                 bb.createBalloon().show(RelativePoint.getCenterOf(IntroFrame.this), Balloon.Position.above);
             }
         });

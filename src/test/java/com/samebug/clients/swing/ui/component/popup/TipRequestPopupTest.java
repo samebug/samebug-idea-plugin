@@ -2,10 +2,7 @@ package com.samebug.clients.swing.ui.component.popup;
 
 import com.google.gson.*;
 import com.samebug.clients.common.ui.component.popup.ITipRequestPopup;
-import com.samebug.clients.common.ui.frame.tipRequest.ITipRequestFrame;
 import com.samebug.clients.idea.ui.modules.IdeaMessageService;
-import com.samebug.clients.swing.ui.TipRequestFrameUITest;
-import com.samebug.clients.swing.ui.frame.tipRequest.TipRequestFrame;
 import com.samebug.clients.swing.ui.modules.*;
 import com.samebug.clients.swing.ui.testModules.TestColorService;
 import com.samebug.clients.swing.ui.testModules.TestIconService;
