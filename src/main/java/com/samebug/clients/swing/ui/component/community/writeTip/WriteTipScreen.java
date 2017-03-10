@@ -35,7 +35,7 @@ public class WriteTipScreen extends SamebugPanel {
 
     public WriteTipScreen(int peopleToHelp) {
         setOpaque(false);
-        setBackground(ColorService.Tip);
+        setBackgroundColor(ColorService.Tip);
 
         titleLabel = new SamebugLabel(MessageService.message("samebug.component.tip.write.title"), FontService.regular(14));
         titleLabel.setForeground(ColorService.TipText);
@@ -63,7 +63,7 @@ public class WriteTipScreen extends SamebugPanel {
         {
             sendButton = new SamebugButton(MessageService.message("samebug.component.tip.write.send"), true);
             sendButton.setInteractionColors(ColorService.MarkInteraction);
-            sendButton.setBackgroundColors(ColorService.Tip);
+            sendButton.setBackgroundColor(ColorService.Tip);
             sendButton.setFont(FontService.demi(14));
 
             cancelButton = new LinkLabel(MessageService.message("samebug.component.tip.write.cancel"));

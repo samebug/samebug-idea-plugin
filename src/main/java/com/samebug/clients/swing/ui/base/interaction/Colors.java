@@ -15,6 +15,8 @@
  */
 package com.samebug.clients.swing.ui.base.interaction;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.awt.*;
 
 public class Colors {
@@ -26,5 +28,11 @@ public class Colors {
         this.normal = normal;
         this.rollover = rollover;
         this.pressed = pressed;
+    }
+
+    @Nullable
+    public static Color normal(@Nullable Colors colors) {
+        if (colors == null) return null;
+        else return colors.normal;
     }
 }

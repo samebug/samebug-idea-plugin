@@ -113,8 +113,8 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
 
         {
             setPreferredSize(new Dimension(0, TopHeight + 1 + BottomHeight));
-            setForeground(ColorService.Separator);
-            setBackground(ColorService.Background);
+            setForegroundColor(ColorService.Separator);
+            setBackgroundColor(ColorService.Background);
         }
 
         @Override

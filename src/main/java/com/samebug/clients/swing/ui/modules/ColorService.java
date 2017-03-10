@@ -111,5 +111,17 @@ public abstract class ColorService {
 
     public final static Color[] Mark = new Color[MarkInteraction.length];
 
+    static {
+        for (int i = 0; i < LinkInteraction.length; ++i) {
+            Link[i] = LinkInteraction[i].normal;
+        }
+        for (int i = 0; i < SecondaryLinkInteraction.length; ++i) {
+            SecondaryLink[i] = SecondaryLinkInteraction[i].normal;
+        }
+        for (int i = 0; i < MarkInteraction.length; ++i) {
+            Mark[i] = MarkInteraction[i].normal;
+        }
+    }
+
     protected abstract <T> T internalForCurrentTheme(T[] objects);
 }

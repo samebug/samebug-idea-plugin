@@ -41,7 +41,7 @@ public final class TipRequest extends TransparentPanel implements ITipRequest {
         final WriteTipArea writeTipArea = new WriteTipArea(1);
         final ActionRow actions = new ActionRow();
 
-        setBackground(ColorService.Tip);
+        setBackgroundColor(ColorService.Tip);
         setLayout(new MigLayout("fillx", "20[40!]10[300, fill]20", "20[]20[]0[]30[]10[]20"));
         add(titleLabel, "cell 0 0, spanx 2");
         add(avatar, "cell 0 1, spany 2, top");
@@ -88,7 +88,7 @@ public final class TipRequest extends TransparentPanel implements ITipRequest {
             setText(MessageService.message("samebug.component.tip.write.send"));
             setFilled(true);
             setInteractionColors(ColorService.MarkInteraction);
-            setBackgroundColors(ColorService.Tip);
+            setBackgroundColor(ColorService.Tip);
             setFont(FontService.demi(14));
         }
     }

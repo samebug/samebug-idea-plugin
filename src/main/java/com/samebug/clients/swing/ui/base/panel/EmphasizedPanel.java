@@ -22,7 +22,7 @@ import java.awt.*;
 
 public class EmphasizedPanel extends TransparentPanel {
     {
-        setForeground(ColorService.Separator);
+        setForegroundColor(ColorService.Separator);
     }
 
     @Override

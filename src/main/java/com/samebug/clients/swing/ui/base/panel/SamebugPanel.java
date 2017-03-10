@@ -25,24 +25,30 @@ public class SamebugPanel extends JPanel {
     private Color[] backgroundColors;
 
     public SamebugPanel() {
-        setBackground(ColorService.Background);
+        setBackgroundColor(ColorService.Background);
         updateUI();
     }
 
-    public void setBackground(Color[] c) {
+    public void setBackgroundColor(Color[] c) {
         backgroundColors = c;
-        super.setBackground(ColorService.forCurrentTheme(backgroundColors));
+        updateColors();
     }
 
-    public void setForeground(Color[] c) {
+    public void setForegroundColor(Color[] c) {
         foregroundColors = c;
-        super.setForeground(ColorService.forCurrentTheme(foregroundColors));
+        updateColors();
     }
 
     @Override
     public void updateUI() {
         setUI(new SamebugPanelUI());
-        super.setForeground(ColorService.forCurrentTheme(foregroundColors));
-        super.setBackground(ColorService.forCurrentTheme(backgroundColors));
+        updateColors();
     }
+
+    private void updateColors() {
+        setForeground(ColorService.forCurrentTheme(foregroundColors));
+        setBackground(ColorService.forCurrentTheme(backgroundColors));
+    }
+
+
 }

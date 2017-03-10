@@ -31,7 +31,7 @@ import java.util.Date;
 
 public final class TipRequestPreview extends TransparentPanel implements ITipRequestPreview {
     public TipRequestPreview(Model model) {
-        setBackground(ColorService.Tip);
+        setBackgroundColor(ColorService.Tip);
         final AvatarIcon avatar = new AvatarIcon(model.avatarUrl, 40);
         final SamebugLabel diplayName = new DisplayName(model.displayName);
         final SamebugLabel tipRequestBody = new TipRequestBody(model.tipRequestBody);

@@ -152,7 +152,7 @@ public final class WriteRequestArea extends JComponent {
             add(lengthCounter, "cell 0 1, align right");
             add(exceptionPreview, "cell 0 2, wmin 0, growx");
 
-            setBackground(ColorService.Background);
+            setBackgroundColor(ColorService.Background);
 
 
             ((AbstractDocument) editableArea.getDocument()).setDocumentFilter(new TipRequestConstraints());

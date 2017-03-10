@@ -15,20 +15,18 @@
  */
 package com.samebug.clients.swing.ui.base.button;
 
-import com.samebug.clients.swing.ui.base.interaction.Colors;
-import com.samebug.clients.swing.ui.base.interaction.ForegroundColorChanger;
 import com.samebug.clients.swing.ui.modules.ColorService;
-import com.samebug.clients.swing.ui.modules.DrawService;
 import com.samebug.clients.swing.ui.modules.FontService;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class SamebugButton extends JButton {
-    protected ForegroundColorChanger interactionListener;
-    protected Colors[] foregroundColors;
-    protected Color[] backgroundColors;
-    protected boolean filled;
+/**
+ * Ordinary button with a single text label, and sensible defaults.
+ */
+public class SamebugButton extends BasicButton {
+    protected final JLabel label;
 
     public SamebugButton() {
         this(null);
@@ -39,60 +37,28 @@ public class SamebugButton extends JButton {
     }
 
     public SamebugButton(String text, boolean filled) {
-        super(text);
-        this.filled = filled;
+        super(filled);
+        label = new JLabel(text);
 
-        setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 12));
-        setContentAreaFilled(false);
-        setOpaque(false);
         setFont(FontService.demi(14));
+        setLayout(new MigLayout("", "12:push[]12:push", "11[]12"));
+        add(label, "align center");
 
-        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         setInteractionColors(ColorService.LinkInteraction);
-        setBackgroundColors(ColorService.Background);
+        setBackgroundColor(ColorService.Background);
     }
 
-    public void setInteractionColors(Colors[] c) {
-        foregroundColors = c;
-        setForeground(ColorService.forCurrentTheme(foregroundColors).normal);
-        interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, ColorService.forCurrentTheme(foregroundColors), this);
-    }
-
-    public void setBackgroundColors(Color[] c) {
-        backgroundColors = c;
-        setBackground(ColorService.forCurrentTheme(backgroundColors));
-    }
-
-    public void setFilled(boolean filled) {
-        this.filled = filled;
-        repaint();
-    }
-
-    public boolean isFilled() {
-        return filled;
+    public void setText(String t) {
+        label.setText(t);
     }
 
     @Override
-    public void paint(Graphics g) {
-        Graphics2D g2 = DrawService.init(g);
-        paintBorder(g2);
-        paintContent(g2);
-    }
-
-    protected void paintBorder(Graphics2D g2) {
-        // draw the rounded border
-        g2.setColor(getForeground());
-        if (filled) g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, DrawService.RoundingDiameter, DrawService.RoundingDiameter);
-        else g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, DrawService.RoundingDiameter, DrawService.RoundingDiameter);
-    }
-
-    protected void paintContent(Graphics2D g2) {
-        // let the SamebugButtonUI paint the text
-        super.paint(g2);
+    protected void setChildrenForeground(Color foreground) {
+        label.setForeground(foreground);
     }
 
     @Override
-    public void updateUI() {
-        setUI(new SamebugButtonUI());
+    protected void setChildrenFont(Font font) {
+        label.setFont(font);
     }
 }

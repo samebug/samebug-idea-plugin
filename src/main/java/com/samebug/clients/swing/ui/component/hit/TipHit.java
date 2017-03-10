@@ -40,13 +40,13 @@ public final class TipHit extends TransparentPanel implements ITipHit {
     public TipHit(Model model) {
         this.model = new Model(model);
 
-        setBackground(ColorService.Tip);
+        setBackgroundColor(ColorService.Tip);
         DataService.putData(this, DataService.SolutionId, model.solutionId);
         tipLabel = new SamebugLabel("TIP", FontService.regular(14));
         tipLabel.setForeground(ColorService.TipText);
         tipMessage = new MessageLabel();
         mark = new MarkButton(model.mark);
-        mark.setBackgroundColors(ColorService.Tip);
+        mark.setBackgroundColor(ColorService.Tip);
         final JPanel filler = new TransparentPanel();
         final AuthorPanel author = new AuthorPanel();
 

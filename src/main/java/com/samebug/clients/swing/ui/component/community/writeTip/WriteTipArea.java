@@ -143,7 +143,7 @@ public final class WriteTipArea extends JComponent {
             add(editableArea, "cell 0 0, wmin 0, growx");
             add(lengthCounter, "cell 0 1, align right");
 
-            setBackground(ColorService.TipFieldBackground);
+            setBackgroundColor(ColorService.TipFieldBackground);
 
 
             ((AbstractDocument) editableArea.getDocument()).setDocumentFilter(new TipConstraints());

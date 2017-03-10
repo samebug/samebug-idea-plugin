@@ -24,7 +24,7 @@ import javax.swing.*;
 
 public class ErrorBar extends SamebugPanel {
     public ErrorBar(String text) {
-        setBackground(ColorService.ErrorBar);
+        setBackgroundColor(ColorService.ErrorBar);
 
         // TODO shadow border
         setLayout(new MigLayout("", "20[]10[]20", "15[]15"));

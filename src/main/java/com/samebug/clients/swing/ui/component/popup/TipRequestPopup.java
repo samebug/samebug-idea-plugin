@@ -38,7 +38,7 @@ public final class TipRequestPopup extends SamebugPanel implements ITipRequestPo
         final JComponent answer = new AnswerButton();
         final JComponent later = new LaterButton();
 
-        setBackground(ColorService.Tip);
+        setBackgroundColor(ColorService.Tip);
         setLayout(new MigLayout("", "10[40!]8[fill]10", "10[]5[]10[]10"));
         add(avatar, "cell 0 0, spany 2");
         add(title, "cell 1 0");
