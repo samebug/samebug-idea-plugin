@@ -44,7 +44,7 @@ public final class SearchHeaderPanel extends SamebugPanel implements ISearchHead
         {
             setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
             setFont(FontService.demi(24));
-            setForeground(ColorService.EmphasizedText);
+            setForegroundColor(ColorService.EmphasizedText);
 
             setText(model.title);
 

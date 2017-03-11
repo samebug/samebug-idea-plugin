@@ -18,6 +18,7 @@ package com.samebug.clients.swing.ui.component.community.writeTip;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.modules.ColorService;
@@ -28,17 +29,16 @@ import net.miginfocom.swing.MigLayout;
 
 import java.awt.*;
 
-public class WriteTipScreen extends SamebugPanel {
+public class WriteTipScreen extends RoundedBackgroundPanel {
     final SamebugLabel titleLabel;
     final WriteTipArea tipArea;
     final ActionRow actionRow;
 
     public WriteTipScreen(int peopleToHelp) {
-        setOpaque(false);
         setBackgroundColor(ColorService.Tip);
 
         titleLabel = new SamebugLabel(MessageService.message("samebug.component.tip.write.title"), FontService.regular(14));
-        titleLabel.setForeground(ColorService.TipText);
+        titleLabel.setForegroundColor(ColorService.TipText);
         tipArea = new WriteTipArea(peopleToHelp);
         actionRow = new ActionRow();
 
@@ -46,14 +46,6 @@ public class WriteTipScreen extends SamebugPanel {
         add(titleLabel, "cell 0 0");
         add(tipArea, "cell 0 1");
         add(actionRow, "cell 0 2");
-    }
-
-    @Override
-    public void paintBorder(Graphics g) {
-        Graphics2D g2 = DrawService.init(g);
-
-        g2.setColor(getBackground());
-        g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, DrawService.RoundingDiameter, DrawService.RoundingDiameter);
     }
 
     final class ActionRow extends TransparentPanel {

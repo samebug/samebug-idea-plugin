@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.swing.ui.base.interaction;
 
+import com.samebug.clients.swing.ui.modules.ColorService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,65 +25,48 @@ import java.awt.event.MouseEvent;
 
 public class ForegroundColorChanger extends BasicInteractionListener {
     protected final JComponent component;
-    protected final Colors colors;
+    protected final InteractionColors interactionColors;
 
-    public ForegroundColorChanger(Colors colors, JComponent component) {
+    public ForegroundColorChanger(InteractionColors interactionColors, JComponent component) {
         this.component = component;
-        this.colors = colors;
+        this.interactionColors = interactionColors;
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        pressed = true;
-        component.setForeground(getColor());
         super.mousePressed(e);
+        component.setForeground(getColor());
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        pressed = false;
-        component.setForeground(getColor());
         super.mouseReleased(e);
+        component.setForeground(getColor());
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        rollover = true;
-        component.setForeground(getColor());
         super.mouseEntered(e);
+        component.setForeground(getColor());
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        rollover = false;
-        component.setForeground(getColor());
         super.mouseExited(e);
+        component.setForeground(getColor());
     }
 
     public Color getColor() {
-        if (pressed) return colors.pressed;
-        else if (rollover) return colors.rollover;
-        else return colors.normal;
+        Color[] colors;
+        if (pressed) colors = interactionColors.pressed;
+        else if (rollover) colors = interactionColors.rollover;
+        else colors = interactionColors.normal;
+        return ColorService.forCurrentTheme(colors);
     }
 
-    public static ForegroundColorChanger installForegroundInteraction(@Nullable Colors interationColors, @NotNull JComponent component) {
-        ForegroundColorChanger listener = new ForegroundColorChanger(interationColors, component);
+    public static ForegroundColorChanger installForegroundInteraction(@Nullable InteractionColors interationInteractionColors, @NotNull JComponent component) {
+        ForegroundColorChanger listener = new ForegroundColorChanger(interationInteractionColors, component);
         component.addMouseListener(listener);
         return listener;
-    }
-
-    @Nullable
-    public static ForegroundColorChanger updateForegroundInteraction(
-            @Nullable ForegroundColorChanger currentListener,
-            @Nullable Colors interationColors,
-            @NotNull JComponent component) {
-        ForegroundColorChanger newListener = null;
-        if (interationColors != null) {
-            if (currentListener != null) currentListener.component.removeMouseListener(currentListener);
-            newListener = new ForegroundColorChanger(interationColors, component);
-            component.addMouseListener(newListener);
-            component.setForeground(interationColors.normal);
-        }
-        return newListener;
     }
 }

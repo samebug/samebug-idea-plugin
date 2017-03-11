@@ -17,6 +17,7 @@ package com.samebug.clients.swing.ui.frame.tipRequestList;
 
 import com.samebug.clients.common.ui.frame.tipRequestList.ITipRequestListHeader;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.base.tabbedPane.HitsLabel;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.MessageService;
@@ -24,13 +25,30 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 
-// TODO extract HitsLabel from tabbed pane and use that here for the number
 public final class TipRequestListHeader extends JComponent implements ITipRequestListHeader {
     public TipRequestListHeader(Model model) {
-        final SamebugLabel title = new SamebugLabel(MessageService.message("samebug.frame.tipRequestList.title"), FontService.demi(24));
-        title.setForeground(ColorService.EmphasizedText);
+        final JComponent title = new Title();
+        final JComponent hits = new TipRequests(model.numberOfTipRequests);
 
-        setLayout(new MigLayout("fillx", "20[]0", "25[]27"));
-        add(title);
+        setLayout(new MigLayout("", "20[]5[]0", "25[0!]4[]27"));
+        add(title, "cell 0 0, spany 2");
+//        add(filler, "cell 1 0, top, flowy");
+        add(hits, "cell 1 1, top");
+    }
+
+    final class Title extends SamebugLabel {
+        {
+            setText(MessageService.message("samebug.frame.tipRequestList.title"));
+            setFont(FontService.demi(24));
+            setForegroundColor(ColorService.EmphasizedText);
+        }
+    }
+
+    final class TipRequests extends HitsLabel {
+        public TipRequests(int n) {
+            super(HitsLabel.LARGE);
+            setText(Integer.toString(n));
+            setForegroundColor(ColorService.SelectedTab);
+        }
     }
 }

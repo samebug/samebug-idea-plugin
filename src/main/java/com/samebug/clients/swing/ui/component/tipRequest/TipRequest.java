@@ -19,6 +19,7 @@ import com.samebug.clients.common.ui.component.tipRequest.ITipRequest;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
+import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.component.community.writeTip.WriteTipArea;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
@@ -32,10 +33,11 @@ import javax.swing.*;
 import java.awt.*;
 
 // TODO colors, write tip area prompt, etc
-public final class TipRequest extends TransparentPanel implements ITipRequest {
+public final class TipRequest extends RoundedBackgroundPanel implements ITipRequest {
+    private final static int AvatarSize = 40;
     public TipRequest(Model model) {
         final SamebugLabel titleLabel = new TitleLabel();
-        final AvatarIcon avatar = new AvatarIcon(model.avatarUrl, 40);
+        final AvatarIcon avatar = new AvatarIcon(model.avatarUrl, AvatarSize);
         final SamebugLabel displayName = new DisplayName(model.displayName);
         final TipRequestBody tipRequestBody = new TipRequestBody(model.tipRequestBody);
         final WriteTipArea writeTipArea = new WriteTipArea(1);
@@ -52,18 +54,11 @@ public final class TipRequest extends TransparentPanel implements ITipRequest {
 
     }
 
-    @Override
-    public void paintBorder(Graphics g) {
-        Graphics2D g2 = DrawService.init(g);
-        g2.setColor(getBackground());
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), DrawService.RoundingDiameter, DrawService.RoundingDiameter);
-    }
-
     final class TitleLabel extends SamebugLabel {
         public TitleLabel() {
             setText("TIP REQUEST");
             setFont(FontService.regular(16));
-            setForeground(ColorService.TipText);
+            setForegroundColor(ColorService.TipText);
         }
     }
 
@@ -71,7 +66,7 @@ public final class TipRequest extends TransparentPanel implements ITipRequest {
         public DisplayName(String name) {
             super(name);
             setFont(FontService.demi(16));
-            setForeground(ColorService.TipText);
+            setForegroundColor(ColorService.TipText);
         }
     }
 
@@ -79,7 +74,7 @@ public final class TipRequest extends TransparentPanel implements ITipRequest {
         public TipRequestBody(String body) {
             setText(body);
             setFont(FontService.regular(16));
-            setForeground(ColorService.TipText);
+            setForegroundColor(ColorService.TipText);
         }
     }
 

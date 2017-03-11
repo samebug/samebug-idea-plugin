@@ -37,17 +37,21 @@ public class StyledMultilineLabel extends JTextPane {
 
     public void setForeground(Color[] c) {
         foregroundColors = c;
-        setForeground(ColorService.forCurrentTheme(foregroundColors));
+        updateColors();
     }
 
     public void setBackground(Color[] c) {
         backgroundColors = c;
-        setBackground(ColorService.forCurrentTheme(backgroundColors));
+        updateColors();
     }
 
     @Override
     public void updateUI() {
         setUI(new BasicTextPaneUI());
+        updateColors();
+    }
+
+    private void updateColors() {
         setForeground(ColorService.forCurrentTheme(foregroundColors));
         setBackground(ColorService.forCurrentTheme(backgroundColors));
     }

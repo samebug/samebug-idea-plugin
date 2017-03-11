@@ -1,6 +1,6 @@
 package com.samebug.clients.swing.ui.base.button;
 
-import com.samebug.clients.swing.ui.base.interaction.Colors;
+import com.samebug.clients.swing.ui.base.interaction.InteractionColors;
 import com.samebug.clients.swing.ui.base.interaction.ForegroundColorChanger;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.DrawService;
@@ -25,7 +25,6 @@ import java.awt.*;
  */
 public abstract class BasicButton extends JComponent {
     protected ForegroundColorChanger interactionListener;
-    protected Colors[] interactionColors;
     protected Color[] backgroundColor;
     protected boolean filled;
 
@@ -38,8 +37,8 @@ public abstract class BasicButton extends JComponent {
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
-    public void setInteractionColors(Colors[] c) {
-        interactionColors = c;
+    public void setInteractionColors(InteractionColors c) {
+        interactionListener = ForegroundColorChanger.installForegroundInteraction(c, this);
         updateColors();
     }
 
@@ -103,11 +102,8 @@ public abstract class BasicButton extends JComponent {
     }
 
     private void updateColors() {
-        Colors currentInteractionColors = ColorService.forCurrentTheme(interactionColors);
-        interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, currentInteractionColors, this);
-        setForeground(Colors.normal(currentInteractionColors));
-        Color currentBackgroundColor = ColorService.forCurrentTheme(backgroundColor);
-        setBackground(currentBackgroundColor);
+        if (interactionListener != null) setForeground(interactionListener.getColor());
+        setBackground(ColorService.forCurrentTheme(backgroundColor));
     }
 
     protected abstract void setChildrenForeground(Color foreground);

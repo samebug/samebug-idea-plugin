@@ -15,10 +15,8 @@
  */
 package com.samebug.clients.swing.ui.base.tabbedPane;
 
-import com.samebug.clients.swing.ui.base.interaction.Colors;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.modules.ColorService;
-import com.samebug.clients.swing.ui.modules.DrawService;
 import com.samebug.clients.swing.ui.modules.FontService;
 
 import javax.swing.*;
@@ -30,15 +28,13 @@ public abstract class SamebugTabHeader extends JPanel {
     protected final HitsLabel hitsLabel;
     protected boolean selected;
     protected TabColorChanger interactionListener;
-    private Colors[] clickableColors;
     private Color[] selectedColor;
     private Color[] selectedHitColor;
 
     public SamebugTabHeader(String tabName, int hits) {
         tabLabel = new SamebugLabel(tabName, FontService.demi(16));
-        hitsLabel = new HitsLabel();
+        hitsLabel = new HitsLabel(HitsLabel.SMALL);
         hitsLabel.setText(Integer.toString(hits));
-        clickableColors = ColorService.LinkInteraction;
         selectedColor = ColorService.Text;
         selectedHitColor = ColorService.SelectedTab;
 
@@ -58,24 +54,10 @@ public abstract class SamebugTabHeader extends JPanel {
             this.removeMouseListener(interactionListener);
             interactionListener = null;
         } else if (wasSelected && !selected) {
-            interactionListener = TabColorChanger.createTabColorChanger(this, ColorService.forCurrentTheme(clickableColors));
+            interactionListener = TabColorChanger.createTabColorChanger(this, ColorService.LinkInteraction);
             addMouseListener(interactionListener);
         }
         updateColors();
-    }
-
-    /**
-     * Update foreground and background color of this component based on the current theme
-     */
-    private void updateColors() {
-        Color foreground;
-        if (selected) foreground = ColorService.forCurrentTheme(selectedColor);
-        else foreground = ColorService.forCurrentTheme(clickableColors).normal;
-        setForeground(foreground);
-        setBackground(ColorService.forCurrentTheme(ColorService.Background));
-
-        // hit label in selected state has a visually corrected color
-        if (hitsLabel != null && selected) hitsLabel.setForeground(ColorService.forCurrentTheme(selectedHitColor));
     }
 
     /**
@@ -97,61 +79,27 @@ public abstract class SamebugTabHeader extends JPanel {
     @Override
     public void updateUI() {
         setUI(new BasicPanelUI());
-        if (clickableColors != null) {
-            if (!selected) {
-                if (interactionListener != null) removeMouseListener(interactionListener);
-                interactionListener = TabColorChanger.createTabColorChanger(this, ColorService.forCurrentTheme(clickableColors));
-                addMouseListener(interactionListener);
-            }
-            updateColors();
+        if (!selected) {
+            if (interactionListener != null) removeMouseListener(interactionListener);
+            interactionListener = TabColorChanger.createTabColorChanger(this, ColorService.LinkInteraction);
+            addMouseListener(interactionListener);
         }
+        updateColors();
     }
 
-    private final class HitsLabel extends SamebugLabel {
-        private static final int Height = 20;
-        private final Font font = FontService.demi(10);
+    /**
+     * Update foreground and background color of this component based on the current theme
+     */
+    private void updateColors() {
+        Color foreground;
+        if (selected) foreground = ColorService.forCurrentTheme(selectedColor);
+        else foreground = interactionListener.getColor();
+        setForeground(foreground);
+        setBackground(ColorService.forCurrentTheme(ColorService.Background));
 
-        @Override
-        public Dimension getPreferredSize() {
-            // Override to guarantee size
-            String hits = getText();
-
-            if (hits.length() == 1) {
-                // the background is a circle
-                return new Dimension(Height, Height);
-            } else {
-                // the background is a rounded rect
-                FontMetrics fm = getFontMetrics(font);
-                int width = fm.stringWidth(hits);
-                return new Dimension(8 + width + 8, Height);
-            }
-        }
-
-        @Override
-        public void paint(Graphics g) {
-            Graphics2D g2 = DrawService.init(g);
-
-            // NOTE different behaviour for one and for more digits
-            // For one digit, we have a disk as background, and show the number in the center
-            // For more digit, we have a rounded rectangle, and push the number to the right (to be in the center of the rectangle
-            String hits = getText();
-
-            g2.setColor(getForeground());
-            if (hits.length() == 1) {
-                g.fillOval(1, 1, getWidth() - 2, getHeight() - 2);
-            } else {
-                g.fillRoundRect(1, 1, getWidth() - 2, getHeight() - 2, 20, 20);
-            }
-
-            g2.setColor(SamebugTabHeader.this.getBackground());
-            g2.setFont(font);
-
-            // TODO this will break when changing the font
-            if (hits.length() == 1) {
-                g2.drawString(getText(), 7, 13);
-            } else {
-                g2.drawString(getText(), 8, 13);
-            }
-        }
+        // hit label in selected state has a visually corrected color
+        if (hitsLabel != null && selected) hitsLabel.setForeground(ColorService.forCurrentTheme(selectedHitColor));
     }
+
+
 }

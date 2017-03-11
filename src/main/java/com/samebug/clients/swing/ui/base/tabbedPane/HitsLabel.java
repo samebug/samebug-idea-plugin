@@ -1,0 +1,77 @@
+package com.samebug.clients.swing.ui.base.tabbedPane;
+
+import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.modules.DrawService;
+import com.samebug.clients.swing.ui.modules.FontService;
+
+import java.awt.*;
+
+public class HitsLabel extends SamebugLabel {
+    public static final int SMALL = 20;
+    public static final int LARGE = 22;
+
+    private final int size;
+    private final int fontSize;
+    private final int xCorrection;
+    private final int yCorrection;
+    private final Font font;
+
+    public HitsLabel(int size) {
+        this.size = size;
+        // TODO it would be nice to generalize
+        if (size == SMALL) {
+            fontSize = 10;
+            xCorrection = 8;
+            yCorrection = 13;
+        } else if (size == LARGE) {
+            fontSize = 14;
+            xCorrection = 8;
+            yCorrection = 16;
+        } else {
+            throw new IllegalArgumentException("The calculations for this parameter are not generalized. Time to complement");
+        }
+        font = FontService.demi(fontSize);
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        // Override to guarantee size
+        String hits = getText();
+
+        if (hits.length() == 1) {
+            // the background is a circle
+            return new Dimension(size, size);
+        } else {
+            // the background is a rounded rect
+            FontMetrics fm = getFontMetrics(font);
+            int width = fm.stringWidth(hits);
+            return new Dimension(xCorrection + width + xCorrection, size);
+        }
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        Graphics2D g2 = DrawService.init(g);
+
+        // NOTE different behaviour for one and for more digits
+        // For one digit, we have a disk as background, and show the number in the center
+        // For more digit, we have a rounded rectangle, and push the number to the right (to be in the center of the rectangle
+        String hits = getText();
+
+        g2.setColor(getForeground());
+        if (hits.length() == 1) {
+            g.fillOval(1, 1, getWidth() - 2, getHeight() - 2);
+        } else {
+            g.fillRoundRect(1, 1, getWidth() - 2, getHeight() - 2, size, size);
+        }
+
+        g2.setColor(getBackground());
+        g2.setFont(font);
+
+        if (hits.length() == 1) {
+            g2.drawString(getText(), xCorrection - 1, yCorrection);
+        } else {
+            g2.drawString(getText(), xCorrection, yCorrection);
+        }
+    }
+}

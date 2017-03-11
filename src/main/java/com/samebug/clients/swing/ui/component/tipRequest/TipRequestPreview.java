@@ -18,6 +18,7 @@ package com.samebug.clients.swing.ui.component.tipRequest;
 import com.samebug.clients.common.ui.component.tipRequest.ITipRequestPreview;
 import com.samebug.clients.common.ui.modules.TextService;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
 import com.samebug.clients.swing.ui.modules.ColorService;
@@ -27,18 +28,21 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.MessageFormat;
 import java.util.Date;
 
-public final class TipRequestPreview extends TransparentPanel implements ITipRequestPreview {
+public final class TipRequestPreview extends RoundedBackgroundPanel implements ITipRequestPreview {
+    private final static int AvatarSize = 40;
+
     public TipRequestPreview(Model model) {
         setBackgroundColor(ColorService.Tip);
-        final AvatarIcon avatar = new AvatarIcon(model.avatarUrl, 40);
+        final AvatarIcon avatar = new AvatarIcon(model.avatarUrl, AvatarSize);
         final SamebugLabel diplayName = new DisplayName(model.displayName);
         final SamebugLabel tipRequestBody = new TipRequestBody(model.tipRequestBody);
         final InfoBar infos = new InfoBar(model.createdAt);
         final SamebugLabel exceptionBody = new ExceptionPreview(model.exceptionBody);
 
-        setLayout(new MigLayout("fillx", "20[40!]10[250, fill]20", "20[]0[]15[]20"));
+        setLayout(new MigLayout("fillx", MessageFormat.format("20[{0}!]10[250, fill]20", AvatarSize), "20[]0[]15[]20"));
 
         add(avatar, "cell 0 0, spany 2");
         add(diplayName, "cell 1 0");
@@ -52,7 +56,7 @@ public final class TipRequestPreview extends TransparentPanel implements ITipReq
         public DisplayName(String name) {
             super(name);
             setFont(FontService.demi(16));
-            setForeground(ColorService.TipText);
+            setForegroundColor(ColorService.TipText);
         }
     }
 
@@ -61,7 +65,7 @@ public final class TipRequestPreview extends TransparentPanel implements ITipReq
             super(body);
             // TODO demi if unread
             setFont(FontService.regular(16));
-            setForeground(ColorService.TipText);
+            setForegroundColor(ColorService.TipText);
         }
     }
 
@@ -70,7 +74,7 @@ public final class TipRequestPreview extends TransparentPanel implements ITipReq
             super(TextService.adaptiveTimestamp(createdAt));
             setHorizontalAlignment(SwingConstants.RIGHT);
             setFont(FontService.regular(12));
-            setForeground(ColorService.TipText);
+            setForegroundColor(ColorService.TipText);
         }
     }
 
@@ -79,18 +83,10 @@ public final class TipRequestPreview extends TransparentPanel implements ITipReq
             super(body);
             setFont(FontService.regular(16));
             // TODO demi if unread
-            setForeground(ColorService.ExceptionPreviewText);
             setOpaque(true);
-            setBackground(ColorService.ExceptionPreviewBackground);
+            setForegroundColor(ColorService.ExceptionPreviewText);
+            setBackgroundColor(ColorService.ExceptionPreviewBackground);
             setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         }
-    }
-
-    // TODO extract panel with rounded rectangle background
-    @Override
-    public void paintBorder(Graphics g) {
-        Graphics2D g2 = DrawService.init(g);
-        g2.setColor(getBackground());
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), DrawService.RoundingDiameter, DrawService.RoundingDiameter);
     }
 }

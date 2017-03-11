@@ -51,7 +51,7 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
             @Override
             public void mouseClicked(MouseEvent e) {
                 // TODO ugh
-                getListener().postTip(WriteTip.this, tipScreen.tipArea.borderedArea.editableArea.getText());
+                getListener().postTip(WriteTip.this, tipScreen.tipArea.borderedArea.getText());
             }
         });
         tipScreen.actionRow.cancelButton.addMouseListener(new MouseAdapter() {

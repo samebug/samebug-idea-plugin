@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
+import com.samebug.clients.common.ui.component.bugmate.IBugmateHit;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
@@ -34,8 +35,8 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
         this.model = new Model(model);
 
         final SubheaderLabel subheader = new SubheaderLabel();
-        final BugmateGrid bugmateGrid = new BugmateGrid();
-        final MoreLabel more = new MoreLabel();
+        final BugmateGrid bugmateGrid = new BugmateGrid(model.bugmateHits);
+        final MoreLabel more = new MoreLabel(model.numberOfOtherBugmates);
         requestTip = new RequestTip(this);
 
         setLayout(new MigLayout("fillx", "0[]0", "0[]25[]25[]10[]0"));
@@ -65,10 +66,10 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
     private final class BugmateGrid extends TransparentPanel {
         private final List<BugmateHit> bugmateHits;
 
-        {
-            bugmateHits = new ArrayList<BugmateHit>(model.bugmateHits.size());
-            for (int i = 0; i < model.bugmateHits.size(); ++i) {
-                BugmateHit hit = new BugmateHit(model.bugmateHits.get(i));
+        private BugmateGrid(List<IBugmateHit.Model> bugmateHitModels){
+            bugmateHits = new ArrayList<BugmateHit>(bugmateHitModels.size());
+            for (IBugmateHit.Model bugmateHitModel : bugmateHitModels) {
+                BugmateHit hit = new BugmateHit(bugmateHitModel);
                 bugmateHits.add(hit);
             }
 
@@ -96,8 +97,8 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
     }
 
     private final class MoreLabel extends SamebugLabel {
-        {
-            setText(MessageService.message("samebug.component.bugmate.list.more", model.numberOfOtherBugmates));
+        private MoreLabel(int numberOfOtherBugmates) {
+            setText(MessageService.message("samebug.component.bugmate.list.more", numberOfOtherBugmates));
             setFont(FontService.regular(14));
         }
     }

@@ -35,24 +35,28 @@ public class SamebugLabel extends JLabel {
 
     public SamebugLabel(String text, Font font) {
         super(text);
-        setForeground(ColorService.Text);
+        setForegroundColor(ColorService.Text);
         setFont(font);
     }
 
-    public void setForeground(Color[] c) {
+    public void setForegroundColor(Color[] c) {
         foregroundColors = c;
-        super.setForeground(ColorService.forCurrentTheme(foregroundColors));
+        updateColors();
     }
 
-    public void setBackground(Color[] c) {
+    public void setBackgroundColor(Color[] c) {
         backgroundColors = c;
-        super.setBackground(ColorService.forCurrentTheme(backgroundColors));
+        updateColors();
     }
 
     @Override
     public void updateUI() {
         setUI(new SamebugLabelUI());
-        super.setForeground(ColorService.forCurrentTheme(foregroundColors));
-        super.setBackground(ColorService.forCurrentTheme(backgroundColors));
+        updateColors();
+    }
+
+    private void updateColors() {
+        setForeground(ColorService.forCurrentTheme(foregroundColors));
+        setBackground(ColorService.forCurrentTheme(backgroundColors));
     }
 }

@@ -29,17 +29,20 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.MessageFormat;
 
 public final class TipRequestPopup extends SamebugPanel implements ITipRequestPopup {
+    private final static int AvatarSize = 40;
+
     public TipRequestPopup(Model model) {
-        final JComponent avatar = new AvatarIcon(model.avatarUrl, 40);
+        final JComponent avatar = new AvatarIcon(model.avatarUrl, AvatarSize);
         final JComponent title = new SamebugLabel(model.displayName + " sent a tip request", FontService.demi(14));
         final JComponent body = new RequestBody(model.tipRequestBody);
         final JComponent answer = new AnswerButton();
         final JComponent later = new LaterButton();
 
         setBackgroundColor(ColorService.Tip);
-        setLayout(new MigLayout("", "10[40!]8[fill]10", "10[]5[]10[]10"));
+        setLayout(new MigLayout("", MessageFormat.format("10[{0}!]8[fill]10", AvatarSize), "10[]5[]10[]10"));
         add(avatar, "cell 0 0, spany 2");
         add(title, "cell 1 0");
         add(body, "cell 1 1");

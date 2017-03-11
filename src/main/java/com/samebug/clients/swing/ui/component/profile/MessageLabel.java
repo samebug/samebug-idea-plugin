@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.profile;
 
-import com.samebug.clients.swing.ui.base.interaction.Colors;
+import com.samebug.clients.swing.ui.base.interaction.InteractionColors;
 import com.samebug.clients.swing.ui.base.interaction.ForegroundColorChanger;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.MessageService;
@@ -23,26 +23,27 @@ import com.samebug.clients.swing.ui.modules.MessageService;
 import java.awt.*;
 
 public final class MessageLabel extends NumberLabel {
-    private Colors[] foregroundColors;
     private ForegroundColorChanger interactionListener;
 
     public MessageLabel(int nMessages) {
         super(nMessages, MessageService.message("samebug.component.profile.messages.label"));
 
-        setForeground(ColorService.SecondaryLinkInteraction);
+        setInteractionColors(ColorService.SecondaryLinkInteraction);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-        updateUI();
+        updateColors();
     }
 
-    public void setForeground(Colors[] c) {
-        foregroundColors = c;
-        setForeground(ColorService.forCurrentTheme(foregroundColors).normal);
+    public void setInteractionColors(InteractionColors c) {
+        interactionListener = ForegroundColorChanger.installForegroundInteraction(c, this);
     }
 
     @Override
     public void updateUI() {
         super.updateUI();
-        interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, ColorService.forCurrentTheme(foregroundColors), this);
+        updateColors();
+    }
+
+    private void updateColors() {
+        if (interactionListener != null) super.setForeground(interactionListener.getColor());
     }
 }

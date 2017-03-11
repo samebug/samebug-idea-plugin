@@ -49,6 +49,4 @@ public class SamebugPanel extends JPanel {
         setForeground(ColorService.forCurrentTheme(foregroundColors));
         setBackground(ColorService.forCurrentTheme(backgroundColors));
     }
-
-
 }

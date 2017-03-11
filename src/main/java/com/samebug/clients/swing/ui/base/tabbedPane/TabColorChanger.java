@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.base.tabbedPane;
 
-import com.samebug.clients.swing.ui.base.interaction.Colors;
+import com.samebug.clients.swing.ui.base.interaction.InteractionColors;
 import com.samebug.clients.swing.ui.base.interaction.ForegroundColorChanger;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,8 +25,8 @@ import java.awt.event.MouseEvent;
 
 final class TabColorChanger extends ForegroundColorChanger {
 
-    TabColorChanger(Colors colors, JComponent component) {
-        super(colors, component);
+    TabColorChanger(InteractionColors interactionColors, JComponent component) {
+        super(interactionColors, component);
     }
 
     @Override
@@ -75,8 +75,8 @@ final class TabColorChanger extends ForegroundColorChanger {
         return (JTabbedPane) parent;
     }
 
-    static TabColorChanger createTabColorChanger(JComponent interactiveComponent, Colors colors) {
-        return new TabColorChanger(colors, interactiveComponent);
+    static TabColorChanger createTabColorChanger(JComponent interactiveComponent, InteractionColors interactionColors) {
+        return new TabColorChanger(interactionColors, interactiveComponent);
     }
 
 }

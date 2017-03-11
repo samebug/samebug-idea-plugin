@@ -15,24 +15,16 @@
  */
 package com.samebug.clients.swing.ui.base.interaction;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.awt.*;
 
-public class Colors {
-    public final Color normal;
-    public final Color rollover;
-    public final Color pressed;
+public class InteractionColors {
+    public final Color[] normal;
+    public final Color[] rollover;
+    public final Color[] pressed;
 
-    public Colors(Color normal, Color rollover, Color pressed) {
+    public InteractionColors(Color[] normal, Color[] rollover, Color[] pressed) {
         this.normal = normal;
         this.rollover = rollover;
         this.pressed = pressed;
-    }
-
-    @Nullable
-    public static Color normal(@Nullable Colors colors) {
-        if (colors == null) return null;
-        else return colors.normal;
     }
 }

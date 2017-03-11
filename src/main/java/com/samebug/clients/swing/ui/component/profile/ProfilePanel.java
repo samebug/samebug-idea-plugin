@@ -67,7 +67,6 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
                 getListener().messagesClicked();
             }
         });
-
     }
 
     @Override
@@ -80,7 +79,6 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
                 BorderFactory.createEmptyBorder(0, 20, 0, 20)
         ));
     }
-
 
     private Listener getListener() {
         return ListenerService.getListener(this, IProfilePanel.Listener.class);

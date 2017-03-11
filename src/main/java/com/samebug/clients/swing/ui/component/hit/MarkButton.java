@@ -145,7 +145,7 @@ public final class MarkButton extends JComponent implements IMarkButton {
     private final class LoadingButton extends EmphasizedPanel {
         public LoadingButton() {
             setOpaque(false);
-            setForegroundColor(ColorService.Mark);
+            setForegroundColor(ColorService.MarkInteraction.normal);
             setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
             setLayout(new MigLayout("", ":push[]:push", "6[]6"));
 

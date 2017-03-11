@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.base.label;
 
-import com.samebug.clients.swing.ui.base.interaction.Colors;
+import com.samebug.clients.swing.ui.base.interaction.InteractionColors;
 import com.samebug.clients.swing.ui.base.interaction.ForegroundColorChanger;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
@@ -24,7 +24,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class LinkLabel extends JLabel {
-    private Colors[] interactionColors;
     private ForegroundColorChanger interactionListener;
 
     public LinkLabel() {
@@ -42,20 +41,18 @@ public class LinkLabel extends JLabel {
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
-    public void setInteractionColors(Colors[] c) {
-        interactionColors = c;
+    public void setInteractionColors(InteractionColors c) {
+        interactionListener = ForegroundColorChanger.installForegroundInteraction(c, this);
         updateColors();
-    }
-
-    public void updateColors() {
-        Colors currentColors = ColorService.forCurrentTheme(interactionColors);
-        interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, currentColors, this);
-        super.setForeground(currentColors.normal);
     }
 
     @Override
     public void updateUI() {
         setUI(new SamebugLabelUI());
-        if (interactionColors != null) updateColors();
+        updateColors();
+    }
+
+    private void updateColors() {
+        if (interactionListener != null) super.setForeground(interactionListener.getColor());
     }
 }

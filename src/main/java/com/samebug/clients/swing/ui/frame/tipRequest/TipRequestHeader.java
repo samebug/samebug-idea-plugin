@@ -26,8 +26,10 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import java.text.MessageFormat;
 
 public final class TipRequestHeader extends JComponent implements ITipRequestHeader {
+    private final static int AvatarSize = 26;
     public TipRequestHeader(Model model) {
         final HeaderTextLabel header = new HeaderTextLabel(model.title);
         final AuthorRow authorRow = new AuthorRow(model.displayName, model.avatarUrl);
@@ -41,7 +43,7 @@ public final class TipRequestHeader extends JComponent implements ITipRequestHea
     final class HeaderTextLabel extends SamebugMultilineLabel {
         public HeaderTextLabel(String text) {
             setFont(FontService.demi(24));
-            setForeground(ColorService.EmphasizedText);
+            setForegroundColor(ColorService.EmphasizedText);
             setText(text);
         }
 
@@ -58,10 +60,10 @@ public final class TipRequestHeader extends JComponent implements ITipRequestHea
     final class AuthorRow extends JComponent {
         public AuthorRow(String displayName, URL avatarUrl) {
             final SamebugLabel by = new SamebugLabel("by", FontService.demi(14));
-            final AvatarIcon avatar = new AvatarIcon(avatarUrl, 26);
+            final AvatarIcon avatar = new AvatarIcon(avatarUrl, AvatarSize);
             final SamebugLabel name = new SamebugLabel(displayName, FontService.demi(14));
 
-            setLayout(new MigLayout("", "0[]8[26!]8[]0"));
+            setLayout(new MigLayout("", MessageFormat.format("0[]8[{0}!]8[]0", AvatarSize)));
             add(by, "cell 0 0");
             add(avatar, "cell 1 0");
             add(name, "cell 2 0");

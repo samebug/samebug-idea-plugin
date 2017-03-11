@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.base.multiline;
 
-import com.samebug.clients.swing.ui.base.interaction.Colors;
+import com.samebug.clients.swing.ui.base.interaction.InteractionColors;
 import com.samebug.clients.swing.ui.base.interaction.ForegroundColorChanger;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
@@ -25,7 +25,6 @@ import javax.swing.plaf.basic.BasicTextAreaUI;
 import java.awt.*;
 
 public class LinkMultilineLabel extends JTextArea {
-    private Colors[] foregroundColors;
     private ForegroundColorChanger interactionListener;
 
     {
@@ -34,7 +33,7 @@ public class LinkMultilineLabel extends JTextArea {
         setWrapStyleWord(true);
         setLineWrap(true);
 
-        setForeground(ColorService.LinkInteraction);
+        setInteractionColors(ColorService.LinkInteraction);
         setFont(FontService.regular(16));
         setOpaque(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -42,14 +41,18 @@ public class LinkMultilineLabel extends JTextArea {
         updateUI();
     }
 
-    public void setForeground(Colors[] c) {
-        foregroundColors = c;
-        setForeground(ColorService.forCurrentTheme(foregroundColors).normal);
+    public void setInteractionColors(InteractionColors c) {
+        interactionListener = ForegroundColorChanger.installForegroundInteraction(c, this);
+        updateColors();
     }
 
     @Override
     public void updateUI() {
         setUI(new BasicTextAreaUI());
-        interactionListener = ForegroundColorChanger.updateForegroundInteraction(interactionListener, ColorService.forCurrentTheme(foregroundColors), this);
+        updateColors();
+    }
+
+    private void updateColors() {
+        if (interactionListener != null) setForeground(interactionListener.getColor());
     }
 }

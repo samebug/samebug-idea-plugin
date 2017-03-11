@@ -15,28 +15,29 @@
  */
 package com.samebug.clients.swing.ui.modules;
 
-import com.samebug.clients.swing.ui.base.interaction.Colors;
+import com.samebug.clients.swing.ui.base.form.FormColors;
+import com.samebug.clients.swing.ui.base.interaction.InteractionColors;
 
 import java.awt.*;
 
 public abstract class ColorService {
     /**
      * Poor man's dependency injection for singletons.
-     *
+     * <p>
      * In the swing implementation of the UI there are some things that we cannot implement barely in swing.
      * E.g. how do we load the images, how do we decide which color theme to use, etc.
      * I do not want to hardcode IntelliJ code here, because that would make it impossible to run separate tests
      * for the UI (which makes the implementation of new component much easier).
-     *
+     * <p>
      * These parts are implemented in the following structure:
-     *  - the whole public interface of the class is actually static, and should be used as a singleton
-     *  - we have an abstract class, that has a private static instance member
-     *  - the class has the necessary interface as protected abstract methods
-     *  - the class has the necessary interface also as public static methods, that calls the respective method of the private instance
-     *  - the class has a public static 'install' method to set the private instance field.
-     *  - install can be called only once
-     *
-     *  It has all the drawbacks of using singleton instances, but it makes the UI components code more clean an easier to use and test.
+     * - the whole public interface of the class is actually static, and should be used as a singleton
+     * - we have an abstract class, that has a private static instance member
+     * - the class has the necessary interface as protected abstract methods
+     * - the class has the necessary interface also as public static methods, that calls the respective method of the private instance
+     * - the class has a public static 'install' method to set the private instance field.
+     * - install can be called only once
+     * <p>
+     * It has all the drawbacks of using singleton instances, but it makes the UI components code more clean an easier to use and test.
      */
     private static ColorService INSTANCE = null;
 
@@ -74,54 +75,45 @@ public abstract class ColorService {
     public final static Color[] ScrollbarThumb = new Color[]{new Color(0xD5D5D5), new Color(0x484A4B)};
     public final static Color[] ErrorBar = new Color[]{new Color(0xF8F4C8), new Color(0xF2EBAB)};
 
-    public final static Color[] FieldName = new Color[]{new Color(0x333333), new Color(0x8B8C8E)};
-    public final static Color[] FieldNormalBorder = new Color[]{new Color(0xB2B2B2), new Color(0x666768)};
-    public final static Color[] FieldFocusBorder = new Color[]{new Color(0x333333), new Color(0xC8C8C9)};
-    public final static Color[] FieldErrorBorder = new Color[]{new Color(0xE80D0D), new Color(0xFF1B1B)};
-    public final static Color[] FieldPlaceholder = new Color[]{new Color(0xAAAAAA), new Color(0x666768)};
-    public final static Color[] FieldError = new Color[]{new Color(0xE80D0D), new Color(0xFF1B1B)};
+    public static final FormColors NormalForm = new FormColors(
+            new Color[]{new Color(0xB2B2B2), new Color(0x666768)},
+            new Color[]{new Color(0x333333), new Color(0xC8C8C9)},
+            new Color[]{new Color(0xE80D0D), new Color(0xFF1B1B)},
+            new Color[]{new Color(0xFFFFFF), new Color(0x242526)},
+            new Color[]{new Color(0x000000), new Color(0xCBCDCF)},
+            new Color[]{new Color(0xE80D0D), new Color(0xFF1B1B)},
+            new Color[]{new Color(0x333333), new Color(0x8B8C8E)},
+            new Color[]{new Color(0xAAAAAA), new Color(0x666768)}
+    );
 
-    public final static Color[] TipFieldNormalBorder = new Color[]{new Color(0xB5D7E2), new Color(0x2072AE)};
-    public final static Color[] TipFieldFocusBorder = new Color[]{new Color(0x3379A1), new Color(0x61B6E7)};
-    public final static Color[] TipFieldErrorBorder = new Color[]{new Color(0xE80D0D), new Color(0xFF5644)};
-    public final static Color[] TipFieldPlaceholder = new Color[]{new Color(0xAAAAAA), new Color(0x3682BE)};
-    public final static Color[] TipFieldError = new Color[]{new Color(0xE80D0D), new Color(0xFF5644)};
-    public final static Color[] TipFieldBackground = new Color[]{new Color(0xFFFFFF), new Color(0x083960)};
-    public final static Color[] TipFieldText = new Color[]{new Color(0x000000), new Color(0xDBEFFF)};
+    public static final FormColors TipForm = new FormColors(
+            new Color[]{new Color(0xB5D7E2), new Color(0x2072AE)},
+            new Color[]{new Color(0x3379A1), new Color(0x61B6E7)},
+            new Color[]{new Color(0xE80D0D), new Color(0xFF5644)},
+            new Color[]{new Color(0xFFFFFF), new Color(0x083960)},
+            new Color[]{new Color(0x000000), new Color(0xDBEFFF)},
+            new Color[]{new Color(0xE80D0D), new Color(0xFF5644)},
+            new Color[]{new Color(0x086a8b), new Color(0xDBEFFF)},
+            new Color[]{new Color(0xAAAAAA), new Color(0x3682BE)}
+    );
 
+    public final static InteractionColors LinkInteraction = new InteractionColors(
+            new Color[]{new Color(0xFF8000), new Color(0xFF8000)},
+            new Color[]{new Color(0xFEA144), new Color(0xFEA144)},
+            new Color[]{new Color(0xED7700), new Color(0xED7700)}
+    );
 
-    public final static Colors[] LinkInteraction = new Colors[]{
-            new Colors(new Color(0xFF8000), new Color(0xFEA144), new Color(0xED7700)),
-            new Colors(new Color(0xFF8820), new Color(0xFEA144), new Color(0xED7700))
-    };
+    public final static InteractionColors SecondaryLinkInteraction = new InteractionColors(
+            new Color[]{new Color(0x333333), new Color(0xCBCDCF)},
+            new Color[]{new Color(0xFEA144), new Color(0xFEA144)},
+            new Color[]{new Color(0xED7700), new Color(0xED7700)}
+    );
 
-    public final static Colors[] SecondaryLinkInteraction = new Colors[]{
-            new Colors(new Color(0x333333), new Color(0xFEA144), new Color(0xED7700)),
-            new Colors(new Color(0xCBCDCF), new Color(0xFEA144), new Color(0xED7700))
-    };
-
-    public final static Colors[] MarkInteraction = new Colors[]{
-            new Colors(new Color(0x3E85DE), new Color(0x66A6F6), new Color(0x3E85DE)),
-            new Colors(new Color(0x7CD2FF), new Color(0xBBE8FF), new Color(0x7CD2FF))
-    };
-
-    public final static Color[] Link = new Color[LinkInteraction.length];
-
-    public final static Color[] SecondaryLink = new Color[SecondaryLinkInteraction.length];
-
-    public final static Color[] Mark = new Color[MarkInteraction.length];
-
-    static {
-        for (int i = 0; i < LinkInteraction.length; ++i) {
-            Link[i] = LinkInteraction[i].normal;
-        }
-        for (int i = 0; i < SecondaryLinkInteraction.length; ++i) {
-            SecondaryLink[i] = SecondaryLinkInteraction[i].normal;
-        }
-        for (int i = 0; i < MarkInteraction.length; ++i) {
-            Mark[i] = MarkInteraction[i].normal;
-        }
-    }
+    public final static InteractionColors MarkInteraction = new InteractionColors(
+            new Color[]{new Color(0x3E85DE), new Color(0x7CD2FF)},
+            new Color[]{new Color(0x66A6F6), new Color(0xBBE8FF)},
+            new Color[]{new Color(0x3E85DE), new Color(0x7CD2FF)}
+    );
 
     protected abstract <T> T internalForCurrentTheme(T[] objects);
 }

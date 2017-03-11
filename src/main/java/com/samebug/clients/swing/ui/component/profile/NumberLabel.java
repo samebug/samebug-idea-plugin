@@ -31,23 +31,27 @@ public class NumberLabel extends TransparentPanel {
         numberLabel = new SamebugLabel(Integer.toString(number), FontService.demi(14));
         hintLabel = new SamebugLabel(hint, FontService.demi(12));
 
+        setForegroundColor(ColorService.Text);
         setLayout(new MigLayout("fillx", "0[]4[]0", "0[]0"));
 
         add(numberLabel, "");
         add(hintLabel, "");
-
-        updateUI();
+        updateChildrenColor();
     }
 
     @Override
     public void setForeground(Color color) {
         super.setForeground(color);
-        for (Component c : getComponents()) c.setForeground(color);
+        updateChildrenColor();
     }
 
     @Override
     public void updateUI() {
         super.updateUI();
-        setForeground(ColorService.forCurrentTheme(ColorService.Text));
+        updateChildrenColor();
+    }
+
+    private void updateChildrenColor() {
+        for (Component c : getComponents()) c.setForeground(getForeground());
     }
 }

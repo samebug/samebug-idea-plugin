@@ -33,24 +33,28 @@ public class SamebugMultilineLabel extends JTextArea {
         setWrapStyleWord(true);
         setLineWrap(true);
 
-        setForeground(ColorService.Text);
+        setForegroundColor(ColorService.Text);
         setFont(FontService.regular(16));
         setOpaque(false);
     }
 
-    public void setForeground(Color[] c) {
+    public void setForegroundColor(Color[] c) {
         foregroundColors = c;
-        setForeground(ColorService.forCurrentTheme(foregroundColors));
+        updateColors();
     }
 
-    public void setBackground(Color[] c) {
+    public void setBackgroundColor(Color[] c) {
         backgroundColors = c;
-        setBackground(ColorService.forCurrentTheme(backgroundColors));
+        updateColors();
     }
 
     @Override
     public void updateUI() {
         setUI(new BasicTextAreaUI());
+        updateColors();
+    }
+
+    private void updateColors() {
         setForeground(ColorService.forCurrentTheme(foregroundColors));
         setBackground(ColorService.forCurrentTheme(backgroundColors));
     }

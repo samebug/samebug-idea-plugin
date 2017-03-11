@@ -24,16 +24,14 @@ import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
+import java.util.Date;
+
 public final class BugmateHit extends TransparentPanel implements IBugmateHit {
     private final static int AvatarSize = 44;
 
-    private final Model model;
-
     public BugmateHit(Model model) {
-        this.model = new Model(model);
-
-        final NameLabel name = new NameLabel();
-        final TimestampLabel timestamp = new TimestampLabel();
+        final NameLabel name = new NameLabel(model.displayName);
+        final TimestampLabel timestamp = new TimestampLabel(model.nSeen, model.lastSeen);
         final AvatarIcon avatar = new AvatarIcon(model.avatarUrl, AvatarSize);
 
         setLayout(new MigLayout("", "0[]10[]0", "0[]0[]0"));
@@ -45,15 +43,15 @@ public final class BugmateHit extends TransparentPanel implements IBugmateHit {
 
 
     private final class NameLabel extends SamebugLabel {
-        {
-            setText(model.displayName);
+        private NameLabel(String name) {
+            setText(name);
             setFont(FontService.demi(14));
         }
     }
 
     private final class TimestampLabel extends SamebugLabel {
-        {
-            setText(MessageService.message("samebug.component.bugmate.hit.occurred", model.nSeen, TextService.prettyTime(model.lastSeen)));
+        private TimestampLabel(int nSeen, Date lastSeen){
+            setText(MessageService.message("samebug.component.bugmate.hit.occurred", nSeen, TextService.prettyTime(lastSeen)));
             setFont(FontService.regular(14));
         }
     }
