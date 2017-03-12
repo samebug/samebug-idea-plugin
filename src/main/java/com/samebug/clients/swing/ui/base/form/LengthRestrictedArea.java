@@ -57,6 +57,7 @@ public abstract class LengthRestrictedArea extends SamebugPanel implements IForm
     }
 
     protected abstract EditableArea createEditableArea();
+
     protected abstract LengthCounter createLengthCounter();
 
     public String getText() {
@@ -124,9 +125,11 @@ public abstract class LengthRestrictedArea extends SamebugPanel implements IForm
 
     private final static class LengthListener implements DocumentListener {
         private final LengthCounter lengthCounter;
+
         LengthListener(LengthCounter lengthCounter) {
             this.lengthCounter = lengthCounter;
         }
+
         @Override
         public void insertUpdate(DocumentEvent e) {
             lengthCounter.updateLength(e.getDocument().getLength());

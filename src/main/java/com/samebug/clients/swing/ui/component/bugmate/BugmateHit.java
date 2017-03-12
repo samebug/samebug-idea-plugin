@@ -50,7 +50,7 @@ public final class BugmateHit extends TransparentPanel implements IBugmateHit {
     }
 
     private final class TimestampLabel extends SamebugLabel {
-        private TimestampLabel(int nSeen, Date lastSeen){
+        private TimestampLabel(int nSeen, Date lastSeen) {
             setText(MessageService.message("samebug.component.bugmate.hit.occurred", nSeen, TextService.prettyTime(lastSeen)));
             setFont(FontService.regular(14));
         }

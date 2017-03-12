@@ -16,8 +16,9 @@
 package com.samebug.clients.common.ui.frame.tipRequestList;
 
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
+import com.samebug.clients.common.ui.frame.IFrame;
 
-public interface ITipRequestListFrame {
+public interface ITipRequestListFrame extends IFrame {
     void loadingSucceeded(Model model);
 
     void setLoading();
@@ -38,12 +39,6 @@ public interface ITipRequestListFrame {
         }
     }
 
-    interface Listener {
-        void reload();
-
-        void openSamebugSettings();
-
-        void openNetworkSettings();
+    interface Listener extends FrameListener {
     }
-
 }

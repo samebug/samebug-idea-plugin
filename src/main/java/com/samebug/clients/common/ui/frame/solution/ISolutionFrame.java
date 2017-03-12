@@ -19,21 +19,7 @@ import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.frame.IFrame;
 
 public interface ISolutionFrame extends IFrame {
-    void setLoading();
-
     void loadingSucceeded(Model model);
-
-    void loadingFailedWithAuthenticationError();
-
-    void loadingFailedWithAuthorizationError();
-
-    void loadingFailedWithRetriableError();
-
-    void loadingFailedWithNetworkError();
-
-    void loadingFailedWithServerError();
-
-    void loadingFailedWithGenericError();
 
     final class Model {
         public final ISearchHeaderPanel.Model header;
@@ -51,11 +37,6 @@ public interface ISolutionFrame extends IFrame {
         }
     }
 
-    interface Listener {
-        void reload();
-
-        void openSamebugSettings();
-
-        void openNetworkSettings();
+    interface Listener extends FrameListener {
     }
 }

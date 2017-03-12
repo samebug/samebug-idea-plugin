@@ -6,6 +6,7 @@ import javax.swing.text.DocumentFilter;
 
 public final class MaxCharactersConstraints extends DocumentFilter {
     private final int MaxCharacters;
+
     public MaxCharactersConstraints(int maxCharacters) {
         this.MaxCharacters = maxCharacters;
     }

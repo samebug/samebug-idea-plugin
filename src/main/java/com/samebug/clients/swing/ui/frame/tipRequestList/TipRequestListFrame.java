@@ -16,10 +16,10 @@
 package com.samebug.clients.swing.ui.frame.tipRequestList;
 
 import com.samebug.clients.common.ui.frame.tipRequestList.ITipRequestListFrame;
-import com.samebug.clients.swing.ui.base.errorBarPane.BasicFrame;
-import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.base.frame.BasicFrame;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.component.profile.ProfilePanel;
+import com.samebug.clients.swing.ui.modules.ListenerService;
 
 import java.awt.*;
 
@@ -33,10 +33,6 @@ public final class TipRequestListFrame extends BasicFrame implements ITipRequest
     public void loadingSucceeded(Model model) {
         tipRequests = new TipRequests(model);
         addMainComponent(tipRequests);
-    }
-
-    public void setLoading() {
-        addMainComponent(new SamebugLabel("loading"));
     }
 
     private final class TipRequests extends SamebugPanel {
@@ -56,5 +52,8 @@ public final class TipRequestListFrame extends BasicFrame implements ITipRequest
         }
     }
 
-
+    @Override
+    protected Listener getListener() {
+        return ListenerService.getListener(this, Listener.class);
+    }
 }

@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.swing.ui.base.tabbedPane;
 
-import com.samebug.clients.swing.ui.base.interaction.InteractionColors;
 import com.samebug.clients.swing.ui.base.interaction.ForegroundColorChanger;
+import com.samebug.clients.swing.ui.base.interaction.InteractionColors;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;

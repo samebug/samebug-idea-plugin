@@ -66,7 +66,7 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
     private final class BugmateGrid extends TransparentPanel {
         private final List<BugmateHit> bugmateHits;
 
-        private BugmateGrid(List<IBugmateHit.Model> bugmateHitModels){
+        private BugmateGrid(List<IBugmateHit.Model> bugmateHitModels) {
             bugmateHits = new ArrayList<BugmateHit>(bugmateHitModels.size());
             for (IBugmateHit.Model bugmateHitModel : bugmateHitModels) {
                 BugmateHit hit = new BugmateHit(bugmateHitModel);

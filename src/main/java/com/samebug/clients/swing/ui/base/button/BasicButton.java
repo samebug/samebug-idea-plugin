@@ -1,7 +1,7 @@
 package com.samebug.clients.swing.ui.base.button;
 
-import com.samebug.clients.swing.ui.base.interaction.InteractionColors;
 import com.samebug.clients.swing.ui.base.interaction.ForegroundColorChanger;
+import com.samebug.clients.swing.ui.base.interaction.InteractionColors;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.DrawService;
 
@@ -10,18 +10,18 @@ import java.awt.*;
 
 /**
  * Samebug style button
- *
+ * <p>
  * By not extending the swing AbstractButton, we have lost couple of functionality, e.g. tab selection, mnemonics, accessibility.
  * However, atm we don't need those, and the features that we actually need are much easier to implement on a clean JComponent.
- *
+ * <p>
  * If it happens that we need those features from AbstractButton, still don't try to extend it, it is simply not suitable for
  * this level of reusability. Simply lift the necessary code.
- *
+ * <p>
  * The features this button provides:
- *  - samebug-style interaction (separate colors for normal/rollover/pressed states)
- *  - intellij-style themes (separate colors for light/dark theme)
- *  - arbitrary component as content
- *  - samebug-style filled/not filled state
+ * - samebug-style interaction (separate colors for normal/rollover/pressed states)
+ * - intellij-style themes (separate colors for light/dark theme)
+ * - arbitrary component as content
+ * - samebug-style filled/not filled state
  */
 public abstract class BasicButton extends JComponent {
     protected ForegroundColorChanger interactionListener;
@@ -107,5 +107,6 @@ public abstract class BasicButton extends JComponent {
     }
 
     protected abstract void setChildrenForeground(Color foreground);
+
     protected abstract void setChildrenFont(Font font);
 }

@@ -110,19 +110,19 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
 
     /**
      * Schedule a task to remove all gutter icons and create them from scratch.
-     *
+     * <p>
      * This is called something changes that might influence the gutter icons:
-     *  - the content of the console (the editor's document) is changed
-     *  - there is a new information about a search (e.g. a stack trace is found and posted to Samebug, or the solutions for a search are available)
-     *
-     *  The short delay before executing the rebuild is kind of an optimization. When the application logs a stack trace, the console watcher will be
-     *  triggered at least three times:
-     *   - a document update
-     *   - new search request
-     *   - search saved/failed
-     *
-     *   The first two of these usually happens close together in time (few millis), and it would be wasteful to make the full rebuild each time.
-     *   Also, when there is a burst of exceptions, we don't have to rebuild the whole console every time.
+     * - the content of the console (the editor's document) is changed
+     * - there is a new information about a search (e.g. a stack trace is found and posted to Samebug, or the solutions for a search are available)
+     * <p>
+     * The short delay before executing the rebuild is kind of an optimization. When the application logs a stack trace, the console watcher will be
+     * triggered at least three times:
+     * - a document update
+     * - new search request
+     * - search saved/failed
+     * <p>
+     * The first two of these usually happens close together in time (few millis), and it would be wasteful to make the full rebuild each time.
+     * Also, when there is a burst of exceptions, we don't have to rebuild the whole console every time.
      */
     private synchronized void initiateRebuildingMarkers() {
         if (currentTask != null) currentTask.cancel();

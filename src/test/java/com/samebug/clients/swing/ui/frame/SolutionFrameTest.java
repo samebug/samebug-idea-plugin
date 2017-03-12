@@ -17,18 +17,22 @@ public class SolutionFrameTest extends TestDialog {
     public void oneBugmate() {
         waitToInitializeUI("solution/b1.json").showDialog();
     }
+
     @Test
     public void twoBugmates() {
         waitToInitializeUI("solution/b2.json").showDialog();
     }
+
     @Test
     public void threeBugmates() {
         waitToInitializeUI("solution/b3.json").showDialog();
     }
+
     @Test
     public void zeroTipsAndZeroWebHits() {
         waitToInitializeUI("solution/t0w0.json").showDialog();
     }
+
     @Test
     public void twoTipsAndTwentysevenWebHits() {
         waitToInitializeUI("solution/t2w27.json").showDialog();

@@ -30,6 +30,7 @@ import java.text.MessageFormat;
 
 public final class TipRequestHeader extends JComponent implements ITipRequestHeader {
     private final static int AvatarSize = 26;
+
     public TipRequestHeader(Model model) {
         final HeaderTextLabel header = new HeaderTextLabel(model.title);
         final AuthorRow authorRow = new AuthorRow(model.displayName, model.avatarUrl);

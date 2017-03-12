@@ -25,4 +25,26 @@ public interface IFrame {
     void hideAuthenticationError();
 
     void popupError(String message);
+
+    void setLoading();
+
+    void loadingFailedWithAuthenticationError();
+
+    void loadingFailedWithAuthorizationError();
+
+    void loadingFailedWithRetriableError();
+
+    void loadingFailedWithNetworkError();
+
+    void loadingFailedWithServerError();
+
+    void loadingFailedWithGenericError();
+
+    interface FrameListener {
+        void reload();
+
+        void openSamebugSettings();
+
+        void openNetworkSettings();
+    }
 }

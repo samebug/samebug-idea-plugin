@@ -19,6 +19,7 @@ import java.util.Date;
 
 public abstract class TestDialog extends JDialog {
     private static final Gson gson;
+
     static {
         gson = createGson();
 

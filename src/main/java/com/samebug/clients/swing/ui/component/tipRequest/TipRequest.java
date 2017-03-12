@@ -24,17 +24,16 @@ import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.component.community.writeTip.WriteTipArea;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
 import com.samebug.clients.swing.ui.modules.ColorService;
-import com.samebug.clients.swing.ui.modules.DrawService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.awt.*;
 
 // TODO colors, write tip area prompt, etc
 public final class TipRequest extends RoundedBackgroundPanel implements ITipRequest {
     private final static int AvatarSize = 40;
+
     public TipRequest(Model model) {
         final SamebugLabel titleLabel = new TitleLabel();
         final AvatarIcon avatar = new AvatarIcon(model.avatarUrl, AvatarSize);

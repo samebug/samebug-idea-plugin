@@ -16,4 +16,6 @@
 package com.samebug.clients.common.ui.frame;
 
 public interface IAuthenticationFrame extends IFrame {
+    interface Listener extends FrameListener {
+    }
 }

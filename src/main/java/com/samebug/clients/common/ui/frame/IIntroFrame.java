@@ -16,4 +16,6 @@
 package com.samebug.clients.common.ui.frame;
 
 public interface IIntroFrame extends IFrame {
+    interface Listener extends FrameListener {
+    }
 }

@@ -15,6 +15,7 @@ public class MaxCharactersAndLinesConstraints extends DocumentFilter {
         this.MaxLines = maxLines;
         this.MaxCharacters = maxCharacters;
     }
+
     @Override
     public void replace(FilterBypass fb, int offs, int length, String str, AttributeSet a) throws BadLocationException {
         super.replace(fb, offs, length, str, a);

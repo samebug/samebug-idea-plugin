@@ -16,8 +16,9 @@
 package com.samebug.clients.common.ui.frame.tipRequest;
 
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
+import com.samebug.clients.common.ui.frame.IFrame;
 
-public interface ITipRequestFrame {
+public interface ITipRequestFrame extends IFrame {
     void setLoading();
 
     void loadingSucceeded(Model model);
@@ -38,6 +39,6 @@ public interface ITipRequestFrame {
         }
     }
 
-    interface Listener {
+    interface Listener extends FrameListener {
     }
 }

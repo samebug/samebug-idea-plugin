@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui.base.errorBarPane;
+package com.samebug.clients.swing.ui.base.frame;
 
 import com.samebug.clients.swing.ui.modules.ColorService;
 

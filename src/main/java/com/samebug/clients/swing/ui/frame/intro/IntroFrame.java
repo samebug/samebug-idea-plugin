@@ -20,10 +20,11 @@ import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
 import com.samebug.clients.common.ui.frame.IIntroFrame;
-import com.samebug.clients.swing.ui.base.errorBarPane.BasicFrame;
+import com.samebug.clients.swing.ui.base.frame.BasicFrame;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.modules.DrawService;
+import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.*;
@@ -58,5 +59,10 @@ public final class IntroFrame extends BasicFrame implements IIntroFrame {
                 bb.createBalloon().show(RelativePoint.getCenterOf(IntroFrame.this), Balloon.Position.above);
             }
         });
+    }
+
+    @Override
+    protected FrameListener getListener() {
+        return ListenerService.getListener(this, Listener.class);
     }
 }

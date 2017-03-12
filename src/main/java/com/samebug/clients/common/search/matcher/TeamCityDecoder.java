@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Tests write to the console do this in teamcity's format. See https://confluence.jetbrains.com/display/TCD10/Build+Script+Interaction+with+TeamCity
  * This means that we have to decode it to find stack traces from test runners.
- *
+ * <p>
  * However, converting the teamcity failed state to its actual presentation text is not trivially available, so we kind of hack it.
  */
 public class TeamCityDecoder {
