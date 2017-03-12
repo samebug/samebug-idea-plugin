@@ -28,14 +28,13 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.messages.CloseListener;
 import com.samebug.clients.idea.messages.FocusListener;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
 import com.samebug.clients.idea.ui.controller.authentication.AuthenticationController;
 import com.samebug.clients.idea.ui.controller.intro.IntroFrameController;
 import com.samebug.clients.idea.ui.controller.solution.SolutionsController;
-import com.samebug.clients.idea.ui.modules.IdeaDataService;
-import com.samebug.clients.swing.ui.modules.DataService;
+import com.samebug.clients.idea.ui.controller.tipRequest.TipRequestController;
+import com.samebug.clients.idea.ui.controller.tipRequestList.TipRequestListController;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,10 +42,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
-final public class ToolWindowController implements FocusListener, CloseListener, Disposable {
+final public class ToolWindowController implements FocusListener, Disposable {
     final static Logger LOGGER = Logger.getInstance(ToolWindowController.class);
 
     @NotNull
@@ -55,23 +52,21 @@ final public class ToolWindowController implements FocusListener, CloseListener,
     IntroFrameController introFrame;
     @Nullable
     AuthenticationController authenticationFrame;
-    @NotNull
-    final ConcurrentMap<Integer, SolutionsController> solutionFrames;
+    @Nullable
+    TipRequestController tipRequestFrame;
+    @Nullable
+    TipRequestListController tipRequestListFrame;
+    @Nullable
+    SolutionsController solutionFrame;
 
     @NotNull
     final Timer dateLabelRefresher;
 
-    @Nullable
-    Integer focusedSearch = null;
-
 
     protected ToolWindowController(@NotNull final Project project) {
         this.project = project;
-        solutionFrames = new ConcurrentHashMap<Integer, SolutionsController>();
-
         MessageBusConnection connection = project.getMessageBus().connect(project);
         connection.subscribe(FocusListener.TOPIC, this);
-        connection.subscribe(CloseListener.TOPIC, this);
 
         final int LabelRefreshInitialDelayInMs = 1 * 60 * 1000;
         final int LabelRefreshDelayInMs = 1 * 60 * 1000;
@@ -91,9 +86,9 @@ final public class ToolWindowController implements FocusListener, CloseListener,
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
 
         introFrame = new IntroFrameController(this, project);
-        DataService.putData(introFrame.getControlPanel(), IdeaDataService.Project, project);
-
         authenticationFrame = new AuthenticationController(this, project);
+        tipRequestListFrame = new TipRequestListController(this, project);
+        // TODO load tip request list
 
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content;
@@ -103,48 +98,45 @@ final public class ToolWindowController implements FocusListener, CloseListener,
             content = contentFactory.createContent(introFrame.getControlPanel(), MessageService.message("samebug.toolwindow.intro.tabName"), false);
         }
         toolWindow.getContentManager().addContent(content);
+        toolWindow.getContentManager().addContent(contentFactory.createContent(tipRequestListFrame.getControlPanel(), MessageService.message("samebug.toolwindow.tipRequestList.tabName"), false));
+    }
+
+    public void focusOnTipRequest(/* TODO request id*/) {
+        // TODO remove other tabs?
+        final TipRequestController tab = getOrCreateTipRequestFrame(0);
+        focusOnTab(tab.getControlPanel(), MessageService.message("samebug.toolwindow.tipRequest.tabName"));
     }
 
     @Override
     public void focusOnSearch(final int searchId) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
-        final ToolWindow toolWindow = getToolWindow();
-        final ContentManager toolwindowCM = toolWindow.getContentManager();
-
-        // FIXME: for now, we let at most one search tab, so we close all
-        if (focusedSearch != null && !focusedSearch.equals(searchId)) {
-            project.getMessageBus().syncPublisher(CloseListener.TOPIC).closeSolutionFrame(focusedSearch);
-            Content content = toolwindowCM.getContent(1);
-            if (content != null) toolwindowCM.removeContent(content, true);
-            focusedSearch = null;
-        }
-
+        // TODO remove other tabs?
         final SolutionsController tab = getOrCreateSolutionFrame(searchId);
-        focusedSearch = searchId;
-        Content toolWindowTab = toolwindowCM.getContent(tab.getControlPanel());
-        if (toolWindowTab != null) toolwindowCM.setSelectedContent(toolWindowTab);
-        else {
-            ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-            JComponent solutionFrame = tab.getControlPanel();
-            Content newToolWindowTab = contentFactory.createContent(solutionFrame, MessageService.message("samebug.toolwindow.search.tabName"), false);
-            DataService.putData(solutionFrame, IdeaDataService.Project, project);
-            toolwindowCM.addContent(newToolWindowTab);
-            toolwindowCM.setSelectedContent(newToolWindowTab);
-        }
-        toolWindow.show(null);
+        focusOnTab(tab.getControlPanel(), MessageService.message("samebug.toolwindow.search.tabName"));
     }
 
     @NotNull
     SolutionsController getOrCreateSolutionFrame(final int searchId) {
         ApplicationManager.getApplication().assertIsDispatchThread();
 
-        if (solutionFrames.containsKey(searchId)) {
-            return solutionFrames.get(searchId);
+        if (solutionFrame != null && solutionFrame.getSearchId() == searchId) {
+            return solutionFrame;
         } else {
-            final SolutionsController newSolutionFrame = new SolutionsController(this, project, searchId);
-            newSolutionFrame.loadAll();
-            solutionFrames.put(searchId, newSolutionFrame);
-            return newSolutionFrame;
+            solutionFrame = new SolutionsController(this, project, searchId);
+            solutionFrame.loadAll();
+            return solutionFrame;
+        }
+    }
+
+    @NotNull
+    TipRequestController getOrCreateTipRequestFrame(int tipRequestId) {
+        ApplicationManager.getApplication().assertIsDispatchThread();
+
+        if (tipRequestFrame != null && tipRequestFrame.getTipRequestId() == tipRequestId) {
+            return tipRequestFrame;
+        } else {
+            tipRequestFrame = new TipRequestController(this, project);
+            // TODO load
+            return tipRequestFrame;
         }
     }
 
@@ -152,17 +144,42 @@ final public class ToolWindowController implements FocusListener, CloseListener,
     public void dispose() {
         if (introFrame != null) Disposer.dispose(introFrame);
         if (authenticationFrame != null) Disposer.dispose(authenticationFrame);
+        if (tipRequestListFrame != null) Disposer.dispose(tipRequestListFrame);
 
-        for (Integer searchId : solutionFrames.keySet()) {
-            closeSolutionFrame(searchId);
-        }
+        closeAllSolutionFrames();
+        closeAllTipRequestFrames();
     }
 
-    @Override
     public void closeSolutionFrame(final int searchId) {
-        SolutionsController tab = solutionFrames.get(searchId);
-        if (tab != null) Disposer.dispose(tab);
-        solutionFrames.remove(searchId);
+        if (solutionFrame != null && solutionFrame.getSearchId() == searchId) Disposer.dispose(solutionFrame);
+    }
+
+    public void closeAllSolutionFrames() {
+        if (solutionFrame != null) Disposer.dispose(solutionFrame);
+    }
+
+    public void closeTipRequestFrame(final int tipRequestId) {
+        if (tipRequestFrame != null && tipRequestFrame.getTipRequestId() == tipRequestId) Disposer.dispose(tipRequestFrame);
+    }
+
+    public void closeAllTipRequestFrames() {
+        if (tipRequestFrame != null) Disposer.dispose(tipRequestFrame);
+    }
+
+    private void focusOnTab(JComponent tab, String tabTitle) {
+        ApplicationManager.getApplication().assertIsDispatchThread();
+        final ToolWindow toolWindow = getToolWindow();
+        final ContentManager toolwindowCM = toolWindow.getContentManager();
+
+        Content toolWindowTab = toolwindowCM.getContent(tab);
+        if (toolWindowTab != null) toolwindowCM.setSelectedContent(toolWindowTab);
+        else {
+            ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+            Content newToolWindowTab = contentFactory.createContent(tab, tabTitle, false);
+            toolwindowCM.addContent(newToolWindowTab);
+            toolwindowCM.setSelectedContent(newToolWindowTab);
+        }
+        toolWindow.show(null);
     }
 
     private ToolWindow getToolWindow() {

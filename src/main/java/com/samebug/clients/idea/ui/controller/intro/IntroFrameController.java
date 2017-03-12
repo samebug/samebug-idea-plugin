@@ -21,8 +21,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.frame.IIntroFrame;
 import com.samebug.clients.idea.components.project.ToolWindowController;
-import com.samebug.clients.idea.ui.controller.ConnectionStatusController;
+import com.samebug.clients.idea.ui.controller.frame.ConnectionStatusController;
+import com.samebug.clients.idea.ui.modules.IdeaDataService;
 import com.samebug.clients.swing.ui.frame.intro.IntroFrame;
+import com.samebug.clients.swing.ui.modules.DataService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -41,6 +43,7 @@ public class IntroFrameController implements Disposable {
         this.twc = twc;
         this.myProject = project;
         this.view = new IntroFrame();
+        DataService.putData((IntroFrame) view, IdeaDataService.Project, project);
 
         MessageBus messageBus = myProject.getMessageBus();
         connectionStatusController = new ConnectionStatusController(view, messageBus);

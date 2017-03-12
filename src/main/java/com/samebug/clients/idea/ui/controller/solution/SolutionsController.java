@@ -35,8 +35,10 @@ import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.frame.solution.*;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.project.ToolWindowController;
-import com.samebug.clients.idea.ui.controller.ConnectionStatusController;
+import com.samebug.clients.idea.ui.controller.frame.ConnectionStatusController;
+import com.samebug.clients.idea.ui.modules.IdeaDataService;
 import com.samebug.clients.swing.ui.frame.solution.SolutionFrame;
+import com.samebug.clients.swing.ui.modules.DataService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.ide.PooledThreadExecutor;
 
@@ -52,6 +54,7 @@ public final class SolutionsController implements Disposable {
     final static Logger LOGGER = Logger.getInstance(SolutionsController.class);
     final ToolWindowController twc;
     final Project myProject;
+
     final int searchId;
     final ConnectionStatusController connectionStatusController;
 
@@ -79,9 +82,10 @@ public final class SolutionsController implements Disposable {
         this.twc = twc;
         this.myProject = project;
         this.searchId = searchId;
+        view = new SolutionFrame();
+        DataService.putData((SolutionFrame) view, IdeaDataService.Project, project);
 
         MessageBus messageBus = myProject.getMessageBus();
-        view = new SolutionFrame();
         connectionStatusController = new ConnectionStatusController(view, messageBus);
 
         viewController = new ViewController(this);
@@ -102,6 +106,10 @@ public final class SolutionsController implements Disposable {
         solutionService = plugin.solutionService;
         bugmateStore = plugin.bugmateStore;
         bugmateService = plugin.bugmateService;
+    }
+
+    public int getSearchId() {
+        return searchId;
     }
 
     public void loadAll() {

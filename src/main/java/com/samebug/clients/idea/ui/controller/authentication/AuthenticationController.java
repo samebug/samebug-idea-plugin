@@ -21,8 +21,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.frame.IAuthenticationFrame;
 import com.samebug.clients.idea.components.project.ToolWindowController;
-import com.samebug.clients.idea.ui.controller.ConnectionStatusController;
+import com.samebug.clients.idea.ui.controller.frame.ConnectionStatusController;
+import com.samebug.clients.idea.ui.modules.IdeaDataService;
 import com.samebug.clients.swing.ui.frame.authentication.AuthenticationFrame;
+import com.samebug.clients.swing.ui.modules.DataService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -38,6 +40,7 @@ public final class AuthenticationController implements Disposable {
         this.twc = twc;
         this.myProject = project;
         view = new AuthenticationFrame();
+        DataService.putData((AuthenticationFrame) view, IdeaDataService.Project, project);
 
         MessageBus messageBus = myProject.getMessageBus();
         connectionStatusController = new ConnectionStatusController(view, messageBus);
