@@ -13,8 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.api;
+package com.samebug.clients.common.services;
 
-public interface LogScannerFactory {
-    LogScanner createScanner();
+import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
+import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
+
+public final class HelpRequestStore {
+    IncomingHelpRequests incoming;
+
+    public HelpRequestStore() {
+
+    }
+
+    public IncomingHelpRequests get() {
+        return incoming;
+    }
+
+    public MatchingHelpRequest getHelpRequest(String id) {
+        for (MatchingHelpRequest h : incoming.helpRequests) {
+            if (h.helpRequest.id.equals(id)) return h;
+        }
+        return null;
+    }
 }

@@ -18,11 +18,11 @@ package com.samebug.clients.common.api.entities.helpRequest;
 import com.samebug.clients.common.api.entities.search.SearchGroup;
 
 public final class MatchingHelpRequest {
-    public final HelpRequest helpRequest;
+    public final HelpRequest2 helpRequest;
     public final SearchGroup matchingGroup;
     public final SearchGroup requestGroup;
 
-    public MatchingHelpRequest(HelpRequest helpRequest, SearchGroup matchingGroup, SearchGroup requestGroup) {
+    public MatchingHelpRequest(HelpRequest2 helpRequest, SearchGroup matchingGroup, SearchGroup requestGroup) {
         this.helpRequest = helpRequest;
         this.matchingGroup = matchingGroup;
         this.requestGroup = requestGroup;

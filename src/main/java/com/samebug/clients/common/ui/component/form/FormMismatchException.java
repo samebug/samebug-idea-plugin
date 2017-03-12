@@ -15,6 +15,8 @@
  */
 package com.samebug.clients.common.ui.component.form;
 
+import com.samebug.clients.common.api.form.FormError;
+
 import java.util.List;
 
 public final class FormMismatchException extends java.lang.Exception {

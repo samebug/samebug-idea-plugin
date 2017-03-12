@@ -16,10 +16,10 @@
 package com.samebug.clients.idea.search;
 
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.common.api.LogScanner;
-import com.samebug.clients.common.api.LogScannerFactory;
-import com.samebug.clients.common.api.StackTraceListener;
 import com.samebug.clients.common.entities.search.DebugSessionInfo;
+import com.samebug.clients.common.search.LogScanner;
+import com.samebug.clients.common.search.LogScannerFactory;
+import com.samebug.clients.common.search.StackTraceListener;
 import com.samebug.clients.common.search.StackTraceMatcher;
 
 public class StackTraceMatcherFactory implements LogScannerFactory {

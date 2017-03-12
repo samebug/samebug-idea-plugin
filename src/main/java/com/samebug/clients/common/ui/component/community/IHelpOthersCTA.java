@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.common.ui.component.community;
 
-import com.samebug.clients.common.ui.component.form.FormError;
+import com.samebug.clients.common.api.form.FormError;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 
 import java.util.List;

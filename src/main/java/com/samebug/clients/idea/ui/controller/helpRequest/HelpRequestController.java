@@ -16,53 +16,95 @@
 package com.samebug.clients.idea.ui.controller.helpRequest;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.messages.MessageBus;
+import com.samebug.clients.common.api.entities.UserInfo;
+import com.samebug.clients.common.api.entities.UserStats;
+import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
+import com.samebug.clients.common.api.entities.solution.Solutions;
+import com.samebug.clients.common.api.exceptions.SamebugClientException;
+import com.samebug.clients.common.services.HelpRequestStore;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestFrame;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.project.ToolWindowController;
-import com.samebug.clients.idea.ui.controller.frame.ConnectionStatusController;
-import com.samebug.clients.idea.ui.modules.IdeaDataService;
+import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.swing.ui.frame.helpRequest.HelpRequestFrame;
-import com.samebug.clients.swing.ui.modules.DataService;
-import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
-public final class HelpRequestController implements Disposable {
+public final class HelpRequestController extends BaseFrameController<IHelpRequestFrame> implements Disposable {
     final static Logger LOGGER = Logger.getInstance(HelpRequestController.class);
-    final ToolWindowController twc;
-    final Project myProject;
-    final IHelpRequestFrame view;
+    final String helpRequestId;
 
-    final ConnectionStatusController connectionStatusController;
+    private final HelpRequestStore helpRequestStore;
 
 
-    public HelpRequestController(ToolWindowController twc, Project project) {
-        this.twc = twc;
-        this.myProject = project;
-        view = new HelpRequestFrame();
-        DataService.putData((HelpRequestFrame) view, IdeaDataService.Project, project);
+    public HelpRequestController(ToolWindowController twc, Project project, final String helpRequestId) {
+        super(twc, project, new HelpRequestFrame());
+        this.helpRequestId = helpRequestId;
 
-        MessageBus messageBus = myProject.getMessageBus();
-        connectionStatusController = new ConnectionStatusController(view, messageBus);
-
+        IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
+        helpRequestStore = plugin.helpRequestStore;
     }
 
-    public int getHelpRequestId() {
-        // TODO
-        return 0;
+    public String getHelpRequestId() {
+        return helpRequestId;
     }
 
 
-    @NotNull
-    public JComponent getControlPanel() {
-        return (HelpRequestFrame) view;
+    public void load() {
+        MatchingHelpRequest helpRequest = helpRequestStore.getHelpRequest(helpRequestId);
+        assert helpRequest != null;
+
+        final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
+        final Future<UserStats> userStatsTask = concurrencyService.userStats();
+
+        // TODO decide if we can access the requester's search, or only for the matching one
+        int visibleSearchId = helpRequest.matchingGroup.getLastSearch().getId();
+
+        final Future<Solutions> solutionsTask = concurrencyService.solutions(visibleSearchId);
+        final Future<MatchingHelpRequest> helpRequestTask = concurrencyService.helpRequest(helpRequestId);
+
+        load(solutionsTask, helpRequestTask, userInfoTask, userStatsTask);
     }
 
-    @Override
-    public void dispose() {
-        connectionStatusController.dispose();
+    private void load(final Future<Solutions> solutionsTask,
+                      final Future<MatchingHelpRequest> helpRequestTask,
+                      final Future<UserInfo> userInfoTask,
+                      final Future<UserStats> userStatsTask) {
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    try {
+                        final IHelpRequestFrame.Model model = conversionService.convertHelpRequestFrame(
+                                solutionsTask.get(), helpRequestTask.get(), userInfoTask.get(), userStatsTask.get());
+                        ApplicationManager.getApplication().invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.loadingSucceeded(model);
+                            }
+                        });
+                    } catch (IllegalStateException e) {
+                        // TODO generic error, probably safe to retry (loadAll)
+                        LOGGER.warn("Failed to load user beforehand", e);
+                        ApplicationManager.getApplication().invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.loadingFailedWithGenericError();
+                            }
+                        });
+                    } catch (InterruptedException e) {
+                        handleInterruptedException(e);
+                    } catch (ExecutionException e) {
+                        handleExecutionException(e);
+                    }
+                } catch (final SamebugClientException e) {
+                    handleSamebugClientException(e);
+                }
+            }
+        });
     }
-
 }

@@ -18,8 +18,8 @@ package com.samebug.clients.idea.search.processadapters;
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.openapi.util.Key;
-import com.samebug.clients.common.api.LogScanner;
-import com.samebug.clients.common.api.LogScannerFactory;
+import com.samebug.clients.common.search.LogScanner;
+import com.samebug.clients.common.search.LogScannerFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;

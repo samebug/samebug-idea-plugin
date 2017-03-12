@@ -1,7 +1,6 @@
 package com.samebug.clients.common.search;
 
 import com.samebug.TestUtils;
-import com.samebug.clients.common.api.StackTraceListener;
 import org.junit.Before;
 import org.junit.Test;
 

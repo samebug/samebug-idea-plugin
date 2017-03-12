@@ -88,7 +88,7 @@ final public class ToolWindowController implements FocusListener, Disposable {
         introFrame = new IntroFrameController(this, project);
         authenticationFrame = new AuthenticationController(this, project);
         helpRequestListFrame = new HelpRequestListController(this, project);
-        // TODO load tip request list
+        helpRequestListFrame.load();
 
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content;
@@ -101,9 +101,9 @@ final public class ToolWindowController implements FocusListener, Disposable {
         toolWindow.getContentManager().addContent(contentFactory.createContent(helpRequestListFrame.getControlPanel(), MessageService.message("samebug.toolwindow.helpRequestList.tabName"), false));
     }
 
-    public void focusOnHelpRequest(/* TODO request id*/) {
+    public void focusOnHelpRequest(String helpRequestId) {
         // TODO remove other tabs?
-        final HelpRequestController tab = getOrCreateHelpRequestFrame(0);
+        final HelpRequestController tab = getOrCreateHelpRequestFrame(helpRequestId);
         focusOnTab(tab.getControlPanel(), MessageService.message("samebug.toolwindow.helpRequest.tabName"));
     }
 
@@ -122,20 +122,20 @@ final public class ToolWindowController implements FocusListener, Disposable {
             return solutionFrame;
         } else {
             solutionFrame = new SolutionsController(this, project, searchId);
-            solutionFrame.loadAll();
+            solutionFrame.load();
             return solutionFrame;
         }
     }
 
     @NotNull
-    HelpRequestController getOrCreateHelpRequestFrame(int helpRequestId) {
+    HelpRequestController getOrCreateHelpRequestFrame(String helpRequestId) {
         ApplicationManager.getApplication().assertIsDispatchThread();
 
-        if (helpRequestFrame != null && helpRequestFrame.getHelpRequestId() == helpRequestId) {
+        if (helpRequestFrame != null && helpRequestFrame.getHelpRequestId().equals(helpRequestId)) {
             return helpRequestFrame;
         } else {
-            helpRequestFrame = new HelpRequestController(this, project);
-            // TODO load
+            helpRequestFrame = new HelpRequestController(this, project, helpRequestId);
+            helpRequestFrame.load();
             return helpRequestFrame;
         }
     }
@@ -158,8 +158,8 @@ final public class ToolWindowController implements FocusListener, Disposable {
         if (solutionFrame != null) Disposer.dispose(solutionFrame);
     }
 
-    public void closeHelpRequestFrame(final int helpRequestId) {
-        if (helpRequestFrame != null && helpRequestFrame.getHelpRequestId() == helpRequestId) Disposer.dispose(helpRequestFrame);
+    public void closeHelpRequestFrame(final String helpRequestId) {
+        if (helpRequestFrame != null && helpRequestFrame.getHelpRequestId().equals(helpRequestId)) Disposer.dispose(helpRequestFrame);
     }
 
     public void closeAllHelpRequestFrames() {

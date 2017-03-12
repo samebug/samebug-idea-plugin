@@ -15,7 +15,11 @@
  */
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
-import com.samebug.clients.common.ui.component.form.*;
+import com.samebug.clients.common.api.form.FormError;
+import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
+import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
+import com.samebug.clients.common.ui.component.form.FormMismatchException;
+import com.samebug.clients.common.ui.component.form.IForm;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;

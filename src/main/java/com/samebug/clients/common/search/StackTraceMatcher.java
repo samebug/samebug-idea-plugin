@@ -15,9 +15,6 @@
  */
 package com.samebug.clients.common.search;
 
-import com.samebug.clients.common.api.LogScanner;
-import com.samebug.clients.common.api.StackTraceListener;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -13,19 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.ui.component.form;
+package com.samebug.clients.common.search;
 
-public final class FormError {
-    public final String key;
-    public final String code;
-
-    public FormError(String key, String code) {
-        this.key = key;
-        this.code = code;
-    }
-
-    @Override
-    public String toString() {
-        return key + " - " + code;
-    }
+public interface StackTraceListener {
+    void stacktraceFound(String stacktrace);
 }

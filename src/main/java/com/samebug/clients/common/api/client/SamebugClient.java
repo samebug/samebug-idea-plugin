@@ -21,6 +21,8 @@ import com.samebug.clients.common.api.RestUrlBuilder;
 import com.samebug.clients.common.api.entities.UserInfo;
 import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
+import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
+import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
 import com.samebug.clients.common.api.entities.search.SearchResults;
 import com.samebug.clients.common.api.entities.solution.MarkResponse;
 import com.samebug.clients.common.api.entities.solution.RestHit;
@@ -28,6 +30,7 @@ import com.samebug.clients.common.api.entities.solution.Solutions;
 import com.samebug.clients.common.api.entities.solution.Tip;
 import com.samebug.clients.common.api.entities.tracking.TrackEvent;
 import com.samebug.clients.common.api.exceptions.*;
+import com.samebug.clients.common.api.form.FormBuilder;
 import com.samebug.clients.common.api.json.Json;
 import org.apache.http.Consts;
 import org.apache.http.HttpResponse;
@@ -110,7 +113,29 @@ final public class SamebugClient {
 
     public
     @NotNull
-    ClientResponse<RestHit<Tip>> postTip(@NotNull final Integer searchId, @NotNull final String tip, @Nullable final String source) {
+    ClientResponse<IncomingHelpRequests> getIncomingHelpRequests() {
+        final URL url = urlBuilder.incomingHelpRequests();
+        HttpGet request = new HttpGet(url.toString());
+
+        return rawClient.executeAuthenticated(request, new HandleJsonRequest<IncomingHelpRequests>(IncomingHelpRequests.class));
+    }
+
+    public
+    @NotNull
+    ClientResponse<HelpRequest> createHelpRequest(int searchId, String context) {
+        final URL url = urlBuilder.helpRequest();
+        HttpPost request = new HttpPost(url.toString());
+        List<BasicNameValuePair> form = new ArrayList<BasicNameValuePair>();
+        form.add(new BasicNameValuePair(FormBuilder.CreateHelpRequest.SEARCH_ID, Integer.toString(searchId)));
+        form.add(new BasicNameValuePair(FormBuilder.CreateHelpRequest.CONTEXT, context));
+        request.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
+
+        return rawClient.executeAuthenticated(request, new HandleJsonRequest<HelpRequest>(HelpRequest.class));
+    }
+
+    public
+    @NotNull
+    ClientResponse<RestHit<Tip>> createTip(@NotNull final Integer searchId, @NotNull final String tip, @Nullable final String source) {
         final URL url = urlBuilder.tip();
         HttpPost post = new HttpPost(url.toString());
         List<BasicNameValuePair> form = new ArrayList<BasicNameValuePair>();

@@ -16,47 +16,71 @@
 package com.samebug.clients.idea.ui.controller.helpRequestList;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.messages.MessageBus;
+import com.samebug.clients.common.api.entities.UserInfo;
+import com.samebug.clients.common.api.entities.UserStats;
+import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
+import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListFrame;
 import com.samebug.clients.idea.components.project.ToolWindowController;
-import com.samebug.clients.idea.ui.controller.frame.ConnectionStatusController;
-import com.samebug.clients.idea.ui.modules.IdeaDataService;
+import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.swing.ui.frame.helpRequestList.HelpRequestListFrame;
-import com.samebug.clients.swing.ui.modules.DataService;
-import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
-public final class HelpRequestListController implements Disposable {
+public final class HelpRequestListController extends BaseFrameController<IHelpRequestListFrame> implements Disposable {
     final static Logger LOGGER = Logger.getInstance(HelpRequestListController.class);
-    final ToolWindowController twc;
-    final Project myProject;
-    final IHelpRequestListFrame view;
-
-    final ConnectionStatusController connectionStatusController;
-
 
     public HelpRequestListController(ToolWindowController twc, Project project) {
-        this.twc = twc;
-        this.myProject = project;
-        view = new HelpRequestListFrame();
-        DataService.putData((HelpRequestListFrame) view, IdeaDataService.Project, project);
-
-        MessageBus messageBus = myProject.getMessageBus();
-        connectionStatusController = new ConnectionStatusController(view, messageBus);
-
+        super(twc, project, new HelpRequestListFrame());
     }
 
-    @NotNull
-    public JComponent getControlPanel() {
-        return (HelpRequestListFrame) view;
+    public void load() {
+        final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
+        final Future<UserStats> userStatsTask = concurrencyService.userStats();
+        final Future<IncomingHelpRequests> helpRequestsTask = concurrencyService.incomingHelpRequests();
+
+        load(helpRequestsTask, userInfoTask, userStatsTask);
     }
 
-    @Override
-    public void dispose() {
-        connectionStatusController.dispose();
+    private void load(final Future<IncomingHelpRequests> helpRequestsTask,
+                      final Future<UserInfo> userInfoTask,
+                      final Future<UserStats> userStatsTask) {
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    try {
+                        final IHelpRequestListFrame.Model model = conversionService.convertHelpRequestListFrame(
+                                helpRequestsTask.get(), userInfoTask.get(), userStatsTask.get());
+                        ApplicationManager.getApplication().invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.loadingSucceeded(model);
+                            }
+                        });
+                    } catch (IllegalStateException e) {
+                        // TODO generic error, probably safe to retry (loadAll)
+                        LOGGER.warn("Failed to load user beforehand", e);
+                        ApplicationManager.getApplication().invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.loadingFailedWithGenericError();
+                            }
+                        });
+                    } catch (InterruptedException e) {
+                        handleInterruptedException(e);
+                    } catch (ExecutionException e) {
+                        handleExecutionException(e);
+                    }
+                } catch (final SamebugClientException e) {
+                    handleSamebugClientException(e);
+                }
+            }
+        });
     }
 
 }

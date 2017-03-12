@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
+import com.samebug.clients.common.api.form.FormError;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
-import com.samebug.clients.common.ui.component.form.FormError;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import com.samebug.clients.swing.ui.modules.MessageService;

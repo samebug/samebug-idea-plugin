@@ -61,8 +61,18 @@ final public class RestUrlBuilder {
     }
 
     @NotNull
-    public URL history() {
-        return resolve("history");
+    public URL helpRequest() {
+        return resolve("helprequest");
+    }
+
+    @NotNull
+    public URL revokeHelpRequest(String id) {
+        return resolve("helprequest/" + id + "/revoke");
+    }
+
+    @NotNull
+    public URL incomingHelpRequests() {
+        return resolve("incoming-helprequests");
     }
 
     @NotNull

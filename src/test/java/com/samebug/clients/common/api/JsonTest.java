@@ -76,12 +76,12 @@ public class JsonTest {
 
     /**
      * Check if any of the fields are null that should not be null.
-     *
+     * <p>
      * Ideally, this would be handled by the NotNull annotations, but that has a compile time retention.
      * On the other hand, IntelliJ can instrument the code to add runtime assertions based on those annotations,
      * but that only works if you run the test from IntelliJ, and won't work anyway when the object fields
      * are initialized by gson.
-     *
+     * <p>
      * This solution has a serious drawback of double bookkeeping. Maybe we should check annotation processors,
      * or use an other NotNull annotation with runtime retention.
      */

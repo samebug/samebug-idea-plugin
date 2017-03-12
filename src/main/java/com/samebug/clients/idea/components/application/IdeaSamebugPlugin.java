@@ -29,6 +29,8 @@ import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.*;
 import com.samebug.clients.idea.controllers.ConsoleSearchController;
 import com.samebug.clients.idea.controllers.TimedTasks;
+import com.samebug.clients.idea.ui.controller.frame.ConcurrencyService;
+import com.samebug.clients.idea.ui.controller.frame.ConversionService;
 import com.samebug.clients.idea.ui.modules.*;
 import com.samebug.clients.swing.ui.modules.*;
 import org.jetbrains.annotations.NotNull;
@@ -61,7 +63,11 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public SearchService searchService;
     public BugmateStore bugmateStore;
     public BugmateService bugmateService;
+    public HelpRequestStore helpRequestStore;
+    public HelpRequestService helpRequestService;
     public AuthenticationService authenticationService;
+    public ConversionService conversionService;
+    public ConcurrencyService concurrencyService;
 
     @Nullable
     private MessageBusConnection connection;
@@ -113,7 +119,14 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         searchRequestService = new SearchRequestService(searchRequestStore);
         bugmateStore = new BugmateStore();
         bugmateService = new BugmateService(clientService, bugmateStore);
+        helpRequestStore = new HelpRequestStore();
+        helpRequestService = new HelpRequestService(clientService, helpRequestStore);
         authenticationService = new AuthenticationService(clientService);
+        conversionService = new ConversionService(urlBuilder);
+        concurrencyService = new ConcurrencyService(profileStore, profileService,
+                solutionStore, solutionService,
+                bugmateStore, bugmateService,
+                helpRequestStore, helpRequestService);
 
         TimedTasks timedTasks = new TimedTasks(messageBus.connect(this));
         ConsoleSearchController consoleSearchController = new ConsoleSearchController(messageBus.connect(this));

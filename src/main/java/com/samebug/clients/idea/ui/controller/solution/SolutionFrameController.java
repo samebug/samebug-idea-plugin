@@ -38,7 +38,7 @@ final class SolutionFrameController implements ISolutionFrame.Listener {
     @Override
     public void reload() {
         controller.view.setLoading();
-        controller.loadAll();
+        controller.load();
     }
 
     @Override

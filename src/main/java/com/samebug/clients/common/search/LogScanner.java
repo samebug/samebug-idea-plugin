@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.ui.component.form;
+package com.samebug.clients.common.search;
 
-import com.samebug.clients.common.api.form.FormError;
+public interface LogScanner {
+    void append(String text);
 
-import java.util.List;
-
-public interface IForm {
-    void setFormErrors(List<FormError> errors) throws FormMismatchException;
+    void end();
 }

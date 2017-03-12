@@ -62,7 +62,7 @@ public final class SolutionService {
         ClientService.ConnectionAwareHttpRequest<RestHit<Tip>> requestHandler =
                 new ClientService.ConnectionAwareHttpRequest<RestHit<Tip>>() {
                     ClientResponse<RestHit<Tip>> request() {
-                        return client.postTip(searchId, tip, sourceUrl);
+                        return client.createTip(searchId, tip, sourceUrl);
                     }
 
                     protected void success(RestHit<Tip> response) {

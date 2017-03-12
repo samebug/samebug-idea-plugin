@@ -22,9 +22,9 @@ import com.samebug.clients.common.api.entities.solution.RestHit;
 import com.samebug.clients.common.api.entities.solution.Tip;
 import com.samebug.clients.common.api.exceptions.BadRequest;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
+import com.samebug.clients.common.api.form.FormError;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
-import com.samebug.clients.common.ui.component.form.FormError;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.modules.IdeaListenerService;
@@ -56,7 +56,7 @@ final class HelpOthersCTAController implements IHelpOthersCTA.Listener {
                     ApplicationManager.getApplication().invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            controller.loadLazy();
+                            controller.load();
                             source.successPostTip();
                         }
                     });

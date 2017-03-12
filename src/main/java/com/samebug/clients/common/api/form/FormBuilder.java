@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.api;
+package com.samebug.clients.common.api.form;
 
-public interface LogScanner {
-    void append(String text);
-
-    void end();
+public final class FormBuilder {
+    public static final class CreateHelpRequest {
+        public static final String SEARCH_ID = "searchId";
+        public static final String CONTEXT = "context";
+    }
 }

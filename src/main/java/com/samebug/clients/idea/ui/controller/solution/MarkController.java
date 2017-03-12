@@ -47,10 +47,10 @@ final class MarkController implements IMarkButton.Listener {
                     final IMarkButton.Model newModel;
                     if (markId == null) {
                         final MarkResponse response = solutionService.postMark(controller.searchId, solutionId);
-                        newModel = controller.convertMarkResponse(response);
+                        newModel = controller.conversionService.convertMarkResponse(response);
                     } else {
                         final MarkResponse response = solutionService.retractMark(markId);
-                        newModel = controller.convertRetractedMarkResponse(response);
+                        newModel = controller.conversionService.convertRetractedMarkResponse(response);
                     }
                     ApplicationManager.getApplication().invokeLater(new Runnable() {
                         @Override

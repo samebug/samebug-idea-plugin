@@ -15,12 +15,25 @@
  */
 package com.samebug.clients.common.api.entities.helpRequest;
 
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public final class IncomingHelpRequests {
-    public final List<MatchingHelpRequest> helpRequests;
+import java.net.URL;
 
-    public IncomingHelpRequests(List<MatchingHelpRequest> helpRequests) {
-        this.helpRequests = helpRequests;
+public final class Requester {
+    @NotNull
+    public final Integer id;
+    @NotNull
+    public final Boolean online;
+    @NotNull
+    public final String displayName;
+    @Nullable
+    public final URL avatarUrl;
+
+    public Requester(@NotNull Integer id, @NotNull Boolean online, @NotNull String displayName, @Nullable URL avatarUrl) {
+        this.id = id;
+        this.online = online;
+        this.displayName = displayName;
+        this.avatarUrl = avatarUrl;
     }
 }
