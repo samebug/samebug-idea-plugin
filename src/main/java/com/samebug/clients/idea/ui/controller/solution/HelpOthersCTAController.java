@@ -24,9 +24,13 @@ import com.samebug.clients.common.search.api.exceptions.BadRequest;
 import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
+import com.samebug.clients.common.ui.component.form.FormError;
+import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.modules.IdeaListenerService;
-import com.samebug.clients.swing.ui.modules.MessageService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 final class HelpOthersCTAController implements IHelpOthersCTA.Listener {
     final static Logger LOGGER = Logger.getInstance(HelpOthersCTAController.class);
@@ -57,29 +61,71 @@ final class HelpOthersCTAController implements IHelpOthersCTA.Listener {
                         }
                     });
                 } catch (SamebugClientException e) {
-                    final String errorMessage;
-                    // TODO refine this error message part
+                    final List<String> globalErrors = new ArrayList<String>();
+                    final List<FormError> formErrors = new ArrayList<FormError>();
+
                     if (e instanceof BadRequest) {
-                        final String writeTipErrorCode = ((BadRequest) e).getRestError().getCode();
-                        if ("UNRECOGNIZED_SOURCE".equals(writeTipErrorCode)) errorMessage = MessageService.message("samebug.component.tip.write.error.source.malformed");
-                        else if ("MESSAGE_TOO_SHORT".equals(writeTipErrorCode)) errorMessage = MessageService.message("samebug.component.tip.write.error.tip.short");
-                        else if ("MESSAGE_TOO_LONG".equals(writeTipErrorCode)) errorMessage = MessageService.message("samebug.component.tip.write.error.tip.long");
-                        else if ("NOT_YOUR_SEARCH".equals(writeTipErrorCode)) errorMessage = MessageService.message("samebug.component.tip.write.error.notYourSearch");
-                        else if ("NOT_EXCEPTION_SEARCH".equals(writeTipErrorCode)) errorMessage = MessageService.message("samebug.component.tip.write.error.notExceptionSearch");
-                        else if ("UNKNOWN_SEARCH".equals(writeTipErrorCode)) errorMessage = MessageService.message("samebug.component.tip.write.error.unknownSearch");
-                        else if ("UNREACHABLE_SOURCE".equals(writeTipErrorCode)) errorMessage = MessageService.message("samebug.component.tip.write.error.unreachableSource");
-                        else errorMessage = MessageService.message("samebug.component.tip.write.error.source.unhandledBadRequest");
+                        // TODO if it is FORM_ERROR
+                        if (true) {
+                            // TODO add form errors that belong to fields
+                            // TODO add the rest to global errors
+                        } else {
+                            // TODO add these to global errors
+                        }
                     } else {
-                        errorMessage = MessageService.message("samebug.component.tip.write.error.source.unhandled");
-                        LOGGER.warn("unhandled exception after post tip", e);
+                        // TODO add this to global errors
                     }
+
                     ApplicationManager.getApplication().invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            source.interruptPostTip();
-                            controller.view.popupError(errorMessage);
+                            if (!formErrors.isEmpty()) {
+                                try {
+                                    source.failPostTipWithFormError(formErrors);
+                                } catch (FormMismatchException formException) {
+                                    LOGGER.warn("Unprocessed form errors after posting tip", formException);
+                                    globalErrors.add("TODO: failed to add field errors");
+                                }
+                            } else {
+                                source.interruptPostTip();
+                            }
+
+                            // TODO show global errors
+                            controller.view.popupError(null);
                         }
                     });
+
+//                    // TODO refine this error message part
+//                    if (e instanceof BadRequest) {
+//                        // TODO extract formerror processing
+//                        final String writeTipErrorCode = ((BadRequest) e).getRestError().getCode();
+//                        if ("FORM_ERROR".equals(writeTipErrorCode)) {
+//                            final List<FormError> formErrors = null; // TODO form errors with nonnull keys
+//                            if (!formErrors.isEmpty()) {
+//                                ApplicationManager.getApplication().invokeLater(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        try {
+//                                            source.failPostTipWithFormError(formErrors);
+//                                        } catch (FormMismatchException formException) {
+//                                            LOGGER.warn("Unprocessed form errors after posting tip", formException);
+//                                        }
+//                                    }
+//                                });
+//                            }
+//                            String globalErrorCode = null; // TODO
+//                            if ("NOT_YOUR_SEARCH".equals(globalErrorCode)) globalErrorMessage = MessageService.message("samebug.component.tip.write.error.notYourSearch");
+//                            else if ("NOT_EXCEPTION_SEARCH".equals(globalErrorCode)) globalErrorMessage = MessageService.message("samebug.component.tip.write.error.notExceptionSearch");
+//                            else if ("UNKNOWN_SEARCH".equals(globalErrorCode)) globalErrorMessage = MessageService.message("samebug.component.tip.write.error.unknownSearch");
+//                            else if ("UNREACHABLE_SOURCE".equals(globalErrorCode)) globalErrorMessage = MessageService.message("samebug.component.tip.write.error.unreachableSource");
+//                            else LOGGER.warn("Unhandled global form error with code " + globalErrorCode);
+//                        } else {
+//                            // TODO handle non-form errors
+//                        }
+//                    } else {
+//                        globalErrorMessage = MessageService.message("samebug.component.tip.write.error.source.unhandled");
+//                        LOGGER.warn("unhandled exception after post tip", e);
+//                    }
                 }
             }
         });

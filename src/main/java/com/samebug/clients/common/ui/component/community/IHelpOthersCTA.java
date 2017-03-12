@@ -15,12 +15,19 @@
  */
 package com.samebug.clients.common.ui.component.community;
 
+import com.samebug.clients.common.ui.component.form.FormError;
+import com.samebug.clients.common.ui.component.form.FormMismatchException;
+
+import java.util.List;
+
 public interface IHelpOthersCTA {
     void startPostTip();
 
     void interruptPostTip();
 
     void successPostTip();
+
+    void failPostTipWithFormError(List<FormError> errors) throws FormMismatchException;
 
     final class Model {
         public final int usersWaitingHelp;

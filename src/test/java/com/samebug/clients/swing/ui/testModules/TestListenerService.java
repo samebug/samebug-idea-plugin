@@ -15,22 +15,29 @@
  */
 package com.samebug.clients.swing.ui.testModules;
 
-import com.samebug.clients.common.ui.component.hit.IMarkButton;
+import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
+import com.samebug.clients.common.ui.component.form.FormError;
+import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Collections;
 
 public final class TestListenerService extends ListenerService {
     @Override
     protected <T> T internalGetListener(JComponent component, Class<T> listenerClass) {
-        if (listenerClass == IMarkButton.Listener.class) {
-            return (T) new IMarkButton.Listener() {
+        if (listenerClass == IHelpOthersCTA.Listener.class) {
+            return (T) new IHelpOthersCTA.Listener() {
                 @Override
-                public void markClicked(IMarkButton markButton, Integer solutionId, Integer currentMarkId) {
-                    markButton.setLoading();
+                public void postTip(IHelpOthersCTA source, String tipBody) {
+                    try {
+                        source.failPostTipWithFormError(Collections.singletonList(new FormError("tip", "LONG")));
+                    } catch (FormMismatchException e) {
+                        e.printStackTrace();
+                    }
                 }
             };
         } else {

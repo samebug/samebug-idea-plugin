@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
+import com.samebug.clients.common.ui.component.form.*;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
@@ -25,17 +26,27 @@ import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
-public class WriteTipScreen extends RoundedBackgroundPanel {
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+
+class WriteTipScreen extends RoundedBackgroundPanel implements IForm {
+    // TODO
+    static final String FIELD_NAME_TIP = "TIP_BODY";
+
+    final WriteTip writeTip;
     final SamebugLabel titleLabel;
     final WriteTipArea tipArea;
     final ActionRow actionRow;
 
-    public WriteTipScreen(int peopleToHelp) {
+    WriteTipScreen(WriteTip writeTip) {
+        this.writeTip = writeTip;
         setBackgroundColor(ColorService.Tip);
 
         titleLabel = new SamebugLabel(MessageService.message("samebug.component.tip.write.title"), FontService.regular(14));
         titleLabel.setForegroundColor(ColorService.TipText);
-        tipArea = new WriteTipArea(peopleToHelp);
+        tipArea = new WriteTipArea(MessageService.message("samebug.component.tip.write.placeholder", writeTip.model.usersWaitingHelp));
         actionRow = new ActionRow();
 
         setLayout(new MigLayout("fillx", "20[fill]20", "18[]13[]10[]20"));
@@ -43,6 +54,25 @@ public class WriteTipScreen extends RoundedBackgroundPanel {
         add(tipArea, "cell 0 1");
         add(actionRow, "cell 0 2");
     }
+
+    public void setFormErrors(List<FormError> errors) throws FormMismatchException {
+        List<FormError> mismatched = new ArrayList<FormError>();
+        for (FormError f : errors) {
+            // TODO where to show global errors?
+            try {
+                if (FIELD_NAME_TIP.equals(f.key)) tipArea.setFormError(f.code);
+                else throw new FieldNameMismatchException(f.key);
+            } catch (ErrorCodeMismatchException e) {
+                mismatched.add(f);
+            } catch (FieldNameMismatchException e) {
+                mismatched.add(f);
+            }
+        }
+        if (!mismatched.isEmpty()) throw new FormMismatchException(mismatched);
+        revalidate();
+        repaint();
+    }
+
 
     final class ActionRow extends TransparentPanel {
         final SamebugButton sendButton;
@@ -61,6 +91,21 @@ public class WriteTipScreen extends RoundedBackgroundPanel {
             setLayout(new MigLayout("", "0[]20[]:push", "0[]0"));
             add(sendButton);
             add(cancelButton);
+
+            sendButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    writeTip.getListener().postTip(writeTip, tipArea.getText());
+                }
+            });
+            cancelButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    writeTip.changeToClosedState();
+                }
+            });
+
+
         }
 
     }

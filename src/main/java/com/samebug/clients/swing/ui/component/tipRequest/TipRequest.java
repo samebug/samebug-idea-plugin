@@ -39,7 +39,7 @@ public final class TipRequest extends RoundedBackgroundPanel implements ITipRequ
         final AvatarIcon avatar = new AvatarIcon(model.avatarUrl, AvatarSize);
         final SamebugLabel displayName = new DisplayName(model.displayName);
         final TipRequestBody tipRequestBody = new TipRequestBody(model.tipRequestBody);
-        final WriteTipArea writeTipArea = new WriteTipArea(1);
+        final WriteTipArea writeTipArea = new WriteTipArea(MessageService.message("samebug.component.tipRequest.answer.placeholder", model.displayName));
         final ActionRow actions = new ActionRow();
 
         setBackgroundColor(ColorService.Tip);

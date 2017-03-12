@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui.base.panel;
+package com.samebug.clients.common.ui.component.form;
 
-import com.samebug.clients.swing.ui.modules.DrawService;
+public final class FormError {
+    public final String key;
+    public final String code;
 
-import java.awt.*;
+    public FormError(String key, String code) {
+        this.key = key;
+        this.code = code;
+    }
 
-public class RoundedBackgroundPanel extends TransparentPanel {
     @Override
-    public void paintBorder(Graphics g) {
-        Graphics2D g2 = DrawService.init(g);
-        g2.setColor(getBackground());
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), DrawService.RoundingDiameter, DrawService.RoundingDiameter);
+    public String toString() {
+        return key + " - " + code;
     }
 }

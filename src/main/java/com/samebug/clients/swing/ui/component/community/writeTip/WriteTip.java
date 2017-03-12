@@ -16,6 +16,8 @@
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
+import com.samebug.clients.common.ui.component.form.FormError;
+import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
@@ -24,10 +26,11 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 public final class WriteTip extends JComponent implements IHelpOthersCTA {
-    private final IHelpOthersCTA.Model model;
-    private final CTA_TYPE ctaType;
+    final IHelpOthersCTA.Model model;
+    final CTA_TYPE ctaType;
 
     private WriteTipCTAScreen ctaScreen;
     private WriteTipScreen tipScreen;
@@ -40,32 +43,44 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
         changeToClosedState();
     }
 
-    private void changeToOpenState() {
+    @Override
+    public void startPostTip() {
+        if (tipScreen == null) return;
+        tipScreen.actionRow.sendButton.setText("loading...");
+    }
+
+    @Override
+    public void interruptPostTip() {
+        if (tipScreen == null) return;
+        tipScreen.actionRow.sendButton.setText("Post tip");
+    }
+
+    @Override
+    public void successPostTip() {
+        changeToClosedState();
+    }
+
+    @Override
+    public void failPostTipWithFormError(List<FormError> errors) throws FormMismatchException {
+        if (tipScreen != null) tipScreen.setFormErrors(errors);
+    }
+
+    public enum CTA_TYPE {
+        SMALL, LARGE_FOR_TIP_HITS, LARGE_FOR_WEB_HITS
+    }
+
+    void changeToOpenState() {
         assert tipScreen == null : "Tip screen should not be open";
-        tipScreen = new WriteTipScreen(model.usersWaitingHelp);
+        tipScreen = new WriteTipScreen(this);
         removeAll();
         ctaScreen = null;
         add(tipScreen);
-
-        tipScreen.actionRow.sendButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // TODO ugh
-                getListener().postTip(WriteTip.this, tipScreen.tipArea.borderedArea.getText());
-            }
-        });
-        tipScreen.actionRow.cancelButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                changeToClosedState();
-            }
-        });
 
         revalidate();
         repaint();
     }
 
-    private void changeToClosedState() {
+    void changeToClosedState() {
         assert ctaScreen == null : "CTA screen should not be open";
         ctaScreen = createCTAScreen();
         removeAll();
@@ -81,26 +96,6 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
 
         revalidate();
         repaint();
-    }
-
-    @Override
-    public void startPostTip() {
-        tipScreen.actionRow.sendButton.setText("loading...");
-    }
-
-    @Override
-    public void interruptPostTip() {
-        tipScreen.actionRow.sendButton.setText("Post tip");
-
-    }
-
-    @Override
-    public void successPostTip() {
-        changeToClosedState();
-    }
-
-    public enum CTA_TYPE {
-        SMALL, LARGE_FOR_TIP_HITS, LARGE_FOR_WEB_HITS
     }
 
     @NotNull
@@ -125,7 +120,7 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
         return s;
     }
 
-    private Listener getListener() {
+    Listener getListener() {
         return ListenerService.getListener(this, Listener.class);
     }
 

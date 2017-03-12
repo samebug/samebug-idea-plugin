@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
+import com.samebug.clients.common.ui.component.form.*;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.modules.MessageService;
@@ -23,8 +24,13 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
-public final class RequestTipScreen extends JComponent {
+public final class RequestTipScreen extends JComponent implements IForm {
+    // TODO
+    static final String TIP_FIELD_NAME = "tip";
+
     final WriteRequestArea writeRequestArea;
     final SamebugButton sendButton;
     final LinkLabel cancelButton;
@@ -53,5 +59,23 @@ public final class RequestTipScreen extends JComponent {
                 bugmateList.requestTip.changeToClosedState();
             }
         });
+    }
+
+    @Override
+    public void setFormErrors(List<FormError> errors) throws FormMismatchException {
+        List<FormError> mismatched = new ArrayList<FormError>();
+        for (FormError f : errors) {
+            try {
+                if (TIP_FIELD_NAME.equals(f.key)) writeRequestArea.setFormError(f.code);
+                else throw new FieldNameMismatchException(f.key);
+            } catch (ErrorCodeMismatchException e) {
+                mismatched.add(f);
+            } catch (FieldNameMismatchException e) {
+                mismatched.add(f);
+            }
+        }
+        if (!mismatched.isEmpty()) throw new FormMismatchException(mismatched);
+        revalidate();
+        repaint();
     }
 }

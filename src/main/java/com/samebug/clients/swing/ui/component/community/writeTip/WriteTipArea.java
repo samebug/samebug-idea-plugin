@@ -15,25 +15,45 @@
  */
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
+import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
+import com.samebug.clients.common.ui.component.form.IFormField;
 import com.samebug.clients.swing.ui.base.form.LengthRestrictedArea;
+import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 
-public final class WriteTipArea extends JComponent {
+public final class WriteTipArea extends JComponent implements IFormField {
     static final int MaxCharacters = 140;
+    static final String ERROR_TOO_SHORT = "MESSAGE_TOO_SHORT";
+    static final String ERROR_TOO_LONG = "MESSAGE_TOO_LONG";
 
-    final int peopleToHelp;
+    final String placeholder;
     final BorderedArea borderedArea;
+    final ErrorLabel errorLabel;
 
-    public WriteTipArea(int peopleToHelp) {
-        this.peopleToHelp = peopleToHelp;
+    public WriteTipArea(String placeholder) {
+        this.placeholder = placeholder;
         borderedArea = new BorderedArea();
+        errorLabel = new ErrorLabel();
 
-        setLayout(new MigLayout("fillx", "0[fill]0", "0[]0"));
-        add(borderedArea);
+        setLayout(new MigLayout("fillx", "0[fill]0", "0[]0[]0"));
+        add(borderedArea, "cell 0 0");
+    }
+
+    public String getText() {
+        return borderedArea.getText();
+    }
+
+    public void setFormError(String errorCode) throws ErrorCodeMismatchException {
+        borderedArea.setError();
+        if (ERROR_TOO_SHORT.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.tip.write.error.tip.short"));
+        if (ERROR_TOO_LONG.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.tip.write.error.tip.long"));
+        else throw new ErrorCodeMismatchException(errorCode);
+        remove(errorLabel);
+        add(errorLabel, "cell 0 1");
     }
 
     final class BorderedArea extends LengthRestrictedArea {
@@ -46,12 +66,19 @@ public final class WriteTipArea extends JComponent {
 
         @Override
         protected EditableArea createEditableArea() {
-            return new EditableArea(MessageService.message("samebug.component.tip.write.placeholder", peopleToHelp));
+            return new EditableArea(placeholder);
         }
 
         @Override
         protected LengthCounter createLengthCounter() {
             return new LengthCounter(MaxCharacters);
+        }
+    }
+
+    final class ErrorLabel extends SamebugLabel {
+        public ErrorLabel() {
+            setForegroundColor(ColorService.TipForm.error);
+            setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
         }
     }
 }

@@ -15,8 +15,11 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
+import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
+import com.samebug.clients.common.ui.component.form.IFormField;
 import com.samebug.clients.swing.ui.base.form.LengthRestrictedArea;
 import com.samebug.clients.swing.ui.base.form.MaxCharactersConstraints;
+import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.component.tipRequest.ExceptionPreview;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.MessageService;
@@ -25,19 +28,36 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
 
-public final class WriteRequestArea extends JComponent {
+public final class WriteRequestArea extends JComponent implements IFormField {
     public static final int MaxOvershootCharacters = 200;
     public static final int MaxCharacters = 140;
+    static final String FIELD_TIP_LONG = "LONG";
 
-    final BorderedArea borderedArea;
     final BugmateList bugmateList;
+    final BorderedArea borderedArea;
+    final ErrorLabel errorLabel;
 
     public WriteRequestArea(BugmateList bugmateList) {
         this.bugmateList = bugmateList;
         borderedArea = new BorderedArea();
+        errorLabel = new ErrorLabel();
 
         setLayout(new MigLayout("fillx", "0[fill]0", "0[]0"));
         add(borderedArea);
+    }
+
+    @Override
+    public String getText() {
+        return borderedArea.getText();
+    }
+
+    @Override
+    public void setFormError(String errorCode) throws ErrorCodeMismatchException {
+        borderedArea.setError();
+        if (FIELD_TIP_LONG.equals(errorCode)) errorLabel.setText("DANG long!");
+        else throw new ErrorCodeMismatchException(errorCode);
+        remove(errorLabel);
+        add(errorLabel, "cell 0 1");
     }
 
     final class BorderedArea extends LengthRestrictedArea {
@@ -72,6 +92,13 @@ public final class WriteRequestArea extends JComponent {
                 setBackgroundColor(ColorService.Tip);
                 setForegroundColor(ColorService.TipText);
             }
+        }
+    }
+
+    final class ErrorLabel extends SamebugLabel {
+        public ErrorLabel() {
+            setForegroundColor(ColorService.NormalForm.error);
+            setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
         }
     }
 }
