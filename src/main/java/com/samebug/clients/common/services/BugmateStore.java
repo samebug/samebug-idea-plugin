@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.search.api.entities.BugmatesResult;
+import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

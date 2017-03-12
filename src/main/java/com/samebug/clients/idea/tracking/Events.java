@@ -23,8 +23,8 @@ import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.entities.search.DebugSessionInfo;
 import com.samebug.clients.common.entities.search.SearchInfo;
-import com.samebug.clients.common.search.api.entities.SearchResults;
-import com.samebug.clients.common.search.api.entities.tracking.TrackEvent;
+import com.samebug.clients.common.api.entities.search.SearchResults;
+import com.samebug.clients.common.api.entities.tracking.TrackEvent;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.Nullable;
 

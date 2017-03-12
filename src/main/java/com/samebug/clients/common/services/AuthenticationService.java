@@ -15,10 +15,10 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.search.api.client.ClientResponse;
-import com.samebug.clients.common.search.api.client.SamebugClient;
-import com.samebug.clients.common.search.api.entities.UserInfo;
-import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.common.api.client.ClientResponse;
+import com.samebug.clients.common.api.client.SamebugClient;
+import com.samebug.clients.common.api.entities.UserInfo;
+import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.Nullable;
 
 public final class AuthenticationService {

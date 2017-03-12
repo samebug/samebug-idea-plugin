@@ -15,11 +15,17 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.search.api.client.ClientResponse;
-import com.samebug.clients.common.search.api.client.SamebugClient;
-import com.samebug.clients.common.search.api.entities.Exception;
-import com.samebug.clients.common.search.api.entities.*;
-import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.common.api.client.ClientResponse;
+import com.samebug.clients.common.api.client.SamebugClient;
+import com.samebug.clients.common.api.entities.Exception;
+import com.samebug.clients.common.api.entities.search.Search;
+import com.samebug.clients.common.api.entities.search.StackTraceSearch;
+import com.samebug.clients.common.api.entities.search.TextSearch;
+import com.samebug.clients.common.api.entities.solution.MarkResponse;
+import com.samebug.clients.common.api.entities.solution.RestHit;
+import com.samebug.clients.common.api.entities.solution.Solutions;
+import com.samebug.clients.common.api.entities.solution.Tip;
+import com.samebug.clients.common.api.exceptions.SamebugClientException;
 
 public final class SolutionService {
     final ClientService clientService;

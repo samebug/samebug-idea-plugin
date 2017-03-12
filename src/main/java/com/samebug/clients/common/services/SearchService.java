@@ -15,10 +15,10 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.search.api.client.ClientResponse;
-import com.samebug.clients.common.search.api.client.SamebugClient;
-import com.samebug.clients.common.search.api.entities.SearchResults;
-import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.common.api.client.ClientResponse;
+import com.samebug.clients.common.api.client.SamebugClient;
+import com.samebug.clients.common.api.entities.search.SearchResults;
+import com.samebug.clients.common.api.exceptions.SamebugClientException;
 
 public final class SearchService {
     final ClientService clientService;
@@ -37,15 +37,6 @@ public final class SearchService {
                 new ClientService.ConnectionAwareHttpRequest<SearchResults>() {
                     ClientResponse<SearchResults> request() {
                         return client.searchSolutions(trace);
-                    }
-
-                    protected void start() {
-                    }
-
-                    protected void success(SearchResults result) {
-                    }
-
-                    protected void fail(SamebugClientException e) {
                     }
                 };
         return clientService.execute(requestHandler);

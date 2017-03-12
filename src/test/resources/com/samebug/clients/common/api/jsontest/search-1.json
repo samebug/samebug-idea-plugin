@@ -1,0 +1,398 @@
+{
+  "tips": [
+    {
+      "solutionId": 2936466,
+      "solution": {
+        "type": "tip",
+        "author": {
+          "name": "rp",
+          "url": "https://samebug.io/user/2/rp",
+          "avatarUrl": "https://samebug.io/avatars/777"
+        },
+        "createdAt": 1488312548571,
+        "tip": "hello",
+        "via": null
+      },
+      "stackTraceId": "a601dc18024613d68608d98ea83cfdb4",
+      "matchLevel": 4,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 2,
+        "slug": "rp",
+        "displayName": "rp",
+        "avatarUrl": "https://samebug.io/avatars/777",
+        "defaultWorkspaceId": 2
+      },
+      "exception": {
+        "typeName": "java.lang.NoSuchMethodError",
+        "message": "org.scalactic.Requirements$RequirementsHelper.macroRequireNonNull([Ljava/lang/String;[Ljava/lang/Object;Lorg/scalactic/Prettifier;Lorg/scalactic/source/Position;)V"
+      },
+      "tagged": true
+    },
+    {
+      "solutionId": 2936467,
+      "solution": {
+        "type": "tip",
+        "author": {
+          "name": "rp",
+          "url": "https://samebug.io/user/2/rp",
+          "avatarUrl": "https://samebug.io/avatars/777"
+        },
+        "createdAt": 1488313329012,
+        "tip": "halló ittvagyok",
+        "via": null
+      },
+      "stackTraceId": "a601dc18024613d68608d98ea83cfdb4",
+      "matchLevel": 4,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 2,
+        "slug": "rp",
+        "displayName": "rp",
+        "avatarUrl": "https://samebug.io/avatars/777",
+        "defaultWorkspaceId": 2
+      },
+      "exception": {
+        "typeName": "java.lang.NoSuchMethodError",
+        "message": "org.scalactic.Requirements$RequirementsHelper.macroRequireNonNull([Ljava/lang/String;[Ljava/lang/Object;Lorg/scalactic/Prettifier;Lorg/scalactic/source/Position;)V"
+      },
+      "tagged": true
+    }
+  ],
+  "references": [
+    {
+      "solutionId": 78368,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "Stack Overflow",
+          "icon": "stackoverflow"
+        },
+        "author": {
+          "name": "Nishan",
+          "url": "http://stackoverflow.com/users/4274854",
+          "avatarUrl": null
+        },
+        "createdAt": 1418425774060,
+        "title": "NoSuchMethodError while running Scalatest",
+        "url": "http://stackoverflow.com/questions/27453552"
+      },
+      "stackTraceId": "a601dc18024613d68608d98ea83cfdb4",
+      "matchLevel": 4,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "java.lang.NoSuchMethodError",
+        "message": "scala.collection.immutable.$colon$colon.hd$1()Ljava/lang/Object;"
+      },
+      "tagged": false
+    },
+    {
+      "solutionId": 12896,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "GitHub",
+          "icon": "github"
+        },
+        "author": {
+          "name": "vasily-kirichenko",
+          "url": "https://github.com/vasily-kirichenko",
+          "avatarUrl": "https://github.com/vasily-kirichenko.png"
+        },
+        "createdAt": 1408802131000,
+        "title": "Cannot run akka tests inside Intellij",
+        "url": "https://github.com/scalatest/scalatest/issues/373"
+      },
+      "stackTraceId": "a601dc18024613d68608d98ea83cfdb4",
+      "matchLevel": 4,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "java.lang.NoSuchMethodError",
+        "message": "scala.runtime.ObjectRef.create(Ljava/lang/Object;)Lscala/runtime/ObjectRef;"
+      },
+      "tagged": false
+    },
+    {
+      "solutionId": 361765,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "Stack Overflow",
+          "icon": "stackoverflow"
+        },
+        "author": {
+          "name": "rabejens",
+          "url": "http://stackoverflow.com/users/1474073",
+          "avatarUrl": null
+        },
+        "createdAt": 1436977181000,
+        "title": "Some ScalaTests do not run from IDEA - NoSuchMethodError",
+        "url": "http://stackoverflow.com/questions/31435820"
+      },
+      "stackTraceId": "a601dc18024613d68608d98ea83cfdb4",
+      "matchLevel": 4,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "java.lang.NoSuchMethodError",
+        "message": "scala.runtime.ObjectRef.create(Ljava/lang/Object;)Lscala/runtime/ObjectRef;"
+      },
+      "tagged": false
+    },
+    {
+      "solutionId": 690198,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "YouTrack",
+          "icon": "youtrack"
+        },
+        "author": null,
+        "createdAt": 1412412016647,
+        "title": "Running Scala 2.11/ScalaTest 2.2.1 causes incorrect highlighted errors",
+        "url": "https://youtrack.jetbrains.com/issue/SCL-7654"
+      },
+      "stackTraceId": "a601dc18024613d68608d98ea83cfdb4",
+      "matchLevel": 4,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "java.lang.NoSuchMethodError",
+        "message": "scala.runtime.ObjectRef.create(Ljava/lang/Object;)Lscala/runtime/ObjectRef;"
+      },
+      "tagged": false
+    },
+    {
+      "solutionId": 2734839,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "Stack Overflow",
+          "icon": "stackoverflow"
+        },
+        "author": {
+          "name": "user2705433",
+          "url": "http://stackoverflow.com/users/2705433",
+          "avatarUrl": null
+        },
+        "createdAt": 1482159436000,
+        "title": "Unable to run scala test",
+        "url": "http://stackoverflow.com/questions/41225333"
+      },
+      "stackTraceId": "a601dc18024613d68608d98ea83cfdb4",
+      "matchLevel": 4,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "java.lang.NoSuchMethodError",
+        "message": "scala.Predef$.refArrayOps([Ljava/lang/Object;)Lscala/collection/mutable/ArrayOps;"
+      },
+      "tagged": false
+    },
+    {
+      "solutionId": 336024,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "Google Groups",
+          "icon": "googlegroups"
+        },
+        "author": {
+          "name": "Alan Hardy",
+          "url": null,
+          "avatarUrl": null
+        },
+        "createdAt": 1265119320000,
+        "title": "IntelliJ IDEA 9 + ScalaTest",
+        "url": "https://groups.google.com/d/topic/scalatest-users/vt60NrJRdgc"
+      },
+      "stackTraceId": "ebfc4db8a3ce6bf9a1189c5e3bd84105",
+      "matchLevel": 1,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "java.lang.NoSuchMethodError",
+        "message": "scala.reflect.Manifest$.Int()Ljava/lang/\nObject;"
+      },
+      "tagged": false
+    },
+    {
+      "solutionId": 117900,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "Stack Overflow",
+          "icon": "stackoverflow"
+        },
+        "author": {
+          "name": "Can't Tell",
+          "url": "http://stackoverflow.com/users/672841",
+          "avatarUrl": null
+        },
+        "createdAt": 1414948017910,
+        "title": "Exception Occurs when Running Scala Test from Eclipse",
+        "url": "http://stackoverflow.com/questions/26701992"
+      },
+      "stackTraceId": "c79b43363d536d670d9dc02295171957",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "java.lang.reflect.InvocationTargetException",
+        "message": null
+      },
+      "tagged": false
+    },
+    {
+      "solutionId": 529416,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "askubuntu.com",
+          "icon": "web"
+        },
+        "author": null,
+        "createdAt": 1468408220866,
+        "title": "java - scala ide (eclipse) and sbt project - Ask Ubuntu",
+        "url": "http://askubuntu.com/questions/571604/scala-ide-eclipse-and-sbt-project"
+      },
+      "stackTraceId": "c79b43363d536d670d9dc02295171957",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "java.lang.reflect.InvocationTargetException",
+        "message": null
+      },
+      "tagged": false
+    },
+    {
+      "solutionId": 2438007,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "Google Groups",
+          "icon": "googlegroups"
+        },
+        "author": {
+          "name": "Unknown author",
+          "url": null,
+          "avatarUrl": null
+        },
+        "createdAt": 1409692937000,
+        "title": "Is there a better way for \"Scala Library Container\"?",
+        "url": "https://groups.google.com/d/topic/scala-ide-user/awojFjgT5u4"
+      },
+      "stackTraceId": "c79b43363d536d670d9dc02295171957",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "java.lang.reflect.InvocationTargetException",
+        "message": null
+      },
+      "tagged": false
+    },
+    {
+      "solutionId": 2462906,
+      "solution": {
+        "type": "reference",
+        "source": {
+          "name": "Ask Ubuntu",
+          "icon": "stackexchange-askubuntu"
+        },
+        "author": {
+          "name": "Donbeo",
+          "url": "http://askubuntu.com/users/207234",
+          "avatarUrl": null
+        },
+        "createdAt": 1420789940000,
+        "title": "scala ide (eclipse) and sbt project",
+        "url": "http://askubuntu.com/questions/571604"
+      },
+      "stackTraceId": "c79b43363d536d670d9dc02295171957",
+      "matchLevel": 0,
+      "score": 0,
+      "markId": null,
+      "createdBy": {
+        "id": 7,
+        "slug": "samebug-crawler",
+        "displayName": "Samebug",
+        "avatarUrl": "https://samebug.io/avatars/7/3",
+        "defaultWorkspaceId": 3
+      },
+      "exception": {
+        "typeName": "java.lang.reflect.InvocationTargetException",
+        "message": null
+      },
+      "tagged": false
+    }
+  ]
+}

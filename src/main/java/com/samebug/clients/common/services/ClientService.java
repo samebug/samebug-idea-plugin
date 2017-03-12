@@ -17,9 +17,9 @@ package com.samebug.clients.common.services;
 
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.common.search.api.client.*;
-import com.samebug.clients.common.search.api.entities.tracking.TrackEvent;
-import com.samebug.clients.common.search.api.exceptions.SamebugClientException;
+import com.samebug.clients.common.api.client.*;
+import com.samebug.clients.common.api.entities.tracking.TrackEvent;
+import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicBoolean;

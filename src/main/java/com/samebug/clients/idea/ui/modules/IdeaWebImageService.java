@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.ui.modules;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.samebug.clients.common.search.api.WebUrlBuilder;
+import com.samebug.clients.common.api.WebUrlBuilder;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.WebImageService;
 import org.jetbrains.annotations.NotNull;

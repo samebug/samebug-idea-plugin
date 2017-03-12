@@ -18,7 +18,7 @@ package com.samebug.clients.common.services;
 import com.samebug.clients.common.entities.search.RequestedSearch;
 import com.samebug.clients.common.entities.search.SavedSearch;
 import com.samebug.clients.common.entities.search.SearchInfo;
-import com.samebug.clients.common.search.api.entities.SearchResults;
+import com.samebug.clients.common.api.entities.search.SearchResults;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

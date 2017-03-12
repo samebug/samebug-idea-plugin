@@ -24,7 +24,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.entities.search.DebugSessionInfo;
-import com.samebug.clients.common.search.api.LogScannerFactory;
+import com.samebug.clients.common.api.LogScannerFactory;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.search.StackTraceMatcherFactory;
