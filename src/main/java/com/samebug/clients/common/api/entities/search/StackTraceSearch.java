@@ -16,7 +16,6 @@
 package com.samebug.clients.common.api.entities.search;
 
 import com.samebug.clients.common.api.entities.StackTraceWithBreadCrumbs;
-import com.samebug.clients.common.api.entities.search.Search;
 import org.jetbrains.annotations.NotNull;
 
 public final class StackTraceSearch extends Search {

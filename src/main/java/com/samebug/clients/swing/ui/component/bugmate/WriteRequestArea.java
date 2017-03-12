@@ -20,7 +20,7 @@ import com.samebug.clients.common.ui.component.form.IFormField;
 import com.samebug.clients.swing.ui.base.form.LengthRestrictedArea;
 import com.samebug.clients.swing.ui.base.form.MaxCharactersConstraints;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
-import com.samebug.clients.swing.ui.component.tipRequest.ExceptionPreview;
+import com.samebug.clients.swing.ui.component.helpRequest.ExceptionPreview;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;

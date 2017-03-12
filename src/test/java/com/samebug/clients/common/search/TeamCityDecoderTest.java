@@ -1,7 +1,6 @@
 package com.samebug.clients.common.search;
 
 import com.samebug.TestUtils;
-import com.samebug.clients.common.search.TeamCityDecoder;
 import org.junit.Ignore;
 import org.junit.Test;
 

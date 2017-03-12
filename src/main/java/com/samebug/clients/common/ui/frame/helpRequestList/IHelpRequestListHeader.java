@@ -13,23 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.api.entities;
+package com.samebug.clients.common.ui.frame.helpRequestList;
 
-import org.jetbrains.annotations.NotNull;
+public interface IHelpRequestListHeader {
+    final class Model {
+        public final int numberOfHelpRequests;
 
-public final class StackTraceWithBreadCrumbs {
-    @NotNull
-    private String stackTraceId;
-    @NotNull
-    private Exception trace;
+        public Model(Model rhs) {
+            this(rhs.numberOfHelpRequests);
+        }
 
-    @NotNull
-    public String getStackTraceId() {
-        return stackTraceId;
-    }
-
-    @NotNull
-    public Exception getTrace() {
-        return trace;
+        public Model(int numberOfHelpRequests) {
+            this.numberOfHelpRequests = numberOfHelpRequests;
+        }
     }
 }

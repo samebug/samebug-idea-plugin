@@ -13,23 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.api.entities;
+package com.samebug.clients.common.api.entities.helpRequest;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public final class StackTraceWithBreadCrumbs {
-    @NotNull
-    private String stackTraceId;
-    @NotNull
-    private Exception trace;
+import java.util.Date;
 
+public final class HelpRequest {
     @NotNull
-    public String getStackTraceId() {
-        return stackTraceId;
-    }
+    public final String id;
 
+    public final int searchId;
     @NotNull
-    public Exception getTrace() {
-        return trace;
+    public final String context;
+    @NotNull
+    public final Date createdAt;
+    @Nullable
+    public final Date revokedAt;
+
+    public HelpRequest(@NotNull String id, int searchId, @NotNull String context, @NotNull Date createdAt, @Nullable Date revokedAt) {
+        this.id = id;
+        this.searchId = searchId;
+        this.context = context;
+        this.createdAt = createdAt;
+        this.revokedAt = revokedAt;
     }
 }

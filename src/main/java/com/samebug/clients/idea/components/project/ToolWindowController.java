@@ -31,10 +31,10 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.FocusListener;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
 import com.samebug.clients.idea.ui.controller.authentication.AuthenticationController;
+import com.samebug.clients.idea.ui.controller.helpRequest.HelpRequestController;
+import com.samebug.clients.idea.ui.controller.helpRequestList.HelpRequestListController;
 import com.samebug.clients.idea.ui.controller.intro.IntroFrameController;
 import com.samebug.clients.idea.ui.controller.solution.SolutionsController;
-import com.samebug.clients.idea.ui.controller.tipRequest.TipRequestController;
-import com.samebug.clients.idea.ui.controller.tipRequestList.TipRequestListController;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,9 +53,9 @@ final public class ToolWindowController implements FocusListener, Disposable {
     @Nullable
     AuthenticationController authenticationFrame;
     @Nullable
-    TipRequestController tipRequestFrame;
+    HelpRequestController helpRequestFrame;
     @Nullable
-    TipRequestListController tipRequestListFrame;
+    HelpRequestListController helpRequestListFrame;
     @Nullable
     SolutionsController solutionFrame;
 
@@ -87,7 +87,7 @@ final public class ToolWindowController implements FocusListener, Disposable {
 
         introFrame = new IntroFrameController(this, project);
         authenticationFrame = new AuthenticationController(this, project);
-        tipRequestListFrame = new TipRequestListController(this, project);
+        helpRequestListFrame = new HelpRequestListController(this, project);
         // TODO load tip request list
 
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
@@ -98,13 +98,13 @@ final public class ToolWindowController implements FocusListener, Disposable {
             content = contentFactory.createContent(introFrame.getControlPanel(), MessageService.message("samebug.toolwindow.intro.tabName"), false);
         }
         toolWindow.getContentManager().addContent(content);
-        toolWindow.getContentManager().addContent(contentFactory.createContent(tipRequestListFrame.getControlPanel(), MessageService.message("samebug.toolwindow.tipRequestList.tabName"), false));
+        toolWindow.getContentManager().addContent(contentFactory.createContent(helpRequestListFrame.getControlPanel(), MessageService.message("samebug.toolwindow.helpRequestList.tabName"), false));
     }
 
-    public void focusOnTipRequest(/* TODO request id*/) {
+    public void focusOnHelpRequest(/* TODO request id*/) {
         // TODO remove other tabs?
-        final TipRequestController tab = getOrCreateTipRequestFrame(0);
-        focusOnTab(tab.getControlPanel(), MessageService.message("samebug.toolwindow.tipRequest.tabName"));
+        final HelpRequestController tab = getOrCreateHelpRequestFrame(0);
+        focusOnTab(tab.getControlPanel(), MessageService.message("samebug.toolwindow.helpRequest.tabName"));
     }
 
     @Override
@@ -128,15 +128,15 @@ final public class ToolWindowController implements FocusListener, Disposable {
     }
 
     @NotNull
-    TipRequestController getOrCreateTipRequestFrame(int tipRequestId) {
+    HelpRequestController getOrCreateHelpRequestFrame(int helpRequestId) {
         ApplicationManager.getApplication().assertIsDispatchThread();
 
-        if (tipRequestFrame != null && tipRequestFrame.getTipRequestId() == tipRequestId) {
-            return tipRequestFrame;
+        if (helpRequestFrame != null && helpRequestFrame.getHelpRequestId() == helpRequestId) {
+            return helpRequestFrame;
         } else {
-            tipRequestFrame = new TipRequestController(this, project);
+            helpRequestFrame = new HelpRequestController(this, project);
             // TODO load
-            return tipRequestFrame;
+            return helpRequestFrame;
         }
     }
 
@@ -144,10 +144,10 @@ final public class ToolWindowController implements FocusListener, Disposable {
     public void dispose() {
         if (introFrame != null) Disposer.dispose(introFrame);
         if (authenticationFrame != null) Disposer.dispose(authenticationFrame);
-        if (tipRequestListFrame != null) Disposer.dispose(tipRequestListFrame);
+        if (helpRequestListFrame != null) Disposer.dispose(helpRequestListFrame);
 
         closeAllSolutionFrames();
-        closeAllTipRequestFrames();
+        closeAllHelpRequestFrames();
     }
 
     public void closeSolutionFrame(final int searchId) {
@@ -158,12 +158,12 @@ final public class ToolWindowController implements FocusListener, Disposable {
         if (solutionFrame != null) Disposer.dispose(solutionFrame);
     }
 
-    public void closeTipRequestFrame(final int tipRequestId) {
-        if (tipRequestFrame != null && tipRequestFrame.getTipRequestId() == tipRequestId) Disposer.dispose(tipRequestFrame);
+    public void closeHelpRequestFrame(final int helpRequestId) {
+        if (helpRequestFrame != null && helpRequestFrame.getHelpRequestId() == helpRequestId) Disposer.dispose(helpRequestFrame);
     }
 
-    public void closeAllTipRequestFrames() {
-        if (tipRequestFrame != null) Disposer.dispose(tipRequestFrame);
+    public void closeAllHelpRequestFrames() {
+        if (helpRequestFrame != null) Disposer.dispose(helpRequestFrame);
     }
 
     private void focusOnTab(JComponent tab, String tabTitle) {

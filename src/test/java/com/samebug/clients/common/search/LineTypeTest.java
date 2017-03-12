@@ -1,6 +1,5 @@
 package com.samebug.clients.common.search;
 
-import com.samebug.clients.common.search.LineType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

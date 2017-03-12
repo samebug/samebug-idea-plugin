@@ -2,7 +2,6 @@ package com.samebug.clients.common.search;
 
 import com.samebug.TestUtils;
 import com.samebug.clients.common.api.StackTraceListener;
-import com.samebug.clients.common.search.StackTraceMatcher;
 import org.junit.Before;
 import org.junit.Test;
 

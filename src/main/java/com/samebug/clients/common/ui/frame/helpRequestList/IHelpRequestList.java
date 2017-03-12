@@ -13,23 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.api.entities;
+package com.samebug.clients.common.ui.frame.helpRequestList;
 
-import org.jetbrains.annotations.NotNull;
+import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
 
-public final class StackTraceWithBreadCrumbs {
-    @NotNull
-    private String stackTraceId;
-    @NotNull
-    private Exception trace;
+import java.util.List;
 
-    @NotNull
-    public String getStackTraceId() {
-        return stackTraceId;
+public interface IHelpRequestList {
+    final class Model {
+        public final List<IHelpRequestPreview.Model> requestPreviews;
+
+        public Model(Model rhs) {
+            this(rhs.requestPreviews);
+        }
+
+        public Model(List<IHelpRequestPreview.Model> requestPreviews) {
+            this.requestPreviews = requestPreviews;
+        }
     }
 
-    @NotNull
-    public Exception getTrace() {
-        return trace;
+    interface Listener {
+        void moreClicked();
     }
+
 }
