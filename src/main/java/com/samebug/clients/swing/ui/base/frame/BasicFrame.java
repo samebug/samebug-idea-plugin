@@ -18,7 +18,6 @@ package com.samebug.clients.swing.ui.base.frame;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.swing.ui.base.animation.LoadingAnimation;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
-import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.CenteredMultilineLabel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.modules.IconService;
@@ -111,27 +110,41 @@ public abstract class BasicFrame extends ErrorBarPane implements IFrame {
         public ErrorPanel(String description, String buttonLabel, MouseListener mouseListener) {
             final JLabel alertImage = new JLabel(IconService.alert());
             final CenteredMultilineLabel label = new CenteredMultilineLabel();
-            final SamebugButton button = new SamebugButton(buttonLabel, false);
             label.setText(description);
-            button.addMouseListener(mouseListener);
+            final SamebugButton reloadButton = new SamebugButton(MessageService.message("samebug.component.error.general.button"), false);
+            final MouseListener reloadAction = new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    getListener().reload();
+                }
+            };
+            reloadButton.addMouseListener(reloadAction);
 
-            setLayout(new MigLayout("fillx", "0[]0", "0:push[]30[]30[]0:push"));
+            // TODO this is a bit hackish...
+            if (buttonLabel != null && mouseListener != null) {
+                final SamebugButton alternativeButton = new SamebugButton(buttonLabel, false);
+                alternativeButton.addMouseListener(mouseListener);
+                setLayout(new MigLayout("fillx", "0[]0", "0:push[]30[]30[]30[]0:push"));
+                add(alternativeButton, "cell 0 2, al center");
+                add(reloadButton, "cell 0 3, al center");
+            } else {
+                setLayout(new MigLayout("fillx", "0[]0", "0:push[]30[]30[]0:push"));
+                add(reloadButton, "cell 0 2, al center");
+            }
             add(alertImage, "cell 0 0, wmin 0, growx");
             add(label, "cell 0 1, wmin 0, growx");
-            add(button, "cell 0 2, al center");
         }
     }
 
     private final class ConnectionErrorPanel extends ErrorPanel {
         public ConnectionErrorPanel() {
-            super(MessageService.message("samebug.component.error.connection.description"),
-                    MessageService.message("samebug.component.error.connection.button"),
-                    new MouseAdapter() {
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
-                            getListener().reload();
-                        }
-                    });
+            super(MessageService.message("samebug.component.error.connection.description"), null, null);
+        }
+    }
+
+    private final class GeneralErrorPanel extends ErrorPanel {
+        public GeneralErrorPanel() {
+            super(MessageService.message("samebug.component.error.general.description"), null, null);
         }
     }
 
@@ -156,19 +169,6 @@ public abstract class BasicFrame extends ErrorBarPane implements IFrame {
                         @Override
                         public void mouseClicked(MouseEvent e) {
                             getListener().openSamebugSettings();
-                        }
-                    });
-        }
-    }
-
-    private final class GeneralErrorPanel extends ErrorPanel {
-        public GeneralErrorPanel() {
-            super(MessageService.message("samebug.component.error.general.description"),
-                    MessageService.message("samebug.component.error.general.button"),
-                    new MouseAdapter() {
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
-                            getListener().reload();
                         }
                     });
         }

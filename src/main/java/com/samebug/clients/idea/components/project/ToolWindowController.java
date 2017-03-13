@@ -31,13 +31,13 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.FocusListener;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
 import com.samebug.clients.idea.ui.controller.authentication.AuthenticationController;
+import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.helpRequest.HelpRequestController;
 import com.samebug.clients.idea.ui.controller.helpRequestList.HelpRequestListController;
 import com.samebug.clients.idea.ui.controller.intro.IntroFrameController;
 import com.samebug.clients.idea.ui.controller.solution.SolutionsController;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -93,7 +93,9 @@ final public class ToolWindowController implements FocusListener, Disposable {
             content = contentFactory.createContent(introFrame.getControlPanel(), MessageService.message("samebug.toolwindow.intro.tabName"), false);
         }
         toolWindow.getContentManager().addContent(content);
-        toolWindow.getContentManager().addContent(contentFactory.createContent(helpRequestListFrame.getControlPanel(), MessageService.message("samebug.toolwindow.helpRequestList.tabName"), false));
+        Content helpRequestListContent = contentFactory.createContent(
+                helpRequestListFrame.getControlPanel(), MessageService.message("samebug.toolwindow.helpRequestList.tabName"), false);
+        toolWindow.getContentManager().addContent(helpRequestListContent);
     }
 
     public void focusOnHelpRequestList() {
@@ -119,6 +121,7 @@ final public class ToolWindowController implements FocusListener, Disposable {
         if (solutionFrame != null && solutionFrame.getSearchId() == searchId) {
             return solutionFrame;
         } else {
+            if (solutionFrame != null) closeTab(solutionFrame);
             solutionFrame = new SolutionsController(this, project, searchId);
             solutionFrame.load();
             return solutionFrame;
@@ -132,6 +135,7 @@ final public class ToolWindowController implements FocusListener, Disposable {
         if (helpRequestFrame != null && helpRequestFrame.getHelpRequestId().equals(helpRequestId)) {
             return helpRequestFrame;
         } else {
+            if (helpRequestFrame != null) closeTab(helpRequestFrame);
             helpRequestFrame = new HelpRequestController(this, project, helpRequestId);
             helpRequestFrame.load();
             return helpRequestFrame;
@@ -143,27 +147,17 @@ final public class ToolWindowController implements FocusListener, Disposable {
         if (introFrame != null) Disposer.dispose(introFrame);
         if (authenticationFrame != null) Disposer.dispose(authenticationFrame);
         if (helpRequestListFrame != null) Disposer.dispose(helpRequestListFrame);
-
-//        closeAllSolutionFrames();
-//        closeAllHelpRequestFrames();
+        if (solutionFrame != null) closeTab(solutionFrame);
+        if (helpRequestFrame != null) closeTab(helpRequestFrame);
     }
 
-    public void closeSolutionFrame(final int searchId) {
-        if (solutionFrame != null && solutionFrame.getSearchId() == searchId) Disposer.dispose(solutionFrame);
+    public void closeTab(@NotNull final BaseFrameController frame) {
+        final ToolWindow toolWindow = getToolWindow();
+        final ContentManager toolwindowCM = toolWindow.getContentManager();
+        toolwindowCM.removeContent(toolwindowCM.getContent(frame.getControlPanel()), true);
     }
 
-    public void closeAllSolutionFrames() {
-        if (solutionFrame != null) Disposer.dispose(solutionFrame);
-    }
-
-    public void closeHelpRequestFrame(final String helpRequestId) {
-        if (helpRequestFrame != null && helpRequestFrame.getHelpRequestId().equals(helpRequestId)) Disposer.dispose(helpRequestFrame);
-    }
-
-    public void closeAllHelpRequestFrames() {
-        if (helpRequestFrame != null) Disposer.dispose(helpRequestFrame);
-    }
-
+    // TODO needs refactor
     private void focusOnTab(JComponent tab, String tabTitle) {
         ApplicationManager.getApplication().assertIsDispatchThread();
         final ToolWindow toolWindow = getToolWindow();
@@ -176,6 +170,13 @@ final public class ToolWindowController implements FocusListener, Disposable {
             Content newToolWindowTab = contentFactory.createContent(tab, tabTitle, false);
             toolwindowCM.addContent(newToolWindowTab);
             toolwindowCM.setSelectedContent(newToolWindowTab);
+            // TODO somewhy the content of the tab does not show up first, only after some interaction (clicking the tab title again, resize toolwindow, etc).
+            // Not sure if it is bug in intellij ContentManagerImpl.setSelectedContent() or I'm missing something.
+            // This requestFocus seems to fix it, but
+            //   - I don't know why
+            //   - I don't know if it has any side effects
+            //   - The content still won't show up for HelpRequestFrameList when you simply click on the tab title, and not on the messages on the profile.
+            toolwindowCM.requestFocus(newToolWindowTab, true);
         }
         toolWindow.show(null);
     }
