@@ -26,11 +26,12 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 
 public final class ConnectionStatusController implements ClientService.ConnectionStatusListener, Disposable {
     final IFrame frame;
+    private final MessageBusConnection projectConnection;
 
     public ConnectionStatusController(IFrame frame, MessageBus messageBus) {
         this.frame = frame;
 
-        MessageBusConnection projectConnection = messageBus.connect(this);
+        projectConnection = messageBus.connect(this);
         projectConnection.subscribe(ClientService.ConnectionStatusListener.TOPIC, this);
 
         // initialize the error bars if necessary
@@ -87,6 +88,6 @@ public final class ConnectionStatusController implements ClientService.Connectio
 
     @Override
     public void dispose() {
-
+        projectConnection.dispose();
     }
 }

@@ -22,20 +22,22 @@ import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.api.entities.UserInfo;
 import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListFrame;
 import com.samebug.clients.idea.components.project.ToolWindowController;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.swing.ui.frame.helpRequestList.HelpRequestListFrame;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public final class HelpRequestListController extends BaseFrameController<IHelpRequestListFrame> implements Disposable {
     final static Logger LOGGER = Logger.getInstance(HelpRequestListController.class);
 
+    final HelpRequestListListener frameListener;
+
     public HelpRequestListController(ToolWindowController twc, Project project) {
         super(twc, project, new HelpRequestListFrame());
+
+        frameListener = new HelpRequestListListener(this);
     }
 
     public void load() {
@@ -49,38 +51,19 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
     private void load(final Future<IncomingHelpRequests> helpRequestsTask,
                       final Future<UserInfo> userInfoTask,
                       final Future<UserStats> userStatsTask) {
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+        new LoadingTask() {
             @Override
-            public void run() {
-                try {
-                    try {
-                        final IHelpRequestListFrame.Model model = conversionService.convertHelpRequestListFrame(
-                                helpRequestsTask.get(), userInfoTask.get(), userStatsTask.get());
-                        ApplicationManager.getApplication().invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.loadingSucceeded(model);
-                            }
-                        });
-                    } catch (IllegalStateException e) {
-                        // TODO generic error, probably safe to retry (loadAll)
-                        LOGGER.warn("Failed to load user beforehand", e);
-                        ApplicationManager.getApplication().invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.loadingFailedWithGenericError();
-                            }
-                        });
-                    } catch (InterruptedException e) {
-                        handleInterruptedException(e);
-                    } catch (ExecutionException e) {
-                        handleExecutionException(e);
+            protected void load() throws Exception {
+                final IHelpRequestListFrame.Model model = conversionService.convertHelpRequestListFrame(
+                        helpRequestsTask.get(), userInfoTask.get(), userStatsTask.get());
+                ApplicationManager.getApplication().invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.loadingSucceeded(model);
                     }
-                } catch (final SamebugClientException e) {
-                    handleSamebugClientException(e);
-                }
+                });
             }
-        });
+        }.executeInBackground();
     }
 
 }

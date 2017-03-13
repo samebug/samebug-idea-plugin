@@ -74,37 +74,18 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
                       final Future<MatchingHelpRequest> helpRequestTask,
                       final Future<UserInfo> userInfoTask,
                       final Future<UserStats> userStatsTask) {
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+        new LoadingTask() {
             @Override
-            public void run() {
-                try {
-                    try {
-                        final IHelpRequestFrame.Model model = conversionService.convertHelpRequestFrame(
-                                solutionsTask.get(), helpRequestTask.get(), userInfoTask.get(), userStatsTask.get());
-                        ApplicationManager.getApplication().invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.loadingSucceeded(model);
-                            }
-                        });
-                    } catch (IllegalStateException e) {
-                        // TODO generic error, probably safe to retry (loadAll)
-                        LOGGER.warn("Failed to load user beforehand", e);
-                        ApplicationManager.getApplication().invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.loadingFailedWithGenericError();
-                            }
-                        });
-                    } catch (InterruptedException e) {
-                        handleInterruptedException(e);
-                    } catch (ExecutionException e) {
-                        handleExecutionException(e);
+            protected void load() throws Exception {
+                final IHelpRequestFrame.Model model = conversionService.convertHelpRequestFrame(
+                        solutionsTask.get(), helpRequestTask.get(), userInfoTask.get(), userStatsTask.get());
+                ApplicationManager.getApplication().invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.loadingSucceeded(model);
                     }
-                } catch (final SamebugClientException e) {
-                    handleSamebugClientException(e);
-                }
+                });
             }
-        });
+        }.executeInBackground();
     }
 }

@@ -58,22 +58,75 @@ public abstract class BaseFrameController<T extends IFrame> implements Disposabl
         concurrencyService = plugin.concurrencyService;
     }
 
-    protected void handleInterruptedException(InterruptedException e) {
-        // TODO not sure when could it happen, probably safe to retry
-        LOGGER.warn("Loading solutions frame interrupted", e);
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                view.loadingFailedWithRetriableError();
-            }
-        });
-    }
+    protected abstract class LoadingTask {
+        protected abstract void load() throws java.lang.Exception;
 
-    protected void handleExecutionException(ExecutionException e) throws SamebugClientException {
-        if (e.getCause() instanceof SamebugClientException) throw (SamebugClientException) e.getCause();
-        else {
-            // some of the executed tasks failed with an exception, that means a bug in the plugin
-            LOGGER.warn("Plugin-side error during loading solutions", e);
+        public void executeInBackground() {
+            ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        try {
+                            load();
+                        } catch (InterruptedException e) {
+                            handleInterruptedException(e);
+                        } catch (ExecutionException e) {
+                            handleExecutionException(e);
+                        }
+                    } catch (final SamebugClientException e) {
+                        handleSamebugClientException(e);
+                    } catch (final Exception e) {
+                        handleOtherException(e);
+                    }
+                }
+            });
+        }
+
+
+        protected void handleInterruptedException(InterruptedException e) {
+            // TODO not sure when could it happen, probably safe to retry
+            LOGGER.warn("Loading interrupted", e);
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    view.loadingFailedWithRetriableError();
+                }
+            });
+        }
+
+        protected void handleExecutionException(ExecutionException e) throws SamebugClientException {
+            if (e.getCause() instanceof SamebugClientException) throw (SamebugClientException) e.getCause();
+            else {
+                // some of the executed tasks failed with an exception, that means a bug in the plugin
+                LOGGER.warn("Plugin-side error during loading", e);
+                ApplicationManager.getApplication().invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.loadingFailedWithGenericError();
+                    }
+                });
+            }
+        }
+
+        protected void handleSamebugClientException(final SamebugClientException e) {
+            // TODO error with loading, bad connection, bad apikey, server error, etc
+            LOGGER.warn("Error during loading solutions", e);
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    if (e instanceof SamebugTimeout) view.loadingFailedWithRetriableError();
+                    else if (e instanceof UserUnauthenticated) view.loadingFailedWithAuthenticationError();
+                    else if (e instanceof UserUnauthorized) view.loadingFailedWithAuthorizationError();
+                    else if (e instanceof UnsuccessfulResponseStatus && ((UnsuccessfulResponseStatus) e).statusCode == 500) view.loadingFailedWithServerError();
+                    else if (e instanceof HttpError) view.loadingFailedWithNetworkError();
+                    else view.loadingFailedWithGenericError();
+                }
+            });
+        }
+
+        protected void handleOtherException(java.lang.Exception e) {
+            // anything can go wrong during the loading (e.g. missing json field)
+            LOGGER.warn("Unexpected exception during loading", e);
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
                 public void run() {
@@ -81,22 +134,6 @@ public abstract class BaseFrameController<T extends IFrame> implements Disposabl
                 }
             });
         }
-    }
-
-    protected void handleSamebugClientException(final SamebugClientException e) {
-        // TODO error with loading, bad connection, bad apikey, server error, etc
-        LOGGER.warn("Error during loading solutions", e);
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (e instanceof SamebugTimeout) view.loadingFailedWithRetriableError();
-                else if (e instanceof UserUnauthenticated) view.loadingFailedWithAuthenticationError();
-                else if (e instanceof UserUnauthorized) view.loadingFailedWithAuthorizationError();
-                else if (e instanceof UnsuccessfulResponseStatus && ((UnsuccessfulResponseStatus) e).statusCode == 500) view.loadingFailedWithServerError();
-                else if (e instanceof HttpError) view.loadingFailedWithNetworkError();
-                else view.loadingFailedWithGenericError();
-            }
-        });
     }
 
     @NotNull
@@ -108,5 +145,4 @@ public abstract class BaseFrameController<T extends IFrame> implements Disposabl
     public void dispose() {
         connectionStatusController.dispose();
     }
-
 }

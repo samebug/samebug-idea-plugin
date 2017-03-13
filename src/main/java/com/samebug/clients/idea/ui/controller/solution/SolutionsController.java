@@ -23,13 +23,12 @@ import com.samebug.clients.common.api.entities.UserInfo;
 import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
 import com.samebug.clients.common.api.entities.solution.Solutions;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
 import com.samebug.clients.idea.components.project.ToolWindowController;
+import com.samebug.clients.idea.ui.controller.component.ProfileController;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.swing.ui.frame.solution.SolutionFrame;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public final class SolutionsController extends BaseFrameController<ISolutionFrame> implements Disposable {
@@ -78,28 +77,18 @@ public final class SolutionsController extends BaseFrameController<ISolutionFram
                       final Future<BugmatesResult> bugmatesTask,
                       final Future<UserInfo> userInfoTask,
                       final Future<UserStats> userStatsTask) {
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+        new LoadingTask() {
             @Override
-            public void run() {
-                try {
-                    try {
-                        final SolutionFrame.Model model = conversionService.solutionFrame(solutionsTask.get(), bugmatesTask.get(), userInfoTask.get(), userStatsTask.get());
-                        ApplicationManager.getApplication().invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.loadingSucceeded(model);
-                            }
-                        });
-                    } catch (InterruptedException e) {
-                        handleInterruptedException(e);
-                    } catch (ExecutionException e) {
-                        handleExecutionException(e);
+            protected void load() throws Exception {
+                final SolutionFrame.Model model = conversionService.solutionFrame(solutionsTask.get(), bugmatesTask.get(), userInfoTask.get(), userStatsTask.get());
+                ApplicationManager.getApplication().invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.loadingSucceeded(model);
                     }
-                } catch (final SamebugClientException e) {
-                    handleSamebugClientException(e);
-                }
+                });
             }
-        });
+        }.executeInBackground();
     }
 }
 

@@ -48,15 +48,10 @@ final public class ToolWindowController implements FocusListener, Disposable {
 
     @NotNull
     final Project project;
-    @Nullable
     IntroFrameController introFrame;
-    @Nullable
     AuthenticationController authenticationFrame;
-    @Nullable
     HelpRequestController helpRequestFrame;
-    @Nullable
     HelpRequestListController helpRequestListFrame;
-    @Nullable
     SolutionsController solutionFrame;
 
     @NotNull
@@ -101,8 +96,11 @@ final public class ToolWindowController implements FocusListener, Disposable {
         toolWindow.getContentManager().addContent(contentFactory.createContent(helpRequestListFrame.getControlPanel(), MessageService.message("samebug.toolwindow.helpRequestList.tabName"), false));
     }
 
+    public void focusOnHelpRequestList() {
+        focusOnTab(helpRequestListFrame.getControlPanel(), MessageService.message("samebug.toolwindow.helpRequestList.tabName"));
+    }
+
     public void focusOnHelpRequest(String helpRequestId) {
-        // TODO remove other tabs?
         final HelpRequestController tab = getOrCreateHelpRequestFrame(helpRequestId);
         focusOnTab(tab.getControlPanel(), MessageService.message("samebug.toolwindow.helpRequest.tabName"));
     }
@@ -146,8 +144,8 @@ final public class ToolWindowController implements FocusListener, Disposable {
         if (authenticationFrame != null) Disposer.dispose(authenticationFrame);
         if (helpRequestListFrame != null) Disposer.dispose(helpRequestListFrame);
 
-        closeAllSolutionFrames();
-        closeAllHelpRequestFrames();
+//        closeAllSolutionFrames();
+//        closeAllHelpRequestFrames();
     }
 
     public void closeSolutionFrame(final int searchId) {

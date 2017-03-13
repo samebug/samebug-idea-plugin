@@ -74,6 +74,7 @@ public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRe
         }
     }
 
+    // TODO loading animation on every button starts request
     final class SendButton extends SamebugButton {
         public SendButton() {
             setText(MessageService.message("samebug.component.tip.write.send"));

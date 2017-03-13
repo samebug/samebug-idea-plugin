@@ -16,19 +16,17 @@
 package com.samebug.clients.idea.ui.controller.solution;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.options.ShowSettingsUtil;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.util.messages.MessageBusConnection;
-import com.intellij.util.net.HttpProxyConfigurable;
 import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
-import com.samebug.clients.idea.ui.controller.ConfigDialog;
+import com.samebug.clients.idea.ui.controller.frame.BaseFrameListener;
 import com.samebug.clients.idea.ui.modules.IdeaListenerService;
 
-final class SolutionFrameController implements ISolutionFrame.Listener {
+final class SolutionFrameController extends BaseFrameListener implements ISolutionFrame.Listener {
     final static Logger LOGGER = Logger.getInstance(WebHitController.class);
     final SolutionsController controller;
 
     public SolutionFrameController(final SolutionsController controller) {
+        super(controller);
         this.controller = controller;
 
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
@@ -39,15 +37,5 @@ final class SolutionFrameController implements ISolutionFrame.Listener {
     public void reload() {
         controller.view.setLoading();
         controller.load();
-    }
-
-    @Override
-    public void openSamebugSettings() {
-        ShowSettingsUtil.getInstance().showSettingsDialog(ProjectManager.getInstance().getDefaultProject(), ConfigDialog.class);
-    }
-
-    @Override
-    public void openNetworkSettings() {
-        ShowSettingsUtil.getInstance().showSettingsDialog(ProjectManager.getInstance().getDefaultProject(), HttpProxyConfigurable.class);
     }
 }

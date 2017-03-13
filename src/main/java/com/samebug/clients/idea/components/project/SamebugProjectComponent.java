@@ -17,6 +17,7 @@ package com.samebug.clients.idea.components.project;
 
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Disposer;
 
 public class SamebugProjectComponent extends AbstractProjectComponent {
     private ToolWindowController toolWindowController;
@@ -41,7 +42,7 @@ public class SamebugProjectComponent extends AbstractProjectComponent {
 
     @Override
     public void projectClosed() {
-        toolWindowController.dispose();
+        Disposer.dispose(toolWindowController);
+        Disposer.dispose(runDebugWatcher);
     }
-
 }

@@ -39,10 +39,11 @@ import java.util.Map;
 
 public class RunDebugWatcher implements RunContentWithExecutorListener, Disposable {
     private final Project myProject;
+    MessageBusConnection messageBusConnection;
 
     public RunDebugWatcher(Project project) {
         this.myProject = project;
-        MessageBusConnection messageBusConnection = project.getMessageBus().connect(this);
+        messageBusConnection = project.getMessageBus().connect(this);
         messageBusConnection.subscribe(RunContentManager.TOPIC, this);
     }
 
@@ -115,5 +116,6 @@ public class RunDebugWatcher implements RunContentWithExecutorListener, Disposab
             listener.stop();
         }
         listeners.clear();
+        messageBusConnection.dispose();
     }
 }
