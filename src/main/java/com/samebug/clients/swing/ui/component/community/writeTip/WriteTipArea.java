@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
+import com.samebug.clients.common.api.form.FormBuilder;
 import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.common.ui.component.form.IFormField;
 import com.samebug.clients.swing.ui.base.form.LengthRestrictedArea;
@@ -27,8 +28,6 @@ import javax.swing.*;
 
 public final class WriteTipArea extends JComponent implements IFormField {
     static final int MaxCharacters = 140;
-    static final String ERROR_TOO_SHORT = "MESSAGE_TOO_SHORT";
-    static final String ERROR_TOO_LONG = "MESSAGE_TOO_LONG";
 
     final String placeholder;
     final BorderedArea borderedArea;
@@ -49,8 +48,8 @@ public final class WriteTipArea extends JComponent implements IFormField {
 
     public void setFormError(String errorCode) throws ErrorCodeMismatchException {
         borderedArea.setError();
-        if (ERROR_TOO_SHORT.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.tip.write.error.tip.short"));
-        if (ERROR_TOO_LONG.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.tip.write.error.tip.long"));
+        if (FormBuilder.CreateTip.E_TOO_SHORT.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.tip.write.error.tip.short"));
+        if (FormBuilder.CreateTip.E_TOO_LONG.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.tip.write.error.tip.long"));
         else throw new ErrorCodeMismatchException(errorCode);
         remove(errorLabel);
         add(errorLabel, "cell 0 1");

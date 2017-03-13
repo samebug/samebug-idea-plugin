@@ -16,6 +16,7 @@
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
 import com.samebug.clients.common.api.form.FieldError;
+import com.samebug.clients.common.api.form.FormBuilder;
 import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
@@ -35,10 +36,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-class WriteTipScreen extends RoundedBackgroundPanel implements IForm {
-    // TODO
-    static final String FIELD_NAME_TIP = "TIP_BODY";
-
+public class WriteTipScreen extends RoundedBackgroundPanel implements IForm {
     final WriteTip writeTip;
     final SamebugLabel titleLabel;
     final WriteTipArea tipArea;
@@ -62,9 +60,8 @@ class WriteTipScreen extends RoundedBackgroundPanel implements IForm {
     public void setFormErrors(List<FieldError> errors) throws FormMismatchException {
         List<FieldError> mismatched = new ArrayList<FieldError>();
         for (FieldError f : errors) {
-            // TODO where to show global errors?
             try {
-                if (FIELD_NAME_TIP.equals(f.key)) tipArea.setFormError(f.code);
+                if (FormBuilder.CreateTip.BODY.equals(f.key)) tipArea.setFormError(f.code);
                 else throw new FieldNameMismatchException(f.key);
             } catch (ErrorCodeMismatchException e) {
                 mismatched.add(f);

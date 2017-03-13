@@ -8,6 +8,7 @@ import com.samebug.clients.common.api.exceptions.BadRequest;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
+import com.samebug.clients.swing.ui.modules.MessageService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +54,7 @@ public abstract class FormHandler {
                     showFieldErrors(fieldErrors);
                 } catch (FormMismatchException formException) {
                     LOGGER.warn("Unprocessed form errors", formException);
-                    // TODO this message will be shown to the users
-                    globalErrors.add("Failed to add field errors");
+                    globalErrors.add(MessageService.message("samebug.error.pluginBug"));
                 }
 
                 showGlobalErrors(globalErrors);

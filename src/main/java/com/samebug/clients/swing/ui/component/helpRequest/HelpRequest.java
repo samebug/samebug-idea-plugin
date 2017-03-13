@@ -28,9 +28,6 @@ import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
-import javax.swing.*;
-
-// TODO colors, write tip area prompt, etc
 public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRequest {
     private final static int AvatarSize = 40;
 
@@ -55,7 +52,7 @@ public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRe
 
     final class TitleLabel extends SamebugLabel {
         public TitleLabel() {
-            setText("TIP REQUEST");
+            setText(MessageService.message("samebug.component.helpRequest.answer.title"));
             setFont(FontService.regular(16));
             setForegroundColor(ColorService.TipText);
         }
@@ -90,12 +87,12 @@ public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRe
     final class ActionRow extends TransparentPanel {
         {
             final SamebugButton sendButton = new SendButton();
-            final SamebugLabel why = new SamebugLabel("Why did I receive this message?");
-            why.setHorizontalAlignment(SwingConstants.RIGHT);
+            // TODO postponed feature
+//            final SamebugLabel why = new SamebugLabel(MessageService.message("samebug.component.helpRequest.answer.explain"));
+//            why.setHorizontalAlignment(SwingConstants.RIGHT);
 
-            setLayout(new MigLayout("fillx", "0[]:push[]0", "0[]0"));
+            setLayout(new MigLayout("fillx", "0[]0", "0[]0"));
             add(sendButton);
-            add(why);
         }
 
     }

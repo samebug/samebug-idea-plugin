@@ -23,6 +23,7 @@ import com.samebug.clients.common.api.entities.solution.RestHit;
 import com.samebug.clients.common.api.entities.solution.Tip;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.api.form.FieldError;
+import com.samebug.clients.common.api.form.FormBuilder;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
@@ -68,31 +69,23 @@ final class HelpOthersCTAController implements IHelpOthersCTA.Listener {
 
                     @Override
                     protected void handle(FieldError fieldError, List<String> globalErrors, List<FieldError> fieldErrors) {
-                        // TODO field names
-                        if ("tip".equals(fieldError.key)) fieldErrors.add(fieldError);
-                            // TODO what to say to users?
-                        else globalErrors.add("Failed because of form error on an unknown field");
+                        if (FormBuilder.CreateTip.BODY.equals(fieldError.key)) fieldErrors.add(fieldError);
+                        else {
+                            LOGGER.warn("Unhandled form error: " + fieldError);
+                            globalErrors.add(MessageService.message("samebug.error.pluginBug"));
+                        }
                     }
 
                     @Override
                     protected void handle(RestError nonFormError, List<String> globalErrors, List<FieldError> fieldErrors) {
-                        String code = nonFormError.code;
-                        if ("NOT_YOUR_SEARCH".equals(code)) globalErrors.add(MessageService.message("samebug.component.tip.write.error.notYourSearch"));
-                        else if ("NOT_EXCEPTION_SEARCH".equals(code)) globalErrors.add(MessageService.message("samebug.component.tip.write.error.notExceptionSearch"));
-                        else if ("UNKNOWN_SEARCH".equals(code)) globalErrors.add(MessageService.message("samebug.component.tip.write.error.unknownSearch"));
-                        else if ("UNREACHABLE_SOURCE".equals(code)) globalErrors.add(MessageService.message("samebug.component.tip.write.error.unreachableSource"));
-                        else {
-                            LOGGER.warn("Unhandled global form error with code " + code);
-                            // TODO
-                            globalErrors.add("unhandled bad request");
-                        }
+                        LOGGER.warn("Unhandled bad request: " + nonFormError);
+                        globalErrors.add(MessageService.message("samebug.component.tip.write.error.badRequest"));
                     }
 
                     @Override
                     protected void handle(SamebugClientException exception, List<String> globalErrors, List<FieldError> fieldErrors) {
                         LOGGER.warn("Failed to post tip", exception);
-                        // TODO
-                        globalErrors.add("Sorry, could not post tip");
+                        globalErrors.add(MessageService.message("samebug.component.tip.write.error.unhandled"));
                     }
 
                     @Override
@@ -102,7 +95,7 @@ final class HelpOthersCTAController implements IHelpOthersCTA.Listener {
 
                     @Override
                     protected void showGlobalErrors(List<String> globalErrors) {
-                        // TODO
+                        // TODO showing more errors?
                         if (!globalErrors.isEmpty()) controller.view.popupError(globalErrors.get(0));
                     }
                 }.execute();

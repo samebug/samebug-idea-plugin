@@ -5,7 +5,6 @@ import com.samebug.clients.swing.ui.modules.DrawService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 
 public class LoadingAnimation extends JComponent {
     final int size;

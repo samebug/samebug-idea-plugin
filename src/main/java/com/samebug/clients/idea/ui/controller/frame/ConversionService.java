@@ -163,8 +163,7 @@ public final class ConversionService {
     public IHelpRequestListFrame.Model convertHelpRequestListFrame(@NotNull IncomingHelpRequests incomingRequests, @NotNull UserInfo user, @NotNull UserStats statistics) {
         List<IHelpRequestPreview.Model> requestPreviews = new ArrayList<IHelpRequestPreview.Model>(incomingRequests.helpRequests.size());
         for (MatchingHelpRequest r : incomingRequests.helpRequests) {
-            // TODO
-            Requester requester = null;
+            Requester requester = r.helpRequest.requester;
             HelpRequest2 hr = r.helpRequest;
             IHelpRequestPreview.Model preview = new IHelpRequestPreview.Model(requester.displayName, requester.avatarUrl, hr.createdAt, hr.context, null);
             requestPreviews.add(preview);

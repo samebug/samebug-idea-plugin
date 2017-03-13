@@ -20,4 +20,14 @@ public final class FormBuilder {
         public static final String SEARCH_ID = "searchId";
         public static final String CONTEXT = "context";
     }
+
+    public static final class CreateTip {
+        public static final String BODY = "tip";
+        public static final String E_TOO_SHORT = "MESSAGE_TOO_SHORT";
+        public static final String E_TOO_LONG = "MESSAGE_TOO_LONG";
+        public static final String E_NOT_YOUR_SEARCH = "NOT_YOUR_SEARCH";
+        public static final String E_NOT_EXCEPTION_SEARCH = "NOT_EXCEPTION_SEARCH";
+        public static final String E_UNKNOWN_SEARCH = "UNKNOWN_SEARCH";
+        public static final String E_UNREACHABLE_SOURCE = "UNREACHABLE_SOURCE";
+    }
 }

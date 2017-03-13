@@ -16,6 +16,7 @@
 package com.samebug.clients.swing.ui.testModules;
 
 import com.samebug.clients.common.api.form.FieldError;
+import com.samebug.clients.common.api.form.FormBuilder;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
@@ -36,7 +37,7 @@ public final class TestListenerService extends ListenerService {
                 @Override
                 public void postTip(IHelpOthersCTA source, String tipBody) {
                     try {
-                        source.failPostTipWithFormError(Collections.singletonList(new FieldError("tip", "LONG")));
+                        source.failPostTipWithFormError(Collections.singletonList(new FieldError(FormBuilder.CreateTip.BODY, FormBuilder.CreateTip.E_TOO_LONG)));
                     } catch (FormMismatchException e) {
                         e.printStackTrace();
                     }

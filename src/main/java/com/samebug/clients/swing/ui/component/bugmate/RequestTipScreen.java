@@ -41,9 +41,9 @@ public final class RequestTipScreen extends JComponent implements IForm {
 
     public RequestTipScreen(final BugmateList bugmateList) {
         writeRequestArea = new WriteRequestArea(bugmateList);
-        sendButton = new SamebugButton(MessageService.message("samebug.component.bugmate.ask.send"));
+        sendButton = new SamebugButton(MessageService.message("samebug.component.helpRequest.ask.send"));
         sendButton.setFilled(true);
-        cancelButton = new LinkLabel(MessageService.message("samebug.component.bugmate.ask.cancel"));
+        cancelButton = new LinkLabel(MessageService.message("samebug.component.helpRequest.ask.cancel"));
 
         setLayout(new MigLayout("fillx", "0[]0", "0[]10[]10[]0"));
         add(writeRequestArea, "cell 0 0, growx");
