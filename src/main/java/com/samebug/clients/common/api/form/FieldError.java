@@ -15,11 +15,11 @@
  */
 package com.samebug.clients.common.api.form;
 
-public final class FormError {
+public final class FieldError {
     public final String key;
     public final String code;
 
-    public FormError(String key, String code) {
+    public FieldError(String key, String code) {
         this.key = key;
         this.code = code;
     }

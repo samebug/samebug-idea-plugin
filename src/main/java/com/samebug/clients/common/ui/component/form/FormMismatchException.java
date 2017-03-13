@@ -15,21 +15,21 @@
  */
 package com.samebug.clients.common.ui.component.form;
 
-import com.samebug.clients.common.api.form.FormError;
+import com.samebug.clients.common.api.form.FieldError;
 
 import java.util.List;
 
 public final class FormMismatchException extends java.lang.Exception {
-    public final List<FormError> mismatchedErrors;
+    public final List<FieldError> mismatchedErrors;
 
-    public FormMismatchException(List<FormError> errors) {
+    public FormMismatchException(List<FieldError> errors) {
         super("Failed to find the following errorKey-errorCode pairs: " + makeString(errors));
         this.mismatchedErrors = errors;
     }
 
-    private static String makeString(List<FormError> errors) {
+    private static String makeString(List<FieldError> errors) {
         StringBuilder b = new StringBuilder();
-        for (FormError e : errors) b.append(e).append(", ");
+        for (FieldError e : errors) b.append(e).append(", ");
         b.setLength(b.length() - 2);
         return b.toString();
     }

@@ -22,9 +22,18 @@ import com.intellij.util.messages.Topic;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateHit;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
+import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.common.ui.component.hit.IWebHit;
+import com.samebug.clients.common.ui.component.popup.IHelpRequestPopup;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
+import com.samebug.clients.common.ui.frame.IAuthenticationFrame;
+import com.samebug.clients.common.ui.frame.IIntroFrame;
+import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestFrame;
+import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestHeader;
+import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestTab;
+import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestList;
+import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListFrame;
 import com.samebug.clients.common.ui.frame.solution.ISearchHeaderPanel;
 import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
@@ -48,6 +57,15 @@ public final class IdeaListenerService extends ListenerService {
     public static final Topic<ISolutionFrame.Listener> SolutionFrame = Topic.create("ISolutionFrame", ISolutionFrame.Listener.class);
     public static final Topic<IWebHit.Listener> WebHit = Topic.create("IWebHit", IWebHit.Listener.class);
     public static final Topic<IWebResultsTab.Listener> WebResultsTab = Topic.create("IWebResultsTab", IWebResultsTab.Listener.class);
+    public static final Topic<IHelpRequestPreview.Listener> HelpRequestPreview = Topic.create("IHelpRequestPreview", IHelpRequestPreview.Listener.class);
+    public static final Topic<IHelpRequestPopup.Listener> HelpRequestPopup = Topic.create("IHelpRequestPopup", IHelpRequestPopup.Listener.class);
+    public static final Topic<IAuthenticationFrame.Listener> AuthenticationFrame = Topic.create("IAuthenticationFrame", IAuthenticationFrame.Listener.class);
+    public static final Topic<IHelpRequestList.Listener> HelpRequestList = Topic.create("IHelpRequestList", IHelpRequestList.Listener.class);
+    public static final Topic<IHelpRequestListFrame.Listener> HelpRequestListFrame = Topic.create("IHelpRequestListFrame", IHelpRequestListFrame.Listener.class);
+    public static final Topic<IHelpRequestTab.Listener> HelpRequestTab = Topic.create("IHelpRequestTab", IHelpRequestTab.Listener.class);
+    public static final Topic<IHelpRequestHeader.Listener> HelpRequestHeader = Topic.create("IHelpRequestHeader", IHelpRequestHeader.Listener.class);
+    public static final Topic<IHelpRequestFrame.Listener> HelpRequestFrame = Topic.create("IHelpRequestFrame", IHelpRequestFrame.Listener.class);
+    public static final Topic<IIntroFrame.Listener> IntroFrame = Topic.create("IIntroFrame", IIntroFrame.Listener.class);
 
     private static final Topic[] topics = {
             ProfilePanel,
@@ -58,7 +76,16 @@ public final class IdeaListenerService extends ListenerService {
             HelpOthersCTA,
             SolutionFrame,
             WebHit,
-            WebResultsTab
+            WebResultsTab,
+            HelpRequestPreview,
+            HelpRequestPopup,
+            AuthenticationFrame,
+            HelpRequestList,
+            HelpRequestListFrame,
+            HelpRequestTab,
+            HelpRequestHeader,
+            HelpRequestFrame,
+            IntroFrame
     };
 
     private static final Map<Class, Topic> topicMap = new HashMap<Class, Topic>();

@@ -205,8 +205,8 @@ final public class SamebugClient {
         }
 
         @Override
-        RestError onBadRequest(HttpResponse response) throws ProcessResponseException {
-            return readJsonResponse(response, RestError.class);
+        BasicRestError onBadRequest(HttpResponse response) throws ProcessResponseException {
+            return readJsonResponse(response, BasicRestError.class);
         }
 
         @Override

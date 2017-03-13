@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.samebug.clients.common.api.client.FormRestError;
+import com.samebug.clients.common.api.client.BasicRestError;
 import com.samebug.clients.common.api.client.RestError;
 import com.samebug.clients.common.api.entities.*;
 import com.samebug.clients.common.api.entities.Exception;
@@ -74,6 +76,20 @@ public class JsonTest {
     }
 
 
+    @Test
+    public void restError() {
+        BasicRestError x = gson.fromJson(stream("unknownApiKey"), BasicRestError.class);
+        Assert.assertTrue(x instanceof RestError);
+        checkFields(x);
+    }
+
+    @Test
+    public void formError() {
+        BasicRestError x = gson.fromJson(stream("formError"), BasicRestError.class);
+        Assert.assertTrue(x instanceof FormRestError);
+        checkFields(x);
+    }
+
     /**
      * Check if any of the fields are null that should not be null.
      * <p>
@@ -108,7 +124,7 @@ public class JsonTest {
             .put(Author.class, ImmutableList.<String>of("url", "avatarUrl"))
             .put(Exception.class, ImmutableList.<String>of("message"))
             .put(MarkResponse.class, ImmutableList.<String>of("id"))
-            .put(RestError.class, ImmutableList.<String>of())
+            .put(BasicRestError.class, ImmutableList.<String>of())
             .put(RestHit.class, ImmutableList.<String>of("markId"))
             .put(RestSolution.class, ImmutableList.<String>of())
             .put(Search.class, ImmutableList.<String>of("visitorId", "userId", "teamId"))

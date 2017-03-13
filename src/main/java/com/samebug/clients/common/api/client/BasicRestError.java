@@ -13,26 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.api.exceptions;
+package com.samebug.clients.common.api.client;
 
-import com.samebug.clients.common.api.client.BasicRestError;
-import org.jetbrains.annotations.NotNull;
+public abstract class BasicRestError {
+    public final String code;
+    public final String message;
 
-public class BadRequest extends SamebugClientException {
-    @NotNull
-    private final BasicRestError restError;
-
-    public BadRequest(@NotNull final BasicRestError restError) {
-        this.restError = restError;
-    }
-
-    @NotNull
-    public BasicRestError getRestError() {
-        return restError;
+    public BasicRestError(String code, String message) {
+        this.code = code;
+        this.message = message;
     }
 
     @Override
-    public String getMessage() {
-        return restError.toString();
+    public String toString() {
+        return code + ": " + message;
     }
 }

@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
-import com.samebug.clients.common.api.form.FormError;
+import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
@@ -59,9 +59,9 @@ class WriteTipScreen extends RoundedBackgroundPanel implements IForm {
         add(actionRow, "cell 0 2");
     }
 
-    public void setFormErrors(List<FormError> errors) throws FormMismatchException {
-        List<FormError> mismatched = new ArrayList<FormError>();
-        for (FormError f : errors) {
+    public void setFormErrors(List<FieldError> errors) throws FormMismatchException {
+        List<FieldError> mismatched = new ArrayList<FieldError>();
+        for (FieldError f : errors) {
             // TODO where to show global errors?
             try {
                 if (FIELD_NAME_TIP.equals(f.key)) tipArea.setFormError(f.code);

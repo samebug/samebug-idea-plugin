@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.testModules;
 
-import com.samebug.clients.common.api.form.FormError;
+import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.swing.ui.modules.ListenerService;
@@ -34,7 +34,7 @@ public final class TestListenerService extends ListenerService {
                 @Override
                 public void postTip(IHelpOthersCTA source, String tipBody) {
                     try {
-                        source.failPostTipWithFormError(Collections.singletonList(new FormError("tip", "LONG")));
+                        source.failPostTipWithFormError(Collections.singletonList(new FieldError("tip", "LONG")));
                     } catch (FormMismatchException e) {
                         e.printStackTrace();
                     }

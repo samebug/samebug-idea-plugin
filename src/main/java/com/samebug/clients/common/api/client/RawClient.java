@@ -131,7 +131,7 @@ final class RawClient {
             case HttpStatus.SC_BAD_REQUEST:
                 connectionStatus.successfullyAuthenticated = true;
                 try {
-                    RestError processedError = handler.onBadRequest(httpResponse);
+                    BasicRestError processedError = handler.onBadRequest(httpResponse);
                     return new Failure<T>(connectionStatus, new BadRequest(processedError));
                 } catch (ProcessResponseException e) {
                     return new Failure<T>(connectionStatus, e);
@@ -217,7 +217,7 @@ final class RawClient {
 abstract class HandleRequest<T> {
     abstract T onSuccess(final HttpResponse response) throws ProcessResponseException;
 
-    abstract RestError onBadRequest(final HttpResponse response) throws ProcessResponseException;
+    abstract BasicRestError onBadRequest(final HttpResponse response) throws ProcessResponseException;
 
     abstract void modifyRequest(HttpRequestBase request);
 

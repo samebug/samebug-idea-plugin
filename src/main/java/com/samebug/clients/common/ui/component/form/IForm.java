@@ -15,10 +15,10 @@
  */
 package com.samebug.clients.common.ui.component.form;
 
-import com.samebug.clients.common.api.form.FormError;
+import com.samebug.clients.common.api.form.FieldError;
 
 import java.util.List;
 
 public interface IForm {
-    void setFormErrors(List<FormError> errors) throws FormMismatchException;
+    void setFormErrors(List<FieldError> errors) throws FormMismatchException;
 }

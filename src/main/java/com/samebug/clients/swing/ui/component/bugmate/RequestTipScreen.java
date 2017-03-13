@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
-import com.samebug.clients.common.api.form.FormError;
+import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
@@ -66,9 +66,9 @@ public final class RequestTipScreen extends JComponent implements IForm {
     }
 
     @Override
-    public void setFormErrors(List<FormError> errors) throws FormMismatchException {
-        List<FormError> mismatched = new ArrayList<FormError>();
-        for (FormError f : errors) {
+    public void setFormErrors(List<FieldError> errors) throws FormMismatchException {
+        List<FieldError> mismatched = new ArrayList<FieldError>();
+        for (FieldError f : errors) {
             try {
                 if (TIP_FIELD_NAME.equals(f.key)) writeRequestArea.setFormError(f.code);
                 else throw new FieldNameMismatchException(f.key);

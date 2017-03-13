@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.common.ui.component.community;
 
-import com.samebug.clients.common.api.form.FormError;
+import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public interface IHelpOthersCTA {
 
     void successPostTip();
 
-    void failPostTipWithFormError(List<FormError> errors) throws FormMismatchException;
+    void failPostTipWithFormError(List<FieldError> errors) throws FormMismatchException;
 
     final class Model {
         public final int usersWaitingHelp;

@@ -18,18 +18,19 @@ package com.samebug.clients.idea.ui.controller.solution;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.api.client.RestError;
 import com.samebug.clients.common.api.entities.solution.RestHit;
 import com.samebug.clients.common.api.entities.solution.Tip;
-import com.samebug.clients.common.api.exceptions.BadRequest;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.api.form.FormError;
+import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.ui.controller.form.FormHandler;
 import com.samebug.clients.idea.ui.modules.IdeaListenerService;
+import com.samebug.clients.swing.ui.modules.MessageService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 final class HelpOthersCTAController implements IHelpOthersCTA.Listener {
@@ -50,83 +51,61 @@ final class HelpOthersCTAController implements IHelpOthersCTA.Listener {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
-                SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
-                try {
-                    final RestHit<Tip> response = solutionService.postTip(controller.searchId, tipBody, null);
-                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            controller.load();
-                            source.successPostTip();
-                        }
-                    });
-                } catch (SamebugClientException e) {
-                    final List<String> globalErrors = new ArrayList<String>();
-                    final List<FormError> formErrors = new ArrayList<FormError>();
+                final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
+                new FormHandler() {
 
-                    if (e instanceof BadRequest) {
-                        // TODO if it is FORM_ERROR
-                        if (true) {
-                            // TODO add form errors that belong to fields
-                            // TODO add the rest to global errors
-                        } else {
-                            // TODO add these to global errors
-                        }
-                    } else {
-                        // TODO add this to global errors
+                    @Override
+                    protected void attempt() throws SamebugClientException {
+                        final RestHit<Tip> response = solutionService.postTip(controller.searchId, tipBody, null);
+                        ApplicationManager.getApplication().invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                controller.load();
+                                source.successPostTip();
+                            }
+                        });
                     }
 
-                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!formErrors.isEmpty()) {
-                                try {
-                                    source.failPostTipWithFormError(formErrors);
-                                } catch (FormMismatchException formException) {
-                                    LOGGER.warn("Unprocessed form errors after posting tip", formException);
-                                    globalErrors.add("TODO: failed to add field errors");
-                                }
-                            } else {
-                                source.interruptPostTip();
-                            }
+                    @Override
+                    protected void handle(FieldError fieldError, List<String> globalErrors, List<FieldError> fieldErrors) {
+                        // TODO field names
+                        if ("tip".equals(fieldError.key)) fieldErrors.add(fieldError);
+                            // TODO what to say to users?
+                        else globalErrors.add("Failed because of form error on an unknown field");
+                    }
 
-                            // TODO show global errors
-                            controller.view.popupError(null);
+                    @Override
+                    protected void handle(RestError nonFormError, List<String> globalErrors, List<FieldError> fieldErrors) {
+                        String code = nonFormError.code;
+                        if ("NOT_YOUR_SEARCH".equals(code)) globalErrors.add(MessageService.message("samebug.component.tip.write.error.notYourSearch"));
+                        else if ("NOT_EXCEPTION_SEARCH".equals(code)) globalErrors.add(MessageService.message("samebug.component.tip.write.error.notExceptionSearch"));
+                        else if ("UNKNOWN_SEARCH".equals(code)) globalErrors.add(MessageService.message("samebug.component.tip.write.error.unknownSearch"));
+                        else if ("UNREACHABLE_SOURCE".equals(code)) globalErrors.add(MessageService.message("samebug.component.tip.write.error.unreachableSource"));
+                        else {
+                            LOGGER.warn("Unhandled global form error with code " + code);
+                            // TODO
+                            globalErrors.add("unhandled bad request");
                         }
-                    });
+                    }
 
-//                    // TODO refine this error message part
-//                    if (e instanceof BadRequest) {
-//                        // TODO extract formerror processing
-//                        final String writeTipErrorCode = ((BadRequest) e).getRestError().getCode();
-//                        if ("FORM_ERROR".equals(writeTipErrorCode)) {
-//                            final List<FormError> formErrors = null; // TODO form errors with nonnull keys
-//                            if (!formErrors.isEmpty()) {
-//                                ApplicationManager.getApplication().invokeLater(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        try {
-//                                            source.failPostTipWithFormError(formErrors);
-//                                        } catch (FormMismatchException formException) {
-//                                            LOGGER.warn("Unprocessed form errors after posting tip", formException);
-//                                        }
-//                                    }
-//                                });
-//                            }
-//                            String globalErrorCode = null; // TODO
-//                            if ("NOT_YOUR_SEARCH".equals(globalErrorCode)) globalErrorMessage = MessageService.message("samebug.component.tip.write.error.notYourSearch");
-//                            else if ("NOT_EXCEPTION_SEARCH".equals(globalErrorCode)) globalErrorMessage = MessageService.message("samebug.component.tip.write.error.notExceptionSearch");
-//                            else if ("UNKNOWN_SEARCH".equals(globalErrorCode)) globalErrorMessage = MessageService.message("samebug.component.tip.write.error.unknownSearch");
-//                            else if ("UNREACHABLE_SOURCE".equals(globalErrorCode)) globalErrorMessage = MessageService.message("samebug.component.tip.write.error.unreachableSource");
-//                            else LOGGER.warn("Unhandled global form error with code " + globalErrorCode);
-//                        } else {
-//                            // TODO handle non-form errors
-//                        }
-//                    } else {
-//                        globalErrorMessage = MessageService.message("samebug.component.tip.write.error.source.unhandled");
-//                        LOGGER.warn("unhandled exception after post tip", e);
-//                    }
-                }
+                    @Override
+                    protected void handle(SamebugClientException exception, List<String> globalErrors, List<FieldError> fieldErrors) {
+                        LOGGER.warn("Failed to post tip", exception);
+                        // TODO
+                        globalErrors.add("Sorry, could not post tip");
+                    }
+
+                    @Override
+                    protected void showFieldErrors(List<FieldError> fieldErrors) throws FormMismatchException {
+                        source.failPostTipWithFormError(fieldErrors);
+                    }
+
+                    @Override
+                    protected void showGlobalErrors(List<String> globalErrors) {
+                        // TODO
+                        if (!globalErrors.isEmpty()) controller.view.popupError(globalErrors.get(0));
+                    }
+                }.execute();
             }
         });
     }

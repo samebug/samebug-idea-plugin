@@ -16,6 +16,7 @@
 package com.samebug.clients.common.api.json;
 
 import com.google.gson.*;
+import com.samebug.clients.common.api.client.BasicRestError;
 import com.samebug.clients.common.api.entities.search.Search;
 import com.samebug.clients.common.api.entities.search.SearchGroup;
 import com.samebug.clients.common.api.entities.solution.RestSolution;
@@ -38,6 +39,7 @@ public class Json {
         gsonBuilder.registerTypeAdapter(RestSolution.class, new RestSolutionAdapter());
         gsonBuilder.registerTypeAdapter(Search.class, new SearchAdapter());
         gsonBuilder.registerTypeAdapter(SearchGroup.class, new SearchGroupAdapter());
+        gsonBuilder.registerTypeAdapter(BasicRestError.class, new BasicRestErrorAdapter());
         gson = gsonBuilder.create();
     }
 }
