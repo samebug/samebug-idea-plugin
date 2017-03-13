@@ -40,6 +40,9 @@ public final class RestHit<T extends RestSolution> {
     @Nullable
     private Boolean tagged;
 
+    @Nullable
+    private Boolean markable;
+
     private RestHit(@NotNull final RestHit<T> rhs) {
         solutionId = rhs.solutionId;
         solution = rhs.solution;
@@ -50,6 +53,7 @@ public final class RestHit<T extends RestSolution> {
         createdBy = rhs.createdBy;
         exception = rhs.exception;
         tagged = rhs.tagged;
+        markable = rhs.markable;
     }
 
     @NotNull
@@ -95,6 +99,11 @@ public final class RestHit<T extends RestSolution> {
     @Nullable
     public Boolean getTagged() {
         return tagged;
+    }
+
+    @NotNull
+    public Boolean getMarkable() {
+        return markable == null ? false : markable;
     }
 
     @NotNull

@@ -23,19 +23,26 @@ import java.util.Date;
 public final class HelpRequest {
     @NotNull
     public final String id;
-
-    public final int searchId;
+    @NotNull
+    public final Requester requester;
+    @NotNull
+    public final Integer workspaceId;
     @NotNull
     public final String context;
+    // TODO enum
+    @NotNull
+    public final String visibility;
     @NotNull
     public final Date createdAt;
     @Nullable
     public final Date revokedAt;
 
-    public HelpRequest(@NotNull String id, int searchId, @NotNull String context, @NotNull Date createdAt, @Nullable Date revokedAt) {
+    public HelpRequest(@NotNull String id, @NotNull Requester requester, @NotNull Integer workspaceId, @NotNull String context, @NotNull String visibility, @NotNull Date createdAt, @Nullable Date revokedAt) {
         this.id = id;
-        this.searchId = searchId;
+        this.requester = requester;
+        this.workspaceId = workspaceId;
         this.context = context;
+        this.visibility = visibility;
         this.createdAt = createdAt;
         this.revokedAt = revokedAt;
     }

@@ -17,10 +17,6 @@ package com.samebug.clients.common.services;
 
 import com.samebug.clients.common.api.client.ClientResponse;
 import com.samebug.clients.common.api.client.SamebugClient;
-import com.samebug.clients.common.api.entities.Exception;
-import com.samebug.clients.common.api.entities.search.Search;
-import com.samebug.clients.common.api.entities.search.StackTraceSearch;
-import com.samebug.clients.common.api.entities.search.TextSearch;
 import com.samebug.clients.common.api.entities.solution.MarkResponse;
 import com.samebug.clients.common.api.entities.solution.RestHit;
 import com.samebug.clients.common.api.entities.solution.Solutions;
@@ -50,7 +46,7 @@ public final class SolutionService {
                     }
 
                     protected void fail(SamebugClientException e) {
-                        solutionStore.solutions.remove(searchId);
+//                        solutionStore.solutions.remove(searchId);
                     }
                 };
         return clientService.execute(requestHandler);
@@ -95,20 +91,5 @@ public final class SolutionService {
                     }
                 };
         return clientService.execute(requestHandler);
-    }
-
-
-    public static String headLine(Search search) {
-        if (search instanceof TextSearch) {
-            return "Not parseable stacktrace";
-        } else {
-            StackTraceSearch s = (StackTraceSearch) search;
-            Exception trace = s.getStackTrace().getTrace();
-            String headLine = trace.getTypeName();
-            if (trace.getMessage() != null) {
-                headLine += ": " + trace.getMessage();
-            }
-            return headLine;
-        }
     }
 }

@@ -18,7 +18,7 @@ package com.samebug.clients.common.api.entities.search;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class SearchResults {
+public final class CreatedSearch {
     @NotNull
     private Integer searchId;
     @Nullable

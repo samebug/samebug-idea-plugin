@@ -15,15 +15,15 @@
  */
 package com.samebug.clients.common.entities.search;
 
-import com.samebug.clients.common.api.entities.search.SearchResults;
+import com.samebug.clients.common.api.entities.search.CreatedSearch;
 import org.jetbrains.annotations.NotNull;
 
 public class SavedSearch implements SearchRequest {
     private final String trace;
     private final SearchInfo searchInfo;
-    private final SearchResults savedSearch;
+    private final CreatedSearch savedSearch;
 
-    public SavedSearch(SearchInfo searchInfo, String trace, SearchResults savedSearch) {
+    public SavedSearch(SearchInfo searchInfo, String trace, CreatedSearch savedSearch) {
         this.searchInfo = searchInfo;
         this.savedSearch = savedSearch;
         Integer lineOffset = savedSearch.getFirstLine();
@@ -50,7 +50,7 @@ public class SavedSearch implements SearchRequest {
     }
 
     @NotNull
-    public SearchResults getSavedSearch() {
+    public CreatedSearch getSavedSearch() {
         return savedSearch;
     }
 }

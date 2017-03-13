@@ -30,7 +30,7 @@ public final class HelpRequestStore {
     }
 
     public MatchingHelpRequest getHelpRequest(String id) {
-        for (MatchingHelpRequest h : incoming.helpRequests) {
+        for (MatchingHelpRequest h : incoming.matches) {
             if (h.helpRequest.id.equals(id)) return h;
         }
         return null;

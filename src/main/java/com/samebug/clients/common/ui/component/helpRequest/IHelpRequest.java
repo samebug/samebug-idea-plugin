@@ -24,18 +24,16 @@ public interface IHelpRequest {
         public final URL avatarUrl;
         public final Date createdAt;
         public final String helpRequestBody;
-        public final String stacktrace;
 
         public Model(Model rhs) {
-            this(rhs.displayName, rhs.avatarUrl, rhs.createdAt, rhs.helpRequestBody, rhs.stacktrace);
+            this(rhs.displayName, rhs.avatarUrl, rhs.createdAt, rhs.helpRequestBody);
         }
 
-        public Model(String displayName, URL avatarUrl, Date createdAt, String helpRequestBody, String stacktrace) {
+        public Model(String displayName, URL avatarUrl, Date createdAt, String helpRequestBody) {
             this.displayName = displayName;
             this.avatarUrl = avatarUrl;
             this.createdAt = createdAt;
             this.helpRequestBody = helpRequestBody;
-            this.stacktrace = stacktrace;
         }
     }
 }

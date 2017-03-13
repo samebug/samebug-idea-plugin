@@ -21,7 +21,7 @@ import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.common.api.entities.search.SearchResults;
+import com.samebug.clients.common.api.entities.search.CreatedSearch;
 import com.samebug.clients.common.api.entities.tracking.TrackEvent;
 import com.samebug.clients.common.entities.search.DebugSessionInfo;
 import com.samebug.clients.common.entities.search.SearchInfo;
@@ -85,11 +85,11 @@ final public class Events {
         }.getEvent();
     }
 
-    public static TrackEvent searchSucceeded(final SearchInfo searchInfo, final SearchResults searchResults) {
+    public static TrackEvent searchSucceeded(final SearchInfo searchInfo, final CreatedSearch createdSearch) {
         return new TrackBuilder("Search", "Succeeded", null) {
             @Override
             protected void initFields() {
-                fields.put("searchId", searchResults.getSearchId());
+                fields.put("searchId", createdSearch.getSearchId());
                 fields.put("sessionId", searchInfo.getSessionInfo().getId().toString());
                 fields.put("sessionType", searchInfo.getSessionInfo().getSessionType());
             }

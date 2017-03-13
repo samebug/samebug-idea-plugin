@@ -21,9 +21,11 @@ import com.samebug.clients.common.api.RestUrlBuilder;
 import com.samebug.clients.common.api.entities.UserInfo;
 import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
-import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
+import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
 import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
-import com.samebug.clients.common.api.entities.search.SearchResults;
+import com.samebug.clients.common.api.entities.search.Search;
+import com.samebug.clients.common.api.entities.search.CreatedSearch;
+import com.samebug.clients.common.api.entities.search.SearchDetails;
 import com.samebug.clients.common.api.entities.solution.MarkResponse;
 import com.samebug.clients.common.api.entities.solution.RestHit;
 import com.samebug.clients.common.api.entities.solution.Solutions;
@@ -85,18 +87,27 @@ final public class SamebugClient {
 
     public
     @NotNull
-    ClientResponse<SearchResults> searchSolutions(@NotNull final String stacktrace) {
+    ClientResponse<CreatedSearch> createSearch(@NotNull final String stacktrace) {
         final URL url = urlBuilder.search();
         HttpPost post = new HttpPost(url.toString());
         post.setEntity(new UrlEncodedFormEntity(Collections.singletonList(new BasicNameValuePair("exception", stacktrace)), Consts.UTF_8));
 
-        return rawClient.executeAuthenticated(post, new HandleJsonRequest<SearchResults>(SearchResults.class));
+        return rawClient.executeAuthenticated(post, new HandleJsonRequest<CreatedSearch>(CreatedSearch.class));
+    }
+
+    public
+    @NotNull
+    ClientResponse<SearchDetails> getSearch(@NotNull final Integer searchId) {
+        final URL url = urlBuilder.search(searchId);
+        HttpGet request = new HttpGet(url.toString());
+
+        return rawClient.executeAuthenticated(request, new HandleJsonRequest<SearchDetails>(SearchDetails.class));
     }
 
     public
     @NotNull
     ClientResponse<Solutions> getSolutions(@NotNull final Integer searchId) {
-        final URL url = urlBuilder.search(searchId);
+        final URL url = urlBuilder.solutions(searchId);
         HttpGet request = new HttpGet(url.toString());
 
         return rawClient.executeAuthenticated(request, new HandleJsonRequest<Solutions>(Solutions.class));
@@ -122,7 +133,7 @@ final public class SamebugClient {
 
     public
     @NotNull
-    ClientResponse<HelpRequest> createHelpRequest(int searchId, String context) {
+    ClientResponse<MyHelpRequest> createHelpRequest(int searchId, String context) {
         final URL url = urlBuilder.helpRequest();
         HttpPost request = new HttpPost(url.toString());
         List<BasicNameValuePair> form = new ArrayList<BasicNameValuePair>();
@@ -130,7 +141,7 @@ final public class SamebugClient {
         form.add(new BasicNameValuePair(FormBuilder.CreateHelpRequest.CONTEXT, context));
         request.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
 
-        return rawClient.executeAuthenticated(request, new HandleJsonRequest<HelpRequest>(HelpRequest.class));
+        return rawClient.executeAuthenticated(request, new HandleJsonRequest<MyHelpRequest>(MyHelpRequest.class));
     }
 
     public

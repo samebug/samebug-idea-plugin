@@ -17,26 +17,47 @@ package com.samebug.clients.common.services;
 
 import com.samebug.clients.common.api.client.ClientResponse;
 import com.samebug.clients.common.api.client.SamebugClient;
-import com.samebug.clients.common.api.entities.search.SearchResults;
+import com.samebug.clients.common.api.entities.search.CreatedSearch;
+import com.samebug.clients.common.api.entities.search.SearchDetails;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
 
 public final class SearchService {
     final ClientService clientService;
-    final SearchStore searchStore;
+    final SearchStore store;
 
-    public SearchService(ClientService clientService, SearchStore searchStore) {
+    public SearchService(ClientService clientService, SearchStore store) {
         this.clientService = clientService;
-        this.searchStore = searchStore;
+        this.store = store;
     }
 
-    public SearchResults search(final String trace) throws SamebugClientException {
+    public CreatedSearch search(final String trace) throws SamebugClientException {
         final SamebugClient client = clientService.client;
 
         // TODO
-        ClientService.ConnectionAwareHttpRequest<SearchResults> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<SearchResults>() {
-                    ClientResponse<SearchResults> request() {
-                        return client.searchSolutions(trace);
+        ClientService.ConnectionAwareHttpRequest<CreatedSearch> requestHandler =
+                new ClientService.ConnectionAwareHttpRequest<CreatedSearch>() {
+                    ClientResponse<CreatedSearch> request() {
+                        return client.createSearch(trace);
+                    }
+                };
+        return clientService.execute(requestHandler);
+    }
+
+    public SearchDetails get(final int searchId) throws SamebugClientException {
+        final SamebugClient client = clientService.client;
+
+        ClientService.ConnectionAwareHttpRequest<SearchDetails> requestHandler =
+                new ClientService.ConnectionAwareHttpRequest<SearchDetails>() {
+                    ClientResponse<SearchDetails> request() {
+                        return client.getSearch(searchId);
+                    }
+
+                    protected void success(SearchDetails result) {
+                        store.searches.put(searchId, result);
+                    }
+
+                    protected void fail(SamebugClientException e) {
+                        store.searches.remove(searchId);
                     }
                 };
         return clientService.execute(requestHandler);

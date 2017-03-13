@@ -20,29 +20,22 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 
-public final class HelpRequest2 {
+public final class MyHelpRequest {
     @NotNull
     public final String id;
-    @NotNull
-    public final Requester requester;
-    @NotNull
-    public final Integer workspaceId;
+
+    public final int searchId;
     @NotNull
     public final String context;
-    // TODO enum
-    @NotNull
-    public final String visibility;
     @NotNull
     public final Date createdAt;
     @Nullable
     public final Date revokedAt;
 
-    public HelpRequest2(@NotNull String id, @NotNull Requester requester, @NotNull Integer workspaceId, @NotNull String context, @NotNull String visibility, @NotNull Date createdAt, @Nullable Date revokedAt) {
+    public MyHelpRequest(@NotNull String id, int searchId, @NotNull String context, @NotNull Date createdAt, @Nullable Date revokedAt) {
         this.id = id;
-        this.requester = requester;
-        this.workspaceId = workspaceId;
+        this.searchId = searchId;
         this.context = context;
-        this.visibility = visibility;
         this.createdAt = createdAt;
         this.revokedAt = revokedAt;
     }

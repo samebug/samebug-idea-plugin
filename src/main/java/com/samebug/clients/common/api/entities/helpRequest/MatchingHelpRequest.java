@@ -15,16 +15,26 @@
  */
 package com.samebug.clients.common.api.entities.helpRequest;
 
-import com.samebug.clients.common.api.entities.search.SearchGroup;
+import com.samebug.clients.common.api.entities.search.SearchInfo;
+import org.jetbrains.annotations.NotNull;
 
 public final class MatchingHelpRequest {
-    public final HelpRequest2 helpRequest;
-    public final SearchGroup matchingGroup;
-    public final SearchGroup requestGroup;
+    @NotNull
+    public final HelpRequest helpRequest;
+    @NotNull
+    public final Group matchingGroup;
+    @NotNull
+    public final Group requestGroup;
 
-    public MatchingHelpRequest(HelpRequest2 helpRequest, SearchGroup matchingGroup, SearchGroup requestGroup) {
+    public MatchingHelpRequest(@NotNull HelpRequest helpRequest, @NotNull Group matchingGroup, @NotNull Group requestGroup) {
         this.helpRequest = helpRequest;
         this.matchingGroup = matchingGroup;
         this.requestGroup = requestGroup;
+    }
+
+    @NotNull
+    public SearchInfo accessibleSearchInfo() {
+        assert matchingGroup.lastSearchInfo != null : "you should always be able to access your own search";
+        return requestGroup.lastSearchInfo != null ? requestGroup.lastSearchInfo : matchingGroup.lastSearchInfo;
     }
 }

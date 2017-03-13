@@ -46,6 +46,11 @@ final public class RestUrlBuilder {
     }
 
     @NotNull
+    public URL solutions(@NotNull final Integer searchId) {
+        return resolve("search/" + searchId + "/solutions");
+    }
+
+    @NotNull
     public URL bugmates(@NotNull final Integer searchId) {
         return resolve("search/" + searchId + "/bugmates");
     }

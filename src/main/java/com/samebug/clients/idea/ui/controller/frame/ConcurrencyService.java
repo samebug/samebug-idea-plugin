@@ -21,6 +21,7 @@ import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
 import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
 import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
+import com.samebug.clients.common.api.entities.search.SearchDetails;
 import com.samebug.clients.common.api.entities.solution.Solutions;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.*;
@@ -40,11 +41,14 @@ public final class ConcurrencyService {
     private final BugmateService bugmateService;
     private final HelpRequestStore helpRequestStore;
     private final HelpRequestService helpRequestService;
+    private final SearchStore searchStore;
+    private final SearchService searchService;
 
     public ConcurrencyService(ProfileStore profileStore, ProfileService profileService,
                               SolutionStore solutionStore, SolutionService solutionService,
                               BugmateStore bugmateStore, BugmateService bugmateService,
-                              HelpRequestStore helpRequestStore, HelpRequestService helpRequestService) {
+                              HelpRequestStore helpRequestStore, HelpRequestService helpRequestService,
+                              SearchStore searchStore, SearchService searchService) {
         this.solutionStore = solutionStore;
         this.profileStore = profileStore;
         this.profileService = profileService;
@@ -53,6 +57,8 @@ public final class ConcurrencyService {
         this.bugmateService = bugmateService;
         this.helpRequestStore = helpRequestStore;
         this.helpRequestService = helpRequestService;
+        this.searchStore = searchStore;
+        this.searchService = searchService;
         executor = PooledThreadExecutor.INSTANCE;
     }
 
@@ -115,5 +121,16 @@ public final class ConcurrencyService {
         MatchingHelpRequest current = helpRequestStore.getHelpRequest(helpRequestId);
         if (current == null) return FixedFuture.completeExceptionally(new IllegalStateException("help request " + helpRequestId + " was not loaded"));
         else return new FixedFuture<MatchingHelpRequest>(current);
+    }
+
+    public Future<SearchDetails> search(final int searchId) {
+        SearchDetails current = searchStore.get(searchId);
+        if (current == null) return executor.submit(new Callable<SearchDetails>() {
+            @Override
+            public SearchDetails call() throws SamebugClientException {
+                return searchService.get(searchId);
+            }
+        });
+        else return new FixedFuture<SearchDetails>(current);
     }
 }

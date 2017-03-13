@@ -24,21 +24,13 @@ import java.util.List;
 
 public class Solutions {
     @NotNull
-    private SearchGroup searchGroup;
-    @NotNull
     private List<RestHit<Tip>> tips;
     @NotNull
     private List<RestHit<SolutionReference>> references;
 
     private Solutions(@NotNull final Solutions rhs) {
-        this.searchGroup = rhs.searchGroup;
         this.tips = new ArrayList<RestHit<Tip>>(rhs.tips);
         this.references = new ArrayList<RestHit<SolutionReference>>(rhs.references);
-    }
-
-    @NotNull
-    public SearchGroup getSearchGroup() {
-        return searchGroup;
     }
 
     @NotNull

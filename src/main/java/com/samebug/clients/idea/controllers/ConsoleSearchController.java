@@ -19,7 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.api.entities.search.SearchResults;
+import com.samebug.clients.common.api.entities.search.CreatedSearch;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.entities.search.DebugSessionInfo;
 import com.samebug.clients.common.entities.search.RequestedSearch;
@@ -53,7 +53,7 @@ public class ConsoleSearchController implements StackTraceMatcherListener {
                 if (!project.isDisposed()) project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).newSearchRequest(requestedSearch);
 
                 try {
-                    SearchResults result = searchService.search(stackTrace);
+                    CreatedSearch result = searchService.search(stackTrace);
                     SavedSearch savedSearchRequest = searchRequestService.searchSucceeded(searchInfo, requestedSearch, result);
                     if (!project.isDisposed()) {
                         if (savedSearchRequest != null) project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).savedSearch(savedSearchRequest);

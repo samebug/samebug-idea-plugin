@@ -22,6 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.api.entities.UserInfo;
 import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
+import com.samebug.clients.common.api.entities.search.SearchDetails;
 import com.samebug.clients.common.api.entities.solution.Solutions;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.HelpRequestStore;
@@ -61,10 +62,9 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
         final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
 
-        // TODO decide if we can access the requester's search, or only for the matching one
-        int visibleSearchId = helpRequest.matchingGroup.getLastSearch().getId();
+        int accessibleSearchId = helpRequest.accessibleSearchInfo().id;
 
-        final Future<Solutions> solutionsTask = concurrencyService.solutions(visibleSearchId);
+        final Future<Solutions> solutionsTask = concurrencyService.solutions(accessibleSearchId);
         final Future<MatchingHelpRequest> helpRequestTask = concurrencyService.helpRequest(helpRequestId);
 
         load(solutionsTask, helpRequestTask, userInfoTask, userStatsTask);

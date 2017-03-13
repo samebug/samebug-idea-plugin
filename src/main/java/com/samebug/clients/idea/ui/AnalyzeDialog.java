@@ -21,7 +21,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.unscramble.AnalyzeStacktraceUtil;
-import com.samebug.clients.common.api.entities.search.SearchResults;
+import com.samebug.clients.common.api.entities.search.CreatedSearch;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.search.StackTraceListener;
 import com.samebug.clients.common.search.StackTraceMatcher;
@@ -112,7 +112,7 @@ final public class AnalyzeDialog extends DialogWrapper {
                     // TODO find out what does searchService do
                     // TODO show some progress during the search, and close the dialog and open the tool window if the search was successful.
                     try {
-                        SearchResults result = searchService.search(trace);
+                        CreatedSearch result = searchService.search(trace);
                         try {
                             final int searchId = result.getSearchId();
                             // TODO open solutions tab

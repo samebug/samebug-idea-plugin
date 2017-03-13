@@ -22,6 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.api.entities.UserInfo;
 import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
+import com.samebug.clients.common.api.entities.search.SearchDetails;
 import com.samebug.clients.common.api.entities.solution.Solutions;
 import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
 import com.samebug.clients.idea.components.project.ToolWindowController;
@@ -70,17 +71,19 @@ public final class SolutionsController extends BaseFrameController<ISolutionFram
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
         final Future<Solutions> solutionsTask = concurrencyService.solutions(searchId);
         final Future<BugmatesResult> bugmatesTask = concurrencyService.bugmates(searchId);
-        load(solutionsTask, bugmatesTask, userInfoTask, userStatsTask);
+        final Future<SearchDetails> searchTask = concurrencyService.search(searchId);
+        load(solutionsTask, bugmatesTask, searchTask, userInfoTask, userStatsTask);
     }
 
     private void load(final Future<Solutions> solutionsTask,
                       final Future<BugmatesResult> bugmatesTask,
+                      final Future<SearchDetails> searchTask,
                       final Future<UserInfo> userInfoTask,
                       final Future<UserStats> userStatsTask) {
         new LoadingTask() {
             @Override
             protected void load() throws Exception {
-                final SolutionFrame.Model model = conversionService.solutionFrame(solutionsTask.get(), bugmatesTask.get(), userInfoTask.get(), userStatsTask.get());
+                final SolutionFrame.Model model = conversionService.solutionFrame(searchTask.get(), solutionsTask.get(), bugmatesTask.get(), userInfoTask.get(), userStatsTask.get());
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                     @Override
                     public void run() {
