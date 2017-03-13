@@ -8,11 +8,13 @@ import java.awt.*;
 
 public class LoadingAnimation extends JComponent {
     final int size;
+    final int thickness;
     final MyAnimator animator;
     final Color[] arcColor = ColorService.LoadingArc;
 
     public LoadingAnimation(int size) {
         this.size = size;
+        thickness = size < 20 ? 1 :size / 20;
         animator = new MyAnimator();
 
         Dimension d = new Dimension(size, size);
@@ -43,9 +45,10 @@ public class LoadingAnimation extends JComponent {
         }
 
         public void paint(Graphics2D g2) {
-            int arcCenterDegrees = currentFrame * 10;
+            int arcCenterDegrees = -currentFrame * 10;
+            g2.setStroke(new BasicStroke(thickness));
             g2.setPaint(gradient(arcCenterDegrees));
-            g2.drawOval(1, 1, size - 2, size - 2);
+            g2.drawOval(thickness/2, thickness/2, size - 2*(thickness/2)-1, size - 2*(thickness/2)-1);
         }
 
         // TODO we can extract most of the computations to arrays if there is a preformance issue

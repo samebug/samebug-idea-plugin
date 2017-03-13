@@ -16,6 +16,7 @@
 package com.samebug.clients.swing.ui.base.frame;
 
 import com.samebug.clients.common.ui.frame.IFrame;
+import com.samebug.clients.swing.ui.base.animation.LoadingAnimation;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.CenteredMultilineLabel;
@@ -60,7 +61,7 @@ public abstract class BasicFrame extends ErrorBarPane implements IFrame {
 
     @Override
     public void setLoading() {
-        addMainComponent(new SamebugLabel("loading"));
+        addMainComponent(new LoadingPanel());
     }
 
     @Override
@@ -95,6 +96,16 @@ public abstract class BasicFrame extends ErrorBarPane implements IFrame {
 
     protected abstract FrameListener getListener();
 
+    private final class LoadingPanel extends TransparentPanel {
+        public LoadingPanel() {
+            final LoadingAnimation animation = new LoadingAnimation(80);
+            final CenteredMultilineLabel label = new CenteredMultilineLabel();
+            label.setText(MessageService.message("samebug.frame.loading"));
+            setLayout(new MigLayout("fillx", "0:push[fill]0:push", "0:push[]30[]0:push"));
+            add(animation, "cell 0 0, wmin 0, al center");
+            add(label, "cell 0 1, wmin 0");
+        }
+    }
 
     private class ErrorPanel extends TransparentPanel {
         public ErrorPanel(String description, String buttonLabel, MouseListener mouseListener) {
@@ -104,10 +115,10 @@ public abstract class BasicFrame extends ErrorBarPane implements IFrame {
             label.setText(description);
             button.addMouseListener(mouseListener);
 
-            setLayout(new MigLayout("fillx, al center center", "0[]0", "0:push[]30[]30[]0:push"));
+            setLayout(new MigLayout("fillx", "0[]0", "0:push[]30[]30[]0:push"));
             add(alertImage, "cell 0 0, wmin 0, growx");
             add(label, "cell 0 1, wmin 0, growx");
-            add(button, "cell 0 2, align center");
+            add(button, "cell 0 2, al center");
         }
     }
 

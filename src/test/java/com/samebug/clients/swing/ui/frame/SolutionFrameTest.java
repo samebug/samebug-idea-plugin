@@ -42,7 +42,7 @@ public class SolutionFrameTest extends TestDialog {
         final ISolutionFrame.Model model = readJson(resourceJson, ISolutionFrame.Model.class);
 
         SolutionFrame f = new SolutionFrame();
-        f.loadingSucceeded(model);
+//        f.loadingSucceeded(model);
         setContentPane(f);
     }
 }
