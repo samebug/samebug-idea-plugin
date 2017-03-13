@@ -6,32 +6,32 @@ import com.samebug.clients.swing.ui.frame.solution.SolutionFrame;
 import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
+//@Ignore
 public class SolutionFrameTest extends TestDialog {
-    @Test
-    public void everythingIsEmpty() {
-        waitToInitializeUI("solution/empty.json").showDialog();
-    }
-
-    @Test
-    public void oneBugmate() {
-        waitToInitializeUI("solution/b1.json").showDialog();
-    }
-
-    @Test
-    public void twoBugmates() {
-        waitToInitializeUI("solution/b2.json").showDialog();
-    }
-
-    @Test
-    public void threeBugmates() {
-        waitToInitializeUI("solution/b3.json").showDialog();
-    }
-
-    @Test
-    public void zeroTipsAndZeroWebHits() {
-        waitToInitializeUI("solution/t0w0.json").showDialog();
-    }
+//    @Test
+//    public void everythingIsEmpty() {
+//        waitToInitializeUI("solution/empty.json").showDialog();
+//    }
+//
+//    @Test
+//    public void oneBugmate() {
+//        waitToInitializeUI("solution/b1.json").showDialog();
+//    }
+//
+//    @Test
+//    public void twoBugmates() {
+//        waitToInitializeUI("solution/b2.json").showDialog();
+//    }
+//
+//    @Test
+//    public void threeBugmates() {
+//        waitToInitializeUI("solution/b3.json").showDialog();
+//    }
+//
+//    @Test
+//    public void zeroTipsAndZeroWebHits() {
+//        waitToInitializeUI("solution/t0w0.json").showDialog();
+//    }
 
     @Test
     public void twoTipsAndTwentysevenWebHits() {

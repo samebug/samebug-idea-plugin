@@ -16,6 +16,7 @@
 package com.samebug.clients.swing.ui.component.hit;
 
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
+import com.samebug.clients.swing.ui.base.animation.LoadingAnimation;
 import com.samebug.clients.swing.ui.base.button.BasicButton;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.EmphasizedPanel;
@@ -149,9 +150,11 @@ public final class MarkButton extends JComponent implements IMarkButton {
             setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
             setLayout(new MigLayout("", ":push[]:push", "6[]6"));
 
-            JLabel icon = new JLabel(IconService.loading());
-            add(icon, "align center, h 20!");
+            LoadingAnimation l = new LoadingAnimation(20);
+            add(l, "align center, h 20!");
         }
+
+
     }
 
     private Integer getSolutionId() {

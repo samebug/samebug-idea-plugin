@@ -18,6 +18,7 @@ package com.samebug.clients.swing.ui.testModules;
 import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
+import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 
 import javax.swing.*;
@@ -26,6 +27,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Collections;
 
+@SuppressWarnings("unchecked")
 public final class TestListenerService extends ListenerService {
     @Override
     protected <T> T internalGetListener(JComponent component, Class<T> listenerClass) {
@@ -40,8 +42,14 @@ public final class TestListenerService extends ListenerService {
                     }
                 }
             };
+        } else if (listenerClass == IMarkButton.Listener.class) {
+            return (T) new IMarkButton.Listener() {
+                @Override
+                public void markClicked(IMarkButton markButton, Integer solutionId, Integer currentMarkId) {
+                    markButton.setLoading();
+                }
+            };
         } else {
-
             Class<?>[] interfaces = new Class<?>[]{listenerClass};
             return (T) Proxy.newProxyInstance(getClass().getClassLoader(), interfaces, new InvocationHandler() {
                 @Override
