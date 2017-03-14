@@ -36,8 +36,6 @@ public final class HelpRequest {
     public final Date createdAt;
     @Nullable
     public final Date revokedAt;
-    @Nullable
-    public final Date viewedAt;
 
     public HelpRequest(@NotNull String id,
                        @NotNull Requester requester,
@@ -45,8 +43,7 @@ public final class HelpRequest {
                        @NotNull String context,
                        @NotNull String visibility,
                        @NotNull Date createdAt,
-                       @Nullable Date revokedAt,
-                       @Nullable Date viewedAt) {
+                       @Nullable Date revokedAt) {
         this.id = id;
         this.requester = requester;
         this.workspaceId = workspaceId;
@@ -54,6 +51,5 @@ public final class HelpRequest {
         this.visibility = visibility;
         this.createdAt = createdAt;
         this.revokedAt = revokedAt;
-        this.viewedAt = viewedAt;
     }
 }

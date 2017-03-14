@@ -15,18 +15,16 @@
  */
 package com.samebug.clients.idea.ui.controller.solution;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameListener;
 import com.samebug.clients.idea.ui.modules.IdeaListenerService;
 
 final class SolutionFrameController extends BaseFrameListener implements ISolutionFrame.Listener {
-    final static Logger LOGGER = Logger.getInstance(WebHitController.class);
     final SolutionsController controller;
 
     public SolutionFrameController(final SolutionsController controller) {
-        super(controller);
+        super(controller.myProject);
         this.controller = controller;
 
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);

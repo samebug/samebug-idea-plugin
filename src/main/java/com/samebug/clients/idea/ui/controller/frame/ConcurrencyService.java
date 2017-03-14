@@ -118,9 +118,12 @@ public final class ConcurrencyService {
     }
 
     public Future<MatchingHelpRequest> helpRequest(final String helpRequestId) {
-        MatchingHelpRequest current = helpRequestStore.getHelpRequest(helpRequestId);
-        if (current == null) return FixedFuture.completeExceptionally(new IllegalStateException("help request " + helpRequestId + " was not loaded"));
-        else return new FixedFuture<MatchingHelpRequest>(current);
+        return executor.submit(new Callable<MatchingHelpRequest>() {
+            @Override
+            public MatchingHelpRequest call() throws SamebugClientException {
+                return helpRequestService.getHelpRequest(helpRequestId);
+            }
+        });
     }
 
     public Future<SearchDetails> search(final int searchId) {

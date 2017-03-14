@@ -172,7 +172,7 @@ public final class ConversionService {
             Requester requester = r.helpRequest.requester;
             HelpRequest hr = r.helpRequest;
             String exceptionBody = headLine(r.accessibleSearchInfo());
-            IHelpRequestPreview.Model preview = new IHelpRequestPreview.Model(requester.displayName, requester.avatarUrl, hr.createdAt, hr.viewedAt, hr.context, hr.id, exceptionBody);
+            IHelpRequestPreview.Model preview = new IHelpRequestPreview.Model(requester.displayName, requester.avatarUrl, hr.createdAt, r.viewedAt, hr.context, hr.id, exceptionBody);
             requestPreviews.add(preview);
         }
         IHelpRequestList.Model requestList = new IHelpRequestList.Model(requestPreviews);

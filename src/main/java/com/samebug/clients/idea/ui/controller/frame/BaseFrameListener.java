@@ -2,7 +2,6 @@ package com.samebug.clients.idea.ui.controller.frame;
 
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.util.net.HttpProxyConfigurable;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.idea.ui.controller.ConfigDialog;
@@ -10,8 +9,8 @@ import com.samebug.clients.idea.ui.controller.ConfigDialog;
 public abstract class BaseFrameListener implements IFrame.FrameListener {
     private final Project project;
 
-    public BaseFrameListener(BaseFrameController controller) {
-        this.project = controller.myProject;
+    public BaseFrameListener(Project project) {
+        this.project = project;
     }
 
     @Override
@@ -21,6 +20,6 @@ public abstract class BaseFrameListener implements IFrame.FrameListener {
 
     @Override
     public void openNetworkSettings() {
-        ShowSettingsUtil.getInstance().showSettingsDialog(ProjectManager.getInstance().getDefaultProject(), HttpProxyConfigurable.class);
+        ShowSettingsUtil.getInstance().showSettingsDialog(project, HttpProxyConfigurable.class);
     }
 }

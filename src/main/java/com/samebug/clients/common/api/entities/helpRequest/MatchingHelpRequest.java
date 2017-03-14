@@ -17,6 +17,9 @@ package com.samebug.clients.common.api.entities.helpRequest;
 
 import com.samebug.clients.common.api.entities.search.SearchInfo;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Date;
 
 public final class MatchingHelpRequest {
     @NotNull
@@ -25,11 +28,15 @@ public final class MatchingHelpRequest {
     public final Group matchingGroup;
     @NotNull
     public final Group requestGroup;
+    @Nullable
+    public final Date viewedAt;
 
-    public MatchingHelpRequest(@NotNull HelpRequest helpRequest, @NotNull Group matchingGroup, @NotNull Group requestGroup) {
+    public MatchingHelpRequest(@NotNull HelpRequest helpRequest, @NotNull Group matchingGroup, @NotNull Group requestGroup,
+                               @Nullable Date viewedAt) {
         this.helpRequest = helpRequest;
         this.matchingGroup = matchingGroup;
         this.requestGroup = requestGroup;
+        this.viewedAt = viewedAt;
     }
 
     @NotNull

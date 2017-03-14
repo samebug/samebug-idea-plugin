@@ -37,6 +37,7 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
     final String helpRequestId;
 
     final WriteTipListener writeTipListener;
+    final HelpRequestFrameListener frameListener;
 
     final HelpRequestStore helpRequestStore;
 
@@ -47,6 +48,7 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
 
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
         helpRequestStore = plugin.helpRequestStore;
+        frameListener = new HelpRequestFrameListener(this);
         writeTipListener = new WriteTipListener(this);
     }
 
@@ -56,6 +58,8 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
 
 
     public void load() {
+        // TODO other controllers should also make sure to set the loading screen when starting to load content
+        view.setLoading();
         MatchingHelpRequest helpRequest = helpRequestStore.getHelpRequest(helpRequestId);
         assert helpRequest != null;
 

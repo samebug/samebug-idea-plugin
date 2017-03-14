@@ -17,6 +17,8 @@ package com.samebug.clients.common.services;
 
 import com.samebug.clients.common.api.client.ClientResponse;
 import com.samebug.clients.common.api.client.SamebugClient;
+import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
+import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
 import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
 import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
@@ -58,6 +60,18 @@ public final class HelpRequestService {
                 new ClientService.ConnectionAwareHttpRequest<MyHelpRequest>() {
                     ClientResponse<MyHelpRequest> request() {
                         return client.createHelpRequest(searchId, context);
+                    }
+                };
+        return clientService.execute(requestHandler);
+    }
+
+    public MatchingHelpRequest getHelpRequest(final String helpRequestId) throws SamebugClientException {
+        final SamebugClient client = clientService.client;
+
+        ClientService.ConnectionAwareHttpRequest<MatchingHelpRequest> requestHandler =
+                new ClientService.ConnectionAwareHttpRequest<MatchingHelpRequest>() {
+                    ClientResponse<MatchingHelpRequest> request() {
+                        return client.getHelpRequest(helpRequestId);
                     }
                 };
         return clientService.execute(requestHandler);

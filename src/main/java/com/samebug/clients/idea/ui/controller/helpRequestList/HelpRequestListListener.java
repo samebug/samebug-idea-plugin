@@ -9,7 +9,7 @@ public final class HelpRequestListListener extends BaseFrameListener implements 
     final HelpRequestListController controller;
 
     public HelpRequestListListener(final HelpRequestListController controller) {
-        super(controller);
+        super(controller.myProject);
         this.controller = controller;
 
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
@@ -18,7 +18,6 @@ public final class HelpRequestListListener extends BaseFrameListener implements 
 
     @Override
     public void reload() {
-        controller.view.setLoading();
         controller.load();
     }
 }

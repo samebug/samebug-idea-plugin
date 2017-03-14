@@ -76,6 +76,11 @@ final public class RestUrlBuilder {
     }
 
     @NotNull
+    public URL getHelpRequest(String helpRequestId) {
+        return resolve("helprequest/" + helpRequestId);
+    }
+
+    @NotNull
     public URL incomingHelpRequests() {
         return resolve("incoming-helprequests");
     }

@@ -21,6 +21,8 @@ import com.samebug.clients.common.api.RestUrlBuilder;
 import com.samebug.clients.common.api.entities.UserInfo;
 import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
+import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
+import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
 import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
 import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
 import com.samebug.clients.common.api.entities.search.CreatedSearch;
@@ -128,6 +130,15 @@ final public class SamebugClient {
         HttpGet request = new HttpGet(url.toString());
 
         return rawClient.executeAuthenticated(request, new HandleJsonRequest<IncomingHelpRequests>(IncomingHelpRequests.class));
+    }
+
+    public
+    @NotNull
+    ClientResponse<MatchingHelpRequest> getHelpRequest(String helpRequestId) {
+        final URL url = urlBuilder.getHelpRequest(helpRequestId);
+        HttpGet request = new HttpGet(url.toString());
+
+        return rawClient.executeAuthenticated(request, new HandleJsonRequest<MatchingHelpRequest>(MatchingHelpRequest.class));
     }
 
     public
