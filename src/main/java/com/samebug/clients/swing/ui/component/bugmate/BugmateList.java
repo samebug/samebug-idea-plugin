@@ -31,7 +31,9 @@ import java.util.List;
 
 public final class BugmateList extends TransparentPanel implements IBugmateList {
     final Model model;
+    // TODO when IBugList is separated from the revoke/request interface, these two component can be refactored too
     final RequestTip requestTip;
+    final RevokeHelpRequest revokeHelpRequest;
 
     public BugmateList(Model model) {
         this.model = new Model(model);
@@ -39,14 +41,24 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
         final SubheaderLabel subheader = new SubheaderLabel();
         final BugmateGrid bugmateGrid = new BugmateGrid(model.bugmateHits);
         final MoreLabel more = new MoreLabel(model.numberOfOtherBugmates);
-        requestTip = new RequestTip(this);
+        if (model.helpRequest != null) {
+            revokeHelpRequest = new RevokeHelpRequest(this);
+            requestTip = null;
+        } else {
+            requestTip = new RequestTip(this);
+            revokeHelpRequest = null;
+        }
 
         setLayout(new MigLayout("fillx", "0[]0", "0[]25[]25[]10[]0"));
 
         add(subheader, "cell 0 0");
         add(bugmateGrid, "cell 0 1, growx");
         add(more, "cell 0 2, align center");
-        add(requestTip, "cell 0 3, align center, growx");
+        if (model.helpRequest != null) {
+            add(revokeHelpRequest, "cell 0 3, align center, growx");
+        } else {
+            add(requestTip, "cell 0 3, align center, growx");
+        }
     }
 
     @Override
@@ -63,6 +75,21 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
     @Override
     public void successRequestTip() {
         requestTip.successRequestTip();
+    }
+
+    @Override
+    public void startRevoke() {
+        revokeHelpRequest.startRevoke();
+    }
+
+    @Override
+    public void failRevoke() {
+        revokeHelpRequest.failRevoke();
+    }
+
+    @Override
+    public void successRevoke() {
+        revokeHelpRequest.successRevoke();
     }
 
 

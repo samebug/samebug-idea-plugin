@@ -62,4 +62,16 @@ public final class HelpRequestService {
                 };
         return clientService.execute(requestHandler);
     }
+
+    public MyHelpRequest revokeHelpRequest(final String helpRequestId) throws SamebugClientException {
+        final SamebugClient client = clientService.client;
+
+        ClientService.ConnectionAwareHttpRequest<MyHelpRequest> requestHandler =
+                new ClientService.ConnectionAwareHttpRequest<MyHelpRequest>() {
+                    ClientResponse<MyHelpRequest> request() {
+                        return client.revokeHelpRequest(helpRequestId);
+                    }
+                };
+        return clientService.execute(requestHandler);
+    }
 }

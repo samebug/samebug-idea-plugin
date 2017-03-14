@@ -146,6 +146,15 @@ final public class SamebugClient {
 
     public
     @NotNull
+    ClientResponse<MyHelpRequest> revokeHelpRequest(String helpRequestId) {
+        final URL url = urlBuilder.revokeHelpRequest(helpRequestId);
+        HttpPost request = new HttpPost(url.toString());
+
+        return rawClient.executeAuthenticated(request, new HandleJsonRequest<MyHelpRequest>(MyHelpRequest.class));
+    }
+
+    public
+    @NotNull
     ClientResponse<RestHit<Tip>> createTip(@NotNull final Integer searchId, @NotNull final String tip, @Nullable final String source) {
         final URL url = urlBuilder.tip();
         HttpPost post = new HttpPost(url.toString());

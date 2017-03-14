@@ -24,6 +24,7 @@ import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.modules.IdeaListenerService;
+import com.samebug.clients.swing.ui.modules.MessageService;
 
 final class MarkController implements IMarkButton.Listener {
     final static Logger LOGGER = Logger.getInstance(MarkController.class);
@@ -38,6 +39,7 @@ final class MarkController implements IMarkButton.Listener {
 
     @Override
     public void markClicked(final IMarkButton markButton, final Integer solutionId, final Integer markId) {
+        // TODO it does not handles non-SamebugExceptions. Extract the handler for this and formHandler
         markButton.setLoading();
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
@@ -60,12 +62,12 @@ final class MarkController implements IMarkButton.Listener {
                         }
                     });
                 } catch (SamebugClientException e) {
-                    // TODO refine this error message part
+                    LOGGER.warn("Failed to post mark", e);
                     ApplicationManager.getApplication().invokeLater(new Runnable() {
                         @Override
                         public void run() {
                             markButton.interruptLoading();
-                            controller.view.popupError("Mark failed");
+                            controller.view.popupError(MessageService.message("samebug.component.mark.error.unhandled"));
                         }
                     });
                 }

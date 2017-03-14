@@ -14,11 +14,14 @@ public final class SearchDetails {
     public final String message;
     @NotNull
     public final Date timestamp;
+    @NotNull
+    public final Group group;
 
-    public SearchDetails(@NotNull Integer id, @NotNull String typeName, String message, @NotNull Date timestamp) {
+    public SearchDetails(@NotNull Integer id, @NotNull String typeName, @Nullable String message, @NotNull Date timestamp, @NotNull Group group) {
         this.id = id;
         this.typeName = typeName;
         this.message = message;
         this.timestamp = timestamp;
+        this.group = group;
     }
 }

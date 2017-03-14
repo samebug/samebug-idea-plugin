@@ -110,7 +110,7 @@ public final class ConversionService {
             bugmateHits.add(model);
         }
         String exceptionTitle = headLine(search);
-        IBugmateList.Model bugmateList = new IBugmateList.Model(bugmateHits, bugmates.getNumberOfOtherBugmates(), bugmates.isEvenMoreExists(), exceptionTitle);
+        IBugmateList.Model bugmateList = new IBugmateList.Model(bugmateHits, bugmates.getNumberOfOtherBugmates(), bugmates.isEvenMoreExists(), exceptionTitle, search.group.helpRequest);
         return new ITipResultsTab.Model(tipHits, bugmateList);
     }
 

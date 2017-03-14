@@ -102,4 +102,34 @@ final class BugmateListController implements IBugmateList.Listener {
             ;
         });
     }
+
+    @Override
+    public void revokeHelpRequest(final IBugmateList source, final String helpRequestId) {
+        source.startRevoke();
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                final HelpRequestService helpRequestService = IdeaSamebugPlugin.getInstance().helpRequestService;
+                try {
+                    final MyHelpRequest response = helpRequestService.revokeHelpRequest(helpRequestId);
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            controller.load();
+                            source.successRevoke();
+                        }
+                    });
+                } catch (SamebugClientException e) {
+                    LOGGER.warn("Failed to revoke help request", e);
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            source.failRevoke();
+                            controller.view.popupError(MessageService.message("samebug.component.helpRequest.revoke.error.unhandled"));
+                        }
+                    });
+                }
+            }
+        });
+    }
 }
