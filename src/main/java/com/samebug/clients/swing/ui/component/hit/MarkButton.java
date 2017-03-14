@@ -63,9 +63,10 @@ public final class MarkButton extends ActionButton implements IMarkButton {
     }
 
     private void normalState() {
+        final boolean markedByMe = model.userMarkId != null;
         final CounterLabel counter = new CounterLabel();
         final Separator separator = new Separator();
-        final MarkLabel markLabel = new MarkLabel();
+        final MarkLabel markLabel = new MarkLabel(markedByMe, model.userCanMark);
 
         setLayout(new MigLayout("", "12[]9[]10[]8", "8[]8"));
 
@@ -73,25 +74,26 @@ public final class MarkButton extends ActionButton implements IMarkButton {
         add(separator, "w 1!, h 16!");
         add(markLabel, ", h 16!");
 
-        setFilled(MarkButton.this.model.userMarkId != null);
-        // TODO set disabled state
+        setFilled(markedByMe);
+        setEnabled(model.userCanMark);
         setFont(FontService.demi(14));
         setInteractionColors(ColorService.MarkInteraction);
-        setBackgroundColor(MarkButton.this.backgroundColor);
+        setBackgroundColor(backgroundColor);
     }
 
     private final class CounterLabel extends SamebugLabel {
         {
             setHorizontalAlignment(SwingConstants.CENTER);
-            setText(Integer.toString(MarkButton.this.model.marks));
+            setText(Integer.toString(model.marks));
         }
     }
 
     private final class MarkLabel extends SamebugLabel {
-        {
+        public MarkLabel(boolean markedByMe, boolean markableByMe) {
             setHorizontalAlignment(SwingConstants.CENTER);
-            if (MarkButton.this.model.userMarkId == null) setText(MessageService.message("samebug.component.mark.mark"));
-            else setText(MessageService.message("samebug.component.mark.marked"));
+            if (markableByMe && !markedByMe) setText(MessageService.message("samebug.component.mark.mark"));
+            else if (markableByMe && markedByMe) setText(MessageService.message("samebug.component.mark.marked"));
+            else setText(MessageService.message("samebug.component.mark.marked")); // we have the same text when the button is disabled
         }
     }
 

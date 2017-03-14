@@ -86,8 +86,9 @@ public final class ConversionService {
             final String sourceIconName = externalSolution.getSource().getIcon();
             final URL sourceIconUrl = urlBuilder.sourceIcon(sourceIconName);
 
-            String createdBy = null;
+            final String createdBy;
             if (externalSolution.getAuthor() != null) createdBy = externalSolution.getAuthor().getName();
+            else createdBy = null;
             IWebHit.Model webHit =
                     new IWebHit.Model(externalSolution.getTitle(), externalSolution.getUrl(), externalHit.getSolutionId(),
                             externalSolution.getCreatedAt(), createdBy,
@@ -166,7 +167,8 @@ public final class ConversionService {
         for (MatchingHelpRequest r : incomingRequests.matches) {
             Requester requester = r.helpRequest.requester;
             HelpRequest hr = r.helpRequest;
-            IHelpRequestPreview.Model preview = new IHelpRequestPreview.Model(requester.displayName, requester.avatarUrl, hr.createdAt, hr.context, null);
+            String exceptionBody = headLine(r.accessibleSearchInfo());
+            IHelpRequestPreview.Model preview = new IHelpRequestPreview.Model(requester.displayName, requester.avatarUrl, hr.createdAt, hr.context, exceptionBody);
             requestPreviews.add(preview);
         }
         IHelpRequestList.Model requestList = new IHelpRequestList.Model(requestPreviews);
