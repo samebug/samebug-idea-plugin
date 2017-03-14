@@ -146,7 +146,7 @@ final public class ToolWindowController implements FocusListener, Disposable {
     public void dispose() {
         if (introFrame != null) Disposer.dispose(introFrame);
         if (authenticationFrame != null) Disposer.dispose(authenticationFrame);
-        if (helpRequestListFrame != null) Disposer.dispose(helpRequestListFrame);
+        if (helpRequestListFrame != null) closeTab(helpRequestListFrame);
         if (solutionFrame != null) closeTab(solutionFrame);
         if (helpRequestFrame != null) closeTab(helpRequestFrame);
     }
@@ -154,7 +154,9 @@ final public class ToolWindowController implements FocusListener, Disposable {
     public void closeTab(@NotNull final BaseFrameController frame) {
         final ToolWindow toolWindow = getToolWindow();
         final ContentManager toolwindowCM = toolWindow.getContentManager();
+        // NOTE the dispose: true parameter here will only dispose the content (the JPanel) but not the controller!
         toolwindowCM.removeContent(toolwindowCM.getContent(frame.getControlPanel()), true);
+        Disposer.dispose(frame);
     }
 
     // TODO needs refactor
