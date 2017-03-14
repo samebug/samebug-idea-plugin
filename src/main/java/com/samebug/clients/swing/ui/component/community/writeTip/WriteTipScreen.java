@@ -21,6 +21,7 @@ import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.common.ui.component.form.IForm;
+import com.samebug.clients.swing.ui.base.button.ActionButton;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
@@ -80,11 +81,7 @@ public class WriteTipScreen extends RoundedBackgroundPanel implements IForm {
         final LinkLabel cancelButton;
 
         {
-            sendButton = new SamebugButton(MessageService.message("samebug.component.tip.write.send"), true);
-            sendButton.setInteractionColors(ColorService.MarkInteraction);
-            sendButton.setBackgroundColor(ColorService.Tip);
-            sendButton.setFont(FontService.demi(14));
-
+            sendButton = new SendTipButton();
             cancelButton = new LinkLabel(MessageService.message("samebug.component.tip.write.cancel"));
             cancelButton.setInteractionColors(ColorService.MarkInteraction);
             cancelButton.setFont(FontService.demi(14));
@@ -93,12 +90,6 @@ public class WriteTipScreen extends RoundedBackgroundPanel implements IForm {
             add(sendButton);
             add(cancelButton);
 
-            sendButton.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    writeTip.getListener().postTip(writeTip, tipArea.getText());
-                }
-            });
             cancelButton.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -109,5 +100,23 @@ public class WriteTipScreen extends RoundedBackgroundPanel implements IForm {
 
         }
 
+    }
+
+    final class SendTipButton extends SamebugButton {
+        public SendTipButton() {
+            super(MessageService.message("samebug.component.tip.write.send"), true);
+            setInteractionColors(ColorService.MarkInteraction);
+            setBackgroundColor(ColorService.Tip);
+            setFont(FontService.demi(14));
+
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (isEnabled()) {
+                        writeTip.getListener().postTip(writeTip, tipArea.getText());
+                    }
+                }
+            });
+        }
     }
 }

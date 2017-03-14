@@ -25,7 +25,7 @@ import java.awt.*;
 /**
  * Ordinary button with a single text label, and sensible defaults.
  */
-public class SamebugButton extends BasicButton {
+public class SamebugButton extends ActionButton {
     protected final JLabel label;
 
     public SamebugButton() {
@@ -41,8 +41,7 @@ public class SamebugButton extends BasicButton {
         label = new JLabel(text);
 
         setFont(FontService.demi(14));
-        setLayout(new MigLayout("", "12:push[]12:push", "11[]12"));
-        add(label, "align center");
+        addLabel();
 
         setInteractionColors(ColorService.LinkInteraction);
         setBackgroundColor(ColorService.Background);
@@ -53,12 +52,17 @@ public class SamebugButton extends BasicButton {
     }
 
     @Override
-    protected void setChildrenForeground(Color foreground) {
-        label.setForeground(foreground);
+    public void revertFromLoadingAnimation() {
+        super.revertFromLoadingAnimation();
+        addLabel();
+        revalidate();
+        repaint();
+
     }
 
-    @Override
-    protected void setChildrenFont(Font font) {
-        label.setFont(font);
+    private void addLabel() {
+        label.setForeground(currentChildrenColor);
+        setLayout(new MigLayout("", "12:push[]12:push", "11[]12"));
+        add(label, "align center");
     }
 }

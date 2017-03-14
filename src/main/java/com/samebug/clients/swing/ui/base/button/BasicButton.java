@@ -41,11 +41,14 @@ import java.awt.*;
 public abstract class BasicButton extends JComponent {
     protected ForegroundColorChanger interactionListener;
     protected Color[] backgroundColor;
+    protected Color[] disabledColor;
     protected boolean filled;
+    protected Color currentChildrenColor;
 
     public BasicButton(boolean filled) {
         this.filled = filled;
 
+        disabledColor = ColorService.DisabledButton;
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         setOpaque(false);
 
@@ -53,8 +56,12 @@ public abstract class BasicButton extends JComponent {
     }
 
     public void setInteractionColors(InteractionColors c) {
-        interactionListener = ForegroundColorChanger.installForegroundInteraction(c, this);
-        updateColors();
+        if (interactionListener != null) interactionListener.uninstall();
+        interactionListener = new ForegroundColorChanger(c, this);
+        if (isEnabled()) {
+            interactionListener.install();
+            updateColors();
+        }
     }
 
     public void setBackgroundColor(Color[] c) {
@@ -92,6 +99,18 @@ public abstract class BasicButton extends JComponent {
     }
 
     @Override
+    public void setEnabled(boolean enabled) {
+        // TODO this should happen only when the property actually changes, would be better to use property change listener?
+        if (isEnabled() == enabled) return;
+        super.setEnabled(enabled);
+        if (interactionListener != null) {
+            if (enabled) interactionListener.install();
+            else interactionListener.uninstall();
+        }
+        updateColors();
+    }
+
+    @Override
     public void paint(Graphics g) {
         Graphics2D g2 = DrawService.init(g);
         paintBorder(g2);
@@ -117,11 +136,18 @@ public abstract class BasicButton extends JComponent {
     }
 
     private void updateColors() {
-        if (interactionListener != null) setForeground(interactionListener.getColor());
+        if (isEnabled() && interactionListener != null) setForeground(interactionListener.getColor());
+        else if (!isEnabled()) setForeground(ColorService.forCurrentTheme(disabledColor));
         setBackground(ColorService.forCurrentTheme(backgroundColor));
     }
 
-    protected abstract void setChildrenForeground(Color foreground);
 
-    protected abstract void setChildrenFont(Font font);
+    protected void setChildrenForeground(Color foreground) {
+        currentChildrenColor = foreground;
+        for (Component c : getComponents()) c.setForeground(currentChildrenColor);
+    };
+
+    protected void setChildrenFont(Font font) {
+        for (Component c : getComponents()) c.setFont(font);
+    }
 }

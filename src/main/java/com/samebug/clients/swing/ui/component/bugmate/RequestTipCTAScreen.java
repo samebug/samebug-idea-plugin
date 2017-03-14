@@ -41,7 +41,7 @@ public final class RequestTipCTAScreen extends TransparentPanel {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    bugmateList.requestTip.changeToOpenState();
+                    if (isEnabled()) bugmateList.requestTip.changeToOpenState();
                 }
             });
 

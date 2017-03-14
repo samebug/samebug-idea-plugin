@@ -34,6 +34,7 @@ public final class MessageLabel extends NumberLabel {
     }
 
     public void setInteractionColors(InteractionColors c) {
+        if (interactionListener != null) interactionListener.uninstall();
         interactionListener = ForegroundColorChanger.installForegroundInteraction(c, this);
     }
 

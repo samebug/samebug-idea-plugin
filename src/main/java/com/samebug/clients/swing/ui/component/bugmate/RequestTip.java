@@ -39,11 +39,14 @@ public final class RequestTip extends JComponent {
     public void startRequestTip() {
         // TODO loading
         if (tipScreen == null) return;
-        tipScreen.sendButton.setText("loading...");
+        tipScreen.sendButton.changeToLoadingAnimation();
     }
 
     public void failRequestTip(List<FieldError> errors) throws FormMismatchException {
-        if (tipScreen != null) tipScreen.setFormErrors(errors);
+        if (tipScreen != null) {
+            tipScreen.setFormErrors(errors);
+            tipScreen.sendButton.revertFromLoadingAnimation();
+        }
     }
 
     public void successRequestTip() {

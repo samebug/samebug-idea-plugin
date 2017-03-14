@@ -64,9 +64,21 @@ public class ForegroundColorChanger extends BasicInteractionListener {
         return ColorService.forCurrentTheme(colors);
     }
 
+    public void uninstall() {
+        component.removeMouseListener(this);
+    }
+    public void install() {
+        component.addMouseListener(this);
+    }
+
+    @Nullable
     public static ForegroundColorChanger installForegroundInteraction(@Nullable InteractionColors interationInteractionColors, @NotNull JComponent component) {
-        ForegroundColorChanger listener = new ForegroundColorChanger(interationInteractionColors, component);
-        component.addMouseListener(listener);
-        return listener;
+        if (interationInteractionColors != null) {
+            ForegroundColorChanger listener = new ForegroundColorChanger(interationInteractionColors, component);
+            component.addMouseListener(listener);
+            return listener;
+        } else {
+            return null;
+        }
     }
 }

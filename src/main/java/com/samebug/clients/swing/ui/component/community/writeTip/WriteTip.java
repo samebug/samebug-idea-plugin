@@ -45,20 +45,23 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
 
     @Override
     public void startPostTip() {
-        // TODO loading
         if (tipScreen == null) return;
-        tipScreen.actionRow.sendButton.setText("loading...");
+        tipScreen.actionRow.sendButton.changeToLoadingAnimation();
     }
 
     @Override
     public void successPostTip() {
         // TODO keep track of open/close state in a boolean?
+        // TODO do we have to properly close the loading animation on the send button?
         if (ctaScreen == null) changeToClosedState();
     }
 
     @Override
     public void failPostTipWithFormError(List<FieldError> errors) throws FormMismatchException {
-        if (tipScreen != null) tipScreen.setFormErrors(errors);
+        if (tipScreen != null) {
+            tipScreen.actionRow.sendButton.revertFromLoadingAnimation();
+            tipScreen.setFormErrors(errors);
+        }
     }
 
     public enum CTA_TYPE {

@@ -31,17 +31,15 @@ public final class RevokeHelpRequest extends JComponent {
     }
 
     public void startRevoke() {
-        // TODO loading animation
-        revoke.setText("loading...");
+        revoke.changeToLoadingAnimation();
     }
 
     public void failRevoke() {
-        // TODO reset
-
+        revoke.revertFromLoadingAnimation();
     }
 
     public void successRevoke() {
-        // TODO reset
+        revoke.revertFromLoadingAnimation();
     }
 
     private final class HelpRequestLabel extends SamebugPanel {
@@ -69,7 +67,7 @@ public final class RevokeHelpRequest extends JComponent {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    bugmateList.getListener().revokeHelpRequest(bugmateList, helpRequest.id);
+                    if (isEnabled()) bugmateList.getListener().revokeHelpRequest(bugmateList, helpRequest.id);
                 }
             });
         }

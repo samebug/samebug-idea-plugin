@@ -36,11 +36,12 @@ public final class TestListenerService extends ListenerService {
             return (T) new IHelpOthersCTA.Listener() {
                 @Override
                 public void postTip(IHelpOthersCTA source, String tipBody) {
-                    try {
-                        source.failPostTipWithFormError(Collections.singletonList(new FieldError(FormBuilder.CreateTip.BODY, FormBuilder.CreateTip.E_TOO_LONG)));
-                    } catch (FormMismatchException e) {
-                        e.printStackTrace();
-                    }
+                    source.startPostTip();
+//                    try {
+//                        source.failPostTipWithFormError(Collections.singletonList(new FieldError(FormBuilder.CreateTip.BODY, FormBuilder.CreateTip.E_TOO_LONG)));
+//                    } catch (FormMismatchException e) {
+//                        e.printStackTrace();
+//                    }
                 }
             };
         } else if (listenerClass == IMarkButton.Listener.class) {

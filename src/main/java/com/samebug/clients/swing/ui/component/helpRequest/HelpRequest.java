@@ -16,6 +16,7 @@
 package com.samebug.clients.swing.ui.component.helpRequest;
 
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequest;
+import com.samebug.clients.swing.ui.base.button.ActionButton;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
@@ -74,9 +75,9 @@ public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRe
         }
     }
 
-    // TODO loading animation on every button starts request
     final class SendButton extends SamebugButton {
         public SendButton() {
+            super();
             setText(MessageService.message("samebug.component.tip.write.send"));
             setFilled(true);
             setInteractionColors(ColorService.MarkInteraction);

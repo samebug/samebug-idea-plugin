@@ -39,8 +39,7 @@ public final class RequestTipScreen extends JComponent implements IForm {
 
     public RequestTipScreen(final BugmateList bugmateList) {
         writeRequestArea = new WriteRequestArea(bugmateList);
-        sendButton = new SamebugButton(MessageService.message("samebug.component.helpRequest.ask.send"));
-        sendButton.setFilled(true);
+        sendButton = new SendButton();
         cancelButton = new LinkLabel(MessageService.message("samebug.component.helpRequest.ask.cancel"));
 
         setLayout(new MigLayout("fillx", "0[]0", "0[]10[]10[]0"));
@@ -51,14 +50,14 @@ public final class RequestTipScreen extends JComponent implements IForm {
         sendButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                bugmateList.getListener().askBugmates(bugmateList, writeRequestArea.getText());
+                if (isEnabled()) bugmateList.getListener().askBugmates(bugmateList, writeRequestArea.getText());
             }
         });
 
         cancelButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                bugmateList.requestTip.changeToClosedState();
+                if (isEnabled()) bugmateList.requestTip.changeToClosedState();
             }
         });
     }
@@ -79,5 +78,12 @@ public final class RequestTipScreen extends JComponent implements IForm {
         if (!mismatched.isEmpty()) throw new FormMismatchException(mismatched);
         revalidate();
         repaint();
+    }
+
+    private final class SendButton extends SamebugButton {
+        public SendButton() {
+            super(MessageService.message("samebug.component.helpRequest.ask.send"), true);
+
+        }
     }
 }
