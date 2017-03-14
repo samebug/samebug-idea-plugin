@@ -13,6 +13,8 @@ import com.samebug.clients.swing.ui.modules.MessageService;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO generalize CreateTipFormHandler and use that instead
+@Deprecated
 public abstract class FormHandler {
     final static Logger LOGGER = Logger.getInstance(FormHandler.class);
 

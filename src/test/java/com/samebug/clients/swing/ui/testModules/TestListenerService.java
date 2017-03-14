@@ -15,10 +15,7 @@
  */
 package com.samebug.clients.swing.ui.testModules;
 
-import com.samebug.clients.common.api.form.FieldError;
-import com.samebug.clients.common.api.form.FormBuilder;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 
@@ -26,7 +23,6 @@ import javax.swing.*;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Collections;
 
 @SuppressWarnings("unchecked")
 public final class TestListenerService extends ListenerService {

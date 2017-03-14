@@ -36,7 +36,9 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
     final static Logger LOGGER = Logger.getInstance(HelpRequestController.class);
     final String helpRequestId;
 
-    private final HelpRequestStore helpRequestStore;
+    final WriteTipListener writeTipListener;
+
+    final HelpRequestStore helpRequestStore;
 
 
     public HelpRequestController(ToolWindowController twc, Project project, final String helpRequestId) {
@@ -45,6 +47,7 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
 
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
         helpRequestStore = plugin.helpRequestStore;
+        writeTipListener = new WriteTipListener(this);
     }
 
     public String getHelpRequestId() {

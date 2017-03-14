@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.controller.solution;
+package com.samebug.clients.idea.ui.controller.helpRequest;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
 import com.samebug.clients.common.api.entities.solution.RestHit;
 import com.samebug.clients.common.api.entities.solution.Tip;
 import com.samebug.clients.common.api.form.CreateTip;
@@ -24,11 +25,11 @@ import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.idea.ui.controller.form.CreateTipFormHandler;
 import com.samebug.clients.idea.ui.modules.IdeaListenerService;
 
-final class HelpOthersCTAController implements IHelpOthersCTA.Listener {
-    final static Logger LOGGER = Logger.getInstance(HelpOthersCTAController.class);
-    final SolutionsController controller;
+final class WriteTipListener implements IHelpOthersCTA.Listener {
+    final static Logger LOGGER = Logger.getInstance(WriteTipListener.class);
+    final HelpRequestController controller;
 
-    public HelpOthersCTAController(final SolutionsController controller) {
+    public WriteTipListener(final HelpRequestController controller) {
         this.controller = controller;
 
         MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
@@ -39,7 +40,10 @@ final class HelpOthersCTAController implements IHelpOthersCTA.Listener {
     public void postTip(final IHelpOthersCTA source, final String tipBody) {
         LOGGER.debug("post tips clicked");
 
-        new CreateTipFormHandler(controller.view, source, new CreateTip(controller.searchId, tipBody, null, null)) {
+        final MatchingHelpRequest helpRequest = controller.helpRequestStore.getHelpRequest(controller.helpRequestId);
+        assert helpRequest != null : "we just showed it, it should not be null";
+        assert helpRequest.matchingGroup.lastSearchInfo != null : "our own search is always visible";
+        new CreateTipFormHandler(controller.view, source, new CreateTip(helpRequest.matchingGroup.lastSearchInfo.id, tipBody, null, controller.helpRequestId)) {
             @Override
             protected void afterPostForm(RestHit<Tip> response) {
                 controller.load();

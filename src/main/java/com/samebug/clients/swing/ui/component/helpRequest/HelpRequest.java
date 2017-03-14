@@ -15,15 +15,14 @@
  */
 package com.samebug.clients.swing.ui.component.helpRequest;
 
+import com.samebug.clients.common.api.form.CreateTip;
 import com.samebug.clients.common.api.form.FieldError;
-import com.samebug.clients.common.api.form.FormBuilder;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.common.ui.component.form.IForm;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequest;
-import com.samebug.clients.swing.ui.base.button.ActionButton;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
@@ -88,7 +87,7 @@ public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRe
         List<FieldError> mismatched = new ArrayList<FieldError>();
         for (FieldError f : errors) {
             try {
-                if (FormBuilder.CreateTip.BODY.equals(f.key)) writeTipArea.setFormError(f.code);
+                if (CreateTip.BODY.equals(f.key)) writeTipArea.setFormError(f.code);
                 else throw new FieldNameMismatchException(f.key);
             } catch (ErrorCodeMismatchException e) {
                 mismatched.add(f);

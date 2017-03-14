@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
-import com.samebug.clients.common.api.form.FormBuilder;
+import com.samebug.clients.common.api.form.CreateTip;
 import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.common.ui.component.form.IFormField;
 import com.samebug.clients.swing.ui.base.form.LengthRestrictedArea;
@@ -48,8 +48,8 @@ public final class WriteTipArea extends JComponent implements IFormField {
 
     public void setFormError(String errorCode) throws ErrorCodeMismatchException {
         borderedArea.setError();
-        if (FormBuilder.CreateTip.E_TOO_SHORT.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.tip.write.error.tip.short"));
-        if (FormBuilder.CreateTip.E_TOO_LONG.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.tip.write.error.tip.long"));
+        if (CreateTip.E_TOO_SHORT.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.tip.write.error.tip.short"));
+        if (CreateTip.E_TOO_LONG.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.tip.write.error.tip.long"));
         else throw new ErrorCodeMismatchException(errorCode);
         remove(errorLabel);
         add(errorLabel, "cell 0 1");

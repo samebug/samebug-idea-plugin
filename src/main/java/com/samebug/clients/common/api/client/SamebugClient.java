@@ -23,7 +23,6 @@ import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
 import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
 import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
-import com.samebug.clients.common.api.entities.search.Search;
 import com.samebug.clients.common.api.entities.search.CreatedSearch;
 import com.samebug.clients.common.api.entities.search.SearchDetails;
 import com.samebug.clients.common.api.entities.solution.MarkResponse;
@@ -32,7 +31,7 @@ import com.samebug.clients.common.api.entities.solution.Solutions;
 import com.samebug.clients.common.api.entities.solution.Tip;
 import com.samebug.clients.common.api.entities.tracking.TrackEvent;
 import com.samebug.clients.common.api.exceptions.*;
-import com.samebug.clients.common.api.form.FormBuilder;
+import com.samebug.clients.common.api.form.CreateHelpRequest;
 import com.samebug.clients.common.api.json.Json;
 import org.apache.http.Consts;
 import org.apache.http.HttpResponse;
@@ -137,8 +136,8 @@ final public class SamebugClient {
         final URL url = urlBuilder.helpRequest();
         HttpPost request = new HttpPost(url.toString());
         List<BasicNameValuePair> form = new ArrayList<BasicNameValuePair>();
-        form.add(new BasicNameValuePair(FormBuilder.CreateHelpRequest.SEARCH_ID, Integer.toString(searchId)));
-        form.add(new BasicNameValuePair(FormBuilder.CreateHelpRequest.CONTEXT, context));
+        form.add(new BasicNameValuePair(CreateHelpRequest.SEARCH_ID, Integer.toString(searchId)));
+        form.add(new BasicNameValuePair(CreateHelpRequest.CONTEXT, context));
         request.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
 
         return rawClient.executeAuthenticated(request, new HandleJsonRequest<MyHelpRequest>(MyHelpRequest.class));
@@ -155,13 +154,14 @@ final public class SamebugClient {
 
     public
     @NotNull
-    ClientResponse<RestHit<Tip>> createTip(@NotNull final Integer searchId, @NotNull final String tip, @Nullable final String source) {
+    ClientResponse<RestHit<Tip>> createTip(@NotNull final Integer searchId, @NotNull final String tip, @Nullable final String source, @Nullable String helpRequestId) {
         final URL url = urlBuilder.tip();
         HttpPost post = new HttpPost(url.toString());
         List<BasicNameValuePair> form = new ArrayList<BasicNameValuePair>();
         form.add(new BasicNameValuePair("message", tip));
         form.add(new BasicNameValuePair("searchId", searchId.toString()));
         if (source != null) form.add(new BasicNameValuePair("sourceUrl", source));
+        if (helpRequestId != null) form.add(new BasicNameValuePair("helpRequestId", helpRequestId));
         post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
         // NOTE: posting a tip includes downloading the source on the server side, which might take a while, hence we let it work a bit more.
         post.setConfig(rawClient.requestConfigBuilder.setSocketTimeout(config.requestTimeout + TipSourceLoadingTime_Handicap_Millis).build());

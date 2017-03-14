@@ -22,6 +22,8 @@ import com.samebug.clients.common.api.entities.solution.RestHit;
 import com.samebug.clients.common.api.entities.solution.Solutions;
 import com.samebug.clients.common.api.entities.solution.Tip;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class SolutionService {
     final ClientService clientService;
@@ -52,13 +54,13 @@ public final class SolutionService {
         return clientService.execute(requestHandler);
     }
 
-    public RestHit<Tip> postTip(final int searchId, final String tip, final String sourceUrl) throws SamebugClientException {
+    public RestHit<Tip> postTip(@NotNull final int searchId, @NotNull final String tip, @Nullable final String sourceUrl, @Nullable final String helpRequestId) throws SamebugClientException {
         final SamebugClient client = clientService.client;
 
         ClientService.ConnectionAwareHttpRequest<RestHit<Tip>> requestHandler =
                 new ClientService.ConnectionAwareHttpRequest<RestHit<Tip>>() {
                     ClientResponse<RestHit<Tip>> request() {
-                        return client.createTip(searchId, tip, sourceUrl);
+                        return client.createTip(searchId, tip, sourceUrl, helpRequestId);
                     }
 
                     protected void success(RestHit<Tip> response) {

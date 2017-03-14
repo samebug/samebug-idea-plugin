@@ -21,8 +21,8 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.api.client.RestError;
 import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
+import com.samebug.clients.common.api.form.CreateHelpRequest;
 import com.samebug.clients.common.api.form.FieldError;
-import com.samebug.clients.common.api.form.FormBuilder;
 import com.samebug.clients.common.services.HelpRequestService;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
@@ -68,7 +68,7 @@ final class BugmateListController implements IBugmateList.Listener {
 
                     @Override
                     protected void handle(FieldError fieldError, List<String> globalErrors, List<FieldError> fieldErrors) {
-                        if (FormBuilder.CreateHelpRequest.CONTEXT.equals(fieldError.key)) fieldErrors.add(fieldError);
+                        if (CreateHelpRequest.CONTEXT.equals(fieldError.key)) fieldErrors.add(fieldError);
                         else {
                             LOGGER.warn("Unhandled form error: " + fieldError);
                             globalErrors.add(MessageService.message("samebug.error.pluginBug"));

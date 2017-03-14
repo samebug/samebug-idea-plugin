@@ -15,13 +15,12 @@
  */
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
+import com.samebug.clients.common.api.form.CreateTip;
 import com.samebug.clients.common.api.form.FieldError;
-import com.samebug.clients.common.api.form.FormBuilder;
 import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.common.ui.component.form.IForm;
-import com.samebug.clients.swing.ui.base.button.ActionButton;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
@@ -62,7 +61,7 @@ public class WriteTipScreen extends RoundedBackgroundPanel implements IForm {
         List<FieldError> mismatched = new ArrayList<FieldError>();
         for (FieldError f : errors) {
             try {
-                if (FormBuilder.CreateTip.BODY.equals(f.key)) tipArea.setFormError(f.code);
+                if (CreateTip.BODY.equals(f.key)) tipArea.setFormError(f.code);
                 else throw new FieldNameMismatchException(f.key);
             } catch (ErrorCodeMismatchException e) {
                 mismatched.add(f);
