@@ -16,6 +16,7 @@
 package com.samebug.clients.swing.ui.component.bugmate;
 
 import com.samebug.clients.common.api.form.FieldError;
+import com.samebug.clients.common.api.form.FormBuilder;
 import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
@@ -32,9 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class RequestTipScreen extends JComponent implements IForm {
-    // TODO
-    static final String TIP_FIELD_NAME = "tip";
-
     final WriteRequestArea writeRequestArea;
     final SamebugButton sendButton;
     final LinkLabel cancelButton;
@@ -53,7 +51,7 @@ public final class RequestTipScreen extends JComponent implements IForm {
         sendButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                bugmateList.getListener().askBugmates(bugmateList, "TODO");
+                bugmateList.getListener().askBugmates(bugmateList, writeRequestArea.getText());
             }
         });
 
@@ -70,7 +68,7 @@ public final class RequestTipScreen extends JComponent implements IForm {
         List<FieldError> mismatched = new ArrayList<FieldError>();
         for (FieldError f : errors) {
             try {
-                if (TIP_FIELD_NAME.equals(f.key)) writeRequestArea.setFormError(f.code);
+                if (FormBuilder.CreateHelpRequest.CONTEXT.equals(f.key)) writeRequestArea.setFormError(f.code);
                 else throw new FieldNameMismatchException(f.key);
             } catch (ErrorCodeMismatchException e) {
                 mismatched.add(f);

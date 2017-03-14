@@ -15,8 +15,10 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
+import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateHit;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
+import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.modules.FontService;
@@ -53,8 +55,9 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
     }
 
     @Override
-    public void interruptRequestTip() {
-        requestTip.interruptRequestTip();
+    public void failRequestTip(List<FieldError> errors) throws FormMismatchException {
+        requestTip.failRequestTip(errors);
+
     }
 
     @Override

@@ -15,11 +15,14 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
+import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
+import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.util.List;
 
 public final class RequestTip extends JComponent {
     final BugmateList bugmateList;
@@ -34,15 +37,18 @@ public final class RequestTip extends JComponent {
     }
 
     public void startRequestTip() {
-
+        // TODO loading
+        if (tipScreen == null) return;
+        tipScreen.sendButton.setText("loading...");
     }
 
-    public void interruptRequestTip() {
-
+    public void failRequestTip(List<FieldError> errors) throws FormMismatchException {
+        if (tipScreen != null) tipScreen.setFormErrors(errors);
     }
 
     public void successRequestTip() {
-
+        // TODO keep track of open/close state in a boolean?
+        if (ctaScreen == null) changeToClosedState();
     }
 
     void changeToOpenState() {

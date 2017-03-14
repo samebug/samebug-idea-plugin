@@ -15,12 +15,15 @@
  */
 package com.samebug.clients.common.ui.component.bugmate;
 
+import com.samebug.clients.common.api.form.FieldError;
+import com.samebug.clients.common.ui.component.form.FormMismatchException;
+
 import java.util.List;
 
 public interface IBugmateList {
     void startRequestTip();
 
-    void interruptRequestTip();
+    void failRequestTip(List<FieldError> errors) throws FormMismatchException;
 
     void successRequestTip(/*TODO param*/);
 

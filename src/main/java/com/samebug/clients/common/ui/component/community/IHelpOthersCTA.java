@@ -23,8 +23,6 @@ import java.util.List;
 public interface IHelpOthersCTA {
     void startPostTip();
 
-    void interruptPostTip();
-
     void successPostTip();
 
     void failPostTipWithFormError(List<FieldError> errors) throws FormMismatchException;

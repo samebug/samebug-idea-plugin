@@ -22,9 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.api.entities.UserInfo;
 import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
-import com.samebug.clients.common.api.entities.search.SearchDetails;
 import com.samebug.clients.common.api.entities.solution.Solutions;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.HelpRequestStore;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestFrame;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
@@ -32,7 +30,6 @@ import com.samebug.clients.idea.components.project.ToolWindowController;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.swing.ui.frame.helpRequest.HelpRequestFrame;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public final class HelpRequestController extends BaseFrameController<IHelpRequestFrame> implements Disposable {

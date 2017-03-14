@@ -45,19 +45,15 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
 
     @Override
     public void startPostTip() {
+        // TODO loading
         if (tipScreen == null) return;
         tipScreen.actionRow.sendButton.setText("loading...");
     }
 
     @Override
-    public void interruptPostTip() {
-        if (tipScreen == null) return;
-        tipScreen.actionRow.sendButton.setText("Post tip");
-    }
-
-    @Override
     public void successPostTip() {
-        changeToClosedState();
+        // TODO keep track of open/close state in a boolean?
+        if (ctaScreen == null) changeToClosedState();
     }
 
     @Override
