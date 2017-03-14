@@ -22,22 +22,27 @@ import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
+import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
 import java.util.Date;
 
 public final class HelpRequestPreview extends RoundedBackgroundPanel implements IHelpRequestPreview {
     private final static int AvatarSize = 40;
 
-    public HelpRequestPreview(Model model) {
+    public HelpRequestPreview(final Model model) {
         setBackgroundColor(ColorService.Tip);
+        final boolean viewedByMe = model.viewedAt != null;
         final AvatarIcon avatar = new AvatarIcon(model.avatarUrl, AvatarSize);
         final SamebugLabel diplayName = new DisplayName(model.displayName);
-        final SamebugLabel helpRequestBody = new HelpRequestBody(model.helpRequestBody);
+        final SamebugLabel helpRequestBody = new HelpRequestBody(model.helpRequestBody, viewedByMe);
         final InfoBar infos = new InfoBar(model.createdAt);
-        final SamebugLabel exceptionBody = new ExceptionPreview(model.exceptionBody);
+        final SamebugLabel exceptionBody = new ExceptionPreview(model.exceptionBody, viewedByMe);
 
         setLayout(new MigLayout("fillx", MessageFormat.format("20[{0}!]10[250, fill]20", AvatarSize), "20[]0[]15[]20"));
 
@@ -47,6 +52,13 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
         add(helpRequestBody, "cell 1 1, wmin 0");
         add(exceptionBody, "cell 1 2, wmin 0");
 
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (isEnabled()) getListener().previewClicked(HelpRequestPreview.this, model.helpRequestId);
+            }
+        });
     }
 
     final class DisplayName extends SamebugLabel {
@@ -58,10 +70,10 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
     }
 
     final class HelpRequestBody extends SamebugLabel {
-        public HelpRequestBody(String body) {
+        public HelpRequestBody(String body, boolean viewedByMe) {
             super(body);
-            // TODO demi if unread
-            setFont(FontService.regular(16));
+            if (viewedByMe) setFont(FontService.regular(16));
+            else setFont(FontService.demi(16));
             setForegroundColor(ColorService.TipText);
         }
     }
@@ -76,14 +88,18 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
     }
 
     final class ExceptionPreview extends SamebugLabel {
-        public ExceptionPreview(String body) {
+        public ExceptionPreview(String body, boolean viewedByMe) {
             super(body);
-            setFont(FontService.regular(16));
-            // TODO demi if unread
+            if (viewedByMe) setFont(FontService.regular(16));
+            else setFont(FontService.demi(16));
             setOpaque(true);
             setForegroundColor(ColorService.ExceptionPreviewText);
             setBackgroundColor(ColorService.ExceptionPreviewBackground);
             setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         }
+    }
+
+    private Listener getListener() {
+        return ListenerService.getListener(this, Listener.class);
     }
 }

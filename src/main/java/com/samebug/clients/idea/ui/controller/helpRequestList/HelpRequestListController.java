@@ -33,11 +33,13 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
     final static Logger LOGGER = Logger.getInstance(HelpRequestListController.class);
 
     final HelpRequestListListener frameListener;
+    final HelpRequestPreviewListener helpRequestPreviewListener;
 
     public HelpRequestListController(ToolWindowController twc, Project project) {
         super(twc, project, new HelpRequestListFrame());
 
         frameListener = new HelpRequestListListener(this);
+        helpRequestPreviewListener = new HelpRequestPreviewListener(this);
     }
 
     public void load() {

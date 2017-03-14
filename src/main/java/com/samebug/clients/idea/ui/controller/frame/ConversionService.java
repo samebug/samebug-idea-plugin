@@ -60,29 +60,33 @@ public final class ConversionService {
     }
 
     public IMarkButton.Model convertMarkResponse(MarkResponse response) {
-        return new IMarkButton.Model(response.getDocumentVotes(), response.getId(), true /*TODO*/);
+        return new IMarkButton.Model(response.getDocumentVotes(), response.getId(), true);
     }
 
     public IMarkButton.Model convertRetractedMarkResponse(MarkResponse response) {
-        return new IMarkButton.Model(response.getDocumentVotes(), null, true /*TODO*/);
+        return new IMarkButton.Model(response.getDocumentVotes(), null, true);
     }
 
-    public IMarkButton.Model convertMarkPanel(RestHit hit) {
-        return new IMarkButton.Model(hit.getScore(), hit.getMarkId(), hit.getMarkable());
+    /**
+     *  When showing the hits for a tip request, then marking is disabled. This parameter flows through the whole conversion call tree.
+     */
+    public IMarkButton.Model convertMarkPanel(RestHit hit, boolean disabled) {
+        boolean userCanMark = disabled ? false : hit.getMarkable();
+        return new IMarkButton.Model(hit.getScore(), hit.getMarkId(), userCanMark);
     }
 
-    public ITipHit.Model tipHit(RestHit<Tip> hit) {
+    public ITipHit.Model tipHit(RestHit<Tip> hit, boolean disabled) {
         Tip tip = hit.getSolution();
-        IMarkButton.Model mark = convertMarkPanel(hit);
+        IMarkButton.Model mark = convertMarkPanel(hit, disabled);
         UserReference author = hit.getCreatedBy();
         return new ITipHit.Model(tip.getTip(), hit.getSolutionId(), tip.getCreatedAt(), author.getDisplayName(), author.getAvatarUrl(), mark);
     }
 
-    public IWebResultsTab.Model webResultsTab(Solutions solutions) {
+    public IWebResultsTab.Model webResultsTab(Solutions solutions, boolean disabled) {
         final List<IWebHit.Model> webHits = new ArrayList<IWebHit.Model>(solutions.getReferences().size());
         for (RestHit<SolutionReference> externalHit : solutions.getReferences()) {
             SolutionReference externalSolution = externalHit.getSolution();
-            IMarkButton.Model mark = convertMarkPanel(externalHit);
+            IMarkButton.Model mark = convertMarkPanel(externalHit, disabled);
             final String sourceIconName = externalSolution.getSource().getIcon();
             final URL sourceIconUrl = urlBuilder.sourceIcon(sourceIconName);
 
@@ -99,10 +103,10 @@ public final class ConversionService {
         return new IWebResultsTab.Model(webHits);
     }
 
-    public ITipResultsTab.Model tipResultsTab(SearchDetails search, Solutions solutions, BugmatesResult bugmates) {
+    public ITipResultsTab.Model tipResultsTab(SearchDetails search, Solutions solutions, BugmatesResult bugmates, boolean disabled) {
         final List<ITipHit.Model> tipHits = new ArrayList<ITipHit.Model>(solutions.getTips().size());
         for (RestHit<Tip> tipSolution : solutions.getTips()) {
-            ITipHit.Model tipHit = tipHit(tipSolution);
+            ITipHit.Model tipHit = tipHit(tipSolution, disabled);
             tipHits.add(tipHit);
         }
         final List<IBugmateHit.Model> bugmateHits = new ArrayList<IBugmateHit.Model>(bugmates.getBugmates().size());
@@ -121,8 +125,8 @@ public final class ConversionService {
     }
 
     public ISolutionFrame.Model solutionFrame(SearchDetails search, Solutions solutions, BugmatesResult bugmates, UserInfo user, UserStats statistics) {
-        IWebResultsTab.Model webResults = webResultsTab(solutions);
-        ITipResultsTab.Model tipResults = tipResultsTab(search, solutions, bugmates);
+        IWebResultsTab.Model webResults = webResultsTab(solutions, false);
+        ITipResultsTab.Model tipResults = tipResultsTab(search, solutions, bugmates, false);
 
         IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(0);
         String exceptionTitle = headLine(search);
@@ -141,7 +145,7 @@ public final class ConversionService {
     public IHelpRequestTab.Model helpRequestTab(Solutions solutions, MatchingHelpRequest helpRequest) {
         final List<ITipHit.Model> tipHits = new ArrayList<ITipHit.Model>(solutions.getTips().size());
         for (RestHit<Tip> tipSolution : solutions.getTips()) {
-            ITipHit.Model tipHit = tipHit(tipSolution);
+            ITipHit.Model tipHit = tipHit(tipSolution, true);
             tipHits.add(tipHit);
         }
         Requester requester = helpRequest.helpRequest.requester;
@@ -152,7 +156,7 @@ public final class ConversionService {
 
 
     public IHelpRequestFrame.Model convertHelpRequestFrame(Solutions solutions, MatchingHelpRequest helpRequest, UserInfo user, UserStats statistics) {
-        IWebResultsTab.Model webResults = webResultsTab(solutions);
+        IWebResultsTab.Model webResults = webResultsTab(solutions, true);
         IHelpRequestTab.Model helpRequestTab = helpRequestTab(solutions, helpRequest);
         IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(0);
         IHelpRequestTabs.Model tabs = new IHelpRequestTabs.Model(webResults, helpRequestTab, cta);
@@ -168,7 +172,7 @@ public final class ConversionService {
             Requester requester = r.helpRequest.requester;
             HelpRequest hr = r.helpRequest;
             String exceptionBody = headLine(r.accessibleSearchInfo());
-            IHelpRequestPreview.Model preview = new IHelpRequestPreview.Model(requester.displayName, requester.avatarUrl, hr.createdAt, hr.context, exceptionBody);
+            IHelpRequestPreview.Model preview = new IHelpRequestPreview.Model(requester.displayName, requester.avatarUrl, hr.createdAt, hr.viewedAt, hr.context, hr.id, exceptionBody);
             requestPreviews.add(preview);
         }
         IHelpRequestList.Model requestList = new IHelpRequestList.Model(requestPreviews);
