@@ -16,43 +16,14 @@
 package com.samebug.clients.idea.ui.controller.authentication;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.frame.IAuthenticationFrame;
-import com.samebug.clients.idea.ui.controller.frame.ConnectionStatusController;
+import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
-import com.samebug.clients.idea.ui.modules.IdeaDataService;
 import com.samebug.clients.swing.ui.frame.authentication.AuthenticationFrame;
-import com.samebug.clients.swing.ui.modules.DataService;
-import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-
-public final class AuthenticationController implements Disposable {
-    final static Logger LOGGER = Logger.getInstance(AuthenticationController.class);
-    final ToolWindowController twc;
-    final Project myProject;
-    final IAuthenticationFrame view;
-    final ConnectionStatusController connectionStatusController;
-
+public final class AuthenticationController extends BaseFrameController<IAuthenticationFrame> implements Disposable {
     public AuthenticationController(ToolWindowController twc, Project project) {
-        this.twc = twc;
-        this.myProject = project;
-        view = new AuthenticationFrame();
-        DataService.putData((AuthenticationFrame) view, IdeaDataService.Project, project);
-
-        MessageBus messageBus = myProject.getMessageBus();
-        connectionStatusController = new ConnectionStatusController(view, messageBus);
-    }
-
-    @NotNull
-    public JComponent getControlPanel() {
-        return (AuthenticationFrame) view;
-    }
-
-    @Override
-    public void dispose() {
-        connectionStatusController.dispose();
+        super(twc, project, new AuthenticationFrame());
     }
 }

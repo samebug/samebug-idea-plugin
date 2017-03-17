@@ -83,7 +83,7 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
                 final Future<Solutions> solutionsTask = concurrencyService.solutions(accessibleSearchId);
                 HelpRequestController.this.load(solutionsTask, helpRequestTask, userInfoTask, userStatsTask);
             }
-        };
+        }.executeInBackground();
 
     }
 

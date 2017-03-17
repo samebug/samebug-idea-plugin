@@ -46,7 +46,6 @@ import com.samebug.clients.idea.ui.controller.authentication.AuthenticationContr
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.helpRequest.HelpRequestController;
 import com.samebug.clients.idea.ui.controller.helpRequestList.HelpRequestListController;
-import com.samebug.clients.idea.ui.controller.intro.IntroFrameController;
 import com.samebug.clients.idea.ui.controller.solution.SolutionsController;
 import com.samebug.clients.idea.ui.modules.IdeaDataService;
 import com.samebug.clients.swing.ui.component.popup.HelpRequestPopup;
@@ -65,11 +64,8 @@ final public class ToolWindowController implements FocusListener, IncomingHelpRe
 
     @NotNull
     final Project project;
-    IntroFrameController introFrame;
-    AuthenticationController authenticationFrame;
-    HelpRequestController helpRequestFrame;
-    HelpRequestListController helpRequestListFrame;
-    SolutionsController solutionFrame;
+    ToolWindow toolWindow;
+    BaseFrameController currentFrame;
 
     @NotNull
     final Timer dateLabelRefresher;
@@ -99,77 +95,40 @@ final public class ToolWindowController implements FocusListener, IncomingHelpRe
     }
 
     public void initToolWindow(@NotNull ToolWindow toolWindow) {
+        this.toolWindow = toolWindow;
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
 
-        introFrame = new IntroFrameController(this, project);
-        authenticationFrame = new AuthenticationController(this, project);
-        helpRequestListFrame = new HelpRequestListController(this, project);
-        helpRequestListFrame.load();
+        if (plugin.getState().apiKey == null) focusOnAuthentication();
+        else focusOnHelpRequestList();
+    }
 
-        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-        Content content;
-        if (plugin.getState().apiKey == null) {
-            content = contentFactory.createContent(authenticationFrame.getControlPanel(), MessageService.message("samebug.toolwindow.authentication.tabName"), false);
-        } else {
-            content = contentFactory.createContent(introFrame.getControlPanel(), MessageService.message("samebug.toolwindow.intro.tabName"), false);
-        }
-        toolWindow.getContentManager().addContent(content);
-        Content helpRequestListContent = contentFactory.createContent(
-                helpRequestListFrame.getControlPanel(), MessageService.message("samebug.toolwindow.helpRequestList.tabName"), false);
-        toolWindow.getContentManager().addContent(helpRequestListContent);
+    public void focusOnAuthentication() {
+        AuthenticationController controller = new AuthenticationController(this, project);
+        openTab(controller, MessageService.message("samebug.toolwindow.authentication.tabName"));
     }
 
     public void focusOnHelpRequestList() {
-        focusOnTab(helpRequestListFrame.getControlPanel(), MessageService.message("samebug.toolwindow.helpRequestList.tabName"));
+        HelpRequestListController controller = new HelpRequestListController(this, project);
+        controller.load();
+        openTab(controller, MessageService.message("samebug.toolwindow.helpRequestList.tabName"));
     }
 
     public void focusOnHelpRequest(String helpRequestId) {
-        final HelpRequestController tab = getOrCreateHelpRequestFrame(helpRequestId);
-        focusOnTab(tab.getControlPanel(), MessageService.message("samebug.toolwindow.helpRequest.tabName"));
+        HelpRequestController controller = new HelpRequestController(this, project, helpRequestId);
+        controller.load();
+        openTab(controller, MessageService.message("samebug.toolwindow.helpRequest.tabName"));
     }
 
     @Override
     public void focusOnSearch(final int searchId) {
-        // TODO remove other tabs?
-        final SolutionsController tab = getOrCreateSolutionFrame(searchId);
-        focusOnTab(tab.getControlPanel(), MessageService.message("samebug.toolwindow.search.tabName"));
-    }
-
-    @NotNull
-    SolutionsController getOrCreateSolutionFrame(final int searchId) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
-
-        if (solutionFrame != null && solutionFrame.getSearchId() == searchId) {
-            return solutionFrame;
-        } else {
-            if (solutionFrame != null) closeTab(solutionFrame);
-            solutionFrame = new SolutionsController(this, project, searchId);
-            solutionFrame.load();
-            return solutionFrame;
-        }
-    }
-
-    @NotNull
-    HelpRequestController getOrCreateHelpRequestFrame(String helpRequestId) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
-
-        if (helpRequestFrame != null && helpRequestFrame.getHelpRequestId().equals(helpRequestId)) {
-            return helpRequestFrame;
-        } else {
-            if (helpRequestFrame != null) closeTab(helpRequestFrame);
-            helpRequestFrame = new HelpRequestController(this, project, helpRequestId);
-            helpRequestFrame.load();
-            return helpRequestFrame;
-        }
+        SolutionsController controller = new SolutionsController(this, project, searchId);
+        controller.load();
+        openTab(controller, MessageService.message("samebug.toolwindow.search.tabName"));
     }
 
     @Override
     public void dispose() {
-        if (introFrame != null) Disposer.dispose(introFrame);
-        if (authenticationFrame != null) Disposer.dispose(authenticationFrame);
-        if (helpRequestListFrame != null) closeTab(helpRequestListFrame);
-        if (solutionFrame != null) closeTab(solutionFrame);
-        if (helpRequestFrame != null) closeTab(helpRequestFrame);
+        if (currentFrame != null) closeTab(currentFrame);
     }
 
     public void closeTab(@NotNull final BaseFrameController frame) {
@@ -180,34 +139,40 @@ final public class ToolWindowController implements FocusListener, IncomingHelpRe
         Disposer.dispose(frame);
     }
 
-    // TODO needs refactor
-    private void focusOnTab(JComponent tab, String tabTitle) {
+    private void openTab(BaseFrameController controller, String tabTitle) {
         ApplicationManager.getApplication().assertIsDispatchThread();
         final ToolWindow toolWindow = getToolWindow();
         final ContentManager toolwindowCM = toolWindow.getContentManager();
+        final ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
 
-        Content toolWindowTab = toolwindowCM.getContent(tab);
-        if (toolWindowTab != null) toolwindowCM.setSelectedContent(toolWindowTab);
-        else {
-            ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-            Content newToolWindowTab = contentFactory.createContent(tab, tabTitle, false);
-            toolwindowCM.addContent(newToolWindowTab);
-            toolwindowCM.setSelectedContent(newToolWindowTab);
-            // TODO somewhy the content of the tab does not show up first, only after some interaction (clicking the tab title again, resize toolwindow, etc).
-            // Not sure if it is bug in intellij ContentManagerImpl.setSelectedContent() or I'm missing something.
-            // This requestFocus seems to fix it, but
-            //   - I don't know why
-            //   - I don't know if it has any side effects
-            //   - The content still won't show up for HelpRequestFrameList when you simply click on the tab title, and not on the messages on the profile.
-            toolwindowCM.requestFocus(newToolWindowTab, true);
+        // clean up previous tab
+        if (currentFrame != null) {
+            toolwindowCM.removeContent(toolwindowCM.getContent(currentFrame.getControlPanel()), true);
+            Disposer.dispose(currentFrame);
         }
+
+        // add new content
+        currentFrame = controller;
+        Content newToolWindowTab = contentFactory.createContent(currentFrame.getControlPanel(), tabTitle, false);
+        toolwindowCM.addContent(newToolWindowTab);
+        toolwindowCM.setSelectedContent(newToolWindowTab);
+
+        // make sure the toolwindow is visible
+        // TODO somewhy the content of the tab does not show up first, only after some interaction (clicking the tab title again, resize toolwindow, etc).
+        // Not sure if it is bug in intellij ContentManagerImpl.setSelectedContent() or I'm missing something.
+        // This requestFocus seems to fix it, but
+        //   - I don't know why
+        //   - I don't know if it has any side effects
+        toolwindowCM.requestFocus(newToolWindowTab, true);
         toolWindow.show(null);
     }
 
     private ToolWindow getToolWindow() {
-        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
-        if (toolWindow instanceof ToolWindowImpl) {
-            ((ToolWindowImpl) toolWindow).ensureContentInitialized();
+        if (toolWindow == null) {
+            ToolWindow tw = ToolWindowManager.getInstance(project).getToolWindow("Samebug");
+            if (tw instanceof ToolWindowImpl) {
+                ((ToolWindowImpl) tw).ensureContentInitialized();
+            }
         }
         return toolWindow;
     }

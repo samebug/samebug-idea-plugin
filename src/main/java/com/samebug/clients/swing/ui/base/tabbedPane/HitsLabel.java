@@ -60,7 +60,7 @@ public class HitsLabel extends SamebugLabel {
             // the background is a rounded rect
             FontMetrics fm = getFontMetrics(font);
             int width = fm.stringWidth(hits);
-            return new Dimension(width + xCorrection, size);
+            return new Dimension(xCorrection + width + xCorrection, size);
         }
     }
 
