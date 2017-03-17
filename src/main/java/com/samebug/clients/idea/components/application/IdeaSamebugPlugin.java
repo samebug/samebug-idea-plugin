@@ -30,6 +30,7 @@ import com.samebug.clients.common.services.*;
 import com.samebug.clients.idea.controllers.ConsoleSearchController;
 import com.samebug.clients.idea.controllers.NotificationController;
 import com.samebug.clients.idea.controllers.TimedTasks;
+import com.samebug.clients.idea.controllers.WebSocketClientService;
 import com.samebug.clients.idea.ui.controller.frame.ConcurrencyService;
 import com.samebug.clients.idea.ui.controller.frame.ConversionService;
 import com.samebug.clients.idea.ui.modules.*;
@@ -70,6 +71,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public ConversionService conversionService;
     public ConcurrencyService concurrencyService;
     public NotificationController notificationController;
+    public WebSocketClientService webSocketClientService;
 
     @Nullable
     private MessageBusConnection connection;
@@ -134,6 +136,8 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         TimedTasks timedTasks = new TimedTasks(messageBus.connect(this));
         ConsoleSearchController consoleSearchController = new ConsoleSearchController(messageBus.connect(this));
         notificationController = new NotificationController();
+        webSocketClientService = new WebSocketClientService(notificationController);
+        webSocketClientService.configure(state.get().getNetworkConfig());
 
         ColorService.install(new IdeaColorService());
         WebImageService.install(new IdeaWebImageService(urlBuilder));
@@ -171,14 +175,13 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public void saveSettings(final ApplicationSettings settings) {
         ApplicationSettings newSettings = new ApplicationSettings(settings);
         state.set(newSettings);
-        if (clientService != null) {
-            try {
-                clientService.configure(newSettings.getNetworkConfig());
-                urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
-            } finally {
-                // TODO change the event
+        try {
+            if (clientService != null) clientService.configure(newSettings.getNetworkConfig());
+            if (webSocketClientService != null)webSocketClientService.configure(newSettings.getNetworkConfig());
+            urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
+        } finally {
+            // TODO change the event
 //            Tracking.appTracking().trace(Events.apiKeySet());
-            }
         }
     }
 
@@ -186,9 +189,8 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public void loadState(ApplicationSettings state) {
         ApplicationSettings newSettings = new ApplicationSettings(state);
         this.state.set(newSettings);
-        if (clientService != null) {
-            clientService.configure(newSettings.getNetworkConfig());
-        }
+        if (clientService != null) clientService.configure(newSettings.getNetworkConfig());
+        if (webSocketClientService != null)webSocketClientService.configure(newSettings.getNetworkConfig());
         urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
     }
 }
