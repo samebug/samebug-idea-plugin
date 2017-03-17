@@ -26,7 +26,6 @@ public class HitsLabel extends SamebugLabel {
     public static final int LARGE = 22;
 
     private final int size;
-    private final int fontSize;
     private final int xCorrection;
     private final int yCorrection;
     private final Font font;
@@ -34,6 +33,7 @@ public class HitsLabel extends SamebugLabel {
     public HitsLabel(int size) {
         this.size = size;
         // TODO it would be nice to generalize
+        int fontSize;
         if (size == SMALL) {
             fontSize = 10;
             xCorrection = 8;
@@ -60,7 +60,7 @@ public class HitsLabel extends SamebugLabel {
             // the background is a rounded rect
             FontMetrics fm = getFontMetrics(font);
             int width = fm.stringWidth(hits);
-            return new Dimension(xCorrection + width + xCorrection, size);
+            return new Dimension(width + xCorrection, size);
         }
     }
 
@@ -83,10 +83,10 @@ public class HitsLabel extends SamebugLabel {
         g2.setColor(getBackground());
         g2.setFont(font);
 
-        if (hits.length() == 1) {
-            g2.drawString(getText(), xCorrection - 1, yCorrection);
-        } else {
-            g2.drawString(getText(), xCorrection, yCorrection);
-        }
+        FontMetrics fm = getFontMetrics(font);
+        int labelWidth = getWidth();
+        int textWidth = fm.stringWidth(hits);
+        // round up on the x axis because it looks nicer
+        g2.drawString(getText(), (labelWidth - textWidth + 1) / 2, yCorrection);
     }
 }

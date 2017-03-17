@@ -20,6 +20,7 @@ import com.samebug.clients.common.ui.modules.TextService;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
+import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
@@ -45,6 +46,7 @@ public final class BugmateHit extends TransparentPanel implements IBugmateHit {
     private final class NameLabel extends SamebugLabel {
         private NameLabel(String name) {
             setText(name);
+            setForegroundColor(ColorService.EmphasizedText);
             setFont(FontService.demi(14));
         }
     }

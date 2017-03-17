@@ -22,8 +22,8 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 
 public final class FontService {
-    private static final String AvenirRegular = "AvenirNextLTPro-Regular";
-    private static final String AvenirDemi = "AvenirNextLTPro-Demi";
+    private static final String Regular = "Montserrat Regular";
+    private static final String Bold = "Montserrat Medium";
     private static final float ExpectedAscentOfAvenirRegular = 0.848999f;
 
     private static boolean useCorrection = false;
@@ -31,29 +31,25 @@ public final class FontService {
     public static void registerFonts() throws IOException, FontFormatException {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 
-        final InputStream isDemi = FontService.class.getResourceAsStream("/com/samebug/fonts/AvenirNextLTPro-Demi.ttf");
-        final InputStream isRegular = FontService.class.getResourceAsStream("/com/samebug/fonts/AvenirNextLTPro-Regular.ttf");
+        final InputStream streamBold = FontService.class.getResourceAsStream("/com/samebug/fonts/Montserrat-Medium.ttf");
+        final InputStream streamRegular = FontService.class.getResourceAsStream("/com/samebug/fonts/Montserrat-Regular.ttf");
 
-        final Font demi = Font.createFont(Font.TRUETYPE_FONT, isDemi);
-        final Font regular = Font.createFont(Font.TRUETYPE_FONT, isRegular);
+        final Font bold = Font.createFont(Font.TRUETYPE_FONT, streamBold);
+        final Font regular = Font.createFont(Font.TRUETYPE_FONT, streamRegular);
 
-        isDemi.close();
-        isRegular.close();
+        streamBold.close();
+        streamRegular.close();
 
-        ge.registerFont(demi);
+        ge.registerFont(bold);
         ge.registerFont(regular);
-
-        useCorrection = doesFontNeedsCorrection(regular, ExpectedAscentOfAvenirRegular);
     }
 
     public static Font regular(int size) {
-        Font f = new Font(AvenirRegular, Font.PLAIN, size);
-        return f.deriveFont(correction(size));
+        return new Font(Regular, Font.PLAIN, size - 1);
     }
 
     public static Font demi(int size) {
-        Font f = new Font(AvenirDemi, Font.PLAIN, size);
-        return f.deriveFont(correction(size));
+        return new Font(Bold, Font.PLAIN, size - 1);
     }
 
     /**
@@ -65,11 +61,12 @@ public final class FontService {
      * Another problem is that this correction is not necessary on openjdk jvms which are already patched.
      * <p>
      * NOTE this method is hardcoded for Avenir, but simple to generalize by extracting the transformation constants.
+     * NOTE luckily enough, for Montserrat correction is not needed
      *
      * @param scale the size of the font we use the correction for
      * @return the correction transformation, which is identity if correction is not needed
      */
-    private static AffineTransform correction(float scale) {
+    private static AffineTransform correctionForAvenir(float scale) {
         AffineTransform t = new AffineTransform();
         if (useCorrection) {
             t.concatenate(AffineTransform.getTranslateInstance(0.0, 0.125 * scale));
