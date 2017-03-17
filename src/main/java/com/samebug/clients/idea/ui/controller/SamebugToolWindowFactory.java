@@ -20,7 +20,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.samebug.clients.idea.components.project.SamebugProjectComponent;
-import com.samebug.clients.idea.components.project.ToolWindowController;
+import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import org.jetbrains.annotations.NotNull;
 
 

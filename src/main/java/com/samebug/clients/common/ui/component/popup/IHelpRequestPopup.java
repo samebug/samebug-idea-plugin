@@ -35,8 +35,8 @@ public interface IHelpRequestPopup {
     }
 
     interface Listener {
-        void answerClick();
+        void answerClick(IHelpRequestPopup source);
 
-        void laterClick();
+        void laterClick(IHelpRequestPopup source);
     }
 }

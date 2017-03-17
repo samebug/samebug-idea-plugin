@@ -84,5 +84,9 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
         return ListenerService.getListener(this, IProfilePanel.Listener.class);
     }
 
+    @Override
+    public void increaseMessages() {
+        // TODO
+    }
 }
 

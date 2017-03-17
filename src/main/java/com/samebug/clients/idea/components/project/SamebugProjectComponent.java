@@ -18,6 +18,7 @@ package com.samebug.clients.idea.components.project;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 
 public class SamebugProjectComponent extends AbstractProjectComponent {
     private ToolWindowController toolWindowController;

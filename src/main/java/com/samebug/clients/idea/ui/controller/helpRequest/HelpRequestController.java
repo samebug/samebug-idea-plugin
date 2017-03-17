@@ -26,8 +26,8 @@ import com.samebug.clients.common.api.entities.solution.Solutions;
 import com.samebug.clients.common.services.HelpRequestStore;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestFrame;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.components.project.ToolWindowController;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
+import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.swing.ui.frame.helpRequest.HelpRequestFrame;
 
 import java.util.concurrent.Future;
@@ -60,18 +60,31 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
     public void load() {
         // TODO other controllers should also make sure to set the loading screen when starting to load content
         view.setLoading();
-        MatchingHelpRequest helpRequest = helpRequestStore.getHelpRequest(helpRequestId);
-        assert helpRequest != null;
-
         final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
 
-        int accessibleSearchId = helpRequest.accessibleSearchInfo().id;
-
-        final Future<Solutions> solutionsTask = concurrencyService.solutions(accessibleSearchId);
         final Future<MatchingHelpRequest> helpRequestTask = concurrencyService.helpRequest(helpRequestId);
 
-        load(solutionsTask, helpRequestTask, userInfoTask, userStatsTask);
+        load(helpRequestTask, userInfoTask, userStatsTask);
+    }
+
+    /**
+     *  Wait for the help request so we can decide which search id to use for showing the solutions
+     */
+    private void load(final Future<MatchingHelpRequest> helpRequestTask,
+                      final Future<UserInfo> userInfoTask,
+                      final Future<UserStats> userStatsTask) {
+        new LoadingTask() {
+            @Override
+            protected void load() throws Exception {
+                MatchingHelpRequest helpRequest = helpRequestTask.get();
+                int accessibleSearchId = helpRequest.accessibleSearchInfo().id;
+
+                final Future<Solutions> solutionsTask = concurrencyService.solutions(accessibleSearchId);
+                HelpRequestController.this.load(solutionsTask, helpRequestTask, userInfoTask, userStatsTask);
+            }
+        };
+
     }
 
     private void load(final Future<Solutions> solutionsTask,

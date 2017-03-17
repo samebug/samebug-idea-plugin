@@ -20,7 +20,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.ui.frame.IIntroFrame;
-import com.samebug.clients.idea.components.project.ToolWindowController;
+import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.idea.ui.controller.frame.ConnectionStatusController;
 import com.samebug.clients.idea.ui.modules.IdeaDataService;
 import com.samebug.clients.swing.ui.frame.intro.IntroFrame;

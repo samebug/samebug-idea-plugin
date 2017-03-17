@@ -25,7 +25,7 @@ import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
 import com.samebug.clients.common.api.entities.search.SearchDetails;
 import com.samebug.clients.common.api.entities.solution.Solutions;
 import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
-import com.samebug.clients.idea.components.project.ToolWindowController;
+import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.idea.ui.controller.component.ProfileController;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.swing.ui.frame.solution.SolutionFrame;

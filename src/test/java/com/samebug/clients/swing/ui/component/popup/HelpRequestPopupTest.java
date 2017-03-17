@@ -7,11 +7,11 @@ import org.junit.Test;
 
 import java.awt.*;
 
-@Ignore
+//@Ignore
 public class HelpRequestPopupTest extends TestDialog {
     @Test
     public void popup() {
-        waitToInitializeUI("tipRequestPopup/1.json").showDialog();
+        waitToInitializeUI("helpRequestPopup/1.json").showDialog();
     }
 
     public void initializeUI(String resourceJson) throws Exception {

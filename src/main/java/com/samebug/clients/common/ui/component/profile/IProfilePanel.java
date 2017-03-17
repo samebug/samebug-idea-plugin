@@ -18,6 +18,8 @@ package com.samebug.clients.common.ui.component.profile;
 import java.net.URL;
 
 public interface IProfilePanel {
+    void increaseMessages();
+
     final class Model {
         public final int messages;
         public final int marks;

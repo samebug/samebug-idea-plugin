@@ -24,6 +24,7 @@ import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
+import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -42,10 +43,10 @@ public final class HelpRequestPopup extends SamebugPanel implements IHelpRequest
         final JComponent later = new LaterButton();
 
         setBackgroundColor(ColorService.Tip);
-        setLayout(new MigLayout("", MessageFormat.format("10[{0}!]8[fill]10", AvatarSize), "10[]5[]10[]10"));
+        setLayout(new MigLayout("", MessageFormat.format("10[{0}!]8[320]10", AvatarSize), "10[]5[]10[]10"));
         add(avatar, "cell 0 0, spany 2");
         add(title, "cell 1 0");
-        add(body, "cell 1 1");
+        add(body, "cell 1 1, growx, wmin 0");
         add(answer, "cell 1 2");
         add(later, "cell 1 2");
     }
@@ -64,7 +65,7 @@ public final class HelpRequestPopup extends SamebugPanel implements IHelpRequest
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    super.mouseClicked(e);
+                    if (isEnabled()) getListener().answerClick(HelpRequestPopup.this);
                 }
             });
         }
@@ -75,6 +76,18 @@ public final class HelpRequestPopup extends SamebugPanel implements IHelpRequest
             setText("Later");
             setFont(FontService.demi(14));
             setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (isEnabled()) getListener().laterClick(HelpRequestPopup.this);
+                }
+            });
         }
     }
+
+    protected Listener getListener() {
+        return ListenerService.getListener(this, Listener.class);
+    }
+
 }

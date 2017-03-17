@@ -23,7 +23,7 @@ import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.common.api.exceptions.*;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.components.project.ToolWindowController;
+import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.idea.ui.modules.IdeaDataService;
 import com.samebug.clients.swing.ui.modules.DataService;
 import org.jetbrains.annotations.NotNull;

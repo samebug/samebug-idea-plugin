@@ -28,6 +28,7 @@ import com.samebug.clients.common.api.WebUrlBuilder;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.*;
 import com.samebug.clients.idea.controllers.ConsoleSearchController;
+import com.samebug.clients.idea.controllers.NotificationController;
 import com.samebug.clients.idea.controllers.TimedTasks;
 import com.samebug.clients.idea.ui.controller.frame.ConcurrencyService;
 import com.samebug.clients.idea.ui.controller.frame.ConversionService;
@@ -68,6 +69,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public AuthenticationService authenticationService;
     public ConversionService conversionService;
     public ConcurrencyService concurrencyService;
+    public NotificationController notificationController;
 
     @Nullable
     private MessageBusConnection connection;
@@ -131,6 +133,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
 
         TimedTasks timedTasks = new TimedTasks(messageBus.connect(this));
         ConsoleSearchController consoleSearchController = new ConsoleSearchController(messageBus.connect(this));
+        notificationController = new NotificationController();
 
         ColorService.install(new IdeaColorService());
         WebImageService.install(new IdeaWebImageService(urlBuilder));

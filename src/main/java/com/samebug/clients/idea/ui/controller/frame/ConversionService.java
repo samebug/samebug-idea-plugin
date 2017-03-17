@@ -36,6 +36,7 @@ import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.component.hit.IWebHit;
+import com.samebug.clients.common.ui.component.popup.IHelpRequestPopup;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestFrame;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestHeader;
@@ -180,6 +181,10 @@ public final class ConversionService {
         IProfilePanel.Model profile = profilePanel(user, statistics);
 
         return new IHelpRequestListFrame.Model(header, requestList, profile);
+    }
+
+    public IHelpRequestPopup.Model convertHelpRequestPopup(HelpRequest incomingRequest) {
+        return new IHelpRequestPopup.Model(incomingRequest.context, incomingRequest.requester.displayName, incomingRequest.requester.avatarUrl);
     }
 
     public static String headLine(SearchDetails search) {

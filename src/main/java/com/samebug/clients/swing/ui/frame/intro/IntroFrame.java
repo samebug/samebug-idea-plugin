@@ -15,21 +15,17 @@
  */
 package com.samebug.clients.swing.ui.frame.intro;
 
-import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.ui.popup.BalloonBuilder;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.ui.awt.RelativePoint;
+import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
+import com.samebug.clients.common.api.entities.helpRequest.Requester;
 import com.samebug.clients.common.ui.frame.IIntroFrame;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.base.frame.BasicFrame;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
-import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
-import com.samebug.clients.swing.ui.modules.DrawService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
-import net.miginfocom.swing.MigLayout;
 
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Date;
 
 // TODO
 public final class IntroFrame extends BasicFrame implements IIntroFrame {
@@ -39,24 +35,14 @@ public final class IntroFrame extends BasicFrame implements IIntroFrame {
         l.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                TransparentPanel c = new TransparentPanel() {
-                    {
-                        setBackground(Color.red);
-                        setLayout(new MigLayout());
-                        add(new SamebugLabel("hello"));
-                    }
-
-                    @Override
-                    public void paintBorder(Graphics g) {
-                        Graphics2D g2 = DrawService.init(g);
-                        g2.setColor(getBackground());
-                        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
-                    }
-                };
-                BalloonBuilder bb = JBPopupFactory.getInstance().createBalloonBuilder(c);
-                bb.setFillColor(Color.blue);
-                bb.setContentInsets(new Insets(10, 10, 10, 10));
-                bb.createBalloon().show(RelativePoint.getCenterOf(IntroFrame.this), Balloon.Position.above);
+                HelpRequest h = new HelpRequest("x",
+                        new Requester(1, true, "Petra", null),
+                        2,
+                        "ugy elakadtam...",
+                        "",
+                        new Date(),
+                        null);
+                IdeaSamebugPlugin.getInstance().notificationController.incomingHelpRequest(h);
             }
         });
     }
