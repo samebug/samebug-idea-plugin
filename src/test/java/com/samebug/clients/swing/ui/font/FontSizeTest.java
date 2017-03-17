@@ -2,12 +2,14 @@ package com.samebug.clients.swing.ui.font;
 
 import com.samebug.clients.swing.ui.modules.FontService;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.*;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
+@Ignore
 public class FontSizeTest {
     @Test
     public void printFontMetrics() throws NoSuchFieldException, IllegalAccessException {

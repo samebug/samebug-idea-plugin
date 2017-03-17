@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.idea.ui.controller.toolwindow;
 
-import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import com.intellij.notification.impl.NotificationsManagerImpl;

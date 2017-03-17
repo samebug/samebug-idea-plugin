@@ -145,7 +145,7 @@ public abstract class BasicButton extends JComponent {
     protected void setChildrenForeground(Color foreground) {
         currentChildrenColor = foreground;
         for (Component c : getComponents()) c.setForeground(currentChildrenColor);
-    };
+    }
 
     protected void setChildrenFont(Font font) {
         for (Component c : getComponents()) c.setFont(font);

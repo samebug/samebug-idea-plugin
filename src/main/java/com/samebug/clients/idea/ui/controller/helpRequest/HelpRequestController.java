@@ -69,7 +69,7 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
     }
 
     /**
-     *  Wait for the help request so we can decide which search id to use for showing the solutions
+     * Wait for the help request so we can decide which search id to use for showing the solutions
      */
     private void load(final Future<MatchingHelpRequest> helpRequestTask,
                       final Future<UserInfo> userInfoTask,

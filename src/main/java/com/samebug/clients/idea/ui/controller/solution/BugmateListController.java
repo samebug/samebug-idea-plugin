@@ -98,8 +98,6 @@ final class BugmateListController implements IBugmateList.Listener {
                     }
                 }.execute();
             }
-
-            ;
         });
     }
 

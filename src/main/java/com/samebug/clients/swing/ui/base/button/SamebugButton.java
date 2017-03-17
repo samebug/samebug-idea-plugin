@@ -20,7 +20,6 @@ import com.samebug.clients.swing.ui.modules.FontService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * Ordinary button with a single text label, and sensible defaults.

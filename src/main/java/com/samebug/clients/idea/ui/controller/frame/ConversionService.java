@@ -69,7 +69,7 @@ public final class ConversionService {
     }
 
     /**
-     *  When showing the hits for a tip request, then marking is disabled. This parameter flows through the whole conversion call tree.
+     * When showing the hits for a tip request, then marking is disabled. This parameter flows through the whole conversion call tree.
      */
     public IMarkButton.Model convertMarkPanel(RestHit hit, boolean disabled) {
         boolean userCanMark = disabled ? false : hit.getMarkable();
@@ -116,7 +116,8 @@ public final class ConversionService {
             bugmateHits.add(model);
         }
         String exceptionTitle = headLine(search);
-        IBugmateList.Model bugmateList = new IBugmateList.Model(bugmateHits, bugmates.getNumberOfOtherBugmates(), bugmates.isEvenMoreExists(), exceptionTitle, search.group.helpRequest);
+        IBugmateList.Model bugmateList =
+                new IBugmateList.Model(bugmateHits, bugmates.getNumberOfOtherBugmates(), bugmates.isEvenMoreExists(), exceptionTitle, search.group.helpRequest);
         return new ITipResultsTab.Model(tipHits, bugmateList);
     }
 
@@ -173,7 +174,8 @@ public final class ConversionService {
             Requester requester = r.helpRequest.requester;
             HelpRequest hr = r.helpRequest;
             String exceptionBody = headLine(r.accessibleSearchInfo());
-            IHelpRequestPreview.Model preview = new IHelpRequestPreview.Model(requester.displayName, requester.avatarUrl, hr.createdAt, r.viewedAt, hr.context, hr.id, exceptionBody);
+            IHelpRequestPreview.Model preview =
+                    new IHelpRequestPreview.Model(requester.displayName, requester.avatarUrl, hr.createdAt, r.viewedAt, hr.context, hr.id, exceptionBody);
             requestPreviews.add(preview);
         }
         IHelpRequestList.Model requestList = new IHelpRequestList.Model(requestPreviews);

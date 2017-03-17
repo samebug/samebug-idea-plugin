@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.api.entities.solution;
 
-import com.samebug.clients.common.api.entities.search.SearchGroup;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -25,9 +25,9 @@ import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
 import com.samebug.clients.common.api.entities.search.SearchDetails;
 import com.samebug.clients.common.api.entities.solution.Solutions;
 import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
-import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.idea.ui.controller.component.ProfileController;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
+import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.swing.ui.frame.solution.SolutionFrame;
 
 import java.util.concurrent.Future;
@@ -83,7 +83,8 @@ public final class SolutionsController extends BaseFrameController<ISolutionFram
         new LoadingTask() {
             @Override
             protected void load() throws Exception {
-                final SolutionFrame.Model model = conversionService.solutionFrame(searchTask.get(), solutionsTask.get(), bugmatesTask.get(), userInfoTask.get(), userStatsTask.get());
+                final SolutionFrame.Model model =
+                        conversionService.solutionFrame(searchTask.get(), solutionsTask.get(), bugmatesTask.get(), userInfoTask.get(), userStatsTask.get());
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                     @Override
                     public void run() {

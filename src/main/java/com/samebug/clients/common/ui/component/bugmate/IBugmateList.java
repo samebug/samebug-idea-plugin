@@ -61,6 +61,7 @@ public interface IBugmateList {
         // TODO not sure if this is the right place for it, or the list and the ask should be separated.
         // TODO It should definitely be separated.
         void askBugmates(IBugmateList source, String description);
+
         // TODO the UI should not know the help request id, it should come from the controller
         void revokeHelpRequest(IBugmateList source, String helpRequestId);
     }

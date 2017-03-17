@@ -67,6 +67,7 @@ public class ForegroundColorChanger extends BasicInteractionListener {
     public void uninstall() {
         component.removeMouseListener(this);
     }
+
     public void install() {
         component.addMouseListener(this);
     }

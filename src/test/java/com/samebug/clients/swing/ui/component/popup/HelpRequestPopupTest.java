@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import java.awt.*;
 
-//@Ignore
+@Ignore
 public class HelpRequestPopupTest extends TestDialog {
     @Test
     public void popup() {

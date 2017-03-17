@@ -54,7 +54,8 @@ public final class SolutionService {
         return clientService.execute(requestHandler);
     }
 
-    public RestHit<Tip> postTip(@NotNull final int searchId, @NotNull final String tip, @Nullable final String sourceUrl, @Nullable final String helpRequestId) throws SamebugClientException {
+    public RestHit<Tip> postTip(@NotNull final int searchId, @NotNull final String tip, @Nullable final String sourceUrl, @Nullable final String helpRequestId)
+            throws SamebugClientException {
         final SamebugClient client = clientService.client;
 
         ClientService.ConnectionAwareHttpRequest<RestHit<Tip>> requestHandler =

@@ -177,7 +177,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         state.set(newSettings);
         try {
             if (clientService != null) clientService.configure(newSettings.getNetworkConfig());
-            if (webSocketClientService != null)webSocketClientService.configure(newSettings.getNetworkConfig());
+            if (webSocketClientService != null) webSocketClientService.configure(newSettings.getNetworkConfig());
             urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
         } finally {
             // TODO change the event
@@ -190,7 +190,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         ApplicationSettings newSettings = new ApplicationSettings(state);
         this.state.set(newSettings);
         if (clientService != null) clientService.configure(newSettings.getNetworkConfig());
-        if (webSocketClientService != null)webSocketClientService.configure(newSettings.getNetworkConfig());
+        if (webSocketClientService != null) webSocketClientService.configure(newSettings.getNetworkConfig());
         urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
     }
 }

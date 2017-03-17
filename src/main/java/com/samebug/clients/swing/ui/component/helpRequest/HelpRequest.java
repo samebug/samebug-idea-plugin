@@ -143,6 +143,7 @@ public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRe
 
     final class ActionRow extends TransparentPanel {
         final SendButton sendButton;
+
         {
             sendButton = new SendButton();
             // TODO postponed feature
