@@ -37,7 +37,6 @@ public final class RequestTip extends JComponent {
     }
 
     public void startRequestTip() {
-        // TODO loading
         if (tipScreen == null) return;
         tipScreen.sendButton.changeToLoadingAnimation();
     }
@@ -50,7 +49,6 @@ public final class RequestTip extends JComponent {
     }
 
     public void successRequestTip() {
-        // TODO keep track of open/close state in a boolean?
         if (ctaScreen == null) changeToClosedState();
     }
 

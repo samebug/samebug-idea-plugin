@@ -43,11 +43,6 @@ public final class HelpRequestService {
                     protected void success(IncomingHelpRequests result) {
                         store.incoming = result;
                     }
-
-                    protected void fail(SamebugClientException e) {
-//                        TODO why would we remove it if once we found it?
-//                        store.incoming = null;
-                    }
                 };
         return clientService.execute(requestHandler);
     }

@@ -33,7 +33,7 @@ public final class SearchService {
     public CreatedSearch search(final String trace) throws SamebugClientException {
         final SamebugClient client = clientService.client;
 
-        // TODO
+        // TODO is there something common in SearchService and SearchRequestService?
         ClientService.ConnectionAwareHttpRequest<CreatedSearch> requestHandler =
                 new ClientService.ConnectionAwareHttpRequest<CreatedSearch>() {
                     ClientResponse<CreatedSearch> request() {

@@ -15,12 +15,19 @@
  */
 package com.samebug.clients.swing.ui.base.tabbedPane;
 
+import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.modules.FontService;
 import net.miginfocom.swing.MigLayout;
 
-public final class FirstTabHeader extends SamebugTabHeader {
-    public FirstTabHeader(String tabName, int hits) {
-        super(tabName, hits);
+public class LabelTabHeader extends SamebugTabHeader {
+    protected final SamebugLabel tabLabel;
 
-        setLayout(new MigLayout("", "0[]7[]20", "0[20, fill]0"));
+    public LabelTabHeader(String tabName) {
+        tabLabel = new SamebugLabel(tabName, FontService.demi(16));
+
+        setLayout(new MigLayout("", "0[]0", "0[20, fill]0"));
+        add(tabLabel, "cell 0 0");
+
+        updateColors();
     }
 }

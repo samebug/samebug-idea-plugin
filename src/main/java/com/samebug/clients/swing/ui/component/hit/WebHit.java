@@ -77,7 +77,6 @@ public final class WebHit extends SamebugPanel implements IWebHit {
 
         @Override
         public Dimension getPreferredSize() {
-            // TODO breaks when changing font
             if (getLineCount() <= 1) {
                 return new Dimension(Integer.MAX_VALUE, 18);
             } else {

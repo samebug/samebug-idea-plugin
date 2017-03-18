@@ -15,49 +15,29 @@
  */
 package com.samebug.clients.swing.ui.base.tabbedPane;
 
-import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.modules.ColorService;
-import com.samebug.clients.swing.ui.modules.FontService;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicPanelUI;
 import java.awt.*;
 
 public abstract class SamebugTabHeader extends JPanel {
-    protected final SamebugLabel tabLabel;
-    protected final HitsLabel hitsLabel;
     protected boolean selected;
     protected TabColorChanger interactionListener;
-    private Color[] selectedColor;
-    private Color[] selectedHitColor;
+    protected Color[] selectedColor;
 
-    public SamebugTabHeader(String tabName, int hits) {
-        tabLabel = new SamebugLabel(tabName, FontService.demi(16));
-        hitsLabel = new HitsLabel(HitsLabel.SMALL);
-        hitsLabel.setText(Integer.toString(hits));
+    public SamebugTabHeader() {
         selectedColor = ColorService.Text;
-        selectedHitColor = ColorService.SelectedTab;
-
         setOpaque(false);
-        // NOTE the layout is specified in the derived classes, don't forget to introduce changes to both when necessary
-
-        add(tabLabel, "cell 0 0");
-        add(hitsLabel, "cell 1 0");
-        updateUI();
+        notSelectedState();
     }
 
     public void setSelected(boolean selected) {
         boolean wasSelected = this.selected;
         this.selected = selected;
 
-        if (!wasSelected && selected && interactionListener != null) {
-            this.removeMouseListener(interactionListener);
-            interactionListener = null;
-        } else if (wasSelected && !selected) {
-            interactionListener = TabColorChanger.createTabColorChanger(this, ColorService.LinkInteraction);
-            addMouseListener(interactionListener);
-        }
-        updateColors();
+        if (!wasSelected && selected && interactionListener != null) selectedState();
+        else if (wasSelected && !selected) notSelectedState();
     }
 
     /**
@@ -67,38 +47,48 @@ public abstract class SamebugTabHeader extends JPanel {
     @Override
     public void setForeground(Color color) {
         super.setForeground(color);
-        for (Component c : getComponents()) c.setForeground(color);
+        setChildrenForeground(color);
     }
 
     @Override
     public void setBackground(Color color) {
         super.setBackground(color);
-        for (Component c : getComponents()) c.setBackground(color);
+        setChildrenBackground(color);
     }
 
     @Override
     public void updateUI() {
         setUI(new BasicPanelUI());
-        if (!selected) {
-            if (interactionListener != null) removeMouseListener(interactionListener);
-            interactionListener = TabColorChanger.createTabColorChanger(this, ColorService.LinkInteraction);
-            addMouseListener(interactionListener);
-        }
         updateColors();
     }
 
     /**
      * Update foreground and background color of this component based on the current theme
      */
-    private void updateColors() {
-        Color foreground;
-        if (selected) foreground = ColorService.forCurrentTheme(selectedColor);
-        else foreground = interactionListener.getColor();
-        setForeground(foreground);
+    protected void updateColors() {
+        if (selected) setForeground(ColorService.forCurrentTheme(selectedColor));
+        else if (interactionListener != null) setForeground(interactionListener.getColor());
         setBackground(ColorService.forCurrentTheme(ColorService.Background));
+    }
 
-        // hit label in selected state has a visually corrected color
-        if (hitsLabel != null && selected) hitsLabel.setForeground(ColorService.forCurrentTheme(selectedHitColor));
+    protected void setChildrenForeground(Color foreground) {
+        for (Component c : getComponents()) c.setForeground(foreground);
+    }
+
+    protected void setChildrenBackground(Color background) {
+        for (Component c : getComponents()) c.setBackground(background);
+    }
+
+    protected void selectedState() {
+        this.removeMouseListener(interactionListener);
+        interactionListener = null;
+        updateColors();
+    }
+
+    protected void notSelectedState() {
+        interactionListener = TabColorChanger.createTabColorChanger(this, ColorService.LinkInteraction);
+        addMouseListener(interactionListener);
+        updateColors();
     }
 
 

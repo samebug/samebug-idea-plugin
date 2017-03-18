@@ -34,8 +34,8 @@ public final class ResultTabs extends SamebugTabbedPane implements IResultTabs {
         webResultsTab = new WebResultsTab(model.webResults, model.cta);
         tipResultsTab = new TipResultsTab(model.tipResults, model.cta);
 
-        tipResultsTabHeader = addTab(MessageService.message("samebug.component.solutionFrame.tips.tabName"), model.tipResults.getTipsSize(), tipResultsTab);
-        webResultsTabHeader = addTab(MessageService.message("samebug.component.solutionFrame.webSolutions.tabName"), model.webResults.webHits.size(), webResultsTab);
+        tipResultsTabHeader = addLabeledTab(MessageService.message("samebug.component.solutionFrame.tips.tabName"), model.tipResults.getTipsSize(), tipResultsTab);
+        webResultsTabHeader = addLabeledTab(MessageService.message("samebug.component.solutionFrame.webSolutions.tabName"), model.webResults.webHits.size(), webResultsTab);
         tipResultsTabHeader.setSelected(true);
     }
 }

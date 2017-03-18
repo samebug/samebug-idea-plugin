@@ -51,7 +51,6 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
 
     @Override
     public void successPostTip() {
-        // TODO keep track of open/close state in a boolean?
         // TODO do we have to properly close the loading animation on the send button?
         if (ctaScreen == null) changeToClosedState();
     }

@@ -31,9 +31,8 @@ public final class HelpRequestTabs extends SamebugTabbedPane implements IHelpReq
         webResultsTab = new WebResultsTab(model.webResults, model.cta);
         helpRequestTab = new HelpRequestTab(model.helpRequest);
 
-        // TODO hits: 0 should be null, not displaying the number
-        helpRequestTabHeader = addTab(MessageService.message("samebug.component.solutionFrame.tips.tabName"), 0, helpRequestTab);
-        webResultsTabHeader = addTab(MessageService.message("samebug.component.solutionFrame.webSolutions.tabName"), model.webResults.webHits.size(), webResultsTab);
+        helpRequestTabHeader = addLabeledTab(MessageService.message("samebug.component.solutionFrame.tips.tabName"), null, helpRequestTab);
+        webResultsTabHeader = addLabeledTab(MessageService.message("samebug.component.solutionFrame.webSolutions.tabName"), model.webResults.webHits.size(), webResultsTab);
         helpRequestTabHeader.setSelected(true);
     }
 }

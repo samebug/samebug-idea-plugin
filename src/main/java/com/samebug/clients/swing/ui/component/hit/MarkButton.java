@@ -106,13 +106,6 @@ public final class MarkButton extends ActionButton implements IMarkButton {
         }
     }
 
-    private final class DisabledMarkLabel extends SamebugLabel {
-        {
-            // TODO
-            setText("");
-        }
-    }
-
     private Integer getSolutionId() {
         return DataService.getData(this, DataService.SolutionId);
     }

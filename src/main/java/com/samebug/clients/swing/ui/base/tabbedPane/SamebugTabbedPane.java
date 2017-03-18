@@ -17,6 +17,7 @@ package com.samebug.clients.swing.ui.base.tabbedPane;
 
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -53,13 +54,13 @@ public class SamebugTabbedPane extends JTabbedPane {
     }
 
     // TODO this addTab behaviour differs from the base class, it also adds (and returns) the tab component
-    public SamebugTabHeader addTab(String tabName, int hits, Component tabComponent) {
+    public SamebugTabHeader addLabeledTab(String tabName, @Nullable Integer hits, Component tabComponent) {
         SamebugTabHeader tabHeader;
-        if (getTabCount() == 0) {
-            tabHeader = new FirstTabHeader(tabName, hits);
-        } else {
-            tabHeader = new NonFirstTabHeader(tabName, hits);
-        }
+        if (hits != null) tabHeader = new LabelAndHitsTabHeader(tabName, hits);
+        else tabHeader = new LabelTabHeader(tabName);
+
+        if (getTabCount() == 0) tabHeader.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
+        else tabHeader.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 
         int newTabIndex = getTabCount();
         super.addTab(null, tabComponent);
