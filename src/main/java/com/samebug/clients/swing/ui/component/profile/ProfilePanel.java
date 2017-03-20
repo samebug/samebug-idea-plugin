@@ -86,7 +86,7 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
 
     @Override
     public void increaseMessages() {
-        // TODO
+        messages.setNumber(messages.getNumber() + 1);
     }
 }
 

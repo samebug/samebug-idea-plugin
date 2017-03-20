@@ -24,10 +24,13 @@ import net.miginfocom.swing.MigLayout;
 import java.awt.*;
 
 public class NumberLabel extends TransparentPanel {
+    protected int number;
+
     protected final SamebugLabel numberLabel;
     protected final SamebugLabel hintLabel;
 
     public NumberLabel(int number, String hint) {
+        this.number = number;
         numberLabel = new SamebugLabel(Integer.toString(number), FontService.demi(14));
         hintLabel = new SamebugLabel(hint, FontService.demi(12));
 
@@ -37,6 +40,16 @@ public class NumberLabel extends TransparentPanel {
         add(numberLabel, "");
         add(hintLabel, "");
         updateChildrenColor();
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        numberLabel.setText(Integer.toString(number));
+        revalidate();
+        repaint();
     }
 
     @Override

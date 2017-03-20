@@ -20,6 +20,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.api.entities.UserInfo;
 import com.samebug.clients.common.api.entities.UserStats;
+import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
 import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
 import com.samebug.clients.common.api.entities.solution.Solutions;
 import com.samebug.clients.common.services.HelpRequestStore;
@@ -89,16 +90,17 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
 
         final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
-
+        final Future<IncomingHelpRequests> incomingHelpRequestsTask = concurrencyService.incomingHelpRequests();
         final Future<MatchingHelpRequest> helpRequestTask = concurrencyService.helpRequest(helpRequestId);
 
-        load(helpRequestTask, userInfoTask, userStatsTask);
+        load(helpRequestTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);
     }
 
     /**
      * Wait for the help request so we can decide which search id to use for showing the solutions
      */
     private void load(final Future<MatchingHelpRequest> helpRequestTask,
+                      final Future<IncomingHelpRequests> incomingHelpRequestsTask,
                       final Future<UserInfo> userInfoTask,
                       final Future<UserStats> userStatsTask) {
         new LoadingTask() {
@@ -111,7 +113,7 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
                 ListenerService.putListenerToComponent((JComponent) view, IWebResultsTab.Listener.class, webResultsTabListener);
 
                 final Future<Solutions> solutionsTask = concurrencyService.solutions(accessibleSearchId);
-                HelpRequestController.this.load(solutionsTask, helpRequestTask, userInfoTask, userStatsTask);
+                HelpRequestController.this.load(solutionsTask, helpRequestTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);
             }
         }.executeInBackground();
 
@@ -119,13 +121,14 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
 
     private void load(final Future<Solutions> solutionsTask,
                       final Future<MatchingHelpRequest> helpRequestTask,
+                      final Future<IncomingHelpRequests> incomingHelpRequestsTask,
                       final Future<UserInfo> userInfoTask,
                       final Future<UserStats> userStatsTask) {
         new LoadingTask() {
             @Override
             protected void load() throws Exception {
                 final IHelpRequestFrame.Model model = conversionService.convertHelpRequestFrame(
-                        solutionsTask.get(), helpRequestTask.get(), userInfoTask.get(), userStatsTask.get());
+                        solutionsTask.get(), helpRequestTask.get(), incomingHelpRequestsTask.get(), userInfoTask.get(), userStatsTask.get());
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                     @Override
                     public void run() {

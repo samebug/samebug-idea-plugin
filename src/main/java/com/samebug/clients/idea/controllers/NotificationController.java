@@ -24,6 +24,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
 
 public final class NotificationController {
@@ -57,7 +58,9 @@ public final class NotificationController {
                 }
             }
         });
-    }
 
+        // Invalidate currently cached help request list
+        IdeaSamebugPlugin.getInstance().helpRequestStore.invalidate();
+    }
 }
 

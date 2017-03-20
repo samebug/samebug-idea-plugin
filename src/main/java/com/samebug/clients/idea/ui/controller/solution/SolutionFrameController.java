@@ -22,6 +22,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.api.entities.UserInfo;
 import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
+import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
 import com.samebug.clients.common.api.entities.search.SearchDetails;
 import com.samebug.clients.common.api.entities.solution.Solutions;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
@@ -110,22 +111,24 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
     public void load() {
         final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
+        final Future<IncomingHelpRequests> incomingHelpRequestsTask = concurrencyService.incomingHelpRequests();
         final Future<Solutions> solutionsTask = concurrencyService.solutions(searchId);
         final Future<BugmatesResult> bugmatesTask = concurrencyService.bugmates(searchId);
         final Future<SearchDetails> searchTask = concurrencyService.search(searchId);
-        load(solutionsTask, bugmatesTask, searchTask, userInfoTask, userStatsTask);
+        load(solutionsTask, bugmatesTask, searchTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);
     }
 
     private void load(final Future<Solutions> solutionsTask,
                       final Future<BugmatesResult> bugmatesTask,
                       final Future<SearchDetails> searchTask,
+                      final Future<IncomingHelpRequests> incomingHelpRequestsTask,
                       final Future<UserInfo> userInfoTask,
                       final Future<UserStats> userStatsTask) {
         new LoadingTask() {
             @Override
             protected void load() throws Exception {
                 final SolutionFrame.Model model =
-                        conversionService.solutionFrame(searchTask.get(), solutionsTask.get(), bugmatesTask.get(), userInfoTask.get(), userStatsTask.get());
+                        conversionService.solutionFrame(searchTask.get(), solutionsTask.get(), bugmatesTask.get(), incomingHelpRequestsTask.get(), userInfoTask.get(), userStatsTask.get());
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                     @Override
                     public void run() {

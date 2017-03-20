@@ -35,4 +35,8 @@ public final class HelpRequestStore {
         }
         return null;
     }
+
+    public void invalidate() {
+        incoming = null;
+    }
 }

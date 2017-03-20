@@ -121,20 +121,21 @@ public final class ConversionService {
         return new ITipResultsTab.Model(tipHits, bugmateList);
     }
 
-    public IProfilePanel.Model profilePanel(UserInfo user, UserStats statistics) {
-        return new IProfilePanel.Model(0, statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(),
+    public IProfilePanel.Model profilePanel(IncomingHelpRequests incomingRequests, UserInfo user, UserStats statistics) {
+        return new IProfilePanel.Model(incomingRequests.matches.size(), statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(),
                 user.getDisplayName(), user.getAvatarUrl());
     }
 
-    public ISolutionFrame.Model solutionFrame(SearchDetails search, Solutions solutions, BugmatesResult bugmates, UserInfo user, UserStats statistics) {
+    public ISolutionFrame.Model solutionFrame(SearchDetails search, Solutions solutions, BugmatesResult bugmates, IncomingHelpRequests incomingRequests, UserInfo user, UserStats statistics) {
         IWebResultsTab.Model webResults = webResultsTab(solutions, false);
         ITipResultsTab.Model tipResults = tipResultsTab(search, solutions, bugmates, false);
 
-        IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(0);
+        int nBugmates = bugmates.getBugmates().size() + (bugmates.isEvenMoreExists() ? bugmates.getNumberOfOtherBugmates() : 0);
+        IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(nBugmates);
         String exceptionTitle = headLine(search);
         IResultTabs.Model resultTabs = new IResultTabs.Model(webResults, tipResults, cta);
         ISearchHeaderPanel.Model header = new ISearchHeaderPanel.Model(exceptionTitle);
-        IProfilePanel.Model profile = profilePanel(user, statistics);
+        IProfilePanel.Model profile = profilePanel(incomingRequests, user, statistics);
         return new ISolutionFrame.Model(resultTabs, header, profile);
     }
 
@@ -157,13 +158,13 @@ public final class ConversionService {
     }
 
 
-    public IHelpRequestFrame.Model convertHelpRequestFrame(Solutions solutions, MatchingHelpRequest helpRequest, UserInfo user, UserStats statistics) {
+    public IHelpRequestFrame.Model convertHelpRequestFrame(Solutions solutions, MatchingHelpRequest helpRequest, IncomingHelpRequests incomingRequests, UserInfo user, UserStats statistics) {
         IWebResultsTab.Model webResults = webResultsTab(solutions, true);
         IHelpRequestTab.Model helpRequestTab = helpRequestTab(solutions, helpRequest);
         IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(0);
         IHelpRequestTabs.Model tabs = new IHelpRequestTabs.Model(webResults, helpRequestTab, cta);
         IHelpRequestHeader.Model header = helpRequestHeader(helpRequest);
-        IProfilePanel.Model profile = profilePanel(user, statistics);
+        IProfilePanel.Model profile = profilePanel(incomingRequests, user, statistics);
 
         return new IHelpRequestFrame.Model(tabs, header, profile);
     }
@@ -180,7 +181,7 @@ public final class ConversionService {
         }
         IHelpRequestList.Model requestList = new IHelpRequestList.Model(requestPreviews);
         IHelpRequestListHeader.Model header = new IHelpRequestListHeader.Model(incomingRequests.matches.size());
-        IProfilePanel.Model profile = profilePanel(user, statistics);
+        IProfilePanel.Model profile = profilePanel(incomingRequests, user, statistics);
 
         return new IHelpRequestListFrame.Model(header, requestList, profile);
     }
