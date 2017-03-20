@@ -15,7 +15,23 @@
  */
 package com.samebug.clients.common.api.form;
 
+import org.jetbrains.annotations.NotNull;
+
 public final class CreateHelpRequest {
     public static final String SEARCH_ID = "searchId";
     public static final String CONTEXT = "context";
+    public static final String E_TOO_LONG = "Maximum length is 160";
+    public static final String E_NOT_YOUR_SEARCH = "NOT_YOUR_SEARCH";
+    public static final String E_DUPLICATE_HELP_REQUEST = "DUPLICATE_HELP_REQUEST";
+    public static final String E_NOT_STACKTRACE_SEARCH = "NOT_STACKTRACE_SEARCH";
+
+    @NotNull
+    public final Integer searchId;
+    @NotNull
+    public final String context;
+
+    public CreateHelpRequest(@NotNull Integer searchId, @NotNull String context) {
+        this.searchId = searchId;
+        this.context = context;
+    }
 }

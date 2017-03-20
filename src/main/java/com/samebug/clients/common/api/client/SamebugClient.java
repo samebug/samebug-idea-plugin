@@ -140,6 +140,7 @@ final public class SamebugClient {
         return rawClient.executeAuthenticated(request, new HandleJsonRequest<MatchingHelpRequest>(MatchingHelpRequest.class));
     }
 
+    // TODO use the api.form classes here
     public
     @NotNull
     ClientResponse<MyHelpRequest> createHelpRequest(int searchId, String context) {

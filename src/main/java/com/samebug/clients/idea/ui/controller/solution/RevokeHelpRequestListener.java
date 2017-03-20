@@ -5,12 +5,11 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.HelpRequestService;
-import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
-import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
+// TODO ALREADY_REVOKED is not handled. Post request handling should be generalized
 final class RevokeHelpRequestListener implements IMyHelpRequest.Listener {
     final static Logger LOGGER = Logger.getInstance(RevokeHelpRequestListener.class);
 

@@ -10,7 +10,7 @@ public interface IAskForHelp {
 
     void failRequestTip(List<FieldError> errors) throws FormMismatchException;
 
-    void successRequestTip(/*TODO param*/);
+    void successRequestTip();
 
     final class Model {
         public final int numberOfBugmates;

@@ -26,6 +26,9 @@ public final class CreateTip {
     public static final String E_NOT_EXCEPTION_SEARCH = "NOT_EXCEPTION_SEARCH";
     public static final String E_UNKNOWN_SEARCH = "UNKNOWN_SEARCH";
     public static final String E_UNREACHABLE_SOURCE = "UNREACHABLE_SOURCE";
+    public static final String E_UNRECOGNIZED_SOURCE = "UNRECOGNIZED_SOURCE";
+    public static final String E_UNKNOWN_HELP_REQUEST = "UNKNOWN_HELP_REQUEST";
+    public static final String E_NO_STACKTRACE = "NO_STACKTRACE";
 
     @NotNull
     public final Integer searchId;

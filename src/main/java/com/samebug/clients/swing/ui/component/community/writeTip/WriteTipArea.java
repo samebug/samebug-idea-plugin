@@ -49,7 +49,7 @@ public final class WriteTipArea extends JComponent implements IFormField {
     public void setFormError(String errorCode) throws ErrorCodeMismatchException {
         borderedArea.setError();
         if (CreateTip.E_TOO_SHORT.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.tip.write.error.tip.short"));
-        if (CreateTip.E_TOO_LONG.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.tip.write.error.tip.long"));
+        else if (CreateTip.E_TOO_LONG.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.tip.write.error.tip.long"));
         else throw new ErrorCodeMismatchException(errorCode);
         remove(errorLabel);
         add(errorLabel, "cell 0 1");

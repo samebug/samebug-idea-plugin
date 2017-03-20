@@ -15,17 +15,14 @@
  */
 package com.samebug.clients.idea.ui.controller.solution;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.api.entities.solution.MarkResponse;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.services.SolutionService;
+import com.samebug.clients.common.api.form.CancelMark;
+import com.samebug.clients.common.api.form.CreateMark;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.idea.ui.controller.form.CancelMarkFormHandler;
+import com.samebug.clients.idea.ui.controller.form.CreateMarkFormHandler;
 
 final class MarkButtonListener implements IMarkButton.Listener {
-    final static Logger LOGGER = Logger.getInstance(MarkButtonListener.class);
     final SolutionFrameController controller;
 
     public MarkButtonListener(final SolutionFrameController controller) {
@@ -34,39 +31,22 @@ final class MarkButtonListener implements IMarkButton.Listener {
 
     @Override
     public void markClicked(final IMarkButton markButton, final Integer solutionId, final Integer markId) {
-        // TODO it does not handles non-SamebugExceptions. Extract the handler for this and formHandler
-        markButton.setLoading();
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-            @Override
-            public void run() {
-                SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
-                try {
-                    final IMarkButton.Model newModel;
-                    if (markId == null) {
-                        final MarkResponse response = solutionService.postMark(controller.searchId, solutionId);
-                        newModel = controller.conversionService.convertMarkResponse(response);
-                    } else {
-                        final MarkResponse response = solutionService.retractMark(markId);
-                        newModel = controller.conversionService.convertRetractedMarkResponse(response);
-                    }
-                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            markButton.update(newModel);
-                        }
-                    });
-                } catch (SamebugClientException e) {
-                    LOGGER.warn("Failed to post mark", e);
-                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            markButton.interruptLoading();
-                            controller.view.popupError(MessageService.message("samebug.component.mark.error.unhandled"));
-                        }
-                    });
+        if (markId == null) {
+            new CreateMarkFormHandler(controller.view, markButton, new CreateMark(controller.searchId, solutionId)) {
+                @Override
+                protected void afterPostForm(MarkResponse response) {
+                    final IMarkButton.Model newModel = controller.conversionService.convertMarkResponse(response);
+                    markButton.update(newModel);
                 }
-            }
-        });
+            }.execute();
+        } else {
+            new CancelMarkFormHandler(controller.view, markButton, new CancelMark(markId)) {
+                @Override
+                protected void afterPostForm(MarkResponse response) {
+                    final IMarkButton.Model newModel = controller.conversionService.convertRetractedMarkResponse(response);
+                    markButton.update(newModel);
+                }
+            }.execute();
+        }
     }
 }

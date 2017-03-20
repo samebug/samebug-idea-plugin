@@ -21,10 +21,10 @@ import com.samebug.clients.common.api.form.CreateTip;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.idea.ui.controller.form.CreateTipFormHandler;
 
-final class HelpOthersCTAController implements IHelpOthersCTA.Listener {
+final class HelpOthersCTAListener implements IHelpOthersCTA.Listener {
     final SolutionFrameController controller;
 
-    public HelpOthersCTAController(final SolutionFrameController controller) {
+    public HelpOthersCTAListener(final SolutionFrameController controller) {
         this.controller = controller;
     }
 

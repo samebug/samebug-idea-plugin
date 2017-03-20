@@ -25,7 +25,6 @@ import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
 import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
 import com.samebug.clients.common.api.entities.search.SearchDetails;
 import com.samebug.clients.common.api.entities.solution.Solutions;
-import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
@@ -59,7 +58,7 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
     final WebResultsTabListener webResultsTabListener;
     final RequestHelpListener requestHelpListener;
     final RevokeHelpRequestListener revokeHelpRequestListener;
-    final HelpOthersCTAController helpOthersCTAController;
+    final HelpOthersCTAListener helpOthersCTAListener;
     final WebHitListener webHitListener;
     final MarkButtonListener markButtonListener;
     final ProfileListener profileListener;
@@ -91,8 +90,8 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
         revokeHelpRequestListener = new RevokeHelpRequestListener(this);
         ListenerService.putListenerToComponent(frame, IMyHelpRequest.Listener.class, revokeHelpRequestListener);
 
-        helpOthersCTAController = new HelpOthersCTAController(this);
-        ListenerService.putListenerToComponent(frame, IHelpOthersCTA.Listener.class, helpOthersCTAController);
+        helpOthersCTAListener = new HelpOthersCTAListener(this);
+        ListenerService.putListenerToComponent(frame, IHelpOthersCTA.Listener.class, helpOthersCTAListener);
 
         profileListener = new ProfileListener(this);
         ListenerService.putListenerToComponent(frame, IProfilePanel.Listener.class, profileListener);
