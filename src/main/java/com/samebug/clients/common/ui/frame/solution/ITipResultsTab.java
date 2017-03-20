@@ -16,7 +16,10 @@
 package com.samebug.clients.common.ui.frame.solution;
 
 import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
+import com.samebug.clients.common.ui.component.community.IAskForHelp;
+import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -24,14 +27,19 @@ public interface ITipResultsTab {
     final class Model {
         public final List<ITipHit.Model> tipHits;
         public final IBugmateList.Model bugmateList;
+        public final IAskForHelp.Model askForHelp;
+        @Nullable
+        public final IMyHelpRequest.Model myHelpRequest;
 
         public Model(Model rhs) {
-            this(rhs.tipHits, rhs.bugmateList);
+            this(rhs.tipHits, rhs.bugmateList, rhs.askForHelp, rhs.myHelpRequest);
         }
 
-        public Model(List<ITipHit.Model> tipHits, IBugmateList.Model bugmateList) {
+        public Model(List<ITipHit.Model> tipHits, IBugmateList.Model bugmateList, IAskForHelp.Model askForHelp, @Nullable IMyHelpRequest.Model myHelpRequest) {
             this.tipHits = tipHits;
             this.bugmateList = bugmateList;
+            this.askForHelp = askForHelp;
+            this.myHelpRequest = myHelpRequest;
         }
 
         public int getTipsSize() {

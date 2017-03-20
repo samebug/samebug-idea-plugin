@@ -21,6 +21,8 @@ import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.base.scrollPane.SamebugScrollPane;
 import com.samebug.clients.swing.ui.component.bugmate.BugmateList;
+import com.samebug.clients.swing.ui.component.bugmate.RequestHelp;
+import com.samebug.clients.swing.ui.component.bugmate.RevokeHelpRequest;
 import com.samebug.clients.swing.ui.component.community.writeTip.WriteTip;
 import com.samebug.clients.swing.ui.component.hit.TipHit;
 import net.miginfocom.swing.MigLayout;
@@ -38,6 +40,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
     private final SamebugPanel contentPanel;
     private final List<TipHit> tipHits;
 
+
     public TipResultsTab(Model model, IHelpOthersCTA.Model ctaModel) {
         this.model = new Model(model);
         this.ctaModel = new IHelpOthersCTA.Model(ctaModel);
@@ -48,11 +51,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
             TipHit hit = new TipHit(m);
             tipHits.add(hit);
         }
-        if (model.getTipsSize() == 0) {
-            contentPanel = new EmptyContentPanel();
-        } else {
-            contentPanel = new ContentPanel();
-        }
+        contentPanel = new ContentPanel();
         scrollPane = new SamebugScrollPane();
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -63,25 +62,43 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
     }
 
 
-    private final class EmptyContentPanel extends SamebugPanel {
-        {
-            final WriteTip cta = new WriteTip(ctaModel, WriteTip.CTA_TYPE.LARGE_FOR_TIP_HITS);
-            setLayout(new MigLayout("fillx", "20[fill]0", "0[]20"));
-            add(cta);
-        }
-    }
-
     private final class ContentPanel extends SamebugPanel {
         {
             final ListPanel listPanel = new ListPanel();
             final WriteTip writeTip = new WriteTip(ctaModel, WriteTip.CTA_TYPE.SMALL);
+            final WriteTip cta = new WriteTip(ctaModel, WriteTip.CTA_TYPE.LARGE_FOR_TIP_HITS);
             final BugmateList bugmateList = new BugmateList(model.bugmateList);
+            final JComponent helpRequest;
+            if (model.myHelpRequest != null) {
+                helpRequest = new RevokeHelpRequest(model.myHelpRequest);
+            } else {
+                helpRequest = new RequestHelp(model.askForHelp);
+            }
 
-            setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]20[]20"));
+            if (model.tipHits.size() > 0 && model.bugmateList.bugmateHits.size() > 0) {
+                setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]20[]10[]20"));
 
-            add(listPanel, "cell 0 0");
-            add(writeTip, "cell 0 1");
-            add(bugmateList, "cell 0 2");
+                add(listPanel, "cell 0 0");
+                add(writeTip, "cell 0 1");
+                add(bugmateList, "cell 0 2");
+                add(helpRequest, "cell 0 3, align center, growx");
+            } else if (model.tipHits.size() == 0 && model.bugmateList.bugmateHits.size() > 0) {
+                setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]10[]20"));
+
+                add(cta, "cell 0 0");
+                add(bugmateList, "cell 0 1");
+                add(helpRequest, "cell 0 2, align center, growx");
+            } else if (model.tipHits.size() > 0 && model.bugmateList.bugmateHits.size() == 0) {
+                setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]10[]20"));
+
+                add(listPanel, "cell 0 0");
+                add(writeTip, "cell 0 1");
+                add(helpRequest, "cell 0 2, align center, growx");
+            } else {
+                setLayout(new MigLayout("fillx", "20[fill]0", "0[]10[]20"));
+                add(cta, "cell 0 0");
+                add(helpRequest, "cell 0 1, align center, growx");
+            }
         }
     }
 

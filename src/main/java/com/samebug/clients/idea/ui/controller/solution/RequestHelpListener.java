@@ -1,18 +1,3 @@
-/*
- * Copyright 2017 Samebug, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- *    http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.samebug.clients.idea.ui.controller.solution;
 
 import com.intellij.openapi.application.ApplicationManager;
@@ -23,7 +8,7 @@ import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.api.form.CreateHelpRequest;
 import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.services.HelpRequestService;
-import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
+import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.controller.form.FormHandler;
@@ -31,17 +16,17 @@ import com.samebug.clients.swing.ui.modules.MessageService;
 
 import java.util.List;
 
-final class BugmateListListener implements IBugmateList.Listener {
-    final static Logger LOGGER = Logger.getInstance(BugmateListListener.class);
+final class RequestHelpListener implements IAskForHelp.Listener {
+    final static Logger LOGGER = Logger.getInstance(RequestHelpListener.class);
 
     final SolutionFrameController controller;
 
-    public BugmateListListener(final SolutionFrameController controller) {
+    public RequestHelpListener(final SolutionFrameController controller) {
         this.controller = controller;
     }
 
     @Override
-    public void askBugmates(final IBugmateList source, final String description) {
+    public void askBugmates(final IAskForHelp source, final String description) {
         source.startRequestTip();
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
@@ -96,33 +81,4 @@ final class BugmateListListener implements IBugmateList.Listener {
         });
     }
 
-    @Override
-    public void revokeHelpRequest(final IBugmateList source, final String helpRequestId) {
-        source.startRevoke();
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-            @Override
-            public void run() {
-                final HelpRequestService helpRequestService = IdeaSamebugPlugin.getInstance().helpRequestService;
-                try {
-                    final MyHelpRequest response = helpRequestService.revokeHelpRequest(helpRequestId);
-                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            controller.load();
-                            source.successRevoke();
-                        }
-                    });
-                } catch (SamebugClientException e) {
-                    LOGGER.warn("Failed to revoke help request", e);
-                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            source.failRevoke();
-                            controller.view.popupError(MessageService.message("samebug.component.helpRequest.revoke.error.unhandled"));
-                        }
-                    });
-                }
-            }
-        });
-    }
 }

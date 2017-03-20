@@ -32,13 +32,13 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class RequestTipScreen extends JComponent implements IForm {
+public final class RequestHelpScreen extends JComponent implements IForm {
     final WriteRequestArea writeRequestArea;
     final SamebugButton sendButton;
     final LinkLabel cancelButton;
 
-    public RequestTipScreen(final BugmateList bugmateList) {
-        writeRequestArea = new WriteRequestArea(bugmateList);
+    public RequestHelpScreen(final RequestHelp requestHelp) {
+        writeRequestArea = new WriteRequestArea(requestHelp);
         sendButton = new SendButton();
         cancelButton = new LinkLabel(MessageService.message("samebug.component.helpRequest.ask.cancel"));
 
@@ -50,14 +50,14 @@ public final class RequestTipScreen extends JComponent implements IForm {
         sendButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (isEnabled()) bugmateList.getListener().askBugmates(bugmateList, writeRequestArea.getText());
+                if (isEnabled()) requestHelp.getListener().askBugmates(requestHelp, writeRequestArea.getText());
             }
         });
 
         cancelButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (isEnabled()) bugmateList.requestTip.changeToClosedState();
+                if (isEnabled()) requestHelp.changeToClosedState();
             }
         });
     }

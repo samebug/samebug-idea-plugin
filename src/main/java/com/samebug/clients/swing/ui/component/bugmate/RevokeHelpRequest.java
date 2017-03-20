@@ -16,12 +16,14 @@
 package com.samebug.clients.swing.ui.component.bugmate;
 
 import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
+import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.common.ui.modules.TextService;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
+import com.samebug.clients.swing.ui.modules.ListenerService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
@@ -29,30 +31,30 @@ import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public final class RevokeHelpRequest extends JComponent {
-    final BugmateList bugmateList;
-
+public final class RevokeHelpRequest extends JComponent implements IMyHelpRequest {
     private final JComponent helpRequestLabel;
     private final SamebugButton revoke;
 
-    public RevokeHelpRequest(BugmateList bugmateList) {
-        this.bugmateList = bugmateList;
-        helpRequestLabel = new HelpRequestLabel(bugmateList.model.helpRequest);
-        revoke = new RevokeButton(bugmateList.model.helpRequest);
+    public RevokeHelpRequest(Model model) {
+        helpRequestLabel = new HelpRequestLabel(model.helpRequest);
+        revoke = new RevokeButton(model.helpRequest);
 
         setLayout(new MigLayout("fillx", "0[]0", "0[]15[]0"));
         add(helpRequestLabel, "cell 0 0, growx");
         add(revoke, "cell 0 1, align center");
     }
 
+    @Override
     public void startRevoke() {
         revoke.changeToLoadingAnimation();
     }
 
+    @Override
     public void failRevoke() {
         revoke.revertFromLoadingAnimation();
     }
 
+    @Override
     public void successRevoke() {
         revoke.revertFromLoadingAnimation();
     }
@@ -82,9 +84,14 @@ public final class RevokeHelpRequest extends JComponent {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (isEnabled()) bugmateList.getListener().revokeHelpRequest(bugmateList, helpRequest.id);
+                    if (isEnabled()) getListener().revokeHelpRequest(RevokeHelpRequest.this, helpRequest.id);
                 }
             });
         }
     }
+
+    Listener getListener() {
+        return ListenerService.getListener(this, IMyHelpRequest.Listener.class);
+    }
+
 }

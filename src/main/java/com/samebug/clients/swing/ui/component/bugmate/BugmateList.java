@@ -15,14 +15,11 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
-import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateHit;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.modules.FontService;
-import com.samebug.clients.swing.ui.modules.ListenerService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
@@ -31,9 +28,6 @@ import java.util.List;
 
 public final class BugmateList extends TransparentPanel implements IBugmateList {
     final Model model;
-    // TODO when IBugList is separated from the revoke/request interface, these two component can be refactored too
-    final RequestTip requestTip;
-    final RevokeHelpRequest revokeHelpRequest;
 
     public BugmateList(Model model) {
         this.model = new Model(model);
@@ -41,57 +35,12 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
         final SubheaderLabel subheader = new SubheaderLabel();
         final BugmateGrid bugmateGrid = new BugmateGrid(model.bugmateHits);
         final MoreLabel more = new MoreLabel(model.numberOfOtherBugmates);
-        if (model.helpRequest != null) {
-            revokeHelpRequest = new RevokeHelpRequest(this);
-            requestTip = null;
-        } else {
-            requestTip = new RequestTip(this);
-            revokeHelpRequest = null;
-        }
-
-        setLayout(new MigLayout("fillx", "0[]0", "0[]25[]25[]10[]0"));
+        setLayout(new MigLayout("fillx", "0[]0", "0[]25[]25[]0"));
 
         add(subheader, "cell 0 0");
         add(bugmateGrid, "cell 0 1, growx");
         add(more, "cell 0 2, align center");
-        if (model.helpRequest != null) {
-            add(revokeHelpRequest, "cell 0 3, align center, growx");
-        } else {
-            add(requestTip, "cell 0 3, align center, growx");
-        }
     }
-
-    @Override
-    public void startRequestTip() {
-        requestTip.startRequestTip();
-    }
-
-    @Override
-    public void failRequestTip(List<FieldError> errors) throws FormMismatchException {
-        requestTip.failRequestTip(errors);
-
-    }
-
-    @Override
-    public void successRequestTip() {
-        requestTip.successRequestTip();
-    }
-
-    @Override
-    public void startRevoke() {
-        revokeHelpRequest.startRevoke();
-    }
-
-    @Override
-    public void failRevoke() {
-        revokeHelpRequest.failRevoke();
-    }
-
-    @Override
-    public void successRevoke() {
-        revokeHelpRequest.successRevoke();
-    }
-
 
     private final class BugmateGrid extends TransparentPanel {
         private final List<BugmateHit> bugmateHits;
@@ -131,9 +80,5 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
             setText(MessageService.message("samebug.component.bugmate.list.more", numberOfOtherBugmates));
             setFont(FontService.regular(14));
         }
-    }
-
-    Listener getListener() {
-        return ListenerService.getListener(this, IBugmateList.Listener.class);
     }
 }

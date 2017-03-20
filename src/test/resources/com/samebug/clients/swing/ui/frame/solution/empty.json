@@ -11,7 +11,10 @@
       "bugmateList": {
         "bugmateHits": [],
         "numberOfOtherBugmates": 0,
-        "evenMoreExists": false,
+        "evenMoreExists": false
+      },
+      "askForHelp": {
+        "numberOfBugmates": 0,
         "exceptionTitle": "UnsupportedDriverException: Could not instantiate class"
       }
     }

@@ -23,11 +23,11 @@ import net.miginfocom.swing.MigLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public final class RequestTipCTAScreen extends TransparentPanel {
-    final BugmateList bugmateList;
+public final class RequestHelpCTAScreen extends TransparentPanel {
+    final RequestHelp requestHelp;
 
-    public RequestTipCTAScreen(BugmateList bugmateList) {
-        this.bugmateList = bugmateList;
+    public RequestHelpCTAScreen(RequestHelp requestHelp) {
+        this.requestHelp = requestHelp;
 
         final AskButton ask = new AskButton();
 
@@ -41,7 +41,7 @@ public final class RequestTipCTAScreen extends TransparentPanel {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (isEnabled()) bugmateList.requestTip.changeToOpenState();
+                    if (isEnabled()) requestHelp.changeToOpenState();
                 }
             });
 

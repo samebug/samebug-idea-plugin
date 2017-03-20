@@ -16,7 +16,7 @@
 package com.samebug.clients.swing.ui.component.bugmate;
 
 import com.samebug.clients.common.api.form.FieldError;
-import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
+import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
@@ -24,23 +24,25 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.util.List;
 
-public final class RequestTip extends JComponent {
-    final BugmateList bugmateList;
+public final class RequestHelp extends JComponent implements IAskForHelp {
+    final Model model;
 
-    private RequestTipCTAScreen ctaScreen;
-    private RequestTipScreen tipScreen;
+    private RequestHelpCTAScreen ctaScreen;
+    private RequestHelpScreen tipScreen;
 
-    public RequestTip(BugmateList bugmateList) {
-        this.bugmateList = bugmateList;
+    public RequestHelp(Model model) {
+        this.model = model;
         setLayout(new MigLayout("fillx", "0[fill]0", "0[fill]0"));
         changeToClosedState();
     }
 
+    @Override
     public void startRequestTip() {
         if (tipScreen == null) return;
         tipScreen.sendButton.changeToLoadingAnimation();
     }
 
+    @Override
     public void failRequestTip(List<FieldError> errors) throws FormMismatchException {
         if (tipScreen != null) {
             tipScreen.setFormErrors(errors);
@@ -48,13 +50,14 @@ public final class RequestTip extends JComponent {
         }
     }
 
+    @Override
     public void successRequestTip() {
         if (ctaScreen == null) changeToClosedState();
     }
 
     void changeToOpenState() {
         assert tipScreen == null : "Tip screen should not be open";
-        tipScreen = new RequestTipScreen(bugmateList);
+        tipScreen = new RequestHelpScreen(this);
         removeAll();
         ctaScreen = null;
         add(tipScreen);
@@ -65,7 +68,7 @@ public final class RequestTip extends JComponent {
 
     void changeToClosedState() {
         assert ctaScreen == null : "CTA screen should not be open";
-        ctaScreen = new RequestTipCTAScreen(bugmateList);
+        ctaScreen = new RequestHelpCTAScreen(this);
         removeAll();
         tipScreen = null;
         add(ctaScreen);
@@ -74,8 +77,7 @@ public final class RequestTip extends JComponent {
         repaint();
     }
 
-    IBugmateList.Listener getListener() {
-        return ListenerService.getListener(this, IBugmateList.Listener.class);
+    Listener getListener() {
+        return ListenerService.getListener(this, IAskForHelp.Listener.class);
     }
-
 }

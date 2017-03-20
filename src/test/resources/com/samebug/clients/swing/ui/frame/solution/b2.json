@@ -26,7 +26,10 @@
           }
         ],
         "numberOfOtherBugmates": 0,
-        "evenMoreExists": false,
+        "evenMoreExists": false
+      },
+      "askForHelp": {
+        "numberOfBugmates": 2,
         "exceptionTitle": "UnsupportedDriverException: Could not instantiate class"
       }
     }

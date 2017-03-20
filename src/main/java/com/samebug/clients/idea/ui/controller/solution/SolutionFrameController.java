@@ -26,7 +26,9 @@ import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
 import com.samebug.clients.common.api.entities.search.SearchDetails;
 import com.samebug.clients.common.api.entities.solution.Solutions;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
+import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
+import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.common.ui.component.hit.IWebHit;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
@@ -55,7 +57,8 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
     final TimestampRefreshListener timestampRefreshListener;
     final ExceptionHeaderListener exceptionHeaderListener;
     final WebResultsTabListener webResultsTabListener;
-    final BugmateListListener bugmateListListener;
+    final RequestHelpListener requestHelpListener;
+    final RevokeHelpRequestListener revokeHelpRequestListener;
     final HelpOthersCTAController helpOthersCTAController;
     final WebHitListener webHitListener;
     final MarkButtonListener markButtonListener;
@@ -82,8 +85,11 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
         webHitListener = new WebHitListener();
         ListenerService.putListenerToComponent(frame, IWebHit.Listener.class, webHitListener);
 
-        bugmateListListener = new BugmateListListener(this);
-        ListenerService.putListenerToComponent(frame, IBugmateList.Listener.class, bugmateListListener);
+        requestHelpListener = new RequestHelpListener(this);
+        ListenerService.putListenerToComponent(frame, IAskForHelp.Listener.class, requestHelpListener);
+
+        revokeHelpRequestListener = new RevokeHelpRequestListener(this);
+        ListenerService.putListenerToComponent(frame, IMyHelpRequest.Listener.class, revokeHelpRequestListener);
 
         helpOthersCTAController = new HelpOthersCTAController(this);
         ListenerService.putListenerToComponent(frame, IHelpOthersCTA.Listener.class, helpOthersCTAController);

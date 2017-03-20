@@ -30,9 +30,11 @@ import com.samebug.clients.common.api.entities.search.SearchInfo;
 import com.samebug.clients.common.api.entities.solution.*;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateHit;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
+import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequest;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
+import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.component.hit.IWebHit;
@@ -117,8 +119,10 @@ public final class ConversionService {
         }
         String exceptionTitle = headLine(search);
         IBugmateList.Model bugmateList =
-                new IBugmateList.Model(bugmateHits, bugmates.getNumberOfOtherBugmates(), bugmates.isEvenMoreExists(), exceptionTitle, search.group.helpRequest);
-        return new ITipResultsTab.Model(tipHits, bugmateList);
+                new IBugmateList.Model(bugmateHits, bugmates.getNumberOfOtherBugmates(), bugmates.isEvenMoreExists());
+        IAskForHelp.Model askForHelp = new IAskForHelp.Model(numberOfBugmates(bugmates), exceptionTitle);
+        IMyHelpRequest.Model myHelpRequest = new IMyHelpRequest.Model(search.group.helpRequest);
+        return new ITipResultsTab.Model(tipHits, bugmateList, askForHelp, myHelpRequest);
     }
 
     public IProfilePanel.Model profilePanel(IncomingHelpRequests incomingRequests, UserInfo user, UserStats statistics) {
@@ -130,8 +134,7 @@ public final class ConversionService {
         IWebResultsTab.Model webResults = webResultsTab(solutions, false);
         ITipResultsTab.Model tipResults = tipResultsTab(search, solutions, bugmates, false);
 
-        int nBugmates = bugmates.getBugmates().size() + (bugmates.isEvenMoreExists() ? bugmates.getNumberOfOtherBugmates() : 0);
-        IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(nBugmates);
+        IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(numberOfBugmates(bugmates));
         String exceptionTitle = headLine(search);
         IResultTabs.Model resultTabs = new IResultTabs.Model(webResults, tipResults, cta);
         ISearchHeaderPanel.Model header = new ISearchHeaderPanel.Model(exceptionTitle);
@@ -200,5 +203,9 @@ public final class ConversionService {
 
     public static String headLine(@NotNull String typeName, @Nullable String message) {
         return (message != null) ? typeName + ": " + message : typeName;
+    }
+
+    static int numberOfBugmates(BugmatesResult bugmates) {
+        return bugmates.getBugmates().size() + (bugmates.isEvenMoreExists() ? bugmates.getNumberOfOtherBugmates() : 0);
     }
 }

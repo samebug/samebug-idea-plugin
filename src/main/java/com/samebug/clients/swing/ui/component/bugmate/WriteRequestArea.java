@@ -33,12 +33,12 @@ public final class WriteRequestArea extends JComponent implements IFormField {
     public static final int MaxCharacters = 140;
     static final String FIELD_TIP_LONG = "LONG";
 
-    final BugmateList bugmateList;
+    final RequestHelp requestHelp;
     final BorderedArea borderedArea;
     final ErrorLabel errorLabel;
 
-    public WriteRequestArea(BugmateList bugmateList) {
-        this.bugmateList = bugmateList;
+    public WriteRequestArea(RequestHelp requestHelp) {
+        this.requestHelp = requestHelp;
         borderedArea = new BorderedArea();
         errorLabel = new ErrorLabel();
 
@@ -88,7 +88,7 @@ public final class WriteRequestArea extends JComponent implements IFormField {
 
         private final class MyExceptionPreview extends ExceptionPreview {
             public MyExceptionPreview() {
-                super(bugmateList.model.exceptionTitle);
+                super(requestHelp.model.exceptionTitle);
                 setBackgroundColor(ColorService.Tip);
                 setForegroundColor(ColorService.TipText);
             }

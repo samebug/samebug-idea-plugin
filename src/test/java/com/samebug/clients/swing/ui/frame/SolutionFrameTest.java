@@ -38,6 +38,11 @@ public class SolutionFrameTest extends TestDialog {
         waitToInitializeUI("solution/t2w27.json").showDialog();
     }
 
+    @Test
+    public void activeHelpRequest() {
+        waitToInitializeUI("solution/t2w27_helprequest.json").showDialog();
+    }
+
     public void initializeUI(String resourceJson) throws Exception {
         final ISolutionFrame.Model model = readJson(resourceJson, ISolutionFrame.Model.class);
 
