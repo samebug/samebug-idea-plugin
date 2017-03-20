@@ -17,24 +17,19 @@ package com.samebug.clients.idea.ui.controller.solution;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.api.entities.solution.MarkResponse;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.ui.modules.IdeaListenerService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-final class MarkController implements IMarkButton.Listener {
-    final static Logger LOGGER = Logger.getInstance(MarkController.class);
-    final SolutionsController controller;
+final class MarkButtonListener implements IMarkButton.Listener {
+    final static Logger LOGGER = Logger.getInstance(MarkButtonListener.class);
+    final SolutionFrameController controller;
 
-    public MarkController(final SolutionsController controller) {
+    public MarkButtonListener(final SolutionFrameController controller) {
         this.controller = controller;
-
-        MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
-        projectConnection.subscribe(IdeaListenerService.MarkButton, this);
     }
 
     @Override

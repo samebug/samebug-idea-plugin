@@ -54,6 +54,12 @@ final public class WebUrlBuilder {
     }
 
     @NotNull
+    public URL profile(@NotNull final int userId) {
+        // TODO profile page url
+        return resolveToRoot("/user/" + userId);
+    }
+
+    @NotNull
     URL resolveToRoot(@NotNull final String uri) throws IllegalUriException {
         try {
             return serverRoot.resolve(uri).toURL();

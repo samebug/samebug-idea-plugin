@@ -40,7 +40,7 @@
           "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
           "mark": {
             "marks": 0,
-            "userMarkId": null,
+            "userMarkId": 2,
             "userCanMark": true
           }
         },
@@ -54,7 +54,7 @@
           "mark": {
             "marks": 0,
             "userMarkId": null,
-            "userCanMark": true
+            "userCanMark": false
           }
         },
         {

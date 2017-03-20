@@ -15,51 +15,36 @@
  */
 package com.samebug.clients.idea.ui.controller.toolwindow;
 
-import com.intellij.notification.NotificationDisplayType;
-import com.intellij.notification.impl.NotificationsConfigurationImpl;
-import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.ui.popup.BalloonBuilder;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.impl.ToolWindowImpl;
-import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
-import com.samebug.clients.common.ui.component.popup.IHelpRequestPopup;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.FocusListener;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
-import com.samebug.clients.idea.notifications.IncomingHelpRequestNotification;
 import com.samebug.clients.idea.ui.controller.authentication.AuthenticationController;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.helpRequest.HelpRequestController;
 import com.samebug.clients.idea.ui.controller.helpRequestList.HelpRequestListController;
-import com.samebug.clients.idea.ui.controller.solution.SolutionsController;
-import com.samebug.clients.idea.ui.modules.IdeaDataService;
-import com.samebug.clients.swing.ui.component.popup.HelpRequestPopup;
-import com.samebug.clients.swing.ui.modules.ColorService;
-import com.samebug.clients.swing.ui.modules.DataService;
+import com.samebug.clients.idea.ui.controller.helpRequestPopup.HelpRequestPopupController;
+import com.samebug.clients.idea.ui.controller.solution.SolutionFrameController;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-final public class ToolWindowController implements FocusListener, IncomingHelpRequest, Disposable {
+final public class ToolWindowController implements FocusListener, Disposable {
     final static Logger LOGGER = Logger.getInstance(ToolWindowController.class);
 
     @NotNull
@@ -67,16 +52,13 @@ final public class ToolWindowController implements FocusListener, IncomingHelpRe
     ToolWindow toolWindow;
     BaseFrameController currentFrame;
 
-    @NotNull
     final Timer dateLabelRefresher;
-    final HelpRequestPopupListener helpRequestPopupListener;
+    final IncomingHelpRequestPopupListener incomingHelpRequestPopupListener;
 
+    final HelpRequestPopupController helpRequestPopupController;
 
     public ToolWindowController(@NotNull final Project project) {
         this.project = project;
-        MessageBusConnection connection = project.getMessageBus().connect(project);
-        connection.subscribe(FocusListener.TOPIC, this);
-        connection.subscribe(IncomingHelpRequest.TOPIC, this);
 
         final int LabelRefreshInitialDelayInMs = 1 * 60 * 1000;
         final int LabelRefreshDelayInMs = 1 * 60 * 1000;
@@ -91,7 +73,11 @@ final public class ToolWindowController implements FocusListener, IncomingHelpRe
         dateLabelRefresher.setInitialDelay(LabelRefreshInitialDelayInMs);
         dateLabelRefresher.start();
 
-        helpRequestPopupListener = new HelpRequestPopupListener(this);
+        incomingHelpRequestPopupListener = new IncomingHelpRequestPopupListener(this);
+        helpRequestPopupController = new HelpRequestPopupController(this, project);
+        MessageBusConnection connection = project.getMessageBus().connect(project);
+        connection.subscribe(FocusListener.TOPIC, this);
+        connection.subscribe(IncomingHelpRequest.TOPIC, incomingHelpRequestPopupListener);
     }
 
     public void initToolWindow(@NotNull ToolWindow toolWindow) {
@@ -121,7 +107,7 @@ final public class ToolWindowController implements FocusListener, IncomingHelpRe
 
     @Override
     public void focusOnSearch(final int searchId) {
-        SolutionsController controller = new SolutionsController(this, project, searchId);
+        SolutionFrameController controller = new SolutionFrameController(this, project, searchId);
         controller.load();
         openTab(controller, MessageService.message("samebug.toolwindow.search.tabName"));
     }
@@ -177,35 +163,5 @@ final public class ToolWindowController implements FocusListener, IncomingHelpRe
         return toolWindow;
     }
 
-    @Override
-    public void showHelpRequest(HelpRequest helpRequest) {
-        IncomingHelpRequestNotification n = new IncomingHelpRequestNotification(helpRequest);
-        NotificationDisplayType notificationType = NotificationsConfigurationImpl.getSettings(n.getGroupId()).getDisplayType();
-        if (NotificationDisplayType.BALLOON == notificationType) {
-            // This is the type we set by default.
-            // In this case, do not use it as a notification, but create instead a custom balloon and show that, because we cannot customize the presentation of a notification
-            IHelpRequestPopup.Model popupModel = IdeaSamebugPlugin.getInstance().conversionService.convertHelpRequestPopup(helpRequest);
-            HelpRequestPopup popup = new HelpRequestPopup(popupModel);
-            DataService.putData(popup, IdeaDataService.Project, project);
-
-            BalloonBuilder bb = JBPopupFactory.getInstance().createBalloonBuilder(popup);
-            bb.setFillColor(ColorService.forCurrentTheme(ColorService.Background));
-            bb.setContentInsets(new Insets(10, 10, 10, 10));
-            IdeFrame f = (IdeFrame) NotificationsManagerImpl.findWindowForBalloon(project);
-            RelativePoint x = null;
-            if (f != null) x = RelativePoint.getSouthEastOf(f.getComponent());
-            Balloon b = bb.createBalloon();
-            helpRequestPopupListener.addIncomingHelpRequest(helpRequest, n, b, popup);
-            b.show(x, Balloon.Position.atLeft);
-        } else {
-            // if the user changed it, than handle it as a well-behaved notification
-            n.notify(project);
-        }
-    }
-
-    @Override
-    public void addHelpRequest(HelpRequest helpRequest) {
-        // nothing to do
-    }
 }
 

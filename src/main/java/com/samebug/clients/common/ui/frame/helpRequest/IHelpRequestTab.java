@@ -34,10 +34,4 @@ public interface IHelpRequestTab {
             this.helpRequest = helpRequest;
         }
     }
-
-    interface Listener {
-        void sendTip(String tipBody);
-
-        void clickExplanation();
-    }
 }

@@ -15,6 +15,8 @@
  */
 package com.samebug.clients.swing.ui.modules;
 
+import org.jetbrains.annotations.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -22,6 +24,7 @@ public final class DataService {
     public static final Key<Integer> SolutionId = new Key<Integer>("SolutionId");
 
     @SuppressWarnings("unchecked")
+    @Nullable
     public static <T> T getData(JComponent component, Key<T> key) {
         for (Component c = component; c != null; c = c.getParent()) {
             if (!(c instanceof JComponent)) continue;

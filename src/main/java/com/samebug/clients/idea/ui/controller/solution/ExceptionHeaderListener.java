@@ -15,27 +15,22 @@
  */
 package com.samebug.clients.idea.ui.controller.solution;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.ui.component.hit.IWebHit;
+import com.samebug.clients.common.ui.frame.solution.ISearchHeaderPanel;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.BrowserUtil;
-import com.samebug.clients.idea.ui.modules.IdeaListenerService;
 
 import java.net.URL;
 
-final class WebHitController implements IWebHit.Listener {
-    final static Logger LOGGER = Logger.getInstance(WebHitController.class);
-    final SolutionsController controller;
+final class ExceptionHeaderListener implements ISearchHeaderPanel.Listener {
+    final SolutionFrameController controller;
 
-    public WebHitController(final SolutionsController controller) {
+    public ExceptionHeaderListener(final SolutionFrameController controller) {
         this.controller = controller;
-
-        MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
-        projectConnection.subscribe(IdeaListenerService.WebHit, this);
     }
 
     @Override
-    public void urlClicked(URL url) {
-        BrowserUtil.browse(url);
+    public void titleClicked() {
+        final URL searchUrl = IdeaSamebugPlugin.getInstance().urlBuilder.search(controller.searchId);
+        BrowserUtil.browse(searchUrl);
     }
 }

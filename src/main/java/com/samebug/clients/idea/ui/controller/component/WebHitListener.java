@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.controller.helpRequestList;
+package com.samebug.clients.idea.ui.controller.component;
 
-import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
+import com.samebug.clients.common.ui.component.hit.IWebHit;
+import com.samebug.clients.idea.ui.BrowserUtil;
 
-final class HelpRequestPreviewListener implements IHelpRequestPreview.Listener {
+import java.net.URL;
 
-    final HelpRequestListController controller;
-
-    HelpRequestPreviewListener(HelpRequestListController controller) {
-        this.controller = controller;
+public final class WebHitListener implements IWebHit.Listener {
+    public WebHitListener() {
     }
 
-
     @Override
-    public void previewClicked(IHelpRequestPreview source, String helpRequestId) {
-        controller.twc.focusOnHelpRequest(helpRequestId);
+    public void urlClicked(URL url) {
+        BrowserUtil.browse(url);
     }
 }

@@ -15,9 +15,8 @@
  */
 package com.samebug.clients.swing.ui.testModules;
 
-import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
-import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.swing.ui.modules.ListenerService;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationHandler;
@@ -27,28 +26,13 @@ import java.lang.reflect.Proxy;
 @SuppressWarnings("unchecked")
 public final class TestListenerService extends ListenerService {
     @Override
-    protected <T> T internalGetListener(JComponent component, Class<T> listenerClass) {
-        if (listenerClass == IHelpOthersCTA.Listener.class) {
-            return (T) new IHelpOthersCTA.Listener() {
-                @Override
-                public void postTip(IHelpOthersCTA source, String tipBody) {
-                    source.startPostTip();
-//                    try {
-//                        source.failPostTipWithFormError(Collections.singletonList(new FieldError(FormBuilder.CreateTip.BODY, FormBuilder.CreateTip.E_TOO_LONG)));
-//                    } catch (FormMismatchException e) {
-//                        e.printStackTrace();
-//                    }
-                }
-            };
-        } else if (listenerClass == IMarkButton.Listener.class) {
-            return (T) new IMarkButton.Listener() {
-                @Override
-                public void markClicked(IMarkButton markButton, Integer solutionId, Integer currentMarkId) {
-                    markButton.setLoading();
-                }
-            };
+    @NotNull
+    protected <T> T internalGetListener(JComponent component, Class<T> listenerInterface) {
+        T mapping = ListenerService.getListenerFromComponent(component, listenerInterface);
+        if (mapping != null) {
+            return mapping;
         } else {
-            Class<?>[] interfaces = new Class<?>[]{listenerClass};
+            Class<?>[] interfaces = new Class<?>[]{listenerInterface};
             return (T) Proxy.newProxyInstance(getClass().getClassLoader(), interfaces, new InvocationHandler() {
                 @Override
                 public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

@@ -13,21 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.controller.helpRequestList;
+package com.samebug.clients.idea.ui.controller.component;
 
-import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
+import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.ui.BrowserUtil;
 
-final class HelpRequestPreviewListener implements IHelpRequestPreview.Listener {
+import java.net.URL;
 
-    final HelpRequestListController controller;
+public final class WebResultsTabListener implements IWebResultsTab.Listener {
+    final int searchId;
 
-    HelpRequestPreviewListener(HelpRequestListController controller) {
-        this.controller = controller;
+    public WebResultsTabListener(int searchId) {
+        this.searchId = searchId;
     }
 
 
     @Override
-    public void previewClicked(IHelpRequestPreview source, String helpRequestId) {
-        controller.twc.focusOnHelpRequest(helpRequestId);
+    public void moreClicked() {
+        URL url = IdeaSamebugPlugin.getInstance().urlBuilder.search(searchId);
+        BrowserUtil.browse(url);
     }
 }

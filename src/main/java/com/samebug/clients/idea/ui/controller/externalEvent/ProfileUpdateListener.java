@@ -13,39 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.controller.component;
+package com.samebug.clients.idea.ui.controller.externalEvent;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
-import com.samebug.clients.idea.ui.modules.IdeaListenerService;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 
-public final class ProfileController implements IProfilePanel.Listener, IncomingHelpRequest {
-    final static Logger LOGGER = Logger.getInstance(ProfileController.class);
+public final class ProfileUpdateListener implements IncomingHelpRequest {
     final BaseFrameController controller;
 
-    public ProfileController(final BaseFrameController controller) {
+    public ProfileUpdateListener(final BaseFrameController controller) {
         this.controller = controller;
-
-        MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
-        projectConnection.subscribe(IdeaListenerService.ProfilePanel, this);
-        projectConnection.subscribe(IncomingHelpRequest.TOPIC, this);
     }
-
-    @Override
-    public void messagesClicked() {
-        controller.twc.focusOnHelpRequestList();
-    }
-
 
     @Override
     public void showHelpRequest(HelpRequest helpRequest) {
@@ -56,7 +41,7 @@ public final class ProfileController implements IProfilePanel.Listener, Incoming
     public void addHelpRequest(HelpRequest helpRequest) {
         final Component view = (JComponent) controller.view;
         IProfilePanel profilePanel = null;
-        List<Component> components = new LinkedList<Component>();
+        java.util.List<Component> components = new LinkedList<Component>();
         components.add(view);
         while (profilePanel == null && !components.isEmpty()) {
             Component c = components.get(0);

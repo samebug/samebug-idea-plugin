@@ -37,14 +37,18 @@ public final class HelpRequestPopup extends SamebugPanel implements IHelpRequest
 
     public HelpRequestPopup(Model model) {
         final JComponent avatar = new AvatarIcon(model.avatarUrl, AvatarSize);
-        final JComponent title = new SamebugLabel(model.displayName + " sent a tip request", FontService.demi(14));
-        final JComponent body = new RequestBody(model.helpRequestBody);
-        final JComponent answer = new AnswerButton();
+        final SamebugLabel title = new SamebugLabel(model.displayName + " sent a tip request", FontService.demi(14));
+        final RequestBody body = new RequestBody(model.helpRequestBody);
+        final AnswerButton answer = new AnswerButton();
         final JComponent later = new LaterButton();
 
         setBackgroundColor(ColorService.Tip);
+        answer.setBackgroundColor(ColorService.Tip);
+        title.setForegroundColor(ColorService.EmphasizedText);
+        body.setForegroundColor(ColorService.EmphasizedText);
+
         setLayout(new MigLayout("", MessageFormat.format("10[{0}!]8[320]10", AvatarSize), "10[]5[]10[]10"));
-        add(avatar, "cell 0 0, spany 2");
+        add(avatar, "cell 0 0, spany 2, align center top");
         add(title, "cell 1 0");
         add(body, "cell 1 1, growx, wmin 0");
         add(answer, "cell 1 2");
@@ -54,6 +58,7 @@ public final class HelpRequestPopup extends SamebugPanel implements IHelpRequest
     final class RequestBody extends SamebugMultilineLabel {
         public RequestBody(String body) {
             setText(body);
+            setFont(FontService.regular(14));
         }
     }
 

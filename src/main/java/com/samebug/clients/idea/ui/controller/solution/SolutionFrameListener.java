@@ -15,24 +15,20 @@
  */
 package com.samebug.clients.idea.ui.controller.solution;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.messages.RefreshTimestampsListener;
-import org.jetbrains.annotations.NotNull;
+import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
+import com.samebug.clients.idea.ui.controller.frame.BaseFrameListener;
 
-final class ViewController implements RefreshTimestampsListener {
-    final static Logger LOGGER = Logger.getInstance(ViewController.class);
-    @NotNull
-    final SolutionsController controller;
+final class SolutionFrameListener extends BaseFrameListener implements ISolutionFrame.Listener {
+    final SolutionFrameController controller;
 
-    public ViewController(@NotNull final SolutionsController controller) {
+    public SolutionFrameListener(final SolutionFrameController controller) {
+        super(controller.myProject);
         this.controller = controller;
-
-        MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
-        projectConnection.subscribe(RefreshTimestampsListener.TOPIC, this);
     }
 
     @Override
-    public void refreshDateLabels() {
+    public void reload() {
+        controller.view.setLoading();
+        controller.load();
     }
 }

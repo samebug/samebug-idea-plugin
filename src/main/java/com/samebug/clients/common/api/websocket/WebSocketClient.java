@@ -60,7 +60,9 @@ public final class WebSocketClient implements Closeable {
         this.host = uri.getHost() == null ? "127.0.0.1" : uri.getHost();
         this.sslContext = isWs ? null : SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
         this.group = new NioEventLoopGroup();
-        this.channel = connect(eventHandler);
+        // TODO blocks on the main thread!
+        //this.channel = connect(eventHandler);
+        this.channel = null;
     }
 
     private Channel connect(WebSocketEventHandler eventHandler) throws InterruptedException {

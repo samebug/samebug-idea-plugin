@@ -17,29 +17,51 @@ package com.samebug.clients.idea.ui.controller.helpRequestList;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.api.entities.UserInfo;
 import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
+import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
+import com.samebug.clients.common.ui.component.profile.IProfilePanel;
+import com.samebug.clients.common.ui.frame.IFrame;
+import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestList;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListFrame;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.ui.BrowserUtil;
+import com.samebug.clients.idea.ui.controller.component.ProfileListener;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.swing.ui.frame.helpRequestList.HelpRequestListFrame;
+import com.samebug.clients.swing.ui.modules.ListenerService;
 
+import javax.swing.*;
+import java.net.URL;
 import java.util.concurrent.Future;
 
 public final class HelpRequestListController extends BaseFrameController<IHelpRequestListFrame> implements Disposable {
-    final static Logger LOGGER = Logger.getInstance(HelpRequestListController.class);
 
-    final HelpRequestListListener frameListener;
+    final HelpRequestListFrameListener frameListener;
     final HelpRequestPreviewListener helpRequestPreviewListener;
+    final HelpRequestListListener helpRequestListListener;
+    final ProfileListener profileListener;
 
     public HelpRequestListController(ToolWindowController twc, Project project) {
         super(twc, project, new HelpRequestListFrame());
 
-        frameListener = new HelpRequestListListener(this);
+        JComponent frame = (JComponent) view;
+
+        frameListener = new HelpRequestListFrameListener(this);
+        ListenerService.putListenerToComponent(frame, IFrame.FrameListener.class, frameListener);
+        ListenerService.putListenerToComponent(frame, IHelpRequestListFrame.Listener.class, frameListener);
+
         helpRequestPreviewListener = new HelpRequestPreviewListener(this);
+        ListenerService.putListenerToComponent(frame, IHelpRequestPreview.Listener.class, helpRequestPreviewListener);
+
+        helpRequestListListener = new HelpRequestListListener();
+        ListenerService.putListenerToComponent(frame, IHelpRequestList.Listener.class, helpRequestListListener);
+
+        profileListener = new ProfileListener(this);
+        ListenerService.putListenerToComponent(frame, IProfilePanel.Listener.class, profileListener);
     }
 
     public void load() {
@@ -68,4 +90,18 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
         }.executeInBackground();
     }
 
+
+    final class HelpRequestListListener implements IHelpRequestList.Listener {
+        @Override
+        public void moreClicked() {
+            IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
+            // TODO help requests url
+            UserInfo user = plugin.profileStore.getUser();
+            if (user != null) {
+                int myUserId = user.getUserId();
+                URL url = plugin.urlBuilder.profile(myUserId);
+                BrowserUtil.browse(url);
+            }
+        }
+    }
 }

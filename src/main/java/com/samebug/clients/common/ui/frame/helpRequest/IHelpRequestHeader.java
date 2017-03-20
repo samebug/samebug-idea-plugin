@@ -33,8 +33,4 @@ public interface IHelpRequestHeader {
             this.avatarUrl = avatarUrl;
         }
     }
-
-    interface Listener {
-        void clickViewStackTrace();
-    }
 }

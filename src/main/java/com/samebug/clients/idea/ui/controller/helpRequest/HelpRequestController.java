@@ -17,27 +17,38 @@ package com.samebug.clients.idea.ui.controller.helpRequest;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.api.entities.UserInfo;
 import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
 import com.samebug.clients.common.api.entities.solution.Solutions;
 import com.samebug.clients.common.services.HelpRequestStore;
+import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
+import com.samebug.clients.common.ui.component.hit.IWebHit;
+import com.samebug.clients.common.ui.component.profile.IProfilePanel;
+import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestFrame;
+import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.ui.controller.component.ProfileListener;
+import com.samebug.clients.idea.ui.controller.component.WebHitListener;
+import com.samebug.clients.idea.ui.controller.component.WebResultsTabListener;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.swing.ui.frame.helpRequest.HelpRequestFrame;
+import com.samebug.clients.swing.ui.modules.ListenerService;
 
+import javax.swing.*;
 import java.util.concurrent.Future;
 
 public final class HelpRequestController extends BaseFrameController<IHelpRequestFrame> implements Disposable {
-    final static Logger LOGGER = Logger.getInstance(HelpRequestController.class);
     final String helpRequestId;
 
-    final WriteTipListener writeTipListener;
     final HelpRequestFrameListener frameListener;
+    final ProfileListener profileListener;
+    final WriteTipListener writeTipListener;
+    final WebHitListener webHitListener;
+    WebResultsTabListener webResultsTabListener;
 
     final HelpRequestStore helpRequestStore;
 
@@ -48,8 +59,21 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
 
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
         helpRequestStore = plugin.helpRequestStore;
+
+        JComponent frame = (JComponent) view;
+
         frameListener = new HelpRequestFrameListener(this);
+        ListenerService.putListenerToComponent(frame, IFrame.FrameListener.class, frameListener);
+        ListenerService.putListenerToComponent(frame, IHelpRequestFrame.Listener.class, frameListener);
+
+        profileListener = new ProfileListener(this);
+        ListenerService.putListenerToComponent(frame, IProfilePanel.Listener.class, profileListener);
+
         writeTipListener = new WriteTipListener(this);
+        ListenerService.putListenerToComponent(frame, IHelpOthersCTA.Listener.class, writeTipListener);
+
+        webHitListener = new WebHitListener();
+        ListenerService.putListenerToComponent(frame, IWebHit.Listener.class, webHitListener);
     }
 
     public String getHelpRequestId() {
@@ -60,6 +84,9 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
     public void load() {
         // TODO other controllers should also make sure to set the loading screen when starting to load content
         view.setLoading();
+        webResultsTabListener = null;
+        ListenerService.putListenerToComponent((JComponent) view, IWebResultsTab.Listener.class, null);
+
         final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
 
@@ -79,6 +106,9 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
             protected void load() throws Exception {
                 MatchingHelpRequest helpRequest = helpRequestTask.get();
                 int accessibleSearchId = helpRequest.accessibleSearchInfo().id;
+
+                webResultsTabListener = new WebResultsTabListener(accessibleSearchId);
+                ListenerService.putListenerToComponent((JComponent) view, IWebResultsTab.Listener.class, webResultsTabListener);
 
                 final Future<Solutions> solutionsTask = concurrencyService.solutions(accessibleSearchId);
                 HelpRequestController.this.load(solutionsTask, helpRequestTask, userInfoTask, userStatsTask);

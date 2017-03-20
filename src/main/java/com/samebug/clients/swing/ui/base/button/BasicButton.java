@@ -53,6 +53,7 @@ public abstract class BasicButton extends JComponent {
         setOpaque(false);
 
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        setBackgroundColor(ColorService.Background);
     }
 
     public void setInteractionColors(InteractionColors c) {

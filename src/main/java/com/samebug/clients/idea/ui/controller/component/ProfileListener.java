@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.controller.helpRequestList;
+package com.samebug.clients.idea.ui.controller.component;
 
-import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
+import com.samebug.clients.common.ui.component.profile.IProfilePanel;
+import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 
-final class HelpRequestPreviewListener implements IHelpRequestPreview.Listener {
+public final class ProfileListener implements IProfilePanel.Listener {
+    final BaseFrameController controller;
 
-    final HelpRequestListController controller;
-
-    HelpRequestPreviewListener(HelpRequestListController controller) {
+    public ProfileListener(final BaseFrameController controller) {
         this.controller = controller;
     }
 
-
     @Override
-    public void previewClicked(IHelpRequestPreview source, String helpRequestId) {
-        controller.twc.focusOnHelpRequest(helpRequestId);
+    public void messagesClicked() {
+        controller.twc.focusOnHelpRequestList();
     }
+
+
 }

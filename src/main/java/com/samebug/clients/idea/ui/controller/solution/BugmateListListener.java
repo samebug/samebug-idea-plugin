@@ -17,7 +17,6 @@ package com.samebug.clients.idea.ui.controller.solution;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.api.client.RestError;
 import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
@@ -28,21 +27,17 @@ import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.controller.form.FormHandler;
-import com.samebug.clients.idea.ui.modules.IdeaListenerService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
 import java.util.List;
 
-final class BugmateListController implements IBugmateList.Listener {
-    final static Logger LOGGER = Logger.getInstance(BugmateListController.class);
+final class BugmateListListener implements IBugmateList.Listener {
+    final static Logger LOGGER = Logger.getInstance(BugmateListListener.class);
 
-    final SolutionsController controller;
+    final SolutionFrameController controller;
 
-    public BugmateListController(final SolutionsController controller) {
+    public BugmateListListener(final SolutionFrameController controller) {
         this.controller = controller;
-
-        MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
-        projectConnection.subscribe(IdeaListenerService.BugmateList, this);
     }
 
     @Override

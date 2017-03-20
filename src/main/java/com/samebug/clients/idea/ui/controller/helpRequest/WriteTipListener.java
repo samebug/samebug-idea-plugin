@@ -16,14 +16,12 @@
 package com.samebug.clients.idea.ui.controller.helpRequest;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
 import com.samebug.clients.common.api.entities.solution.RestHit;
 import com.samebug.clients.common.api.entities.solution.Tip;
 import com.samebug.clients.common.api.form.CreateTip;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.idea.ui.controller.form.CreateTipFormHandler;
-import com.samebug.clients.idea.ui.modules.IdeaListenerService;
 
 final class WriteTipListener implements IHelpOthersCTA.Listener {
     final static Logger LOGGER = Logger.getInstance(WriteTipListener.class);
@@ -31,15 +29,10 @@ final class WriteTipListener implements IHelpOthersCTA.Listener {
 
     public WriteTipListener(final HelpRequestController controller) {
         this.controller = controller;
-
-        MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
-        projectConnection.subscribe(IdeaListenerService.HelpOthersCTA, this);
     }
 
     @Override
     public void postTip(final IHelpOthersCTA source, final String tipBody) {
-        LOGGER.debug("post tips clicked");
-
         final MatchingHelpRequest helpRequest = controller.helpRequestStore.getHelpRequest(controller.helpRequestId);
         assert helpRequest != null : "we just showed it, it should not be null";
         assert helpRequest.matchingGroup.lastSearchInfo != null : "our own search is always visible";

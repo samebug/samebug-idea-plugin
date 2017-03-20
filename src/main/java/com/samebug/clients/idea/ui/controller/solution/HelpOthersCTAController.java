@@ -15,30 +15,21 @@
  */
 package com.samebug.clients.idea.ui.controller.solution;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.api.entities.solution.RestHit;
 import com.samebug.clients.common.api.entities.solution.Tip;
 import com.samebug.clients.common.api.form.CreateTip;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.idea.ui.controller.form.CreateTipFormHandler;
-import com.samebug.clients.idea.ui.modules.IdeaListenerService;
 
 final class HelpOthersCTAController implements IHelpOthersCTA.Listener {
-    final static Logger LOGGER = Logger.getInstance(HelpOthersCTAController.class);
-    final SolutionsController controller;
+    final SolutionFrameController controller;
 
-    public HelpOthersCTAController(final SolutionsController controller) {
+    public HelpOthersCTAController(final SolutionFrameController controller) {
         this.controller = controller;
-
-        MessageBusConnection projectConnection = controller.myProject.getMessageBus().connect(controller);
-        projectConnection.subscribe(IdeaListenerService.HelpOthersCTA, this);
     }
 
     @Override
     public void postTip(final IHelpOthersCTA source, final String tipBody) {
-        LOGGER.debug("post tips clicked");
-
         new CreateTipFormHandler(controller.view, source, new CreateTip(controller.searchId, tipBody, null, null)) {
             @Override
             protected void afterPostForm(RestHit<Tip> response) {
