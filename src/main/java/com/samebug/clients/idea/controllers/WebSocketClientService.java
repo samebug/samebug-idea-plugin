@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.net.ssl.SSLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,8 +48,9 @@ public final class WebSocketClientService {
             if (config.workspaceId != null) authHeaders.put("X-Samebug-WorkspaceId", config.workspaceId);
             URI serverUri = URI.create(config.serverRoot);
             String host = serverUri.getHost();
-            String scheme = serverUri.getScheme().endsWith("s") ? "wss://" : "ws://";
-            URI endpointUri = URI.create(scheme + host + "/socket/notifications/websocket");
+            int port = serverUri.getPort();
+            String scheme = serverUri.getScheme().endsWith("s") ? "wss" : "ws";
+            URI endpointUri = new URI(scheme, null, host, port, "/socket/notifications/websocket", null, null);
             this.client = new WebSocketClient(endpointUri, authHeaders, new SamebugNotificationWatcher(new NotificationHandler() {
                 @Override
                 public void helpRequestReceived(MatchingHelpRequest helpRequestNotification) {
@@ -66,6 +68,8 @@ public final class WebSocketClientService {
         } catch (SSLException e) {
             LOGGER.warn("Failed to configure websocket client", e);
             client = null;
+        } catch (URISyntaxException e) {
+            LOGGER.warn("Failed to configure websocket client", e);
         }
     }
 

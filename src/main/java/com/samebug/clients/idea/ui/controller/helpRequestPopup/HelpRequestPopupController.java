@@ -62,7 +62,10 @@ public final class HelpRequestPopupController {
 
         BalloonBuilder balloonBuilder = JBPopupFactory.getInstance().createBalloonBuilder(popup);
         balloonBuilder.setFillColor(ColorService.forCurrentTheme(ColorService.Background));
-        balloonBuilder.setContentInsets(new Insets(10, 10, 10, 10));
+        balloonBuilder.setContentInsets(new Insets(40, 0, 40, 0));
+        balloonBuilder.setBorderInsets(new Insets(0, 0, 0, 0));
+        balloonBuilder.setBorderColor(ColorService.forCurrentTheme(ColorService.Background));
+        balloonBuilder.setShadow(true);
         IdeFrame window = (IdeFrame) NotificationsManagerImpl.findWindowForBalloon(myProject);
         RelativePoint pointToShowPopup = null;
         if (window != null) pointToShowPopup = RelativePoint.getSouthEastOf(window.getComponent());

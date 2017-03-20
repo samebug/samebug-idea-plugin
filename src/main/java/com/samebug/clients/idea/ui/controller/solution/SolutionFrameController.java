@@ -116,7 +116,7 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
     public void load() {
         final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
-        final Future<IncomingHelpRequests> incomingHelpRequestsTask = concurrencyService.incomingHelpRequests();
+        final Future<IncomingHelpRequests> incomingHelpRequestsTask = concurrencyService.incomingHelpRequests(false);
         final Future<Solutions> solutionsTask = concurrencyService.solutions(searchId);
         final Future<BugmatesResult> bugmatesTask = concurrencyService.bugmates(searchId);
         final Future<SearchDetails> searchTask = concurrencyService.search(searchId);

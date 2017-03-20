@@ -106,9 +106,9 @@ public final class ConcurrencyService {
         else return new FixedFuture<BugmatesResult>(current);
     }
 
-    public Future<IncomingHelpRequests> incomingHelpRequests() {
+    public Future<IncomingHelpRequests> incomingHelpRequests(boolean forceReload) {
         IncomingHelpRequests current = helpRequestStore.get();
-        if (current == null) return executor.submit(new Callable<IncomingHelpRequests>() {
+        if (current == null || forceReload) return executor.submit(new Callable<IncomingHelpRequests>() {
             @Override
             public IncomingHelpRequests call() throws SamebugClientException {
                 return helpRequestService.loadIncoming();

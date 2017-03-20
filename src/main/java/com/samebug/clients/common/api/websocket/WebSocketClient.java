@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.common.api.websocket;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -28,6 +29,7 @@ import io.netty.handler.codec.http.websocketx.*;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.net.ssl.SSLException;
 import java.io.Closeable;
@@ -59,10 +61,9 @@ public final class WebSocketClient implements Closeable {
         this.port = uri.getPort() == -1 ? (isWss ? 443 : 80) : uri.getPort();
         this.host = uri.getHost() == null ? "127.0.0.1" : uri.getHost();
         this.sslContext = isWs ? null : SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
-        this.group = new NioEventLoopGroup();
+        this.group = new NioEventLoopGroup(1, PooledThreadExecutor.INSTANCE);
         // TODO blocks on the main thread!
-        //this.channel = connect(eventHandler);
-        this.channel = null;
+        this.channel = connect(eventHandler);
     }
 
     private Channel connect(WebSocketEventHandler eventHandler) throws InterruptedException {
@@ -93,9 +94,14 @@ public final class WebSocketClient implements Closeable {
                     }
                 });
 
-        Channel channel = bootstrap.connect(WebSocketClient.this.host, WebSocketClient.this.port).sync().channel();
-        clientHandler.getHandshakeFuture().sync();
-        return channel;
+        // TODO Fragile. There should be proper error handling
+        try {
+            Channel channel = bootstrap.connect(WebSocketClient.this.host, WebSocketClient.this.port).sync().channel();
+            clientHandler.getHandshakeFuture().sync();
+            return channel;
+        } catch (Throwable e) {
+            return null;
+        }
     }
 
     @Override

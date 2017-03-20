@@ -67,7 +67,7 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
     public void load() {
         final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
-        final Future<IncomingHelpRequests> helpRequestsTask = concurrencyService.incomingHelpRequests();
+        final Future<IncomingHelpRequests> helpRequestsTask = concurrencyService.incomingHelpRequests(true);
 
         load(helpRequestsTask, userInfoTask, userStatsTask);
     }
