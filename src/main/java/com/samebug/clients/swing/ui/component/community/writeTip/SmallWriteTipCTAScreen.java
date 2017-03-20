@@ -33,8 +33,8 @@ final class SmallWriteTipCTAScreen extends EmphasizedPanel implements WriteTipCT
         label = new SamebugMultilineLabel();
         label.setText(MessageService.message("samebug.component.cta.writeTip.tips.label", usersWaitingHelp));
 
-        setLayout(new MigLayout("fillx, w 300", "20[fill]50[fill]10", "20[fill]20"));
-        add(button, "cell 0 0");
+        setLayout(new MigLayout("fillx, w 300", "20[fill]50[fill]10", "20[]20"));
+        add(button, "cell 0 0, al center center");
         add(label, "cell 1 0, wmin 0");
     }
 
