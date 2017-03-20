@@ -20,6 +20,7 @@ import com.samebug.clients.swing.ui.modules.FontService;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTextAreaUI;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 
 public class SamebugMultilineLabel extends JTextArea {
@@ -28,6 +29,7 @@ public class SamebugMultilineLabel extends JTextArea {
 
     {
         setEditable(false);
+        ((DefaultCaret) getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
         setCursor(null);
         setFocusable(false);
         setWrapStyleWord(true);

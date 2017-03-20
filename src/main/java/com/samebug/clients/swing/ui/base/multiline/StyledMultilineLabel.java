@@ -20,6 +20,7 @@ import com.samebug.clients.swing.ui.modules.FontService;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTextPaneUI;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 
 public class StyledMultilineLabel extends JTextPane {
@@ -28,6 +29,7 @@ public class StyledMultilineLabel extends JTextPane {
 
     {
         setEditable(false);
+        ((DefaultCaret) getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
         setCursor(null);
         setFocusable(false);
         setFont(FontService.regular(16));

@@ -45,10 +45,9 @@ public final class HelpRequestTab extends TransparentPanel implements IHelpReque
         }
 
         contentPanel = new ContentPanel();
-        scrollPane = new SamebugScrollPane();
+        scrollPane = new SamebugScrollPane(contentPanel);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setViewportView(contentPanel);
 
         setLayout(new BorderLayout());
         add(scrollPane);

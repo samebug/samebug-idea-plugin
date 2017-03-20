@@ -22,6 +22,7 @@ import com.samebug.clients.swing.ui.modules.FontService;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTextAreaUI;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 
 public class LinkMultilineLabel extends JTextArea {
@@ -29,6 +30,7 @@ public class LinkMultilineLabel extends JTextArea {
 
     {
         setEditable(false);
+        ((DefaultCaret) getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
         setFocusable(false);
         setWrapStyleWord(true);
         setLineWrap(true);
@@ -38,7 +40,7 @@ public class LinkMultilineLabel extends JTextArea {
         setOpaque(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        updateUI();
+        updateColors();
     }
 
     public void setInteractionColors(InteractionColors c) {

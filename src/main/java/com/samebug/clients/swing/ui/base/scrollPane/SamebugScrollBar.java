@@ -26,7 +26,7 @@ public class SamebugScrollBar extends JScrollBar {
     public SamebugScrollBar(int orientation) {
         super(orientation);
         setUnitIncrement(20);
-        updateUI();
+        setBackground(ColorService.forCurrentTheme(Background));
     }
 
     @Override
