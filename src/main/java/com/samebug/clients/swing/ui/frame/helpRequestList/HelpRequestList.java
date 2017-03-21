@@ -17,6 +17,10 @@ package com.samebug.clients.swing.ui.frame.helpRequestList;
 
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestList;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
+import com.samebug.clients.swing.ui.base.label.LinkLabel;
+import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.base.multiline.CenteredMultilineLabel;
+import com.samebug.clients.swing.ui.base.panel.EmphasizedPanel;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.base.scrollPane.SamebugScrollPane;
@@ -58,13 +62,17 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
 
     private final class ContentPanel extends SamebugPanel {
         public ContentPanel() {
-            final ListPanel listPanel = new ListPanel();
-            final MoreButton more = new MoreButton();
-
-            setLayout(new MigLayout("fillx", "20[]0", "0[]20[]20"));
-
-            add(listPanel, "cell 0 0, growx");
-            add(more, "cell 0 1, al center");
+            if (previews.isEmpty()) {
+                final EmptyListPanel emptyPanel = new EmptyListPanel();
+                setLayout(new MigLayout("fillx", "20[fill]0", "0[]0"));
+                add(emptyPanel);
+            } else {
+                final ListPanel listPanel = new ListPanel();
+                final MoreButton more = new MoreButton();
+                setLayout(new MigLayout("fillx", "20[]0", "0[]20[]20"));
+                add(listPanel, "cell 0 0, growx");
+                add(more, "cell 0 1, al center");
+            }
         }
     }
 
@@ -90,6 +98,32 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
                     getListener().moreClicked();
                 }
             });
+        }
+    }
+
+    private final class EmptyListPanel extends EmphasizedPanel {
+        {
+            final SamebugLabel emptylabel = new SamebugLabel(MessageService.message("samebug.frame.helpRequestList.emptyList"));
+            final LinkLabel openLabel = new LinkLabel(MessageService.message("samebug.frame.helpRequestList.openLabel"));
+            final CenteredMultilineLabel description = new CenteredMultilineLabel();
+            description.setText(MessageService.message("samebug.frame.helpRequestList.description"));
+
+            openLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    removeAll();
+                    setLayout(new MigLayout("fillx", "40[300]40", "40[]27[]40"));
+                    add(emptylabel, "cell 0 0, al center");
+                    add(description, "cell 0 1, growx, wmin 0");
+                    revalidate();
+                    repaint();
+                }
+            });
+
+            setLayout(new MigLayout("fillx", "40[300]40", "40[]5[]40"));
+            add(emptylabel, "cell 0 0, al center");
+            add(openLabel, "cell 0 1, al center");
+
         }
     }
 
