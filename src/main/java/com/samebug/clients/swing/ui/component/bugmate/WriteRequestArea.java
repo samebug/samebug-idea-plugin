@@ -28,6 +28,8 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public final class WriteRequestArea extends JComponent implements IFormField {
     public static final int MaxOvershootCharacters = 200;
@@ -42,6 +44,17 @@ public final class WriteRequestArea extends JComponent implements IFormField {
         borderedArea = new BorderedArea();
         errorLabel = new ErrorLabel();
 
+        borderedArea.addPropertyChangeListener(LengthRestrictedArea.ERROR_PROPERTY, new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getNewValue() instanceof Boolean && !((Boolean) evt.getNewValue())) {
+                    remove(errorLabel);
+                    revalidate();
+                    repaint();
+                }
+            }
+        });
+
         setLayout(new MigLayout("fillx", "0[300, fill]0", "0[]0"));
         add(borderedArea);
     }
@@ -53,7 +66,7 @@ public final class WriteRequestArea extends JComponent implements IFormField {
 
     @Override
     public void setFormError(String errorCode) throws ErrorCodeMismatchException {
-        borderedArea.setError();
+        borderedArea.setError(true);
         if (CreateHelpRequest.E_TOO_LONG.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.helpRequest.ask.error.long"));
         else throw new ErrorCodeMismatchException(errorCode);
         remove(errorLabel);

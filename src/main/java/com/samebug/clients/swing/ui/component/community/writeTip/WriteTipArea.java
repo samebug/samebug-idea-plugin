@@ -25,6 +25,8 @@ import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public final class WriteTipArea extends JComponent implements IFormField {
     static final int MaxCharacters = 140;
@@ -38,6 +40,17 @@ public final class WriteTipArea extends JComponent implements IFormField {
         borderedArea = new BorderedArea();
         errorLabel = new ErrorLabel();
 
+        borderedArea.addPropertyChangeListener(LengthRestrictedArea.ERROR_PROPERTY, new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getNewValue() instanceof Boolean && !((Boolean) evt.getNewValue())) {
+                   remove(errorLabel);
+                   revalidate();
+                   repaint();
+                }
+            }
+        });
+
         setLayout(new MigLayout("fillx", "0[300, fill]0", "0[]0[]0"));
         add(borderedArea, "cell 0 0");
     }
@@ -47,7 +60,7 @@ public final class WriteTipArea extends JComponent implements IFormField {
     }
 
     public void setFormError(String errorCode) throws ErrorCodeMismatchException {
-        borderedArea.setError();
+        borderedArea.setError(true);
         if (CreateTip.E_TOO_SHORT.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.tip.write.error.tip.short"));
         else if (CreateTip.E_TOO_LONG.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.tip.write.error.tip.long"));
         else throw new ErrorCodeMismatchException(errorCode);

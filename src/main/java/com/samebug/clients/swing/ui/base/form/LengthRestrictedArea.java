@@ -33,6 +33,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public abstract class LengthRestrictedArea extends SamebugPanel {
+    public static final String ERROR_PROPERTY = "samebug.error";
+
     protected final EditableArea myEditableArea;
     protected final LengthCounter myLengthCounter;
     protected FormColors myColors;
@@ -50,8 +52,7 @@ public abstract class LengthRestrictedArea extends SamebugPanel {
         myEditableArea.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                hasError = false;
-                repaint();
+                setError(false);
             }
 
             @Override
@@ -79,8 +80,9 @@ public abstract class LengthRestrictedArea extends SamebugPanel {
         return myEditableArea.getText();
     }
 
-    public void setError() {
-        hasError = true;
+    public void setError(boolean hasError) {
+        firePropertyChange(ERROR_PROPERTY, this.hasError, hasError);
+        this.hasError = hasError;
         repaint();
     }
 
