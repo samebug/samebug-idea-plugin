@@ -16,25 +16,25 @@
 package com.samebug.clients.idea.ui.controller.form;
 
 import com.samebug.clients.common.api.client.RestError;
-import com.samebug.clients.common.api.entities.solution.MarkResponse;
+import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.api.form.CreateMark;
 import com.samebug.clients.common.api.form.FieldError;
-import com.samebug.clients.common.services.SolutionService;
+import com.samebug.clients.common.api.form.RevokeHelpRequest;
+import com.samebug.clients.common.services.HelpRequestService;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
-import com.samebug.clients.common.ui.component.hit.IMarkButton;
+import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
 import java.util.List;
 
-public abstract class CreateMarkFormHandler extends PostFormHandler<MarkResponse> {
+public abstract class RevokeHelpRequestFormHandler extends PostFormHandler<MyHelpRequest> {
     final IFrame frame;
-    final IMarkButton button;
-    final CreateMark data;
+    final IMyHelpRequest button;
+    final RevokeHelpRequest data;
 
-    public CreateMarkFormHandler(IFrame frame, IMarkButton button, CreateMark data) {
+    public RevokeHelpRequestFormHandler(IFrame frame, IMyHelpRequest button, RevokeHelpRequest data) {
         this.frame = frame;
         this.button = button;
         this.data = data;
@@ -42,13 +42,13 @@ public abstract class CreateMarkFormHandler extends PostFormHandler<MarkResponse
 
     @Override
     protected void beforePostForm() {
-        button.setLoading();
+        button.startRevoke();
     }
 
     @Override
-    protected MarkResponse postForm() throws SamebugClientException {
-        final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
-        return solutionService.postMark(data.searchId, data.solutionId);
+    protected MyHelpRequest postForm() throws SamebugClientException {
+        final HelpRequestService helpRequestService = IdeaSamebugPlugin.getInstance().helpRequestService;
+        return helpRequestService.revokeHelpRequest(data.helpRequestId);
     }
 
     @Override
@@ -60,19 +60,19 @@ public abstract class CreateMarkFormHandler extends PostFormHandler<MarkResponse
     @Override
     protected void handleNonFormBadRequests(RestError nonFormError, List<String> globalErrors, List<FieldError> fieldErrors) {
         super.handleNonFormBadRequests(nonFormError, globalErrors, fieldErrors);
-        if (nonFormError.code.equals(CreateMark.E_ALREADY_MARKED)) globalErrors.add(MessageService.message("samebug.component.mark.create.error.alreadyMarked"));
-        else globalErrors.add(MessageService.message("samebug.component.mark.create.error.badRequest"));
+        if (nonFormError.code.equals(RevokeHelpRequest.E_ALREADY_REVOKED)) globalErrors.add(MessageService.message("samebug.component.helpRequest.revoke.error.alreadyRevoked"));
+        else globalErrors.add(MessageService.message("samebug.component.helpRequest.revoke.error.badRequest"));
     }
 
     @Override
     protected void handleOtherClientExceptions(SamebugClientException exception, List<String> globalErrors, List<FieldError> fieldErrors) {
         super.handleOtherClientExceptions(exception, globalErrors, fieldErrors);
-        globalErrors.add(MessageService.message("samebug.component.mark.create.error.unhandled"));
+        globalErrors.add(MessageService.message("samebug.component.helpRequest.revoke.error.unhandled"));
     }
 
     @Override
     protected void showFieldErrors(List<FieldError> fieldErrors) throws FormMismatchException {
-        button.interruptLoading();
+        button.failRevoke();
     }
 
     @Override

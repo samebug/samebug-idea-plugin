@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.api.websocket;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
