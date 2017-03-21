@@ -51,6 +51,7 @@ public abstract class BasicButton extends JComponent {
         disabledColor = ColorService.DisabledButton;
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         setOpaque(false);
+        addMouseListener(new BasicButtonListener());
 
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         setBackgroundColor(ColorService.Background);
