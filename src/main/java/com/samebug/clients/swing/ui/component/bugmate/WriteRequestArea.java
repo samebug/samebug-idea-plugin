@@ -20,7 +20,7 @@ import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.common.ui.component.form.IFormField;
 import com.samebug.clients.swing.ui.base.form.LengthRestrictedArea;
 import com.samebug.clients.swing.ui.base.form.MaxCharactersConstraints;
-import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.component.helpRequest.ExceptionPreview;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.MessageService;
@@ -42,7 +42,7 @@ public final class WriteRequestArea extends JComponent implements IFormField {
         borderedArea = new BorderedArea();
         errorLabel = new ErrorLabel();
 
-        setLayout(new MigLayout("fillx", "0[fill]0", "0[]0"));
+        setLayout(new MigLayout("fillx", "0[300, fill]0", "0[]0"));
         add(borderedArea);
     }
 
@@ -57,7 +57,7 @@ public final class WriteRequestArea extends JComponent implements IFormField {
         if (CreateHelpRequest.E_TOO_LONG.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.helpRequest.ask.error.long"));
         else throw new ErrorCodeMismatchException(errorCode);
         remove(errorLabel);
-        add(errorLabel, "cell 0 1");
+        add(errorLabel, "cell 0 1, wmin 0");
     }
 
     final class BorderedArea extends LengthRestrictedArea {
@@ -95,7 +95,7 @@ public final class WriteRequestArea extends JComponent implements IFormField {
         }
     }
 
-    final class ErrorLabel extends SamebugLabel {
+    final class ErrorLabel extends SamebugMultilineLabel {
         public ErrorLabel() {
             setForegroundColor(ColorService.NormalForm.error);
             setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
