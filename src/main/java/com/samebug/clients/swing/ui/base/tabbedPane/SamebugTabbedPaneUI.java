@@ -70,4 +70,8 @@ public final class SamebugTabbedPaneUI extends BasicTabbedPaneUI {
         }
         return width;
     }
+
+    @Override
+    protected void paintContentBorder(Graphics g, int tabPlacement, int selectedIndex) {
+    }
 }
