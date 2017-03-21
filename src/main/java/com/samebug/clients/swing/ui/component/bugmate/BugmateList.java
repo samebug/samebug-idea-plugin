@@ -34,12 +34,19 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
 
         final SubheaderLabel subheader = new SubheaderLabel();
         final BugmateGrid bugmateGrid = new BugmateGrid(model.bugmateHits);
-        final MoreLabel more = new MoreLabel(model.numberOfOtherBugmates);
-        setLayout(new MigLayout("fillx", "0[]0", "0[]25[]25[]0"));
+        if (model.numberOfOtherBugmates == 0) {
+            setLayout(new MigLayout("fillx", "0[]0", "0[]25[]0"));
 
-        add(subheader, "cell 0 0");
-        add(bugmateGrid, "cell 0 1, growx");
-        add(more, "cell 0 2, align center");
+            add(subheader, "cell 0 0");
+            add(bugmateGrid, "cell 0 1, growx");
+        } else {
+            final MoreLabel more = new MoreLabel(model.numberOfOtherBugmates);
+            setLayout(new MigLayout("fillx", "0[]0", "0[]25[]25[]0"));
+
+            add(subheader, "cell 0 0");
+            add(bugmateGrid, "cell 0 1, growx");
+            add(more, "cell 0 2, align center");
+        }
     }
 
     private final class BugmateGrid extends TransparentPanel {
