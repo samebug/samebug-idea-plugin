@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.ui.controller.component;
 
 import com.samebug.clients.common.ui.component.hit.IWebHit;
-import com.samebug.clients.idea.ui.BrowserUtil;
+import com.samebug.clients.idea.ui.modules.BrowserUtil;
 
 import java.net.URL;
 

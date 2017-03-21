@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui;
+package com.samebug.clients.idea.ui.dialog.analyze;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
@@ -28,7 +27,9 @@ import com.samebug.clients.common.search.StackTraceMatcher;
 import com.samebug.clients.common.services.SearchService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
+import com.samebug.clients.idea.messages.FocusListener;
 import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.idea.ui.modules.BrowserUtil;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,6 +45,7 @@ final public class AnalyzeDialog extends DialogWrapper {
     final Project myProject;
     JPanel panel;
     final JPanel warningPanel;
+    final SamebugSearch searchAction;
 
     AnalyzeStacktraceUtil.StacktraceEditorPanel myEditorPanel;
 
@@ -52,6 +54,7 @@ final public class AnalyzeDialog extends DialogWrapper {
         myProject = project;
         panel = new JPanel();
         warningPanel = new JPanel();
+        searchAction = new SamebugSearch();
         setTitle(MessageService.message("samebug.menu.analyze.dialog.title"));
         init();
     }
@@ -86,12 +89,19 @@ final public class AnalyzeDialog extends DialogWrapper {
         }
         panel.revalidate();
         panel.repaint();
+    }
 
+    // TODO should use a separate component, not the warningpanel
+    protected void displayError(String message) {
+        warningPanel.removeAll();
+        warningPanel.add(new JLabel(message));
+        panel.revalidate();
+        panel.repaint();
     }
 
     @NotNull
     protected Action[] createActions() {
-        return new Action[]{getCancelAction(), new SamebugSearch()};
+        return new Action[]{getCancelAction(), searchAction};
     }
 
     final protected class SamebugSearch extends DialogWrapperAction implements DumbAware {
@@ -106,25 +116,30 @@ final public class AnalyzeDialog extends DialogWrapper {
             final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
             final SearchService searchService = plugin.searchService;
             final String trace = myEditorPanel.getText();
-            ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-                @Override
-                public void run() {
-                    // TODO find out what does searchService do
-                    // TODO show some progress during the search, and close the dialog and open the tool window if the search was successful.
-                    try {
-                        CreatedSearch result = searchService.search(trace);
-                        try {
-                            final int searchId = result.getSearchId();
-                            // TODO open solutions tab
-                            BrowserUtil.browse(IdeaSamebugPlugin.getInstance().urlBuilder.search(searchId));
-                        } catch (java.lang.Exception e1) {
-                            LOGGER.warn("Failed to open browser for search " + result.getSearchId(), e1);
-                        }
-                    } catch (SamebugClientException e1) {
-                        LOGGER.warn("Failed to execute search", e1);
-                    }
+            final JButton searchButton = getButton(searchAction);
+            if (searchButton != null) {
+                searchButton.setText("Searching...");
+                searchButton.setEnabled(false);
+            }
+            try {
+                // NOTE: this search post happens on the UI thread, but we own the UI thread as long as the dialog is opened.
+                CreatedSearch result = searchService.search(trace);
+                final int searchId = result.getSearchId();
+
+                if (result.getStackTraceId() == null) displayError(MessageService.message("samebug.menu.analyze.dialog.error.textSearch"));
+                else {
+                    myProject.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchId);
+                    AnalyzeDialog.this.close(OK_EXIT_CODE);
                 }
-            });
+            } catch (SamebugClientException e1) {
+                LOGGER.warn("Failed to execute search", e1);
+                displayError(MessageService.message("samebug.menu.analyze.dialog.error.unhandled"));
+            } finally {
+                if (searchButton != null) {
+                    searchButton.setEnabled(true);
+                    searchButton.setText(MessageService.message("samebug.menu.analyze.dialog.samebugButton"));
+                }
+            }
         }
     }
 

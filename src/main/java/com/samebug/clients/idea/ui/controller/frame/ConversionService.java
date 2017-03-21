@@ -121,7 +121,7 @@ public final class ConversionService {
         IBugmateList.Model bugmateList =
                 new IBugmateList.Model(bugmateHits, bugmates.getNumberOfOtherBugmates(), bugmates.isEvenMoreExists());
         IAskForHelp.Model askForHelp = new IAskForHelp.Model(numberOfBugmates(bugmates), exceptionTitle);
-        IMyHelpRequest.Model myHelpRequest = new IMyHelpRequest.Model(search.group.helpRequest);
+        IMyHelpRequest.Model myHelpRequest = (search.group.helpRequest != null) ? new IMyHelpRequest.Model(search.group.helpRequest) : null;
         return new ITipResultsTab.Model(tipHits, bugmateList, askForHelp, myHelpRequest);
     }
 

@@ -162,6 +162,5 @@ final public class ToolWindowController implements FocusListener, Disposable {
         }
         return toolWindow;
     }
-
 }
 

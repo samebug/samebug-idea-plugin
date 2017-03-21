@@ -17,7 +17,7 @@ package com.samebug.clients.idea.ui.controller.solution;
 
 import com.samebug.clients.common.ui.frame.solution.ISearchHeaderPanel;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.ui.BrowserUtil;
+import com.samebug.clients.idea.ui.modules.BrowserUtil;
 
 import java.net.URL;
 

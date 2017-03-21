@@ -30,12 +30,12 @@ import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListFrame
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
-import com.samebug.clients.idea.ui.BrowserUtil;
 import com.samebug.clients.idea.ui.controller.component.ProfileListener;
 import com.samebug.clients.idea.ui.controller.externalEvent.ProfileUpdateListener;
 import com.samebug.clients.idea.ui.controller.externalEvent.RefreshListener;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
+import com.samebug.clients.idea.ui.modules.BrowserUtil;
 import com.samebug.clients.swing.ui.frame.helpRequestList.HelpRequestListFrame;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 

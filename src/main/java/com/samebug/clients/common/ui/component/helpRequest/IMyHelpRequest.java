@@ -16,6 +16,7 @@
 package com.samebug.clients.common.ui.component.helpRequest;
 
 import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
+import org.jetbrains.annotations.NotNull;
 
 public interface IMyHelpRequest {
     void startRevoke();
@@ -26,13 +27,14 @@ public interface IMyHelpRequest {
 
     final class Model {
         // TODO this is a rest api entity in the ui model, remove it
+        @NotNull
         public final MyHelpRequest helpRequest;
 
         public Model(Model rhs) {
             this(rhs.helpRequest);
         }
 
-        public Model(MyHelpRequest helpRequest) {
+        public Model(@NotNull MyHelpRequest helpRequest) {
             this.helpRequest = helpRequest;
         }
     }
