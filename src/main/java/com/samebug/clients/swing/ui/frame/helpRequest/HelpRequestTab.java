@@ -23,6 +23,7 @@ import com.samebug.clients.swing.ui.base.scrollPane.SamebugScrollPane;
 import com.samebug.clients.swing.ui.component.helpRequest.HelpRequest;
 import com.samebug.clients.swing.ui.component.hit.TipHit;
 import com.samebug.clients.swing.ui.modules.FontService;
+import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -55,15 +56,18 @@ public final class HelpRequestTab extends TransparentPanel implements IHelpReque
 
     private final class ContentPanel extends SamebugPanel {
         {
-            final ListPanel listPanel = new ListPanel();
-            // TODO when empty
-            final SamebugLabel tipListLabel = new SamebugLabel("Other tips", FontService.demi(16));
+            if (tipHits.isEmpty()) {
+                setLayout(new MigLayout("fillx", "20[fill]0", "0[]20"));
+                add(request, "cell 0 0");
+            } else {
+                final ListPanel listPanel = new ListPanel();
+                final SamebugLabel tipListLabel = new SamebugLabel(MessageService.message("samebug.component.helpRequest.answer.otherTips"), FontService.demi(16));
 
-            setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]20[]20"));
-
-            add(request, "cell 0 0");
-            add(tipListLabel, "cell 0 1");
-            add(listPanel, "cell 0 2");
+                setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]20[]20"));
+                add(request, "cell 0 0");
+                add(tipListLabel, "cell 0 1");
+                add(listPanel, "cell 0 2");
+            }
         }
     }
 
