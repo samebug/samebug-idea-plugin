@@ -18,6 +18,7 @@ package com.samebug.clients.swing.ui.component.helpRequest;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
 import com.samebug.clients.common.ui.modules.TextService;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.base.label.TimestampLabel;
 import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
 import com.samebug.clients.swing.ui.modules.ColorService;
@@ -78,12 +79,20 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
         }
     }
 
-    final class InfoBar extends SamebugLabel {
+    final class InfoBar extends SamebugLabel implements TimestampLabel {
+        private final Date createdAt;
+
         public InfoBar(Date createdAt) {
-            super(TextService.adaptiveTimestamp(createdAt));
+            this.createdAt = createdAt;
             setHorizontalAlignment(SwingConstants.RIGHT);
             setFont(FontService.regular(12));
             setForegroundColor(ColorService.TipText);
+            updateRelativeTimestamp();
+        }
+
+        @Override
+        public void updateRelativeTimestamp() {
+            setText(TextService.adaptiveTimestamp(createdAt));
         }
     }
 

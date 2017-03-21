@@ -18,6 +18,7 @@ package com.samebug.clients.swing.ui.component.hit;
 import com.samebug.clients.common.ui.component.hit.IWebHit;
 import com.samebug.clients.common.ui.modules.TextService;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.base.label.TimestampLabel;
 import com.samebug.clients.swing.ui.base.multiline.LinkMultilineLabel;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
@@ -85,9 +86,13 @@ public final class WebHit extends SamebugPanel implements IWebHit {
         }
     }
 
-    private final class SourceLabel extends SamebugLabel {
+    private final class SourceLabel extends SamebugLabel implements TimestampLabel {
         {
             setFont(FontService.regular(12));
+        }
+
+        @Override
+        public void updateRelativeTimestamp() {
             String sourceText;
             if (model.createdBy == null) {
                 sourceText = model.sourceName + " | " + String.format("%s", TextService.prettyTime(model.createdAt));

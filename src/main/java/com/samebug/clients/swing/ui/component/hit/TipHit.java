@@ -28,6 +28,7 @@ import com.samebug.clients.swing.ui.modules.FontService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.util.Date;
 
 public final class TipHit extends RoundedBackgroundPanel implements ITipHit {
     private final Model model;
@@ -74,14 +75,29 @@ public final class TipHit extends RoundedBackgroundPanel implements ITipHit {
             final AvatarIcon authorIcon = new AvatarIcon(model.createdByAvatarUrl, AvatarIconSize);
             name = new SamebugLabel(model.createdBy, FontService.regular(12));
             name.setForegroundColor(ColorService.UnemphasizedText);
-            timestamp = new SamebugLabel(TextService.prettyTime(model.createdAt), FontService.regular(12));
-            timestamp.setForegroundColor(ColorService.UnemphasizedText);
+            timestamp = new TimestampLabel(model.createdAt);
 
             setLayout(new MigLayout("", "0[]5[]0", "0[14!]0[14!]0"));
 
             add(authorIcon, "cell 0 0, spany 2");
             add(name, "cell 1 0");
             add(timestamp, "cell 1 1");
+        }
+    }
+
+    private final class TimestampLabel extends SamebugLabel implements com.samebug.clients.swing.ui.base.label.TimestampLabel {
+        private final Date timestamp;
+
+        private TimestampLabel(Date timestamp) {
+            this.timestamp = timestamp;
+            setFont(FontService.regular(12));
+            setForegroundColor(ColorService.UnemphasizedText);
+            updateRelativeTimestamp();
+        }
+
+        @Override
+        public void updateRelativeTimestamp() {
+            setText(TextService.prettyTime(timestamp));
         }
     }
 }

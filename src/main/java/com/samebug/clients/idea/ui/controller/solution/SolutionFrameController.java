@@ -41,7 +41,7 @@ import com.samebug.clients.idea.ui.controller.component.ProfileListener;
 import com.samebug.clients.idea.ui.controller.component.WebHitListener;
 import com.samebug.clients.idea.ui.controller.component.WebResultsTabListener;
 import com.samebug.clients.idea.ui.controller.externalEvent.ProfileUpdateListener;
-import com.samebug.clients.idea.ui.controller.externalEvent.TimestampRefreshListener;
+import com.samebug.clients.idea.ui.controller.externalEvent.RefreshListener;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.swing.ui.frame.solution.SolutionFrame;
@@ -53,7 +53,8 @@ import java.util.concurrent.Future;
 public final class SolutionFrameController extends BaseFrameController<ISolutionFrame> implements Disposable {
     final int searchId;
 
-    final TimestampRefreshListener timestampRefreshListener;
+    final RefreshListener refreshListener;
+    final ProfileUpdateListener profileUpdateListener;
     final ExceptionHeaderListener exceptionHeaderListener;
     final WebResultsTabListener webResultsTabListener;
     final RequestHelpListener requestHelpListener;
@@ -62,7 +63,6 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
     final WebHitListener webHitListener;
     final MarkButtonListener markButtonListener;
     final ProfileListener profileListener;
-    final ProfileUpdateListener profileUpdateListener;
     final SolutionFrameListener frameListener;
 
     public SolutionFrameController(ToolWindowController twc, Project project, final int searchId) {
@@ -101,8 +101,8 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
 
         // bind external listeners
         MessageBusConnection projectConnection = myProject.getMessageBus().connect(this);
-        timestampRefreshListener = new TimestampRefreshListener(this);
-        projectConnection.subscribe(RefreshTimestampsListener.TOPIC, timestampRefreshListener);
+        refreshListener = new RefreshListener(this);
+        projectConnection.subscribe(RefreshTimestampsListener.TOPIC, refreshListener);
 
         profileUpdateListener = new ProfileUpdateListener(this);
         projectConnection.subscribe(IncomingHelpRequest.TOPIC, profileUpdateListener);

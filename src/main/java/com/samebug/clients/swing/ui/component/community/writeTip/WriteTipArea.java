@@ -44,9 +44,9 @@ public final class WriteTipArea extends JComponent implements IFormField {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getNewValue() instanceof Boolean && !((Boolean) evt.getNewValue())) {
-                   remove(errorLabel);
-                   revalidate();
-                   repaint();
+                    remove(errorLabel);
+                    revalidate();
+                    repaint();
                 }
             }
         });

@@ -18,6 +18,7 @@ package com.samebug.clients.idea.ui.controller.helpRequestList;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.api.entities.UserInfo;
 import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
@@ -27,8 +28,12 @@ import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestList;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListFrame;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.messages.IncomingHelpRequest;
+import com.samebug.clients.idea.messages.RefreshTimestampsListener;
 import com.samebug.clients.idea.ui.BrowserUtil;
 import com.samebug.clients.idea.ui.controller.component.ProfileListener;
+import com.samebug.clients.idea.ui.controller.externalEvent.ProfileUpdateListener;
+import com.samebug.clients.idea.ui.controller.externalEvent.RefreshListener;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.swing.ui.frame.helpRequestList.HelpRequestListFrame;
@@ -40,6 +45,8 @@ import java.util.concurrent.Future;
 
 public final class HelpRequestListController extends BaseFrameController<IHelpRequestListFrame> implements Disposable {
 
+    final RefreshListener refreshListener;
+    final ProfileUpdateListener profileUpdateListener;
     final HelpRequestListFrameListener frameListener;
     final HelpRequestPreviewListener helpRequestPreviewListener;
     final HelpRequestListListener helpRequestListListener;
@@ -62,6 +69,13 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
 
         profileListener = new ProfileListener(this);
         ListenerService.putListenerToComponent(frame, IProfilePanel.Listener.class, profileListener);
+
+
+        MessageBusConnection projectConnection = myProject.getMessageBus().connect(this);
+        refreshListener = new RefreshListener(this);
+        projectConnection.subscribe(RefreshTimestampsListener.TOPIC, refreshListener);
+        profileUpdateListener = new ProfileUpdateListener(this);
+        projectConnection.subscribe(IncomingHelpRequest.TOPIC, profileUpdateListener);
     }
 
     public void load() {

@@ -20,6 +20,7 @@ import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.common.ui.modules.TextService;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.base.label.TimestampLabel;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
@@ -30,13 +31,14 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Date;
 
 public final class RevokeHelpRequest extends JComponent implements IMyHelpRequest {
     private final JComponent helpRequestLabel;
     private final SamebugButton revoke;
 
     public RevokeHelpRequest(Model model) {
-        helpRequestLabel = new HelpRequestLabel(model.helpRequest);
+        helpRequestLabel = new HelpRequestBar(model.helpRequest);
         revoke = new RevokeButton(model.helpRequest);
 
         setLayout(new MigLayout("fillx", "0[]0", "0[]15[]0"));
@@ -59,22 +61,13 @@ public final class RevokeHelpRequest extends JComponent implements IMyHelpReques
         revoke.revertFromLoadingAnimation();
     }
 
-    private final class HelpRequestLabel extends SamebugPanel {
-        public HelpRequestLabel(MyHelpRequest helpRequest) {
-            final SamebugLabel text = new SamebugLabel(format(helpRequest));
-            text.setFont(FontService.regular(16));
-            text.setForegroundColor(ColorService.TipText);
-            text.setHorizontalAlignment(SwingConstants.CENTER);
+    private final class HelpRequestBar extends SamebugPanel {
+        public HelpRequestBar(MyHelpRequest helpRequest) {
+            final SamebugLabel text = new HelpRequestLabel(helpRequest.createdAt);
             setBackgroundColor(ColorService.Tip);
 
             setLayout(new MigLayout("fillx", "30[fill]30", "30[]30"));
             add(text, "al center");
-        }
-
-        String format(MyHelpRequest r) {
-            // TODO it is not exactly the same as in the design
-            String date = TextService.adaptiveTimestamp(r.createdAt);
-            return MessageService.message("samebug.component.helpRequest.ask.alreadySent", date);
         }
     }
 
@@ -87,6 +80,25 @@ public final class RevokeHelpRequest extends JComponent implements IMyHelpReques
                     if (isEnabled()) getListener().revokeHelpRequest(RevokeHelpRequest.this, helpRequest.id);
                 }
             });
+        }
+    }
+
+    private final class HelpRequestLabel extends SamebugLabel implements TimestampLabel {
+        private final Date timestamp;
+
+        public HelpRequestLabel(Date timestamp) {
+            this.timestamp = timestamp;
+            setFont(FontService.regular(16));
+            setForegroundColor(ColorService.TipText);
+            setHorizontalAlignment(SwingConstants.CENTER);
+            updateRelativeTimestamp();
+        }
+
+        @Override
+        public void updateRelativeTimestamp() {
+            // TODO it is not exactly the same as in the design
+            String date = TextService.adaptiveTimestamp(timestamp);
+            setText(MessageService.message("samebug.component.helpRequest.ask.alreadySent", date));
         }
     }
 

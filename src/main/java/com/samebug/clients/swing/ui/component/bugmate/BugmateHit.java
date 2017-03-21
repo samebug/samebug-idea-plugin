@@ -51,10 +51,20 @@ public final class BugmateHit extends TransparentPanel implements IBugmateHit {
         }
     }
 
-    private final class TimestampLabel extends SamebugLabel {
+    private final class TimestampLabel extends SamebugLabel implements com.samebug.clients.swing.ui.base.label.TimestampLabel {
+        private final int nSeen;
+        private final Date lastSeen;
+
         private TimestampLabel(int nSeen, Date lastSeen) {
-            setText(MessageService.message("samebug.component.bugmate.hit.occurred", nSeen, TextService.prettyTime(lastSeen)));
+            this.nSeen = nSeen;
+            this.lastSeen = lastSeen;
             setFont(FontService.regular(14));
+            updateRelativeTimestamp();
+        }
+
+        @Override
+        public void updateRelativeTimestamp() {
+            setText(MessageService.message("samebug.component.bugmate.hit.occurred", nSeen, TextService.prettyTime(lastSeen)));
         }
     }
 }

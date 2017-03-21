@@ -18,6 +18,7 @@ package com.samebug.clients.idea.ui.controller.helpRequest;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.api.entities.UserInfo;
 import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
@@ -31,9 +32,13 @@ import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestFrame;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.messages.IncomingHelpRequest;
+import com.samebug.clients.idea.messages.RefreshTimestampsListener;
 import com.samebug.clients.idea.ui.controller.component.ProfileListener;
 import com.samebug.clients.idea.ui.controller.component.WebHitListener;
 import com.samebug.clients.idea.ui.controller.component.WebResultsTabListener;
+import com.samebug.clients.idea.ui.controller.externalEvent.ProfileUpdateListener;
+import com.samebug.clients.idea.ui.controller.externalEvent.RefreshListener;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.swing.ui.frame.helpRequest.HelpRequestFrame;
@@ -45,6 +50,8 @@ import java.util.concurrent.Future;
 public final class HelpRequestController extends BaseFrameController<IHelpRequestFrame> implements Disposable {
     final String helpRequestId;
 
+    final RefreshListener refreshListener;
+    final ProfileUpdateListener profileUpdateListener;
     final HelpRequestFrameListener frameListener;
     final ProfileListener profileListener;
     final WriteTipListener writeTipListener;
@@ -75,6 +82,12 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
 
         webHitListener = new WebHitListener();
         ListenerService.putListenerToComponent(frame, IWebHit.Listener.class, webHitListener);
+
+        MessageBusConnection projectConnection = myProject.getMessageBus().connect(this);
+        refreshListener = new RefreshListener(this);
+        projectConnection.subscribe(RefreshTimestampsListener.TOPIC, refreshListener);
+        profileUpdateListener = new ProfileUpdateListener(this);
+        projectConnection.subscribe(IncomingHelpRequest.TOPIC, profileUpdateListener);
     }
 
     public String getHelpRequestId() {
