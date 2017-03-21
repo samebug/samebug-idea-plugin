@@ -16,6 +16,7 @@
 package com.samebug.clients.swing.ui.base.scrollPane;
 
 import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.DrawService;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -138,6 +139,7 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
     @Override
     public void paint(Graphics g, JComponent c) {
         if (g instanceof Graphics2D) {
+            Graphics2D g2 = DrawService.init(g);
             // add padding to the track and the thumb, depending on the scrollbar orientation
             Rectangle bounds;
             final int padding = 6;
@@ -149,7 +151,7 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
 
             // showing the track only when the area is actually scrollable (not the whole content is showed)
             if (myThumbBounds.width > 0 && myThumbBounds.height > 0) {
-                paintTrack((Graphics2D) g, bounds.x, bounds.y, bounds.width, bounds.height, c);
+                paintTrack(g2, bounds.x, bounds.y, bounds.width, bounds.height, c);
             }
 
             myTrackBounds.setBounds(bounds);
@@ -157,7 +159,7 @@ public final class SamebugScrollBarUI extends ScrollBarUI {
 
             // show the thumb only when the area is actually scrollable (not the whole content is showed)
             if (myThumbBounds.width > 0 && myThumbBounds.height > 0) {
-                paintThumb((Graphics2D) g, myThumbBounds.x, myThumbBounds.y, myThumbBounds.width, myThumbBounds.height, c);
+                paintThumb(g2, myThumbBounds.x, myThumbBounds.y, myThumbBounds.width, myThumbBounds.height, c);
             }
         }
     }
