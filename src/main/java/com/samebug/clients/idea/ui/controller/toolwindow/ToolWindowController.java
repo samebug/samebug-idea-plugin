@@ -149,8 +149,10 @@ final public class ToolWindowController implements FocusListener, Disposable {
         // This requestFocus seems to fix it, but
         //   - I don't know why
         //   - I don't know if it has any side effects
-        toolwindowCM.requestFocus(newToolWindowTab, true);
+//        toolwindowCM.requestFocus(newToolWindowTab, true);
         toolWindow.show(null);
+        ((JComponent) currentFrame.view).revalidate();
+        ((JComponent) currentFrame.view).repaint();
     }
 
     private ToolWindow getToolWindow() {

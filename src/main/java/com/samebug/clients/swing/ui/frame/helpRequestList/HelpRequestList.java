@@ -115,8 +115,8 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
                     setLayout(new MigLayout("fillx", "40[300]40", "40[]27[]40"));
                     add(emptylabel, "cell 0 0, al center");
                     add(description, "cell 0 1, growx, wmin 0");
-                    revalidate();
-                    repaint();
+                    // TODO: after a change in the layout, it seems that revalidate-repaint is sometimes not enough in IntelliJ
+                    validate();
                 }
             });
 

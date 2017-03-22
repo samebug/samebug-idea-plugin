@@ -66,6 +66,7 @@ public final class IdeaWebImageService extends WebImageService {
         if (nonScaled == null) {
             try {
                 nonScaled = ImageIO.read(url);
+                cache.put(url, nonScaled);
             } catch (IOException e) {
                 LOGGER.warn("Failed to load image from " + url);
             }

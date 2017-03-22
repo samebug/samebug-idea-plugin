@@ -133,10 +133,6 @@ public abstract class Animator {
 
     public abstract void paintNow(int frame, int totalFrames, int cycle);
 
-    public void destroy() {
-        stopTicker();
-    }
-
     public boolean isRunning() {
         return myTicker != null;
     }

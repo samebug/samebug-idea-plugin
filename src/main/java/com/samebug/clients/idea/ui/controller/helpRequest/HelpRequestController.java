@@ -45,6 +45,7 @@ import com.samebug.clients.swing.ui.frame.helpRequest.HelpRequestFrame;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.concurrent.Future;
 
 public final class HelpRequestController extends BaseFrameController<IHelpRequestFrame> implements Disposable {
