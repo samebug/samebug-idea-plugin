@@ -22,6 +22,8 @@ import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
 import com.samebug.clients.common.api.websocket.NotificationHandler;
 import com.samebug.clients.common.api.websocket.SamebugNotificationWatcher;
 import com.samebug.clients.common.api.websocket.WebSocketClient;
+import com.samebug.clients.common.api.websocket.WebSocketEventHandler;
+import io.netty.handler.ssl.SslContextBuilder;
 import org.jetbrains.annotations.Nullable;
 
 import javax.net.ssl.SSLException;
@@ -31,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class WebSocketClientService {
-    final private static Logger LOGGER = Logger.getInstance(WebSocketClientService.class);
+    final static Logger LOGGER = Logger.getInstance(WebSocketClientService.class);
 
     final NotificationController notificationController;
     @Nullable
@@ -51,7 +53,7 @@ public final class WebSocketClientService {
             int port = serverUri.getPort();
             String scheme = serverUri.getScheme().endsWith("s") ? "wss" : "ws";
             URI endpointUri = new URI(scheme, null, host, port, "/socket/notifications/websocket", null, null);
-            this.client = new WebSocketClient(endpointUri, authHeaders, new SamebugNotificationWatcher(new NotificationHandler() {
+            this.client = WebSocketClientFactory.create(endpointUri, authHeaders, new SamebugNotificationWatcher(new NotificationHandler() {
                 @Override
                 public void helpRequestReceived(MatchingHelpRequest helpRequestNotification) {
                     notificationController.incomingHelpRequest(helpRequestNotification.helpRequest);
@@ -72,6 +74,22 @@ public final class WebSocketClientService {
             LOGGER.warn("Failed to configure websocket client", e);
         }
     }
+}
 
-
+final class WebSocketClientFactory {
+    static WebSocketClient create(URI uri, Map<String, Object> customHeaders, WebSocketEventHandler eventHandler) throws SSLException, InterruptedException {
+        boolean canWeUseWebsocket;
+        try {
+            Class<?> resolveSslContextBuilder = SslContextBuilder.class;
+            canWeUseWebsocket = true;
+        } catch (Throwable e) {
+            canWeUseWebsocket = false;
+        }
+        if (canWeUseWebsocket) {
+            return new WebSocketClient(uri, customHeaders, eventHandler);
+        } else {
+            WebSocketClientService.LOGGER.warn("This intellij version does not have a websocket-compatible netty version");
+            return null;
+        }
+    }
 }
