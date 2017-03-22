@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.frame.authentication;
 
-import com.samebug.clients.common.ui.frame.IAuthenticationFrame;
+import com.samebug.clients.common.ui.frame.authentication.IAuthenticationFrame;
 import com.samebug.clients.swing.ui.base.frame.BasicFrame;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.CenteredMultilineLabel;

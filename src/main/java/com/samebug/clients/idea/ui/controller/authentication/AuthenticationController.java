@@ -17,7 +17,7 @@ package com.samebug.clients.idea.ui.controller.authentication;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.common.ui.frame.IAuthenticationFrame;
+import com.samebug.clients.common.ui.frame.authentication.IAuthenticationFrame;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.swing.ui.frame.authentication.AuthenticationFrame;

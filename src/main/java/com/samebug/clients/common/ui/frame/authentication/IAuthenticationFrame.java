@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.ui.frame;
+package com.samebug.clients.common.ui.frame.authentication;
 
-public interface IIntroFrame extends IFrame {
+import com.samebug.clients.common.ui.frame.IFrame;
+
+public interface IAuthenticationFrame extends IFrame {
     interface Listener extends FrameListener {
     }
 }
