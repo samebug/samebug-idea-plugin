@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui.testModules;
+package com.samebug.clients.swing.ui.base.tabbedPane;
 
-import com.samebug.clients.swing.ui.modules.ColorService;
+import java.awt.*;
 
-public final class TestColorService extends ColorService {
-    final boolean isUnderDarcula = false;
-
+public final class CenterTabbedPaneUI extends SamebugTabbedPaneUI {
     @Override
-    protected <T> T internalForCurrentTheme(T[] objects) {
-        if (objects == null) return null;
-        else if (isUnderDarcula && objects.length > 1) return objects[1];
-        else return objects[0];
+    protected void installDefaults() {
+        super.installDefaults();
+        tabAreaInsets = new Insets(0, 0, 20, 0);
+    }
+    @Override
+    protected int calculateTabWidth(int tabPlacement, int tabIndex, FontMetrics metrics) {
+        int totalWidth = tabPane.getWidth();
+        int nTabs = tabPane.getTabCount();
+        return totalWidth / nTabs;
     }
 }

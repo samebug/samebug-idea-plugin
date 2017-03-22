@@ -18,13 +18,49 @@ package com.samebug.clients.swing.ui.frame.authentication;
 import com.samebug.clients.common.ui.frame.IAuthenticationFrame;
 import com.samebug.clients.swing.ui.base.frame.BasicFrame;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.base.multiline.CenteredMultilineLabel;
+import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
+import com.samebug.clients.swing.ui.modules.MessageService;
+import net.miginfocom.swing.MigLayout;
 
-// TODO
+import javax.swing.*;
+
 public class AuthenticationFrame extends BasicFrame implements IAuthenticationFrame {
     public AuthenticationFrame() {
-        addMainComponent(new SamebugLabel("TODO login screen"));
+        addMainComponent(new Authentication());
     }
+
+    private final class Authentication extends JComponent {
+        Authentication() {
+            final SamebugLabel title = new TitleLabel();
+            final CenteredMultilineLabel intro = new IntroLabel();
+            final JComponent tabs = new AuthenticationTabs();
+
+            setLayout(new MigLayout("fillx", "0[380!]0", "40[]20[]30[]0"));
+            add(title, "cell 0 0, al center");
+            add(intro, "cell 0 1, growx, wmin 0");
+            add(tabs, "cell 0 2, w 260!, al center");
+        }
+    }
+
+    private final class TitleLabel extends SamebugLabel {
+        {
+            setText(MessageService.message("samebug.frame.authentication.title"));
+            setFont(FontService.demi(24));
+            setForegroundColor(ColorService.EmphasizedText);
+        }
+    }
+
+    private final class IntroLabel extends CenteredMultilineLabel {
+        {
+            setText(MessageService.message("samebug.frame.authentication.intro"));
+            setForeground(ColorService.Text);
+            setFont(FontService.regular(16));
+        }
+    }
+
 
     @Override
     protected FrameListener getListener() {

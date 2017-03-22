@@ -66,6 +66,7 @@ public abstract class ColorService {
     public final static Color[] Text = new Color[]{new Color(0x333333), new Color(0x8B8C8F)};
     public final static Color[] UnemphasizedText = new Color[]{new Color(0x88BCCE), new Color(0x8AB0D6)};
     public final static Color[] Separator = new Color[]{new Color(0xE5E5E5), new Color(0x454546)};
+    public final static Color[] FormSeparator = new Color[]{new Color(0xBDBDBD), new Color(0x454546)};
     public final static Color[] SelectedTab = new Color[]{new Color(0x666666), new Color(0xCBCDCF)};
     public final static Color[] Tip = new Color[]{new Color(0xE0F2F8), new Color(0x0560A2)};
     public final static Color[] TipText = new Color[]{new Color(0x086a8b), new Color(0xDBEFFF)};

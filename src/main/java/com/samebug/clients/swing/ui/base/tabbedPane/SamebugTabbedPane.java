@@ -38,8 +38,6 @@ public class SamebugTabbedPane extends JTabbedPane {
         setTabLayoutPolicy(SCROLL_TAB_LAYOUT);
         setOpaque(false);
 
-        // TODO not sure if it is a good idea to listen to our own events
-        // TODO not sure if there is a simpler way to do it
         addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {

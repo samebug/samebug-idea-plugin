@@ -20,7 +20,7 @@ import com.samebug.clients.swing.ui.modules.ColorService;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import java.awt.*;
 
-public final class SamebugTabbedPaneUI extends BasicTabbedPaneUI {
+public class SamebugTabbedPaneUI extends BasicTabbedPaneUI {
     @Override
     protected void installDefaults() {
         super.installDefaults();
@@ -44,7 +44,7 @@ public final class SamebugTabbedPaneUI extends BasicTabbedPaneUI {
 
     @Override
     protected void paintTabBorder(Graphics g, int tabPlacement, int tabIndex, int x, int y, int w, int h, boolean isSelected) {
-        // Override as out border is a simple line between tabs
+        // Override as our border is a simple line between tabs
         // This is implemented as a line at the left side for each tabs except the first one.
         if (tabIndex > 0) {
             g.setColor(ColorService.forCurrentTheme(ColorService.Separator));
