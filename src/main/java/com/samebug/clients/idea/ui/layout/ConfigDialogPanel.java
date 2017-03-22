@@ -94,7 +94,7 @@ public class ConfigDialogPanel {
 
     ApplicationSettings fromUI() {
         final ApplicationSettings settings = new ApplicationSettings(currentConfig);
-        settings.apiKey = apiKey.getText();
+        settings.apiKey = apiKey.getText().isEmpty() ? null : apiKey.getText();
         settings.workspaceId = (Integer) workspaceId.getValue() <= 0 ? null : ((Integer) workspaceId.getValue());
         settings.serverRoot = serverRoot.getText();
         settings.trackingRoot = trackingRoot.getText();

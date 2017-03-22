@@ -13,38 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.api.entities;
+package com.samebug.clients.common.api.entities.profile;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.net.URL;
-
-public final class UserInfo {
+public class UserStats {
     @NotNull
-    private Boolean isUserExist;
-    private Integer userId;
-    private String displayName;
-    private URL avatarUrl;
-    private Integer defaultWorkspaceId;
+    private Integer numberOfCrashes;
+    @NotNull
+    private Integer numberOfMarks;
+    @NotNull
+    private Integer numberOfTips;
+    @NotNull
+    private Integer numberOfThanks;
 
     @NotNull
-    public Boolean getUserExist() {
-        return isUserExist;
+    public Integer getNumberOfCrashes() {
+        return numberOfCrashes;
     }
 
-    public Integer getUserId() {
-        return userId;
+    @NotNull
+    public Integer getNumberOfMarks() {
+        return numberOfMarks;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    @NotNull
+    public Integer getNumberOfTips() {
+        return numberOfTips;
     }
 
-    public URL getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    public Integer getDefaultWorkspaceId() {
-        return defaultWorkspaceId;
+    @NotNull
+    public Integer getNumberOfThanks() {
+        return numberOfThanks;
     }
 }

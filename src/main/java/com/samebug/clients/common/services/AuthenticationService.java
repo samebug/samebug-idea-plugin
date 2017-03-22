@@ -17,8 +17,14 @@ package com.samebug.clients.common.services;
 
 import com.samebug.clients.common.api.client.ClientResponse;
 import com.samebug.clients.common.api.client.SamebugClient;
-import com.samebug.clients.common.api.entities.UserInfo;
+import com.samebug.clients.common.api.entities.profile.LoggedInUser;
+import com.samebug.clients.common.api.entities.profile.UserInfo;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
+import com.samebug.clients.common.api.form.AnonymousUse;
+import com.samebug.clients.common.api.form.LogIn;
+import com.samebug.clients.common.api.form.SignUp;
+import com.samebug.clients.idea.components.application.ApplicationSettings;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.Nullable;
 
 public final class AuthenticationService {
@@ -50,4 +56,61 @@ public final class AuthenticationService {
     }
 
 
+    public LoggedInUser logIn(final LogIn data) throws SamebugClientException {
+        final SamebugClient client = clientService.client;
+
+        ClientService.ConnectionAwareHttpRequest<LoggedInUser> requestHandler =
+                new ClientService.ConnectionAwareHttpRequest<LoggedInUser>() {
+                    ClientResponse<LoggedInUser> request() {
+                        return client.logIn(data);
+                    }
+
+                    protected void success(LoggedInUser result) {
+                        updateSettings(result);
+                    }
+                };
+        return clientService.execute(requestHandler);
+    }
+
+    public LoggedInUser signUp(final SignUp data) throws SamebugClientException {
+        final SamebugClient client = clientService.client;
+
+        ClientService.ConnectionAwareHttpRequest<LoggedInUser> requestHandler =
+                new ClientService.ConnectionAwareHttpRequest<LoggedInUser>() {
+                    ClientResponse<LoggedInUser> request() {
+                        return client.signUp(data);
+                    }
+
+                    protected void success(LoggedInUser result) {
+                        updateSettings(result);
+                    }
+                };
+        return clientService.execute(requestHandler);
+    }
+
+    public LoggedInUser anonymousUse(final AnonymousUse data) throws SamebugClientException {
+        final SamebugClient client = clientService.client;
+
+        ClientService.ConnectionAwareHttpRequest<LoggedInUser> requestHandler =
+                new ClientService.ConnectionAwareHttpRequest<LoggedInUser>() {
+                    ClientResponse<LoggedInUser> request() {
+                        return client.anonymousUse(data);
+                    }
+
+                    protected void success(LoggedInUser result) {
+                        updateSettings(result);
+                    }
+                };
+        return clientService.execute(requestHandler);
+    }
+
+    private void updateSettings(LoggedInUser user) {
+        IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
+        ApplicationSettings oldSettings = plugin.getState();
+        ApplicationSettings newSettings = new ApplicationSettings(oldSettings);
+        newSettings.apiKey = user.apiKey;
+        if (oldSettings.workspaceId == null) newSettings.workspaceId = user.defaultWorkspaceId;
+        newSettings.userId = user.userId;
+        if (!oldSettings.equals(newSettings)) plugin.saveSettings(newSettings);
+    }
 }

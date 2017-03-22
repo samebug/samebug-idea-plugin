@@ -13,34 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.services;
+package com.samebug.clients.common.api.entities.profile;
 
-import com.samebug.clients.common.api.entities.profile.UserInfo;
-import com.samebug.clients.common.api.entities.profile.UserStats;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.concurrent.atomic.AtomicReference;
+import java.net.URL;
 
-public final class ProfileStore {
+public final class UserInfo {
     @NotNull
-    final AtomicReference<UserInfo> user;
+    private Boolean isUserExist;
+    private Integer userId;
+    private String displayName;
+    private URL avatarUrl;
+    private Integer defaultWorkspaceId;
 
     @NotNull
-    final AtomicReference<UserStats> statistics;
-
-    public ProfileStore() {
-        this.user = new AtomicReference<UserInfo>();
-        this.statistics = new AtomicReference<UserStats>();
+    public Boolean getUserExist() {
+        return isUserExist;
     }
 
-    @Nullable
-    public UserInfo getUser() {
-        return user.get();
+    public Integer getUserId() {
+        return userId;
     }
 
-    @Nullable
-    public UserStats getUserStats() {
-        return statistics.get();
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public URL getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public Integer getDefaultWorkspaceId() {
+        return defaultWorkspaceId;
     }
 }

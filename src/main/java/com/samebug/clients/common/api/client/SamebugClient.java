@@ -18,12 +18,13 @@ package com.samebug.clients.common.api.client;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.samebug.clients.common.api.RestUrlBuilder;
-import com.samebug.clients.common.api.entities.UserInfo;
-import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
 import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
 import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
 import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
+import com.samebug.clients.common.api.entities.profile.LoggedInUser;
+import com.samebug.clients.common.api.entities.profile.UserInfo;
+import com.samebug.clients.common.api.entities.profile.UserStats;
 import com.samebug.clients.common.api.entities.search.CreatedSearch;
 import com.samebug.clients.common.api.entities.search.SearchDetails;
 import com.samebug.clients.common.api.entities.solution.MarkResponse;
@@ -32,7 +33,10 @@ import com.samebug.clients.common.api.entities.solution.Solutions;
 import com.samebug.clients.common.api.entities.solution.Tip;
 import com.samebug.clients.common.api.entities.tracking.TrackEvent;
 import com.samebug.clients.common.api.exceptions.*;
+import com.samebug.clients.common.api.form.AnonymousUse;
 import com.samebug.clients.common.api.form.CreateHelpRequest;
+import com.samebug.clients.common.api.form.LogIn;
+import com.samebug.clients.common.api.form.SignUp;
 import com.samebug.clients.common.api.json.Json;
 import org.apache.http.Consts;
 import org.apache.http.HttpResponse;
@@ -211,6 +215,42 @@ final public class SamebugClient {
         HttpGet get = new HttpGet(url.toString());
 
         return rawClient.executeAuthenticated(get, new HandleJsonRequest<UserStats>(UserStats.class));
+    }
+
+    public
+    @NotNull
+    ClientResponse<LoggedInUser> logIn(@NotNull LogIn data) {
+        final URL url = urlBuilder.logIn();
+        HttpPost post = new HttpPost(url.toString());
+        List<BasicNameValuePair> form = Arrays.asList(
+                new BasicNameValuePair(LogIn.EMAIL, data.email),
+                new BasicNameValuePair(LogIn.PASSWORD, data.password));
+        post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
+
+        return rawClient.executeAuthenticated(post, new HandleJsonRequest<LoggedInUser>(LoggedInUser.class));
+    }
+
+    public
+    @NotNull
+    ClientResponse<LoggedInUser> signUp(@NotNull SignUp data) {
+        final URL url = urlBuilder.signUp();
+        HttpPost post = new HttpPost(url.toString());
+        List<BasicNameValuePair> form = Arrays.asList(
+                new BasicNameValuePair(SignUp.DISPLAY_NAME, data.displayName),
+                new BasicNameValuePair(SignUp.EMAIL, data.email),
+                new BasicNameValuePair(SignUp.PASSWORD, data.password));
+        new BasicNameValuePair(SignUp.NEWSLETTER, data.subscribedToNewsLetter.toString());
+        post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
+
+        return rawClient.executeAuthenticated(post, new HandleJsonRequest<LoggedInUser>(LoggedInUser.class));
+    }
+
+    public
+    @NotNull
+    ClientResponse<LoggedInUser> anonymousUse(@NotNull AnonymousUse data) {
+        final URL url = urlBuilder.anonymousUse();
+        HttpPost post = new HttpPost(url.toString());
+        return rawClient.executeAuthenticated(post, new HandleJsonRequest<LoggedInUser>(LoggedInUser.class));
     }
 
     public void trace(@NotNull final TrackEvent event) throws SamebugClientException {

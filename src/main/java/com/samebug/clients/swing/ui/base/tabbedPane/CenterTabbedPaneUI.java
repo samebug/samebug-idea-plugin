@@ -23,6 +23,7 @@ public final class CenterTabbedPaneUI extends SamebugTabbedPaneUI {
         super.installDefaults();
         tabAreaInsets = new Insets(0, 0, 20, 0);
     }
+
     @Override
     protected int calculateTabWidth(int tabPlacement, int tabIndex, FontMetrics metrics) {
         int totalWidth = tabPane.getWidth();

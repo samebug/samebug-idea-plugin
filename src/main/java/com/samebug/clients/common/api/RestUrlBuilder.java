@@ -105,6 +105,21 @@ final public class RestUrlBuilder {
         return resolve("user/statistics");
     }
 
+    @NotNull
+    public URL anonymousUse() {
+        return resolve("signup-anonymously");
+    }
+
+    @NotNull
+    public URL signUp() {
+        return resolve("signup");
+    }
+
+    @NotNull
+    public URL logIn() {
+        return resolve("signin");
+    }
+
 
     @NotNull
     URL resolve(@NotNull final String uri) throws IllegalUriException {

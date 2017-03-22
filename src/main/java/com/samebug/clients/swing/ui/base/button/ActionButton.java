@@ -55,7 +55,9 @@ public abstract class ActionButton extends BasicButton {
         setLayout(new MigLayout("", ":push[]:push", ":push[]:push"));
         loadingAnimation = new LoadingAnimation(20);
         add(loadingAnimation, "align center, h 20!");
+        setMinimumSize(currentSize);
         setPreferredSize(currentSize);
+        setMaximumSize(currentSize);
         revalidate();
         repaint();
     }

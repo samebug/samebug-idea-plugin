@@ -60,6 +60,12 @@ final public class WebUrlBuilder {
     }
 
     @NotNull
+    public URL forgottenPassword() {
+        // TODO forgotten password page
+        return resolveToRoot("");
+    }
+
+    @NotNull
     URL resolveToRoot(@NotNull final String uri) throws IllegalUriException {
         try {
             return serverRoot.resolve(uri).toURL();

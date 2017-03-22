@@ -16,15 +16,15 @@
 package com.samebug.clients.idea.ui.controller.frame;
 
 import com.samebug.clients.common.api.WebUrlBuilder;
-import com.samebug.clients.common.api.entities.UserInfo;
 import com.samebug.clients.common.api.entities.UserReference;
-import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.bugmate.Bugmate;
 import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
 import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
 import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
 import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
 import com.samebug.clients.common.api.entities.helpRequest.Requester;
+import com.samebug.clients.common.api.entities.profile.UserInfo;
+import com.samebug.clients.common.api.entities.profile.UserStats;
 import com.samebug.clients.common.api.entities.search.SearchDetails;
 import com.samebug.clients.common.api.entities.search.SearchInfo;
 import com.samebug.clients.common.api.entities.solution.*;

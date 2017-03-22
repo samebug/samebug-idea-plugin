@@ -13,23 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.ui.component.authentication;
+package com.samebug.clients.common.api.form;
 
-import com.samebug.clients.common.api.form.FieldError;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
-
-import java.util.List;
-
-public interface IAnonymousUseForm {
-    void startPost();
-
-    void failPost(List<FieldError> errors) throws FormMismatchException;
-
-    void successPost();
-
-
-    interface Listener {
-        void useAnonymously(IAnonymousUseForm source);
-    }
-
+public final class AnonymousUse {
 }

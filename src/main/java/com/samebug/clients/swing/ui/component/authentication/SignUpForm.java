@@ -1,8 +1,25 @@
+/*
+ * Copyright 2017 Samebug, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.samebug.clients.swing.ui.component.authentication;
 
 import com.samebug.clients.common.api.form.FieldError;
+import com.samebug.clients.common.api.form.SignUp;
 import com.samebug.clients.common.ui.component.authentication.ISignUpForm;
 import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
+import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
@@ -13,6 +30,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 public final class SignUpForm extends JComponent implements ISignUpForm {
@@ -43,17 +61,32 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
 
     @Override
     public void startPost() {
-
+        signUp.changeToLoadingAnimation();
     }
 
     @Override
     public void failPost(List<FieldError> errors) throws FormMismatchException {
+        signUp.revertFromLoadingAnimation();
 
+        List<FieldError> mismatched = new ArrayList<FieldError>();
+        for (FieldError f : errors) {
+            try {
+                if (f.key.equals(SignUp.DISPLAY_NAME)) displayName.setFormError(f.code);
+                else if (f.key.equals(SignUp.EMAIL)) email.setFormError(f.code);
+                else if (f.key.equals(SignUp.PASSWORD)) password.setFormError(f.code);
+                else throw new FieldNameMismatchException(f.key);
+            } catch (ErrorCodeMismatchException e) {
+                mismatched.add(f);
+            } catch (FieldNameMismatchException e) {
+                mismatched.add(f);
+            }
+        }
+        if (!mismatched.isEmpty()) throw new FormMismatchException(mismatched);
     }
 
     @Override
     public void successPost() {
-
+        signUp.revertFromLoadingAnimation();
     }
 
 
@@ -64,7 +97,9 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
 
         @Override
         protected void updateErrorLabel(SamebugMultilineLabel errorLabel, String errorCode) throws ErrorCodeMismatchException {
-
+            if (errorCode.equals(SignUp.E_DISPLAY_NAME_LONG)) errorLabel.setText(MessageService.message("samebug.component.authentication.signUp.error.displayName.long"));
+            else if (errorCode.equals(SignUp.E_DISPLAY_EMPTY)) errorLabel.setText(MessageService.message("samebug.component.authentication.signUp.error.displayName.empty"));
+            else throw new ErrorCodeMismatchException(errorCode);
         }
     }
 
@@ -75,7 +110,10 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
 
         @Override
         protected void updateErrorLabel(SamebugMultilineLabel errorLabel, String errorCode) throws ErrorCodeMismatchException {
-
+            if (errorCode.equals(SignUp.E_EMAIL_TAKEN)) errorLabel.setText(MessageService.message("samebug.component.authentication.signUp.error.email.taken"));
+            else if (errorCode.equals(SignUp.E_EMAIL_INVALID)) errorLabel.setText(MessageService.message("samebug.component.authentication.signUp.error.email.invalid"));
+            else if (errorCode.equals(SignUp.E_EMAIL_LONG)) errorLabel.setText(MessageService.message("samebug.component.authentication.signUp.error.email.long"));
+            else throw new ErrorCodeMismatchException(errorCode);
         }
     }
 
@@ -86,7 +124,8 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
 
         @Override
         protected void updateErrorLabel(SamebugMultilineLabel errorLabel, String errorCode) throws ErrorCodeMismatchException {
-
+            if (errorCode.equals(SignUp.E_PASSWORD_SHORT)) errorLabel.setText(MessageService.message("samebug.component.authentication.signUp.error.password.short"));
+            else throw new ErrorCodeMismatchException(errorCode);
         }
     }
 

@@ -17,8 +17,8 @@ package com.samebug.clients.common.services;
 
 import com.samebug.clients.common.api.client.ClientResponse;
 import com.samebug.clients.common.api.client.SamebugClient;
-import com.samebug.clients.common.api.entities.UserInfo;
-import com.samebug.clients.common.api.entities.UserStats;
+import com.samebug.clients.common.api.entities.profile.UserInfo;
+import com.samebug.clients.common.api.entities.profile.UserStats;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.NotNull;

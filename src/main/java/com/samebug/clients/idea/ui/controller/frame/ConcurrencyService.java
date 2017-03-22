@@ -16,11 +16,11 @@
 package com.samebug.clients.idea.ui.controller.frame;
 
 import com.intellij.util.concurrency.FixedFuture;
-import com.samebug.clients.common.api.entities.UserInfo;
-import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
 import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
 import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
+import com.samebug.clients.common.api.entities.profile.UserInfo;
+import com.samebug.clients.common.api.entities.profile.UserStats;
 import com.samebug.clients.common.api.entities.search.SearchDetails;
 import com.samebug.clients.common.api.entities.solution.Solutions;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;

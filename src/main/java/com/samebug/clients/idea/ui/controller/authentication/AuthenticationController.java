@@ -17,13 +17,31 @@ package com.samebug.clients.idea.ui.controller.authentication;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
+import com.samebug.clients.common.ui.component.authentication.IAnonymousUseForm;
+import com.samebug.clients.common.ui.component.authentication.ILogInForm;
+import com.samebug.clients.common.ui.component.authentication.ISignUpForm;
 import com.samebug.clients.common.ui.frame.authentication.IAuthenticationFrame;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.swing.ui.frame.authentication.AuthenticationFrame;
+import com.samebug.clients.swing.ui.modules.ListenerService;
+
+import javax.swing.*;
 
 public final class AuthenticationController extends BaseFrameController<IAuthenticationFrame> implements Disposable {
+    final SignUpListener signUpListener;
+    final LogInListener logInListener;
+    final AnonymousUseListener anonymousUseListener;
+
     public AuthenticationController(ToolWindowController twc, Project project) {
         super(twc, project, new AuthenticationFrame());
+
+        JComponent frame = (JComponent) view;
+        signUpListener = new SignUpListener(this);
+        ListenerService.putListenerToComponent(frame, ISignUpForm.Listener.class, signUpListener);
+        logInListener = new LogInListener(this);
+        ListenerService.putListenerToComponent(frame, ILogInForm.Listener.class, logInListener);
+        anonymousUseListener = new AnonymousUseListener(this);
+        ListenerService.putListenerToComponent(frame, IAnonymousUseForm.Listener.class, anonymousUseListener);
     }
 }

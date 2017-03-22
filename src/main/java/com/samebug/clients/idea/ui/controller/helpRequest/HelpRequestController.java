@@ -19,10 +19,10 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.api.entities.UserInfo;
-import com.samebug.clients.common.api.entities.UserStats;
 import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
 import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
+import com.samebug.clients.common.api.entities.profile.UserInfo;
+import com.samebug.clients.common.api.entities.profile.UserStats;
 import com.samebug.clients.common.api.entities.solution.Solutions;
 import com.samebug.clients.common.services.HelpRequestStore;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
@@ -45,7 +45,6 @@ import com.samebug.clients.swing.ui.frame.helpRequest.HelpRequestFrame;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.concurrent.Future;
 
 public final class HelpRequestController extends BaseFrameController<IHelpRequestFrame> implements Disposable {
@@ -100,7 +99,6 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
         // TODO other controllers should also make sure to set the loading screen when starting to load content
         view.setLoading();
         webResultsTabListener = null;
-        ListenerService.putListenerToComponent((JComponent) view, IWebResultsTab.Listener.class, null);
 
         final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
@@ -124,6 +122,7 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
                 int accessibleSearchId = helpRequest.accessibleSearchInfo().id;
 
                 webResultsTabListener = new WebResultsTabListener(accessibleSearchId);
+                ListenerService.putListenerToComponent((JComponent) view, IWebResultsTab.Listener.class, null);
                 ListenerService.putListenerToComponent((JComponent) view, IWebResultsTab.Listener.class, webResultsTabListener);
 
                 final Future<Solutions> solutionsTask = concurrencyService.solutions(accessibleSearchId);

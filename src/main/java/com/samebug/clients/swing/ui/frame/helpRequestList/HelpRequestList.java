@@ -117,6 +117,8 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
                     add(description, "cell 0 1, growx, wmin 0");
                     // TODO: after a change in the layout, it seems that revalidate-repaint is sometimes not enough in IntelliJ
                     validate();
+                    revalidate();
+                    repaint();
                 }
             });
 

@@ -1,8 +1,25 @@
+/*
+ * Copyright 2017 Samebug, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.samebug.clients.swing.ui.component.authentication;
 
 import com.samebug.clients.common.api.form.FieldError;
+import com.samebug.clients.common.api.form.LogIn;
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
 import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
+import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
@@ -15,6 +32,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 public final class LogInForm extends JComponent implements ILogInForm {
@@ -51,17 +69,31 @@ public final class LogInForm extends JComponent implements ILogInForm {
 
     @Override
     public void startPost() {
-
+        logIn.changeToLoadingAnimation();
     }
 
     @Override
     public void failPost(List<FieldError> errors) throws FormMismatchException {
+        logIn.revertFromLoadingAnimation();
 
+        List<FieldError> mismatched = new ArrayList<FieldError>();
+        for (FieldError f : errors) {
+            try {
+                if (f.key.equals(LogIn.EMAIL)) email.setFormError(f.code);
+                else if (f.key.equals(LogIn.PASSWORD)) password.setFormError(f.code);
+                else throw new FieldNameMismatchException(f.key);
+            } catch (ErrorCodeMismatchException e) {
+                mismatched.add(f);
+            } catch (FieldNameMismatchException e) {
+                mismatched.add(f);
+            }
+        }
+        if (!mismatched.isEmpty()) throw new FormMismatchException(mismatched);
     }
 
     @Override
     public void successPost() {
-
+        logIn.revertFromLoadingAnimation();
     }
 
 
@@ -72,7 +104,10 @@ public final class LogInForm extends JComponent implements ILogInForm {
 
         @Override
         protected void updateErrorLabel(SamebugMultilineLabel errorLabel, String errorCode) throws ErrorCodeMismatchException {
-
+            if (errorCode.equals(LogIn.E_UNKNOWN_CREDENTIALS)) errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.email.unknown"));
+            else if (errorCode.equals(LogIn.E_EMAIL_INVALID)) errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.email.invalid"));
+            else if (errorCode.equals(LogIn.E_EMAIL_LONG)) errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.email.long"));
+            else throw new ErrorCodeMismatchException(errorCode);
         }
     }
 
@@ -83,7 +118,9 @@ public final class LogInForm extends JComponent implements ILogInForm {
 
         @Override
         protected void updateErrorLabel(SamebugMultilineLabel errorLabel, String errorCode) throws ErrorCodeMismatchException {
-
+            if (errorCode.equals(LogIn.E_UNKNOWN_CREDENTIALS)) errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.password.unknown"));
+            else if (errorCode.equals(LogIn.E_EMPTY_PASSWORD)) errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.password.empty"));
+            else throw new ErrorCodeMismatchException(errorCode);
         }
     }
 
