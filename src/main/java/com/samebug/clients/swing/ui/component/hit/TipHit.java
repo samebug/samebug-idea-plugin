@@ -17,6 +17,8 @@ package com.samebug.clients.swing.ui.component.hit;
 
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.modules.TextService;
+import com.samebug.clients.swing.ui.base.animation.Animator;
+import com.samebug.clients.swing.ui.base.animation.FadeInFadeOut;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
@@ -26,8 +28,10 @@ import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Date;
 
 public final class TipHit extends RoundedBackgroundPanel implements ITipHit {
@@ -36,6 +40,8 @@ public final class TipHit extends RoundedBackgroundPanel implements ITipHit {
     private final SamebugLabel tipLabel;
     private final MessageLabel tipMessage;
     private final MarkButton mark;
+
+    private FadeInFadeOut myAnimation;
 
     public TipHit(Model model) {
         this.model = new Model(model);
@@ -57,6 +63,17 @@ public final class TipHit extends RoundedBackgroundPanel implements ITipHit {
         add(mark, "cell 0 2, align left");
         add(filler, "cell 0 2, growx");
         add(author, "cell 0 2, align right");
+    }
+
+    public void fadeIn() {
+        myAnimation = new FadeInAnimation();
+        myAnimation.resume();
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        if (myAnimation == null) super.paint(g);
+        else myAnimation.paint(g);
     }
 
     private final class MessageLabel extends SamebugMultilineLabel {
@@ -98,6 +115,17 @@ public final class TipHit extends RoundedBackgroundPanel implements ITipHit {
         @Override
         public void updateRelativeTimestamp() {
             setText(TextService.prettyTime(timestamp));
+        }
+    }
+
+    final class FadeInAnimation extends FadeInFadeOut {
+        public FadeInAnimation() {
+            super(TipHit.this, 1000, true);
+        }
+
+        protected void animationDone() {
+            super.animationDone();
+            TipHit.this.myAnimation = null;
         }
     }
 }

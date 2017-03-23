@@ -31,7 +31,7 @@ public class LabelAndHitsTabHeader extends SamebugTabHeader {
     public LabelAndHitsTabHeader(String tabName, int hits) {
         tabLabel = new SamebugLabel(tabName, FontService.demi(16));
         hitsLabel = new HitsLabel(HitsLabel.SMALL);
-        hitsLabel.setText(Integer.toString(hits));
+        setHits(hits);
 
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
         setLayout(new MigLayout("", "0[]7[]0", "0[20, fill]0"));
@@ -39,6 +39,10 @@ public class LabelAndHitsTabHeader extends SamebugTabHeader {
         add(hitsLabel, "cell 1 0");
 
         updateColors();
+    }
+
+    public void setHits(int hits) {
+        hitsLabel.setText(Integer.toString(hits));
     }
 
     @Override

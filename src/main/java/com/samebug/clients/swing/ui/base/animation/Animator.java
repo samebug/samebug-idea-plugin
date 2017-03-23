@@ -91,10 +91,9 @@ public abstract class Animator {
         // NOTE seems to be required on linux as window managers less frequently render the frame if there is no interaction
         // see https://docs.oracle.com/javase/7/docs/api/java/awt/Toolkit.html#sync()
         Toolkit.getDefaultToolkit().sync();
-
     }
 
-    private void animationDone() {
+    protected void animationDone() {
         stopTicker();
     }
 

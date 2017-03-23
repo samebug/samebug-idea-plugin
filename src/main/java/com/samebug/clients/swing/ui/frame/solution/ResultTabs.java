@@ -15,28 +15,49 @@
  */
 package com.samebug.clients.swing.ui.frame.solution;
 
+import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.solution.IResultTabs;
-import com.samebug.clients.swing.ui.base.tabbedPane.SamebugTabHeader;
+import com.samebug.clients.swing.ui.base.tabbedPane.LabelAndHitsTabHeader;
 import com.samebug.clients.swing.ui.base.tabbedPane.SamebugTabbedPane;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
 public final class ResultTabs extends SamebugTabbedPane implements IResultTabs {
-    private final Model model;
+    private int tipHits;
+    private int webHits;
 
-    private final WebResultsTab webResultsTab;
-    private final TipResultsTab tipResultsTab;
-    private final SamebugTabHeader webResultsTabHeader;
-    private final SamebugTabHeader tipResultsTabHeader;
+    final WebResultsTab webResultsTab;
+    final TipResultsTab tipResultsTab;
+    final LabelAndHitsTabHeader webResultsTabHeader;
+    final LabelAndHitsTabHeader tipResultsTabHeader;
 
     public ResultTabs(Model model) {
-        this.model = new Model(model);
+        tipHits = model.tipResults.tipHits.size();
+        webHits = model.webResults.webHits.size();
 
         webResultsTab = new WebResultsTab(model.webResults, model.cta);
         tipResultsTab = new TipResultsTab(model.tipResults, model.cta);
 
-        tipResultsTabHeader = addLabeledTab(MessageService.message("samebug.component.solutionFrame.tips.tabName"), model.tipResults.getTipsSize(), tipResultsTab);
-        webResultsTabHeader = addLabeledTab(MessageService.message("samebug.component.solutionFrame.webSolutions.tabName"), model.webResults.webHits.size(), webResultsTab);
+        tipResultsTabHeader = (LabelAndHitsTabHeader) addLabeledTab(MessageService.message("samebug.component.solutionFrame.tips.tabName"), tipHits, tipResultsTab);
+        webResultsTabHeader = (LabelAndHitsTabHeader) addLabeledTab(MessageService.message("samebug.component.solutionFrame.webSolutions.tabName"), webHits, webResultsTab);
         // TODO setSelectedIndex(0) does not work because that is already selected
         tipResultsTabHeader.setSelected(true);
+    }
+
+    public void animatedAddTip(ITipHit.Model model) {
+        // switch to tips tab
+        int currentTab = getSelectedIndex();
+        if (currentTab != 0) {
+            // TODO setselected is so cluttered
+            tipResultsTabHeader.animatedSetSelected(true);
+            webResultsTabHeader.animatedSetSelected(false);
+            setSelectedIndex(0);
+        }
+
+        // update tip hits
+        tipHits += 1;
+        tipResultsTabHeader.setHits(tipHits);
+
+        // float in new tip
+        tipResultsTab.animatedAddTip(model);
     }
 }

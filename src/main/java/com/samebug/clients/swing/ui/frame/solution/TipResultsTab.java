@@ -16,7 +16,9 @@
 package com.samebug.clients.swing.ui.frame.solution;
 
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
+import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.solution.ITipResultsTab;
+import com.samebug.clients.swing.ui.base.animation.FadeInFadeOut;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.base.scrollPane.SamebugScrollPane;
@@ -37,7 +39,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
     private final IHelpOthersCTA.Model ctaModel;
 
     private final JScrollPane scrollPane;
-    private final SamebugPanel contentPanel;
+    private final ContentPanel contentPanel;
     private final List<TipHit> tipHits;
 
 
@@ -63,34 +65,40 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
 
 
     private final class ContentPanel extends SamebugPanel {
+        final ListPanel listPanel;
+        final WriteTip writeTip;
+        final WriteTip cta;
+        final BugmateList bugmateList;
+        final JComponent helpRequest;
+
         {
-            final ListPanel listPanel = new ListPanel();
-            final WriteTip writeTip = new WriteTip(ctaModel, WriteTip.CTA_TYPE.SMALL);
-            final WriteTip cta = new WriteTip(ctaModel, WriteTip.CTA_TYPE.LARGE_FOR_TIP_HITS);
-            final BugmateList bugmateList = new BugmateList(model.bugmateList);
-            final JComponent helpRequest;
+            listPanel = new ListPanel();
+            writeTip = new WriteTip(ctaModel, WriteTip.CTA_TYPE.SMALL);
+            cta = new WriteTip(ctaModel, WriteTip.CTA_TYPE.LARGE_FOR_TIP_HITS);
+            bugmateList = new BugmateList(model.bugmateList);
             if (model.myHelpRequest != null) {
                 helpRequest = new RevokeHelpRequest(model.myHelpRequest);
             } else {
                 helpRequest = new RequestHelp(model.askForHelp);
             }
+            update();
+        }
 
-            if (model.tipHits.size() > 0 && model.bugmateList.bugmateHits.size() > 0) {
+        void update() {
+            removeAll();
+            if (tipHits.size() > 0 && model.bugmateList.bugmateHits.size() > 0) {
                 setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]20[]10[]20"));
-
                 add(listPanel, "cell 0 0");
                 add(writeTip, "cell 0 1");
                 add(bugmateList, "cell 0 2");
                 add(helpRequest, "cell 0 3, align center, growx");
-            } else if (model.tipHits.size() == 0 && model.bugmateList.bugmateHits.size() > 0) {
+            } else if (tipHits.size() == 0 && model.bugmateList.bugmateHits.size() > 0) {
                 setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]10[]20"));
-
                 add(cta, "cell 0 0");
                 add(bugmateList, "cell 0 1");
                 add(helpRequest, "cell 0 2, align center, growx");
-            } else if (model.tipHits.size() > 0 && model.bugmateList.bugmateHits.size() == 0) {
+            } else if (tipHits.size() > 0 && model.bugmateList.bugmateHits.size() == 0) {
                 setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]10[]20"));
-
                 add(listPanel, "cell 0 0");
                 add(writeTip, "cell 0 1");
                 add(helpRequest, "cell 0 2, align center, growx");
@@ -105,7 +113,11 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
     private final class ListPanel extends SamebugPanel {
         {
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+            update();
+        }
 
+        public void update() {
+            removeAll();
             // tipHits is required to be initialized here (the hit views are actually added to the list)
             for (int i = 0; i < tipHits.size(); i++) {
                 if (i == 0) add(Box.createRigidArea(new Dimension(0, 10)));
@@ -114,5 +126,16 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
                 add(hit);
             }
         }
+    }
+
+    public void animatedAddTip(ITipHit.Model model) {
+        TipHit newTip = new TipHit(model);
+        tipHits.add(0, newTip);
+        contentPanel.listPanel.update();
+        contentPanel.update();
+        contentPanel.validate();
+        contentPanel.revalidate();
+        contentPanel.repaint();
+        newTip.fadeIn();
     }
 }
