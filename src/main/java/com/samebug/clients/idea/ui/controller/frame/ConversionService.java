@@ -130,7 +130,8 @@ public final class ConversionService {
                 user.getDisplayName(), user.getAvatarUrl());
     }
 
-    public ISolutionFrame.Model solutionFrame(SearchDetails search, Solutions solutions, BugmatesResult bugmates, IncomingHelpRequests incomingRequests, UserInfo user, UserStats statistics) {
+    public ISolutionFrame.Model solutionFrame(SearchDetails search, Solutions solutions, BugmatesResult bugmates, IncomingHelpRequests incomingRequests,
+                                              UserInfo user, UserStats statistics) {
         IWebResultsTab.Model webResults = webResultsTab(solutions, false);
         ITipResultsTab.Model tipResults = tipResultsTab(search, solutions, bugmates, false);
 
@@ -161,7 +162,8 @@ public final class ConversionService {
     }
 
 
-    public IHelpRequestFrame.Model convertHelpRequestFrame(Solutions solutions, MatchingHelpRequest helpRequest, IncomingHelpRequests incomingRequests, UserInfo user, UserStats statistics) {
+    public IHelpRequestFrame.Model convertHelpRequestFrame(Solutions solutions, MatchingHelpRequest helpRequest, IncomingHelpRequests incomingRequests,
+                                                           UserInfo user, UserStats statistics) {
         IWebResultsTab.Model webResults = webResultsTab(solutions, true);
         IHelpRequestTab.Model helpRequestTab = helpRequestTab(solutions, helpRequest);
         IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(0);

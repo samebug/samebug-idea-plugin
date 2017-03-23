@@ -57,7 +57,8 @@ public abstract class PasswordFormField extends SamebugPanel {
     }
 
     public String getText() {
-        return field.getText();
+        // TODO handle password sensitively
+        return new String(field.getPassword());
     }
 
     public void setFormError(String errorCode) throws ErrorCodeMismatchException {

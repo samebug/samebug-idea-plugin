@@ -133,7 +133,8 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
             @Override
             protected void load() throws Exception {
                 final SolutionFrame.Model model =
-                        conversionService.solutionFrame(searchTask.get(), solutionsTask.get(), bugmatesTask.get(), incomingHelpRequestsTask.get(), userInfoTask.get(), userStatsTask.get());
+                        conversionService.solutionFrame(searchTask.get(), solutionsTask.get(), bugmatesTask.get(), incomingHelpRequestsTask.get(),
+                                userInfoTask.get(), userStatsTask.get());
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                     @Override
                     public void run() {
