@@ -126,7 +126,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         helpRequestStore = new HelpRequestStore();
         helpRequestService = new HelpRequestService(clientService, helpRequestStore);
         authenticationService = new AuthenticationService(clientService);
-        conversionService = new ConversionService(urlBuilder);
+        conversionService = new ConversionService();
         concurrencyService = new ConcurrencyService(profileStore, profileService,
                 solutionStore, solutionService,
                 bugmateStore, bugmateService,
@@ -140,7 +140,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         webSocketClientService.configure(state.get().getNetworkConfig());
 
         ColorService.install(new IdeaColorService());
-        WebImageService.install(new IdeaWebImageService(urlBuilder));
+        WebImageService.install(new IdeaWebImageService());
         IconService.install(new IdeaIconService());
         ListenerService.install(new IdeaListenerService());
         MessageService.install(new IdeaMessageService());

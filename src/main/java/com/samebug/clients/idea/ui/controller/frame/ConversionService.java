@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.idea.ui.controller.frame;
 
-import com.samebug.clients.common.api.WebUrlBuilder;
 import com.samebug.clients.common.api.entities.UserReference;
 import com.samebug.clients.common.api.entities.bugmate.Bugmate;
 import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
@@ -51,15 +50,11 @@ import com.samebug.clients.common.ui.frame.solution.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public final class ConversionService {
-    private final WebUrlBuilder urlBuilder;
-
-    public ConversionService(WebUrlBuilder urlBuilder) {
-        this.urlBuilder = urlBuilder;
+    public ConversionService() {
     }
 
     public IMarkButton.Model convertMarkResponse(MarkResponse response) {
@@ -90,16 +85,13 @@ public final class ConversionService {
         for (RestHit<SolutionReference> externalHit : solutions.getReferences()) {
             SolutionReference externalSolution = externalHit.getSolution();
             IMarkButton.Model mark = convertMarkPanel(externalHit, disabled);
-            final String sourceIconName = externalSolution.getSource().getIcon();
-            final URL sourceIconUrl = urlBuilder.sourceIcon(sourceIconName);
-
             final String createdBy;
             if (externalSolution.getAuthor() != null) createdBy = externalSolution.getAuthor().getName();
             else createdBy = null;
             IWebHit.Model webHit =
                     new IWebHit.Model(externalSolution.getTitle(), externalSolution.getUrl(), externalHit.getSolutionId(),
                             externalSolution.getCreatedAt(), createdBy,
-                            externalSolution.getSource().getName(), sourceIconUrl,
+                            externalSolution.getSource().getName(), externalSolution.getSource().getIcon(),
                             mark);
             webHits.add(webHit);
         }

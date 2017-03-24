@@ -15,13 +15,13 @@
  */
 package com.samebug.clients.swing.ui.modules;
 
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
-import java.util.Collection;
 
 public abstract class WebImageService {
     private static WebImageService INSTANCE;
@@ -31,19 +31,9 @@ public abstract class WebImageService {
         INSTANCE = instance;
     }
 
-    @Nullable
-    public static Image getAvatarPlaceholder() {
-        return INSTANCE.internalGetAvatarPlaceholder();
-    }
-
-    @Nullable
+    @NotNull
     public static BufferedImage getAvatarPlaceholder(int width, int height) {
         return INSTANCE.internalGetAvatarPlaceholder(width, height);
-    }
-
-    @Nullable
-    public static BufferedImage get(@NotNull URL url) {
-        return INSTANCE.internalGet(url);
     }
 
     @Nullable
@@ -51,78 +41,21 @@ public abstract class WebImageService {
         return INSTANCE.internalGetScaled(url, width, height);
     }
 
-    public static void loadImages(@NotNull final Collection<URL> sources) {
-        INSTANCE.internalLoadImages(sources);
+    @NotNull
+    public static BufferedImage[] getSource(@NotNull String iconName, int width, int height) {
+        // TODO fallback web source
+        URL intellijUrl = IdeaSamebugPlugin.class.getResource("/com/samebug/cache/images/sources/intellij/" + iconName + ".png");
+        URL darculaUrl = IdeaSamebugPlugin.class.getResource("/com/samebug/cache/images/sources/darcula/" + iconName + ".png");
+        BufferedImage intellijIcon = getScaled(intellijUrl, width, height);
+        BufferedImage darculaIcon = getScaled(darculaUrl, width, height);
+        return new BufferedImage[]{intellijIcon, darculaIcon};
     }
 
-    protected abstract void internalLoadImages(@NotNull final Collection<URL> sources);
-
-    protected abstract BufferedImage internalGetScaled(@NotNull URL url, int width, int height);
-
-    protected abstract BufferedImage internalGet(@NotNull URL url);
-
+    @NotNull
     protected abstract BufferedImage internalGetAvatarPlaceholder(int width, int height);
 
-    protected abstract Image internalGetAvatarPlaceholder();
-
-    protected static final String[] cachedImages = {
-            "images/sources/alfresco.png",
-            "images/sources/apache.png",
-            "images/sources/appcelerator.png",
-            "images/sources/appfuse.png",
-            "images/sources/atlassian.png",
-            "images/sources/cask.png",
-            "images/sources/cloudera.png",
-            "images/sources/codehaus.png",
-            "images/sources/couchbase.png",
-            "images/sources/datastax.png",
-            "images/sources/djigzo.png",
-            "images/sources/duraspace.png",
-            "images/sources/ehour.png",
-            "images/sources/forgerock.png",
-            "images/sources/github.png",
-            "images/sources/googlegroups.png",
-            "images/sources/gradle.png",
-            "images/sources/grails.png",
-            "images/sources/hibernate.png",
-            "images/sources/icesoft.png",
-            "images/sources/igniterealtime.png",
-            "images/sources/internet2.png",
-            "images/sources/jasig.png",
-            "images/sources/java.png",
-            "images/sources/jboss.png",
-            "images/sources/jenkins.png",
-            "images/sources/jfrog.png",
-            "images/sources/jira.png",
-            "images/sources/kuali.png",
-            "images/sources/liferay.png",
-            "images/sources/mirthcorp.png",
-            "images/sources/mojang.png",
-            "images/sources/mulesoft.png",
-            "images/sources/openjdk.png",
-            "images/sources/opennms.png",
-            "images/sources/page.png",
-            "images/sources/pentaho.png",
-            "images/sources/pmease.png",
-            "images/sources/qt.png",
-            "images/sources/sakai.png",
-            "images/sources/samebug.png",
-            "images/sources/samebug-justbug.png",
-            "images/sources/scala.png",
-            "images/sources/sonarsource.png",
-            "images/sources/sonatype.png",
-            "images/sources/sourceforge.png",
-            "images/sources/spring.png",
-            "images/sources/springsource.png",
-            "images/sources/stackoverflow.png",
-            "images/sources/talendforge.png",
-            "images/sources/terracotta.png",
-            "images/sources/web.png",
-            "images/sources/wso2.png",
-            "images/sources/xwiki.png",
-            "images/sources/youtrack.png",
-            "images/sources/zkoss.png"
-    };
+    @Nullable
+    protected abstract BufferedImage internalGetScaled(@NotNull URL url, int width, int height);
 
     protected static final class ScaledKey {
         final URL src;

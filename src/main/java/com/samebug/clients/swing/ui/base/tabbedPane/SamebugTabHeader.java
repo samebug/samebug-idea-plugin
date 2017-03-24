@@ -107,6 +107,7 @@ public abstract class SamebugTabHeader extends JPanel {
     }
 
     private static int Frames = 10;
+
     private final class FadeAnimation extends Animator {
         Color[] gradient = GradientSampler.sample(ColorService.forCurrentTheme(ColorService.LinkInteraction.normal),
                 ColorService.forCurrentTheme(selectedColor), Frames);

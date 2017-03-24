@@ -16,8 +16,6 @@
 package com.samebug.clients.idea.ui.modules;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.samebug.clients.common.api.WebUrlBuilder;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.WebImageService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,10 +24,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Hashtable;
 
 public final class IdeaWebImageService extends WebImageService {
@@ -39,24 +34,12 @@ public final class IdeaWebImageService extends WebImageService {
     private final URL avatarPlaceholderUrl;
     private final BufferedImage avatarPlaceholder;
 
-    private final WebUrlBuilder urlBuilder;
-
     @Override
-    @Nullable
-    protected Image internalGetAvatarPlaceholder() {
-        return avatarPlaceholder;
-    }
-
-    @Override
-    @Nullable
+    @NotNull
     public BufferedImage internalGetAvatarPlaceholder(int width, int height) {
-        return getScaledThroughCache(avatarPlaceholderUrl, avatarPlaceholder, width, height);
-    }
-
-    @Override
-    @Nullable
-    public BufferedImage internalGet(@NotNull URL url) {
-        return cache.get(url);
+        BufferedImage scaledPlaceholder = getScaledThroughCache(avatarPlaceholderUrl, avatarPlaceholder, width, height);
+        assert scaledPlaceholder != null : "the avatar placeholder image should not be null";
+        return scaledPlaceholder;
     }
 
     @Override
@@ -91,48 +74,17 @@ public final class IdeaWebImageService extends WebImageService {
         }
     }
 
-    @Override
-    public void internalLoadImages(@NotNull final Collection<URL> sources) {
-        for (final URL url : sources) {
-            if (url == null || cache.get(url) != null) continue;
-            try {
-                BufferedImage image = ImageIO.read(url);
-                if (image != null) cache.put(url, image);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public IdeaWebImageService(WebUrlBuilder urlBuilder) {
-        this.urlBuilder = urlBuilder;
+    public IdeaWebImageService() {
         URL tmpAvatarUrl = null;
         BufferedImage tmpAvatarImage = null;
         try {
             tmpAvatarUrl = WebImageService.class.getResource("/com/samebug/cache/images/avatar-placeholder.png");
             if (tmpAvatarUrl != null) tmpAvatarImage = ImageIO.read(tmpAvatarUrl);
         } catch (IOException e) {
-            LOGGER.warn("Failed to read avatar-placeholder.png as an image!", e);
+            LOGGER.error("Failed to read avatar-placeholder.png as an image!", e);
         }
         avatarPlaceholderUrl = tmpAvatarUrl;
         avatarPlaceholder = tmpAvatarImage;
-
-        for (String imageUri : cachedImages) {
-            InputStream imageBytes = IdeaSamebugPlugin.class.getResourceAsStream("/com/samebug/cache/" + imageUri);
-            if (imageBytes == null) {
-                LOGGER.warn("Image " + imageUri + " was not found!");
-            } else {
-                try {
-                    URL remoteUrl = urlBuilder.assets(imageUri);
-                    BufferedImage image = ImageIO.read(imageBytes);
-                    cache.put(remoteUrl, image);
-                } catch (MalformedURLException e) {
-                    LOGGER.warn("Url of image " + imageUri + " could not be resolved!", e);
-                } catch (IOException e) {
-                    LOGGER.warn("Failed to read " + imageUri + " as an image!", e);
-                }
-            }
-        }
     }
 
 }

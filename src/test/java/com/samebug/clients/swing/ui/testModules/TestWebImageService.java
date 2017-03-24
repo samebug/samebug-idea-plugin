@@ -23,11 +23,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Hashtable;
 
 public final class TestWebImageService extends WebImageService {
@@ -37,11 +33,7 @@ public final class TestWebImageService extends WebImageService {
     private final BufferedImage avatarPlaceholder;
 
     @Override
-    protected void internalLoadImages(@NotNull Collection<URL> sources) {
-
-    }
-
-    @Override
+    @NotNull
     protected BufferedImage internalGetScaled(@NotNull URL url, int width, int height) {
         BufferedImage nonScaled = cache.get(url);
         if (nonScaled == null) {
@@ -55,18 +47,9 @@ public final class TestWebImageService extends WebImageService {
     }
 
     @Override
-    protected BufferedImage internalGet(@NotNull URL url) {
-        return cache.get(url);
-    }
-
-    @Override
+    @NotNull
     protected BufferedImage internalGetAvatarPlaceholder(int width, int height) {
         return getScaledThroughCache(avatarPlaceholderUrl, avatarPlaceholder, width, height);
-    }
-
-    @Override
-    protected Image internalGetAvatarPlaceholder() {
-        return avatarPlaceholder;
     }
 
     @Nullable
@@ -98,23 +81,5 @@ public final class TestWebImageService extends WebImageService {
         }
         avatarPlaceholderUrl = tmpAvatarUrl;
         avatarPlaceholder = tmpAvatarImage;
-
-        for (String imageUri : cachedImages) {
-            InputStream imageBytes = WebImageService.class.getResourceAsStream("/com/samebug/cache/" + imageUri);
-            if (imageBytes == null) {
-                System.err.println("Image " + imageUri + " was not found!");
-            } else {
-                try {
-                    URL remoteUrl = URI.create("https://samebug.io/assets/").resolve(imageUri).toURL();
-                    BufferedImage image = ImageIO.read(imageBytes);
-                    cache.put(remoteUrl, image);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    System.err.println("Failed to read " + imageUri + " as an image!");
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 }

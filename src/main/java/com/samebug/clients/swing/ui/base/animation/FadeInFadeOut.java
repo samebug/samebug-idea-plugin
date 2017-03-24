@@ -1,3 +1,18 @@
+/*
+ * Copyright 2017 Samebug, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.samebug.clients.swing.ui.base.animation;
 
 import com.intellij.util.ui.UIUtil;
@@ -37,9 +52,9 @@ public abstract class FadeInFadeOut extends Animator {
     }
 
 
-    public void paint(final Graphics g_) {
-        Graphics2D g = DrawService.init(g_);
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) myRatio));
-        g.drawImage(myComponentImage, 0, 0, myComponent.getWidth(), myComponent.getHeight(), myComponent);
+    public void paint(final Graphics g) {
+        Graphics2D g2 = DrawService.init(g);
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) myRatio));
+        g2.drawImage(myComponentImage, 0, 0, myComponent.getWidth(), myComponent.getHeight(), myComponent);
     }
 }

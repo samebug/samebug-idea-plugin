@@ -1,9 +1,6 @@
 package com.samebug.clients.swing.ui.frame;
 
-import com.samebug.clients.common.api.form.CreateTip;
-import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
@@ -11,15 +8,10 @@ import com.samebug.clients.swing.ui.TestDialog;
 import com.samebug.clients.swing.ui.component.community.writeTip.WriteTip;
 import com.samebug.clients.swing.ui.frame.solution.ResultTabs;
 import com.samebug.clients.swing.ui.frame.solution.SolutionFrame;
-import com.samebug.clients.swing.ui.frame.solution.TipResultsTab;
-import com.samebug.clients.swing.ui.frame.solution.WebResultsTab;
 import com.samebug.clients.swing.ui.modules.ListenerService;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Date;
 
 //@Ignore
@@ -44,16 +36,16 @@ public class SolutionFrameTest extends TestDialog {
 //        waitToInitializeUI("solution/b3.json").showDialog();
 //    }
 
+//    @Test
+//    public void zeroTipsAndZeroWebHits() {
+//        waitToInitializeUI("solution/t0w0.json").showDialog();
+//    }
+
     @Test
-    public void zeroTipsAndZeroWebHits() {
-        waitToInitializeUI("solution/t0w0.json").showDialog();
+    public void twoTipsAndTwentysevenWebHits() {
+        waitToInitializeUI("solution/t2w27.json").showDialog();
     }
 
-//    @Test
-//    public void twoTipsAndTwentysevenWebHits() {
-//        waitToInitializeUI("solution/t2w27.json").showDialog();
-//    }
-//
 //    @Test
 //    public void activeHelpRequest() {
 //        waitToInitializeUI("solution/t2w27_helprequest.json").showDialog();

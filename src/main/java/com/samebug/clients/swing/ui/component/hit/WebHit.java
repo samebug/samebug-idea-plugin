@@ -104,16 +104,16 @@ public final class WebHit extends SamebugPanel implements IWebHit {
     }
 
     private final class SourceIcon extends TransparentPanel {
-        private final Image sourceIcon;
+        private final Image[] sourceIcon;
 
         {
-            sourceIcon = WebImageService.getScaled(model.sourceIconUrl, TitlePanel.Size, TitlePanel.Size);
+            sourceIcon = WebImageService.getSource(model.sourceIcon, TitlePanel.Size, TitlePanel.Size);
         }
 
         @Override
         public void paintComponent(Graphics g) {
             Graphics2D g2 = DrawService.init(g);
-            g2.drawImage(sourceIcon, 0, 0, null, null);
+            g2.drawImage(ColorService.forCurrentTheme(sourceIcon), 0, 0, null, null);
         }
     }
 
