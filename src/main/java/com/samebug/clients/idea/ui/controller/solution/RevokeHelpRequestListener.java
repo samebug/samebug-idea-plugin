@@ -33,8 +33,8 @@ final class RevokeHelpRequestListener implements IMyHelpRequest.Listener {
 
             @Override
             protected void afterPostForm(MyHelpRequest response) {
-                controller.load();
                 source.successRevoke();
+                controller.load();
             }
         }.execute();
     }

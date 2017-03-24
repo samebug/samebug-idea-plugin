@@ -114,6 +114,7 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
     }
 
     public void load() {
+        view.setLoading();
         final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
         final Future<IncomingHelpRequests> incomingHelpRequestsTask = concurrencyService.incomingHelpRequests(false);

@@ -96,7 +96,7 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
 
 
     public void load() {
-        // TODO other controllers should also make sure to set the loading screen when starting to load content
+        // TODO every controllers should also make sure to set the loading screen when starting to load content
         view.setLoading();
         webResultsTabListener = null;
 

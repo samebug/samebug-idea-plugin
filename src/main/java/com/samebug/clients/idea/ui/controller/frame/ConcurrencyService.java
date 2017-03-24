@@ -127,13 +127,11 @@ public final class ConcurrencyService {
     }
 
     public Future<SearchDetails> search(final int searchId) {
-        SearchDetails current = searchStore.get(searchId);
-        if (current == null) return executor.submit(new Callable<SearchDetails>() {
+        return executor.submit(new Callable<SearchDetails>() {
             @Override
             public SearchDetails call() throws SamebugClientException {
                 return searchService.get(searchId);
             }
         });
-        else return new FixedFuture<SearchDetails>(current);
     }
 }
