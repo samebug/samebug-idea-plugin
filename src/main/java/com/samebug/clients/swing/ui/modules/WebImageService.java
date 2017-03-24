@@ -19,43 +19,92 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Hashtable;
 
-public abstract class WebImageService {
-    private static WebImageService INSTANCE;
+public final class WebImageService {
+    private static Hashtable<URL, BufferedImage> cache = new Hashtable<URL, BufferedImage>();
+    private static Hashtable<ScaledKey, BufferedImage> scaledCache = new Hashtable<ScaledKey, BufferedImage>();
+    private static BufferedImage avatarPlaceholder;
+    private static BufferedImage[] webSourceIcon;
 
-    public static void install(WebImageService instance) {
-        assert INSTANCE == null : "WebImageService has already been initialized";
-        INSTANCE = instance;
+    public static void install() {
+        final URL avatarPlaceholderUrl = WebImageService.class.getResource("/com/samebug/cache/images/avatar-placeholder.png");
+        assert avatarPlaceholderUrl != null : "Failed to find avatar placeholder image";
+        avatarPlaceholder = getImage(avatarPlaceholderUrl);
+        assert avatarPlaceholder != null : "Failed to load avatar placeholder image";
+
+        final URL[] webSourceIconUrl = sourceIconUrl("web");
+        assert webSourceIconUrl[0] != null : "Failed to find web source icon for IntelliJ theme";
+        assert webSourceIconUrl[1] != null : "Failed to find web source icon for Darcula theme";
+        webSourceIcon = new BufferedImage[webSourceIconUrl.length];
+        for (int i = 0; i < webSourceIconUrl.length; ++i) {
+            webSourceIcon[i] = getImage(webSourceIconUrl[i]);
+            assert webSourceIcon[i] != null : "Failed to load web source icon image";
+        }
     }
 
     @NotNull
-    public static BufferedImage getAvatarPlaceholder(int width, int height) {
-        return INSTANCE.internalGetAvatarPlaceholder(width, height);
-    }
-
-    @Nullable
-    public static BufferedImage getScaled(@NotNull URL url, int width, int height) {
-        return INSTANCE.internalGetScaled(url, width, height);
+    public static BufferedImage getAvatar(@Nullable URL avatarUrl, int width, int height) {
+        if (avatarUrl == null) return getScaledInstance(avatarPlaceholder, width, height);
+        else {
+            BufferedImage nonScaledAvatar = getImage(avatarUrl);
+            if (nonScaledAvatar == null) nonScaledAvatar = avatarPlaceholder;
+            return getScaled(avatarUrl, nonScaledAvatar, width, height);
+        }
     }
 
     @NotNull
     public static BufferedImage[] getSource(@NotNull String iconName, int width, int height) {
-        // TODO fallback web source
-        URL intellijUrl = IdeaSamebugPlugin.class.getResource("/com/samebug/cache/images/sources/intellij/" + iconName + ".png");
-        URL darculaUrl = IdeaSamebugPlugin.class.getResource("/com/samebug/cache/images/sources/darcula/" + iconName + ".png");
-        BufferedImage intellijIcon = getScaled(intellijUrl, width, height);
-        BufferedImage darculaIcon = getScaled(darculaUrl, width, height);
-        return new BufferedImage[]{intellijIcon, darculaIcon};
+        URL[] urls = sourceIconUrl(iconName);
+        BufferedImage[] icons = new BufferedImage[urls.length];
+        for (int i = 0; i < urls.length; ++i) {
+            BufferedImage nonScaled = getImage(urls[i]);
+            if (nonScaled == null) nonScaled = webSourceIcon[i];
+            icons[i] = getScaled(urls[i], nonScaled, width, height);
+        }
+        return icons;
+    }
+
+    @Nullable
+    public static BufferedImage getImage(@NotNull URL url) {
+        BufferedImage nonScaled = cache.get(url);
+        if (nonScaled == null) {
+            try {
+                nonScaled = ImageIO.read(url);
+                cache.put(url, nonScaled);
+            } catch (IOException e) {
+                // IMPROVE smoother handling of load failures.
+                // If we failed to download an image, than probably we should note this a failed-to-load url so it won't take much time to render second time.
+                // However, to do this, we also have to take care of some expiration, i.e. when should we try again loading this image
+                nonScaled = null;
+            }
+        }
+        return nonScaled;
     }
 
     @NotNull
-    protected abstract BufferedImage internalGetAvatarPlaceholder(int width, int height);
+    private static BufferedImage getScaled(@NotNull URL url, @NotNull BufferedImage nonScaledImage, int width, int height) {
+        ScaledKey key = new ScaledKey(url, width, height);
+        BufferedImage scaledImage = scaledCache.get(key);
+        if (scaledImage == null) {
+            scaledImage = getScaledInstance(nonScaledImage, width, height);
+            scaledCache.put(key, scaledImage);
+            return scaledImage;
+        } else {
+            return scaledImage;
+        }
+    }
 
-    @Nullable
-    protected abstract BufferedImage internalGetScaled(@NotNull URL url, int width, int height);
+    private static URL[] sourceIconUrl(String iconName) {
+        URL intellijUrl = IdeaSamebugPlugin.class.getResource("/com/samebug/cache/images/sources/intellij/" + iconName + ".png");
+        URL darculaUrl = IdeaSamebugPlugin.class.getResource("/com/samebug/cache/images/sources/darcula/" + iconName + ".png");
+        return new URL[]{intellijUrl, darculaUrl};
+    }
 
     protected static final class ScaledKey {
         final URL src;
@@ -86,38 +135,43 @@ public abstract class WebImageService {
         }
     }
 
-    // TODO Image.getScaledComponent is told to be evil (slow and bad quality). Not sure if it still holds with Java 7
+    // IMPROVE Image.getScaledComponent is told to be evil (slow and bad quality). Not sure if it still holds with Java 7
     // copypasta from https://community.oracle.com/docs/DOC-983611
 
     /**
      * Convenience method that returns a scaled instance of the
      * provided {@code BufferedImage}.
      *
-     * @param img           the original image to be scaled
-     * @param targetWidth   the desired width of the scaled instance,
-     *                      in pixels
-     * @param targetHeight  the desired height of the scaled instance,
-     *                      in pixels
-     * @param hint          one of the rendering hints that corresponds to
-     *                      {@code RenderingHints.KEY_INTERPOLATION} (e.g.
-     *                      {@code RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR},
-     *                      {@code RenderingHints.VALUE_INTERPOLATION_BILINEAR},
-     *                      {@code RenderingHints.VALUE_INTERPOLATION_BICUBIC})
-     * @param higherQuality if true, this method will use a multi-step
-     *                      scaling technique that provides higher quality than the usual
-     *                      one-step technique (only useful in downscaling cases, where
-     *                      {@code targetWidth} or {@code targetHeight} is
-     *                      smaller than the original dimensions, and generally only when
-     *                      the {@code BILINEAR} hint is specified)
+     * @param img          the original image to be scaled
+     * @param targetWidth  the desired width of the scaled instance,
+     *                     in pixels
+     * @param targetHeight the desired height of the scaled instance,
+     *                     in pixels
      * @return a scaled version of the original {@code BufferedImage}
      */
-    protected static BufferedImage getScaledInstance(BufferedImage img, int targetWidth, int targetHeight, Object hint, boolean higherQuality) {
+    @NotNull
+    protected static BufferedImage getScaledInstance(BufferedImage img, int targetWidth, int targetHeight) {
+        /**
+         * @param hint          one of the rendering hints that corresponds to
+         *                      {@code RenderingHints.KEY_INTERPOLATION} (e.g.
+         *                      {@code RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR},
+         *                      {@code RenderingHints.VALUE_INTERPOLATION_BILINEAR},
+         *                      {@code RenderingHints.VALUE_INTERPOLATION_BICUBIC})
+         * @param higherQuality if true, this method will use a multi-step
+         *                      scaling technique that provides higher quality than the usual
+         *                      one-step technique (only useful in downscaling cases, where
+         *                      {@code targetWidth} or {@code targetHeight} is
+         *                      smaller than the original dimensions, and generally only when
+         *                      the {@code BILINEAR} hint is specified)
+         */
+        Object hint = RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR;
+        boolean higherQuality = true;
         int type = (img.getTransparency() == Transparency.OPAQUE) ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
         BufferedImage ret = (BufferedImage) img;
         int w, h;
         if (higherQuality) {
-            // Use multi-step technique: start with original size, then
             // scale down in multiple passes with drawImage()
+            // Use multi-step technique: start with original size, then
             // until the target size is reached
             w = img.getWidth();
             h = img.getHeight();

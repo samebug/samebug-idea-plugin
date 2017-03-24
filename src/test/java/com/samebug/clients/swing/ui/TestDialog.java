@@ -21,7 +21,6 @@ import com.samebug.clients.swing.ui.modules.*;
 import com.samebug.clients.swing.ui.testModules.TestColorService;
 import com.samebug.clients.swing.ui.testModules.TestIconService;
 import com.samebug.clients.swing.ui.testModules.TestListenerService;
-import com.samebug.clients.swing.ui.testModules.TestWebImageService;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -87,7 +86,7 @@ public abstract class TestDialog extends JDialog {
     private static void installModules() throws Exception {
         FontService.registerFonts();
         ColorService.install(new TestColorService());
-        WebImageService.install(new TestWebImageService());
+        WebImageService.install();
         IconService.install(new TestIconService());
         MessageService.install(new IdeaMessageService());
         ListenerService.install(new TestListenerService());

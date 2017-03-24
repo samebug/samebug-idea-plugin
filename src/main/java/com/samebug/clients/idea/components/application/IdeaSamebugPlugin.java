@@ -33,7 +33,10 @@ import com.samebug.clients.idea.controllers.TimedTasks;
 import com.samebug.clients.idea.controllers.WebSocketClientService;
 import com.samebug.clients.idea.ui.controller.frame.ConcurrencyService;
 import com.samebug.clients.idea.ui.controller.frame.ConversionService;
-import com.samebug.clients.idea.ui.modules.*;
+import com.samebug.clients.idea.ui.modules.IdeaColorService;
+import com.samebug.clients.idea.ui.modules.IdeaIconService;
+import com.samebug.clients.idea.ui.modules.IdeaListenerService;
+import com.samebug.clients.idea.ui.modules.IdeaMessageService;
 import com.samebug.clients.swing.ui.modules.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -140,7 +143,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         webSocketClientService.configure(state.get().getNetworkConfig());
 
         ColorService.install(new IdeaColorService());
-        WebImageService.install(new IdeaWebImageService());
+        WebImageService.install();
         IconService.install(new IdeaIconService());
         ListenerService.install(new IdeaListenerService());
         MessageService.install(new IdeaMessageService());
