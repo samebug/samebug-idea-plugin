@@ -21,6 +21,7 @@ import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
+import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -60,7 +61,7 @@ public final class HelpRequestHeader extends JComponent implements IHelpRequestH
 
     final class AuthorRow extends JComponent {
         public AuthorRow(String displayName, URL avatarUrl) {
-            final SamebugLabel by = new SamebugLabel("by", FontService.demi(14));
+            final SamebugLabel by = new SamebugLabel(MessageService.message("samebug.frame.helpRequest.author.by"), FontService.demi(14));
             final AvatarIcon avatar = new AvatarIcon(avatarUrl, AvatarSize);
             final SamebugLabel name = new SamebugLabel(displayName, FontService.demi(14));
 

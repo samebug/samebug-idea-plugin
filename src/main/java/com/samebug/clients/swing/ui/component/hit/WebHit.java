@@ -94,11 +94,9 @@ public final class WebHit extends SamebugPanel implements IWebHit {
         @Override
         public void updateRelativeTimestamp() {
             String sourceText;
-            if (model.createdBy == null) {
-                sourceText = model.sourceName + " | " + String.format("%s", TextService.prettyTime(model.createdAt));
-            } else {
-                sourceText = model.sourceName + " by " + model.createdBy + " | " + String.format("%s", TextService.prettyTime(model.createdAt));
-            }
+            final String timestamp = TextService.prettyTime(model.createdAt);
+            if (model.createdBy == null) sourceText = MessageService.message("samebug.component.webHit.sourceLabel.withoutAuthor", model.sourceName, timestamp);
+            else sourceText = MessageService.message("samebug.component.webHit.sourceLabel.withAuthor", model.sourceName, timestamp, model.createdBy);
             setText(sourceText);
         }
     }

@@ -26,6 +26,7 @@ import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.FontService;
+import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -46,7 +47,7 @@ public final class TipHit extends RoundedBackgroundPanel implements ITipHit {
 
         setBackgroundColor(ColorService.Tip);
         DataService.putData(this, DataService.SolutionId, model.solutionId);
-        tipLabel = new SamebugLabel("TIP", FontService.regular(14));
+        tipLabel = new SamebugLabel(MessageService.message("samebug.component.tipHit.title"), FontService.regular(14));
         tipLabel.setForegroundColor(ColorService.TipText);
         tipMessage = new MessageLabel();
         mark = new MarkButton(model.mark);
