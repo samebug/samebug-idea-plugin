@@ -78,7 +78,6 @@ public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRe
     @Override
     public void failPostTipWithFormError(List<FieldError> errors) throws FormMismatchException {
         actions.sendButton.revertFromLoadingAnimation();
-        // TODO separate this component into two (write tip form paired with WriteTipScreen and the tip request itself on the top).)
         setFormErrors(errors);
     }
 

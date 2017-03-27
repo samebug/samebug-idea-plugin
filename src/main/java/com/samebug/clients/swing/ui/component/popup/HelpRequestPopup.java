@@ -25,6 +25,7 @@ import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
+import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -37,7 +38,7 @@ public final class HelpRequestPopup extends SamebugPanel implements IHelpRequest
 
     public HelpRequestPopup(Model model) {
         final JComponent avatar = new AvatarIcon(model.avatarUrl, AvatarSize);
-        final SamebugLabel title = new SamebugLabel(model.displayName + " sent a tip request", FontService.demi(14));
+        final SamebugLabel title = new SamebugLabel(MessageService.message("samebug.notification.incomingHelpRequest.title", model.displayName), FontService.demi(14));
         final RequestBody body = new RequestBody(model.helpRequestBody);
         final AnswerButton answer = new AnswerButton();
         final JComponent later = new LaterButton();
@@ -64,7 +65,7 @@ public final class HelpRequestPopup extends SamebugPanel implements IHelpRequest
 
     final class AnswerButton extends SamebugButton {
         {
-            setText("Answer");
+            setText(MessageService.message("samebug.notification.incomingHelpRequest.answer"));
             setFont(FontService.demi(14));
             setFilled(true);
             addMouseListener(new MouseAdapter() {
@@ -78,7 +79,7 @@ public final class HelpRequestPopup extends SamebugPanel implements IHelpRequest
 
     final class LaterButton extends LinkLabel {
         {
-            setText("Later");
+            setText(MessageService.message("samebug.notification.incomingHelpRequest.later"));
             setFont(FontService.demi(14));
             setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
 

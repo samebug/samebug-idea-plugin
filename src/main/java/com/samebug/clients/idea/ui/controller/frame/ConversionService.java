@@ -66,7 +66,7 @@ public final class ConversionService {
     }
 
     /**
-     * When showing the hits for a tip request, then marking is disabled. This parameter flows through the whole conversion call tree.
+     * When showing the hits for a help request, then marking is disabled. This parameter flows through the whole conversion call tree.
      */
     public IMarkButton.Model convertMarkPanel(RestHit hit, boolean disabled) {
         boolean userCanMark = disabled ? false : hit.getMarkable();
