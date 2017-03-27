@@ -20,6 +20,7 @@ import com.samebug.clients.swing.ui.modules.FontService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Ordinary button with a single text label, and sensible defaults.
@@ -48,6 +49,10 @@ public class SamebugButton extends ActionButton {
 
     public void setText(String t) {
         label.setText(t);
+    }
+
+    public void setFont(Font f) {
+        label.setFont(f);
     }
 
     @Override
