@@ -11,7 +11,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 2,
             "userMarkId": null,
@@ -24,7 +24,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 3,
             "userMarkId": 1,
@@ -37,7 +37,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": 2,
@@ -50,7 +50,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -63,7 +63,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -76,7 +76,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -89,7 +89,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -102,7 +102,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -115,7 +115,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -128,7 +128,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -141,7 +141,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -154,7 +154,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -167,7 +167,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -180,7 +180,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -193,7 +193,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -206,7 +206,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -219,7 +219,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -232,7 +232,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -245,7 +245,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -258,7 +258,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -271,7 +271,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -284,7 +284,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -297,7 +297,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -310,7 +310,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -323,7 +323,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -336,7 +336,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,
@@ -349,7 +349,7 @@
           "createdAt": "2017-01-01T00:00:00",
           "createdBy": "Dimitrov",
           "sourceName": "Stack Overflow",
-          "sourceIconUrl": "https://samebug.io/assets/images/sources/stackoverflow.png",
+          "sourceIcon": "stackoverflow",
           "mark": {
             "marks": 0,
             "userMarkId": null,

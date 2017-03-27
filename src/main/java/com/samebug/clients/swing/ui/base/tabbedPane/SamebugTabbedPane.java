@@ -63,7 +63,6 @@ public class SamebugTabbedPane extends JTabbedPane {
         int newTabIndex = getTabCount();
         super.addTab(null, tabComponent);
         setTabComponentAt(newTabIndex, tabHeader);
-
         return tabHeader;
     }
 
