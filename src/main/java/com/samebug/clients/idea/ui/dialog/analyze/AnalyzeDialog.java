@@ -18,10 +18,14 @@ package com.samebug.clients.idea.ui.dialog.analyze;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.unscramble.AnalyzeStacktraceUtil;
 import com.samebug.clients.common.api.entities.search.CreatedSearch;
+import com.samebug.clients.common.api.exceptions.BadRequest;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
+import com.samebug.clients.common.api.exceptions.UserUnauthenticated;
 import com.samebug.clients.common.search.StackTraceListener;
 import com.samebug.clients.common.search.StackTraceMatcher;
 import com.samebug.clients.common.services.SearchService;
@@ -29,6 +33,7 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.messages.FocusListener;
 import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.idea.ui.modules.BrowserUtil;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
@@ -131,6 +136,14 @@ final public class AnalyzeDialog extends DialogWrapper {
                     myProject.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchId);
                     AnalyzeDialog.this.close(OK_EXIT_CODE);
                 }
+            } catch (BadRequest e1) {
+                LOGGER.warn("Failed to execute search", e1);
+                ToolWindowManager.getInstance(myProject).getToolWindow("Samebug").show(null);
+                AnalyzeDialog.this.close(CANCEL_EXIT_CODE);
+            } catch (UserUnauthenticated e1) {
+                LOGGER.warn("Failed to execute search", e1);
+                ToolWindowManager.getInstance(myProject).getToolWindow("Samebug").show(null);
+                AnalyzeDialog.this.close(CANCEL_EXIT_CODE);
             } catch (SamebugClientException e1) {
                 LOGGER.warn("Failed to execute search", e1);
                 displayError(MessageService.message("samebug.menu.analyze.dialog.error.unhandled"));
