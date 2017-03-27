@@ -17,6 +17,7 @@ package com.samebug.clients.idea.search.console;
 
 import com.samebug.clients.common.entities.search.RequestedSearch;
 import com.samebug.clients.swing.ui.modules.IconService;
+import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -57,6 +58,6 @@ final class RequestedSearchMark extends SearchMark {
     @Override
     @NotNull
     public String getTooltipText() {
-        return "Search is under progress, soon you will see the result";
+        return MessageService.message("samebug.gutter.requested.tooltip");
     }
 }

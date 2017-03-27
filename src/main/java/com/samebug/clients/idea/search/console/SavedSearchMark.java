@@ -23,6 +23,7 @@ import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.messages.FocusListener;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.modules.IconService;
+import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -63,8 +64,7 @@ final class SavedSearchMark extends SearchMark {
     @Override
     @NotNull
     public String getTooltipText() {
-        return "Search " + search.getSavedSearch().getSearchId()
-                + "\nClick to show solutions.";
+        return MessageService.message("samebug.gutter.savedSearch.tooltip");
     }
 
     @NotNull
