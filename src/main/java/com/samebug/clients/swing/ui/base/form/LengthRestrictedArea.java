@@ -108,6 +108,7 @@ public abstract class LengthRestrictedArea extends SamebugPanel {
 
             updateColors();
             PromptSupport.setPrompt(prompt, this);
+            PromptSupport.setFocusBehavior(PromptSupport.FocusBehavior.SHOW_PROMPT, this);
             setFont(FontService.regular(16));
         }
 
