@@ -58,6 +58,7 @@ public final class BugmateHit extends TransparentPanel implements IBugmateHit {
         private TimestampLabel(int nSeen, Date lastSeen) {
             this.nSeen = nSeen;
             this.lastSeen = lastSeen;
+            assert nSeen > 0 : "a bugmate should have seen the problem for which he qualifies as a bugmate at least once";
             setFont(FontService.regular(14));
             updateRelativeTimestamp();
         }

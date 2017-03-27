@@ -84,6 +84,7 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
 
     private final class MoreLabel extends SamebugLabel {
         private MoreLabel(int numberOfOtherBugmates) {
+            assert numberOfOtherBugmates != 0 : "Do not display this label if there are no other bugmates";
             setText(MessageService.message("samebug.component.bugmate.list.more", numberOfOtherBugmates));
             setFont(FontService.regular(14));
         }
