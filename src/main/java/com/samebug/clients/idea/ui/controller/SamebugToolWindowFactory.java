@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.ui.controller;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -45,12 +46,26 @@ final public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAw
             ToolWindowManagerImpl twm = ((ToolWindowImpl) toolWindow).getToolWindowManager();
             Method twmGetInfo = twm.getClass().getDeclaredMethod("getInfo", String.class);
             twmGetInfo.setAccessible(true);
-            WindowInfoImpl windowInfo = (WindowInfoImpl) twmGetInfo.invoke(twm, "Samebug");
+            final WindowInfoImpl windowInfo = (WindowInfoImpl) twmGetInfo.invoke(twm, "Samebug");
             Method windowInfoWasRead = windowInfo.getClass().getDeclaredMethod("wasRead");
             windowInfoWasRead.setAccessible(true);
             boolean wasRead = (Boolean) windowInfoWasRead.invoke(windowInfo);
             if (!wasRead) {
                 toolWindow.setAutoHide(true);
+
+                // NOTE IntelliJ sets the width of the toolwindow after it is opened, and we can't hook there,
+                // so the width will be the default one after opening it for first, but will be the enlarged after the second.
+                ApplicationManager.getApplication().invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Method setWeight = windowInfo.getClass().getDeclaredMethod("setWeight", float.class);
+                            setWeight.setAccessible(true);
+                            setWeight.invoke(windowInfo, 0.42f);
+                        } catch (Exception ignored) {
+                        }
+                    }
+                });
             }
         } catch (Exception ignored) {
         }
