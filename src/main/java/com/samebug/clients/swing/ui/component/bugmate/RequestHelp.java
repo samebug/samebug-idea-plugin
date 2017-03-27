@@ -61,6 +61,7 @@ public final class RequestHelp extends JComponent implements IAskForHelp {
         removeAll();
         ctaScreen = null;
         add(tipScreen);
+        tipScreen.writeRequestArea.borderedArea.requestFocus();
 
         revalidate();
         repaint();

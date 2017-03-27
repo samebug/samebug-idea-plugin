@@ -73,6 +73,7 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
         removeAll();
         ctaScreen = null;
         add(tipScreen);
+        tipScreen.tipArea.borderedArea.requestFocus();
 
         revalidate();
         repaint();

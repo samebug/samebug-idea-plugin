@@ -85,6 +85,11 @@ public final class WriteTipArea extends JComponent implements IFormField {
         protected LengthCounter createLengthCounter() {
             return new LengthCounter(MaxCharacters);
         }
+
+        @Override
+        public void requestFocus() {
+            myEditableArea.requestFocus();
+        }
     }
 
     final class ErrorLabel extends SamebugMultilineLabel {

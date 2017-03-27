@@ -90,6 +90,11 @@ public final class WriteRequestArea extends JComponent implements IFormField {
         }
 
         @Override
+        public void requestFocus() {
+            myEditableArea.requestFocus();
+        }
+
+        @Override
         protected EditableArea createEditableArea() {
             return new EditableArea(MessageService.message("samebug.component.helpRequest.ask.placeholder"));
         }
