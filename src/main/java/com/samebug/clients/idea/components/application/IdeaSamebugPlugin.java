@@ -33,6 +33,7 @@ import com.samebug.clients.idea.controllers.TimedTasks;
 import com.samebug.clients.idea.controllers.WebSocketClientService;
 import com.samebug.clients.idea.ui.controller.frame.ConcurrencyService;
 import com.samebug.clients.idea.ui.controller.frame.ConversionService;
+import com.samebug.clients.idea.ui.controller.toolwindow.ConfigChangeListener;
 import com.samebug.clients.idea.ui.modules.IdeaColorService;
 import com.samebug.clients.idea.ui.modules.IdeaIconService;
 import com.samebug.clients.idea.ui.modules.IdeaListenerService;
@@ -176,12 +177,14 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     }
 
     public void saveSettings(final ApplicationSettings settings) {
+        ApplicationSettings oldSettings = state.get();
         ApplicationSettings newSettings = new ApplicationSettings(settings);
         state.set(newSettings);
         try {
             if (clientService != null) clientService.configure(newSettings.getNetworkConfig());
             if (webSocketClientService != null) webSocketClientService.configure(newSettings.getNetworkConfig());
             urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
+            ApplicationManager.getApplication().getMessageBus().syncPublisher(ConfigChangeListener.TOPIC).configChange(oldSettings, newSettings);
         } finally {
             // TODO change the event
 //            Tracking.appTracking().trace(Events.apiKeySet());

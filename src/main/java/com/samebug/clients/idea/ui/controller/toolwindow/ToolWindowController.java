@@ -54,6 +54,7 @@ final public class ToolWindowController implements FocusListener, Disposable {
 
     final Timer dateLabelRefresher;
     final IncomingHelpRequestPopupListener incomingHelpRequestPopupListener;
+    final ConfigChangeListener configChangeListener;
 
     final HelpRequestPopupController helpRequestPopupController;
 
@@ -74,6 +75,7 @@ final public class ToolWindowController implements FocusListener, Disposable {
         dateLabelRefresher.start();
 
         incomingHelpRequestPopupListener = new IncomingHelpRequestPopupListener(this);
+        configChangeListener = new ConfigChangeListener(this);
         helpRequestPopupController = new HelpRequestPopupController(this, project);
         MessageBusConnection connection = project.getMessageBus().connect(project);
         connection.subscribe(FocusListener.TOPIC, this);
