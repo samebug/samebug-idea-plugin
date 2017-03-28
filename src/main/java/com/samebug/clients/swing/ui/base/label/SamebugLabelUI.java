@@ -15,6 +15,9 @@
  */
 package com.samebug.clients.swing.ui.base.label;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLabelUI;
 import java.awt.*;
@@ -23,5 +26,42 @@ public final class SamebugLabelUI extends BasicLabelUI {
     @Override
     public void paint(Graphics g, JComponent c) {
         super.paint(g, c);
+    }
+
+    public Dimension getPreferredSize(JComponent c) {
+        JLabel label = (JLabel)c;
+        String text = label.getText();
+        Insets insets = label.getInsets(null);
+
+        int dx = insets.left + insets.right;
+        int dy = insets.top + insets.bottom;
+        Dimension textBounds = stringBounds(label, text);
+        return new Dimension(textBounds.width + dx, textBounds.height + dy);
+    }
+
+    /**
+     * Honestly, I have no idea what's happening here.
+     *
+     * Empirically I found out that on retina display, running Oracle JVM the component and graphics font metrics return different string width for some strings.
+     * There are some related JDK bugs, but those are claimed to be fixed long ago.
+     * Maybe it's related to fractional font metrics, or subpixel aliasing, or whatever.
+     *
+     * TODO is there a better way to workaround this?
+     * TODO do we need a similar workaround for multiline labels, or buttons, text fields, anywhere?
+     * TODO does this workaround have bad performance impact?
+     */
+    public static Dimension stringBounds(@NotNull JComponent component, @Nullable String text) {
+        Font font = component.getFont();
+        Graphics componentGraphics = component.getGraphics();
+        if (font == null || componentGraphics == null) return new Dimension(0, 0);
+        else {
+            FontMetrics componentFontMetric = component.getFontMetrics(font);
+            FontMetrics graphicsFontMetric = componentGraphics.getFontMetrics(font);
+            int textWidthAccordingToComponent = componentFontMetric.stringWidth(text);
+            int textWidthAccordingToGraphics = graphicsFontMetric.stringWidth(text);
+            int width = Math.max(textWidthAccordingToGraphics, textWidthAccordingToComponent);
+            int height = componentFontMetric.getHeight();
+            return new Dimension(width, height);
+        }
     }
 }
