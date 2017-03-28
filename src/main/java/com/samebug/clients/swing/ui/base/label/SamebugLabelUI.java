@@ -51,17 +51,24 @@ public final class SamebugLabelUI extends BasicLabelUI {
      * TODO does this workaround have bad performance impact?
      */
     public static Dimension stringBounds(@NotNull JComponent component, @Nullable String text) {
+        if (text == null) return new Dimension(0, 0);
+
         Font font = component.getFont();
+        if (font == null) return new Dimension(0, 0);
+
         Graphics componentGraphics = component.getGraphics();
-        if (font == null || componentGraphics == null) return new Dimension(0, 0);
-        else {
-            FontMetrics componentFontMetric = component.getFontMetrics(font);
-            FontMetrics graphicsFontMetric = componentGraphics.getFontMetrics(font);
-            int textWidthAccordingToComponent = componentFontMetric.stringWidth(text);
-            int textWidthAccordingToGraphics = graphicsFontMetric.stringWidth(text);
-            int width = Math.max(textWidthAccordingToGraphics, textWidthAccordingToComponent);
-            int height = componentFontMetric.getHeight();
-            return new Dimension(width, height);
-        }
+        if (componentGraphics == null) return new Dimension(0, 0);
+
+        FontMetrics componentFontMetric = component.getFontMetrics(font);
+        if (componentFontMetric == null) return new Dimension(0, 0);
+
+        FontMetrics graphicsFontMetric = componentGraphics.getFontMetrics(font);
+        if (graphicsFontMetric == null) return new Dimension(0, 0);
+
+        int textWidthAccordingToComponent = componentFontMetric.stringWidth(text);
+        int textWidthAccordingToGraphics = graphicsFontMetric.stringWidth(text);
+        int width = Math.max(textWidthAccordingToGraphics, textWidthAccordingToComponent);
+        int height = componentFontMetric.getHeight();
+        return new Dimension(width, height);
     }
 }
