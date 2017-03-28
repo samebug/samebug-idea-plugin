@@ -65,6 +65,9 @@ public abstract class ActionButton extends BasicButton {
     // override this if necessary, but you should still call super.revertFromLoadingAnimation()
     public void revertFromLoadingAnimation() {
         loading = false;
+        setMinimumSize(null);
+        setPreferredSize(null);
+        setMaximumSize(null);
         setFilled(filledState);
         setEnabled(true);
         removeAll();
