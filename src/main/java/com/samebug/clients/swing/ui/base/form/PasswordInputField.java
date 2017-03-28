@@ -34,6 +34,9 @@ public class PasswordInputField extends JPasswordField {
     {
         myColors = ColorService.NormalForm;
         setFont(FontService.regular(16));
+        // TODO: add richer font set?
+        // Mac uses a different default echo character, which is not present in out font set.
+        setEchoChar('\u2022');
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         addFocusListener(new FocusAdapter() {
