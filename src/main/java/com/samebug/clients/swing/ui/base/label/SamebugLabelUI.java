@@ -29,7 +29,7 @@ public final class SamebugLabelUI extends BasicLabelUI {
     }
 
     public Dimension getPreferredSize(JComponent c) {
-        JLabel label = (JLabel)c;
+        JLabel label = (JLabel) c;
         String text = label.getText();
         Insets insets = label.getInsets(null);
 
@@ -41,11 +41,11 @@ public final class SamebugLabelUI extends BasicLabelUI {
 
     /**
      * Honestly, I have no idea what's happening here.
-     *
+     * <p>
      * Empirically I found out that on retina display, running Oracle JVM the component and graphics font metrics return different string width for some strings.
      * There are some related JDK bugs, but those are claimed to be fixed long ago.
      * Maybe it's related to fractional font metrics, or subpixel aliasing, or whatever.
-     *
+     * <p>
      * TODO is there a better way to workaround this?
      * TODO do we need a similar workaround for multiline labels, or buttons, text fields, anywhere?
      * TODO does this workaround have bad performance impact?
