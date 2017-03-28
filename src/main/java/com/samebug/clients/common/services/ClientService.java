@@ -43,10 +43,11 @@ public final class ClientService {
 
     public synchronized void configure(final Config config) {
         this.client = new SamebugClient(config);
-        this.connected = new AtomicBoolean(true);
-        this.authenticated = new AtomicBoolean(true);
-        this.nRequests = new AtomicInteger(0);
-        this.apiStatus = new AtomicReference<String>(null);
+        // these parameters should keep the state of the previous config (if there was a previous config)
+        this.connected = new AtomicBoolean(connected == null ? true : connected.get());
+        this.authenticated = new AtomicBoolean(authenticated == null ? true : authenticated.get());
+        this.nRequests = new AtomicInteger(nRequests == null ? 0 : nRequests.get());
+        this.apiStatus = new AtomicReference<String>(apiStatus == null ? null : apiStatus.get());
     }
 
     public boolean isConnected() {
