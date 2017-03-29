@@ -17,9 +17,9 @@ package com.samebug.clients.swing.ui.base.animation;
 
 import java.awt.*;
 
-public final class GradientSampler {
+public final class Sampler {
 
-    public static Color[] sample(Color a, Color b, int nPoints) {
+    public static Color[] gradient(Color a, Color b, int nPoints) {
         assert nPoints >= 2;
         Color[] gradient = new Color[nPoints];
         for (int i = 0; i < nPoints; ++i) {
@@ -35,7 +35,21 @@ public final class GradientSampler {
         return gradient;
     }
 
-    private static int linearCombination(int a, int b, int aw, int bw) {
+    public static int[] easeInOutCubic(int pixels, int nPoints) {
+        assert nPoints >= 2;
+        int[] sample = new int[nPoints];
+        double total = (double) (nPoints - 1);
+        for (int i = 0; i < nPoints; ++i) {
+            sample[i] = (int) (pixels * easeInOutCubic(i / total));
+        }
+        return sample;
+    }
+
+    public static int linearCombination(int a, int b, int aw, int bw) {
         return (a * aw + b * bw) / (aw + bw);
+    }
+
+    public static double easeInOutCubic(double t) {
+        return 0d * Math.pow(1 - t, 3) + 3 * .045d * Math.pow(1 - t, 2) * t + 3 * 1d * (1 - t) * Math.pow(t, 2) + 1d * Math.pow(t, 3);
     }
 }

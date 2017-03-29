@@ -16,7 +16,7 @@
 package com.samebug.clients.swing.ui.base.tabbedPane;
 
 import com.samebug.clients.swing.ui.base.animation.ComponentAnimation;
-import com.samebug.clients.swing.ui.base.animation.GradientSampler;
+import com.samebug.clients.swing.ui.base.animation.Sampler;
 import com.samebug.clients.swing.ui.modules.ColorService;
 
 import javax.swing.*;
@@ -110,9 +110,9 @@ public abstract class SamebugTabHeader extends JPanel {
         public FadeAnimation(boolean makeSelected, int totalFrames) {
             super(totalFrames);
             if (makeSelected) {
-                gradient = GradientSampler.sample(ColorService.forCurrentTheme(ColorService.LinkInteraction.normal), ColorService.forCurrentTheme(selectedColor), totalFrames + 1);
+                gradient = Sampler.gradient(ColorService.forCurrentTheme(ColorService.LinkInteraction.normal), ColorService.forCurrentTheme(selectedColor), totalFrames + 1);
             } else {
-                gradient = GradientSampler.sample(ColorService.forCurrentTheme(selectedColor), ColorService.forCurrentTheme(ColorService.LinkInteraction.normal), totalFrames + 1);
+                gradient = Sampler.gradient(ColorService.forCurrentTheme(selectedColor), ColorService.forCurrentTheme(ColorService.LinkInteraction.normal), totalFrames + 1);
             }
         }
 

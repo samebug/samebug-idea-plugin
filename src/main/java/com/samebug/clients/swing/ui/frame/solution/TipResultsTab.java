@@ -21,6 +21,7 @@ import com.samebug.clients.common.ui.frame.solution.ITipResultsTab;
 import com.samebug.clients.swing.ui.base.animation.ComponentAnimation;
 import com.samebug.clients.swing.ui.base.animation.FadeInAnimation;
 import com.samebug.clients.swing.ui.base.animation.LazyComponentAnimation;
+import com.samebug.clients.swing.ui.base.animation.Sampler;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.base.scrollPane.SamebugScrollPane;
@@ -167,6 +168,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
         private final class GrowFromTopAndFadeInNewElement extends ComponentAnimation {
             protected final Dimension myGrownSize;
             protected final int growPixels;
+            protected final int[] offsets;
             protected int currentOffset;
 
             private final ComponentAnimation tipFadeInAnimation;
@@ -176,6 +178,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
                 this.myGrownSize = getSize();
                 this.growPixels = growPixels;
                 assert myGrownSize.height >= growPixels : "Cannot grow " + growPixels + " pixels because its final size is less than that";
+                this.offsets = Sampler.easeInOutCubic(growPixels, totalFrames);
 
                 tipFadeInAnimation = tip.fadeIn(totalFrames);
                 currentOffset = this.growPixels;
@@ -184,9 +187,8 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
             @Override
             public final void doUpdateFrame(int frame) {
                 tipFadeInAnimation.setFrame(frame);
-                currentOffset = growPixels - growPixels * frame / myTotalFrames;
-                int missingHeight = currentOffset;
-                setSize(new Dimension(myGrownSize.width, myGrownSize.height - missingHeight));
+                currentOffset = growPixels - offsets[frame];
+                setSize(new Dimension(myGrownSize.width, myGrownSize.height - currentOffset));
                 revalidate();
             }
 
