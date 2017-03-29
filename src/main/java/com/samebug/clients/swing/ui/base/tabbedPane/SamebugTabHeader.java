@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.base.tabbedPane;
 
-import com.samebug.clients.swing.ui.base.animation.Animator;
+import com.samebug.clients.swing.ui.base.animation.ComponentAnimation;
 import com.samebug.clients.swing.ui.base.animation.GradientSampler;
 import com.samebug.clients.swing.ui.modules.ColorService;
 
@@ -28,7 +28,7 @@ public abstract class SamebugTabHeader extends JPanel {
     protected TabColorChanger interactionListener;
     protected Color[] selectedColor;
 
-    private Animator myAnimation;
+    private ComponentAnimation myAnimation;
 
     public SamebugTabHeader() {
         selectedColor = ColorService.Text;
@@ -70,11 +70,9 @@ public abstract class SamebugTabHeader extends JPanel {
      * Update foreground and background color of this component based on the current theme
      */
     protected void updateColors() {
-        if (myAnimation == null) {
-            if (selected) setForeground(ColorService.forCurrentTheme(selectedColor));
-            else if (interactionListener != null) setForeground(interactionListener.getColor());
-            setBackground(ColorService.forCurrentTheme(ColorService.Background));
-        }
+        if (selected) setForeground(ColorService.forCurrentTheme(selectedColor));
+        else if (interactionListener != null) setForeground(interactionListener.getColor());
+        setBackground(ColorService.forCurrentTheme(ColorService.Background));
     }
 
     protected void setChildrenForeground(Color foreground) {
@@ -100,31 +98,36 @@ public abstract class SamebugTabHeader extends JPanel {
     /**
      * TODO this does not actually changes the selected property of the tab header
      */
-    public void animatedSetSelected(boolean selected) {
-        if (myAnimation != null) myAnimation.suspend();
-        myAnimation = new FadeAnimation(selected);
-        myAnimation.resume();
+    public ComponentAnimation animatedSetSelected(boolean selected, int totalFrames) {
+        if (myAnimation != null) myAnimation.finish();
+        myAnimation = new FadeAnimation(selected, totalFrames);
+        return myAnimation;
     }
 
-    private static int Frames = 10;
+    private final class FadeAnimation extends ComponentAnimation {
+        Color[] gradient;
 
-    private final class FadeAnimation extends Animator {
-        Color[] gradient = GradientSampler.sample(ColorService.forCurrentTheme(ColorService.LinkInteraction.normal),
-                ColorService.forCurrentTheme(selectedColor), Frames);
-
-        public FadeAnimation(boolean makeSelected) {
-            super("FadeAnimation", Frames, 1000, false, makeSelected);
+        public FadeAnimation(boolean makeSelected, int totalFrames) {
+            super(totalFrames);
+            if (makeSelected) {
+                gradient = GradientSampler.sample(ColorService.forCurrentTheme(ColorService.LinkInteraction.normal), ColorService.forCurrentTheme(selectedColor), totalFrames + 1);
+            } else {
+                gradient = GradientSampler.sample(ColorService.forCurrentTheme(selectedColor), ColorService.forCurrentTheme(ColorService.LinkInteraction.normal), totalFrames + 1);
+            }
         }
 
         @Override
-        public void paintNow(int frame, int totalFrames, int cycle) {
+        protected void doUpdateFrame(int frame) {
             setForeground(gradient[frame]);
-            repaint();
         }
 
         @Override
-        protected void animationDone() {
-            super.animationDone();
+        protected void doPaint(Graphics g) {
+            SamebugTabHeader.this.paint(g);
+        }
+
+        @Override
+        protected void doFinish() {
             myAnimation = null;
             updateColors();
         }

@@ -17,6 +17,9 @@ package com.samebug.clients.swing.ui.frame.solution;
 
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.solution.IResultTabs;
+import com.samebug.clients.swing.ui.base.animation.Animator;
+import com.samebug.clients.swing.ui.base.animation.ComponentAnimation;
+import com.samebug.clients.swing.ui.base.animation.LazyComponentAnimation;
 import com.samebug.clients.swing.ui.base.tabbedPane.LabelAndHitsTabHeader;
 import com.samebug.clients.swing.ui.base.tabbedPane.SamebugTabbedPane;
 import com.samebug.clients.swing.ui.modules.MessageService;
@@ -44,20 +47,47 @@ public final class ResultTabs extends SamebugTabbedPane implements IResultTabs {
     }
 
     public void animatedAddTip(ITipHit.Model model) {
-        // switch to tips tab
-        int currentTab = getSelectedIndex();
-        if (currentTab != 0) {
-            // TODO setselected is so cluttered
-            tipResultsTabHeader.animatedSetSelected(true);
-            webResultsTabHeader.animatedSetSelected(false);
-            setSelectedIndex(0);
+        new ShowNewTipAnimation(model).resume();
+    }
+
+    private final class ShowNewTipAnimation extends Animator {
+        private static final int CycleDuration = 300;
+        private static final int WebFadeOutFrames = 10;
+        private static final int TipFadeInFrames = 10;
+        private static final int TipFloatInFrames = 10;
+
+        private ComponentAnimation animationChain;
+
+        public ShowNewTipAnimation(final ITipHit.Model model) {
+            super("ShowNewTipAnimation", WebFadeOutFrames + TipFadeInFrames + TipFloatInFrames, CycleDuration, false);
+
+            ComponentAnimation fadeOutWebTab = webResultsTab.fadeOut(WebFadeOutFrames)
+                    .with(webResultsTabHeader.animatedSetSelected(false, WebFadeOutFrames));
+
+            // TODO tip header fade in should be paralell with tip tab fade in, not the whole add tip animation
+            animationChain = fadeOutWebTab.andThen(new LazyComponentAnimation(TipFadeInFrames + TipFloatInFrames) {
+                @Override
+                public ComponentAnimation createAnimation() {
+                    ComponentAnimation fadeInTipTab = tipResultsTab.animatedAddTip(model, TipFadeInFrames, TipFloatInFrames)
+                            .with(tipResultsTabHeader.animatedSetSelected(true, TipFadeInFrames + TipFloatInFrames));
+                    tipResultsTab.revalidate();
+                    tipResultsTab.repaint();
+                    setSelectedIndex(0);
+                    return fadeInTipTab;
+                }
+            });
         }
 
-        // update tip hits
-        tipHits += 1;
-        tipResultsTabHeader.setHits(tipHits);
+        @Override
+        public void paintNow(int frame, int totalFrames, int cycle) {
+            animationChain.setFrame(frame);
+            repaint();
+        }
 
-        // float in new tip
-        tipResultsTab.animatedAddTip(model);
+        @Override
+        public void animationDone() {
+            super.animationDone();
+            animationChain.finish();
+        }
     }
 }

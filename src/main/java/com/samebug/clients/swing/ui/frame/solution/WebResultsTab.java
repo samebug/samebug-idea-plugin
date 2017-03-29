@@ -17,6 +17,8 @@ package com.samebug.clients.swing.ui.frame.solution;
 
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
+import com.samebug.clients.swing.ui.base.animation.ComponentAnimation;
+import com.samebug.clients.swing.ui.base.animation.FadeOutAnimation;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
@@ -44,6 +46,8 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
     private final JPanel contentPanel;
     private final List<WebHit> webHits;
 
+    private ComponentAnimation myAnimation;
+
     public WebResultsTab(Model model, IHelpOthersCTA.Model ctaModel) {
         this.model = new Model(model);
         this.ctaModel = new IHelpOthersCTA.Model(ctaModel);
@@ -67,6 +71,20 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
 
         setLayout(new BorderLayout());
         add(scrollPane);
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        if (myAnimation == null) super.paint(g);
+        else myAnimation.paint(g);
+    }
+
+    public ComponentAnimation fadeOut(int totalFrames) {
+        if (myAnimation != null) {
+            myAnimation.finish();
+        }
+        myAnimation = new MyFadeOut(totalFrames);
+        return myAnimation;
     }
 
     private final class EmptyContentPanel extends SamebugPanel {
@@ -141,5 +159,17 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
 
     private Listener getListener() {
         return ListenerService.getListener(this, IWebResultsTab.Listener.class);
+    }
+
+    private final class MyFadeOut extends FadeOutAnimation {
+
+        public MyFadeOut(int totalFrames) {
+            super(WebResultsTab.this, totalFrames);
+        }
+
+        @Override
+        protected void doFinish() {
+            WebResultsTab.this.myAnimation = null;
+        }
     }
 }
