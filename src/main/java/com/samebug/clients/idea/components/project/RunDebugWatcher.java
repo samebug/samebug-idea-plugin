@@ -26,11 +26,11 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.entities.search.DebugSessionInfo;
 import com.samebug.clients.common.search.LogScannerFactory;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.search.StackTraceMatcherFactory;
 import com.samebug.clients.idea.search.console.ConsoleWatcher;
 import com.samebug.clients.idea.search.processadapters.RunDebugAdapter;
 import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,7 +60,7 @@ public class RunDebugWatcher implements RunContentWithExecutorListener, Disposab
             listeners.remove(descriptorHashCode);
             DebugSessionInfo sessionInfo = debugSessionIds.get(descriptorHashCode);
             if (sessionInfo != null) {
-                Tracking.projectTracking(myProject).trace(Events.debugStop(myProject, sessionInfo));
+                TrackingService.trace(Events.debugStop(myProject, sessionInfo));
                 debugSessionIds.remove(descriptorHashCode);
                 IdeaSamebugPlugin.getInstance().searchRequestStore.removeSession(sessionInfo);
             }
@@ -85,7 +85,7 @@ public class RunDebugWatcher implements RunContentWithExecutorListener, Disposab
             debugSessionIds.put(descriptorHashCode, sessionInfo);
             processHandler.addProcessListener(listener);
 
-            Tracking.projectTracking(myProject).trace(Events.debugStart(myProject, sessionInfo));
+            TrackingService.trace(Events.debugStart(sessionInfo));
         }
     }
 

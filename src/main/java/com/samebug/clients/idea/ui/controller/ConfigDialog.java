@@ -15,20 +15,17 @@
  */
 package com.samebug.clients.idea.ui.controller;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
-import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.layout.ConfigDialogPanel;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
 final public class ConfigDialog implements Configurable {
-    final private static Logger LOGGER = Logger.getInstance(ConfigDialog.class);
-
     ConfigDialogPanel dialog = null;
 
     @Nls
@@ -46,7 +43,7 @@ final public class ConfigDialog implements Configurable {
     @Nullable
     @Override
     public JComponent createComponent() {
-        Tracking.appTracking().trace(Events.configOpen());
+        TrackingService.trace(Events.configOpen());
         dialog = new ConfigDialogPanel();
         return dialog.controlPanel;
     }

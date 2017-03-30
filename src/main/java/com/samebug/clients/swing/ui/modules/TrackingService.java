@@ -13,11 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.modules;
+package com.samebug.clients.swing.ui.modules;
 
-import com.intellij.openapi.project.Project;
-import com.samebug.clients.swing.ui.modules.DataService;
+import com.samebug.clients.common.api.entities.tracking.TrackEvent;
 
-public final class IdeaDataService {
-    public static final DataService.Key<Project> Project = new DataService.Key<Project>("Project");
+public abstract class TrackingService {
+    private static TrackingService INSTANCE = new TrackingService() {
+        @Override
+        protected void internalTrace(TrackEvent event) {
+        }
+    };
+
+    public static void install(TrackingService instance) {
+        INSTANCE = instance;
+    }
+
+    public static void trace(final TrackEvent event) {
+        INSTANCE.internalTrace(event);
+    }
+
+    protected abstract void internalTrace(final TrackEvent event);
 }

@@ -34,10 +34,7 @@ import com.samebug.clients.idea.controllers.WebSocketClientService;
 import com.samebug.clients.idea.ui.controller.frame.ConcurrencyService;
 import com.samebug.clients.idea.ui.controller.frame.ConversionService;
 import com.samebug.clients.idea.ui.controller.toolwindow.ConfigChangeListener;
-import com.samebug.clients.idea.ui.modules.IdeaColorService;
-import com.samebug.clients.idea.ui.modules.IdeaIconService;
-import com.samebug.clients.idea.ui.modules.IdeaListenerService;
-import com.samebug.clients.idea.ui.modules.IdeaMessageService;
+import com.samebug.clients.idea.ui.modules.*;
 import com.samebug.clients.swing.ui.modules.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -148,6 +145,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         IconService.install(new IdeaIconService());
         ListenerService.install(new IdeaListenerService());
         MessageService.install(new IdeaMessageService());
+        TrackingService.install(new IdeaTrackingService(connection));
 
         checkAuthenticationInTheBackgroundWithCurrentConfig();
     }

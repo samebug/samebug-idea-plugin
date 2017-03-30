@@ -29,11 +29,11 @@ import com.samebug.clients.common.search.StackTraceListener;
 import com.samebug.clients.common.search.StackTraceMatcher;
 import com.samebug.clients.common.services.SearchService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.messages.FocusListener;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.modules.BrowserUtil;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,6 +59,7 @@ final public class AnalyzeDialog extends DialogWrapper {
         warningPanel = new JPanel();
         searchAction = new SamebugSearch();
         setTitle(MessageService.message("samebug.menu.analyze.dialog.title"));
+        TrackingService.trace(Events.openSearchDialog());
         init();
     }
 
@@ -115,7 +116,7 @@ final public class AnalyzeDialog extends DialogWrapper {
 
         @Override
         protected void doAction(ActionEvent e) {
-            Tracking.appTracking().trace(Events.searchInSearchDialog());
+            TrackingService.trace(Events.searchInSearchDialog());
             final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
             final SearchService searchService = plugin.searchService;
             final String trace = myEditorPanel.getText();

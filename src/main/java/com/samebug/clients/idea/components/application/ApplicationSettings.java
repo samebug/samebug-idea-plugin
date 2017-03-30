@@ -28,7 +28,8 @@ public class ApplicationSettings {
     @Nullable
     public Integer workspaceId = defaultWorkspaceId;
     public String instanceId = UUID.randomUUID().toString();
-    public int userId;
+    @Nullable
+    public Integer userId;
     public String serverRoot = defaultServerRoot;
     public String trackingRoot = defaultTrackingRoot;
     public boolean isTrackingEnabled = defaultIsTrackingEnabled;
@@ -80,7 +81,7 @@ public class ApplicationSettings {
             return ((rhs.apiKey == null && apiKey == null) || (rhs.apiKey != null && rhs.apiKey.equals(apiKey)))
                     && ((rhs.workspaceId == null && workspaceId == null) || (rhs.workspaceId != null && rhs.workspaceId.equals(workspaceId)))
                     && rhs.instanceId.equals(instanceId)
-                    && rhs.userId == userId
+                    && ((rhs.userId == null && userId == null) || (rhs.userId != null && rhs.userId.equals(userId)))
                     && rhs.serverRoot.equals(serverRoot)
                     && rhs.trackingRoot.equals(trackingRoot)
                     && rhs.isTrackingEnabled == isTrackingEnabled

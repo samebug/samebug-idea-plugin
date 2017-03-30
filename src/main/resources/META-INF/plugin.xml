@@ -51,9 +51,6 @@
             <implementation-class>com.samebug.clients.idea.components.application.IdeaSamebugPlugin</implementation-class>
         </component>
         <component>
-            <implementation-class>com.samebug.clients.idea.components.application.Tracking</implementation-class>
-        </component>
-        <component>
             <implementation-class>com.samebug.clients.idea.components.application.TutorialApplicationComponent</implementation-class>
         </component>
     </application-components>

@@ -19,11 +19,11 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.entities.search.SavedSearch;
-import com.samebug.clients.idea.components.application.Tracking;
 import com.samebug.clients.idea.messages.FocusListener;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.modules.IconService;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -75,7 +75,7 @@ final class SavedSearchMark extends SearchMark {
                 Integer searchId = search.getSavedSearch().getSearchId();
                 Project project = getEventProject(e);
                 if (project != null) {
-                    Tracking.projectTracking(project).trace(Events.gutterIconClicked(searchId));
+                    TrackingService.trace(Events.gutterIconClicked(searchId));
                     project.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchId);
                 }
             }
