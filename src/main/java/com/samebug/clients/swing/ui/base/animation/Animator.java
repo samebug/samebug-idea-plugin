@@ -15,17 +15,19 @@
  */
 package com.samebug.clients.swing.ui.base.animation;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Copied from com.intellij.util.ui.Animator
  */
 // TODO isn't there a better solution where we don't have to destory it after usage?
+// TODO actually this is only a problem for repeating animations, that can't kill themselves.
 public abstract class Animator {
     private final String myName;
     private final int myTotalFrames;
@@ -33,15 +35,12 @@ public abstract class Animator {
     private final boolean myForward;
     private final boolean myRepeatable;
 
-    private ScheduledFuture<?> myTicker;
+    private Timer timer;
 
     private int myCurrentFrame;
     private long myStartTime;
     private long myStartDeltaTime;
     private boolean myInitialStep;
-
-    // TODO
-    private static final ScheduledExecutorService animatorExecutorService = Executors.newScheduledThreadPool(1);
 
     public Animator(final String name, final int totalFrames, final int cycleDuration, boolean repeatable) {
         this(name, totalFrames, cycleDuration, repeatable, true);
@@ -98,9 +97,9 @@ public abstract class Animator {
     }
 
     private void stopTicker() {
-        if (myTicker != null) {
-            myTicker.cancel(false);
-            myTicker = null;
+        if (timer != null) {
+            timer.stop();
+            timer = null;
         }
     }
 
@@ -115,25 +114,23 @@ public abstract class Animator {
             myCurrentFrame = myTotalFrames - 1;
             paint();
             animationDone();
-        } else if (myTicker == null) {
-            myTicker = animatorExecutorService.scheduleWithFixedDelay(new Runnable() {
+        } else if (timer == null) {
+            timer = new Timer(myCycleDuration / myTotalFrames, new ActionListener() {
                 @Override
-                public void run() {
+                public void actionPerformed(ActionEvent e) {
                     onTick();
                 }
-
-                @Override
-                public String toString() {
-                    return "Scheduled " + Animator.this;
-                }
-            }, 0, myCycleDuration * 1000 / myTotalFrames, TimeUnit.MICROSECONDS);
+            });
+            timer.setRepeats(true);
+            timer.setInitialDelay(0);
+            timer.start();
         }
     }
 
     public abstract void paintNow(int frame, int totalFrames, int cycle);
 
     public boolean isRunning() {
-        return myTicker != null;
+        return timer != null;
     }
 
     public void reset() {
@@ -148,8 +145,7 @@ public abstract class Animator {
 
     @Override
     public String toString() {
-        ScheduledFuture<?> future = myTicker;
-        String state = future == null || future.isDone() ? "stopped" : "running " + myCurrentFrame + "/" + myTotalFrames + " frame";
+        String state = timer == null || timer.isRunning() ? "running " + myCurrentFrame + "/" + myTotalFrames + " frame" : "stopped";
         return MessageFormat.format("Animator '{0}' @{1} ({2})", myName, System.identityHashCode(this), state);
     }
 }

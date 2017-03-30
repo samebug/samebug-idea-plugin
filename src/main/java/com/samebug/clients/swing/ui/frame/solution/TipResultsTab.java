@@ -15,13 +15,13 @@
  */
 package com.samebug.clients.swing.ui.frame.solution;
 
+import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
+import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
+import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.solution.ITipResultsTab;
-import com.samebug.clients.swing.ui.base.animation.ComponentAnimation;
-import com.samebug.clients.swing.ui.base.animation.FadeInAnimation;
-import com.samebug.clients.swing.ui.base.animation.LazyComponentAnimation;
-import com.samebug.clients.swing.ui.base.animation.Sampler;
+import com.samebug.clients.swing.ui.base.animation.*;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.base.scrollPane.SamebugScrollPane;
@@ -30,37 +30,31 @@ import com.samebug.clients.swing.ui.component.bugmate.RequestHelp;
 import com.samebug.clients.swing.ui.component.bugmate.RevokeHelpRequest;
 import com.samebug.clients.swing.ui.component.community.writeTip.WriteTip;
 import com.samebug.clients.swing.ui.component.hit.TipHit;
-import com.samebug.clients.swing.ui.modules.DrawService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class TipResultsTab extends TransparentPanel implements ITipResultsTab {
-    private final Model model;
-    private final IHelpOthersCTA.Model ctaModel;
-
-    private final JScrollPane scrollPane;
     private final ContentPanel contentPanel;
     private final List<TipHit> tipHits;
 
     private ComponentAnimation myAnimation;
 
     public TipResultsTab(Model model, IHelpOthersCTA.Model ctaModel) {
-        this.model = new Model(model);
-        this.ctaModel = new IHelpOthersCTA.Model(ctaModel);
-
         tipHits = new ArrayList<TipHit>();
         for (int i = 0; i < model.tipHits.size(); i++) {
             TipHit.Model m = model.tipHits.get(i);
             TipHit hit = new TipHit(m);
             tipHits.add(hit);
         }
-        contentPanel = new ContentPanel();
-        scrollPane = new SamebugScrollPane();
+        contentPanel = new ContentPanel(ctaModel, model.bugmateList, model.myHelpRequest, model.askForHelp);
+        contentPanel.setContent(tipHits);
+        JScrollPane scrollPane = new SamebugScrollPane();
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setViewportView(contentPanel);
@@ -71,74 +65,63 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
 
     @Override
     public void paint(Graphics g) {
-        if (myAnimation == null) super.paint(g);
+        if (myAnimation == null || !myAnimation.isRunning()) super.paint(g);
         else myAnimation.paint(g);
     }
 
-    public ComponentAnimation fadeIn(int totalFrames) {
-        myAnimation = new MyFadeInAnimation(totalFrames);
-        return myAnimation;
-    }
-
-    public ComponentAnimation animatedAddTip(ITipHit.Model model, final int tabFadeInFrames, final int tipFloatInFrames) {
+    public ControllableAnimation animatedAddTip(ITipHit.Model model, final int tabFadeInFrames, final int tipFloatInFrames) {
         final TipHit newTip = new TipHit(model);
         tipHits.add(0, newTip);
-        contentPanel.listPanel.update();
-        contentPanel.update();
+        contentPanel.setContent(tipHits);
 
-        // TODO I have to understand what happens here. Removing any of these makes the animation jump. Also, substituting them with revalidate makes it jump.
-        contentPanel.invalidate();
-        contentPanel.validate();
-        contentPanel.invalidate();
+        // This is required to make sure newTip has the correct presented size, so the grow animation will know how many pixels to hide
         contentPanel.validate();
 
-        final ComponentAnimation floatInTip = contentPanel.addTip(newTip, tipFloatInFrames);
+        if (myAnimation != null) myAnimation.forceFinish();
         myAnimation = new MyFadeInAnimation(tabFadeInFrames);
 
-        return myAnimation.andThen(new LazyComponentAnimation(tipFloatInFrames) {
-            @Override
-            public ComponentAnimation createAnimation() {
-                return floatInTip;
-            }
-        });
+        final ControllableAnimation floatInAndFadeInTip = contentPanel.addTip(newTip, tabFadeInFrames, tipFloatInFrames);
+        return floatInAndFadeInTip.with(myAnimation);
     }
 
-    private final class ContentPanel extends SamebugPanel {
+    private static final class ContentPanel extends SamebugPanel {
         final ListPanel listPanel;
         final WriteTip writeTip;
         final WriteTip cta;
         final BugmateList bugmateList;
+        final IBugmateList.Model bugmateListModel;
         final JComponent helpRequest;
 
         private ComponentAnimation contentPanelAnimation;
 
-        {
+        ContentPanel(IHelpOthersCTA.Model ctaModel, IBugmateList.Model bugmateListModel, IMyHelpRequest.Model myHelpRequestModel, IAskForHelp.Model askForHelpModel) {
+            this.bugmateListModel = bugmateListModel;
             listPanel = new ListPanel();
             writeTip = new WriteTip(ctaModel, WriteTip.CTA_TYPE.SMALL);
             cta = new WriteTip(ctaModel, WriteTip.CTA_TYPE.LARGE_FOR_TIP_HITS);
-            bugmateList = new BugmateList(model.bugmateList);
-            if (model.myHelpRequest != null) {
-                helpRequest = new RevokeHelpRequest(model.myHelpRequest);
+            bugmateList = new BugmateList(bugmateListModel);
+            if (myHelpRequestModel != null) {
+                helpRequest = new RevokeHelpRequest(myHelpRequestModel);
             } else {
-                helpRequest = new RequestHelp(model.askForHelp);
+                helpRequest = new RequestHelp(askForHelpModel);
             }
-            update();
         }
 
-        void update() {
+        void setContent(List<TipHit> tipHits) {
             removeAll();
-            if (tipHits.size() > 0 && model.bugmateList.bugmateHits.size() > 0) {
+            listPanel.setContent(tipHits);
+            if (tipHits.size() > 0 && bugmateListModel.bugmateHits.size() > 0) {
                 setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]20[]10[]20"));
                 add(listPanel, "cell 0 0");
                 add(writeTip, "cell 0 1");
                 add(bugmateList, "cell 0 2");
                 add(helpRequest, "cell 0 3, align center, growx");
-            } else if (tipHits.size() == 0 && model.bugmateList.bugmateHits.size() > 0) {
+            } else if (tipHits.size() == 0 && bugmateListModel.bugmateHits.size() > 0) {
                 setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]10[]20"));
                 add(cta, "cell 0 0");
                 add(bugmateList, "cell 0 1");
                 add(helpRequest, "cell 0 2, align center, growx");
-            } else if (tipHits.size() > 0 && model.bugmateList.bugmateHits.size() == 0) {
+            } else if (tipHits.size() > 0 && bugmateListModel.bugmateHits.size() == 0) {
                 setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]10[]20"));
                 add(listPanel, "cell 0 0");
                 add(writeTip, "cell 0 1");
@@ -150,81 +133,45 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
             }
         }
 
-        ComponentAnimation addTip(TipHit tip, int totalFrames) {
-            contentPanelAnimation = new GrowFromTopAndFadeInNewElement(tip, totalFrames, tip.getHeight() + 20);
-            return contentPanelAnimation;
+        ControllableAnimation addTip(TipHit tip, int tabFadeInFrames, int tipFloatInFrames) {
+            if (contentPanelAnimation != null) contentPanelAnimation.forceFinish();
+            contentPanelAnimation = new GrowFromTop(tabFadeInFrames, tipFloatInFrames, tip.getHeight() + 20);
+            ControllableAnimation tipFadeInAnimation = tip.fadeIn(tipFloatInFrames);
+            return contentPanelAnimation.andThen(tipFadeInAnimation, tabFadeInFrames);
         }
 
         @Override
         public void paint(Graphics g) {
-            if (contentPanelAnimation == null) super.paint(g);
+            if (contentPanelAnimation == null || !contentPanelAnimation.isRunning()) super.paint(g);
             else contentPanelAnimation.paint(g);
         }
 
-        private void superPaint(Graphics g) {
-            super.paint(g);
-        }
+        private final class GrowFromTop extends DynamicallyUpdatedGrowFromTopAnimation {
 
-        private final class GrowFromTopAndFadeInNewElement extends ComponentAnimation {
-            protected final Dimension myGrownSize;
-            protected final int growPixels;
-            protected final int[] offsets;
-            protected int currentOffset;
-
-            private final ComponentAnimation tipFadeInAnimation;
-
-            public GrowFromTopAndFadeInNewElement(TipHit tip, int totalFrames, int growPixels) {
-                super(totalFrames);
-                this.myGrownSize = getSize();
-                this.growPixels = growPixels;
+            GrowFromTop(int tabFadeInFrames, int tipFloatInFrames, int growPixels) {
+                super(tabFadeInFrames + tipFloatInFrames, ContentPanel.this, growPixels);
                 assert myGrownSize.height >= growPixels : "Cannot grow " + growPixels + " pixels because its final size is less than that";
-                this.offsets = Sampler.easeInOutCubic(growPixels, totalFrames);
 
-                tipFadeInAnimation = tip.fadeIn(totalFrames);
-                currentOffset = this.growPixels;
-            }
-
-            @Override
-            public final void doUpdateFrame(int frame) {
-                tipFadeInAnimation.setFrame(frame);
-                currentOffset = growPixels - offsets[frame];
-                setSize(new Dimension(myGrownSize.width, myGrownSize.height - currentOffset));
-                revalidate();
-            }
-
-            @Override
-            public final void doPaint(Graphics g) {
-                BufferedImage myComponentImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-                Graphics2D graphics = myComponentImage.createGraphics();
-                ContentPanel.this.superPaint(graphics);
-                graphics.dispose();
-
-                Graphics2D g2 = DrawService.init(g);
-                g2.drawImage(myComponentImage,
-                        0, 0, getWidth(), getHeight(),
-                        0, currentOffset, getWidth(), currentOffset + getHeight(),
-                        ContentPanel.this);
+                // IMPROVE override offset values, so it stays hidden in the first phase
+                Arrays.fill(offsets, 0, tabFadeInFrames, growPixels);
+                System.arraycopy(Sampler.easeInOutCubic(growPixels, tipFloatInFrames), 0, offsets, tabFadeInFrames, tipFloatInFrames);
             }
 
             @Override
             protected void doFinish() {
-                tipFadeInAnimation.finish();
-                contentPanelAnimation = null;
                 revalidate();
                 repaint();
             }
         }
     }
 
-    private final class ListPanel extends SamebugPanel {
-        {
+    private static final class ListPanel extends SamebugPanel {
+        ListPanel() {
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-            update();
         }
 
-        public void update() {
+        void setContent(List<TipHit> tipHits) {
             removeAll();
-            // tipHits is required to be initialized here (the hit views are actually added to the list)
             for (int i = 0; i < tipHits.size(); i++) {
                 if (i == 0) add(Box.createRigidArea(new Dimension(0, 10)));
                 else add(Box.createRigidArea(new Dimension(0, 20)));
@@ -242,7 +189,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
 
         @Override
         protected void doFinish() {
-            TipResultsTab.this.myAnimation = null;
+            TipResultsTab.this.repaint();
         }
     }
 }

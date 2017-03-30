@@ -24,6 +24,7 @@ import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -41,6 +42,11 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
 
         setLayout(new MigLayout("fillx", "0[fill]0", "0[fill]0"));
         changeToClosedState();
+    }
+
+    @Override
+    public void reshape(int x, int y, int width, int height) {
+        super.reshape(x, y, width, height);
     }
 
     @Override

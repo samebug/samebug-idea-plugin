@@ -23,7 +23,7 @@ import java.awt.image.BufferedImage;
 
 abstract class FadeAnimation extends ComponentAnimation {
     protected final JComponent myComponent;
-    protected final BufferedImage myComponentImage;
+    protected BufferedImage myComponentImage;
     private final boolean myFadeIn;
     protected double myRatio = 0;
 
@@ -31,19 +31,26 @@ abstract class FadeAnimation extends ComponentAnimation {
         super(totalFrames);
         myComponent = component;
         myFadeIn = fadeIn;
-        // TODO if the parent calls setFrame(0), we don't need this
-        myRatio = 0;
-
-        // TODO does this work properly on Retina?
-        // in the intellij code they used  myComponentImage = UIUtil.createImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        myComponentImage = new BufferedImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D graphics = myComponentImage.createGraphics();
-        myComponent.paint(graphics);
-        graphics.dispose();
+        runBeforeStart(new Runnable() {
+            @Override
+            public void run() {
+                myComponent.validate();
+                // TODO does this work properly on Retina?
+                // in the intellij code they used  myComponentImage = UIUtil.createImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                myComponentImage = new BufferedImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                Graphics2D graphics = myComponentImage.createGraphics();
+                myComponent.paint(graphics);
+                graphics.dispose();
+            }
+        });
     }
 
     @Override
-    public final void doUpdateFrame(int frame) {
+    public final void doStart() {
+    }
+
+    @Override
+    public final void doSetFrame(int frame) {
         double linearProgress = Math.max(0, Math.min(1, (double) frame / myTotalFrames));
         if (!myFadeIn) linearProgress = 1 - linearProgress;
         myRatio = (1 - Math.cos(Math.PI * linearProgress)) / 2;

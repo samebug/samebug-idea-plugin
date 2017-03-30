@@ -16,6 +16,7 @@
 package com.samebug.clients.swing.ui.base.tabbedPane;
 
 import com.samebug.clients.swing.ui.base.animation.ComponentAnimation;
+import com.samebug.clients.swing.ui.base.animation.ControllableAnimation;
 import com.samebug.clients.swing.ui.base.animation.Sampler;
 import com.samebug.clients.swing.ui.modules.ColorService;
 
@@ -98,14 +99,14 @@ public abstract class SamebugTabHeader extends JPanel {
     /**
      * TODO this does not actually changes the selected property of the tab header
      */
-    public ComponentAnimation animatedSetSelected(boolean selected, int totalFrames) {
-        if (myAnimation != null) myAnimation.finish();
+    public ControllableAnimation animatedSetSelected(boolean selected, int totalFrames) {
+        if (myAnimation != null) myAnimation.forceFinish();
         myAnimation = new FadeAnimation(selected, totalFrames);
         return myAnimation;
     }
 
     private final class FadeAnimation extends ComponentAnimation {
-        Color[] gradient;
+        final Color[] gradient;
 
         public FadeAnimation(boolean makeSelected, int totalFrames) {
             super(totalFrames);
@@ -117,7 +118,11 @@ public abstract class SamebugTabHeader extends JPanel {
         }
 
         @Override
-        protected void doUpdateFrame(int frame) {
+        protected void doStart() {
+        }
+
+        @Override
+        protected void doSetFrame(int frame) {
             setForeground(gradient[frame]);
         }
 
@@ -128,7 +133,6 @@ public abstract class SamebugTabHeader extends JPanel {
 
         @Override
         protected void doFinish() {
-            myAnimation = null;
             updateColors();
         }
     }

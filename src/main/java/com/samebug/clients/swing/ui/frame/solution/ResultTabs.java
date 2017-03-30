@@ -18,8 +18,7 @@ package com.samebug.clients.swing.ui.frame.solution;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.solution.IResultTabs;
 import com.samebug.clients.swing.ui.base.animation.Animator;
-import com.samebug.clients.swing.ui.base.animation.ComponentAnimation;
-import com.samebug.clients.swing.ui.base.animation.LazyComponentAnimation;
+import com.samebug.clients.swing.ui.base.animation.ControllableAnimation;
 import com.samebug.clients.swing.ui.base.tabbedPane.LabelAndHitsTabHeader;
 import com.samebug.clients.swing.ui.base.tabbedPane.SamebugTabbedPane;
 import com.samebug.clients.swing.ui.modules.MessageService;
@@ -51,31 +50,32 @@ public final class ResultTabs extends SamebugTabbedPane implements IResultTabs {
     }
 
     private final class ShowNewTipAnimation extends Animator {
-        private static final int CycleDuration = 5000;
-        private static final int WebFadeOutFrames = 100;
-        private static final int TipFadeInFrames = 100;
-        private static final int TipFloatInFrames = 100;
+        private static final int CycleDuration = 6000;
+        private static final int WebFadeOutFrames = 120;
+        private static final int TipFadeInFrames = 120;
+        private static final int TipFloatInFrames = 120;
 
-        private ComponentAnimation animationChain;
+        private ControllableAnimation animationChain;
 
         public ShowNewTipAnimation(final ITipHit.Model model) {
             super("ShowNewTipAnimation", WebFadeOutFrames + TipFadeInFrames + TipFloatInFrames, CycleDuration, false);
 
-            ComponentAnimation fadeOutWebTab = webResultsTab.fadeOut(WebFadeOutFrames)
+            ControllableAnimation fadeOutWebTab = webResultsTab.fadeOut(WebFadeOutFrames)
                     .with(webResultsTabHeader.animatedSetSelected(false, WebFadeOutFrames));
+            ControllableAnimation fadeInTipTabAndAddTip = tipResultsTab.animatedAddTip(model, TipFadeInFrames, TipFloatInFrames)
+                    .with(tipResultsTabHeader.animatedSetSelected(true, TipFadeInFrames));
 
-            // TODO tip header fade in should be paralell with tip tab fade in, not the whole add tip animation
-            animationChain = fadeOutWebTab.andThen(new LazyComponentAnimation(TipFadeInFrames + TipFloatInFrames) {
+            fadeInTipTabAndAddTip.runBeforeStart(new Runnable() {
                 @Override
-                public ComponentAnimation createAnimation() {
-                    ComponentAnimation fadeInTipTab = tipResultsTab.animatedAddTip(model, TipFadeInFrames, TipFloatInFrames)
-                            .with(tipResultsTabHeader.animatedSetSelected(true, TipFadeInFrames + TipFloatInFrames));
+                public void run() {
                     tipResultsTab.revalidate();
                     tipResultsTab.repaint();
                     setSelectedIndex(0);
-                    return fadeInTipTab;
                 }
             });
+
+            animationChain = fadeOutWebTab.andThen(fadeInTipTabAndAddTip);
+            animationChain.start();
         }
 
         @Override

@@ -18,6 +18,7 @@ package com.samebug.clients.swing.ui.component.hit;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.modules.TextService;
 import com.samebug.clients.swing.ui.base.animation.ComponentAnimation;
+import com.samebug.clients.swing.ui.base.animation.ControllableAnimation;
 import com.samebug.clients.swing.ui.base.animation.FadeInAnimation;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
@@ -41,7 +42,7 @@ public final class TipHit extends RoundedBackgroundPanel implements ITipHit {
     private final MessageLabel tipMessage;
     private final MarkButton mark;
 
-    private FadeInAnimation myAnimation;
+    private ComponentAnimation myAnimation;
 
     public TipHit(Model model) {
         this.model = new Model(model);
@@ -65,14 +66,14 @@ public final class TipHit extends RoundedBackgroundPanel implements ITipHit {
         add(author, "cell 0 2, align right");
     }
 
-    public ComponentAnimation fadeIn(int totalFrames) {
+    public ControllableAnimation fadeIn(int totalFrames) {
         myAnimation = new MyFadeInAnimation(totalFrames);
         return myAnimation;
     }
 
     @Override
     public void paint(Graphics g) {
-        if (myAnimation == null) super.paint(g);
+        if (myAnimation == null || !myAnimation.isRunning()) super.paint(g);
         else myAnimation.paint(g);
     }
 
@@ -125,7 +126,7 @@ public final class TipHit extends RoundedBackgroundPanel implements ITipHit {
 
         @Override
         protected void doFinish() {
-            TipHit.this.myAnimation = null;
+            TipHit.this.repaint();
         }
     }
 }

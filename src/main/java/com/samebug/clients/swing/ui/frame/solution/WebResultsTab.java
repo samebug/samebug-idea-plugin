@@ -18,6 +18,7 @@ package com.samebug.clients.swing.ui.frame.solution;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
 import com.samebug.clients.swing.ui.base.animation.ComponentAnimation;
+import com.samebug.clients.swing.ui.base.animation.ControllableAnimation;
 import com.samebug.clients.swing.ui.base.animation.FadeOutAnimation;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
@@ -39,7 +40,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class WebResultsTab extends TransparentPanel implements IWebResultsTab {
-    private final Model model;
     private final IHelpOthersCTA.Model ctaModel;
 
     private final JScrollPane scrollPane;
@@ -49,7 +49,6 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
     private ComponentAnimation myAnimation;
 
     public WebResultsTab(Model model, IHelpOthersCTA.Model ctaModel) {
-        this.model = new Model(model);
         this.ctaModel = new IHelpOthersCTA.Model(ctaModel);
 
         webHits = new ArrayList<WebHit>();
@@ -75,14 +74,12 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
 
     @Override
     public void paint(Graphics g) {
-        if (myAnimation == null) super.paint(g);
+        if (myAnimation == null || !myAnimation.isRunning()) super.paint(g);
         else myAnimation.paint(g);
     }
 
-    public ComponentAnimation fadeOut(int totalFrames) {
-        if (myAnimation != null) {
-            myAnimation.finish();
-        }
+    public ControllableAnimation fadeOut(int totalFrames) {
+        if (myAnimation != null) myAnimation.forceFinish();
         myAnimation = new MyFadeOut(totalFrames);
         return myAnimation;
     }
@@ -169,7 +166,7 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
 
         @Override
         protected void doFinish() {
-            WebResultsTab.this.myAnimation = null;
+            WebResultsTab.this.repaint();
         }
     }
 }
