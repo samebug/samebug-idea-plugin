@@ -19,6 +19,8 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +35,10 @@ final public class TutorialApplicationComponent implements ApplicationComponent,
 
     @Override
     public void initComponent() {
-
+        if (state.firstRun) {
+            TrackingService.trace(Events.pluginInstall());
+            state.firstRun = false;
+        }
     }
 
     @Override

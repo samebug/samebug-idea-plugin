@@ -29,8 +29,6 @@ import com.samebug.clients.common.services.SearchService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.search.SearchRequestListener;
 import com.samebug.clients.idea.search.StackTraceMatcherListener;
-import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 
 public class ConsoleSearchController implements StackTraceMatcherListener {
     public ConsoleSearchController(MessageBusConnection connection) {
@@ -56,7 +54,7 @@ public class ConsoleSearchController implements StackTraceMatcherListener {
                         if (savedSearchRequest != null) project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).savedSearch(savedSearchRequest);
                         else project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failedSearch(searchInfo);
                     }
-                    TrackingService.trace(Events.searchSucceeded(searchInfo, result));
+//                    TrackingService.trace(Events.searchSucceeded(searchInfo, result));
                 } catch (SamebugClientException e) {
                     searchRequestService.searchFailed(searchInfo);
                     if (!project.isDisposed()) project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failedSearch(searchInfo);

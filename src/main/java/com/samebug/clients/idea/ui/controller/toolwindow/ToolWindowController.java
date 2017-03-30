@@ -31,6 +31,7 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.FocusListener;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.authentication.AuthenticationController;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.helpRequest.HelpRequestController;
@@ -38,6 +39,7 @@ import com.samebug.clients.idea.ui.controller.helpRequestList.HelpRequestListCon
 import com.samebug.clients.idea.ui.controller.helpRequestPopup.HelpRequestPopupController;
 import com.samebug.clients.idea.ui.controller.solution.SolutionFrameController;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -93,18 +95,21 @@ final public class ToolWindowController implements FocusListener, Disposable {
     public void focusOnAuthentication() {
         AuthenticationController controller = new AuthenticationController(this, project);
         openTab(controller, MessageService.message("samebug.toolwindow.authentication.tabName"));
+        TrackingService.trace(Events.showLoginScreen(controller));
     }
 
     public void focusOnHelpRequestList() {
         HelpRequestListController controller = new HelpRequestListController(this, project);
         controller.load();
         openTab(controller, MessageService.message("samebug.toolwindow.helpRequestList.tabName"));
+        TrackingService.trace(Events.showHelpRequestListScreen(controller));
     }
 
     public void focusOnHelpRequest(String helpRequestId) {
         HelpRequestController controller = new HelpRequestController(this, project, helpRequestId);
         controller.load();
         openTab(controller, MessageService.message("samebug.toolwindow.helpRequest.tabName"));
+        TrackingService.trace(Events.showHelpRequestScreen(controller, helpRequestId));
     }
 
     @Override
@@ -112,6 +117,7 @@ final public class ToolWindowController implements FocusListener, Disposable {
         SolutionFrameController controller = new SolutionFrameController(this, project, searchId);
         controller.load();
         openTab(controller, MessageService.message("samebug.toolwindow.search.tabName"));
+        TrackingService.trace(Events.showSolutionsScreen(controller, searchId));
     }
 
     @Override
@@ -134,6 +140,7 @@ final public class ToolWindowController implements FocusListener, Disposable {
         final ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
 
         // clean up previous tab
+        boolean toolWindowOpen = currentFrame == null;
         if (currentFrame != null) {
             toolwindowCM.removeContent(toolwindowCM.getContent(currentFrame.getControlPanel()), true);
             Disposer.dispose(currentFrame);
@@ -153,8 +160,10 @@ final public class ToolWindowController implements FocusListener, Disposable {
         //   - I don't know if it has any side effects
 //        toolwindowCM.requestFocus(newToolWindowTab, true);
         toolWindow.show(null);
-        ((JComponent) currentFrame.view).revalidate();
-        ((JComponent) currentFrame.view).repaint();
+        JComponent view = (JComponent) currentFrame.view;
+        view.revalidate();
+        view.repaint();
+        TrackingService.trace(Events.toolWindowOpen(project, view.getWidth(), view.getHeight()));
     }
 
     private ToolWindow getToolWindow() {

@@ -18,7 +18,9 @@ package com.samebug.clients.idea.components.project;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 
 public class SamebugProjectComponent extends AbstractProjectComponent {
     private ToolWindowController toolWindowController;
@@ -39,11 +41,16 @@ public class SamebugProjectComponent extends AbstractProjectComponent {
         this.toolWindowController = new ToolWindowController(myProject);
         this.runDebugWatcher = new RunDebugWatcher(myProject);
         this.deprecationNotifier = new DeprecationNotifier(myProject);
+
+        TrackingService.trace(Events.projectOpen(myProject));
     }
 
     @Override
     public void projectClosed() {
         Disposer.dispose(toolWindowController);
         Disposer.dispose(runDebugWatcher);
+
+        TrackingService.trace(Events.projectClose(myProject));
+
     }
 }

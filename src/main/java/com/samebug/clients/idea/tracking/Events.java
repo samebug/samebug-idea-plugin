@@ -22,7 +22,9 @@ import com.samebug.clients.common.api.entities.search.CreatedSearch;
 import com.samebug.clients.common.api.entities.tracking.TrackEvent;
 import com.samebug.clients.common.entities.search.DebugSessionInfo;
 import com.samebug.clients.common.entities.search.SearchInfo;
+import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 
+import javax.swing.*;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,8 +34,16 @@ public final class Events {
         return new TrackBuilder("Plugin", "FirstRun").getEvent();
     }
 
-    public static TrackEvent apiKeySet() {
+    public static TrackEvent configOpen() {
+        return new TrackBuilder("Settings", "Open").getEvent();
+    }
+
+    public static TrackEvent changeApiKey() {
         return new TrackBuilder("Settings", "ChangeApiKey").getEvent();
+    }
+
+    public static TrackEvent changeWorkspace() {
+        return new TrackBuilder("Settings", "ChangeWorkspace").getEvent();
     }
 
     public static TrackEvent projectOpen(final Project project) {
@@ -80,10 +90,46 @@ public final class Events {
         }.getEvent();
     }
 
-    public static TrackEvent toolWindowOpen(final Project project) {
+    public static TrackEvent toolWindowOpen(final Project project, final int width, final int height) {
         return new TrackBuilder("ToolWindow", "Open") {
             protected void initFields() {
                 add("projectName", project.getName());
+                add("screenWidth", width);
+                add("screenHeight", height);
+            }
+        }.getEvent();
+    }
+
+    public static TrackEvent showLoginScreen(final BaseFrameController controller) {
+        return new ShowToolwindowBuilder("ToolWindow", "Show", controller) {
+            protected void initFields() {
+                add("screenName", LOGIN);
+            }
+        }.getEvent();
+    }
+
+    public static TrackEvent showHelpRequestListScreen(final BaseFrameController controller) {
+        return new ShowToolwindowBuilder("ToolWindow", "Show", controller) {
+            protected void initFields() {
+                add("screenName", HELP_REQUEST_LIST);
+            }
+        }.getEvent();
+    }
+
+    public static TrackEvent showHelpRequestScreen(final BaseFrameController controller, final String helpRequestId) {
+        return new ShowToolwindowBuilder("ToolWindow", "Show", controller) {
+            protected void initFields() {
+                add("screenName", HELP_REQUEST);
+                add("helpRequestId", helpRequestId);
+            }
+        }.getEvent();
+    }
+
+    public static TrackEvent showSolutionsScreen(final BaseFrameController controller, final int searchId) {
+        return new ShowToolwindowBuilder("ToolWindow", "Show", controller) {
+            protected void initFields() {
+                add("screenName", SOLUTIONS);
+                add("searchId", searchId);
             }
         }.getEvent();
     }
@@ -102,10 +148,6 @@ public final class Events {
                 add("searchId", searchId);
             }
         }.getEvent();
-    }
-
-    public static TrackEvent configOpen() {
-        return new TrackBuilder("Configuration", "Open").getEvent();
     }
 
     public static TrackEvent writeTipOpen(final Project project, final int searchId) {
@@ -161,14 +203,6 @@ public final class Events {
         }.getEvent();
     }
 
-    public static TrackEvent gutterIconForSavedSearch(final int searchId) {
-        return new TrackBuilder("Gutter", "SavedSearch") {
-            protected void initFields() {
-                add("searchId", searchId);
-            }
-        }.getEvent();
-    }
-
     public static TrackEvent gutterIconClicked(final int searchId) {
         return new TrackBuilder("Gutter", "Clicked") {
             protected void initFields() {
@@ -177,7 +211,19 @@ public final class Events {
         }.getEvent();
     }
 
+    public static TrackEvent gutterIconTooltip(final int searchId) {
+        return new TrackBuilder("Gutter", "Tooltip") {
+            protected void initFields() {
+                add("searchId", searchId);
+            }
+        }.getEvent();
+    }
+
     private final static Logger LOGGER = Logger.getInstance(Events.class);
+    private static final String LOGIN = "Login";
+    private static final String HELP_REQUEST_LIST = "HelpRequestList";
+    private static final String HELP_REQUEST = "HelpRequest";
+    private static final String SOLUTIONS = "Solutions";
 
     /**
      * Use TrackBuilder to make sure that the creation of a TrackEvent will not leak exception to the caller.
@@ -206,6 +252,19 @@ public final class Events {
             } catch (Exception e) {
                 LOGGER.debug("Failed to send tracking event", e);
                 return null;
+            }
+        }
+    }
+
+    private static class ShowToolwindowBuilder extends TrackBuilder {
+
+        public ShowToolwindowBuilder(String category, String action, BaseFrameController controller) {
+            super(category, action);
+            try {
+                JComponent v = (JComponent) controller.view;
+                add("screenWidth", v.getWidth());
+                add("screenHeight", v.getHeight());
+            } catch (Exception ignored) {
             }
         }
     }

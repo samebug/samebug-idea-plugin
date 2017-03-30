@@ -25,9 +25,9 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
+import com.intellij.util.ui.UIUtil;
 import com.samebug.clients.common.api.entities.tracking.TrackEvent;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.ConfigChangeListener;
 import com.samebug.clients.swing.ui.modules.TrackingService;
 
@@ -39,9 +39,9 @@ public final class IdeaTrackingService extends TrackingService implements Config
     private final static Logger LOGGER = Logger.getInstance(IdeaTrackingService.class);
     private ApplicationSettings config;
 
-    public IdeaTrackingService(MessageBusConnection connection) {
+    public IdeaTrackingService(MessageBusConnection connection, ApplicationSettings config) {
         connection.subscribe(ConfigChangeListener.TOPIC, this);
-        config = IdeaSamebugPlugin.getInstance().getState();
+        this.config = config;
     }
 
     @Override
@@ -55,6 +55,7 @@ public final class IdeaTrackingService extends TrackingService implements Config
                 addAppInfo(event);
                 addUserInfo(event);
                 addProjectInfo(event);
+                addEnvironmentInfo(event);
             } catch (Exception e) {
                 LOGGER.debug("Failed to report tracking event", e);
             }
@@ -97,5 +98,15 @@ public final class IdeaTrackingService extends TrackingService implements Config
             // TODO we should use putIfAbsent
             if (!e.fields.containsKey("projectName")) e.fields.put("projectName", project.getName());
         }
+    }
+
+    private void addEnvironmentInfo(TrackEvent e) {
+        Map<String, String> environmentInfo = new HashMap<String, String>();
+        environmentInfo.put("os_name", System.getProperty("os.name"));
+        environmentInfo.put("os_version", System.getProperty("os.version"));
+        environmentInfo.put("java_version", System.getProperty("java.version"));
+        environmentInfo.put("java_runtime_version", System.getProperty("java.runtime.version"));
+        environmentInfo.put("is_retina", Boolean.toString(UIUtil.isRetina()));
+        e.fields.put("environmentInfo", environmentInfo);
     }
 }

@@ -31,6 +31,7 @@ import com.samebug.clients.idea.controllers.ConsoleSearchController;
 import com.samebug.clients.idea.controllers.NotificationController;
 import com.samebug.clients.idea.controllers.TimedTasks;
 import com.samebug.clients.idea.controllers.WebSocketClientService;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.frame.ConcurrencyService;
 import com.samebug.clients.idea.ui.controller.frame.ConversionService;
 import com.samebug.clients.idea.ui.controller.toolwindow.ConfigChangeListener;
@@ -145,7 +146,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         IconService.install(new IdeaIconService());
         ListenerService.install(new IdeaListenerService());
         MessageService.install(new IdeaMessageService());
-        TrackingService.install(new IdeaTrackingService(connection));
+        TrackingService.install(new IdeaTrackingService(connection, state.get()));
 
         checkAuthenticationInTheBackgroundWithCurrentConfig();
     }
@@ -184,8 +185,8 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
             urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
             ApplicationManager.getApplication().getMessageBus().syncPublisher(ConfigChangeListener.TOPIC).configChange(oldSettings, newSettings);
         } finally {
-            // TODO change the event
-//            Tracking.appTracking().trace(Events.apiKeySet());
+            if (oldSettings.apiKey != newSettings.apiKey) TrackingService.trace(Events.changeApiKey());
+            if (oldSettings.workspaceId != newSettings.workspaceId) TrackingService.trace(Events.changeWorkspace());
         }
     }
 
