@@ -1,3 +1,18 @@
+/*
+ * Copyright 2017 Samebug, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.samebug.clients.swing.ui.base.animation;
 
 import java.awt.*;
@@ -28,11 +43,11 @@ public abstract class ControllableAnimation {
         assert myState == State.INITIALIZED : "Animation started from state " + myState;
         assert EventQueue.isDispatchThread();
 
-        for ( Runnable r : runBeforeStart) r.run();
+        for (Runnable r : runBeforeStart) r.run();
         myState = State.RUNNING;
         myCurrentFrame = 0;
         doStart();
-        for ( Runnable r : runAfterStart) r.run();
+        for (Runnable r : runAfterStart) r.run();
     }
 
     public final void setFrame(int frame) {
@@ -49,11 +64,11 @@ public abstract class ControllableAnimation {
         assert myState == State.RUNNING : "Animation finished at state " + myState;
         assert EventQueue.isDispatchThread();
 
-        for ( Runnable r : runBeforeFinish) r.run();
+        for (Runnable r : runBeforeFinish) r.run();
         myState = State.FINISHED;
         myCurrentFrame = myTotalFrames;
         doFinish();
-        for ( Runnable r : runAfterFinish) r.run();
+        for (Runnable r : runAfterFinish) r.run();
     }
 
     public final boolean isStarted() {
