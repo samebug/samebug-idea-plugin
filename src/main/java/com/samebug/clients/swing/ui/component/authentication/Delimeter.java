@@ -27,7 +27,7 @@ import java.awt.*;
 
 public final class Delimeter extends JComponent {
     private final String label = MessageService.message("samebug.component.authentication.delimeter");
-    private final Color[] myColor = ColorService.FormSeparator;
+    private final Color[] myColor = ColorService.Separator;
     private final int padding = 6;
 
     {
