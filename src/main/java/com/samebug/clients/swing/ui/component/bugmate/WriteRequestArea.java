@@ -23,6 +23,7 @@ import com.samebug.clients.swing.ui.base.form.MaxCharactersConstraints;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.component.helpRequest.ExceptionPreview;
 import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
@@ -116,6 +117,7 @@ public final class WriteRequestArea extends JComponent implements IFormField {
     final class ErrorLabel extends SamebugMultilineLabel {
         public ErrorLabel() {
             setForegroundColor(ColorService.NormalForm.error);
+            setFont(FontService.regular(12));
             setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
         }
     }

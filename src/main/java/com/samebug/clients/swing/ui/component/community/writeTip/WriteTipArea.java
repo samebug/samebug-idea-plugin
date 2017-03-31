@@ -21,6 +21,7 @@ import com.samebug.clients.common.ui.component.form.IFormField;
 import com.samebug.clients.swing.ui.base.form.LengthRestrictedArea;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
@@ -95,6 +96,7 @@ public final class WriteTipArea extends JComponent implements IFormField {
     final class ErrorLabel extends SamebugMultilineLabel {
         public ErrorLabel() {
             setForegroundColor(ColorService.TipForm.error);
+            setFont(FontService.regular(12));
             setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
         }
     }

@@ -83,6 +83,7 @@ public abstract class PasswordFormField extends SamebugPanel {
     final class ErrorLabel extends SamebugMultilineLabel {
         public ErrorLabel() {
             setForegroundColor(ColorService.NormalForm.error);
+            setFont(FontService.regular(12));
             setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
         }
     }
