@@ -27,10 +27,15 @@ public class LoadingAnimation extends JComponent {
     final int size;
     final int thickness;
     final MyAnimator animator;
-    final Color[] arcColor = ColorService.LoadingArc;
+    final Color arcColor;
 
     public LoadingAnimation(int size) {
+        this(size, ColorService.forCurrentTheme(ColorService.LoadingArc));
+    }
+
+    public LoadingAnimation(int size, Color arcColor) {
         this.size = size;
+        this.arcColor = arcColor;
         thickness = size < 20 ? 1 : size / 20;
         animator = new MyAnimator();
 
@@ -66,7 +71,6 @@ public class LoadingAnimation extends JComponent {
 
         @Override
         public void paintNow(int frame, int totalFrames, int cycle) {
-            // TODO this should happen on the EDT?
             currentFrame = frame;
             repaint();
         }
@@ -80,8 +84,7 @@ public class LoadingAnimation extends JComponent {
 
         // TODO we can extract most of the computations to arrays if there is a preformance issue
         private GradientPaint gradient(float arcCenterDegrees) {
-            Color tip = ColorService.forCurrentTheme(arcColor);
-            Color counterPoint = new Color(tip.getRed(), tip.getGreen(), tip.getBlue(), 0);
+            Color counterPoint = new Color(arcColor.getRed(), arcColor.getGreen(), arcColor.getBlue(), 0);
 
             float r = size / 2;
             double arcCenterRadians = (float) Math.toRadians(arcCenterDegrees);
@@ -91,7 +94,7 @@ public class LoadingAnimation extends JComponent {
             float arcCenterY = r + cos * r;
             float counterPointX = r - sin * r;
             float counterPointY = r - cos * r;
-            return new GradientPaint(arcCenterX, arcCenterY, ColorService.forCurrentTheme(arcColor), counterPointX, counterPointY, counterPoint);
+            return new GradientPaint(arcCenterX, arcCenterY, arcColor, counterPointX, counterPointY, counterPoint);
         }
     }
 }

@@ -97,10 +97,10 @@ public abstract class BasicFrame extends ErrorBarPane implements IFrame {
 
     private final class LoadingPanel extends TransparentPanel {
         public LoadingPanel() {
-            final LoadingAnimation animation = new LoadingAnimation(80);
+            final LoadingAnimation animation = new LoadingAnimation(40);
             final CenteredMultilineLabel label = new CenteredMultilineLabel();
             label.setText(MessageService.message("samebug.frame.loading"));
-            setLayout(new MigLayout("fillx", "0:push[fill]0:push", "0:push[]30[]0:push"));
+            setLayout(new MigLayout("fillx", "0:push[fill]0:push", "0:push[]15[]0:push"));
             add(animation, "cell 0 0, wmin 0, al center");
             add(label, "cell 0 1, wmin 0");
         }

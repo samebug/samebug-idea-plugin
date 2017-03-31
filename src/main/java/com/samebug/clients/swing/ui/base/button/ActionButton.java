@@ -53,7 +53,7 @@ public abstract class ActionButton extends BasicButton {
         removeAll();
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         setLayout(new MigLayout("", ":push[]:push", ":push[]:push"));
-        loadingAnimation = new LoadingAnimation(20);
+        loadingAnimation = new LoadingAnimation(20, interactionListener.getColor());
         add(loadingAnimation, "align center, h 20!");
         setMinimumSize(currentSize);
         setPreferredSize(currentSize);

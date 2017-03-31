@@ -40,15 +40,14 @@ import java.awt.*;
  */
 public abstract class BasicButton extends JComponent {
     protected ForegroundColorChanger interactionListener;
+    protected InteractionColors interactionColors;
     protected Color[] backgroundColor;
-    protected Color[] disabledColor;
     protected boolean filled;
     protected Color currentChildrenColor;
 
     public BasicButton(boolean filled) {
         this.filled = filled;
 
-        disabledColor = ColorService.DisabledButton;
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         setOpaque(false);
         addMouseListener(new BasicButtonListener());
@@ -57,6 +56,7 @@ public abstract class BasicButton extends JComponent {
     }
 
     public void setInteractionColors(InteractionColors c) {
+        interactionColors = c;
         if (interactionListener != null) interactionListener.uninstall();
         interactionListener = new ForegroundColorChanger(c, this);
         if (isEnabled()) {
@@ -136,9 +136,10 @@ public abstract class BasicButton extends JComponent {
         updateColors();
     }
 
+    // TODO maybe interaction listener should handle the disabled state also?
     private void updateColors() {
         if (isEnabled() && interactionListener != null) setForeground(interactionListener.getColor());
-        else if (!isEnabled()) setForeground(ColorService.forCurrentTheme(disabledColor));
+        else if (!isEnabled() && interactionColors != null) setForeground(ColorService.forCurrentTheme(interactionColors.disabled));
         setBackground(ColorService.forCurrentTheme(backgroundColor));
     }
 

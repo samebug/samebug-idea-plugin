@@ -74,8 +74,7 @@ public abstract class ColorService {
     public final static Color[] ScrollbarTrack = new Color[]{new Color(0xF5F5F5), new Color(0x2D2E2F)};
     public final static Color[] ScrollbarThumb = new Color[]{new Color(0xD5D5D5), new Color(0x484A4B)};
     public final static Color[] ErrorBar = new Color[]{new Color(0xF8F4C8), new Color(0xF2EBAB)};
-    public final static Color[] LoadingArc = new Color[]{new Color(0x276ABC), new Color(0x72C8F6)};
-    public final static Color[] DisabledButton = new Color[]{new Color(0x81B6C8), new Color(0x78A6D4)};
+    public final static Color[] LoadingArc = new Color[]{new Color(0x3379A1), new Color(0x61B6E7)};
 
     public static final FormColors NormalForm = new FormColors(
             new Color[]{new Color(0xB2B2B2), new Color(0x666768)},
@@ -102,19 +101,22 @@ public abstract class ColorService {
     public final static InteractionColors LinkInteraction = new InteractionColors(
             new Color[]{new Color(0xFF8000), new Color(0xFF8000)},
             new Color[]{new Color(0xFEA144), new Color(0xFEA144)},
-            new Color[]{new Color(0xED7700), new Color(0xED7700)}
+            new Color[]{new Color(0xED7700), new Color(0xED7700)},
+            new Color[]{new Color(0xFEA144), new Color(0xFEA144)}
     );
 
     public final static InteractionColors SecondaryLinkInteraction = new InteractionColors(
             new Color[]{new Color(0x333333), new Color(0xCBCDCF)},
             new Color[]{new Color(0xFEA144), new Color(0xFEA144)},
-            new Color[]{new Color(0xED7700), new Color(0xED7700)}
+            new Color[]{new Color(0xED7700), new Color(0xED7700)},
+            new Color[]{new Color(0xFEA144), new Color(0xFEA144)}
     );
 
     public final static InteractionColors MarkInteraction = new InteractionColors(
             new Color[]{new Color(0x3E85DE), new Color(0x7CD2FF)},
             new Color[]{new Color(0x66A6F6), new Color(0xBBE8FF)},
-            new Color[]{new Color(0x3E85DE), new Color(0x7CD2FF)}
+            new Color[]{new Color(0x3E85DE), new Color(0x7CD2FF)},
+            new Color[]{new Color(0x81B6C8), new Color(0x78A6D4)}
     );
 
     protected abstract <T> T internalForCurrentTheme(T[] objects);
