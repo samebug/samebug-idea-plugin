@@ -20,8 +20,6 @@ import com.samebug.clients.swing.ui.base.interaction.InteractionColors;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-import java.awt.*;
-
 public final class MessageLabel extends NumberLabel {
     private ForegroundColorChanger interactionListener;
 
@@ -29,7 +27,6 @@ public final class MessageLabel extends NumberLabel {
         super(nMessages, MessageService.message("samebug.component.profile.messages.label"));
 
         setInteractionColors(ColorService.SecondaryLinkInteraction);
-        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         updateColors();
     }
 

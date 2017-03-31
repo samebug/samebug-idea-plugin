@@ -60,7 +60,6 @@ public abstract class LengthRestrictedArea extends SamebugPanel {
                 repaint();
             }
         });
-        setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

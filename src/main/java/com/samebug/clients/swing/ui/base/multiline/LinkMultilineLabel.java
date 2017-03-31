@@ -23,7 +23,6 @@ import com.samebug.clients.swing.ui.modules.FontService;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTextAreaUI;
 import javax.swing.text.DefaultCaret;
-import java.awt.*;
 
 public class LinkMultilineLabel extends JTextArea {
     private ForegroundColorChanger interactionListener;
@@ -38,7 +37,6 @@ public class LinkMultilineLabel extends JTextArea {
         setInteractionColors(ColorService.LinkInteraction);
         setFont(FontService.regular(16));
         setOpaque(false);
-        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         updateColors();
     }

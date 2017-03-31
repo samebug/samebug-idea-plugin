@@ -38,7 +38,6 @@ public class LinkLabel extends JLabel {
         super(text);
         setInteractionColors(ColorService.LinkInteraction);
         setFont(font);
-        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
     public void setInteractionColors(InteractionColors c) {

@@ -53,7 +53,6 @@ public abstract class BasicButton extends JComponent {
         setOpaque(false);
         addMouseListener(new BasicButtonListener());
 
-        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         setBackgroundColor(ColorService.Background);
     }
 

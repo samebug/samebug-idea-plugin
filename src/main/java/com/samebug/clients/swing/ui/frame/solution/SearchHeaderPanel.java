@@ -48,7 +48,6 @@ public final class SearchHeaderPanel extends SamebugPanel implements ISearchHead
 
             setText(model.title);
 
-            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {

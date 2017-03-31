@@ -27,7 +27,6 @@ import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
@@ -53,7 +52,6 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
         add(helpRequestBody, "cell 1 1, wmin 0");
         add(exceptionBody, "cell 1 2, wmin 0");
 
-        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
