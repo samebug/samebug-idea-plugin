@@ -63,7 +63,6 @@ public abstract class LogInFormHandler extends PostFormHandler<LoggedInUser> {
     protected void handleNonFormBadRequests(RestError nonFormError, List<String> globalErrors, List<FieldError> fieldErrors) {
         super.handleNonFormBadRequests(nonFormError, globalErrors, fieldErrors);
         if (nonFormError.code.equals(LogIn.E_UNKNOWN_CREDENTIALS)) {
-            fieldErrors.add(new FieldError(LogIn.EMAIL, LogIn.E_UNKNOWN_CREDENTIALS));
             fieldErrors.add(new FieldError(LogIn.PASSWORD, LogIn.E_UNKNOWN_CREDENTIALS));
         } else globalErrors.add(MessageService.message("samebug.component.authentication.logIn.error.badRequest"));
     }
