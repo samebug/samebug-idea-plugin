@@ -29,7 +29,17 @@ public class ConfigChangeListener implements com.samebug.clients.idea.messages.C
     }
 
     @Override
-    public void configChange(ApplicationSettings old, ApplicationSettings c) {
+    public void configChange(final ApplicationSettings old, final ApplicationSettings c) {
+        if (ApplicationManager.getApplication().isDispatchThread()) doConfigChange(old, c);
+        else ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                doConfigChange(old, c);
+            }
+        });
+    }
+
+    private void doConfigChange(ApplicationSettings old, ApplicationSettings c) {
         if (c.apiKey == null) twc.focusOnAuthentication();
         else {
             if (!c.apiKey.equals(old.apiKey) || !c.serverRoot.equals(old.serverRoot)) twc.focusOnHelpRequestList();
