@@ -60,7 +60,7 @@ public final class LogInForm extends JComponent implements ILogInForm {
             }
         });
 
-        setLayout(new MigLayout("fillx", "0[120!]20[120!]0", "0[]10[]20[]0"));
+        setLayout(new MigLayout("fillx", ":push[50%]20[50%]:push", "0[]10[]20[]0"));
         add(email, "cell 0 0, spanx 2, growx");
         add(password, "cell 0 1, spanx 2, growx");
         add(logIn, "cell 0 2, growx");

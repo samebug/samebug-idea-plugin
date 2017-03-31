@@ -33,5 +33,4 @@ public final class LogInTab extends JComponent {
         add(delimeter, "cell 0 1");
         add(anonymousUseForm, "cell 0 2");
     }
-
 }

@@ -52,7 +52,8 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
             }
         });
 
-        setLayout(new MigLayout("fillx", "0[120!]20[120!]0", "0[]10[]10[]20[]0"));
+        // TODO probably we should declare mig layout sizes explicitly in pixels, because the default somehow can get overridden to lpx (logical pixels) that leads to obscure bugs.
+        setLayout(new MigLayout("fillx", "0[50%]20[50%]0", "0[]10[]10[]20[]0"));
         add(displayName, "cell 0 0, spanx 2, growx");
         add(email, "cell 0 1, spanx 2, growx");
         add(password, "cell 0 2, spanx 2, growx");
