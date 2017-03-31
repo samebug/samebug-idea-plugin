@@ -23,6 +23,7 @@ import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.idea.ui.controller.form.CreateTipFormHandler;
 import com.samebug.clients.swing.ui.component.community.writeTip.WriteTip;
 import com.samebug.clients.swing.ui.frame.solution.ResultTabs;
+import com.samebug.clients.swing.ui.modules.ComponentService;
 
 import java.awt.*;
 
@@ -38,24 +39,17 @@ final class HelpOthersCTAListener implements IHelpOthersCTA.Listener {
         new CreateTipFormHandler(controller.view, source, new CreateTip(controller.searchId, tipBody, null, null)) {
             @Override
             protected void afterPostForm(RestHit<Tip> response) {
-                // TODO
                 ITipHit.Model tip = controller.conversionService.tipHit(response, false);
 
-                WriteTip writeTip = findAncestor((Component) source, WriteTip.class);
-                writeTip.successPostTip();
-                ResultTabs resultTabs = findAncestor(writeTip, ResultTabs.class);
-                resultTabs.animatedAddTip(tip);
+                WriteTip writeTip = ComponentService.findAncestor((Component) source, WriteTip.class);
+                assert writeTip != null;
+                ResultTabs resultTabs = ComponentService.findAncestor(writeTip, ResultTabs.class);
+                assert resultTabs != null;
 
-//                controller.load();
+                writeTip.successPostTip();
+                resultTabs.animatedAddTip(tip);
             }
         }.execute();
-    }
-
-    private static <T> T findAncestor(Component component, Class<T> searchedClass) {
-        for (Component c = component; c != null; c = c.getParent()) {
-            if (searchedClass.isInstance(c)) return searchedClass.cast(c);
-        }
-        return null;
     }
 }
 

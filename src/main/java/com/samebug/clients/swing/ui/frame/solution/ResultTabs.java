@@ -51,30 +51,43 @@ public final class ResultTabs extends SamebugTabbedPane implements IResultTabs {
 
     private final class ShowNewTipAnimation extends Animator {
         private static final int CycleDuration = 6000;
-        private static final int WebFadeOutFrames = 120;
-        private static final int TipFadeInFrames = 120;
-        private static final int TipFloatInFrames = 120;
+        private static final int FadeOutFrames = 200;
+        private static final int FadeInFrames = 200;
+        private static final int TipFloatInFrames = 200;
 
         private ControllableAnimation animationChain;
 
         public ShowNewTipAnimation(final ITipHit.Model model) {
-            super("ShowNewTipAnimation", WebFadeOutFrames + TipFadeInFrames + TipFloatInFrames, CycleDuration, false);
+            // TODO the Animator should compute its totalFrames from the internal ControllableAnimation
+            super("ShowNewTipAnimation", FadeOutFrames + FadeInFrames + TipFloatInFrames, CycleDuration, false);
 
-            ControllableAnimation fadeOutWebTab = webResultsTab.fadeOut(WebFadeOutFrames)
-                    .with(webResultsTabHeader.animatedSetSelected(false, WebFadeOutFrames));
-            ControllableAnimation fadeInTipTabAndAddTip = tipResultsTab.animatedAddTip(model, TipFadeInFrames, TipFloatInFrames)
-                    .with(tipResultsTabHeader.animatedSetSelected(true, TipFadeInFrames));
+            final ControllableAnimation showTipTabAnimation;
+            if (getSelectedIndex() == 0) {
+                ControllableAnimation fadeOut = tipResultsTab.fadeOut(FadeOutFrames);
+                ControllableAnimation fadeIn = tipResultsTab.fadeIn(FadeInFrames);
+                fadeIn.runBeforeStart(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO scroll to top
+                    }
+                });
+                showTipTabAnimation = fadeOut.andThen(fadeIn);
+            } else {
+                ControllableAnimation fadeOut = webResultsTab.fadeOut(FadeOutFrames)
+                        .with(webResultsTabHeader.animatedSetSelected(false, FadeOutFrames));
+                ControllableAnimation fadeIn = tipResultsTab.fadeIn(FadeInFrames)
+                        .with(tipResultsTabHeader.animatedSetSelected(true, FadeInFrames));
+                fadeIn.runBeforeStart(new Runnable() {
+                    @Override
+                    public void run() {
+                        setSelectedIndex(0);
+                    }
+                });
+                showTipTabAnimation = fadeOut.andThen(fadeIn);
+            }
 
-            fadeInTipTabAndAddTip.runBeforeStart(new Runnable() {
-                @Override
-                public void run() {
-                    tipResultsTab.revalidate();
-                    tipResultsTab.repaint();
-                    setSelectedIndex(0);
-                }
-            });
-
-            animationChain = fadeOutWebTab.andThen(fadeInTipTabAndAddTip);
+            ControllableAnimation floatInTip = tipResultsTab.animatedAddTip(model, TipFloatInFrames);
+            animationChain = showTipTabAnimation.andThen(floatInTip);
             animationChain.start();
         }
 

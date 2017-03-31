@@ -39,6 +39,7 @@ final class WriteTipListener implements IHelpOthersCTA.Listener {
         new CreateTipFormHandler(controller.view, source, new CreateTip(helpRequest.matchingGroup.lastSearchInfo.id, tipBody, null, controller.helpRequestId)) {
             @Override
             protected void afterPostForm(RestHit<Tip> response) {
+                // TODO animation
                 controller.load();
             }
         }.execute();

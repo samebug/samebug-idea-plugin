@@ -34,7 +34,6 @@ abstract class FadeAnimation extends ComponentAnimation {
         runBeforeStart(new Runnable() {
             @Override
             public void run() {
-                myComponent.validate();
                 // TODO does this work properly on Retina?
                 // in the intellij code they used  myComponentImage = UIUtil.createImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);
                 myComponentImage = new BufferedImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);

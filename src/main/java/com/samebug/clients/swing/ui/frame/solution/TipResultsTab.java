@@ -35,7 +35,6 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public final class TipResultsTab extends TransparentPanel implements ITipResultsTab {
@@ -68,19 +67,17 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
         else myAnimation.paint(g);
     }
 
-    public ControllableAnimation animatedAddTip(ITipHit.Model model, final int tabFadeInFrames, final int tipFloatInFrames) {
+    public ControllableAnimation fadeOut(int totalFrames) {
+        return new MyFadeOutAnimation(totalFrames);
+    }
+
+    public ControllableAnimation fadeIn(int totalFrames) {
+        return new MyFadeInAnimation(totalFrames);
+    }
+
+    public ControllableAnimation animatedAddTip(final ITipHit.Model model, final int tipFloatInFrames) {
         final TipHit newTip = new TipHit(model);
-        tipHits.add(0, newTip);
-        contentPanel.setContent(tipHits);
-
-        // This is required to make sure newTip has the correct presented size, so the grow animation will know how many pixels to hide
-        contentPanel.validate();
-
-        if (myAnimation != null) myAnimation.forceFinish();
-        myAnimation = new MyFadeInAnimation(tabFadeInFrames);
-
-        final ControllableAnimation floatInAndFadeInTip = contentPanel.addTip(newTip, tabFadeInFrames, tipFloatInFrames);
-        return floatInAndFadeInTip.with(myAnimation);
+        return contentPanel.addTip(newTip, tipHits, tipFloatInFrames);
     }
 
     private static final class ContentPanel extends SamebugPanel {
@@ -130,13 +127,37 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
                 add(cta, "cell 0 0");
                 add(helpRequest, "cell 0 1, align center, growx");
             }
+            validate();
         }
 
-        ControllableAnimation addTip(TipHit tip, int tabFadeInFrames, int tipFloatInFrames) {
+        void setZeroFromOneTipContent() {
+            removeAll();
+            if (bugmateListModel.bugmateHits.size() > 0) {
+                setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]10[]20"));
+                add(writeTip, "cell 0 0");
+                add(bugmateList, "cell 0 1");
+                add(helpRequest, "cell 0 2, align center, growx");
+            } else {
+                setLayout(new MigLayout("fillx", "20[fill]0", "0[]10[]20"));
+                add(writeTip, "cell 0 0");
+                add(helpRequest, "cell 0 1, align center, growx");
+            }
+            validate();
+        }
+
+        ControllableAnimation addTip(final TipHit newTip, final List<TipHit> tipHits, int tipFloatInFrames) {
             if (contentPanelAnimation != null) contentPanelAnimation.forceFinish();
-            contentPanelAnimation = new GrowFromTop(tabFadeInFrames, tipFloatInFrames, tip.getHeight() + 20);
-            ControllableAnimation tipFadeInAnimation = tip.fadeIn(tipFloatInFrames);
-            return contentPanelAnimation.andThen(tipFadeInAnimation, tabFadeInFrames);
+
+            contentPanelAnimation = new GrowFromTop(tipFloatInFrames, newTip.getPreferredSize().height);
+            contentPanelAnimation.runBeforeStart(new Runnable() {
+                @Override
+                public void run() {
+                    tipHits.add(0, newTip);
+                    setContent(tipHits);
+                }
+            });
+            ControllableAnimation tipFadeInAnimation = newTip.fadeIn(tipFloatInFrames);
+            return contentPanelAnimation.with(tipFadeInAnimation);
         }
 
         @Override
@@ -147,13 +168,9 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
 
         private final class GrowFromTop extends DynamicallyUpdatedGrowFromTopAnimation {
 
-            GrowFromTop(int tabFadeInFrames, int tipFloatInFrames, int growPixels) {
-                super(tabFadeInFrames + tipFloatInFrames, ContentPanel.this, growPixels);
+            GrowFromTop(int tipFloatInFrames, int growPixels) {
+                super(tipFloatInFrames, ContentPanel.this, growPixels);
                 assert myGrownSize.height >= growPixels : "Cannot grow " + growPixels + " pixels because its final size is less than that";
-
-                // IMPROVE override offset values, so it stays hidden in the first phase
-                Arrays.fill(offsets, 0, tabFadeInFrames, growPixels);
-                System.arraycopy(Sampler.easeInOutCubic(growPixels, tipFloatInFrames), 0, offsets, tabFadeInFrames, tipFloatInFrames);
             }
 
             @Override
@@ -184,6 +201,35 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
 
         public MyFadeInAnimation(int totalFrames) {
             super(TipResultsTab.this, totalFrames);
+            runBeforeStart(new Runnable() {
+                @Override
+                public void run() {
+                    if (tipHits.isEmpty()) {
+                        contentPanel.setZeroFromOneTipContent();
+                    }
+                    if (myAnimation != null) myAnimation.forceFinish();
+                    myAnimation = MyFadeInAnimation.this;
+                }
+            });
+        }
+
+        @Override
+        protected void doFinish() {
+            TipResultsTab.this.repaint();
+        }
+    }
+
+    private final class MyFadeOutAnimation extends FadeOutAnimation {
+
+        public MyFadeOutAnimation(int totalFrames) {
+            super(TipResultsTab.this, totalFrames);
+            runBeforeStart(new Runnable() {
+                @Override
+                public void run() {
+                    if (myAnimation != null) myAnimation.forceFinish();
+                    myAnimation = MyFadeOutAnimation.this;
+                }
+            });
         }
 
         @Override

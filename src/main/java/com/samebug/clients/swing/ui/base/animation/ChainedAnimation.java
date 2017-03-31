@@ -54,7 +54,7 @@ public final class ChainedAnimation extends ControllableAnimation {
 
     @Override
     protected void doFinish() {
-        if (!animationX.isFinished()) animationX.finish();
-        if (!animationY.isFinished()) animationY.finish();
+        if (!animationX.isFinished()) animationX.forceFinish();
+        if (!animationY.isFinished()) animationY.forceFinish();
     }
 }

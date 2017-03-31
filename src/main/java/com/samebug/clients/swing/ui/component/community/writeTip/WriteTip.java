@@ -44,11 +44,6 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
     }
 
     @Override
-    public void reshape(int x, int y, int width, int height) {
-        super.reshape(x, y, width, height);
-    }
-
-    @Override
     public void startPostTip() {
         if (tipScreen == null) return;
         tipScreen.actionRow.sendButton.changeToLoadingAnimation();

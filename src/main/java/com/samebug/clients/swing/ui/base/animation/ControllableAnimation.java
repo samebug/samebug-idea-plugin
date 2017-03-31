@@ -43,7 +43,8 @@ public abstract class ControllableAnimation {
         assert myState == State.INITIALIZED : "Animation started from state " + myState;
         assert EventQueue.isDispatchThread();
 
-        for (Runnable r : runBeforeStart) r.run();
+        // TODO running befores are reversed. this is all crap
+        for (int i = runBeforeStart.size() - 1; i >= 0; --i) runBeforeStart.get(i).run();
         myState = State.RUNNING;
         myCurrentFrame = 0;
         doStart();
