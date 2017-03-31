@@ -16,7 +16,6 @@
 package com.samebug.clients.swing.ui.frame.helpRequestList;
 
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestList;
-import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.CenteredMultilineLabel;
@@ -68,10 +67,8 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
                 add(emptyPanel);
             } else {
                 final ListPanel listPanel = new ListPanel();
-                final MoreButton more = new MoreButton();
                 setLayout(new MigLayout("fillx", "20[]0", "0[]20[]20"));
                 add(listPanel, "cell 0 0, growx");
-                add(more, "cell 0 1, al center");
             }
         }
     }
@@ -86,18 +83,6 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
                 HelpRequestPreview hit = previews.get(i);
                 add(hit);
             }
-        }
-    }
-
-    private final class MoreButton extends SamebugButton {
-        {
-            setText(MessageService.message("samebug.frame.helpRequestList.more"));
-            addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    getListener().moreClicked();
-                }
-            });
         }
     }
 
