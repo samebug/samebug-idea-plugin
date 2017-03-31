@@ -49,12 +49,17 @@ public class ConsoleSearchController implements StackTraceMatcherListener {
 
                 try {
                     CreatedSearch result = searchService.search(stackTrace);
-                    SavedSearch savedSearchRequest = searchRequestService.searchSucceeded(searchInfo, requestedSearch, result);
-                    if (!project.isDisposed()) {
-                        if (savedSearchRequest != null) project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).savedSearch(savedSearchRequest);
-                        else project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failedSearch(searchInfo);
+                    if (result.getStackTraceId() == null) {
+                        // ignore text search
+                        searchRequestService.searchFailed(searchInfo);
+                        if (!project.isDisposed()) project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failedSearch(searchInfo);
+                    } else {
+                        SavedSearch savedSearchRequest = searchRequestService.searchSucceeded(searchInfo, requestedSearch, result);
+                        if (!project.isDisposed()) {
+                            if (savedSearchRequest != null) project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).savedSearch(savedSearchRequest);
+                            else project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failedSearch(searchInfo);
+                        }
                     }
-//                    TrackingService.trace(Events.searchSucceeded(searchInfo, result));
                 } catch (SamebugClientException e) {
                     searchRequestService.searchFailed(searchInfo);
                     if (!project.isDisposed()) project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failedSearch(searchInfo);
