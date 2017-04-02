@@ -45,7 +45,7 @@ public class FontSizeTest {
         System.out.println("OS arch: " + System.getProperty("os.arch"));
         System.out.println("Java version: " + System.getProperty("java.version"));
         System.out.println("Java runtime version: " + System.getProperty("java.runtime.version"));
-        System.out.println("Are we under OpenJDK? " + sun.font.FontUtilities.isOpenJDK);
+        System.out.println("Java runtime name: " + System.getProperty("java.runtime.name"));
     }
 
     private static float getPrivateField(FontMetrics fm, String fieldName) throws NoSuchFieldException, IllegalAccessException {
