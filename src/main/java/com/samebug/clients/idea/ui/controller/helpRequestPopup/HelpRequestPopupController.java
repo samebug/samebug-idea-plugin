@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.idea.ui.controller.helpRequestPopup;
 
-import com.google.common.collect.ImmutableMap;
 import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;

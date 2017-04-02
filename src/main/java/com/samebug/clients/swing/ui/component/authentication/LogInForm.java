@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.swing.ui.component.authentication;
 
-import com.google.common.collect.ImmutableMap;
 import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.api.form.LogIn;
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;

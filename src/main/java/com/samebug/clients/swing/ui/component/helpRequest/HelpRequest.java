@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.swing.ui.component.helpRequest;
 
-import com.google.common.collect.ImmutableMap;
 import com.samebug.clients.common.api.form.CreateTip;
 import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;

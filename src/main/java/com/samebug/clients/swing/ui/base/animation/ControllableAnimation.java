@@ -92,6 +92,7 @@ public abstract class ControllableAnimation {
             case RUNNING:
                 finish();
             case FINISHED:
+            default:
         }
     }
 
