@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.helpRequest;
 
+import com.google.common.collect.ImmutableMap;
 import com.samebug.clients.common.api.form.CreateTip;
 import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
@@ -23,6 +24,7 @@ import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.common.ui.component.form.IForm;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequest;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
@@ -30,10 +32,7 @@ import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.component.community.writeTip.WriteTipArea;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
-import com.samebug.clients.swing.ui.modules.ColorService;
-import com.samebug.clients.swing.ui.modules.FontService;
-import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.modules.*;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.event.MouseAdapter;
@@ -97,6 +96,8 @@ public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRe
         if (!mismatched.isEmpty()) throw new FormMismatchException(mismatched);
         revalidate();
         repaint();
+
+        TrackingService.trace(Events.writeTipError(errors));
     }
 
     final class TitleLabel extends SamebugLabel {
@@ -134,7 +135,10 @@ public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRe
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (isEnabled()) getListener().postTip(HelpRequest.this, writeTipArea.getText());
+                    if (isEnabled()) {
+                        getListener().postTip(HelpRequest.this, writeTipArea.getText());
+                        TrackingService.trace(Events.writeTipSend());
+                    }
                 }
             });
         }

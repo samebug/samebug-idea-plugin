@@ -15,12 +15,15 @@
  */
 package com.samebug.clients.swing.ui.component.authentication;
 
+import com.google.common.collect.ImmutableMap;
 import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.ui.component.authentication.IAnonymousUseForm;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,7 +63,12 @@ public class AnonymousUseForm extends JComponent implements IAnonymousUseForm {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (isEnabled()) getListener().useAnonymously(AnonymousUseForm.this);
+                    if (isEnabled()) {
+                        getListener().useAnonymously(AnonymousUseForm.this);
+                        String parentName = AnonymousUseForm.this.getParent().getName();
+                        String dialogType = parentName.contains("LogIn") ? "SignIn" : "SignUp";
+                        TrackingService.trace(Events.registrationSend("anonymous", dialogType));
+                    }
                 }
             });
         }

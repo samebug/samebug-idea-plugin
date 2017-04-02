@@ -17,6 +17,7 @@ package com.samebug.clients.swing.ui.component.helpRequest;
 
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
 import com.samebug.clients.common.ui.modules.TextService;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.label.TimestampLabel;
 import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
@@ -24,6 +25,7 @@ import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -55,7 +57,10 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (isEnabled()) getListener().previewClicked(HelpRequestPreview.this, model.helpRequestId);
+                if (isEnabled()) {
+                    getListener().previewClicked(HelpRequestPreview.this, model.helpRequestId);
+                    TrackingService.trace(Events.helpRequestOpen(model.helpRequestId));
+                }
             }
         });
     }

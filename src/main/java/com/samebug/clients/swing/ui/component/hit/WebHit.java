@@ -64,7 +64,7 @@ public final class WebHit extends SamebugPanel implements IWebHit {
             title.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    getListener().urlClicked(model.url);
+                    getListener().urlClicked(WebHit.this, model.url);
                 }
             });
         }

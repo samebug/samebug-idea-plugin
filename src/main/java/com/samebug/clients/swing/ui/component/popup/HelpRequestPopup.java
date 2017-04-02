@@ -16,16 +16,14 @@
 package com.samebug.clients.swing.ui.component.popup;
 
 import com.samebug.clients.common.ui.component.popup.IHelpRequestPopup;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
-import com.samebug.clients.swing.ui.modules.ColorService;
-import com.samebug.clients.swing.ui.modules.FontService;
-import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.modules.*;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -71,7 +69,10 @@ public final class HelpRequestPopup extends SamebugPanel implements IHelpRequest
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (isEnabled()) getListener().answerClick(HelpRequestPopup.this);
+                    if (isEnabled()) {
+                        getListener().answerClick(HelpRequestPopup.this);
+                        TrackingService.trace(Events.helpRequestNotificationAnswer());
+                    }
                 }
             });
         }
@@ -86,7 +87,10 @@ public final class HelpRequestPopup extends SamebugPanel implements IHelpRequest
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (isEnabled()) getListener().laterClick(HelpRequestPopup.this);
+                    if (isEnabled()) {
+                        getListener().laterClick(HelpRequestPopup.this);
+                        TrackingService.trace(Events.helpRequestNotificationLater());
+                    }
                 }
             });
         }

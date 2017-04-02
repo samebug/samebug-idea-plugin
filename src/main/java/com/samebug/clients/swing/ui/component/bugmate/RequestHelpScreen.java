@@ -21,9 +21,11 @@ import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.common.ui.component.form.IForm;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -50,14 +52,20 @@ public final class RequestHelpScreen extends JComponent implements IForm {
         sendButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (isEnabled()) requestHelp.getListener().askBugmates(requestHelp, writeRequestArea.getText());
+                if (isEnabled()) {
+                    requestHelp.getListener().askBugmates(requestHelp, writeRequestArea.getText());
+                    TrackingService.trace(Events.helpRequestSend());
+                }
             }
         });
 
         cancelButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (isEnabled()) requestHelp.changeToClosedState();
+                if (isEnabled()) {
+                    requestHelp.changeToClosedState();
+                    TrackingService.trace(Events.helpRequestCancel());
+                }
             }
         });
     }
@@ -78,12 +86,13 @@ public final class RequestHelpScreen extends JComponent implements IForm {
         if (!mismatched.isEmpty()) throw new FormMismatchException(mismatched);
         revalidate();
         repaint();
+
+        TrackingService.trace(Events.helpRequestError(errors));
     }
 
     private final class SendButton extends SamebugButton {
         public SendButton() {
             super(MessageService.message("samebug.component.helpRequest.ask.send"), true);
-
         }
     }
 }

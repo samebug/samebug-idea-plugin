@@ -49,6 +49,6 @@ public interface IWebHit {
     }
 
     interface Listener {
-        void urlClicked(URL url);
+        void urlClicked(IWebHit source, URL url);
     }
 }

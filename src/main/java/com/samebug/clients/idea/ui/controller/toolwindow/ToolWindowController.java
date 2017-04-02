@@ -88,6 +88,8 @@ final public class ToolWindowController implements FocusListener, Disposable {
         this.toolWindow = toolWindow;
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
 
+        TrackingService.trace(Events.toolWindowInitialized(project));
+
         if (plugin.getState().apiKey == null) focusOnAuthentication();
         else focusOnHelpRequestList();
     }
@@ -163,7 +165,6 @@ final public class ToolWindowController implements FocusListener, Disposable {
         JComponent view = (JComponent) currentFrame.view;
         view.revalidate();
         view.repaint();
-        TrackingService.trace(Events.toolWindowOpen(project, view.getWidth(), view.getHeight()));
     }
 
     private ToolWindow getToolWindow() {

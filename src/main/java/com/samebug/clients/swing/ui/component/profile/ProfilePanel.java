@@ -16,12 +16,10 @@
 package com.samebug.clients.swing.ui.component.profile;
 
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
-import com.samebug.clients.swing.ui.modules.ColorService;
-import com.samebug.clients.swing.ui.modules.FontService;
-import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.modules.*;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -32,8 +30,6 @@ import java.awt.event.MouseEvent;
 public final class ProfilePanel extends TransparentPanel implements IProfilePanel {
     private final static int AvatarIconSize = 26;
 
-    private final Model model;
-
     private final AvatarIcon avatarIcon;
     private final MessageLabel messages;
     private final NumberLabel marks;
@@ -41,8 +37,6 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
     private final NumberLabel thanks;
 
     public ProfilePanel(Model model) {
-        this.model = new Model(model);
-
         avatarIcon = new AvatarIcon(model.avatarUrl, AvatarIconSize);
         SamebugLabel name = new SamebugLabel(model.name, FontService.demi(14));
         final JPanel glue = new TransparentPanel();
@@ -65,6 +59,7 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
             @Override
             public void mouseClicked(MouseEvent e) {
                 getListener().messagesClicked();
+                TrackingService.trace(Events.openIncomingRequests());
             }
         });
     }

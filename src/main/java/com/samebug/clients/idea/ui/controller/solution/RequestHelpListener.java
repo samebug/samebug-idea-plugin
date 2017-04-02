@@ -15,15 +15,12 @@
  */
 package com.samebug.clients.idea.ui.controller.solution;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
 import com.samebug.clients.common.api.form.CreateHelpRequest;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.idea.ui.controller.form.CreateHelpRequestFormHandler;
 
 final class RequestHelpListener implements IAskForHelp.Listener {
-    final static Logger LOGGER = Logger.getInstance(RequestHelpListener.class);
-
     final SolutionFrameController controller;
 
     public RequestHelpListener(final SolutionFrameController controller) {

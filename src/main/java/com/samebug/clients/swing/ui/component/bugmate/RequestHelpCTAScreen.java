@@ -15,9 +15,11 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.event.MouseAdapter;
@@ -41,7 +43,10 @@ public final class RequestHelpCTAScreen extends TransparentPanel {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (isEnabled()) requestHelp.changeToOpenState();
+                    if (isEnabled()) {
+                        requestHelp.changeToOpenState();
+                        TrackingService.trace(Events.helpRequestOpen());
+                    }
                 }
             });
 

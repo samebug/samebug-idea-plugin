@@ -52,6 +52,11 @@ public abstract class ListenerService {
         DataService.putData(component, key, listener);
     }
 
+    public static <T> void removeListenerFromComponent(JComponent component, Class<T> bindInterface) {
+        DataService.Key<T> key = createKey(bindInterface);
+        DataService.putData(component, key, null);
+    }
+
     private static <T> DataService.Key<T> createKey(Class<T> listenerClass) {
         return new DataService.Key<T>(listenerClass.getCanonicalName());
     }

@@ -64,7 +64,7 @@ final class SavedSearchMark extends SearchMark {
     @Override
     @NotNull
     public String getTooltipText() {
-        TrackingService.trace(Events.gutterIconTooltip(search.getSavedSearch().getSearchId()));
+        TrackingService.trace(Events.gutterIconHover(search.getSavedSearch().getSearchId()));
         return MessageService.message("samebug.gutter.savedSearch.tooltip");
     }
 

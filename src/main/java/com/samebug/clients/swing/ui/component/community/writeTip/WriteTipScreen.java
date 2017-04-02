@@ -15,12 +15,14 @@
  */
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
+import com.google.common.collect.ImmutableMap;
 import com.samebug.clients.common.api.form.CreateTip;
 import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.common.ui.component.form.IForm;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
@@ -29,6 +31,7 @@ import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.event.MouseAdapter;
@@ -72,6 +75,8 @@ public class WriteTipScreen extends RoundedBackgroundPanel implements IForm {
         if (!mismatched.isEmpty()) throw new FormMismatchException(mismatched);
         revalidate();
         repaint();
+
+        TrackingService.trace(Events.writeTipError(errors));
     }
 
 
@@ -93,6 +98,7 @@ public class WriteTipScreen extends RoundedBackgroundPanel implements IForm {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     writeTip.changeToClosedState();
+                    TrackingService.trace(Events.writeTipCancel());
                 }
             });
 
@@ -113,6 +119,7 @@ public class WriteTipScreen extends RoundedBackgroundPanel implements IForm {
                 public void mouseClicked(MouseEvent e) {
                     if (isEnabled()) {
                         writeTip.getListener().postTip(writeTip, tipArea.getText());
+                        TrackingService.trace(Events.writeTipSend());
                     }
                 }
             });

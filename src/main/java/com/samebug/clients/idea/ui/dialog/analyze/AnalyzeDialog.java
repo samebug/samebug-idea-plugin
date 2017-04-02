@@ -133,6 +133,7 @@ final public class AnalyzeDialog extends DialogWrapper {
                 if (result.getStackTraceId() == null) displayError(MessageService.message("samebug.menu.analyze.dialog.error.textSearch"));
                 else {
                     myProject.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchId);
+                    TrackingService.trace(Events.searchSucceedInSearchDialog(searchId));
                     AnalyzeDialog.this.close(OK_EXIT_CODE);
                 }
             } catch (BadRequest e1) {

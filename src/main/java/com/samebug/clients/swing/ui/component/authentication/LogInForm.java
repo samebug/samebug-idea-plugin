@@ -15,18 +15,21 @@
  */
 package com.samebug.clients.swing.ui.component.authentication;
 
+import com.google.common.collect.ImmutableMap;
 import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.api.form.LogIn;
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
 import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -50,13 +53,19 @@ public final class LogInForm extends JComponent implements ILogInForm {
         logIn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (isEnabled()) getListener().logIn(LogInForm.this, email.getText(), password.getText());
+                if (isEnabled()) {
+                    getListener().logIn(LogInForm.this, email.getText(), password.getText());
+                    TrackingService.trace(Events.registrationSend("credentials", "SignIn"));
+                }
             }
         });
         forgotPassword.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (isEnabled()) getListener().forgotPassword(LogInForm.this);
+                if (isEnabled()) {
+                    getListener().forgotPassword(LogInForm.this);
+                    TrackingService.trace(Events.registrationForgottenPasswordClicked());
+                }
             }
         });
 
@@ -89,6 +98,8 @@ public final class LogInForm extends JComponent implements ILogInForm {
             }
         }
         if (!mismatched.isEmpty()) throw new FormMismatchException(mismatched);
+
+        TrackingService.trace(Events.registrationError("SignIn", errors));
     }
 
     @Override

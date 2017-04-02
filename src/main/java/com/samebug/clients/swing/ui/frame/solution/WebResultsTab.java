@@ -17,6 +17,7 @@ package com.samebug.clients.swing.ui.frame.solution;
 
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.animation.ComponentAnimation;
 import com.samebug.clients.swing.ui.base.animation.ControllableAnimation;
 import com.samebug.clients.swing.ui.base.animation.FadeOutAnimation;
@@ -26,10 +27,7 @@ import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.base.scrollPane.SamebugScrollPane;
 import com.samebug.clients.swing.ui.component.community.writeTip.WriteTip;
 import com.samebug.clients.swing.ui.component.hit.WebHit;
-import com.samebug.clients.swing.ui.modules.ColorService;
-import com.samebug.clients.swing.ui.modules.DrawService;
-import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.modules.*;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -118,6 +116,7 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
                 if (i != 0) add(new Separator(), gbc);
                 WebHit hit = webHits.get(i);
                 add(hit, gbc);
+                DataService.putData(hit, DataService.WebHitIndex, i);
             }
         }
     }
@@ -149,6 +148,7 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     getListener().moreClicked();
+                    TrackingService.trace(Events.more());
                 }
             });
         }

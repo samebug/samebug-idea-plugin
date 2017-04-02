@@ -42,6 +42,7 @@ import com.samebug.clients.idea.ui.controller.externalEvent.RefreshListener;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.swing.ui.frame.helpRequest.HelpRequestFrame;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 
 import javax.swing.*;
@@ -55,7 +56,7 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
     final HelpRequestFrameListener frameListener;
     final ProfileListener profileListener;
     final WriteTipListener writeTipListener;
-    final WebHitListener webHitListener;
+    WebHitListener webHitListener;
     WebResultsTabListener webResultsTabListener;
 
     final HelpRequestStore helpRequestStore;
@@ -80,9 +81,6 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
         writeTipListener = new WriteTipListener(this);
         ListenerService.putListenerToComponent(frame, IHelpOthersCTA.Listener.class, writeTipListener);
 
-        webHitListener = new WebHitListener();
-        ListenerService.putListenerToComponent(frame, IWebHit.Listener.class, webHitListener);
-
         MessageBusConnection projectConnection = myProject.getMessageBus().connect(this);
         refreshListener = new RefreshListener(this);
         projectConnection.subscribe(RefreshTimestampsListener.TOPIC, refreshListener);
@@ -98,7 +96,11 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
     public void load() {
         // TODO every controllers should also make sure to set the loading screen when starting to load content
         view.setLoading();
+
+        webHitListener = null;
+        ListenerService.removeListenerFromComponent((JComponent) view, IWebHit.Listener.class);
         webResultsTabListener = null;
+        ListenerService.removeListenerFromComponent((JComponent) view, IWebResultsTab.Listener.class);
 
         final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
@@ -122,8 +124,9 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
                 int accessibleSearchId = helpRequest.accessibleSearchInfo().id;
 
                 webResultsTabListener = new WebResultsTabListener(accessibleSearchId);
-                ListenerService.putListenerToComponent((JComponent) view, IWebResultsTab.Listener.class, null);
                 ListenerService.putListenerToComponent((JComponent) view, IWebResultsTab.Listener.class, webResultsTabListener);
+                webHitListener = new WebHitListener(accessibleSearchId);
+                ListenerService.putListenerToComponent((JComponent) view, IWebHit.Listener.class, webHitListener);
 
                 final Future<Solutions> solutionsTask = concurrencyService.solutions(accessibleSearchId);
                 HelpRequestController.this.load(solutionsTask, helpRequestTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);

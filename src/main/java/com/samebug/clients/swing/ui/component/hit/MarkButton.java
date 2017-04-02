@@ -16,6 +16,7 @@
 package com.samebug.clients.swing.ui.component.hit;
 
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.button.ActionButton;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.modules.*;
@@ -35,7 +36,15 @@ public final class MarkButton extends ActionButton implements IMarkButton {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (isEnabled()) getListener().markClicked(MarkButton.this, getSolutionId(), MarkButton.this.model.userMarkId);
+                if (isEnabled()) {
+                    getListener().markClicked(MarkButton.this, getSolutionId(), MarkButton.this.model.userMarkId);
+
+                    if (MarkButton.this.model.userMarkId == null) {
+                        TrackingService.trace(Events.mark());
+                    } else {
+                        TrackingService.trace(Events.markCancelled());
+                    }
+                }
             }
         });
     }

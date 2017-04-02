@@ -18,8 +18,10 @@ package com.samebug.clients.swing.ui.component.community.writeTip;
 import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
@@ -89,6 +91,7 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
         ctaScreen.getCTAButton().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                TrackingService.trace(Events.writeTipOpen());
                 changeToOpenState();
             }
         });

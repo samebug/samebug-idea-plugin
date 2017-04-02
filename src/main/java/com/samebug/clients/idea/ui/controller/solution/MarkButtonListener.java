@@ -32,6 +32,7 @@ final class MarkButtonListener implements IMarkButton.Listener {
     @Override
     public void markClicked(final IMarkButton markButton, final Integer solutionId, final Integer markId) {
         if (markId == null) {
+
             new CreateMarkFormHandler(controller.view, markButton, new CreateMark(controller.searchId, solutionId)) {
                 @Override
                 protected void afterPostForm(MarkResponse response) {

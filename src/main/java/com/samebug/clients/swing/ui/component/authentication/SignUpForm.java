@@ -21,10 +21,12 @@ import com.samebug.clients.common.ui.component.authentication.ISignUpForm;
 import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -48,7 +50,10 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
         signUp.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (isEnabled()) getListener().signUp(SignUpForm.this, displayName.getText(), email.getText(), password.getText());
+                if (isEnabled()) {
+                    getListener().signUp(SignUpForm.this, displayName.getText(), email.getText(), password.getText());
+                    TrackingService.trace(Events.registrationSend("credentials", "SignUp"));
+                }
             }
         });
 
@@ -83,6 +88,7 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
             }
         }
         if (!mismatched.isEmpty()) throw new FormMismatchException(mismatched);
+        TrackingService.trace(Events.registrationError("SignUp", errors));
     }
 
     @Override

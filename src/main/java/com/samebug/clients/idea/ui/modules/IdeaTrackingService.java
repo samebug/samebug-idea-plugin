@@ -31,6 +31,7 @@ import com.samebug.clients.common.services.ClientService;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.ConfigChangeListener;
+import com.samebug.clients.idea.tracking.TrackBuilder;
 import com.samebug.clients.swing.ui.modules.TrackingService;
 
 import javax.swing.*;
@@ -54,10 +55,22 @@ public final class IdeaTrackingService extends TrackingService implements Config
     protected void internalTrace(TrackEvent event) {
         if (config.isTrackingEnabled && event != null) {
             try {
-                addAppInfo(event);
-                addUserInfo(event);
-                addProjectInfo(event);
-                addEnvironmentInfo(event);
+                try {
+                    addAppInfo(event);
+                } catch (Exception ignored) {
+                }
+                try {
+                    addUserInfo(event);
+                } catch (Exception ignored) {
+                }
+                try {
+                    if (!event.fields.containsKey("project")) addProjectInfo(event);
+                } catch (Exception ignored) {
+                }
+                try {
+                    addEnvironmentInfo(event);
+                } catch (Exception ignored) {
+                }
                 ClientService client = IdeaSamebugPlugin.getInstance().clientService;
                 client.trace(event);
             } catch (Exception e) {
@@ -98,10 +111,7 @@ public final class IdeaTrackingService extends TrackingService implements Config
         DataContext dataContext = DataManager.getInstance().getDataContextFromFocus().getResult();
         Project project = DataKeys.PROJECT.getData(dataContext);
 
-        if (project != null) {
-            // TODO we should use putIfAbsent
-            if (!e.fields.containsKey("projectName")) e.fields.put("projectName", project.getName());
-        }
+        if (project != null) e.fields.put("project", TrackBuilder.projectData(project));
     }
 
     private void addEnvironmentInfo(TrackEvent e) {

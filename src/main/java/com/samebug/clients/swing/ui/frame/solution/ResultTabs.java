@@ -17,11 +17,16 @@ package com.samebug.clients.swing.ui.frame.solution;
 
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.solution.IResultTabs;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.animation.Animator;
 import com.samebug.clients.swing.ui.base.animation.ControllableAnimation;
 import com.samebug.clients.swing.ui.base.tabbedPane.LabelAndHitsTabHeader;
 import com.samebug.clients.swing.ui.base.tabbedPane.SamebugTabbedPane;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.modules.TrackingService;
+
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public final class ResultTabs extends SamebugTabbedPane implements IResultTabs {
     private int tipHits;
@@ -43,6 +48,8 @@ public final class ResultTabs extends SamebugTabbedPane implements IResultTabs {
         webResultsTabHeader = (LabelAndHitsTabHeader) addLabeledTab(MessageService.message("samebug.component.solutionFrame.webSolutions.tabName"), webHits, webResultsTab);
         // TODO setSelectedIndex(0) does not work because that is already selected
         tipResultsTabHeader.setSelected(true);
+
+        addChangeListener(new TabChangeTracker());
     }
 
     public void animatedAddTip(ITipHit.Model model) {
@@ -101,6 +108,14 @@ public final class ResultTabs extends SamebugTabbedPane implements IResultTabs {
         public void animationDone() {
             super.animationDone();
             animationChain.finish();
+        }
+    }
+
+    final class TabChangeTracker implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            String dialogType = getSelectedIndex() == 0 ? "Tips" : "WebHits";
+            TrackingService.trace(Events.solutionDialogSwitched(dialogType));
         }
     }
 }

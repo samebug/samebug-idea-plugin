@@ -19,8 +19,10 @@ import com.samebug.clients.common.api.entities.profile.LoggedInUser;
 import com.samebug.clients.common.api.form.LogIn;
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.form.LogInFormHandler;
 import com.samebug.clients.idea.ui.modules.BrowserUtil;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 
 import java.net.URL;
 
@@ -38,6 +40,7 @@ public final class LogInListener implements ILogInForm.Listener {
             protected void afterPostForm(LoggedInUser response) {
                 source.successPost();
                 controller.twc.focusOnHelpRequestList();
+                TrackingService.trace(Events.registrationLogInSucceeded());
             }
         }.execute();
     }

@@ -16,12 +16,14 @@
 package com.samebug.clients.swing.ui.base.frame;
 
 import com.samebug.clients.common.ui.frame.IFrame;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.animation.LoadingAnimation;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.multiline.CenteredMultilineLabel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.modules.IconService;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -36,6 +38,14 @@ public abstract class BasicFrame extends ErrorBarPane implements IFrame {
     public BasicFrame() {
         networkErrorBar = new ErrorBar(MessageService.message("samebug.component.errorBar.network"));
         authenticationErrorBar = new ErrorBar(MessageService.message("samebug.component.errorBar.authentication"));
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // swallow click, so the toolwindow will not close when it is not in docked mode
+                super.mouseClicked(e);
+            }
+        });
     }
 
     public void showNetworkError() {
@@ -116,6 +126,7 @@ public abstract class BasicFrame extends ErrorBarPane implements IFrame {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     getListener().reload();
+                    TrackingService.trace(Events.recoveryReload());
                 }
             };
             reloadButton.addMouseListener(reloadAction);
@@ -156,6 +167,7 @@ public abstract class BasicFrame extends ErrorBarPane implements IFrame {
                         @Override
                         public void mouseClicked(MouseEvent e) {
                             getListener().openNetworkSettings();
+                            TrackingService.trace(Events.recoveryOpenIdeaSettings());
                         }
                     });
         }
@@ -169,6 +181,7 @@ public abstract class BasicFrame extends ErrorBarPane implements IFrame {
                         @Override
                         public void mouseClicked(MouseEvent e) {
                             getListener().openSamebugSettings();
+                            TrackingService.trace(Events.recoveryOpenSamebugSettings());
                         }
                     });
         }

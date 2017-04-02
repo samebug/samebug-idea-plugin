@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.ui.controller.helpRequestPopup;
 
+import com.google.common.collect.ImmutableMap;
 import com.intellij.notification.impl.NotificationsManagerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
@@ -26,10 +27,12 @@ import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
 import com.samebug.clients.common.ui.component.popup.IHelpRequestPopup;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.notifications.IncomingHelpRequestNotification;
+import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.swing.ui.component.popup.HelpRequestPopup;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -75,6 +78,7 @@ public final class HelpRequestPopupController {
         balloons.put(popup, balloon);
         balloon.show(pointToShowPopup, Balloon.Position.atLeft);
 
+        TrackingService.trace(Events.helpRequestNotificationShow(helpRequest.id));
     }
 
     void hideAndRemoveIncomingHelpRequest(@NotNull IHelpRequestPopup view) {
