@@ -291,7 +291,7 @@ final public class SamebugClient {
         Reader reader = null;
         try {
             content = response.getEntity().getContent();
-            reader = new InputStreamReader(content);
+            reader = new InputStreamReader(content, "UTF-8");
             return gson.fromJson(reader, classOfT);
         } catch (com.google.gson.JsonParseException e) {
             throw new JsonParseException("Failed to parse json response", e);
