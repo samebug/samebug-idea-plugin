@@ -64,6 +64,7 @@ public final class WebSocketClientService {
                     // TODO
                 }
             }));
+            LOGGER.info("Successfully configured websocket client");
         } catch (InterruptedException e) {
             LOGGER.warn("Failed to configure websocket client", e);
             client = null;
