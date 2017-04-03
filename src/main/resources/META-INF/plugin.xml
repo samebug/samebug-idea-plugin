@@ -8,21 +8,20 @@
       <ul>
         <li>Captures stack traces on your debug console</li>
         <li>search solutions on Samebug</li>
-        <li>preserves your exception history</li>
+        <li>connects you to other Samebug users to help each other</li>
       </ul>
     ]]></description>
 
     <change-notes><![CDATA[
       <ul>
-        <li>Basic profile</li>
-        <li>More convenient config</li>
-        <li>Stack traces are highlighted in the console gutter</li>
-        <li>Integration in run, debug, test and logcat consoles</li>
-        <li>Notifications are turned off by default</li>
-        <li>Fixes for marking solution</li>
+        <li>Removed search history</li>
+        <li>Total UI update</li>
+        <li>Smooth login/signup from the plugin</li>
+        <li>Show bugmates</li>
+        <li>Ask and answer help requests</li>
       </ul>
 
-      Check it at <a href="https://medium.com/@samebug/samebug-integration-0-12-0-525dade4d7b6">our blog</a>
+      Check it at <a href="https://medium.com/@samebug/samebug-integration-0-14-0-15c2d47462d3">our blog</a>
     ]]>
     </change-notes>
 
