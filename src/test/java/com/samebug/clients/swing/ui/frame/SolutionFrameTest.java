@@ -8,6 +8,7 @@ import com.samebug.clients.swing.ui.TestDialog;
 import com.samebug.clients.swing.ui.component.community.writeTip.WriteTip;
 import com.samebug.clients.swing.ui.frame.solution.ResultTabs;
 import com.samebug.clients.swing.ui.frame.solution.SolutionFrame;
+import com.samebug.clients.swing.ui.modules.ComponentService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -63,20 +64,12 @@ public class SolutionFrameTest extends TestDialog {
             @Override
             public void postTip(IHelpOthersCTA source, String tipBody) {
                 // TODO can be helpRequest
-                WriteTip writeTip = findAncestor((Component) source, WriteTip.class);
-                ResultTabs resultTabs = findAncestor(writeTip, ResultTabs.class);
+                WriteTip writeTip = ComponentService.findAncestor((Component) source, WriteTip.class);
+                ResultTabs resultTabs = ComponentService.findAncestor(writeTip, ResultTabs.class);
 
                 resultTabs.animatedAddTip(new ITipHit.Model(tipBody, 0, new Date(), "me", null,
                         new IMarkButton.Model(0, 0, true)));
             }
         });
-    }
-
-
-    private static <T> T findAncestor(Component component, Class<T> searchedClass) {
-        for (Component c = component; c != null; c = c.getParent()) {
-            if (searchedClass.isInstance(c)) return searchedClass.cast(c);
-        }
-        return null;
     }
 }

@@ -57,10 +57,10 @@ public final class ResultTabs extends SamebugTabbedPane implements IResultTabs {
     }
 
     private final class ShowNewTipAnimation extends Animator {
-        private static final int CycleDuration = 6000;
-        private static final int FadeOutFrames = 200;
-        private static final int FadeInFrames = 200;
-        private static final int TipFloatInFrames = 200;
+        private static final int CycleDuration = 600;
+        private static final int FadeOutFrames = 30;
+        private static final int FadeInFrames = 30;
+        private static final int TipFloatInFrames = 30;
 
         private ControllableAnimation animationChain;
 
