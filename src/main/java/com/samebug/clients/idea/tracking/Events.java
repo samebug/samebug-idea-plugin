@@ -64,8 +64,8 @@ public final class Events {
         return new TrackBuilder("Project", "Close", project).getEvent();
     }
 
-    public static TrackEvent debugStart(final DebugSessionInfo debugSessionInfo) {
-        return new TrackBuilder("Debug", "Start") {
+    public static TrackEvent debugStart(Project project, final DebugSessionInfo debugSessionInfo) {
+        return new TrackBuilder("Debug", "Start", project) {
             protected void initDataFields() {
                 add("sessionId", debugSessionInfo.getId().toString());
                 add("sessionType", debugSessionInfo.getSessionType());
@@ -74,7 +74,7 @@ public final class Events {
     }
 
     public static TrackEvent debugStop(Project project, final DebugSessionInfo debugSessionInfo) {
-        return new TrackBuilder("Debug", "Stop") {
+        return new TrackBuilder("Debug", "Stop", project) {
             protected void initDataFields() {
                 add("sessionId", debugSessionInfo.getId().toString());
                 add("sessionType", debugSessionInfo.getSessionType());

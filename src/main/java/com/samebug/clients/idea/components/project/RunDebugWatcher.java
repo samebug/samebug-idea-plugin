@@ -85,7 +85,7 @@ public class RunDebugWatcher implements RunContentWithExecutorListener, Disposab
             debugSessionIds.put(descriptorHashCode, sessionInfo);
             processHandler.addProcessListener(listener);
 
-            TrackingService.trace(Events.debugStart(sessionInfo));
+            TrackingService.trace(Events.debugStart(myProject, sessionInfo));
         }
     }
 
