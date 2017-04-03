@@ -16,7 +16,6 @@
 package com.samebug.clients.idea.tracking;
 
 
-import com.google.common.collect.ImmutableMap;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.api.entities.tracking.TrackEvent;
 import com.samebug.clients.common.api.form.FieldError;
@@ -24,6 +23,7 @@ import com.samebug.clients.common.entities.search.DebugSessionInfo;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -137,27 +137,27 @@ public final class Events {
     }
 
     public static TrackEvent registrationDialogSwitched(String dialogType) {
-        return event("Registration", "DialogSwitched", ImmutableMap.of("dialogType", dialogType));
+        return event("Registration", "DialogSwitched", mapOf("dialogType", dialogType));
     }
 
     public static TrackEvent registrationForgottenPasswordClicked() {
-        return event("Registration", "ForgottenPasswordClicked", ImmutableMap.of("login", "credentials"));
+        return event("Registration", "ForgottenPasswordClicked", mapOf("login", "credentials"));
     }
 
     public static TrackEvent registrationSend(String login, String dialogType) {
-        return event("Registration", "Send", ImmutableMap.of("login", login, "dialogType", dialogType));
+        return event("Registration", "Send", mapOf("login", login, "dialogType", dialogType));
     }
 
     public static TrackEvent registrationError(String dialogType, List<FieldError> errors) {
-        return event("Registration", "FormError", ImmutableMap.of("dialogType", dialogType, "errors", errors));
+        return event("Registration", "FormError", mapOf("dialogType", dialogType, "errors", errors));
     }
 
     public static TrackEvent registrationLogInSucceeded() {
-        return event("Registration", "LogInSucceeded", ImmutableMap.of("login", "credentials"));
+        return event("Registration", "LogInSucceeded", mapOf("login", "credentials"));
     }
 
     public static TrackEvent registrationSignUpSucceeded(String login) {
-        return event("Registration", "UserCreated", ImmutableMap.of("login", login));
+        return event("Registration", "UserCreated", mapOf("login", login));
     }
 
     public static TrackEvent writeTipOpen() {
@@ -173,7 +173,7 @@ public final class Events {
     }
 
     public static TrackEvent writeTipError(List<FieldError> errors) {
-        return event("WriteTip", "FormError", ImmutableMap.of("errors", errors));
+        return event("WriteTip", "FormError", mapOf("errors", errors));
     }
 
     public static TrackEvent mark() {
@@ -185,7 +185,7 @@ public final class Events {
     }
 
     public static TrackEvent helpRequestNotificationShow(String helpRequestId) {
-        return event("HelpRequestNotification", "Show", ImmutableMap.of("helpRequestId", helpRequestId));
+        return event("HelpRequestNotification", "Show", mapOf("helpRequestId", helpRequestId));
     }
 
     public static TrackEvent helpRequestNotificationAnswer() {
@@ -197,11 +197,11 @@ public final class Events {
     }
 
     public static TrackEvent helpRequestOpen(String helpRequestId) {
-        return event("HelpRequestList", "OpenHelpRequest", ImmutableMap.of("helpRequestId", helpRequestId));
+        return event("HelpRequestList", "OpenHelpRequest", mapOf("helpRequestId", helpRequestId));
     }
 
     public static TrackEvent helpRequestDialogSwitched(String dialogType) {
-        return event("HelpRequest", "DialogSwitched", ImmutableMap.of("dialogType", dialogType));
+        return event("HelpRequest", "DialogSwitched", mapOf("dialogType", dialogType));
     }
 
     public static TrackEvent helpRequestOpen() {
@@ -217,7 +217,7 @@ public final class Events {
     }
 
     public static TrackEvent helpRequestError(List<FieldError> errors) {
-        return event("WriteHelpRequest", "FormError", ImmutableMap.of("errors", errors));
+        return event("WriteHelpRequest", "FormError", mapOf("errors", errors));
     }
 
     public static TrackEvent openSearchDialog() {
@@ -229,27 +229,27 @@ public final class Events {
     }
 
     public static TrackEvent searchSucceedInSearchDialog(final Integer searchId) {
-        return event("SearchDialog", "SearchSucceed", ImmutableMap.of("searchId", searchId));
+        return event("SearchDialog", "SearchSucceed", mapOf("searchId", searchId));
     }
 
     public static TrackEvent gutterIconClicked(final Integer searchId) {
-        return event("Gutter", "Clicked", ImmutableMap.of("searchId", searchId));
+        return event("Gutter", "Clicked", mapOf("searchId", searchId));
     }
 
     public static TrackEvent gutterIconHover(final Integer searchId) {
-        return event("Gutter", "Hover", ImmutableMap.of("searchId", searchId));
+        return event("Gutter", "Hover", mapOf("searchId", searchId));
     }
 
     public static TrackEvent solutionDialogSwitched(final String dialogType) {
-        return event("Solution", "DialogSwitched", ImmutableMap.of("dialogType", dialogType));
+        return event("Solution", "DialogSwitched", mapOf("dialogType", dialogType));
     }
 
     public static TrackEvent solutionDisplay(final Integer solutionId, final Integer index) {
-        return event("Solution", "Displayed", ImmutableMap.of("id", solutionId, "index", index));
+        return event("Solution", "Displayed", mapOf("id", solutionId, "index", index));
     }
 
     public static TrackEvent solutionClick(final Integer searchId, final Integer solutionId, final Integer index) {
-        return event("Solution", "Clicked", ImmutableMap.of("sourceSearchId", searchId, "targetId", solutionId, "index", index));
+        return event("Solution", "Clicked", mapOf("sourceSearchId", searchId, "targetId", solutionId, "index", index));
     }
 
 
@@ -263,5 +263,26 @@ public final class Events {
                 if (dataMap != null) for (Map.Entry<String, ?> d : dataMap.entrySet()) add(d.getKey(), d.getValue());
             }
         }.getEvent();
+    }
+
+    private static Map<String, Object> mapOf(String k1, Object v1) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        if (v1 != null) result.put(k1, v1);
+        return result;
+    }
+
+    private static Map<String, Object> mapOf(String k1, Object v1, String k2, Object v2) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        if (v1 != null) result.put(k1, v1);
+        if (v2 != null) result.put(k2, v2);
+        return result;
+    }
+
+    private static Map<String, Object> mapOf(String k1, Object v1, String k2, Object v2, String k3, Object v3) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        if (v1 != null) result.put(k1, v1);
+        if (v2 != null) result.put(k2, v2);
+        if (v3 != null) result.put(k3, v3);
+        return result;
     }
 }

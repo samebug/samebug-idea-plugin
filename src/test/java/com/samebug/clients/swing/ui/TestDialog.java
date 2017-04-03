@@ -21,6 +21,7 @@ import com.samebug.clients.swing.ui.modules.*;
 import com.samebug.clients.swing.ui.testModules.TestColorService;
 import com.samebug.clients.swing.ui.testModules.TestIconService;
 import com.samebug.clients.swing.ui.testModules.TestListenerService;
+import com.samebug.clients.swing.ui.testModules.TestTrackingService;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -90,6 +91,7 @@ public abstract class TestDialog extends JDialog {
         IconService.install(new TestIconService());
         MessageService.install(new IdeaMessageService());
         ListenerService.install(new TestListenerService());
+        TrackingService.install(new TestTrackingService());
     }
 
     private static Gson createGson() {
