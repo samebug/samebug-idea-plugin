@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.idea.ui.controller.frame;
 
-import com.samebug.clients.common.api.entities.UserReference;
+import com.samebug.clients.common.api.entities.Author;
 import com.samebug.clients.common.api.entities.bugmate.Bugmate;
 import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
 import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
@@ -76,8 +76,8 @@ public final class ConversionService {
     public ITipHit.Model tipHit(RestHit<Tip> hit, boolean disabled) {
         Tip tip = hit.getSolution();
         IMarkButton.Model mark = convertMarkPanel(hit, disabled);
-        UserReference author = hit.getCreatedBy();
-        return new ITipHit.Model(tip.getTip(), hit.getSolutionId(), tip.getCreatedAt(), author.getDisplayName(), author.getAvatarUrl(), mark);
+        Author author = tip.getAuthor();
+        return new ITipHit.Model(tip.getTip(), hit.getSolutionId(), tip.getCreatedAt(), author.getName(), author.getAvatarUrl(), mark);
     }
 
     public IWebResultsTab.Model webResultsTab(Solutions solutions, boolean disabled) {
