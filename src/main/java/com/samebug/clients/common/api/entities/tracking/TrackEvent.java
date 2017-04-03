@@ -24,8 +24,8 @@ final public class TrackEvent {
 
     public Map<String, Object> fields;
 
-    @Override
-    public String toString() {
+    @SuppressWarnings("unchecked")
+    public String unsafePresentation() {
         StringBuilder b = new StringBuilder();
         b.append(fields.get("category"));
         b.append(" - ");

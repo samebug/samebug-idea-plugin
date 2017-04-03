@@ -21,6 +21,6 @@ import com.samebug.clients.swing.ui.modules.TrackingService;
 public final class TestTrackingService extends TrackingService {
     @Override
     protected void internalTrace(TrackEvent event) {
-        System.out.println(event);
+        System.out.println(event.unsafePresentation());
     }
 }
