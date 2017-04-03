@@ -1,12 +1,12 @@
-/**
+/*
  * Copyright 2017 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,39 +20,31 @@ import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
 import com.intellij.execution.ui.*;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.AbstractProjectComponent;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.search.api.LogScannerFactory;
-import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
-import com.samebug.clients.idea.components.application.Tracking;
-import com.samebug.clients.idea.console.ConsoleWatcher;
-import com.samebug.clients.idea.processadapters.RunDebugAdapter;
+import com.samebug.clients.common.entities.search.DebugSessionInfo;
+import com.samebug.clients.common.search.LogScannerFactory;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.search.StackTraceMatcherFactory;
+import com.samebug.clients.idea.search.console.ConsoleWatcher;
+import com.samebug.clients.idea.search.processadapters.RunDebugAdapter;
 import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.swing.ui.modules.TrackingService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class RunDebugWatcher extends AbstractProjectComponent implements RunContentWithExecutorListener {
+public class RunDebugWatcher implements RunContentWithExecutorListener, Disposable {
+    private final Project myProject;
+    MessageBusConnection messageBusConnection;
+
     public RunDebugWatcher(Project project) {
-        super(project);
-    }
-
-    @Override
-    public void projectOpened() {
-        MessageBusConnection messageBusConnection = myProject.getMessageBus().connect();
+        this.myProject = project;
+        messageBusConnection = project.getMessageBus().connect(this);
         messageBusConnection.subscribe(RunContentManager.TOPIC, this);
-    }
-
-    @Override
-    public void projectClosed() {
-        for (RunDebugAdapter listener : listeners.values()) {
-            listener.stop();
-        }
-        listeners.clear();
     }
 
     public synchronized void contentSelected(@Nullable RunContentDescriptor descriptor, @NotNull com.intellij.execution.Executor executor) {
@@ -68,21 +60,14 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
             listeners.remove(descriptorHashCode);
             DebugSessionInfo sessionInfo = debugSessionIds.get(descriptorHashCode);
             if (sessionInfo != null) {
-                Tracking.projectTracking(myProject).trace(Events.debugStop(myProject, sessionInfo));
+                TrackingService.trace(Events.debugStop(myProject, sessionInfo));
                 debugSessionIds.remove(descriptorHashCode);
-                myProject.getComponent(SamebugProjectComponent.class).getSessionService().removeSession(sessionInfo);
+                IdeaSamebugPlugin.getInstance().searchRequestStore.removeSession(sessionInfo);
             }
         }
     }
 
     private void createListener(@NotNull RunContentDescriptor descriptor, Integer descriptorHashCode) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                myProject.getComponent(ToolWindowController.class).changeToolwindowIcon(false);
-            }
-        });
-
         DebugSessionInfo sessionInfo = new DebugSessionInfo("run/debug");
 
         ProcessHandler processHandler = descriptor.getProcessHandler();
@@ -91,8 +76,7 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
             if (console instanceof ConsoleView) {
                 ConsoleViewImpl impl = extractConsoleImpl((ConsoleView) console);
                 if (impl != null) {
-                    // do we have to keep this reference?
-                    new ConsoleWatcher(impl, sessionInfo);
+                    new ConsoleWatcher(myProject, impl, sessionInfo);
                 }
             }
             final LogScannerFactory scannerFactory = new StackTraceMatcherFactory(myProject, sessionInfo);
@@ -101,7 +85,7 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
             debugSessionIds.put(descriptorHashCode, sessionInfo);
             processHandler.addProcessListener(listener);
 
-            Tracking.projectTracking(myProject).trace(Events.debugStart(myProject, sessionInfo));
+            TrackingService.trace(Events.debugStart(myProject, sessionInfo));
         }
     }
 
@@ -125,4 +109,13 @@ public class RunDebugWatcher extends AbstractProjectComponent implements RunCont
 
     private final Map<Integer, RunDebugAdapter> listeners = new HashMap<Integer, RunDebugAdapter>();
     private final Map<Integer, DebugSessionInfo> debugSessionIds = new HashMap<Integer, DebugSessionInfo>();
+
+    @Override
+    public void dispose() {
+        for (RunDebugAdapter listener : listeners.values()) {
+            listener.stop();
+        }
+        listeners.clear();
+        messageBusConnection.dispose();
+    }
 }

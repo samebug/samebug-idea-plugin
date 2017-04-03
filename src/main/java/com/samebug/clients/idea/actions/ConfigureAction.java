@@ -1,12 +1,12 @@
-/**
+/*
  * Copyright 2017 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,11 +20,11 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.ProjectManager;
-import com.samebug.clients.idea.components.application.ClientService;
+import com.samebug.clients.common.services.ClientService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.resources.SamebugBundle;
-import com.samebug.clients.idea.resources.SamebugIcons;
 import com.samebug.clients.idea.ui.controller.ConfigDialog;
+import com.samebug.clients.swing.ui.modules.IconService;
+import com.samebug.clients.swing.ui.modules.MessageService;
 
 final public class ConfigureAction extends AnAction implements DumbAware {
     @Override
@@ -34,13 +34,13 @@ final public class ConfigureAction extends AnAction implements DumbAware {
 
     @Override
     public void update(AnActionEvent e) {
-        ClientService connectionService = IdeaSamebugPlugin.getInstance().getClient();
+        ClientService connectionService = IdeaSamebugPlugin.getInstance().clientService;
         if (connectionService.isConnected() && !connectionService.isAuthenticated()) {
-            e.getPresentation().setText(SamebugBundle.message("samebug.actions.configure.text.invalidApiKey"));
-            e.getPresentation().setIcon(SamebugIcons.cogwheelTodo);
+            e.getPresentation().setText(MessageService.message("samebug.actions.configure.text.invalidApiKey"));
+            e.getPresentation().setIcon(IconService.cogwheelTodo);
         } else {
-            e.getPresentation().setText(SamebugBundle.message("samebug.actions.configure.text.ok"));
-            e.getPresentation().setIcon(SamebugIcons.cogwheel);
+            e.getPresentation().setText(MessageService.message("samebug.actions.configure.text.ok"));
+            e.getPresentation().setIcon(IconService.cogwheel);
         }
     }
 }

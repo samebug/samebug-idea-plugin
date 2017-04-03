@@ -1,12 +1,12 @@
-/**
+/*
  * Copyright 2017 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,248 +16,273 @@
 package com.samebug.clients.idea.tracking;
 
 
-import com.intellij.ide.plugins.PluginManager;
-import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.common.search.api.entities.SearchResults;
-import com.samebug.clients.common.search.api.entities.tracking.DebugSessionInfo;
-import com.samebug.clients.common.search.api.entities.tracking.SearchInfo;
-import com.samebug.clients.common.search.api.entities.tracking.TrackEvent;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import org.jetbrains.annotations.Nullable;
+import com.samebug.clients.common.api.entities.tracking.TrackEvent;
+import com.samebug.clients.common.api.form.FieldError;
+import com.samebug.clients.common.entities.search.DebugSessionInfo;
+import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 
-import javax.swing.*;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-final public class Events {
+public final class Events {
     public static TrackEvent pluginInstall() {
-        return new TrackBuilder("Plugin", "FirstRun", null) {
-        }.getEvent();
+        return event("Plugin", "FirstRun");
     }
 
-    public static TrackEvent apiKeySet() {
-        return new TrackBuilder("Settings", "ChangeApiKey", null) {
-        }.getEvent();
+    public static TrackEvent configOpen() {
+        return event("Settings", "Open");
     }
 
-    public static TrackEvent projectOpen(Project project) {
-        return new TrackBuilder("Project", "Open", project) {
-            @Override
-            protected void initFields() {
-                Map<String, String> intellijInfo = new HashMap<String, String>();
-                LookAndFeel laf = UIManager.getLookAndFeel();
-                ApplicationInfo appInfo = ApplicationInfo.getInstance();
-                if (laf != null) intellijInfo.put("lookAndFeel", laf.getName());
-                intellijInfo.put("ideaApiVersion", appInfo.getApiVersion());
-                intellijInfo.put("ideaFullVersion", appInfo.getFullVersion());
-                intellijInfo.put("ideaVersionName", appInfo.getVersionName());
-                fields.put("intellijInfo", intellijInfo);
-            }
-        }.getEvent();
+    public static TrackEvent changeApiKey() {
+        return event("Settings", "ChangeApiKey");
     }
 
-    public static TrackEvent projectClose(Project project) {
-        return new TrackBuilder("Project", "Close", project) {
-        }.getEvent();
+    public static TrackEvent changeWorkspace() {
+        return event("Settings", "ChangeWorkspace");
+    }
+
+    public static TrackEvent recoveryOpenIdeaSettings() {
+        return event("Recovery", "OpenIntelliJSettings");
+    }
+
+    public static TrackEvent recoveryOpenSamebugSettings() {
+        return event("Recovery", "OpenSamebugSettings");
+    }
+
+    public static TrackEvent recoveryReload() {
+        return event("Recovery", "Reload");
+    }
+
+    public static TrackEvent projectOpen(final Project project) {
+        return new TrackBuilder("Project", "Open", project).getEvent();
+    }
+
+    public static TrackEvent projectClose(final Project project) {
+        return new TrackBuilder("Project", "Close", project).getEvent();
     }
 
     public static TrackEvent debugStart(Project project, final DebugSessionInfo debugSessionInfo) {
         return new TrackBuilder("Debug", "Start", project) {
-            @Override
-            protected void initFields() {
-                fields.put("sessionId", debugSessionInfo.getId().toString());
-                fields.put("sessionType", debugSessionInfo.getSessionType());
+            protected void initDataFields() {
+                add("sessionId", debugSessionInfo.getId().toString());
+                add("sessionType", debugSessionInfo.getSessionType());
             }
         }.getEvent();
     }
 
     public static TrackEvent debugStop(Project project, final DebugSessionInfo debugSessionInfo) {
         return new TrackBuilder("Debug", "Stop", project) {
-            @Override
-            protected void initFields() {
-                fields.put("sessionId", debugSessionInfo.getId().toString());
-                fields.put("sessionType", debugSessionInfo.getSessionType());
+            protected void initDataFields() {
+                add("sessionId", debugSessionInfo.getId().toString());
+                add("sessionType", debugSessionInfo.getSessionType());
             }
         }.getEvent();
     }
 
-    public static TrackEvent searchSucceeded(final SearchInfo searchInfo, final SearchResults searchResults) {
-        return new TrackBuilder("Search", "Succeeded", null) {
-            @Override
-            protected void initFields() {
-                fields.put("searchId", searchResults.getSearchId());
-                fields.put("sessionId", searchInfo.getSessionInfo().getId().toString());
-                fields.put("sessionType", searchInfo.getSessionInfo().getSessionType());
+    public static TrackEvent toolWindowInitialized(final Project project) {
+        return new TrackBuilder("ToolWindow", "Open", project).getEvent();
+    }
+
+    public static TrackEvent showLoginScreen(final BaseFrameController controller) {
+        return new ShowToolwindowBuilder("Page", "View", controller) {
+            protected void initDataFields() {
+                add("page-type", "authentication");
             }
         }.getEvent();
     }
 
-    public static TrackEvent toolWindowOpen(Project project, final String from) {
-        return new TrackBuilder("ToolWindow", "Open", project) {
-            @Override
-            protected void initFields() {
-                fields.put("location", from);
+    public static TrackEvent showHelpRequestListScreen(final BaseFrameController controller) {
+        return new ShowToolwindowBuilder("Page", "View", controller) {
+            protected void initDataFields() {
+                add("page-type", "user-profile/incoming-help-requests");
             }
         }.getEvent();
     }
 
-    public static TrackEvent linkClick(Project project, final URL url) {
-        return new TrackBuilder("Link", "Click", project) {
-            @Override
-            protected void initFields() {
-                String link = null;
-                if (url != null) link = url.toString();
-                fields.put("url", link);
+    public static TrackEvent showHelpRequestScreen(final BaseFrameController controller, final String helpRequestId) {
+        return new ShowToolwindowBuilder("Page", "View", controller) {
+            protected void initDataFields() {
+                add("page-type", "help-request/");
+                add("helpRequestId", helpRequestId);
             }
         }.getEvent();
     }
 
-    public static TrackEvent searchClick(final Project project, final int searchId) {
-        return new TrackBuilder("Search", "Click", project) {
-            @Override
-            protected void initFields() {
-                fields.put("searchId", searchId);
+    public static TrackEvent showSolutionsScreen(final BaseFrameController controller, final Integer searchId) {
+        return new ShowToolwindowBuilder("Page", "View", controller) {
+            protected void initDataFields() {
+                add("page-type", "search/stacktrace");
+                add("searchId", searchId);
             }
         }.getEvent();
     }
 
-    public static TrackEvent configOpen() {
-        return new TrackBuilder("Configuration", "Open", null) {
-        }.getEvent();
-    }
-
-    public static TrackEvent writeTipOpen(final Project project, final int searchId) {
-        return new TrackBuilder("WriteTip", "Open", project) {
-            @Override
-            protected void initFields() {
-                fields.put("searchId", searchId);
+    public static TrackEvent linkClick(final URL url) {
+        return new TrackBuilder("Link", "Click") {
+            protected void initDataFields() {
+                add("url", url.toString());
             }
         }.getEvent();
     }
 
-    public static TrackEvent writeTipCancel(final Project project, final int searchId) {
-        return new TrackBuilder("WriteTip", "Cancel", project) {
-            @Override
-            protected void initFields() {
-                fields.put("searchId", searchId);
-            }
-        }.getEvent();
+    public static TrackEvent more() {
+        return event("MoreButton", "Click");
     }
 
-    public static TrackEvent writeTipSubmit(final Project project, final int searchId, final String tip, final String sourceUrl, final String result) {
-        return new TrackBuilder("WriteTip", "Submit", project) {
-            @Override
-            protected void initFields() {
-                fields.put("searchId", searchId);
-                fields.put("tip", tip);
-                fields.put("sourceUrl", sourceUrl);
-                fields.put("result", result);
-            }
-        }.getEvent();
+    public static TrackEvent openIncomingRequests() {
+        return event("Profile", "OpenIncomingRequests");
     }
 
-    public static TrackEvent markSubmit(final Project project, final int searchId, final int solutionId, final String result) {
-        return new TrackBuilder("Mark", "Submit", project) {
-            @Override
-            protected void initFields() {
-                fields.put("searchId", searchId);
-                fields.put("solutionId", solutionId);
-                fields.put("result", result);
-            }
-        }.getEvent();
+    public static TrackEvent registrationDialogSwitched(String dialogType) {
+        return event("Registration", "DialogSwitched", mapOf("dialogType", dialogType));
+    }
+
+    public static TrackEvent registrationForgottenPasswordClicked() {
+        return event("Registration", "ForgottenPasswordClicked", mapOf("login", "credentials"));
+    }
+
+    public static TrackEvent registrationSend(String login, String dialogType) {
+        return event("Registration", "Send", mapOf("login", login, "dialogType", dialogType));
+    }
+
+    public static TrackEvent registrationError(String dialogType, List<FieldError> errors) {
+        return event("Registration", "FormError", mapOf("dialogType", dialogType, "errors", errors));
+    }
+
+    public static TrackEvent registrationLogInSucceeded() {
+        return event("Registration", "LogInSucceeded", mapOf("login", "credentials"));
+    }
+
+    public static TrackEvent registrationSignUpSucceeded(String login) {
+        return event("Registration", "UserCreated", mapOf("login", login));
+    }
+
+    public static TrackEvent writeTipOpen() {
+        return event("WriteTip", "Open");
+    }
+
+    public static TrackEvent writeTipSend() {
+        return event("WriteTip", "Send");
+    }
+
+    public static TrackEvent writeTipCancel() {
+        return event("WriteTip", "Cancel");
+    }
+
+    public static TrackEvent writeTipError(List<FieldError> errors) {
+        return event("WriteTip", "FormError", mapOf("errors", errors));
+    }
+
+    public static TrackEvent mark() {
+        return event("Mark", "Marked");
+    }
+
+    public static TrackEvent markCancelled() {
+        return event("Mark", "Cancelled");
+    }
+
+    public static TrackEvent helpRequestNotificationShow(String helpRequestId) {
+        return event("HelpRequestNotification", "Show", mapOf("helpRequestId", helpRequestId));
+    }
+
+    public static TrackEvent helpRequestNotificationAnswer() {
+        return event("HelpRequestNotification", "Answer");
+    }
+
+    public static TrackEvent helpRequestNotificationLater() {
+        return event("HelpRequestNotification", "Later");
+    }
+
+    public static TrackEvent helpRequestOpen(String helpRequestId) {
+        return event("HelpRequestList", "OpenHelpRequest", mapOf("helpRequestId", helpRequestId));
+    }
+
+    public static TrackEvent helpRequestDialogSwitched(String dialogType) {
+        return event("HelpRequest", "DialogSwitched", mapOf("dialogType", dialogType));
+    }
+
+    public static TrackEvent helpRequestOpen() {
+        return event("WriteHelpRequest", "Open");
+    }
+
+    public static TrackEvent helpRequestSend() {
+        return event("WriteHelpRequest", "Send");
+    }
+
+    public static TrackEvent helpRequestCancel() {
+        return event("WriteHelpRequest", "Cancel");
+    }
+
+    public static TrackEvent helpRequestError(List<FieldError> errors) {
+        return event("WriteHelpRequest", "FormError", mapOf("errors", errors));
     }
 
     public static TrackEvent openSearchDialog() {
-        return new TrackBuilder("SearchDialog", "Open", null) {
-        }.getEvent();
+        return event("SearchDialog", "Open");
     }
 
     public static TrackEvent searchInSearchDialog() {
-        return new TrackBuilder("SearchDialog", "Search", null) {
+        return event("SearchDialog", "Search");
+    }
+
+    public static TrackEvent searchSucceedInSearchDialog(final Integer searchId) {
+        return event("SearchDialog", "SearchSucceed", mapOf("searchId", searchId));
+    }
+
+    public static TrackEvent gutterIconClicked(final Integer searchId) {
+        return event("Gutter", "Clicked", mapOf("searchId", searchId));
+    }
+
+    public static TrackEvent gutterIconHover(final Integer searchId) {
+        return event("Gutter", "Hover", mapOf("searchId", searchId));
+    }
+
+    public static TrackEvent solutionDialogSwitched(final String dialogType) {
+        return event("Solution", "DialogSwitched", mapOf("dialogType", dialogType));
+    }
+
+    public static TrackEvent solutionDisplay(final Integer solutionId, final Integer index) {
+        return event("Solution", "Displayed", mapOf("id", solutionId, "index", index));
+    }
+
+    public static TrackEvent solutionClick(final Integer searchId, final Integer solutionId, final Integer index) {
+        return event("Solution", "Clicked", mapOf("sourceSearchId", searchId, "targetId", solutionId, "index", index));
+    }
+
+
+    private static TrackEvent event(String category, String action) {
+        return event(category, action, null);
+    }
+
+    private static TrackEvent event(String category, String action, final Map<String, ?> dataMap) {
+        return new TrackBuilder(category, action) {
+            protected void initDataFields() {
+                if (dataMap != null) for (Map.Entry<String, ?> d : dataMap.entrySet()) add(d.getKey(), d.getValue());
+            }
         }.getEvent();
     }
 
-    public static TrackEvent searchSucceedInSearchDialog(final int searchId) {
-        return new TrackBuilder("SearchDialog", "SearchSucceed", null) {
-            protected void initFields() {
-                fields.put("searchId", searchId);
-            }
-        }.getEvent();
+    private static Map<String, Object> mapOf(String k1, Object v1) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        if (v1 != null) result.put(k1, v1);
+        return result;
     }
 
-    public static TrackEvent gutterIconForSavedSearch(final int searchId) {
-        return new TrackBuilder("Gutter", "SavedSearch", null) {
-            protected void initFields() {
-                fields.put("searchId", searchId);
-            }
-        }.getEvent();
+    private static Map<String, Object> mapOf(String k1, Object v1, String k2, Object v2) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        if (v1 != null) result.put(k1, v1);
+        if (v2 != null) result.put(k2, v2);
+        return result;
     }
 
-    public static TrackEvent gutterIconClicked(final int searchId) {
-        return new TrackBuilder("Gutter", "Clicked", null) {
-            protected void initFields() {
-                fields.put("searchId", searchId);
-            }
-        }.getEvent();
-    }
-
-    private final static Logger LOGGER = Logger.getInstance(Events.class);
-
-    private static abstract class TrackBuilder {
-        final protected String category;
-        final protected String action;
-        final protected Project project;
-        final protected Map<String, Object> fields = new HashMap<String, Object>();
-
-        public TrackBuilder(String category, String action, @Nullable Project project) {
-            this.category = category;
-            this.action = action;
-            this.project = project;
-        }
-
-        protected void initFields() {
-        }
-
-        private void addCommonFields() {
-            fields.put("category", category);
-            fields.put("action", action);
-            try {
-                Integer userId = IdeaSamebugPlugin.getInstance().getState().userId;
-                if (userId != null) fields.put("userId", userId);
-            } catch (Exception e) {
-                LOGGER.debug("failed to write userId to tracking event", e);
-            }
-            try {
-                String instanceId = IdeaSamebugPlugin.getInstance().getState().instanceId;
-                if (instanceId != null) fields.put("instanceId", instanceId);
-            } catch (Exception e) {
-                LOGGER.debug("failed to write instanceId to tracking event", e);
-            }
-            try {
-                String pluginVersion = PluginManager.getPlugin(PluginId.getId("Samebug")).getVersion();
-                if (pluginVersion != null) fields.put("pluginVersion", pluginVersion);
-            } catch (Exception e) {
-                LOGGER.debug("failed to write pluginVersion to tracking event", e);
-            }
-            if (project != null) {
-                fields.put("projectName", project.getName());
-            }
-        }
-
-        final public TrackEvent getEvent() {
-
-            try {
-                initFields();
-                addCommonFields();
-                return new TrackEvent(fields);
-            } catch (Exception e) {
-                LOGGER.debug("Failed to send tracking event", e);
-                return null;
-            }
-        }
+    private static Map<String, Object> mapOf(String k1, Object v1, String k2, Object v2, String k3, Object v3) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        if (v1 != null) result.put(k1, v1);
+        if (v2 != null) result.put(k2, v2);
+        if (v3 != null) result.put(k3, v3);
+        return result;
     }
 }

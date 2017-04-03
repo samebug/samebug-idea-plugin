@@ -1,0 +1,23 @@
+{
+  "id": 32345,
+  "visitorId": "955f0657-ee10-4c57-b6eb-b0d27df5dbbb",
+  "stacktrace": "org.codehaus.cargo.util.CargoException: Cannot deploy deployable org.codehaus.cargo.container.jboss.deployable.JBossWAR[iris-adapter.war]\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:116)\n\tat org.gradle.api.internal.project.ant.BasicAntBuilder.nodeCompleted(BasicAntBuilder.java:77)\n\tat org.gradle.api.internal.project.ant.BasicAntBuilder.doInvokeMethod(BasicAntBuilder.java:92)\n\tat org.gradle.api.plugins.cargo.tasks.remote.RemoteCargoContainerTask.runAction(RemoteCargoContainerTask.groovy:78)\n\tat org.gradle.api.plugins.cargo.tasks.AbstractCargoContainerTask$_start_closure1.doCall(AbstractCargoContainerTask.groovy:92)\n\tat org.gradle.api.plugins.cargo.tasks.AbstractCargoContainerTask$_start_closure1.doCall(AbstractCargoContainerTask.groovy)\n\tat org.gradle.api.plugins.cargo.util.LoggingHandler.withAntLoggingListener(LoggingHandler.groovy:38)\n\tat org.gradle.api.plugins.cargo.util.LoggingHandler$withAntLoggingListener.call(Unknown Source)\n\tat org.gradle.api.plugins.cargo.tasks.AbstractCargoContainerTask.start(AbstractCargoContainerTask.groovy:91)\n\tat org.gradle.internal.reflect.JavaMethod.invoke(JavaMethod.java:63)\n\tat org.gradle.api.internal.project.taskfactory.AnnotationProcessingTaskFactory$StandardTaskAction.doExecute(AnnotationProcessingTaskFactory.java:218)\n\tat org.gradle.api.internal.project.taskfactory.AnnotationProcessingTaskFactory$StandardTaskAction.execute(AnnotationProcessingTaskFactory.java:211)\n\tat org.gradle.api.internal.project.taskfactory.AnnotationProcessingTaskFactory$StandardTaskAction.execute(AnnotationProcessingTaskFactory.java:200)\n\tat org.gradle.api.internal.AbstractTask$TaskActionWrapper.execute(AbstractTask.java:579)\n\tat org.gradle.api.internal.AbstractTask$TaskActionWrapper.execute(AbstractTask.java:562)\n\tat org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeAction(ExecuteActionsTaskExecuter.java:80)\n\tat org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeActions(ExecuteActionsTaskExecuter.java:61)\nCaused by: org.codehaus.cargo.util.CargoException: Cannot deploy deployable org.codehaus.cargo.container.jboss.deployable.JBossWAR[iris-adapter.war]\n\tat org.codehaus.cargo.container.jboss.JBoss5xRemoteDeployer.deploy(JBoss5xRemoteDeployer.java:216)\n\tat org.codehaus.cargo.container.spi.deployer.AbstractDeployer.redeploy(AbstractDeployer.java:245)\n\tat org.codehaus.cargo.ant.CargoTask.executeActions(CargoTask.java:798)\n\tat org.codehaus.cargo.ant.CargoTask.execute(CargoTask.java:576)\n\tat org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:292)\n\tat org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)\n\t... 17 more\nCaused by: org.codehaus.cargo.util.CargoException: Deployment action ADD failed\n\tat org.codehaus.cargo.tools.jboss.JBossDeployer.executeAction(JBossDeployer.java:158)\n\tat org.codehaus.cargo.tools.jboss.JBossDeployer.deploy(JBossDeployer.java:84)\n\tat org.codehaus.cargo.container.jboss.JBoss5xRemoteDeployer.deploy(JBoss5xRemoteDeployer.java:212)\n\t... 23 more",
+  "typeName": "org.codehaus.cargo.util.CargoException",
+  "message": "Cannot deploy deployable org.codehaus.cargo.container.jboss.deployable.JBossWAR[iris-adapter.war]",
+  "timestamp": 1443425402109,
+  "visibility": "Public",
+  "numberOfViews": 0,
+  "group": {
+    "id": "577d1b3cd89a4a1b0bb5af26",
+    "visitorId": "955f0657-ee10-4c57-b6eb-b0d27df5dbbb",
+    "firstSeen": 1443425402109,
+    "lastSeen": 1443425402109,
+    "lastSearch": {
+      "id": 32345,
+      "timestamp": 1443425402109,
+      "visitorId": "955f0657-ee10-4c57-b6eb-b0d27df5dbbb"
+    },
+    "numberOfSearches": 1,
+    "numberOfHits": 33
+  }
+}

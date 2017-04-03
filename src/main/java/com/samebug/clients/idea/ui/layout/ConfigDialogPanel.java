@@ -1,12 +1,12 @@
-/**
+/*
  * Copyright 2017 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -69,6 +69,7 @@ public class ConfigDialogPanel {
             }
             IdeaSamebugPlugin.getInstance().saveSettings(settings);
             currentConfig = settings;
+            IdeaSamebugPlugin.getInstance().checkAuthenticationInTheBackgroundWithCurrentConfig();
         } catch (Exception e) {
             throw new ConfigurationException("Failed to save configuration: " + e.getMessage());
         }
@@ -93,8 +94,8 @@ public class ConfigDialogPanel {
 
     ApplicationSettings fromUI() {
         final ApplicationSettings settings = new ApplicationSettings(currentConfig);
-        settings.apiKey = apiKey.getText();
-        settings.workspaceId = (Integer) workspaceId.getValue() <= 0 ? null : ((Integer) workspaceId.getValue()).longValue();
+        settings.apiKey = apiKey.getText().isEmpty() ? null : apiKey.getText();
+        settings.workspaceId = (Integer) workspaceId.getValue() <= 0 ? null : ((Integer) workspaceId.getValue());
         settings.serverRoot = serverRoot.getText();
         settings.trackingRoot = trackingRoot.getText();
         settings.connectTimeout = (Integer) connectTimeout.getValue();
@@ -106,7 +107,7 @@ public class ConfigDialogPanel {
 
     void toUI(final ApplicationSettings settings) {
         apiKey.setText(settings.apiKey);
-        workspaceId.setValue(settings.workspaceId == null ? 0 : settings.workspaceId.intValue());
+        workspaceId.setValue(settings.workspaceId == null ? 0 : settings.workspaceId);
         serverRoot.setText(settings.serverRoot);
         trackingRoot.setText(settings.trackingRoot);
         connectTimeout.setValue(settings.connectTimeout);

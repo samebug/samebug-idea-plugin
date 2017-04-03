@@ -3,7 +3,17 @@ plugins {
     id "com.github.hierynomus.license" version "0.12.1"
 }
 
+group = 'com.samebug.clients.idea'
+description = 'Samebug for IntelliJ IDEA'
+version '0.14.0' +
+        (project.hasProperty('buildNumber') ? '+' + project.getProperty('buildNumber') : '') +
+        '+idea'
+
 apply plugin: 'java'
+apply plugin: 'org.jetbrains.intellij'
+apply plugin: 'license'
+apply plugin: 'checkstyle'
+apply plugin: 'jacoco'
 
 allprojects {
     sourceCompatibility = 1.6
@@ -11,23 +21,10 @@ allprojects {
     tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
 }
 
-sourceSets {
-    main {
-        java.srcDirs 'src/main/java'
-        resources.srcDir 'src/main/resources'
-    }
-    test {
-        java.srcDirs 'src/test/java'
-        resources.srcDir 'src/test/resources'
-    }
-}
-
-apply plugin: 'org.jetbrains.intellij'
-
 intellij {
     version = project.hasProperty('ideaVersion') ? ideaVersion : 'IC-2016.3'
 
-    alternativeIdePath '/opt/idea-IC-141.178.9'
+//    alternativeIdePath '/opt/idea-IC-141.178.9'
 //    alternativeIdePath '/opt/idea-IU-143.382.35'
 //    alternativeIdePath '/opt/idea-IU-145.972.3'
 //    alternativeIdePath '/opt/idea-IC-162.2228.15'
@@ -41,6 +38,19 @@ intellij {
         password project.hasProperty('JETBRAINS_PASSWORD') ? project.getProperty('JETBRAINS_PASSWORD') : null
         channel project.hasProperty('JETBRAINS_CHANNEL') ? project.getProperty('JETBRAINS_CHANNEL') : null
     }
+    systemProperty("awt.useSystemAAFontSettings", "on")
+    systemProperty("swing.aatext", "true")
+}
+
+sourceSets {
+    main {
+        java.srcDir 'src/main/java'
+        resources.srcDir 'src/main/resources'
+    }
+    test {
+        java.srcDir 'src/test/java'
+        resources.srcDir 'src/test/resources'
+    }
 }
 
 repositories {
@@ -52,11 +62,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.2'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile 'joda-time:joda-time:2.9.7'
 }
-
-apply plugin: 'license'
-apply plugin: 'checkstyle'
-apply plugin: 'jacoco'
 
 license {
     strictCheck true
@@ -68,18 +75,13 @@ license {
     }
     mapping {
         form = 'XML_STYLE'
+        java='SLASHSTAR_STYLE'
     }
 
     include "**/*.java"
     include "**/*.form"
     exclude "**/*Test.java"
 }
-
-group = 'com.samebug.clients.idea'
-description = 'Samebug for IntelliJ IDEA'
-version '0.13.0' +
-        (project.hasProperty('buildNumber') ? '+' + project.getProperty('buildNumber') : '') +
-        '+idea'
 
 task checkstyle(type: Checkstyle) {
     configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")

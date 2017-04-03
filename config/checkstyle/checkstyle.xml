@@ -21,7 +21,7 @@
 
   <!-- Space after 'for' and 'if' -->
   <module name="RegexpSingleline">
-    <property name="format" value="^\s*(for|if)[^ ]"/>
+    <property name="format" value="^\s*(for|if)[^ a-zA-Z0-9]"/>
     <property name="message" value="Space needed before opening parenthesis."/>
   </module>
 
@@ -47,7 +47,10 @@
     <module name="MethodName"/>
     <module name="PackageName"/>
     <module name="ParameterName"/>
-    <module name="TypeName"/>
+    <module name="TypeName">
+      <property name="format" value="^[A-Z][_a-zA-Z0-9]*$"/>
+      <property name="tokens" value="ENUM_DEF"/>
+    </module>
 
     <!-- Checks for imports                              -->
     <!-- See http://checkstyle.sf.net/config_import.html -->

@@ -1,0 +1,5 @@
+{
+  "avatarUrl": null,
+  "displayName": "Petra",
+  "helpRequestBody": "When trying to run serenity script in IE im facing with the following error. In my \"serenity.properties\" file have added webdriver.ie.driver=C:\\Automation\\Resources\\IODriverServer.exe -Dwebdriver.driver = iexplorer but still getting the following error. While trying to run in normal selenium Code the IE works fine. Can you guys help me on it."
+}
