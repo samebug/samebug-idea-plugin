@@ -63,11 +63,11 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
         public ContentPanel() {
             if (previews.isEmpty()) {
                 final EmptyListPanel emptyPanel = new EmptyListPanel();
-                setLayout(new MigLayout("fillx", "20[fill]0", "0[]0"));
+                setLayout(new MigLayout("fillx", "20px[fill]0", "0[]0"));
                 add(emptyPanel);
             } else {
                 final ListPanel listPanel = new ListPanel();
-                setLayout(new MigLayout("fillx", "20[]0", "0[]20[]20"));
+                setLayout(new MigLayout("fillx", "20px[]0", "0[]20px[]20px"));
                 add(listPanel, "cell 0 0, growx");
             }
         }
@@ -97,7 +97,7 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     removeAll();
-                    setLayout(new MigLayout("fillx", "40[300]40", "40[]27[]40"));
+                    setLayout(new MigLayout("fillx", "40px[300px]40px", "40px[]27px[]40px"));
                     add(emptylabel, "cell 0 0, al center");
                     add(description, "cell 0 1, growx, wmin 0");
                     // TODO: after a change in the layout, it seems that revalidate-repaint is sometimes not enough in IntelliJ
@@ -107,7 +107,7 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
                 }
             });
 
-            setLayout(new MigLayout("fillx", "40[300]40", "40[]5[]40"));
+            setLayout(new MigLayout("fillx", "40px[300px]40px", "40px[]5px[]40px"));
             add(emptylabel, "cell 0 0, al center");
             add(openLabel, "cell 0 1, al center");
 

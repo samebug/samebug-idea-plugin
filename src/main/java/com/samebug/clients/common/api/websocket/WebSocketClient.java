@@ -17,64 +17,63 @@ package com.samebug.clients.common.api.websocket;
 
 import com.intellij.openapi.diagnostic.Logger;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.websocketx.*;
+import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
+import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
+import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
-import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.net.ssl.SSLException;
 import java.io.Closeable;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Map;
 
 
 public final class WebSocketClient implements Closeable {
     final private static Logger LOGGER = Logger.getInstance(WebSocketClient.class);
 
+    private final WebSocketConfig config;
     private final int port;
     private final String host;
     private final SslContext sslContext;
-    private final URI uri;
-    private final Map<String, Object> customHeaders;
     private final Channel channel;
-    private final EventLoopGroup group;
-    private boolean closed;
 
-    public WebSocketClient(URI uri, Map<String, Object> customHeaders, WebSocketEventHandler eventHandler) throws SSLException, InterruptedException {
-        this.uri = uri;
-        this.customHeaders = customHeaders;
-        String scheme = this.uri.getScheme() == null ? "ws" : uri.getScheme();
+    public WebSocketClient(WebSocketConfig config) throws SSLException, InterruptedException {
+        this.config = config;
+        String scheme = config.uri.getScheme() == null ? "ws" : config.uri.getScheme();
         final boolean isWss = "wss".equalsIgnoreCase(scheme);
         final boolean isWs = "ws".equalsIgnoreCase(scheme);
         if (!isWs && !isWss) throw new IllegalArgumentException("Only WS(S) is supported.");
 
-        this.port = uri.getPort() == -1 ? (isWss ? 443 : 80) : uri.getPort();
-        this.host = uri.getHost() == null ? "127.0.0.1" : uri.getHost();
+        this.port = config.uri.getPort() == -1 ? (isWss ? 443 : 80) : config.uri.getPort();
+        this.host = config.uri.getHost() == null ? "127.0.0.1" : config.uri.getHost();
         this.sslContext = isWs ? null : SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
-        this.group = new NioEventLoopGroup(1, PooledThreadExecutor.INSTANCE);
         // TODO blocks on the main thread!
-        this.channel = connect(eventHandler);
+        this.channel = connect();
     }
 
-    private Channel connect(WebSocketEventHandler eventHandler) throws InterruptedException {
+    private Channel connect() throws InterruptedException {
         DefaultHttpHeaders headers = new DefaultHttpHeaders();
-        for (Map.Entry<String, Object> h : customHeaders.entrySet()) {
+        for (Map.Entry<String, Object> h : config.customHeaders.entrySet()) {
             headers.add(h.getKey(), h.getValue());
         }
-        WebSocketClientHandshaker handshaker = WebSocketClientHandshakerFactory.newHandshaker(uri, WebSocketVersion.V13, null, false, headers);
-        final WebSocketClientHandler clientHandler = new WebSocketClientHandler(handshaker, eventHandler);
+        WebSocketClientHandshaker handshaker = WebSocketClientHandshakerFactory.newHandshaker(config.uri, WebSocketVersion.V13, null, false, headers);
+        final WebSocketClientHandler clientHandler = new WebSocketClientHandler(handshaker, config.eventHandler);
 
         Bootstrap bootstrap = new Bootstrap();
-        bootstrap.group(group)
+        bootstrap.group(config.group)
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
                 .channel(NioSocketChannel.class)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
@@ -93,19 +92,13 @@ public final class WebSocketClient implements Closeable {
                     }
                 });
 
-        // TODO Fragile. There should be proper error handling
-        try {
-            Channel channel = bootstrap.connect(WebSocketClient.this.host, WebSocketClient.this.port).sync().channel();
-            clientHandler.getHandshakeFuture().sync();
-            return channel;
-        } catch (Throwable e) {
-            return null;
-        }
+        Channel channel = bootstrap.connect(WebSocketClient.this.host, WebSocketClient.this.port).sync().channel();
+        clientHandler.getHandshakeFuture().sync();
+        return channel;
     }
 
     @Override
     public void close() throws IOException {
-        this.closed = true;
         try {
             channel.writeAndFlush(new CloseWebSocketFrame()).sync();
         } catch (InterruptedException ie) {
@@ -116,14 +109,10 @@ public final class WebSocketClient implements Closeable {
         } catch (InterruptedException ie) {
             LOGGER.warn("Failed to flush websocket", ie);
         }
-        group.shutdownGracefully();
     }
 
 
-    public ChannelFuture send(WebSocketFrame frame) {
-        if (closed) {
-            throw new IllegalStateException("Client is closed");
-        }
-        return channel.writeAndFlush(frame);
+    public boolean isOpen() {
+        return channel.isOpen();
     }
 }

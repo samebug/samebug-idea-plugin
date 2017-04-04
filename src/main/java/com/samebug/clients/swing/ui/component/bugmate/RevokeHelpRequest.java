@@ -41,7 +41,7 @@ public final class RevokeHelpRequest extends JComponent implements IMyHelpReques
         helpRequestLabel = new HelpRequestBar(model.helpRequest);
         revoke = new RevokeButton(model.helpRequest);
 
-        setLayout(new MigLayout("fillx", "0[]0", "0[]15[]0"));
+        setLayout(new MigLayout("fillx", "0[]0", "0[]15px[]0"));
         add(helpRequestLabel, "cell 0 0, growx");
         add(revoke, "cell 0 1, align center");
     }
@@ -66,7 +66,7 @@ public final class RevokeHelpRequest extends JComponent implements IMyHelpReques
             final SamebugLabel text = new HelpRequestLabel(helpRequest.createdAt);
             setBackgroundColor(ColorService.Tip);
 
-            setLayout(new MigLayout("fillx", "30[fill]30", "30[]30"));
+            setLayout(new MigLayout("fillx", "30px[fill]30px", "30px[]30px"));
             add(text, "al center");
         }
     }

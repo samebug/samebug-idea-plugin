@@ -46,7 +46,7 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
         final InfoBar infos = new InfoBar(model.createdAt);
         final SamebugLabel exceptionBody = new ExceptionPreview(model.exceptionBody, viewedByMe);
 
-        setLayout(new MigLayout("fillx", MessageFormat.format("20[{0}!]10[250, fill]20", AvatarSize), "20[]0[]15[]20"));
+        setLayout(new MigLayout("fillx", MessageFormat.format("20px[{0}px!]10px[250px, fill]20px", AvatarSize), "20px[]0[]15px[]20px"));
 
         add(avatar, "cell 0 0, spany 2");
         add(diplayName, "cell 1 0");

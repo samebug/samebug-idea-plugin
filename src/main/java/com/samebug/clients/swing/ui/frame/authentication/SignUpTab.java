@@ -28,7 +28,7 @@ public final class SignUpTab extends JComponent {
         final Delimeter delimeter = new Delimeter();
         final AnonymousUseForm anonymousUseForm = new AnonymousUseForm();
 
-        setLayout(new MigLayout("fillx", "0[260!, fill]0", "0[]10[]10[]40"));
+        setLayout(new MigLayout("fillx", "0[260px!, fill]0", "0[]10px[]10px[]40px"));
         add(signUpForm, "cell 0 0");
         add(delimeter, "cell 0 1");
         add(anonymousUseForm, "cell 0 2");

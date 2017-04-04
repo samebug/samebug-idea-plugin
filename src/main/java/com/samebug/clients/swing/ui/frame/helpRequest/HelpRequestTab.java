@@ -57,13 +57,13 @@ public final class HelpRequestTab extends TransparentPanel implements IHelpReque
     private final class ContentPanel extends SamebugPanel {
         {
             if (tipHits.isEmpty()) {
-                setLayout(new MigLayout("fillx", "20[fill]0", "0[]20"));
+                setLayout(new MigLayout("fillx", "20px[fill]0", "0[]20px"));
                 add(request, "cell 0 0");
             } else {
                 final ListPanel listPanel = new ListPanel();
                 final SamebugLabel tipListLabel = new SamebugLabel(MessageService.message("samebug.component.helpRequest.answer.otherTips"), FontService.demi(16));
 
-                setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]20[]20"));
+                setLayout(new MigLayout("fillx", "20px[fill]0", "0[]20px[]20px[]20px"));
                 add(request, "cell 0 0");
                 add(tipListLabel, "cell 0 1");
                 add(listPanel, "cell 0 2");

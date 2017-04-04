@@ -5,7 +5,7 @@ plugins {
 
 group = 'com.samebug.clients.idea'
 description = 'Samebug for IntelliJ IDEA'
-version '0.14.0' +
+version '0.14.1' +
         (project.hasProperty('buildNumber') ? '+' + project.getProperty('buildNumber') : '') +
         '+idea'
 

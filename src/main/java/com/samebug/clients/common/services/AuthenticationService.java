@@ -49,7 +49,6 @@ public final class AuthenticationService {
                         clientService.updateAuthenticated(result.getUserExist());
                         // TODO tell the client service if there is a problem with the workspace
                         // TODO if workspaceId is null, save the returned default workspace id to application settings.
-
                     }
                 };
         return clientService.execute(requestHandler);

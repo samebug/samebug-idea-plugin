@@ -45,7 +45,7 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
         tips = new NumberLabel(model.tips, MessageService.message("samebug.component.profile.tips.label"));
         thanks = new NumberLabel(model.thanks, MessageService.message("samebug.component.profile.thanks.label"));
 
-        setLayout(new MigLayout("fillx", "0[]8[]0[grow]0[]19[]19[]19[]0", "10[]10"));
+        setLayout(new MigLayout("fillx", "0[]8px[]0[grow]0[]19px[]19px[]19px[]0", "10px[]10px"));
 
         add(avatarIcon, "");
         add(name, "");

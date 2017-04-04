@@ -36,8 +36,8 @@ public final class HelpRequestHeader extends JComponent implements IHelpRequestH
         final HeaderTextLabel header = new HeaderTextLabel(model.title);
         final AuthorRow authorRow = new AuthorRow(model.displayName, model.avatarUrl);
 
-        setLayout(new MigLayout("fillx, filly", "20[]20", "30[]0[]30"));
-        add(header, "cell 0 0, wmin 0, hmax 56");
+        setLayout(new MigLayout("fillx, filly", "20px[]20px", "30px[]0[]30px"));
+        add(header, "cell 0 0, wmin 0, hmax 56px");
         add(authorRow, "cell 0 1");
     }
 

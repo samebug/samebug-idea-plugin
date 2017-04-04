@@ -42,7 +42,7 @@ public final class WebHit extends SamebugPanel implements IWebHit {
         markButton = new MarkButton(model.mark);
         final TitlePanel titlePanel = new TitlePanel();
 
-        setLayout(new MigLayout("fillx", "0[300]0", "0[]16[]0"));
+        setLayout(new MigLayout("fillx", "0[300px]0", "0[]16px[]0"));
 
         add(titlePanel, "growx, cell 0 0");
         add(markButton, "cell 0 1");
@@ -56,9 +56,9 @@ public final class WebHit extends SamebugPanel implements IWebHit {
             final TitleLabel title = new TitleLabel();
             final SourceLabel source = new SourceLabel();
 
-            setLayout(new MigLayout("", "0[]9[]0", "0[]0[]0"));
-            add(sourceIcon, MessageFormat.format("w {0}!, h {0}!, cell 0 0, span 1 2, ay top", Size));
-            add(title, MessageFormat.format("wmin 0, hmax {0}, growx, cell 1 0", Size));
+            setLayout(new MigLayout("", "0[]9px[]0", "0[]0[]0"));
+            add(sourceIcon, MessageFormat.format("w {0}px!, h {0}px!, cell 0 0, span 1 2, ay top", Size));
+            add(title, MessageFormat.format("wmin 0, hmax {0}px, growx, cell 1 0", Size));
             add(source, "wmin 0, growx, cell 1 1");
 
             title.addMouseListener(new MouseAdapter() {

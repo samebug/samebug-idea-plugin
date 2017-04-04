@@ -16,6 +16,7 @@
 package com.samebug.clients.common.api.websocket;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
@@ -38,6 +39,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     }
 
     WebSocketClientHandler(WebSocketClientHandshaker handshaker, WebSocketEventHandler eventHandler) {
+        super(true);
         this.handshaker = handshaker;
         this.eventHandler = eventHandler;
     }
@@ -56,6 +58,8 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         eventHandler.disconnected();
+        // IMPROVE try reconnect only after a few seconds
+        IdeaSamebugPlugin.getInstance().webSocketClientService.checkConnectionAndConnectOnBackgroundThreadIfNecessary();
     }
 
     @Override

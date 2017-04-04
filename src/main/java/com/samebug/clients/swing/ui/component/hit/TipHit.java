@@ -57,7 +57,7 @@ public final class TipHit extends RoundedBackgroundPanel implements ITipHit {
         final JPanel filler = new TransparentPanel();
         final AuthorPanel author = new AuthorPanel();
 
-        setLayout(new MigLayout("fillx", "20[fill, 300]20", "18[]13[]15[]20"));
+        setLayout(new MigLayout("fillx", "20px[fill, 300px]20px", "18px[]13px[]15px[]20px"));
 
         add(tipLabel, "cell 0 0");
         add(tipMessage, "cell 0 1, wmin 0, growx");
@@ -95,7 +95,7 @@ public final class TipHit extends RoundedBackgroundPanel implements ITipHit {
             name.setForegroundColor(ColorService.UnemphasizedText);
             timestamp = new TimestampLabel(model.createdAt);
 
-            setLayout(new MigLayout("", "0[]5[]0", "0[14!]0[14!]0"));
+            setLayout(new MigLayout("", "0[]5px[]0", "0[14px!]0[14px!]0"));
 
             add(authorIcon, "cell 0 0, spany 2");
             add(name, "cell 1 0");

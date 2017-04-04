@@ -43,4 +43,9 @@ public final class ProfileStore {
     public UserStats getUserStats() {
         return statistics.get();
     }
+
+    public void invalidate() {
+        user.set(null);
+        statistics.set(null);
+    }
 }

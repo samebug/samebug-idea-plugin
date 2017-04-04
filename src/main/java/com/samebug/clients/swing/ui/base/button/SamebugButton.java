@@ -66,7 +66,7 @@ public class SamebugButton extends ActionButton {
 
     private void addLabel() {
         label.setForeground(currentChildrenColor);
-        setLayout(new MigLayout("", "12:push[]12:push", "11[]12"));
+        setLayout(new MigLayout("", "12px:push[]12px:push", "11px[]12px"));
         add(label, "align center");
     }
 }
