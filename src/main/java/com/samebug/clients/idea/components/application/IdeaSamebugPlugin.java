@@ -135,7 +135,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
                 helpRequestStore, helpRequestService,
                 searchStore, searchService);
 
-        TimedTasks timedTasks = new TimedTasks(messageBus.connect(this));
+        TimedTasks timedTasks = new TimedTasks();
         ConsoleSearchController consoleSearchController = new ConsoleSearchController(messageBus.connect(this));
         notificationController = new NotificationController();
         webSocketClientService = new WebSocketClientService(notificationController);
@@ -155,6 +155,9 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public void disposeComponent() {
         if (connection != null) {
             connection.disconnect();
+        }
+        if (webSocketClientService != null) {
+            webSocketClientService.dispose();
         }
     }
 

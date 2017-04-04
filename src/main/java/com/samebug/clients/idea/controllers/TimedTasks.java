@@ -17,45 +17,44 @@ package com.samebug.clients.idea.controllers;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.messages.RefreshUserStatsListener;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class TimedTasks implements RefreshUserStatsListener {
+public class TimedTasks {
     final static Logger LOGGER = Logger.getInstance(TimedTasks.class);
 
     @NotNull
-    final Timer userStatsRefresher;
+    final Timer timer;
 
-    @NotNull
-    final MessageBusConnection connection;
+    TimerTask userStatsRefresher;
+    TimerTask webSocketChecker;
 
+    public TimedTasks() {
+        timer = new Timer("Samebug-timed-tasks");
 
-    public TimedTasks(@NotNull MessageBusConnection connection) {
-        this.connection = connection;
-        connection.subscribe(RefreshUserStatsListener.TOPIC, this);
-
-        final int UserStatsRefreshInitialDelayInMs = 10 * 1000;
-        final int UserStatsRefreshDelayInMs = 10 * 60 * 1000;
-        userStatsRefresher = new Timer(UserStatsRefreshDelayInMs, new ActionListener() {
+        userStatsRefresher = new TimerTask() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                ApplicationManager.getApplication().getMessageBus().syncPublisher(RefreshUserStatsListener.TOPIC).requestRefresh();
+            public void run() {
+                reloadUserStats();
             }
-        });
-        userStatsRefresher.setInitialDelay(UserStatsRefreshInitialDelayInMs);
-        userStatsRefresher.start();
+        };
+        webSocketChecker = new TimerTask() {
+            @Override
+            public void run() {
+                checkWebSocketConnection();
+            }
+        };
+
+        timer.schedule(userStatsRefresher, 5000, 60000);
+        timer.schedule(webSocketChecker, 60000, 60000);
     }
 
 
-    @Override
-    public void requestRefresh() {
+    public void reloadUserStats() {
         final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
@@ -67,5 +66,10 @@ public class TimedTasks implements RefreshUserStatsListener {
                 }
             }
         });
+    }
+
+    public void checkWebSocketConnection() {
+        final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
+        plugin.webSocketClientService.checkConnectionAndConnectOnBackgroundThreadIfNecessary();
     }
 }
