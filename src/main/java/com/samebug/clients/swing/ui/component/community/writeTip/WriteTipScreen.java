@@ -53,7 +53,7 @@ public class WriteTipScreen extends RoundedBackgroundPanel implements IForm {
         tipArea = new WriteTipArea(MessageService.message("samebug.component.tip.write.placeholder", writeTip.model.usersWaitingHelp));
         actionRow = new ActionRow();
 
-        setLayout(new MigLayout("fillx", "20[fill]20", "18[]13[]10[]20"));
+        setLayout(new MigLayout("fillx", "20px[fill]20px", "18px[]13px[]10px[]20px"));
         add(titleLabel, "cell 0 0");
         add(tipArea, "cell 0 1");
         add(actionRow, "cell 0 2");
@@ -89,7 +89,7 @@ public class WriteTipScreen extends RoundedBackgroundPanel implements IForm {
             cancelButton.setInteractionColors(ColorService.MarkInteraction);
             cancelButton.setFont(FontService.demi(14));
 
-            setLayout(new MigLayout("", "0[]20[]:push", "0[]0"));
+            setLayout(new MigLayout("", "0[]20px[]:push", "0[]0"));
             add(sendButton);
             add(cancelButton);
 

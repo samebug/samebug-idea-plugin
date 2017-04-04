@@ -46,7 +46,7 @@ public final class HelpRequestPopup extends SamebugPanel implements IHelpRequest
         title.setForegroundColor(ColorService.EmphasizedText);
         body.setForegroundColor(ColorService.EmphasizedText);
 
-        setLayout(new MigLayout("", MessageFormat.format("10[{0}!]8[320]10", AvatarSize), "10[]5[]10[]10"));
+        setLayout(new MigLayout("", MessageFormat.format("10px[{0}px!]8px[320px]10px", AvatarSize), "10px[]5px[]10px[]10px"));
         add(avatar, "cell 0 0, spany 2, align center top");
         add(title, "cell 1 0");
         add(body, "cell 1 1, growx, wmin 0");

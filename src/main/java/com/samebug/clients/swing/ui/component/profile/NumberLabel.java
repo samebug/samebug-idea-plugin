@@ -35,7 +35,7 @@ public class NumberLabel extends TransparentPanel {
         hintLabel = new SamebugLabel(hint, FontService.demi(12));
 
         setForegroundColor(ColorService.Text);
-        setLayout(new MigLayout("fillx", "0[]4[]0", "0[]0"));
+        setLayout(new MigLayout("fillx", "0[]4px[]0", "0[]0"));
 
         add(numberLabel, "");
         add(hintLabel, "");

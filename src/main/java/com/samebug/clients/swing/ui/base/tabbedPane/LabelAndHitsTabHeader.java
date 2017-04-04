@@ -34,7 +34,7 @@ public class LabelAndHitsTabHeader extends SamebugTabHeader {
         setHits(hits);
 
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
-        setLayout(new MigLayout("", "0[]7[]0", "0[20, fill]0"));
+        setLayout(new MigLayout("", "0[]7px[]0", "0[20px, fill]0"));
         add(tabLabel, "cell 0 0");
         add(hitsLabel, "cell 1 0");
 

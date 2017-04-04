@@ -38,10 +38,10 @@ public class AuthenticationFrame extends BasicFrame implements IAuthenticationFr
             final CenteredMultilineLabel intro = new IntroLabel();
             final JComponent tabs = new AuthenticationTabs();
 
-            setLayout(new MigLayout("fillx", "0[380!]0", "40[]20[]30[]0"));
+            setLayout(new MigLayout("fillx", "0[380px!]0", "40px[]20px[]30px[]0"));
             add(title, "cell 0 0, al center");
             add(intro, "cell 0 1, growx, wmin 0");
-            add(tabs, "cell 0 2, w 260!, al center");
+            add(tabs, "cell 0 2, w 260px!, al center");
         }
     }
 

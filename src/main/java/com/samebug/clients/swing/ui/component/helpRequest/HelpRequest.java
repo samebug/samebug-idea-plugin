@@ -53,7 +53,7 @@ public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRe
         actions = new ActionRow();
 
         setBackgroundColor(ColorService.Tip);
-        setLayout(new MigLayout("fillx", "20[40!]10[300, fill]20", "20[]20[]0[]30[]10[]20"));
+        setLayout(new MigLayout("fillx", "20px[40px!]10px[300px, fill]20px", "20px[]20px[]0[]30px[]10px[]20px"));
         add(titleLabel, "cell 0 0, spanx 2");
         add(avatar, "cell 0 1, spany 2, top");
         add(displayName, "cell 1 1, growx");

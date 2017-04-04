@@ -110,7 +110,7 @@ public abstract class BasicFrame extends ErrorBarPane implements IFrame {
             final LoadingAnimation animation = new LoadingAnimation(40);
             final CenteredMultilineLabel label = new CenteredMultilineLabel();
             label.setText(MessageService.message("samebug.frame.loading"));
-            setLayout(new MigLayout("fillx", "0:push[fill]0:push", "0:push[]15[]0:push"));
+            setLayout(new MigLayout("fillx", "0:push[fill]0:push", "0:push[]15px[]0:push"));
             add(animation, "cell 0 0, wmin 0, al center");
             add(label, "cell 0 1, wmin 0");
         }
@@ -135,11 +135,11 @@ public abstract class BasicFrame extends ErrorBarPane implements IFrame {
             if (buttonLabel != null && mouseListener != null) {
                 final SamebugButton alternativeButton = new SamebugButton(buttonLabel, false);
                 alternativeButton.addMouseListener(mouseListener);
-                setLayout(new MigLayout("fillx", "0[]0", "0:push[]30[]30[]30[]0:push"));
+                setLayout(new MigLayout("fillx", "0[]0", "0:push[]30px[]30px[]30px[]0:push"));
                 add(alternativeButton, "cell 0 2, al center");
                 add(reloadButton, "cell 0 3, al center");
             } else {
-                setLayout(new MigLayout("fillx", "0[]0", "0:push[]30[]30[]0:push"));
+                setLayout(new MigLayout("fillx", "0[]0", "0:push[]30px[]30px[]0:push"));
                 add(reloadButton, "cell 0 2, al center");
             }
             add(alertImage, "cell 0 0, wmin 0, growx");

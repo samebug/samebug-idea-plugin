@@ -44,7 +44,7 @@ public final class RequestHelpScreen extends JComponent implements IForm {
         sendButton = new SendButton();
         cancelButton = new LinkLabel(MessageService.message("samebug.component.helpRequest.ask.cancel"));
 
-        setLayout(new MigLayout("fillx", "0[]0", "0[]10[]10[]0"));
+        setLayout(new MigLayout("fillx", "0[]0", "0[]10px[]10px[]0"));
         add(writeRequestArea, "cell 0 0, growx");
         add(sendButton, "cell 0 1, align center");
         add(cancelButton, "cell 0 2, align center");

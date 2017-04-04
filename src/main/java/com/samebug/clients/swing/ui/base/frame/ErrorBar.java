@@ -27,7 +27,7 @@ public class ErrorBar extends SamebugPanel {
         setBackgroundColor(ColorService.ErrorBar);
 
         // TODO shadow border
-        setLayout(new MigLayout("", "20[]10[]20", "15[]15"));
+        setLayout(new MigLayout("", "20px[]10px[]20px", "15px[]15px"));
         final JLabel alertIcon = new JLabel(IconService.alertErrorBar());
         final JLabel message = new JLabel(text);
         // The color of this text is the samebug under both theme

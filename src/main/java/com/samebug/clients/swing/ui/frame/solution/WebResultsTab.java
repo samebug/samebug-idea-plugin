@@ -85,7 +85,7 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
     private final class EmptyContentPanel extends SamebugPanel {
         {
             final WriteTip cta = new WriteTip(ctaModel, WriteTip.CTA_TYPE.LARGE_FOR_WEB_HITS);
-            setLayout(new MigLayout("fillx", "20[fill]0", "0[]20"));
+            setLayout(new MigLayout("fillx", "20px[fill]0", "0[]20px"));
             add(cta);
         }
     }
@@ -95,7 +95,7 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
             final ListPanel listPanel = new ListPanel();
             final MoreButton more = new MoreButton();
 
-            setLayout(new MigLayout("fillx", "20[]0", "0[]20[]20"));
+            setLayout(new MigLayout("fillx", "20px[]0", "0[]20px[]20px"));
 
             add(listPanel, "cell 0 0, growx");
             add(more, "cell 0 1, al center");

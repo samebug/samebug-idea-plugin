@@ -35,13 +35,13 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
         final SubheaderLabel subheader = new SubheaderLabel();
         final BugmateGrid bugmateGrid = new BugmateGrid(model.bugmateHits);
         if (model.numberOfOtherBugmates == 0) {
-            setLayout(new MigLayout("fillx", "0[]0", "0[]25[]0"));
+            setLayout(new MigLayout("fillx", "0[]0", "0[]25px[]0"));
 
             add(subheader, "cell 0 0");
             add(bugmateGrid, "cell 0 1, growx");
         } else {
             final MoreLabel more = new MoreLabel(model.numberOfOtherBugmates);
-            setLayout(new MigLayout("fillx", "0[]0", "0[]25[]25[]0"));
+            setLayout(new MigLayout("fillx", "0[]0", "0[]25px[]25px[]0"));
 
             add(subheader, "cell 0 0");
             add(bugmateGrid, "cell 0 1, growx");
@@ -61,9 +61,9 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
 
             // TODO generalize it if necessary, for 4 items it's fine
             if (bugmateHits.size() <= 2) {
-                setLayout(new MigLayout("fillx", "0[]20:push[]0", "0[]0"));
+                setLayout(new MigLayout("fillx", "0[]20px:push[]0", "0[]0"));
             } else {
-                setLayout(new MigLayout("fillx", "0[]20:push[]0", "0[]20[]0"));
+                setLayout(new MigLayout("fillx", "0[]20px:push[]0", "0[]20px[]0"));
             }
 
             for (int i = 0; i < bugmateHits.size(); ++i) {

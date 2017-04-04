@@ -107,23 +107,23 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
             removeAll();
             listPanel.setContent(tipHits);
             if (tipHits.size() > 0 && bugmateListModel.bugmateHits.size() > 0) {
-                setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]20[]10[]20"));
+                setLayout(new MigLayout("fillx", "20px[fill]0", "0[]20px[]20px[]10px[]20px"));
                 add(listPanel, "cell 0 0");
                 add(writeTip, "cell 0 1");
                 add(bugmateList, "cell 0 2");
                 add(helpRequest, "cell 0 3, align center, growx");
             } else if (tipHits.size() == 0 && bugmateListModel.bugmateHits.size() > 0) {
-                setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]10[]20"));
+                setLayout(new MigLayout("fillx", "20px[fill]0", "0[]20px[]10px[]20px"));
                 add(cta, "cell 0 0");
                 add(bugmateList, "cell 0 1");
                 add(helpRequest, "cell 0 2, align center, growx");
             } else if (tipHits.size() > 0 && bugmateListModel.bugmateHits.size() == 0) {
-                setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]10[]20"));
+                setLayout(new MigLayout("fillx", "20px[fill]0", "0[]20px[]10px[]20px"));
                 add(listPanel, "cell 0 0");
                 add(writeTip, "cell 0 1");
                 add(helpRequest, "cell 0 2, align center, growx");
             } else {
-                setLayout(new MigLayout("fillx", "20[fill]0", "0[]10[]20"));
+                setLayout(new MigLayout("fillx", "20px[fill]0", "0[]10px[]20px"));
                 add(cta, "cell 0 0");
                 add(helpRequest, "cell 0 1, align center, growx");
             }
@@ -133,12 +133,12 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
         void setZeroFromOneTipContent() {
             removeAll();
             if (bugmateListModel.bugmateHits.size() > 0) {
-                setLayout(new MigLayout("fillx", "20[fill]0", "0[]20[]10[]20"));
+                setLayout(new MigLayout("fillx", "20px[fill]0", "0[]20px[]10px[]20px"));
                 add(writeTip, "cell 0 0");
                 add(bugmateList, "cell 0 1");
                 add(helpRequest, "cell 0 2, align center, growx");
             } else {
-                setLayout(new MigLayout("fillx", "20[fill]0", "0[]10[]20"));
+                setLayout(new MigLayout("fillx", "20px[fill]0", "0[]10px[]20px"));
                 add(writeTip, "cell 0 0");
                 add(helpRequest, "cell 0 1, align center, growx");
             }

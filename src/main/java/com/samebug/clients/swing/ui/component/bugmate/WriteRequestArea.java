@@ -56,7 +56,7 @@ public final class WriteRequestArea extends JComponent implements IFormField {
             }
         });
 
-        setLayout(new MigLayout("fillx", "0[300, fill]0", "0[]0"));
+        setLayout(new MigLayout("fillx", "0[300px, fill]0", "0[]0"));
         add(borderedArea);
     }
 
@@ -81,7 +81,7 @@ public final class WriteRequestArea extends JComponent implements IFormField {
             super(ColorService.NormalForm);
             exceptionPreview = new MyExceptionPreview();
 
-            setLayout(new MigLayout("fillx", "10[300]10", "10[]10[]6[]10"));
+            setLayout(new MigLayout("fillx", "10px[300px]10px", "10px[]10px[]6px[]10px"));
             add(myEditableArea, "cell 0 0, wmin 0, growx");
             add(myLengthCounter, "cell 0 1, align right");
             add(exceptionPreview, "cell 0 2, wmin 0, growx");

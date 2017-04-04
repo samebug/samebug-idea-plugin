@@ -31,7 +31,7 @@ final class LargeWriteTipCTAScreen extends EmphasizedPanel implements WriteTipCT
         button = new SamebugButton(MessageService.message("samebug.component.tip.write.cta.button"), true);
         label = new CenteredMultilineLabel();
 
-        setLayout(new MigLayout("fillx, w 300", "40[]40", "40[]20[]40"));
+        setLayout(new MigLayout("fillx, w 300px", "40px[]40px", "40px[]20px[]40px"));
         add(label, "cell 0 0, wmin 0, growx");
         add(button, "cell 0 1, align center");
     }

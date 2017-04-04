@@ -30,7 +30,7 @@ public final class HelpRequestListHeader extends JComponent implements IHelpRequ
         final JComponent title = new Title();
         final JComponent hits = new HelpRequests(model.numberOfHelpRequests);
 
-        setLayout(new MigLayout("", "20[]5[]0", "25[0!]4[]27"));
+        setLayout(new MigLayout("", "20px[]5px[]0", "25px[0!]4px[]27px"));
         add(title, "cell 0 0, spany 2");
 //        add(filler, "cell 1 0, top, flowy");
         add(hits, "cell 1 1, top");

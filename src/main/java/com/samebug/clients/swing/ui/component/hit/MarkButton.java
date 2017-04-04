@@ -77,7 +77,7 @@ public final class MarkButton extends ActionButton implements IMarkButton {
         final Separator separator = new Separator();
         final MarkLabel markLabel = new MarkLabel(markedByMe, model.userCanMark);
 
-        setLayout(new MigLayout("", "12[]9[]10[]8", "8[]8"));
+        setLayout(new MigLayout("", "12px[]9px[]10px[]8px", "8px[]8px"));
 
         add(counter, ", h 16!");
         add(separator, "w 1!, h 16!");

@@ -35,9 +35,9 @@ public final class SearchHeaderPanel extends SamebugPanel implements ISearchHead
         this.model = new Model(model);
 
         final HeaderTextLabel title = new HeaderTextLabel();
-        setLayout(new MigLayout("fillx, filly", "0[]0", "30[]30"));
+        setLayout(new MigLayout("fillx, filly", "0[]0", "30px[]30px"));
 
-        add(title, "wmin 0, hmax 56");
+        add(title, "wmin 0, hmax 56px");
     }
 
     final class HeaderTextLabel extends SamebugMultilineLabel {

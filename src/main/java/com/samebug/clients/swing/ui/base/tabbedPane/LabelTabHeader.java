@@ -25,7 +25,7 @@ public class LabelTabHeader extends SamebugTabHeader {
     public LabelTabHeader(String tabName) {
         tabLabel = new SamebugLabel(tabName, FontService.demi(16));
 
-        setLayout(new MigLayout("", "0[]0", "0[20, fill]0"));
+        setLayout(new MigLayout("", "0[]0", "0[20px, fill]0"));
         add(tabLabel, "cell 0 0");
 
         updateColors();
