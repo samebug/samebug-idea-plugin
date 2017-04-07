@@ -64,7 +64,7 @@ import java.util.concurrent.atomic.AtomicReference;
 )
 public final class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<ApplicationSettings>, Disposable {
     private static final Logger LOGGER = Logger.getInstance(IdeaSamebugPlugin.class);
-    public static final String ID = "Samebug";
+    public static final String ID = "Samebug for Android Studio";
     private AtomicReference<ApplicationSettings> state = new AtomicReference<ApplicationSettings>(new ApplicationSettings());
 
     public String applicationUserAgent;
