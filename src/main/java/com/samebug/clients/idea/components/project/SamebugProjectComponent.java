@@ -18,6 +18,7 @@ package com.samebug.clients.idea.components.project;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.samebug.clients.idea.services.android.LogcatProcessWatcher;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.swing.ui.modules.TrackingService;
@@ -25,10 +26,12 @@ import com.samebug.clients.swing.ui.modules.TrackingService;
 public class SamebugProjectComponent extends AbstractProjectComponent {
     private ToolWindowController toolWindowController;
     private RunDebugWatcher runDebugWatcher;
+    private final LogcatProcessWatcher logcatService;
     private DeprecationNotifier deprecationNotifier;
 
     public SamebugProjectComponent(Project project) {
         super(project);
+        this.logcatService = new LogcatProcessWatcher(project);
     }
 
     public ToolWindowController getToolWindowController() {
@@ -42,6 +45,8 @@ public class SamebugProjectComponent extends AbstractProjectComponent {
         this.runDebugWatcher = new RunDebugWatcher(myProject);
         this.deprecationNotifier = new DeprecationNotifier(myProject);
 
+        logcatService.projectOpened();
+
         TrackingService.trace(Events.projectOpen(myProject));
     }
 
@@ -50,7 +55,8 @@ public class SamebugProjectComponent extends AbstractProjectComponent {
         Disposer.dispose(toolWindowController);
         Disposer.dispose(runDebugWatcher);
 
-        TrackingService.trace(Events.projectClose(myProject));
+        logcatService.projectClosed();
 
+        TrackingService.trace(Events.projectClose(myProject));
     }
 }
