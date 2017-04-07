@@ -30,6 +30,8 @@ import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -50,12 +52,14 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
         signUp.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (isEnabled()) {
-                    getListener().signUp(SignUpForm.this, displayName.getText(), email.getText(), password.getText());
-                    TrackingService.trace(Events.registrationSend("credentials", "SignUp"));
-                }
+                if (signUp.isEnabled()) sendForm();
             }
         });
+
+        FormActionListener formActionListener = new FormActionListener();
+        displayName.addActionListener(formActionListener);
+        email.addActionListener(formActionListener);
+        password.addActionListener(formActionListener);
 
         // TODO probably we should declare mig layout sizes explicitly in pixels, because the default somehow can get overridden to lpx (logical pixels) that leads to obscure bugs.
         setLayout(new MigLayout("fillx", "0[50%]20px[50%]0", "0[]10px[]10px[]20px[]0"));
@@ -96,6 +100,11 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
         signUp.revertFromLoadingAnimation();
     }
 
+
+    private void sendForm() {
+        getListener().signUp(SignUpForm.this, displayName.getText(), email.getText(), password.getText());
+        TrackingService.trace(Events.registrationSend("credentials", "SignUp"));
+    }
 
     final class DisplayNameField extends FormField {
         public DisplayNameField() {
@@ -140,6 +149,13 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
         {
             setFilled(true);
             setText(MessageService.message("samebug.component.authentication.signUp"));
+        }
+    }
+
+    private class FormActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            sendForm();
         }
     }
 

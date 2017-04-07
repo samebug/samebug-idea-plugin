@@ -32,6 +32,8 @@ import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -52,21 +54,21 @@ public final class LogInForm extends JComponent implements ILogInForm {
         logIn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (isEnabled()) {
-                    getListener().logIn(LogInForm.this, email.getText(), password.getText());
-                    TrackingService.trace(Events.registrationSend("credentials", "SignIn"));
-                }
+                if (logIn.isEnabled()) sendForm();
             }
         });
         forgotPassword.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (isEnabled()) {
+                if (forgotPassword.isEnabled()) {
                     getListener().forgotPassword(LogInForm.this);
                     TrackingService.trace(Events.registrationForgottenPasswordClicked());
                 }
             }
         });
+        FormActionListener formActionListener = new FormActionListener();
+        email.addActionListener(formActionListener);
+        password.addActionListener(formActionListener);
 
         setLayout(new MigLayout("fillx", ":push[50%]20px[50%]:push", "0[]10px[]20px[]0"));
         add(email, "cell 0 0, spanx 2, growx");
@@ -107,6 +109,11 @@ public final class LogInForm extends JComponent implements ILogInForm {
     }
 
 
+    private void sendForm() {
+        getListener().logIn(LogInForm.this, email.getText(), password.getText());
+        TrackingService.trace(Events.registrationSend("credentials", "SignIn"));
+    }
+
     final class EmailField extends FormField {
         public EmailField() {
             super(MessageService.message("samebug.component.authentication.email"));
@@ -145,6 +152,13 @@ public final class LogInForm extends JComponent implements ILogInForm {
         {
             setText(MessageService.message("samebug.component.authentication.forgotPassword"));
             setFont(FontService.demi(14));
+        }
+    }
+
+    private class FormActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            sendForm();
         }
     }
 

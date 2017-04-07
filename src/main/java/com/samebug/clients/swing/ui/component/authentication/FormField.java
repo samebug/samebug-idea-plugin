@@ -25,6 +25,7 @@ import com.samebug.clients.swing.ui.modules.FontService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -63,6 +64,10 @@ public abstract class FormField extends SamebugPanel {
         remove(errorLabel);
         updateErrorLabel(errorLabel, errorCode);
         add(errorLabel, "cell 0 2, wmin 0");
+    }
+
+    public void addActionListener(ActionListener actionListener) {
+        field.addActionListener(actionListener);
     }
 
     protected abstract void updateErrorLabel(SamebugMultilineLabel errorLabel, String errorCode) throws ErrorCodeMismatchException;
