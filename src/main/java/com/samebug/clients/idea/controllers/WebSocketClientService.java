@@ -41,10 +41,13 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public final class WebSocketClientService implements Disposable {
     final static Logger LOGGER = Logger.getInstance(WebSocketClientService.class);
+    final static long MinimalConnectBackoff = 10000L;
 
     final NotificationController notificationController;
     final AtomicReference<WebSocketClient> client;
     final EventLoopGroup group;
+
+    long timestampOfLastConnect;
     @Nullable
     WebSocketConfig wsConfig;
 
@@ -90,11 +93,13 @@ public final class WebSocketClientService implements Disposable {
 
         if (currentClient != null && currentClient.isOpen()) return;
         if (wsConfig == null) return;
+        if (System.currentTimeMillis() < timestampOfLastConnect + MinimalConnectBackoff) return;
 
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
                 try {
+                    timestampOfLastConnect = System.currentTimeMillis();
                     WebSocketClient c = WebSocketClientFactory.create(wsConfig);
                     client.set(c);
                     LOGGER.info("Successfully configured websocket client");

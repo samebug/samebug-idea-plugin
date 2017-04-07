@@ -26,6 +26,7 @@ import com.samebug.clients.swing.ui.modules.FontService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -70,6 +71,9 @@ public abstract class PasswordFormField extends SamebugPanel {
 
     protected abstract void updateErrorLabel(SamebugMultilineLabel errorLabel, String errorCode) throws ErrorCodeMismatchException;
 
+    public void addActionListener(ActionListener actionListener) {
+        field.addActionListener(actionListener);
+    }
 
     final class DescriptionLabel extends SamebugLabel {
         public DescriptionLabel(String text) {
