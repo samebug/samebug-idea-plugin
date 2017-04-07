@@ -1,5 +1,5 @@
 <idea-plugin version="2">
-    <id>Samebug</id>
+    <id>Samebug for Android Studio</id>
     <name>Samebug</name>
     <vendor email="hello@samebug.io" url="http://samebug.io">Samebug</vendor>
 
@@ -28,8 +28,9 @@
     ]]>
     </change-notes>
 
-    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="141.0"/>
+    <idea-version since-build="162.0" until-build="163.0"/>
+    <!-- Without this explicit dependency, the plugin won't see the ddmlib and org.jetbrains.android classes -->
+    <depends>org.jetbrains.android</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Samebug" icon="/com/samebug/toolwindow/samebug.png" anchor="right"
