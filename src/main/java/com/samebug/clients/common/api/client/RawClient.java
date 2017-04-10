@@ -16,18 +16,17 @@
 package com.samebug.clients.common.api.client;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.net.HttpConfigurable;
-import com.intellij.util.net.IdeHttpClientHelpers;
 import com.samebug.clients.common.api.exceptions.*;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -58,22 +57,14 @@ final class RawClient {
         CredentialsProvider provider = new BasicCredentialsProvider();
 
         requestConfigBuilder.setConnectTimeout(config.connectTimeout).setSocketTimeout(config.requestTimeout).setConnectionRequestTimeout(500);
-        try {
-            IdeHttpClientHelpers.ApacheHttpClient4.setProxyForUrlIfEnabled(requestConfigBuilder, config.serverRoot);
-            IdeHttpClientHelpers.ApacheHttpClient4.setProxyCredentialsForUrlIfEnabled(provider, config.serverRoot);
-        } catch (Throwable e) {
-            // fallback to traditional proxy config for backward compatiblity
-            try {
-                final HttpConfigurable proxySettings = HttpConfigurable.getInstance();
-                final ProxyCredentialsFacade facade = new ProxyCredentialsFacade(proxySettings);
-                if (proxySettings != null && proxySettings.USE_HTTP_PROXY && !StringUtil.isEmptyOrSpaces(proxySettings.PROXY_HOST)) {
-                    requestConfigBuilder.setProxy(new HttpHost(proxySettings.PROXY_HOST, proxySettings.PROXY_PORT));
-                    if (proxySettings.PROXY_AUTHENTICATION) {
-                        provider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(facade.getLogin(), facade.getPassword()));
-                    }
-                }
-            } catch (Throwable ignored) {
-                // if even that fails, we cannot do more
+        final ProxyConfig proxySettings = config.proxy;
+        if (proxySettings != null && proxySettings.host != null && !proxySettings.host.isEmpty()) {
+            requestConfigBuilder.setProxy(new HttpHost(proxySettings.host, proxySettings.port));
+            if (proxySettings.login != null && proxySettings.password != null) {
+                provider.setCredentials(new AuthScope(proxySettings.host, proxySettings.port, AuthScope.ANY_REALM, AuthSchemes.NTLM),
+                        new NTCredentials(proxySettings.login, proxySettings.password, null, null));
+                provider.setCredentials(new AuthScope(proxySettings.host, proxySettings.port),
+                        new UsernamePasswordCredentials(proxySettings.login, proxySettings.password));
             }
         }
         defaultRequestConfig = requestConfigBuilder.build();

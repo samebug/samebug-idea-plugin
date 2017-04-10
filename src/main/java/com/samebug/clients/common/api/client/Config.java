@@ -17,19 +17,33 @@ package com.samebug.clients.common.api.client;
 
 import org.jetbrains.annotations.Nullable;
 
-public class Config {
+public final class Config {
     @Nullable
-    public String apiKey;
+    public final String apiKey;
     @Nullable
-    public Integer workspaceId;
-    public String serverRoot;
-    public String trackingRoot;
-    public boolean isTrackingEnabled;
-    public int connectTimeout;
-    public int requestTimeout;
-    public boolean isApacheLoggingEnabled;
+    public final Integer workspaceId;
+    public final String serverRoot;
+    public final String trackingRoot;
+    public final boolean isTrackingEnabled;
+    public final int connectTimeout;
+    public final int requestTimeout;
+    public final boolean isApacheLoggingEnabled;
+    @Nullable
+    public final ProxyConfig proxy;
 
-    public Config() {
+    public Config(@Nullable String apiKey, @Nullable Integer workspaceId,
+                  String serverRoot, String trackingRoot, boolean isTrackingEnabled,
+                  int connectTimeout, int requestTimeout, boolean isApacheLoggingEnabled,
+                  @Nullable ProxyConfig proxy) {
+        this.apiKey = apiKey;
+        this.workspaceId = workspaceId;
+        this.serverRoot = serverRoot;
+        this.trackingRoot = trackingRoot;
+        this.isTrackingEnabled = isTrackingEnabled;
+        this.connectTimeout = connectTimeout;
+        this.requestTimeout = requestTimeout;
+        this.isApacheLoggingEnabled = isApacheLoggingEnabled;
+        this.proxy = proxy;
     }
 
     public Config(final Config rhs) {
@@ -41,5 +55,6 @@ public class Config {
         this.connectTimeout = rhs.connectTimeout;
         this.requestTimeout = rhs.requestTimeout;
         this.isApacheLoggingEnabled = rhs.isApacheLoggingEnabled;
+        this.proxy = rhs.proxy == null ? null : new ProxyConfig(rhs.proxy);
     }
 }
