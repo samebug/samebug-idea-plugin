@@ -15,12 +15,12 @@
  */
 package com.samebug.clients.idea.ui.controller.form;
 
-import com.samebug.clients.common.api.client.RestError;
-import com.samebug.clients.common.api.entities.solution.RestHit;
-import com.samebug.clients.common.api.entities.solution.Tip;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.api.form.CreateTip;
-import com.samebug.clients.common.api.form.FieldError;
+import com.samebug.clients.http.response.RestError;
+import com.samebug.clients.http.entities.solution.RestHit;
+import com.samebug.clients.http.entities.solution.Tip;
+import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.form.CreateTip;
+import com.samebug.clients.http.form.FieldError;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;

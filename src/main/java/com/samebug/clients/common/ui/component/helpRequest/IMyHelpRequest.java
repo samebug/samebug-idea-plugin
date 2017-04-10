@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.common.ui.component.helpRequest;
 
-import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
+import com.samebug.clients.http.entities.helpRequest.MyHelpRequest;
 import org.jetbrains.annotations.NotNull;
 
 public interface IMyHelpRequest {

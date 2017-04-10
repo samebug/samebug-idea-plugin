@@ -15,13 +15,13 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.api.client.ClientResponse;
-import com.samebug.clients.common.api.client.SamebugClient;
-import com.samebug.clients.common.api.entities.solution.MarkResponse;
-import com.samebug.clients.common.api.entities.solution.RestHit;
-import com.samebug.clients.common.api.entities.solution.Solutions;
-import com.samebug.clients.common.api.entities.solution.Tip;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
+import com.samebug.clients.http.response.ClientResponse;
+import com.samebug.clients.http.client.SamebugClient;
+import com.samebug.clients.http.entities.solution.MarkResponse;
+import com.samebug.clients.http.entities.solution.RestHit;
+import com.samebug.clients.http.entities.solution.Solutions;
+import com.samebug.clients.http.entities.solution.Tip;
+import com.samebug.clients.http.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

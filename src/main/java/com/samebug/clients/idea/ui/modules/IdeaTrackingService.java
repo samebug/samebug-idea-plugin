@@ -26,7 +26,7 @@ import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
-import com.samebug.clients.common.api.entities.tracking.TrackEvent;
+import com.samebug.clients.http.entities.tracking.TrackEvent;
 import com.samebug.clients.common.services.ClientService;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;

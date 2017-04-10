@@ -17,7 +17,7 @@ package com.samebug.clients.idea.tracking;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.common.api.entities.tracking.TrackEvent;
+import com.samebug.clients.http.entities.tracking.TrackEvent;
 
 import java.util.HashMap;
 import java.util.Map;

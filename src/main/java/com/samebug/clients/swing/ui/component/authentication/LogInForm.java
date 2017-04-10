@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.swing.ui.component.authentication;
 
-import com.samebug.clients.common.api.form.FieldError;
-import com.samebug.clients.common.api.form.LogIn;
+import com.samebug.clients.http.form.FieldError;
+import com.samebug.clients.http.form.LogIn;
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
 import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;

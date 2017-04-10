@@ -15,9 +15,9 @@
  */
 package com.samebug.clients.idea.ui.controller.solution;
 
-import com.samebug.clients.common.api.entities.solution.MarkResponse;
-import com.samebug.clients.common.api.form.CancelMark;
-import com.samebug.clients.common.api.form.CreateMark;
+import com.samebug.clients.http.entities.solution.MarkResponse;
+import com.samebug.clients.http.form.CancelMark;
+import com.samebug.clients.http.form.CreateMark;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.idea.ui.controller.form.CancelMarkFormHandler;
 import com.samebug.clients.idea.ui.controller.form.CreateMarkFormHandler;

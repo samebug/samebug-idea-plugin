@@ -15,11 +15,11 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.api.client.ClientResponse;
-import com.samebug.clients.common.api.client.SamebugClient;
-import com.samebug.clients.common.api.entities.search.CreatedSearch;
-import com.samebug.clients.common.api.entities.search.SearchDetails;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
+import com.samebug.clients.http.response.ClientResponse;
+import com.samebug.clients.http.client.SamebugClient;
+import com.samebug.clients.http.entities.search.CreatedSearch;
+import com.samebug.clients.http.entities.search.SearchDetails;
+import com.samebug.clients.http.exceptions.SamebugClientException;
 
 public final class SearchService {
     final ClientService clientService;

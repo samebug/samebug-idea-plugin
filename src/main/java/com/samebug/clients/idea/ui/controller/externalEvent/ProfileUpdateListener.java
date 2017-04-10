@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.idea.ui.controller.externalEvent;
 
-import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
+import com.samebug.clients.http.entities.helpRequest.HelpRequest;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;

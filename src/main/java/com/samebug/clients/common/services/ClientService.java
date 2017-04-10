@@ -18,9 +18,14 @@ package com.samebug.clients.common.services;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.common.api.client.*;
-import com.samebug.clients.common.api.entities.tracking.TrackEvent;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
+import com.samebug.clients.http.client.SamebugClient;
+import com.samebug.clients.http.client.Config;
+import com.samebug.clients.http.response.ClientResponse;
+import com.samebug.clients.http.response.ConnectionStatus;
+import com.samebug.clients.http.response.Failure;
+import com.samebug.clients.http.response.Success;
+import com.samebug.clients.http.entities.tracking.TrackEvent;
+import com.samebug.clients.http.exceptions.SamebugClientException;
 import org.apache.log4j.Level;
 import org.jetbrains.annotations.Nullable;
 

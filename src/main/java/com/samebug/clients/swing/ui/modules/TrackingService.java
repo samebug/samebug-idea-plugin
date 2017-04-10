@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.modules;
 
-import com.samebug.clients.common.api.entities.tracking.TrackEvent;
+import com.samebug.clients.http.entities.tracking.TrackEvent;
 
 public abstract class TrackingService {
     private static TrackingService INSTANCE = new TrackingService() {

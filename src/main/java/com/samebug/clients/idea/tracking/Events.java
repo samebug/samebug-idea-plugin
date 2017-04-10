@@ -17,8 +17,8 @@ package com.samebug.clients.idea.tracking;
 
 
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.common.api.entities.tracking.TrackEvent;
-import com.samebug.clients.common.api.form.FieldError;
+import com.samebug.clients.http.entities.tracking.TrackEvent;
+import com.samebug.clients.http.form.FieldError;
 import com.samebug.clients.common.entities.search.DebugSessionInfo;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 

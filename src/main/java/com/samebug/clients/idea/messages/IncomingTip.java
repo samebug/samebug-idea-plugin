@@ -20,5 +20,5 @@ import com.intellij.util.messages.Topic;
 public interface IncomingTip {
     Topic<IncomingTip> TOPIC = Topic.create("incoming tip", IncomingTip.class);
 
-    void showTip(com.samebug.clients.common.api.entities.helpRequest.IncomingTip tip);
+    void showTip(com.samebug.clients.http.entities.helpRequest.IncomingTip tip);
 }

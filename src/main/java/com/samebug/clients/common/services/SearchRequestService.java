@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.api.entities.search.CreatedSearch;
+import com.samebug.clients.http.entities.search.CreatedSearch;
 import com.samebug.clients.common.entities.search.RequestedSearch;
 import com.samebug.clients.common.entities.search.SavedSearch;
 import com.samebug.clients.common.entities.search.SearchInfo;

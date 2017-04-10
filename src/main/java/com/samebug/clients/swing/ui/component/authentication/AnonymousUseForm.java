@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.authentication;
 
-import com.samebug.clients.common.api.form.FieldError;
+import com.samebug.clients.http.form.FieldError;
 import com.samebug.clients.common.ui.component.authentication.IAnonymousUseForm;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.idea.tracking.Events;

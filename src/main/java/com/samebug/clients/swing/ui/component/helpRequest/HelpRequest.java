@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.swing.ui.component.helpRequest;
 
-import com.samebug.clients.common.api.form.CreateTip;
-import com.samebug.clients.common.api.form.FieldError;
+import com.samebug.clients.http.form.CreateTip;
+import com.samebug.clients.http.form.FieldError;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;

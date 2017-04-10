@@ -15,10 +15,10 @@
  */
 package com.samebug.clients.idea.ui.controller.helpRequest;
 
-import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
-import com.samebug.clients.common.api.entities.solution.RestHit;
-import com.samebug.clients.common.api.entities.solution.Tip;
-import com.samebug.clients.common.api.form.CreateTip;
+import com.samebug.clients.http.entities.helpRequest.MatchingHelpRequest;
+import com.samebug.clients.http.entities.solution.RestHit;
+import com.samebug.clients.http.entities.solution.Tip;
+import com.samebug.clients.http.form.CreateTip;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.idea.ui.controller.form.CreateTipFormHandler;
 

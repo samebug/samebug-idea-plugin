@@ -15,12 +15,12 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.api.client.ClientResponse;
-import com.samebug.clients.common.api.client.SamebugClient;
-import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
-import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
-import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
+import com.samebug.clients.http.response.ClientResponse;
+import com.samebug.clients.http.client.SamebugClient;
+import com.samebug.clients.http.entities.helpRequest.IncomingHelpRequests;
+import com.samebug.clients.http.entities.helpRequest.MatchingHelpRequest;
+import com.samebug.clients.http.entities.helpRequest.MyHelpRequest;
+import com.samebug.clients.http.exceptions.SamebugClientException;
 
 public final class HelpRequestService {
     final ClientService clientService;

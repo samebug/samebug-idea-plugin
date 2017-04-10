@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.idea.ui.controller.authentication;
 
-import com.samebug.clients.common.api.entities.profile.LoggedInUser;
-import com.samebug.clients.common.api.form.SignUp;
+import com.samebug.clients.http.entities.profile.LoggedInUser;
+import com.samebug.clients.http.form.SignUp;
 import com.samebug.clients.common.ui.component.authentication.ISignUpForm;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.form.SignUpFormHandler;

@@ -16,8 +16,8 @@
 package com.samebug.clients.idea.components.application;
 
 import com.intellij.util.net.HttpConfigurable;
-import com.samebug.clients.common.api.client.Config;
-import com.samebug.clients.common.api.client.ProxyConfig;
+import com.samebug.clients.http.client.Config;
+import com.samebug.clients.http.client.ProxyConfig;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;

@@ -15,10 +15,10 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.api.client.ClientResponse;
-import com.samebug.clients.common.api.client.SamebugClient;
-import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
+import com.samebug.clients.http.response.ClientResponse;
+import com.samebug.clients.http.client.SamebugClient;
+import com.samebug.clients.http.entities.bugmate.BugmatesResult;
+import com.samebug.clients.http.exceptions.SamebugClientException;
 
 public final class BugmateService {
     final ClientService clientService;

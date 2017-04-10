@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
-import com.samebug.clients.common.api.form.CreateHelpRequest;
-import com.samebug.clients.common.api.form.FieldError;
+import com.samebug.clients.http.form.CreateHelpRequest;
+import com.samebug.clients.http.form.FieldError;
 import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;

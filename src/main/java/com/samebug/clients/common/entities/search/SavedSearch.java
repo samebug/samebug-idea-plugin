@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.common.entities.search;
 
-import com.samebug.clients.common.api.entities.search.CreatedSearch;
+import com.samebug.clients.http.entities.search.CreatedSearch;
 import org.jetbrains.annotations.NotNull;
 
 public class SavedSearch implements SearchRequest {

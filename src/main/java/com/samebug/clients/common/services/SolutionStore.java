@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.api.entities.solution.Solutions;
+import com.samebug.clients.http.entities.solution.Solutions;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

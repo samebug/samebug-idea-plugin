@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.idea.ui.controller.authentication;
 
-import com.samebug.clients.common.api.entities.profile.LoggedInUser;
-import com.samebug.clients.common.api.form.AnonymousUse;
+import com.samebug.clients.http.entities.profile.LoggedInUser;
+import com.samebug.clients.http.form.AnonymousUse;
 import com.samebug.clients.common.ui.component.authentication.IAnonymousUseForm;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.form.AnonymousUseFormHandler;

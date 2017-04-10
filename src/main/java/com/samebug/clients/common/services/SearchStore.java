@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.api.entities.search.SearchDetails;
+import com.samebug.clients.http.entities.search.SearchDetails;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

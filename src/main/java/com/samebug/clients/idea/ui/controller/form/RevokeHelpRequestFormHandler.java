@@ -15,11 +15,11 @@
  */
 package com.samebug.clients.idea.ui.controller.form;
 
-import com.samebug.clients.common.api.client.RestError;
-import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.api.form.FieldError;
-import com.samebug.clients.common.api.form.RevokeHelpRequest;
+import com.samebug.clients.http.response.RestError;
+import com.samebug.clients.http.entities.helpRequest.MyHelpRequest;
+import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.form.FieldError;
+import com.samebug.clients.http.form.RevokeHelpRequest;
 import com.samebug.clients.common.services.HelpRequestService;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;

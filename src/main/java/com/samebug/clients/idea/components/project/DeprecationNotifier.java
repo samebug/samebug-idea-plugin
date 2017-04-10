@@ -21,7 +21,7 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.api.client.ConnectionStatus;
+import com.samebug.clients.http.response.ConnectionStatus;
 import com.samebug.clients.common.services.ClientService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 

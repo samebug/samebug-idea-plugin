@@ -19,7 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.api.client.ConnectionStatus;
+import com.samebug.clients.http.response.ConnectionStatus;
 import com.samebug.clients.common.services.ClientService;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;

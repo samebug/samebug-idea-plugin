@@ -17,7 +17,7 @@ package com.samebug.clients.idea.ui.controller.toolwindow;
 
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
-import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
+import com.samebug.clients.http.entities.helpRequest.HelpRequest;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
 import com.samebug.clients.idea.notifications.IncomingHelpRequestNotification;
 

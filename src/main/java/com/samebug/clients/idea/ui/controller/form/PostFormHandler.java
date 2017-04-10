@@ -17,11 +17,11 @@ package com.samebug.clients.idea.ui.controller.form;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.samebug.clients.common.api.client.FormRestError;
-import com.samebug.clients.common.api.client.RestError;
-import com.samebug.clients.common.api.exceptions.BadRequest;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.api.form.FieldError;
+import com.samebug.clients.http.response.FormRestError;
+import com.samebug.clients.http.response.RestError;
+import com.samebug.clients.http.exceptions.BadRequest;
+import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.form.FieldError;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.swing.ui.modules.MessageService;
 

@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.idea.ui.controller.solution;
 
-import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
-import com.samebug.clients.common.api.form.RevokeHelpRequest;
+import com.samebug.clients.http.entities.helpRequest.MyHelpRequest;
+import com.samebug.clients.http.form.RevokeHelpRequest;
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.idea.ui.controller.form.RevokeHelpRequestFormHandler;
 

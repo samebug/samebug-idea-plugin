@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.idea.ui.controller.solution;
 
-import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
-import com.samebug.clients.common.api.form.CreateHelpRequest;
+import com.samebug.clients.http.entities.helpRequest.MyHelpRequest;
+import com.samebug.clients.http.form.CreateHelpRequest;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.idea.ui.controller.form.CreateHelpRequestFormHandler;
 

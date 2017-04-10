@@ -22,7 +22,7 @@ import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.awt.RelativePoint;
-import com.samebug.clients.common.api.entities.helpRequest.IncomingTip;
+import com.samebug.clients.http.entities.helpRequest.IncomingTip;
 import com.samebug.clients.common.ui.component.popup.IIncomingTipPopup;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.notifications.IncomingTipNotification;

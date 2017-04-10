@@ -23,8 +23,8 @@ import com.intellij.openapi.actionSystem.DataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
-import com.samebug.clients.common.api.entities.helpRequest.IncomingTip;
+import com.samebug.clients.http.entities.helpRequest.HelpRequest;
+import com.samebug.clients.http.entities.helpRequest.IncomingTip;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
 

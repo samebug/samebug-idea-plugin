@@ -15,14 +15,14 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.api.client.ClientResponse;
-import com.samebug.clients.common.api.client.SamebugClient;
-import com.samebug.clients.common.api.entities.profile.LoggedInUser;
-import com.samebug.clients.common.api.entities.profile.UserInfo;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.api.form.AnonymousUse;
-import com.samebug.clients.common.api.form.LogIn;
-import com.samebug.clients.common.api.form.SignUp;
+import com.samebug.clients.http.response.ClientResponse;
+import com.samebug.clients.http.client.SamebugClient;
+import com.samebug.clients.http.entities.profile.LoggedInUser;
+import com.samebug.clients.http.entities.profile.UserInfo;
+import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.form.AnonymousUse;
+import com.samebug.clients.http.form.LogIn;
+import com.samebug.clients.http.form.SignUp;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.Nullable;

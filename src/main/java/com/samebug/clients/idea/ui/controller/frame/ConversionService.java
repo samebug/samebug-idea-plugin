@@ -15,15 +15,6 @@
  */
 package com.samebug.clients.idea.ui.controller.frame;
 
-import com.samebug.clients.common.api.entities.Author;
-import com.samebug.clients.common.api.entities.bugmate.Bugmate;
-import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
-import com.samebug.clients.common.api.entities.helpRequest.*;
-import com.samebug.clients.common.api.entities.profile.UserInfo;
-import com.samebug.clients.common.api.entities.profile.UserStats;
-import com.samebug.clients.common.api.entities.search.SearchDetails;
-import com.samebug.clients.common.api.entities.search.SearchInfo;
-import com.samebug.clients.common.api.entities.solution.*;
 import com.samebug.clients.common.ui.component.bugmate.ConnectionStatus;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateHit;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
@@ -46,6 +37,15 @@ import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestList;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListFrame;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListHeader;
 import com.samebug.clients.common.ui.frame.solution.*;
+import com.samebug.clients.http.entities.Author;
+import com.samebug.clients.http.entities.bugmate.Bugmate;
+import com.samebug.clients.http.entities.bugmate.BugmatesResult;
+import com.samebug.clients.http.entities.helpRequest.*;
+import com.samebug.clients.http.entities.profile.UserInfo;
+import com.samebug.clients.http.entities.profile.UserStats;
+import com.samebug.clients.http.entities.search.SearchDetails;
+import com.samebug.clients.http.entities.search.SearchInfo;
+import com.samebug.clients.http.entities.solution.*;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
