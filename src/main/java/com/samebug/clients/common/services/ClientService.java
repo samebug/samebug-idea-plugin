@@ -15,11 +15,13 @@
  */
 package com.samebug.clients.common.services;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;
 import com.samebug.clients.common.api.client.*;
 import com.samebug.clients.common.api.entities.tracking.TrackEvent;
 import com.samebug.clients.common.api.exceptions.SamebugClientException;
+import org.apache.log4j.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -48,6 +50,8 @@ public final class ClientService {
         this.authenticated = new AtomicBoolean(authenticated == null ? true : authenticated.get());
         this.nRequests = new AtomicInteger(nRequests == null ? 0 : nRequests.get());
         this.apiStatus = new AtomicReference<String>(apiStatus == null ? null : apiStatus.get());
+
+        if (config.isApacheLoggingEnabled) enableApacheLogging();
     }
 
     public boolean isConnected() {
@@ -179,5 +183,35 @@ public final class ClientService {
          * Called when the server sends deprecated status for the first time (resets when the service is configured)
          */
         void apiDeprecated();
+    }
+
+    private static void enableApacheLogging() {
+        java.util.logging.Logger.getLogger("org.apache.http.wire").setLevel(java.util.logging.Level.FINER);
+        java.util.logging.Logger.getLogger("org.apache.http.headers").setLevel(java.util.logging.Level.FINER);
+        Logger.getInstance("org.apache.http.conn.ssl.StrictHostnameVerifier").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.conn.DefaultManagedHttpClientConnection").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.conn.ssl.SSLConnectionSocketFactory").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.client.ProxyAuthenticationStrategy").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.client.DefaultRedirectStrategy").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.execchain.RetryExec").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.conn.DefaultHttpClientConnectionOperator").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.execchain.ProtocolExec").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.conn.ssl.DefaultHostnameVerifier").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.client.TargetAuthenticationStrategy").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.conn.DefaultHttpResponseParser").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.client.protocol.RequestAddCookies").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.conn.PoolingHttpClientConnectionManager").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.headers").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.auth.HttpAuthenticator").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.conn.ssl.BrowserCompatHostnameVerifier").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.execchain.MainClientExec").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.client.protocol.RequestAuthCache").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.wire").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.conn.CPool").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.conn.ssl.AllowAllHostnameVerifier").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.execchain.RedirectExec").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.client.protocol.ResponseProcessCookies").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.impl.client.InternalHttpClient").setLevel(Level.DEBUG);
+        Logger.getInstance("org.apache.http.client.protocol.RequestClientConnControl").setLevel(Level.DEBUG);
     }
 }

@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.api.client;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.api.exceptions.*;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
@@ -33,14 +32,12 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO extract interface and make a separate intellij-specific implementation
 final class RawClient {
     final static String USER_AGENT = "Samebug-Idea-Client/2.0.0";
     public static final int TrackingRequestTimeout_Millis = 3000;
@@ -80,7 +77,6 @@ final class RawClient {
                 .setDefaultCredentialsProvider(provider)
                 .setDefaultHeaders(defaultHeaders)
                 .build();
-        if (config.isApacheLoggingEnabled) enableApacheLogging();
     }
 
     <T> ClientResponse<T> executeAuthenticated(final HttpRequestBase request, final HandleRequest<T> handler) {
@@ -172,36 +168,6 @@ final class RawClient {
             EntityUtils.consume(httpResponse.getEntity());
         } catch (IOException ignored) {
         }
-    }
-
-    private static void enableApacheLogging() {
-        java.util.logging.Logger.getLogger("org.apache.http.wire").setLevel(java.util.logging.Level.FINER);
-        java.util.logging.Logger.getLogger("org.apache.http.headers").setLevel(java.util.logging.Level.FINER);
-        Logger.getInstance("org.apache.http.conn.ssl.StrictHostnameVerifier").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.conn.DefaultManagedHttpClientConnection").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.conn.ssl.SSLConnectionSocketFactory").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.client.ProxyAuthenticationStrategy").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.client.DefaultRedirectStrategy").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.execchain.RetryExec").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.conn.DefaultHttpClientConnectionOperator").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.execchain.ProtocolExec").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.conn.ssl.DefaultHostnameVerifier").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.client.TargetAuthenticationStrategy").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.conn.DefaultHttpResponseParser").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.client.protocol.RequestAddCookies").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.conn.PoolingHttpClientConnectionManager").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.headers").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.auth.HttpAuthenticator").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.conn.ssl.BrowserCompatHostnameVerifier").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.execchain.MainClientExec").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.client.protocol.RequestAuthCache").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.wire").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.conn.CPool").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.conn.ssl.AllowAllHostnameVerifier").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.execchain.RedirectExec").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.client.protocol.ResponseProcessCookies").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.impl.client.InternalHttpClient").setLevel(Level.DEBUG);
-        Logger.getInstance("org.apache.http.client.protocol.RequestClientConnControl").setLevel(Level.DEBUG);
     }
 }
 
