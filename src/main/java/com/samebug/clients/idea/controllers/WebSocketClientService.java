@@ -75,7 +75,7 @@ public final class WebSocketClientService implements Disposable {
 
                 @Override
                 public void tipReceived(IncomingTip tipNotification) {
-                    // TODO
+                    notificationController.incomingTip(tipNotification);
                 }
             });
 

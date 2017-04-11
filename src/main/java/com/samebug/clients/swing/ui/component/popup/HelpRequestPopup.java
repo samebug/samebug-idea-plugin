@@ -36,7 +36,7 @@ public final class HelpRequestPopup extends SamebugPanel implements IHelpRequest
 
     public HelpRequestPopup(Model model) {
         final JComponent avatar = new AvatarIcon(model.avatarUrl, AvatarSize);
-        final SamebugLabel title = new SamebugLabel(MessageService.message("samebug.notification.incomingHelpRequest.title", model.displayName), FontService.demi(14));
+        final SamebugLabel title = new SamebugLabel(MessageService.message("samebug.component.helpRequest.incoming.title", model.displayName), FontService.demi(14));
         final RequestBody body = new RequestBody(model.helpRequestBody);
         final AnswerButton answer = new AnswerButton();
         final JComponent later = new LaterButton();

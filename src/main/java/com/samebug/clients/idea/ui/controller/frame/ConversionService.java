@@ -18,10 +18,7 @@ package com.samebug.clients.idea.ui.controller.frame;
 import com.samebug.clients.common.api.entities.Author;
 import com.samebug.clients.common.api.entities.bugmate.Bugmate;
 import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
-import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
-import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
-import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
-import com.samebug.clients.common.api.entities.helpRequest.Requester;
+import com.samebug.clients.common.api.entities.helpRequest.*;
 import com.samebug.clients.common.api.entities.profile.UserInfo;
 import com.samebug.clients.common.api.entities.profile.UserStats;
 import com.samebug.clients.common.api.entities.search.SearchDetails;
@@ -38,6 +35,7 @@ import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.component.hit.IWebHit;
 import com.samebug.clients.common.ui.component.popup.IHelpRequestPopup;
+import com.samebug.clients.common.ui.component.popup.IIncomingTipPopup;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestFrame;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestHeader;
@@ -185,6 +183,10 @@ public final class ConversionService {
 
     public IHelpRequestPopup.Model convertHelpRequestPopup(HelpRequest incomingRequest) {
         return new IHelpRequestPopup.Model(incomingRequest.context, incomingRequest.requester.displayName, incomingRequest.requester.avatarUrl);
+    }
+
+    public IIncomingTipPopup.Model convertIncomingTipPopup(IncomingTip incomingTip) {
+        return new IIncomingTipPopup.Model(incomingTip.message, incomingTip.author.displayName, incomingTip.author.avatarUrl);
     }
 
     public static String headLine(SearchDetails search) {

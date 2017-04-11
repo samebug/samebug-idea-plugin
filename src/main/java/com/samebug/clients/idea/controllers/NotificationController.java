@@ -24,6 +24,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
+import com.samebug.clients.common.api.entities.helpRequest.IncomingTip;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
 
@@ -43,17 +44,7 @@ public final class NotificationController {
                     p.getMessageBus().syncPublisher(IncomingHelpRequest.TOPIC).addHelpRequest(helpRequest);
                 }
                 if (openProjects.length != 0) {
-                    Project projectToShowPopup = null;
-
-                    // get project from focus
-                    DataContext dataContext = DataManager.getInstance().getDataContextFromFocus().getResult();
-                    projectToShowPopup = DataKeys.PROJECT.getData(dataContext);
-
-                    // get last opened project that must not be null
-                    if (projectToShowPopup == null) {
-                        projectToShowPopup = openProjects[openProjects.length - 1];
-                    }
-
+                    Project projectToShowPopup = selectProjectToShowPopup(openProjects);
                     projectToShowPopup.getMessageBus().syncPublisher(IncomingHelpRequest.TOPIC).showHelpRequest(helpRequest);
                 }
             }
@@ -61,6 +52,36 @@ public final class NotificationController {
 
         // Invalidate currently cached help request list
         IdeaSamebugPlugin.getInstance().helpRequestStore.invalidate();
+    }
+
+    public void incomingTip(final IncomingTip tip) {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+                if (openProjects.length != 0) {
+                    Project projectToShowPopup = selectProjectToShowPopup(openProjects);
+                    projectToShowPopup.getMessageBus().syncPublisher(com.samebug.clients.idea.messages.IncomingTip.TOPIC).showTip(tip);
+                }
+            }
+        });
+        // TODO invalidate solution list for search for which the tip was written
+    }
+
+    private Project selectProjectToShowPopup(Project[] openProjects) {
+        assert openProjects.length > 0;
+        Project projectToShowPopup;
+
+        // get project from focus
+        DataContext dataContext = DataManager.getInstance().getDataContextFromFocus().getResult();
+        projectToShowPopup = DataKeys.PROJECT.getData(dataContext);
+
+        // get last opened project that must not be null
+        if (projectToShowPopup == null) {
+            projectToShowPopup = openProjects[openProjects.length - 1];
+        }
+
+        return projectToShowPopup;
     }
 }
 

@@ -30,13 +30,16 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.FocusListener;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
+import com.samebug.clients.idea.messages.IncomingTip;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
+import com.samebug.clients.idea.notifications.IncomingTipNotification;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.authentication.AuthenticationController;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.helpRequest.HelpRequestController;
 import com.samebug.clients.idea.ui.controller.helpRequestList.HelpRequestListController;
 import com.samebug.clients.idea.ui.controller.helpRequestPopup.HelpRequestPopupController;
+import com.samebug.clients.idea.ui.controller.incomingTipPopup.IncomingTipPopupController;
 import com.samebug.clients.idea.ui.controller.solution.SolutionFrameController;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import com.samebug.clients.swing.ui.modules.TrackingService;
@@ -56,9 +59,11 @@ final public class ToolWindowController implements FocusListener, Disposable {
 
     final Timer dateLabelRefresher;
     final IncomingHelpRequestPopupListener incomingHelpRequestPopupListener;
+    final IncomingTipPopupListener incomingTipPopupListener;
     final ConfigChangeListener configChangeListener;
 
     final HelpRequestPopupController helpRequestPopupController;
+    final IncomingTipPopupController incomingTipPopupController;
 
     public ToolWindowController(@NotNull final Project project) {
         this.project = project;
@@ -77,11 +82,14 @@ final public class ToolWindowController implements FocusListener, Disposable {
         dateLabelRefresher.start();
 
         incomingHelpRequestPopupListener = new IncomingHelpRequestPopupListener(this);
+        incomingTipPopupListener = new IncomingTipPopupListener(this);
         configChangeListener = new ConfigChangeListener(this);
         helpRequestPopupController = new HelpRequestPopupController(this, project);
+        incomingTipPopupController = new IncomingTipPopupController(this, project);
         MessageBusConnection connection = project.getMessageBus().connect(project);
         connection.subscribe(FocusListener.TOPIC, this);
         connection.subscribe(IncomingHelpRequest.TOPIC, incomingHelpRequestPopupListener);
+        connection.subscribe(IncomingTip.TOPIC, incomingTipPopupListener);
     }
 
     public void initToolWindow(@NotNull ToolWindow toolWindow) {
