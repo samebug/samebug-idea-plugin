@@ -49,6 +49,11 @@ public class SolutionFrameTest extends TestDialog {
     }
 
     @Test
+    public void international() {
+        waitToInitializeUI("solution/international.json").showDialog();
+    }
+
+    @Test
     public void activeHelpRequest() {
         waitToInitializeUI("solution/t2w27_helprequest.json").showDialog();
     }

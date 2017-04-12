@@ -1,0 +1,232 @@
+{
+  "resultTabs": {
+    "cta": {
+      "usersWaitingHelp": 234
+    },
+    "webResults": {
+      "webHits": [
+        {
+          "title": "korean: 김범준",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "김범준",
+          "sourceName": "Stack Overflow",
+          "sourceIcon": "stackoverflow",
+          "mark": {
+            "marks": 2,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "chinese: 枯黄叶子",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "枯黄叶子",
+          "sourceName": "Stack Overflow",
+          "sourceIcon": "stackoverflow",
+          "mark": {
+            "marks": 3,
+            "userMarkId": 1,
+            "userCanMark": false
+          }
+        },
+        {
+          "title": "japan: Bão Cát",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Bão Cát",
+          "sourceName": "Stack Overflow",
+          "sourceIcon": "stackoverflow",
+          "mark": {
+            "marks": 0,
+            "userMarkId": 2,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "vietnamese: Trần Minh Tuấn",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Trần Minh Tuấn",
+          "sourceName": "Stack Overflow",
+          "sourceIcon": "stackoverflow",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": false
+          }
+        },
+        {
+          "title": "russian: Сергей Колченко",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Сергей Колченко",
+          "sourceName": "Stack Overflow",
+          "sourceIcon": "stackoverflow",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "turkish: Emrah Küçük",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Emrah Küçük",
+          "sourceName": "Stack Overflow",
+          "sourceIcon": "stackoverflow",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        },
+        {
+          "title": "hungarian: áíőű ÁÍŰŐ",
+          "url": "https://samebug.io",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "áíőű ÁÍŰŐ",
+          "sourceName": "Stack Overflow",
+          "sourceIcon": "stackoverflow",
+          "mark": {
+            "marks": 0,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        }
+      ]
+    },
+    "tipResults": {
+      "tipHits": [
+        {
+          "message": "korean: 김범준",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "김범준",
+          "createdByAvatarUrl": null,
+          "mark": {
+            "marks": 2,
+            "userMarkId": 1,
+            "userCanMark": true
+          }
+        },
+        {
+          "message": "chinese: 枯黄叶子",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "枯黄叶子",
+          "createdByAvatarUrl": null,
+          "mark": {
+            "marks": 2,
+            "userMarkId": 1,
+            "userCanMark": true
+          }
+        },
+        {
+          "message": "japan: Bão Cát",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Bão Cát",
+          "createdByAvatarUrl": null,
+          "mark": {
+            "marks": 2,
+            "userMarkId": 1,
+            "userCanMark": true
+          }
+        },
+        {
+          "message": "vietnamese: Trần Minh Tuấn",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Trần Minh Tuấn",
+          "createdByAvatarUrl": null,
+          "mark": {
+            "marks": 2,
+            "userMarkId": 1,
+            "userCanMark": true
+          }
+        },
+        {
+          "message": "russian: Сергей Колченко",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Сергей Колченко",
+          "createdByAvatarUrl": null,
+          "mark": {
+            "marks": 2,
+            "userMarkId": 1,
+            "userCanMark": true
+          }
+        },
+        {
+          "message": "turkish: Emrah Küçük",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "Emrah Küçük",
+          "createdByAvatarUrl": null,
+          "mark": {
+            "marks": 2,
+            "userMarkId": 1,
+            "userCanMark": true
+          }
+        },
+        {
+          "message": "hungarian: áíőű ÁÍŰŐ",
+          "createdAt": "2017-01-01T00:00:00",
+          "createdBy": "áíőű ÁÍŰŐ",
+          "createdByAvatarUrl": null,
+          "mark": {
+            "marks": 1,
+            "userMarkId": null,
+            "userCanMark": true
+          }
+        }
+      ],
+      "bugmateList": {
+        "bugmateHits": [
+          {
+            "userId": 1,
+            "displayName": "김범준",
+            "avatarUrl": null,
+            "nSeen": 11,
+            "lastSeen": "2017-01-01T00:00:00"
+          },
+          {
+            "userId": 1,
+            "displayName": "Trần Minh Tuấn",
+            "avatarUrl": null,
+            "nSeen": 21,
+            "lastSeen": "2017-01-01T00:00:00"
+          },
+          {
+            "userId": 1,
+            "displayName": "Сергей Колченко",
+            "avatarUrl": null,
+            "nSeen": 1,
+            "lastSeen": "2017-01-01T00:00:00"
+          },
+          {
+            "userId": 1,
+            "displayName": "áíőű ÁÍŰŐ",
+            "avatarUrl": null,
+            "nSeen": 6,
+            "lastSeen": "2016-12-01T00:00:00"
+          }
+        ],
+        "numberOfOtherBugmates": 16,
+        "evenMoreExists": false
+      },
+      "askForHelp": {
+        "numberOfBugmates": 20,
+        "exceptionTitle": "UnsupportedDriverException: Could not instantiate class"
+      }
+    }
+  },
+  "profilePanel": {
+    "messages": 2,
+    "marks": 16,
+    "tips": 48,
+    "thanks": 15,
+    "name": "Bão Cát",
+    "avatarUrl": null
+  },
+  "header": {
+    "title": "UnsupportedDriverException: Could not instantiate class"
+  }
+}
