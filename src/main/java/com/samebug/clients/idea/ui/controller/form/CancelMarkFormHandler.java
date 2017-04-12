@@ -15,22 +15,16 @@
  */
 package com.samebug.clients.idea.ui.controller.form;
 
-import com.samebug.clients.http.response.RestError;
+import com.samebug.clients.common.services.SolutionService;
+import com.samebug.clients.common.ui.component.hit.IMarkButton;
+import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.http.entities.solution.MarkResponse;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.CancelMark;
-import com.samebug.clients.http.form.CreateMark;
-import com.samebug.clients.http.form.FieldError;
-import com.samebug.clients.common.services.SolutionService;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
-import com.samebug.clients.common.ui.component.hit.IMarkButton;
-import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-import java.util.List;
-
-public abstract class CancelMarkFormHandler extends PostFormHandler<MarkResponse> {
+public abstract class CancelMarkFormHandler extends PostFormHandler<MarkResponse, CancelMark.BadRequest> {
     final IFrame frame;
     final IMarkButton button;
     final CancelMark data;
@@ -47,37 +41,20 @@ public abstract class CancelMarkFormHandler extends PostFormHandler<MarkResponse
     }
 
     @Override
-    protected MarkResponse postForm() throws SamebugClientException {
+    protected MarkResponse postForm() throws SamebugClientException, CancelMark.BadRequest {
         final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
         return solutionService.retractMark(data.markId);
     }
 
     @Override
-    protected void handleFieldError(FieldError fieldError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleFieldError(fieldError, globalErrors, fieldErrors);
-        globalErrors.add(MessageService.message("samebug.error.pluginBug"));
-    }
-
-    @Override
-    protected void handleNonFormBadRequests(RestError nonFormError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleNonFormBadRequests(nonFormError, globalErrors, fieldErrors);
-        if (nonFormError.code.equals(CreateMark.E_ALREADY_MARKED)) globalErrors.add(MessageService.message("samebug.component.mark.cancel.error.alreadyCancelled"));
-        else globalErrors.add(MessageService.message("samebug.component.mark.cancel.error.badRequest"));
-    }
-
-    @Override
-    protected void handleOtherClientExceptions(SamebugClientException exception, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleOtherClientExceptions(exception, globalErrors, fieldErrors);
-        globalErrors.add(MessageService.message("samebug.component.mark.cancel.error.unhandled"));
-    }
-
-    @Override
-    protected void showFieldErrors(List<FieldError> fieldErrors) throws FormMismatchException {
+    protected void handleBadRequest(CancelMark.BadRequest fieldErrors) {
+//        if (nonFormError.code.equals(CreateMark.E_ALREADY_MARKED)) globalErrors.add(MessageService.message("samebug.component.mark.cancel.error.alreadyCancelled"));
         button.interruptLoading();
     }
 
     @Override
-    protected void showGlobalErrors(List<String> globalErrors) {
-        if (!globalErrors.isEmpty()) frame.popupError(globalErrors.get(0));
+    protected void handleOtherClientExceptions(SamebugClientException exception) {
+        frame.popupError(MessageService.message("samebug.component.mark.cancel.error.unhandled"));
+        button.interruptLoading();
     }
 }

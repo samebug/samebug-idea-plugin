@@ -19,12 +19,12 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.http.response.ConnectionStatus;
-import com.samebug.clients.common.services.ClientService;
+import com.samebug.clients.common.services.IdeaConnectionService;
 import com.samebug.clients.common.ui.frame.IFrame;
+import com.samebug.clients.http.response.ConnectionStatus;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 
-public final class ConnectionStatusController implements ClientService.ConnectionStatusListener, Disposable {
+public final class ConnectionStatusController implements IdeaConnectionService.ConnectionStatusListener, Disposable {
     final IFrame frame;
     private final MessageBusConnection projectConnection;
 
@@ -32,12 +32,12 @@ public final class ConnectionStatusController implements ClientService.Connectio
         this.frame = frame;
 
         projectConnection = messageBus.connect(this);
-        projectConnection.subscribe(ClientService.ConnectionStatusListener.TOPIC, this);
+        projectConnection.subscribe(IdeaConnectionService.ConnectionStatusListener.TOPIC, this);
 
         // initialize the error bars if necessary
-        ClientService clientService = IdeaSamebugPlugin.getInstance().clientService;
-        if (!clientService.isConnected()) connectionChange(false);
-        else if (!clientService.isAuthenticated()) authenticationChange(false);
+        IdeaConnectionService connectionService = IdeaSamebugPlugin.getInstance().clientService.getConnectionService();
+        if (!connectionService.isConnected()) connectionChange(false);
+        else if (!connectionService.isAuthenticated()) authenticationChange(false);
     }
 
     @Override
@@ -63,12 +63,12 @@ public final class ConnectionStatusController implements ClientService.Connectio
 
     @Override
     public void authenticationChange(final boolean isAuthenticated) {
-        final ClientService clientService = IdeaSamebugPlugin.getInstance().clientService;
+        final IdeaConnectionService connectionService = IdeaSamebugPlugin.getInstance().clientService.getConnectionService();
         // NOTE being unauthenticated is only a problem when we are at least connected to the server
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
-                if (clientService.isConnected()) {
+                if (connectionService.isConnected()) {
                     if (!isAuthenticated) frame.showAuthenticationError();
                     else frame.hideAuthenticationError();
                 }

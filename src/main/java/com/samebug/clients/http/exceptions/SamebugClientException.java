@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.http.exceptions;
 
-public class SamebugClientException extends java.lang.Exception {
+public class SamebugClientException extends SamebugException {
     public SamebugClientException() {
         super();
     }

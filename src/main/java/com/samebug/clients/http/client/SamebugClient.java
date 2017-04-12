@@ -17,11 +17,6 @@ package com.samebug.clients.http.client;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.samebug.clients.http.exceptions.*;
-import com.samebug.clients.http.response.BasicRestError;
-import com.samebug.clients.http.response.ClientResponse;
-import com.samebug.clients.http.response.ConnectionStatus;
-import com.samebug.clients.http.response.Failure;
 import com.samebug.clients.http.entities.bugmate.BugmatesResult;
 import com.samebug.clients.http.entities.helpRequest.IncomingHelpRequests;
 import com.samebug.clients.http.entities.helpRequest.MatchingHelpRequest;
@@ -36,11 +31,12 @@ import com.samebug.clients.http.entities.solution.RestHit;
 import com.samebug.clients.http.entities.solution.Solutions;
 import com.samebug.clients.http.entities.solution.Tip;
 import com.samebug.clients.http.entities.tracking.TrackEvent;
-import com.samebug.clients.http.form.AnonymousUse;
-import com.samebug.clients.http.form.CreateHelpRequest;
-import com.samebug.clients.http.form.LogIn;
-import com.samebug.clients.http.form.SignUp;
+import com.samebug.clients.http.exceptions.*;
+import com.samebug.clients.http.form.*;
 import com.samebug.clients.http.json.Json;
+import com.samebug.clients.http.response.GetResponse;
+import com.samebug.clients.http.response.PostFormResponse;
+import com.samebug.clients.http.response.SamebugFormError;
 import org.apache.http.Consts;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -72,221 +68,416 @@ public final class SamebugClient {
     final RestUrlBuilder urlBuilder;
     final RawClient rawClient;
 
-    public SamebugClient(@NotNull final Config config) {
+    public SamebugClient(@NotNull final Config config, @Nullable ConnectionService connectionService) {
         this.config = new Config(config);
         this.urlBuilder = new RestUrlBuilder(config.serverRoot);
-        this.rawClient = new RawClient(config);
+        this.rawClient = new RawClient(config, connectionService);
+    }
+
+    // TODO the server should accept the workspaceId
+    public
+    @NotNull
+    UserInfo getUserInfo(@NotNull final String apiKey) throws SamebugClientException, UnableToPrepareUrl {
+        final URL url = urlBuilder.checkApiKey(apiKey);
+        HandleGetJson<UserInfo> request = new HandleGetJson<UserInfo>(UserInfo.class) {
+            protected HttpGet internalCreateRequest() {
+                return new HttpGet(url.toString());
+            }
+        };
+        UserInfo response = extractGet(rawClient.execute(request));
+        // NOTE: this is a special case, we handle connection status by the result, not by the http status
+        if (rawClient.connectionService != null) rawClient.connectionService.updateAuthenticated(response.getUserExist());
+        // TODO tell the connection service if there is a problem with the workspace
+        return response;
     }
 
     public
     @NotNull
-    ClientResponse<UserInfo> getUserInfo(@NotNull final String apiKey) {
-        try {
-            final URL url = urlBuilder.checkApiKey(apiKey);
-            HttpGet request = new HttpGet(url.toString());
+    CreatedSearch createSearch(@NotNull final String stacktrace) throws SamebugClientException {
+        final URL url = urlBuilder.search();
+        HandleAuthenticatedGetJson<CreatedSearch> request = new HandleAuthenticatedGetJson<CreatedSearch>(CreatedSearch.class) {
+            protected HttpPost internalCreateRequest() {
+                HttpPost request = new HttpPost(url.toString());
+                request.setEntity(new UrlEncodedFormEntity(Collections.singletonList(new BasicNameValuePair("exception", stacktrace)), Consts.UTF_8));
+                return request;
+            }
+        };
+        return extractGet(rawClient.execute(request));
+    }
 
-            return rawClient.executeUnauthenticated(request, new HandleJsonRequest<UserInfo>(UserInfo.class));
-        } catch (UnableToPrepareUrl unableToPrepareUrl) {
-            ConnectionStatus connectionStatus = new ConnectionStatus();
-            return new Failure<UserInfo>(connectionStatus, unableToPrepareUrl);
+    public
+    @NotNull
+    SearchDetails getSearch(@NotNull final Integer searchId) throws SamebugClientException {
+        final URL url = urlBuilder.search(searchId);
+        HandleSimpleGetJson<SearchDetails> request = new HandleSimpleGetJson<SearchDetails>(url, SearchDetails.class);
+        return extractGet(rawClient.execute(request));
+    }
+
+    public
+    @NotNull
+    Solutions getSolutions(@NotNull final Integer searchId) throws SamebugClientException {
+        final URL url = urlBuilder.solutions(searchId);
+        HandleSimpleGetJson<Solutions> request = new HandleSimpleGetJson<Solutions>(url, Solutions.class);
+        return extractGet(rawClient.execute(request));
+    }
+
+    public
+    @NotNull
+    BugmatesResult getBugmates(@NotNull final Integer searchId) throws SamebugClientException {
+        final URL url = urlBuilder.bugmates(searchId);
+        HandleSimpleGetJson<BugmatesResult> request = new HandleSimpleGetJson<BugmatesResult>(url, BugmatesResult.class);
+        return extractGet(rawClient.execute(request));
+    }
+
+    public
+    @NotNull
+    IncomingHelpRequests getIncomingHelpRequests() throws SamebugClientException {
+        final URL url = urlBuilder.incomingHelpRequests();
+        HandleSimpleGetJson<IncomingHelpRequests> request = new HandleSimpleGetJson<IncomingHelpRequests>(url, IncomingHelpRequests.class);
+        return extractGet(rawClient.execute(request));
+    }
+
+    public
+    @NotNull
+    MatchingHelpRequest getHelpRequest(String helpRequestId) throws SamebugClientException {
+        final URL url = urlBuilder.getHelpRequest(helpRequestId);
+        HandleSimpleGetJson<MatchingHelpRequest> request = new HandleSimpleGetJson<MatchingHelpRequest>(url, MatchingHelpRequest.class);
+        return extractGet(rawClient.execute(request));
+    }
+
+    public
+    @NotNull
+    MyHelpRequest createHelpRequest(final int searchId, final String context) throws SamebugClientException, CreateHelpRequest.BadRequest {
+        final URL url = urlBuilder.helpRequest();
+        HandlePostResponseJson<MyHelpRequest, CreateHelpRequest.Error> request = new HandlePostResponseJson<MyHelpRequest, CreateHelpRequest.Error>(MyHelpRequest.class, CreateHelpRequest.Error.class) {
+            protected HttpPost internalCreateRequest() {
+                HttpPost request = new HttpPost(url.toString());
+                List<BasicNameValuePair> form = new ArrayList<BasicNameValuePair>();
+                form.add(new BasicNameValuePair(CreateHelpRequest.SEARCH_ID, Integer.toString(searchId)));
+                form.add(new BasicNameValuePair(CreateHelpRequest.CONTEXT, context));
+                request.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
+                return request;
+            }
+        };
+        final PostFormResponse<MyHelpRequest, CreateHelpRequest.Error> response = rawClient.execute(request);
+        switch (response.getResultType()) {
+            case SUCCESS:
+                return response.getResult();
+            case EXCEPTION:
+                throw response.getException();
+            case FORM_ERROR:
+                throw new CreateHelpRequest.BadRequest(response.getFormError());
+            default:
+                throw new IllegalStateException();
         }
     }
 
     public
     @NotNull
-    ClientResponse<CreatedSearch> createSearch(@NotNull final String stacktrace) {
-        final URL url = urlBuilder.search();
-        HttpPost post = new HttpPost(url.toString());
-        post.setEntity(new UrlEncodedFormEntity(Collections.singletonList(new BasicNameValuePair("exception", stacktrace)), Consts.UTF_8));
-
-        return rawClient.executeAuthenticated(post, new HandleJsonRequest<CreatedSearch>(CreatedSearch.class));
-    }
-
-    public
-    @NotNull
-    ClientResponse<SearchDetails> getSearch(@NotNull final Integer searchId) {
-        final URL url = urlBuilder.search(searchId);
-        HttpGet request = new HttpGet(url.toString());
-
-        return rawClient.executeAuthenticated(request, new HandleJsonRequest<SearchDetails>(SearchDetails.class));
-    }
-
-    public
-    @NotNull
-    ClientResponse<Solutions> getSolutions(@NotNull final Integer searchId) {
-        final URL url = urlBuilder.solutions(searchId);
-        HttpGet request = new HttpGet(url.toString());
-
-        return rawClient.executeAuthenticated(request, new HandleJsonRequest<Solutions>(Solutions.class));
-    }
-
-    public
-    @NotNull
-    ClientResponse<BugmatesResult> getBugmates(@NotNull final Integer searchId) {
-        final URL url = urlBuilder.bugmates(searchId);
-        HttpGet request = new HttpGet(url.toString());
-
-        return rawClient.executeAuthenticated(request, new HandleJsonRequest<BugmatesResult>(BugmatesResult.class));
-    }
-
-    public
-    @NotNull
-    ClientResponse<IncomingHelpRequests> getIncomingHelpRequests() {
-        final URL url = urlBuilder.incomingHelpRequests();
-        HttpGet request = new HttpGet(url.toString());
-
-        return rawClient.executeAuthenticated(request, new HandleJsonRequest<IncomingHelpRequests>(IncomingHelpRequests.class));
-    }
-
-    public
-    @NotNull
-    ClientResponse<MatchingHelpRequest> getHelpRequest(String helpRequestId) {
-        final URL url = urlBuilder.getHelpRequest(helpRequestId);
-        HttpGet request = new HttpGet(url.toString());
-
-        return rawClient.executeAuthenticated(request, new HandleJsonRequest<MatchingHelpRequest>(MatchingHelpRequest.class));
-    }
-
-    // TODO use the api.form classes here
-    public
-    @NotNull
-    ClientResponse<MyHelpRequest> createHelpRequest(int searchId, String context) {
-        final URL url = urlBuilder.helpRequest();
-        HttpPost request = new HttpPost(url.toString());
-        List<BasicNameValuePair> form = new ArrayList<BasicNameValuePair>();
-        form.add(new BasicNameValuePair(CreateHelpRequest.SEARCH_ID, Integer.toString(searchId)));
-        form.add(new BasicNameValuePair(CreateHelpRequest.CONTEXT, context));
-        request.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
-
-        return rawClient.executeAuthenticated(request, new HandleJsonRequest<MyHelpRequest>(MyHelpRequest.class));
-    }
-
-    public
-    @NotNull
-    ClientResponse<MyHelpRequest> revokeHelpRequest(String helpRequestId) {
+    MyHelpRequest revokeHelpRequest(String helpRequestId) throws SamebugClientException, RevokeHelpRequest.BadRequest {
         final URL url = urlBuilder.revokeHelpRequest(helpRequestId);
-        HttpPost request = new HttpPost(url.toString());
-
-        return rawClient.executeAuthenticated(request, new HandleJsonRequest<MyHelpRequest>(MyHelpRequest.class));
+        HandleSimplePostJson<MyHelpRequest> request = new HandleSimplePostJson<MyHelpRequest>(url, MyHelpRequest.class);
+        return extractGet(rawClient.execute(request));
     }
 
     public
     @NotNull
-    ClientResponse<RestHit<Tip>> createTip(@NotNull final Integer searchId, @NotNull final String tip, @Nullable final String source, @Nullable String helpRequestId) {
+    RestHit<Tip> createTip(@NotNull final Integer searchId, @NotNull final String tip, @Nullable final String source, @Nullable final String helpRequestId)
+            throws SamebugClientException, CreateTip.BadRequest {
         final URL url = urlBuilder.tip();
-        HttpPost post = new HttpPost(url.toString());
-        List<BasicNameValuePair> form = new ArrayList<BasicNameValuePair>();
-        form.add(new BasicNameValuePair("message", tip));
-        form.add(new BasicNameValuePair("searchId", searchId.toString()));
-        if (source != null) form.add(new BasicNameValuePair("sourceUrl", source));
-        if (helpRequestId != null) form.add(new BasicNameValuePair("helpRequestId", helpRequestId));
-        post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
-        // NOTE: posting a tip includes downloading the source on the server side, which might take a while, hence we let it work a bit more.
-        post.setConfig(rawClient.requestConfigBuilder.setSocketTimeout(config.requestTimeout + TipSourceLoadingTime_Handicap_Millis).build());
         Type typeToken = new TypeToken<RestHit<Tip>>() {
         }.getType();
-        return rawClient.executeAuthenticated(post, new HandleJsonRequest<RestHit<Tip>>(typeToken));
-    }
-
-    public
-    @NotNull
-    ClientResponse<MarkResponse> postMark(@NotNull final Integer searchId, @NotNull final Integer solutionId) {
-        final URL url = urlBuilder.mark();
-        HttpPost post = new HttpPost(url.toString());
-        List<BasicNameValuePair> form = Arrays.asList(new BasicNameValuePair("solution", solutionId.toString()),
-                new BasicNameValuePair("search", searchId.toString()));
-        post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
-
-        return rawClient.executeAuthenticated(post, new HandleJsonRequest<MarkResponse>(MarkResponse.class));
-    }
-
-    public
-    @NotNull
-    ClientResponse<MarkResponse> retractMark(@NotNull final Integer voteId) {
-        final URL url = urlBuilder.cancelMark();
-        HttpPost post = new HttpPost(url.toString());
-        List<BasicNameValuePair> form = Collections.singletonList(new BasicNameValuePair("mark", voteId.toString()));
-        post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
-
-        return rawClient.executeAuthenticated(post, new HandleJsonRequest<MarkResponse>(MarkResponse.class));
-    }
-
-    public
-    @NotNull
-    ClientResponse<UserStats> getUserStats() {
-        final URL url = urlBuilder.userStats();
-        HttpGet get = new HttpGet(url.toString());
-
-        return rawClient.executeAuthenticated(get, new HandleJsonRequest<UserStats>(UserStats.class));
-    }
-
-    public
-    @NotNull
-    ClientResponse<LoggedInUser> logIn(@NotNull LogIn data) {
-        final URL url = urlBuilder.logIn();
-        HttpPost post = new HttpPost(url.toString());
-        List<BasicNameValuePair> form = Arrays.asList(
-                new BasicNameValuePair(LogIn.EMAIL, data.email),
-                new BasicNameValuePair(LogIn.PASSWORD, data.password));
-        post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
-
-        return rawClient.executeAuthenticated(post, new HandleJsonRequest<LoggedInUser>(LoggedInUser.class));
-    }
-
-    public
-    @NotNull
-    ClientResponse<LoggedInUser> signUp(@NotNull SignUp data) {
-        final URL url = urlBuilder.signUp();
-        HttpPost post = new HttpPost(url.toString());
-        List<BasicNameValuePair> form = Arrays.asList(
-                new BasicNameValuePair(SignUp.DISPLAY_NAME, data.displayName),
-                new BasicNameValuePair(SignUp.EMAIL, data.email),
-                new BasicNameValuePair(SignUp.PASSWORD, data.password));
-        new BasicNameValuePair(SignUp.NEWSLETTER, data.subscribedToNewsLetter.toString());
-        post.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
-
-        return rawClient.executeAuthenticated(post, new HandleJsonRequest<LoggedInUser>(LoggedInUser.class));
-    }
-
-    public
-    @NotNull
-    ClientResponse<LoggedInUser> anonymousUse(@NotNull AnonymousUse data) {
-        final URL url = urlBuilder.anonymousUse();
-        HttpPost post = new HttpPost(url.toString());
-        return rawClient.executeAuthenticated(post, new HandleJsonRequest<LoggedInUser>(LoggedInUser.class));
-    }
-
-    public void trace(@NotNull final TrackEvent event) throws SamebugClientException {
-        if (config.isTrackingEnabled) {
-            HttpPost post = new HttpPost(config.trackingRoot);
-            post.addHeader("Content-Type", "application/json");
-            final String json = gson.toJson(event.fields);
-            post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
-            rawClient.executeTracking(post);
+        HandlePostResponseJson<RestHit<Tip>, CreateTip.Error> request = new HandlePostResponseJson<RestHit<Tip>, CreateTip.Error>(typeToken, CreateTip.Error.class) {
+            protected HttpPost internalCreateRequest() {
+                HttpPost request = new HttpPost(url.toString());
+                List<BasicNameValuePair> form = new ArrayList<BasicNameValuePair>();
+                form.add(new BasicNameValuePair("message", tip));
+                form.add(new BasicNameValuePair("searchId", searchId.toString()));
+                if (source != null) form.add(new BasicNameValuePair("sourceUrl", source));
+                if (helpRequestId != null) form.add(new BasicNameValuePair("helpRequestId", helpRequestId));
+                request.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
+                // NOTE: posting a tip includes downloading the source on the server side, which might take a while, hence we let it work a bit more.
+                request.setConfig(rawClient.requestConfigBuilder.setSocketTimeout(config.requestTimeout + TipSourceLoadingTime_Handicap_Millis).build());
+                return request;
+            }
+        };
+        PostFormResponse<RestHit<Tip>, CreateTip.Error> response = rawClient.execute(request);
+        switch (response.getResultType()) {
+            case SUCCESS:
+                return response.getResult();
+            case EXCEPTION:
+                throw response.getException();
+            case FORM_ERROR:
+                throw new CreateTip.BadRequest(response.getFormError());
+            default:
+                throw new IllegalStateException();
         }
     }
 
-    final class HandleJsonRequest<T> extends HandleRequest<T> {
+    public
+    @NotNull
+    MarkResponse postMark(@NotNull final Integer searchId, @NotNull final Integer solutionId) throws SamebugClientException, CreateMark.BadRequest {
+        final URL url = urlBuilder.mark();
+        HandleAuthenticatedGetJson<MarkResponse> request = new HandleAuthenticatedGetJson<MarkResponse>(MarkResponse.class) {
+            protected HttpPost internalCreateRequest() {
+                HttpPost request = new HttpPost(url.toString());
+                List<BasicNameValuePair> form = Arrays.asList(new BasicNameValuePair("solution", solutionId.toString()),
+                        new BasicNameValuePair("search", searchId.toString()));
+                request.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
+                return request;
+            }
+        };
+        return extractGet(rawClient.execute(request));
+    }
+
+    public
+    @NotNull
+    MarkResponse retractMark(@NotNull final Integer voteId) throws SamebugClientException, CancelMark.BadRequest {
+        final URL url = urlBuilder.cancelMark();
+        HandleAuthenticatedGetJson<MarkResponse> request = new HandleAuthenticatedGetJson<MarkResponse>(MarkResponse.class) {
+            protected HttpPost internalCreateRequest() {
+                HttpPost request = new HttpPost(url.toString());
+                List<BasicNameValuePair> form = Collections.singletonList(new BasicNameValuePair("mark", voteId.toString()));
+                request.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
+                return request;
+            }
+        };
+        return extractGet(rawClient.execute(request));
+    }
+
+    public
+    @NotNull
+    UserStats getUserStats() throws SamebugClientException {
+        final URL url = urlBuilder.userStats();
+        HandleSimpleGetJson<UserStats> request = new HandleSimpleGetJson<UserStats>(url, UserStats.class);
+        return extractGet(rawClient.execute(request));
+    }
+
+    public
+    @NotNull
+    LoggedInUser logIn(@NotNull final LogIn data) throws SamebugClientException, LogIn.BadRequest {
+        final URL url = urlBuilder.logIn();
+        HandlePostResponseJson<LoggedInUser, LogIn.Error> request = new HandlePostResponseJson<LoggedInUser, LogIn.Error>(LoggedInUser.class, LogIn.Error.class) {
+            protected HttpPost internalCreateRequest() {
+                HttpPost request = new HttpPost(url.toString());
+                List<BasicNameValuePair> form = Arrays.asList(
+                        new BasicNameValuePair(LogIn.EMAIL, data.email),
+                        new BasicNameValuePair(LogIn.PASSWORD, data.password));
+                request.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
+                return request;
+            }
+        };
+        PostFormResponse<LoggedInUser, LogIn.Error> response = rawClient.execute(request);
+        switch (response.getResultType()) {
+            case SUCCESS:
+                return response.getResult();
+            case EXCEPTION:
+                throw response.getException();
+            case FORM_ERROR:
+                throw new LogIn.BadRequest(response.getFormError());
+            default:
+                throw new IllegalStateException();
+        }
+    }
+
+    public
+    @NotNull
+    LoggedInUser signUp(@NotNull final SignUp data) throws SamebugClientException, SignUp.BadRequest {
+        final URL url = urlBuilder.signUp();
+        HandlePostResponseJson<LoggedInUser, SignUp.Error> request = new HandlePostResponseJson<LoggedInUser, SignUp.Error>(LoggedInUser.class, SignUp.Error.class) {
+            protected HttpPost internalCreateRequest() {
+                HttpPost request = new HttpPost(url.toString());
+                List<BasicNameValuePair> form = Arrays.asList(
+                        new BasicNameValuePair(SignUp.DISPLAY_NAME, data.displayName),
+                        new BasicNameValuePair(SignUp.EMAIL, data.email),
+                        new BasicNameValuePair(SignUp.PASSWORD, data.password),
+                        new BasicNameValuePair(SignUp.NEWSLETTER, data.subscribedToNewsLetter.toString()));
+                request.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
+                return request;
+            }
+        };
+        PostFormResponse<LoggedInUser, SignUp.Error> response = rawClient.execute(request);
+        switch (response.getResultType()) {
+            case SUCCESS:
+                return response.getResult();
+            case EXCEPTION:
+                throw response.getException();
+            case FORM_ERROR:
+                throw new SignUp.BadRequest(response.getFormError());
+            default:
+                throw new IllegalStateException();
+        }
+    }
+
+    public
+    @NotNull
+    LoggedInUser anonymousUse() throws SamebugClientException {
+        final URL url = urlBuilder.anonymousUse();
+        HandleSimplePostJson<LoggedInUser> request = new HandleSimplePostJson<LoggedInUser>(url, LoggedInUser.class);
+        return extractGet(rawClient.execute(request));
+    }
+
+    public HttpRequestBase trace(@NotNull final TrackEvent event) {
+        HttpPost post = new HttpPost(config.trackingRoot);
+        post.addHeader("Content-Type", "application/json");
+        final String json = gson.toJson(event.fields);
+        post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
+        return post;
+    }
+
+
+    <T> T extractGet(GetResponse<T> response) throws SamebugClientException {
+        switch (response.getResultType()) {
+            case SUCCESS:
+                return response.getResult();
+            case EXCEPTION:
+                throw response.getException();
+            default:
+                throw new IllegalStateException();
+        }
+    }
+
+
+    abstract class HandleGetJson<Result> extends HandleRequest<GetResponse<Result>> {
         private Type classOfT;
 
-        HandleJsonRequest(Type classOfT) {
+        HandleGetJson(Type classOfT) {
             this.classOfT = classOfT;
         }
 
         @Override
-        T onSuccess(HttpResponse response) throws ProcessResponseException {
-            return readJsonResponse(response, classOfT);
+        HttpRequestBase createRequest() {
+            HttpRequestBase request = internalCreateRequest();
+            setJsonResponseType(request);
+            return request;
         }
 
         @Override
-        BasicRestError onBadRequest(HttpResponse response) throws ProcessResponseException {
-            return readJsonResponse(response, BasicRestError.class);
+        final GetResponse<Result> onSuccess(HttpResponse httpResponse) {
+            try {
+                Result response = readJsonResponse(httpResponse, classOfT);
+                return new GetResponse<Result>(response);
+            } catch (JsonParseException e) {
+                return new GetResponse<Result>(new JsonParseException("Failed to parse json response", e));
+            } catch (HttpError httpError) {
+                return new GetResponse<Result>(httpError);
+            }
         }
 
         @Override
-        void modifyRequest(HttpRequestBase request) {
-            request.setHeader("Accept", "application/json");
+        final GetResponse<Result> onBadRequest(HttpResponse response) {
+            return new GetResponse<Result>(new BadRequest());
         }
+
+        @Override
+        final GetResponse<Result> onError(SamebugClientException exception) {
+            return new GetResponse<Result>(exception);
+        }
+
+        protected abstract HttpRequestBase internalCreateRequest();
+    }
+
+    abstract class HandleAuthenticatedGetJson<Result> extends HandleGetJson<Result> {
+        HandleAuthenticatedGetJson(Type classOfT) {
+            super(classOfT);
+        }
+
+        @Override
+        final HttpRequestBase createRequest() {
+            HttpRequestBase request = super.createRequest();
+            addAuthentication(request);
+            return request;
+        }
+    }
+
+    final class HandleSimpleGetJson<Result> extends HandleAuthenticatedGetJson<Result> {
+        private final URL url;
+
+        HandleSimpleGetJson(URL url, Type classOfT) {
+            super(classOfT);
+            this.url = url;
+        }
+
+        @Override
+        protected HttpGet internalCreateRequest() {
+            return new HttpGet(url.toString());
+        }
+    }
+
+    final class HandleSimplePostJson<Result> extends HandleAuthenticatedGetJson<Result> {
+        private final URL url;
+
+        HandleSimplePostJson(URL url, Type classOfT) {
+            super(classOfT);
+            this.url = url;
+        }
+
+        @Override
+        protected HttpPost internalCreateRequest() {
+            return new HttpPost(url.toString());
+        }
+    }
+
+    abstract class HandlePostResponseJson<Result, FormError extends SamebugFormError> extends HandleRequest<PostFormResponse<Result, FormError>> {
+        private final Type resultType;
+        private final Type formErrorType;
+
+        HandlePostResponseJson(Type resultType, Type formErrorType) {
+            this.resultType = resultType;
+            this.formErrorType = formErrorType;
+        }
+
+        @Override
+        HttpPost createRequest() {
+            HttpPost request = internalCreateRequest();
+            setJsonContentType(request);
+            setJsonResponseType(request);
+            return request;
+        }
+
+        @Override
+        PostFormResponse<Result, FormError> onSuccess(HttpResponse httpResponse) {
+            try {
+                Result response = readJsonResponse(httpResponse, resultType);
+                return new PostFormResponse<Result, FormError>(response);
+            } catch (JsonParseException e) {
+                return new PostFormResponse<Result, FormError>(new JsonParseException("Failed to parse json response", e));
+            } catch (HttpError httpError) {
+                return new PostFormResponse<Result, FormError>(httpError);
+            }
+        }
+
+        @Override
+        PostFormResponse<Result, FormError> onBadRequest(HttpResponse httpResponse) {
+            try {
+                FormError response = readJsonResponse(httpResponse, formErrorType);
+                return new PostFormResponse<Result, FormError>(response);
+            } catch (JsonParseException e) {
+                return new PostFormResponse<Result, FormError>(new JsonParseException("Failed to parse json response", e));
+            } catch (HttpError httpError) {
+                return new PostFormResponse<Result, FormError>(httpError);
+            }
+        }
+
+        @Override
+        PostFormResponse<Result, FormError> onError(SamebugClientException exception) {
+            return new PostFormResponse<Result, FormError>(exception);
+        }
+
+        protected abstract HttpPost internalCreateRequest();
+    }
+
+    void setJsonContentType(HttpRequestBase request) {
+        request.setHeader("Content-Type", "application/json");
+    }
+
+    void setJsonResponseType(HttpRequestBase request) {
+        request.setHeader("Accept", "application/json");
+    }
+
+    void addAuthentication(HttpRequestBase request) {
+        request.addHeader("X-Samebug-ApiKey", config.apiKey);
+        if (config.workspaceId != null) request.addHeader("X-Samebug-WorkspaceId", config.workspaceId.toString());
     }
 
     <T> T readJsonResponse(HttpResponse response, Type classOfT) throws HttpError, JsonParseException {

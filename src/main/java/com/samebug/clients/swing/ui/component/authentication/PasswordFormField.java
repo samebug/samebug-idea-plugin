@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.swing.ui.component.authentication;
 
-import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.swing.ui.base.form.InputField;
 import com.samebug.clients.swing.ui.base.form.PasswordInputField;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
@@ -31,7 +30,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 // TODO extract common parts with FormField
-public abstract class PasswordFormField extends SamebugPanel {
+public abstract class PasswordFormField<T> extends SamebugPanel {
     final SamebugLabel descriptionLabel;
     final PasswordInputField field;
     final ErrorLabel errorLabel;
@@ -62,14 +61,14 @@ public abstract class PasswordFormField extends SamebugPanel {
         return new String(field.getPassword());
     }
 
-    public void setFormError(String errorCode) throws ErrorCodeMismatchException {
+    public void setFormError(T errorCode) {
         field.setError(true);
         remove(errorLabel);
         updateErrorLabel(errorLabel, errorCode);
         add(errorLabel, "cell 0 2, wmin 0");
     }
 
-    protected abstract void updateErrorLabel(SamebugMultilineLabel errorLabel, String errorCode) throws ErrorCodeMismatchException;
+    protected abstract void updateErrorLabel(SamebugMultilineLabel errorLabel, T errorCode);
 
     public void addActionListener(ActionListener actionListener) {
         field.addActionListener(actionListener);

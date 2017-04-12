@@ -24,9 +24,9 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.services.WebUrlBuilder;
-import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.common.services.*;
+import com.samebug.clients.http.client.SamebugClient;
+import com.samebug.clients.http.exceptions.SamebugException;
 import com.samebug.clients.idea.controllers.ConsoleSearchController;
 import com.samebug.clients.idea.controllers.NotificationController;
 import com.samebug.clients.idea.controllers.TimedTasks;
@@ -94,7 +94,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
                 if (settings.apiKey != null) {
                     try {
                         authenticationService.apiKeyAuthentication(settings.apiKey, settings.workspaceId);
-                    } catch (SamebugClientException ignored) {
+                    } catch (SamebugException ignored) {
                     }
                 }
             }
@@ -115,10 +115,11 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         connection = messageBus.connect(this);
         clientService = new ClientService(messageBus);
         clientService.configure(state.get().getNetworkConfig());
+        SamebugClient client = clientService.getClient();
         profileStore = new ProfileStore();
         profileService = new ProfileService(clientService, profileStore);
         solutionStore = new SolutionStore();
-        solutionService = new SolutionService(clientService, solutionStore);
+        solutionService = new SolutionService(client, solutionStore);
         searchStore = new SearchStore();
         searchService = new SearchService(clientService, searchStore);
         searchRequestStore = new SearchRequestStore();
@@ -127,7 +128,7 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         bugmateService = new BugmateService(clientService, bugmateStore);
         helpRequestStore = new HelpRequestStore();
         helpRequestService = new HelpRequestService(clientService, helpRequestStore);
-        authenticationService = new AuthenticationService(clientService);
+        authenticationService = new AuthenticationService(client);
         conversionService = new ConversionService();
         concurrencyService = new ConcurrencyService(profileStore, profileService,
                 solutionStore, solutionService,

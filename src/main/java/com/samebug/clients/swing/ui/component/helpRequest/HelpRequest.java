@@ -15,13 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.helpRequest;
 
-import com.samebug.clients.http.form.CreateTip;
-import com.samebug.clients.http.form.FieldError;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
-import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
-import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
-import com.samebug.clients.common.ui.component.form.IForm;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequest;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
@@ -36,10 +30,8 @@ import net.miginfocom.swing.MigLayout;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
 
-public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRequest, IHelpOthersCTA, IForm {
+public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRequest, IHelpOthersCTA {
     private final static int AvatarSize = 40;
     final ActionRow actions;
     final WriteTipArea writeTipArea;
@@ -74,29 +66,13 @@ public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRe
     }
 
     @Override
-    public void failPostTipWithFormError(List<FieldError> errors) throws FormMismatchException {
+    public void failPostTipWithFormError(BadRequest errors) {
         actions.sendButton.revertFromLoadingAnimation();
-        setFormErrors(errors);
-    }
-
-    @Override
-    public void setFormErrors(List<FieldError> errors) throws FormMismatchException {
-        List<FieldError> mismatched = new ArrayList<FieldError>();
-        for (FieldError f : errors) {
-            try {
-                if (CreateTip.BODY.equals(f.key)) writeTipArea.setFormError(f.code);
-                else throw new FieldNameMismatchException(f.key);
-            } catch (ErrorCodeMismatchException e) {
-                mismatched.add(f);
-            } catch (FieldNameMismatchException e) {
-                mismatched.add(f);
-            }
-        }
-        if (!mismatched.isEmpty()) throw new FormMismatchException(mismatched);
+//        if (CreateTip.BODY.equals(f.key)) writeTipArea.setFormError(f.code);
         revalidate();
         repaint();
 
-        TrackingService.trace(Events.writeTipError(errors));
+//        TrackingService.trace(Events.writeTipError(errors));
     }
 
     final class TitleLabel extends SamebugLabel {

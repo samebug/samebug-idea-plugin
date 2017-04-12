@@ -15,6 +15,8 @@
  */
 package com.samebug.clients.http.form;
 
+import com.samebug.clients.http.exceptions.FormException;
+import com.samebug.clients.http.exceptions.SamebugException;
 import org.jetbrains.annotations.NotNull;
 
 public final class CancelMark {
@@ -28,5 +30,15 @@ public final class CancelMark {
 
     public CancelMark(@NotNull Integer markId) {
         this.markId = markId;
+    }
+
+    public static final class Error {}
+    public static final class BadRequest extends FormException {
+        public final Error error;
+
+        public BadRequest(Error error) {
+            this.error = error;
+        }
+
     }
 }

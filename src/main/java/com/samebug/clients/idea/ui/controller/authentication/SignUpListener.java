@@ -15,9 +15,9 @@
  */
 package com.samebug.clients.idea.ui.controller.authentication;
 
+import com.samebug.clients.common.ui.component.authentication.ISignUpForm;
 import com.samebug.clients.http.entities.profile.LoggedInUser;
 import com.samebug.clients.http.form.SignUp;
-import com.samebug.clients.common.ui.component.authentication.ISignUpForm;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.form.SignUpFormHandler;
 import com.samebug.clients.swing.ui.modules.TrackingService;
@@ -32,13 +32,14 @@ public final class SignUpListener implements ISignUpForm.Listener {
     @Override
     public void signUp(final ISignUpForm source, String displayName, String email, String password) {
         new SignUpFormHandler(controller.view, source, new SignUp(displayName, email, password)) {
-
             @Override
             protected void afterPostForm(LoggedInUser response) {
                 source.successPost();
                 controller.twc.focusOnHelpRequestList();
                 TrackingService.trace(Events.registrationSignUpSucceeded("credentials"));
             }
+
         }.execute();
     }
 }
+

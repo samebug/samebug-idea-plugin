@@ -15,6 +15,8 @@
  */
 package com.samebug.clients.http.form;
 
+import com.samebug.clients.http.exceptions.FormException;
+import com.samebug.clients.http.exceptions.SamebugException;
 import org.jetbrains.annotations.NotNull;
 
 public final class RevokeHelpRequest {
@@ -25,5 +27,15 @@ public final class RevokeHelpRequest {
 
     public RevokeHelpRequest(@NotNull String helpRequestId) {
         this.helpRequestId = helpRequestId;
+    }
+
+    public static final class Error {}
+    public static final class BadRequest extends FormException {
+        public final CreateHelpRequest.Error error;
+
+        public BadRequest(CreateHelpRequest.Error error) {
+            this.error = error;
+        }
+
     }
 }

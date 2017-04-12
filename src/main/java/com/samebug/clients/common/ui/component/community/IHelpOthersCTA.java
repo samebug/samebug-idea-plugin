@@ -15,17 +15,12 @@
  */
 package com.samebug.clients.common.ui.component.community;
 
-import com.samebug.clients.http.form.FieldError;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
-
-import java.util.List;
-
 public interface IHelpOthersCTA {
     void startPostTip();
 
     void successPostTip();
 
-    void failPostTipWithFormError(List<FieldError> errors) throws FormMismatchException;
+    void failPostTipWithFormError(BadRequest errors);
 
     final class Model {
         public final int usersWaitingHelp;
@@ -37,6 +32,17 @@ public interface IHelpOthersCTA {
         public Model(int usersWaitingHelp) {
             this.usersWaitingHelp = usersWaitingHelp;
         }
+    }
+
+    final class BadRequest {
+        public BadRequest(TipBody tipBody) {
+            this.tipBody = tipBody;
+        }
+
+        public final TipBody tipBody;
+
+        public enum TipBody {TOO_SHORT, TOO_LONG}
+
     }
 
     interface Listener {

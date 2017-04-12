@@ -20,7 +20,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.ProjectManager;
-import com.samebug.clients.common.services.ClientService;
+import com.samebug.clients.common.services.IdeaConnectionService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.controller.ConfigDialog;
 import com.samebug.clients.swing.ui.modules.IconService;
@@ -34,7 +34,7 @@ final public class ConfigureAction extends AnAction implements DumbAware {
 
     @Override
     public void update(AnActionEvent e) {
-        ClientService connectionService = IdeaSamebugPlugin.getInstance().clientService;
+        IdeaConnectionService connectionService = IdeaSamebugPlugin.getInstance().clientService.getConnectionService();
         if (connectionService.isConnected() && !connectionService.isAuthenticated()) {
             e.getPresentation().setText(MessageService.message("samebug.actions.configure.text.invalidApiKey"));
             e.getPresentation().setIcon(IconService.cogwheelTodo);

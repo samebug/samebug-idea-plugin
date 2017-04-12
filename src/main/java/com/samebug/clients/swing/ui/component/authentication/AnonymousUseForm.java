@@ -15,9 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.authentication;
 
-import com.samebug.clients.http.form.FieldError;
 import com.samebug.clients.common.ui.component.authentication.IAnonymousUseForm;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.frame.authentication.LogInTab;
@@ -30,7 +28,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 
 public class AnonymousUseForm extends JComponent implements IAnonymousUseForm {
     final SamebugButton useAnonymously;
@@ -47,7 +44,7 @@ public class AnonymousUseForm extends JComponent implements IAnonymousUseForm {
     }
 
     @Override
-    public void failPost(List<FieldError> errors) throws FormMismatchException {
+    public void failPost() {
         useAnonymously.revertFromLoadingAnimation();
     }
 

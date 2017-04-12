@@ -15,21 +15,16 @@
  */
 package com.samebug.clients.idea.ui.controller.form;
 
-import com.samebug.clients.http.response.RestError;
-import com.samebug.clients.http.entities.profile.LoggedInUser;
-import com.samebug.clients.http.exceptions.SamebugClientException;
-import com.samebug.clients.http.form.FieldError;
-import com.samebug.clients.http.form.LogIn;
 import com.samebug.clients.common.services.AuthenticationService;
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.common.ui.frame.IFrame;
+import com.samebug.clients.http.entities.profile.LoggedInUser;
+import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.form.LogIn;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-import java.util.List;
-
-public abstract class LogInFormHandler extends PostFormHandler<LoggedInUser> {
+public abstract class LogInFormHandler extends PostFormHandler<LoggedInUser, LogIn.BadRequest> {
     final IFrame frame;
     final ILogInForm form;
     final LogIn data;
@@ -46,40 +41,19 @@ public abstract class LogInFormHandler extends PostFormHandler<LoggedInUser> {
     }
 
     @Override
-    protected LoggedInUser postForm() throws SamebugClientException {
+    protected LoggedInUser postForm() throws SamebugClientException, LogIn.BadRequest {
         final AuthenticationService authenticationService = IdeaSamebugPlugin.getInstance().authenticationService;
         return authenticationService.logIn(data);
     }
 
     @Override
-    protected void handleFieldError(FieldError fieldError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleFieldError(fieldError, globalErrors, fieldErrors);
-        if (fieldError.key.equals(LogIn.EMAIL)) fieldErrors.add(fieldError);
-        else if (fieldError.key.equals((LogIn.PASSWORD))) fieldErrors.add(fieldError);
-        else globalErrors.add(MessageService.message("samebug.error.pluginBug"));
+    protected void handleBadRequest(LogIn.BadRequest fieldErrors) {
+        ILogInForm.BadRequest b = null;
+        form.failPost(b);
     }
 
     @Override
-    protected void handleNonFormBadRequests(RestError nonFormError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleNonFormBadRequests(nonFormError, globalErrors, fieldErrors);
-        if (nonFormError.code.equals(LogIn.E_UNKNOWN_CREDENTIALS)) {
-            fieldErrors.add(new FieldError(LogIn.PASSWORD, LogIn.E_UNKNOWN_CREDENTIALS));
-        } else globalErrors.add(MessageService.message("samebug.component.authentication.logIn.error.badRequest"));
-    }
-
-    @Override
-    protected void handleOtherClientExceptions(SamebugClientException exception, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleOtherClientExceptions(exception, globalErrors, fieldErrors);
-        globalErrors.add(MessageService.message("samebug.component.authentication.logIn.error.unhandled"));
-    }
-
-    @Override
-    protected void showFieldErrors(List<FieldError> fieldErrors) throws FormMismatchException {
-        form.failPost(fieldErrors);
-    }
-
-    @Override
-    protected void showGlobalErrors(List<String> globalErrors) {
-        if (!globalErrors.isEmpty()) frame.popupError(globalErrors.get(0));
+    protected void handleOtherClientExceptions(SamebugClientException exception) {
+        frame.popupError(MessageService.message("samebug.component.authentication.logIn.error.unhandled"));
     }
 }

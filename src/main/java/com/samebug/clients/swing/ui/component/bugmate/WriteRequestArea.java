@@ -15,9 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
-import com.samebug.clients.http.form.CreateHelpRequest;
-import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
-import com.samebug.clients.common.ui.component.form.IFormField;
+import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.swing.ui.base.form.LengthRestrictedArea;
 import com.samebug.clients.swing.ui.base.form.MaxCharactersConstraints;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
@@ -32,7 +30,7 @@ import javax.swing.text.AbstractDocument;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public final class WriteRequestArea extends JComponent implements IFormField {
+public final class WriteRequestArea extends JComponent {
     public static final int MaxOvershootCharacters = 200;
     public static final int MaxCharacters = 140;
 
@@ -60,16 +58,19 @@ public final class WriteRequestArea extends JComponent implements IFormField {
         add(borderedArea);
     }
 
-    @Override
     public String getText() {
         return borderedArea.getText();
     }
 
-    @Override
-    public void setFormError(String errorCode) throws ErrorCodeMismatchException {
+    public void setFormError(IAskForHelp.BadRequest.Context errorCode) {
         borderedArea.setError(true);
-        if (CreateHelpRequest.E_TOO_LONG.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.helpRequest.ask.error.long"));
-        else throw new ErrorCodeMismatchException(errorCode);
+        if (errorCode == null) return;
+        switch (errorCode) {
+            case TOO_LONG:
+                errorLabel.setText(MessageService.message("samebug.component.helpRequest.ask.error.long"));
+                break;
+            default:
+        }
         remove(errorLabel);
         add(errorLabel, "cell 0 1, wmin 0");
     }

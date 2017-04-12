@@ -26,8 +26,8 @@ import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
+import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.http.entities.tracking.TrackEvent;
-import com.samebug.clients.common.services.ClientService;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.ConfigChangeListener;
@@ -71,7 +71,7 @@ public final class IdeaTrackingService extends TrackingService implements Config
                     addEnvironmentInfo(event);
                 } catch (Exception ignored) {
                 }
-                ClientService client = IdeaSamebugPlugin.getInstance().clientService;
+                SamebugClient client = IdeaSamebugPlugin.getInstance().clientService.getClient();
                 client.trace(event);
             } catch (Exception e) {
                 LOGGER.debug("Failed to report tracking event", e);

@@ -15,6 +15,9 @@
  */
 package com.samebug.clients.http.form;
 
+import com.samebug.clients.http.exceptions.FormException;
+import com.samebug.clients.http.exceptions.SamebugException;
+import com.samebug.clients.http.response.SamebugFormError;
 import org.jetbrains.annotations.NotNull;
 
 public final class LogIn {
@@ -33,5 +36,15 @@ public final class LogIn {
     public LogIn(@NotNull String email, @NotNull String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public static final class Error implements SamebugFormError {}
+    public static final class BadRequest extends FormException {
+        public final Error error;
+
+        public BadRequest(Error error) {
+            this.error = error;
+        }
+
     }
 }

@@ -7,7 +7,6 @@ import com.google.gson.reflect.TypeToken;
 import com.samebug.clients.http.entities.search.*;
 import com.samebug.clients.http.entities.solution.*;
 import com.samebug.clients.http.response.BasicRestError;
-import com.samebug.clients.http.response.FormRestError;
 import com.samebug.clients.http.response.RestError;
 import com.samebug.clients.http.entities.Author;
 import com.samebug.clients.http.entities.Exception;
@@ -82,13 +81,6 @@ public class JsonTest {
     public void restError() {
         BasicRestError x = gson.fromJson(stream("unknownApiKey"), BasicRestError.class);
         Assert.assertTrue(x instanceof RestError);
-        checkFields(x);
-    }
-
-    @Test
-    public void formError() {
-        BasicRestError x = gson.fromJson(stream("formError"), BasicRestError.class);
-        Assert.assertTrue(x instanceof FormRestError);
         checkFields(x);
     }
 

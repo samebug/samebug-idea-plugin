@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.swing.ui.component.authentication;
 
-import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
 import com.samebug.clients.swing.ui.base.form.InputField;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
@@ -29,7 +28,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public abstract class FormField extends SamebugPanel {
+public abstract class FormField<T> extends SamebugPanel {
     final SamebugLabel descriptionLabel;
     final InputField field;
     final ErrorLabel errorLabel;
@@ -59,7 +58,7 @@ public abstract class FormField extends SamebugPanel {
         return field.getText();
     }
 
-    public void setFormError(String errorCode) throws ErrorCodeMismatchException {
+    public void setFormError(T errorCode) {
         field.setError(true);
         remove(errorLabel);
         updateErrorLabel(errorLabel, errorCode);
@@ -70,7 +69,7 @@ public abstract class FormField extends SamebugPanel {
         field.addActionListener(actionListener);
     }
 
-    protected abstract void updateErrorLabel(SamebugMultilineLabel errorLabel, String errorCode) throws ErrorCodeMismatchException;
+    protected abstract void updateErrorLabel(SamebugMultilineLabel errorLabel, T errorCode);
 
 
     final class DescriptionLabel extends SamebugLabel {

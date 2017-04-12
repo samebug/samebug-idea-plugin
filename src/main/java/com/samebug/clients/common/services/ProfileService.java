@@ -15,11 +15,11 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.http.response.ClientResponse;
 import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.http.entities.profile.UserInfo;
 import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.exceptions.UnableToPrepareUrl;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,41 +47,20 @@ public final class ProfileService {
 
         if (apiKey == null) return null;
         else {
-            ClientService.ConnectionAwareHttpRequest<UserInfo> requestHandler =
-                    new ClientService.ConnectionAwareHttpRequest<UserInfo>() {
-                        ClientResponse<UserInfo> request() {
-                            return client.getUserInfo(apiKey);
-                        }
-
-                        protected void success(UserInfo result) {
-                            store.user.set(result);
-                        }
-
-                        protected void fail(SamebugClientException e) {
-                            store.user.set(null);
-                        }
-                    };
-            return clientService.execute(requestHandler);
+            try {
+                UserInfo result = client.getUserInfo(apiKey);
+                store.user.set(result);
+                return result;
+            } catch (UnableToPrepareUrl unableToPrepareUrl) {
+                return null;
+            }
         }
     }
 
     public UserStats loadUserStats() throws SamebugClientException {
         final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<UserStats> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<UserStats>() {
-                    ClientResponse<UserStats> request() {
-                        return client.getUserStats();
-                    }
-
-                    protected void success(UserStats result) {
-                        store.statistics.set(result);
-                    }
-
-                    protected void fail(SamebugClientException e) {
-                        store.statistics.set(null);
-                    }
-                };
-        return clientService.execute(requestHandler);
+        UserStats result = client.getUserStats();
+        store.statistics.set(result);
+        return result;
     }
 }

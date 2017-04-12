@@ -15,21 +15,16 @@
  */
 package com.samebug.clients.idea.ui.controller.form;
 
-import com.samebug.clients.http.response.RestError;
+import com.samebug.clients.common.services.HelpRequestService;
+import com.samebug.clients.common.ui.component.community.IAskForHelp;
+import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.http.entities.helpRequest.MyHelpRequest;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.CreateHelpRequest;
-import com.samebug.clients.http.form.FieldError;
-import com.samebug.clients.common.services.HelpRequestService;
-import com.samebug.clients.common.ui.component.community.IAskForHelp;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
-import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-import java.util.List;
-
-public abstract class CreateHelpRequestFormHandler extends PostFormHandler<MyHelpRequest> {
+public abstract class CreateHelpRequestFormHandler extends PostFormHandler<MyHelpRequest, CreateHelpRequest.BadRequest> {
     final IFrame frame;
     final IAskForHelp form;
     final CreateHelpRequest data;
@@ -46,39 +41,23 @@ public abstract class CreateHelpRequestFormHandler extends PostFormHandler<MyHel
     }
 
     @Override
-    protected MyHelpRequest postForm() throws SamebugClientException {
+    protected MyHelpRequest postForm() throws SamebugClientException, CreateHelpRequest.BadRequest {
         final HelpRequestService helpRequestService = IdeaSamebugPlugin.getInstance().helpRequestService;
         return helpRequestService.createHelpRequest(data.searchId, data.context);
     }
 
     @Override
-    protected void handleFieldError(FieldError fieldError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleFieldError(fieldError, globalErrors, fieldErrors);
-        if (CreateHelpRequest.CONTEXT.equals(fieldError.key)) fieldErrors.add(fieldError);
-        else globalErrors.add(MessageService.message("samebug.error.pluginBug"));
-    }
-
-    @Override
-    protected void handleNonFormBadRequests(RestError nonFormError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleNonFormBadRequests(nonFormError, globalErrors, fieldErrors);
+    protected void handleBadRequest(CreateHelpRequest.BadRequest fieldErrors) {
+//        if (CreateHelpRequest.CONTEXT.equals(fieldError.key)) fieldErrors.add(fieldError);
         // TODO reload?
-        if (nonFormError.code.equals(CreateHelpRequest.E_DUPLICATE_HELP_REQUEST)) globalErrors.add(MessageService.message("samebug.component.helpRequest.ask.error.duplicate"));
-        else globalErrors.add(MessageService.message("samebug.component.helpRequest.ask.error.badRequest"));
+//        if (nonFormError.code.equals(CreateHelpRequest.E_DUPLICATE_HELP_REQUEST)) globalErrors.add(MessageService.message("samebug.component.helpRequest.ask.error.duplicate"));
+        IAskForHelp.BadRequest b = null;
+        form.failRequestTip(b);
     }
 
     @Override
-    protected void handleOtherClientExceptions(SamebugClientException exception, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleOtherClientExceptions(exception, globalErrors, fieldErrors);
-        globalErrors.add(MessageService.message("samebug.component.helpRequest.ask.error.unhandled"));
-    }
-
-    @Override
-    protected void showFieldErrors(List<FieldError> fieldErrors) throws FormMismatchException {
-        form.failRequestTip(fieldErrors);
-    }
-
-    @Override
-    protected void showGlobalErrors(List<String> globalErrors) {
-        if (!globalErrors.isEmpty()) frame.popupError(globalErrors.get(0));
+    protected void handleOtherClientExceptions(SamebugClientException exception) {
+        frame.popupError(MessageService.message("samebug.component.helpRequest.ask.error.unhandled"));
+        form.failRequestTip(null);
     }
 }

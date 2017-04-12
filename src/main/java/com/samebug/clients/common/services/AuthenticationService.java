@@ -15,12 +15,11 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.http.response.ClientResponse;
 import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.http.entities.profile.LoggedInUser;
 import com.samebug.clients.http.entities.profile.UserInfo;
 import com.samebug.clients.http.exceptions.SamebugClientException;
-import com.samebug.clients.http.form.AnonymousUse;
+import com.samebug.clients.http.exceptions.SamebugException;
 import com.samebug.clients.http.form.LogIn;
 import com.samebug.clients.http.form.SignUp;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
@@ -28,79 +27,34 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.Nullable;
 
 public final class AuthenticationService {
-    final ClientService clientService;
+    final SamebugClient client;
 
-    public AuthenticationService(ClientService clientService) {
-        this.clientService = clientService;
+    public AuthenticationService(SamebugClient client) {
+        this.client = client;
     }
 
-    public UserInfo apiKeyAuthentication(final String apiKey, @Nullable final Integer workspaceId) throws SamebugClientException {
-        final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<UserInfo> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<UserInfo>() {
-                    ClientResponse<UserInfo> request() {
-                        // TODO the server should accept the workspaceId
-                        return client.getUserInfo(apiKey);
-                    }
-
-                    protected void success(UserInfo result) {
-                        // NOTE: this is a special case, we handle connection status by the result, not by the http status
-                        clientService.updateAuthenticated(result.getUserExist());
-                        // TODO tell the client service if there is a problem with the workspace
-                        // TODO if workspaceId is null, save the returned default workspace id to application settings.
-                    }
-                };
-        return clientService.execute(requestHandler);
+    public UserInfo apiKeyAuthentication(final String apiKey, @Nullable final Integer workspaceId) throws SamebugException {
+        return client.getUserInfo(apiKey);
+        // TODO if workspaceId is null, save the returned default workspace id to application settings.
     }
 
 
-    public LoggedInUser logIn(final LogIn data) throws SamebugClientException {
-        final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<LoggedInUser> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<LoggedInUser>() {
-                    ClientResponse<LoggedInUser> request() {
-                        return client.logIn(data);
-                    }
-
-                    protected void success(LoggedInUser result) {
-                        updateSettings(result);
-                    }
-                };
-        return clientService.execute(requestHandler);
+    public LoggedInUser logIn(final LogIn data) throws SamebugClientException, LogIn.BadRequest {
+        LoggedInUser result = client.logIn(data);
+        updateSettings(result);
+        return result;
     }
 
-    public LoggedInUser signUp(final SignUp data) throws SamebugClientException {
-        final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<LoggedInUser> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<LoggedInUser>() {
-                    ClientResponse<LoggedInUser> request() {
-                        return client.signUp(data);
-                    }
-
-                    protected void success(LoggedInUser result) {
-                        updateSettings(result);
-                    }
-                };
-        return clientService.execute(requestHandler);
+    public LoggedInUser signUp(final SignUp data) throws SamebugClientException, SignUp.BadRequest {
+        LoggedInUser result = client.signUp(data);
+        updateSettings(result);
+        return result;
     }
 
-    public LoggedInUser anonymousUse(final AnonymousUse data) throws SamebugClientException {
-        final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<LoggedInUser> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<LoggedInUser>() {
-                    ClientResponse<LoggedInUser> request() {
-                        return client.anonymousUse(data);
-                    }
-
-                    protected void success(LoggedInUser result) {
-                        updateSettings(result);
-                    }
-                };
-        return clientService.execute(requestHandler);
+    public LoggedInUser anonymousUse() throws SamebugClientException {
+        LoggedInUser result = client.anonymousUse();
+        updateSettings(result);
+        return result;
     }
 
     private void updateSettings(LoggedInUser user) {

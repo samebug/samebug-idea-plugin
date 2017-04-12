@@ -16,7 +16,7 @@
 package com.samebug.clients.http.client;
 
 import com.samebug.clients.http.exceptions.*;
-import com.samebug.clients.http.response.*;
+import com.samebug.clients.http.response.ConnectionStatus;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -34,22 +34,27 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-final class RawClient {
-    final static String USER_AGENT = "Samebug-Idea-Client/2.0.0";
-    public static final int TrackingRequestTimeout_Millis = 3000;
-    public static final int MaxConnections = 20;
+public final class RawClient {
+    static final String USER_AGENT = "Samebug-Idea-Client/2.0.0";
+    static final int TrackingRequestTimeout_Millis = 3000;
+    static final int MaxConnections = 20;
 
     final HttpClient httpClient;
+    final Config config;
+    final ConnectionService connectionService;
     final RequestConfig defaultRequestConfig;
     final RequestConfig trackingConfig;
     final RequestConfig.Builder requestConfigBuilder;
 
-    RawClient(@NotNull final Config config) {
+    public RawClient(@NotNull final Config config, @Nullable ConnectionService connectionService) {
+        this.config = config;
+        this.connectionService = connectionService;
         HttpClientBuilder httpBuilder = HttpClientBuilder.create();
         requestConfigBuilder = RequestConfig.custom();
         CredentialsProvider provider = new BasicCredentialsProvider();
@@ -69,9 +74,6 @@ final class RawClient {
         trackingConfig = requestConfigBuilder.setSocketTimeout(TrackingRequestTimeout_Millis).build();
         List<BasicHeader> defaultHeaders = new ArrayList<BasicHeader>();
         defaultHeaders.add(new BasicHeader("User-Agent", USER_AGENT));
-        // NOTE identification headers are always posted. They are necessary only for authenticated requests, but probably doesn't hurt to post anyway, and it's simpler this way
-        if (config.apiKey != null) defaultHeaders.add(new BasicHeader("X-Samebug-ApiKey", config.apiKey));
-        if (config.workspaceId != null) defaultHeaders.add(new BasicHeader("X-Samebug-WorkspaceId", config.workspaceId.toString()));
 
         httpClient = httpBuilder.setDefaultRequestConfig(defaultRequestConfig)
                 .setMaxConnTotal(MaxConnections).setMaxConnPerRoute(MaxConnections)
@@ -80,28 +82,32 @@ final class RawClient {
                 .build();
     }
 
-    <T> ClientResponse<T> executeAuthenticated(final HttpRequestBase request, final HandleRequest<T> handler) {
-        ConnectionStatus connectionStatus = ConnectionStatus.authenticatedConnection();
-        return executeRequest(request, handler, connectionStatus);
-    }
+    public <T> T execute(final HandleRequest<T> handler) {
+        final HttpRequestBase request = handler.createRequest();
 
-    <T> ClientResponse<T> executeUnauthenticated(final HttpRequestBase request, final HandleRequest<T> handler) {
-        ConnectionStatus connectionStatus = ConnectionStatus.unauthenticatedConnection();
-        return executeRequest(request, handler, connectionStatus);
-    }
-
-    private <T> ClientResponse<T> executeRequest(final HttpRequestBase request, final HandleRequest<T> handler, final ConnectionStatus connectionStatus) {
-        handler.modifyRequest(request);
-        final HttpResponse httpResponse;
-        try {
-            httpResponse = httpClient.execute(request);
-        } catch (IOException e) {
-            return new Failure<T>(connectionStatus, new HttpError(e));
+        // initialize connection status
+        ConnectionStatus connectionStatus;
+        if (request.containsHeader("X-Samebug-ApiKey")) {
+            connectionStatus = ConnectionStatus.authenticatedConnection();
+            // NOTE if the api key was set, but it is null, we can tell that we will fail to authenticate without actually executing the request.
+            if (request.getFirstHeader("X-Samebug-ApiKey").getValue() == null) return handler.onError(new UserUnauthenticated());
+        } else {
+            connectionStatus = ConnectionStatus.unauthenticatedConnection();
         }
-        return processResponse(httpResponse, handler, connectionStatus);
+
+        // execute request
+        if (connectionService != null) connectionService.beforeRequest();
+        try {
+            final HttpResponse httpResponse = httpClient.execute(request);
+            return processResponse(httpResponse, handler, connectionStatus);
+        } catch (IOException e) {
+            return handler.onError(new HttpError(e));
+        } finally {
+            if (connectionService != null) connectionService.afterRequest(connectionStatus);
+        }
     }
 
-    private <T> ClientResponse<T> processResponse(final HttpResponse httpResponse, final HandleRequest<T> handler, final ConnectionStatus connectionStatus) {
+    private <T> T processResponse(final HttpResponse httpResponse, final HandleRequest<T> handler, final ConnectionStatus connectionStatus) {
         final Header apiStatus = httpResponse.getFirstHeader("X-Samebug-ApiStatus");
         connectionStatus.apiStatus = apiStatus == null ? null : apiStatus.getValue();
         connectionStatus.successfullyConnected = true;
@@ -110,61 +116,41 @@ final class RawClient {
         switch (statusCode) {
             case HttpStatus.SC_OK:
                 connectionStatus.successfullyAuthenticated = true;
-                try {
-                    T response = handler.onSuccess(httpResponse);
-                    return new Success<T>(connectionStatus, response);
-                } catch (ProcessResponseException e) {
-                    return new Failure<T>(connectionStatus, e);
-                }
+                return handler.onSuccess(httpResponse);
             case HttpStatus.SC_BAD_REQUEST:
                 connectionStatus.successfullyAuthenticated = true;
-                try {
-                    BasicRestError processedError = handler.onBadRequest(httpResponse);
-                    return new Failure<T>(connectionStatus, new BadRequest(processedError));
-                } catch (ProcessResponseException e) {
-                    return new Failure<T>(connectionStatus, e);
-                }
+                return handler.onBadRequest(httpResponse);
             case HttpStatus.SC_UNAUTHORIZED:
                 connectionStatus.successfullyAuthenticated = false;
-                try {
-                    EntityUtils.consume(httpResponse.getEntity());
-                } catch (IOException ignored) {
-                }
-                return new Failure<T>(connectionStatus, new UserUnauthenticated());
+                consumeEntity(httpResponse);
+                return handler.onError(new UserUnauthenticated());
             case HttpStatus.SC_FORBIDDEN:
                 connectionStatus.successfullyAuthenticated = true;
-                try {
-                    EntityUtils.consume(httpResponse.getEntity());
-                } catch (IOException ignored) {
-                }
-                return new Failure<T>(connectionStatus, new UserUnauthorized(httpResponse.getStatusLine().getReasonPhrase()));
+                consumeEntity(httpResponse);
+                return handler.onError(new UserUnauthorized(httpResponse.getStatusLine().getReasonPhrase()));
             case HttpStatus.SC_GONE:
                 connectionStatus.successfullyAuthenticated = true;
                 connectionStatus.apiStatus = ConnectionStatus.API_DEPRECATED;
-                try {
-                    EntityUtils.consume(httpResponse.getEntity());
-                } catch (IOException ignored) {
-                }
-                return new Failure<T>(connectionStatus, new DeprecatedApiVersion());
+                consumeEntity(httpResponse);
+                return handler.onError(new DeprecatedApiVersion());
             default:
                 connectionStatus.successfullyAuthenticated = true;
-                try {
-                    EntityUtils.consume(httpResponse.getEntity());
-                } catch (IOException ignored) {
-                }
-                return new Failure<T>(connectionStatus, new UnsuccessfulResponseStatus(statusCode));
+                consumeEntity(httpResponse);
+                return handler.onError(new UnsuccessfulResponseStatus(statusCode));
         }
     }
 
-    void executeTracking(final HttpRequestBase request) throws SamebugClientException {
-        final HttpResponse httpResponse;
+    public void executeTracking(final HttpRequestBase request) throws SamebugClientException {
         request.setConfig(trackingConfig);
         try {
-            httpResponse = httpClient.execute(request);
+            final HttpResponse httpResponse = httpClient.execute(request);
+            consumeEntity(httpResponse);
         } catch (IOException e) {
             throw new HttpError(e);
         }
+    }
 
+    private void consumeEntity(HttpResponse httpResponse) {
         try {
             EntityUtils.consume(httpResponse.getEntity());
         } catch (IOException ignored) {
@@ -173,10 +159,11 @@ final class RawClient {
 }
 
 abstract class HandleRequest<T> {
-    abstract T onSuccess(final HttpResponse response) throws ProcessResponseException;
+    abstract HttpRequestBase createRequest();
 
-    abstract BasicRestError onBadRequest(final HttpResponse response) throws ProcessResponseException;
+    abstract T onSuccess(final HttpResponse response);
 
-    abstract void modifyRequest(HttpRequestBase request);
+    abstract T onBadRequest(final HttpResponse response);
 
+    abstract T onError(final SamebugClientException exception);
 }

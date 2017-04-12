@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.http.response.ClientResponse;
 import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.http.entities.bugmate.BugmatesResult;
 import com.samebug.clients.http.exceptions.SamebugClientException;
@@ -31,24 +30,8 @@ public final class BugmateService {
 
     public BugmatesResult loadBugmates(final int searchId) throws SamebugClientException {
         final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<BugmatesResult> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<BugmatesResult>() {
-                    ClientResponse<BugmatesResult> request() {
-                        return client.getBugmates(searchId);
-                    }
-
-                    protected void start() {
-                    }
-
-                    protected void success(BugmatesResult result) {
-                        bugmateStore.bugmates.put(searchId, result);
-                    }
-
-                    protected void fail(SamebugClientException e) {
-                        bugmateStore.bugmates.remove(searchId);
-                    }
-                };
-        return clientService.execute(requestHandler);
+        BugmatesResult result = client.getBugmates(searchId);
+        bugmateStore.bugmates.put(searchId, result);
+        return result;
     }
 }

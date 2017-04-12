@@ -15,6 +15,9 @@
  */
 package com.samebug.clients.http.form;
 
+import com.samebug.clients.http.exceptions.FormException;
+import com.samebug.clients.http.exceptions.SamebugException;
+import com.samebug.clients.http.response.SamebugFormError;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,5 +47,16 @@ public final class CreateTip {
         this.body = body;
         this.sourceUrl = sourceUrl;
         this.helpRequestId = helpRequestId;
+    }
+    public static class Error implements SamebugFormError {
+
+    }
+
+    public static class BadRequest extends FormException {
+        public final Error error;
+
+        public BadRequest(Error error) {
+            this.error = error;
+        }
     }
 }

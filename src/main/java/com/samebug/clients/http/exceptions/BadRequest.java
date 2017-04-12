@@ -15,24 +15,7 @@
  */
 package com.samebug.clients.http.exceptions;
 
-import com.samebug.clients.http.response.BasicRestError;
-import org.jetbrains.annotations.NotNull;
-
 public class BadRequest extends SamebugClientException {
-    @NotNull
-    private final BasicRestError restError;
-
-    public BadRequest(@NotNull final BasicRestError restError) {
-        this.restError = restError;
-    }
-
-    @NotNull
-    public BasicRestError getRestError() {
-        return restError;
-    }
-
-    @Override
-    public String getMessage() {
-        return restError.toString();
+    public BadRequest() {
     }
 }

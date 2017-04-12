@@ -17,7 +17,7 @@ package com.samebug.clients.http.exceptions;
 
 import java.io.IOException;
 
-public class UnableToPrepareUrl extends SamebugClientException {
+public class UnableToPrepareUrl extends SamebugException {
     public UnableToPrepareUrl(String url, IOException e) {
         super("Unable to prepare url " + url, e);
     }

@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.http.response.ClientResponse;
 import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.http.entities.search.CreatedSearch;
 import com.samebug.clients.http.entities.search.SearchDetails;
@@ -32,35 +31,19 @@ public final class SearchService {
 
     public CreatedSearch search(final String trace) throws SamebugClientException {
         final SamebugClient client = clientService.client;
-
-        // TODO is there something common in SearchService and SearchRequestService?
-        ClientService.ConnectionAwareHttpRequest<CreatedSearch> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<CreatedSearch>() {
-                    ClientResponse<CreatedSearch> request() {
-                        return client.createSearch(trace);
-                    }
-                };
-        return clientService.execute(requestHandler);
+        return client.createSearch(trace);
     }
 
     public SearchDetails get(final int searchId) throws SamebugClientException {
         final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<SearchDetails> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<SearchDetails>() {
-                    ClientResponse<SearchDetails> request() {
-                        return client.getSearch(searchId);
-                    }
-
-                    protected void success(SearchDetails result) {
-                        store.searches.put(searchId, result);
-                    }
-
-                    protected void fail(SamebugClientException e) {
-                        store.searches.remove(searchId);
-                    }
-                };
-        return clientService.execute(requestHandler);
+        try {
+            SearchDetails result = client.getSearch(searchId);
+            store.searches.put(searchId, result);
+            return result;
+        } catch (SamebugClientException e) {
+            store.searches.remove(searchId);
+            throw e;
+        }
     }
 
 

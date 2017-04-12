@@ -15,7 +15,12 @@
  */
 package com.samebug.clients.http.form;
 
+import com.samebug.clients.http.exceptions.FormException;
+import com.samebug.clients.http.exceptions.SamebugException;
+import com.samebug.clients.http.response.SamebugFormError;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public final class SignUp {
     public static final String DISPLAY_NAME = "displayName";
@@ -28,6 +33,8 @@ public final class SignUp {
     public static final String E_PASSWORD_SHORT = "Password must be at least 6 characters long";
     public static final String E_DISPLAY_NAME_LONG = "Display name must not be more than 32 characters long";
     public static final String E_DISPLAY_EMPTY = "This field is required";
+
+    public enum Errors { BAD_REQUEST, INVALID_EMAIL }
 
     @NotNull
     public final String displayName;
@@ -43,5 +50,19 @@ public final class SignUp {
         this.email = email;
         this.password = password;
         this.subscribedToNewsLetter = false;
+    }
+
+    public static final class Error implements SamebugFormError {
+        public List<Errors> getErrors() {
+            return null;
+        }
+    }
+    public static final class BadRequest extends FormException {
+        public final Error error;
+
+        public BadRequest(Error error) {
+            this.error = error;
+        }
+
     }
 }
