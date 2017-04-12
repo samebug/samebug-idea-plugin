@@ -16,48 +16,48 @@ import org.junit.Test;
 import java.awt.*;
 import java.util.Date;
 
-//@Ignore
+@Ignore
 public class SolutionFrameTest extends TestDialog {
-//    @Test
-//    public void everythingIsEmpty() {
-//        waitToInitializeUI("solution/empty.json").showDialog();
-//    }
-//
-//    @Test
-//    public void oneBugmate() {
-//        waitToInitializeUI("solution/b1.json").showDialog();
-//    }
-//
-//    @Test
-//    public void twoBugmates() {
-//        waitToInitializeUI("solution/b2.json").showDialog();
-//    }
-//
-//    @Test
-//    public void threeBugmates() {
-//        waitToInitializeUI("solution/b3.json").showDialog();
-//    }
-//
-//    @Test
-//    public void zeroTipsAndZeroWebHits() {
-//        waitToInitializeUI("solution/t0w0.json").showDialog();
-//    }
-//
-//    @Test
-//    public void twoTipsAndTwentysevenWebHits() {
-//        waitToInitializeUI("solution/t2w27.json").showDialog();
-//    }
-//
+    @Test
+    public void everythingIsEmpty() {
+        waitToInitializeUI("solution/empty.json").showDialog();
+    }
+
+    @Test
+    public void oneBugmate() {
+        waitToInitializeUI("solution/b1.json").showDialog();
+    }
+
+    @Test
+    public void twoBugmates() {
+        waitToInitializeUI("solution/b2.json").showDialog();
+    }
+
+    @Test
+    public void threeBugmates() {
+        waitToInitializeUI("solution/b3.json").showDialog();
+    }
+
+    @Test
+    public void zeroTipsAndZeroWebHits() {
+        waitToInitializeUI("solution/t0w0.json").showDialog();
+    }
+
+    @Test
+    public void twoTipsAndTwentysevenWebHits() {
+        waitToInitializeUI("solution/t2w27.json").showDialog();
+    }
+
     @Test
     public void international() {
         waitToInitializeUI("solution/international.json").showDialog();
     }
 
-//    @Test
-//    public void activeHelpRequest() {
-//        waitToInitializeUI("solution/t2w27_helprequest.json").showDialog();
-//    }
-//
+    @Test
+    public void activeHelpRequest() {
+        waitToInitializeUI("solution/t2w27_helprequest.json").showDialog();
+    }
+
     public void initializeUI(String resourceJson) throws Exception {
         final ISolutionFrame.Model model = readJson(resourceJson, ISolutionFrame.Model.class);
 

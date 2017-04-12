@@ -11,20 +11,19 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.swing.*;
-import java.awt.*;
 
-//@Ignore
+@Ignore
 public class AuthenticationFrameTest extends TestDialog {
-//    @Test
-//    public void authentication() {
-//        waitToInitializeUI(null).showDialog();
-//    }
+    @Test
+    public void authentication() {
+        waitToInitializeUI(null).showDialog();
+    }
 
     @Test
     public void diplayInternationalCharacters() {
         TestDialog d = waitToInitializeUI(null);
-        AuthenticationTabs authenticationTabs = (AuthenticationTabs) ((JComponent)((JRootPane)d.getComponent(0)).getContentPane().getComponent(0)).getComponent(2);
-        LogInForm logInForm = ((LogInForm)((LogInTab)authenticationTabs.getComponent(2)).getComponent(0));
+        AuthenticationTabs authenticationTabs = (AuthenticationTabs) ((JComponent) ((JRootPane) d.getComponent(0)).getContentPane().getComponent(0)).getComponent(2);
+        LogInForm logInForm = ((LogInForm) ((LogInTab) authenticationTabs.getComponent(2)).getComponent(0));
         InputField email = (InputField) ((FormField) logInForm.getComponent(0)).getComponent(1);
 
 
