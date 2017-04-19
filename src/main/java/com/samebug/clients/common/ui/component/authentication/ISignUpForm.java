@@ -29,5 +29,7 @@ public interface ISignUpForm {
 
     interface Listener {
         void signUp(ISignUpForm source, String displayName, String email, String password);
+        void googleLogin();
+        void facebookLogin();
     }
 }

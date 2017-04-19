@@ -25,10 +25,7 @@ import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
-import com.samebug.clients.swing.ui.modules.FontService;
-import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.MessageService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
+import com.samebug.clients.swing.ui.modules.*;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -44,12 +41,18 @@ public final class LogInForm extends JComponent implements ILogInForm {
     final PasswordFormField password;
     final SamebugButton logIn;
     final LinkLabel forgotPassword;
+    final Delimeter delimeter;
+    final SamebugButton google;
+    final SamebugButton facebook;
 
     {
         email = new EmailField();
         password = new PasswordField();
         logIn = new LogInButton();
         forgotPassword = new ForgotPasswordLabel();
+        delimeter = new Delimeter();
+        google = new GoogleButton();
+        facebook = new FacebookButton();
 
         logIn.addMouseListener(new MouseAdapter() {
             @Override
@@ -66,15 +69,36 @@ public final class LogInForm extends JComponent implements ILogInForm {
                 }
             }
         });
+        google.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (google.isEnabled()) {
+                    getListener().googleLogin();
+                    TrackingService.trace(Events.registrationForgottenPasswordClicked());
+                }
+            }
+        });
+        facebook.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (facebook.isEnabled()) {
+                    getListener().facebookLogin();
+                    TrackingService.trace(Events.registrationForgottenPasswordClicked());
+                }
+            }
+        });
         FormActionListener formActionListener = new FormActionListener();
         email.addActionListener(formActionListener);
         password.addActionListener(formActionListener);
 
-        setLayout(new MigLayout("fillx", ":push[50%]20px[50%]:push", "0[]10px[]20px[]0"));
+        setLayout(new MigLayout("fillx", ":push[50%]20px[50%]:push", "0[]10px[]20px[]10px[]20px[]0"));
         add(email, "cell 0 0, spanx 2, growx");
         add(password, "cell 0 1, spanx 2, growx");
         add(logIn, "cell 0 2, growx");
         add(forgotPassword, "cell 1 2, al right");
+        add(delimeter, "cell 0 3, spanx 2, growx");
+        add(google, "cell 0 4, growx");
+        add(facebook, "cell 1 4, growx");
     }
 
     @Override
@@ -152,6 +176,22 @@ public final class LogInForm extends JComponent implements ILogInForm {
         {
             setText(MessageService.message("samebug.component.authentication.forgotPassword"));
             setFont(FontService.demi(14));
+        }
+    }
+
+    final class GoogleButton extends SamebugButton {
+        {
+            setFilled(true);
+            setText(MessageService.message("samebug.component.authentication.google"));
+            setInteractionColors(ColorService.GoogleInteraction);
+        }
+    }
+
+    final class FacebookButton extends SamebugButton {
+        {
+            setFilled(true);
+            setText(MessageService.message("samebug.component.authentication.facebook"));
+            setInteractionColors(ColorService.FacebookInteraction);
         }
     }
 

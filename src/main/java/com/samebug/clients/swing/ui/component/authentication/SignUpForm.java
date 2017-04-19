@@ -24,6 +24,7 @@ import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
+import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import com.samebug.clients.swing.ui.modules.TrackingService;
@@ -42,17 +43,41 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
     final FormField email;
     final PasswordFormField password;
     final SamebugButton signUp;
+    final Delimeter delimeter;
+    final SamebugButton google;
+    final SamebugButton facebook;
 
     {
         displayName = new DisplayNameField();
         email = new EmailField();
         password = new PasswordField();
         signUp = new SignUpButton();
+        delimeter = new Delimeter();
+        google = new GoogleButton();
+        facebook = new FacebookButton();
 
         signUp.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (signUp.isEnabled()) sendForm();
+            }
+        });
+        google.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (google.isEnabled()) {
+                    getListener().googleLogin();
+                    TrackingService.trace(Events.registrationForgottenPasswordClicked());
+                }
+            }
+        });
+        facebook.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (facebook.isEnabled()) {
+                    getListener().facebookLogin();
+                    TrackingService.trace(Events.registrationForgottenPasswordClicked());
+                }
             }
         });
 
@@ -62,11 +87,14 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
         password.addActionListener(formActionListener);
 
         // TODO probably we should declare mig layout sizes explicitly in pixels, because the default somehow can get overridden to lpx (logical pixels) that leads to obscure bugs.
-        setLayout(new MigLayout("fillx", "0[50%]20px[50%]0", "0[]10px[]10px[]20px[]0"));
+        setLayout(new MigLayout("fillx", "0[50%]20px[50%]0", "0[]10px[]10px[]20px[]10px[]20px[]0"));
         add(displayName, "cell 0 0, spanx 2, growx");
         add(email, "cell 0 1, spanx 2, growx");
         add(password, "cell 0 2, spanx 2, growx");
         add(signUp, "cell 0 3, growx");
+        add(delimeter, "cell 0 4, spanx 2, growx");
+        add(google, "cell 0 5, growx");
+        add(facebook, "cell 1 5, growx");
     }
 
     @Override
@@ -149,6 +177,22 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
         {
             setFilled(true);
             setText(MessageService.message("samebug.component.authentication.signUp"));
+        }
+    }
+
+    final class GoogleButton extends SamebugButton {
+        {
+            setFilled(true);
+            setText(MessageService.message("samebug.component.authentication.google"));
+            setInteractionColors(ColorService.GoogleInteraction);
+        }
+    }
+
+    final class FacebookButton extends SamebugButton {
+        {
+            setFilled(true);
+            setText(MessageService.message("samebug.component.authentication.facebook"));
+            setInteractionColors(ColorService.FacebookInteraction);
         }
     }
 

@@ -119,5 +119,19 @@ public abstract class ColorService {
             new Color[]{new Color(0x81B6C8), new Color(0x78A6D4)}
     );
 
+    public final static InteractionColors GoogleInteraction = new InteractionColors(
+            new Color[]{new Color(0x3E85DE), new Color(0x7CD2FF)},
+            new Color[]{new Color(0x66A6F6), new Color(0xBBE8FF)},
+            new Color[]{new Color(0x3E85DE), new Color(0x7CD2FF)},
+            new Color[]{new Color(0x81B6C8), new Color(0x78A6D4)}
+    );
+
+    public final static InteractionColors FacebookInteraction = new InteractionColors(
+            new Color[]{new Color(0x3E85DE), new Color(0x7CD2FF)},
+            new Color[]{new Color(0x66A6F6), new Color(0xBBE8FF)},
+            new Color[]{new Color(0x3E85DE), new Color(0x7CD2FF)},
+            new Color[]{new Color(0x81B6C8), new Color(0x78A6D4)}
+    );
+
     protected abstract <T> T internalForCurrentTheme(T[] objects);
 }

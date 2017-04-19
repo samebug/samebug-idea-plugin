@@ -31,5 +31,9 @@ public interface ILogInForm {
         void logIn(ILogInForm source, String email, String password);
 
         void forgotPassword(ILogInForm source);
+
+        void googleLogin();
+
+        void facebookLogin();
     }
 }

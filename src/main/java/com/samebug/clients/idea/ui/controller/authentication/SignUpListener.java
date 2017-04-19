@@ -41,4 +41,14 @@ public final class SignUpListener implements ISignUpForm.Listener {
             }
         }.execute();
     }
+
+    @Override
+    public void googleLogin() {
+
+    }
+
+    @Override
+    public void facebookLogin() {
+
+    }
 }
