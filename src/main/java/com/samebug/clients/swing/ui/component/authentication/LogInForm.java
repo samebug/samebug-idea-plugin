@@ -105,12 +105,6 @@ public final class LogInForm extends JComponent implements ILogInForm {
                 case UNKNOWN_CREDENTIALS:
                     errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.email.unknown"));
                     break;
-                case INVALID:
-                    errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.email.invalid"));
-                    break;
-                case LONG:
-                    errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.email.long"));
-                    break;
             }
         }
     }
@@ -125,9 +119,6 @@ public final class LogInForm extends JComponent implements ILogInForm {
             switch (errorCode) {
                 case UNKNOWN_CREDENTIALS:
                     errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.password.unknown"));
-                    break;
-                case EMPTY:
-                    errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.password.empty"));
                     break;
             }
         }

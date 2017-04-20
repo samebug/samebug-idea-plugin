@@ -31,7 +31,7 @@ public final class SignUpListener implements ISignUpForm.Listener {
 
     @Override
     public void signUp(final ISignUpForm source, String displayName, String email, String password) {
-        new SignUpFormHandler(controller.view, source, new SignUp(displayName, email, password)) {
+        new SignUpFormHandler(controller.view, source, new SignUp.Data(displayName, email, password)) {
             @Override
             protected void afterPostForm(LoggedInUser response) {
                 source.successPost();

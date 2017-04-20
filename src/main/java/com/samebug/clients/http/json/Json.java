@@ -38,6 +38,7 @@ public class Json {
         gsonBuilder.registerTypeAdapter(RestSolution.class, new RestSolutionAdapter());
         gsonBuilder.registerTypeAdapter(Search.class, new SearchAdapter());
         gsonBuilder.registerTypeAdapter(SearchGroup.class, new SearchGroupAdapter());
+        gsonBuilder.registerTypeAdapterFactory(new EnumTypeAdapterFactory());
         gson = gsonBuilder.create();
     }
 }

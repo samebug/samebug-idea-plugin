@@ -15,8 +15,10 @@
  */
 package com.samebug.clients.http.client;
 
+import com.google.common.io.CharStreams;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.http.entities.bugmate.BugmatesResult;
 import com.samebug.clients.http.entities.helpRequest.IncomingHelpRequests;
 import com.samebug.clients.http.entities.helpRequest.MatchingHelpRequest;
@@ -36,7 +38,6 @@ import com.samebug.clients.http.form.*;
 import com.samebug.clients.http.json.Json;
 import com.samebug.clients.http.response.GetResponse;
 import com.samebug.clients.http.response.PostFormResponse;
-import com.samebug.clients.http.response.SamebugFormError;
 import org.apache.http.Consts;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -61,6 +62,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class SamebugClient {
+    private final static Logger LOGGER = Logger.getInstance(SamebugClient.class);
     final static Gson gson = Json.gson;
     public static final int TipSourceLoadingTime_Handicap_Millis = 30000;
 
@@ -255,19 +257,19 @@ public final class SamebugClient {
 
     public
     @NotNull
-    LoggedInUser logIn(@NotNull final LogIn data) throws SamebugClientException, LogIn.BadRequest {
+    LoggedInUser logIn(@NotNull final LogIn.Data data) throws SamebugClientException, LogIn.BadRequest {
         final URL url = urlBuilder.logIn();
-        HandlePostResponseJson<LoggedInUser, LogIn.Error> request = new HandlePostResponseJson<LoggedInUser, LogIn.Error>(LoggedInUser.class, LogIn.Error.class) {
+        Type responseType = LoggedInUser.class;
+        Type badRequestType = new TypeToken<ErrorList<LogIn.ErrorCode>>() {}.getType();
+        HandlePostResponseJson<LoggedInUser, ErrorList<LogIn.ErrorCode>> request =
+                new HandlePostResponseJson<LoggedInUser, ErrorList<LogIn.ErrorCode>>(responseType, badRequestType) {
             protected HttpPost internalCreateRequest() {
                 HttpPost request = new HttpPost(url.toString());
-                List<BasicNameValuePair> form = Arrays.asList(
-                        new BasicNameValuePair(LogIn.EMAIL, data.email),
-                        new BasicNameValuePair(LogIn.PASSWORD, data.password));
-                request.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
+                request.setEntity(new StringEntity(gson.toJson(data), Consts.UTF_8));
                 return request;
             }
         };
-        PostFormResponse<LoggedInUser, LogIn.Error> response = rawClient.execute(request);
+        PostFormResponse<LoggedInUser, ErrorList<LogIn.ErrorCode>> response = rawClient.execute(request);
         switch (response.getResultType()) {
             case SUCCESS:
                 return response.getResult();
@@ -282,21 +284,18 @@ public final class SamebugClient {
 
     public
     @NotNull
-    LoggedInUser signUp(@NotNull final SignUp data) throws SamebugClientException, SignUp.BadRequest {
+    LoggedInUser signUp(@NotNull final SignUp.Data data) throws SamebugClientException, SignUp.BadRequest {
         final URL url = urlBuilder.signUp();
-        HandlePostResponseJson<LoggedInUser, SignUp.Error> request = new HandlePostResponseJson<LoggedInUser, SignUp.Error>(LoggedInUser.class, SignUp.Error.class) {
+        Type responseType = LoggedInUser.class;
+        Type badRequestType = new TypeToken<ErrorList<SignUp.ErrorCode>>() {}.getType();
+        HandlePostResponseJson<LoggedInUser, ErrorList<SignUp.ErrorCode>> request = new HandlePostResponseJson<LoggedInUser, ErrorList<SignUp.ErrorCode>>(responseType, badRequestType) {
             protected HttpPost internalCreateRequest() {
                 HttpPost request = new HttpPost(url.toString());
-                List<BasicNameValuePair> form = Arrays.asList(
-                        new BasicNameValuePair(SignUp.DISPLAY_NAME, data.displayName),
-                        new BasicNameValuePair(SignUp.EMAIL, data.email),
-                        new BasicNameValuePair(SignUp.PASSWORD, data.password),
-                        new BasicNameValuePair(SignUp.NEWSLETTER, data.subscribedToNewsLetter.toString()));
-                request.setEntity(new UrlEncodedFormEntity(form, Consts.UTF_8));
+                request.setEntity(new StringEntity(gson.toJson(data), Consts.UTF_8));
                 return request;
             }
         };
-        PostFormResponse<LoggedInUser, SignUp.Error> response = rawClient.execute(request);
+        PostFormResponse<LoggedInUser, ErrorList<SignUp.ErrorCode>> response = rawClient.execute(request);
         switch (response.getResultType()) {
             case SUCCESS:
                 return response.getResult();
@@ -418,7 +417,7 @@ public final class SamebugClient {
         }
     }
 
-    abstract class HandlePostResponseJson<Result, FormError extends SamebugFormError> extends HandleRequest<PostFormResponse<Result, FormError>> {
+    abstract class HandlePostResponseJson<Result, FormError> extends HandleRequest<PostFormResponse<Result, FormError>> {
         private final Type resultType;
         private final Type formErrorType;
 
@@ -439,11 +438,12 @@ public final class SamebugClient {
         PostFormResponse<Result, FormError> onSuccess(HttpResponse httpResponse) {
             try {
                 Result response = readJsonResponse(httpResponse, resultType);
-                return new PostFormResponse<Result, FormError>(response);
+                return PostFormResponse.fromResult(response);
             } catch (JsonParseException e) {
-                return new PostFormResponse<Result, FormError>(new JsonParseException("Failed to parse json response", e));
+                SamebugClientException exception = new JsonParseException("Failed to parse json response", e);
+                return PostFormResponse.fromException(exception);
             } catch (HttpError httpError) {
-                return new PostFormResponse<Result, FormError>(httpError);
+                return PostFormResponse.fromException(httpError);
             }
         }
 
@@ -451,17 +451,18 @@ public final class SamebugClient {
         PostFormResponse<Result, FormError> onBadRequest(HttpResponse httpResponse) {
             try {
                 FormError response = readJsonResponse(httpResponse, formErrorType);
-                return new PostFormResponse<Result, FormError>(response);
+                return PostFormResponse.fromFormError(response);
             } catch (JsonParseException e) {
-                return new PostFormResponse<Result, FormError>(new JsonParseException("Failed to parse json response", e));
+                SamebugClientException exception = new JsonParseException("Failed to parse json response", e);
+                return PostFormResponse.fromException(exception);
             } catch (HttpError httpError) {
-                return new PostFormResponse<Result, FormError>(httpError);
+                return PostFormResponse.fromException(httpError);
             }
         }
 
         @Override
         PostFormResponse<Result, FormError> onError(SamebugClientException exception) {
-            return new PostFormResponse<Result, FormError>(exception);
+            return PostFormResponse.fromException(exception);
         }
 
         protected abstract HttpPost internalCreateRequest();
@@ -483,12 +484,18 @@ public final class SamebugClient {
     <T> T readJsonResponse(HttpResponse response, Type classOfT) throws HttpError, JsonParseException {
         InputStream content = null;
         Reader reader = null;
+        String json = null;
         try {
             content = response.getEntity().getContent();
             reader = new InputStreamReader(content, "UTF-8");
-            return gson.fromJson(reader, classOfT);
+            if (config.isJsonDebugEnabled) {
+                json = CharStreams.toString(reader);
+                return gson.fromJson(json, classOfT);
+            } else {
+                return gson.fromJson(reader, classOfT);
+            }
         } catch (com.google.gson.JsonParseException e) {
-            throw new JsonParseException("Failed to parse json response", e);
+            throw new JsonParseException(json, e);
         } catch (IOException e) {
             throw new HttpError(e);
         } finally {

@@ -16,34 +16,33 @@
 package com.samebug.clients.http.form;
 
 import com.samebug.clients.http.exceptions.FormException;
-import com.samebug.clients.http.exceptions.SamebugException;
-import com.samebug.clients.http.response.SamebugFormError;
 import org.jetbrains.annotations.NotNull;
 
 public final class LogIn {
-    public static final String EMAIL = "email";
-    public static final String PASSWORD = "password";
-    public static final String E_UNKNOWN_CREDENTIALS = "UNKNOWN_CREDENTIALS";
-    public static final String E_EMPTY_PASSWORD = "This field is required";
-    public static final String E_EMAIL_INVALID = "Invalid email address";
-    public static final String E_EMAIL_LONG = "Email must not be more than 64 characters long";
+    public static final class Data {
+        public final String type;
+        @NotNull
+        public final String email;
+        @NotNull
+        public final String password;
 
-    @NotNull
-    public final String email;
-    @NotNull
-    public final String password;
-
-    public LogIn(@NotNull String email, @NotNull String password) {
-        this.email = email;
-        this.password = password;
+        public Data(@NotNull String email, @NotNull String password) {
+            this.email = email;
+            this.password = password;
+            type = "signin-request";
+        }
     }
 
-    public static final class Error implements SamebugFormError {}
-    public static final class BadRequest extends FormException {
-        public final Error error;
+    public enum ErrorCode {
+        INVALID_CREDENTIALS
+    }
 
-        public BadRequest(Error error) {
-            this.error = error;
+
+    public static final class BadRequest extends FormException {
+        public final ErrorList<ErrorCode> errorList;
+
+        public BadRequest(ErrorList<ErrorCode> errorList) {
+            this.errorList = errorList;
         }
 
     }

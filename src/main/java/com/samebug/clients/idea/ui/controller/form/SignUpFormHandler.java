@@ -27,9 +27,9 @@ import com.samebug.clients.swing.ui.modules.MessageService;
 public abstract class SignUpFormHandler extends PostFormHandler<LoggedInUser, SignUp.BadRequest> {
     final IFrame frame;
     final ISignUpForm form;
-    final SignUp data;
+    final SignUp.Data data;
 
-    public SignUpFormHandler(IFrame frame, ISignUpForm form, SignUp data) {
+    public SignUpFormHandler(IFrame frame, ISignUpForm form, SignUp.Data data) {
         this.frame = frame;
         this.form = form;
         this.data = data;

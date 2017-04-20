@@ -28,13 +28,14 @@ public final class Config {
     public final int connectTimeout;
     public final int requestTimeout;
     public final boolean isApacheLoggingEnabled;
+    public final boolean isJsonDebugEnabled;
     @Nullable
     public final ProxyConfig proxy;
 
     public Config(@Nullable String apiKey, @Nullable Integer workspaceId,
                   String serverRoot, String trackingRoot, boolean isTrackingEnabled,
                   int connectTimeout, int requestTimeout, boolean isApacheLoggingEnabled,
-                  @Nullable ProxyConfig proxy) {
+                  boolean isJsonDebugEnabled, @Nullable ProxyConfig proxy) {
         this.apiKey = apiKey;
         this.workspaceId = workspaceId;
         this.serverRoot = serverRoot;
@@ -43,6 +44,7 @@ public final class Config {
         this.connectTimeout = connectTimeout;
         this.requestTimeout = requestTimeout;
         this.isApacheLoggingEnabled = isApacheLoggingEnabled;
+        this.isJsonDebugEnabled = isJsonDebugEnabled;
         this.proxy = proxy;
     }
 
@@ -55,6 +57,7 @@ public final class Config {
         this.connectTimeout = rhs.connectTimeout;
         this.requestTimeout = rhs.requestTimeout;
         this.isApacheLoggingEnabled = rhs.isApacheLoggingEnabled;
+        this.isJsonDebugEnabled = rhs.isJsonDebugEnabled;
         this.proxy = rhs.proxy == null ? null : new ProxyConfig(rhs.proxy);
     }
 }

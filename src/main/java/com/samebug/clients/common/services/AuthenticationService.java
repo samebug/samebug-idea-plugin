@@ -39,13 +39,13 @@ public final class AuthenticationService {
     }
 
 
-    public LoggedInUser logIn(final LogIn data) throws SamebugClientException, LogIn.BadRequest {
+    public LoggedInUser logIn(final LogIn.Data data) throws SamebugClientException, LogIn.BadRequest {
         LoggedInUser result = client.logIn(data);
         updateSettings(result);
         return result;
     }
 
-    public LoggedInUser signUp(final SignUp data) throws SamebugClientException, SignUp.BadRequest {
+    public LoggedInUser signUp(final SignUp.Data data) throws SamebugClientException, SignUp.BadRequest {
         LoggedInUser result = client.signUp(data);
         updateSettings(result);
         return result;

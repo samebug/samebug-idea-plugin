@@ -15,16 +15,15 @@
  */
 package com.samebug.clients.http.exceptions;
 
+import org.jetbrains.annotations.Nullable;
+
 public class JsonParseException extends ProcessResponseException {
-    public JsonParseException(String message) {
-        super(message);
+    public JsonParseException(@Nullable String json, Throwable cause) {
+        super(createMessage(json), cause);
     }
 
-    public JsonParseException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public JsonParseException(Throwable cause) {
-        super(cause);
+    private static String createMessage(@Nullable String json) {
+        if (json == null) return "Failed to parse json [omitted]";
+        else return "Failed to parse json:\n" + json + "\n";
     }
 }

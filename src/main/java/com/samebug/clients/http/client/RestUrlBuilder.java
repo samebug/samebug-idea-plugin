@@ -26,13 +26,13 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 final class RestUrlBuilder {
-    final static String API_VERSION = "0.13";
     @NotNull
     final URI gateway;
 
     public RestUrlBuilder(@NotNull final String serverRoot) {
         assert !serverRoot.endsWith("/");
-        this.gateway = URI.create(serverRoot + "/").resolve("rest/").resolve(API_VERSION + "/");
+        if (serverRoot.equals("http://localhost:9000")) this.gateway = URI.create(serverRoot + "/");
+        else this.gateway = URI.create(serverRoot + "/").resolve("rest/");
     }
 
     @NotNull
@@ -112,12 +112,12 @@ final class RestUrlBuilder {
 
     @NotNull
     public URL signUp() {
-        return resolve("signup");
+        return resolve("auth/signup");
     }
 
     @NotNull
     public URL logIn() {
-        return resolve("signin");
+        return resolve("auth/signin");
     }
 
 

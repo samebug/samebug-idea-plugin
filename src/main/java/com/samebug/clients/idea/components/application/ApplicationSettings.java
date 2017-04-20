@@ -38,6 +38,7 @@ public class ApplicationSettings {
     public int connectTimeout = defaultConnectTimeout;
     public int requestTimeout = defaultRequestTimeout;
     public boolean isApacheLoggingEnabled = defaultIsApacheLoggingEnabled;
+    public boolean isJsonDebugEnabled = defaultIsJsonDebugEnabled;
     public boolean isToolwindowDefaultModeOverridden = defaultIsToolwindowDefaultModeOverridden;
 
     //=========================================================================
@@ -49,6 +50,7 @@ public class ApplicationSettings {
     public static final int defaultConnectTimeout = 5000;
     public static final int defaultRequestTimeout = 10000;
     public static final boolean defaultIsApacheLoggingEnabled = false;
+    public static final boolean defaultIsJsonDebugEnabled = false;
     public static final boolean defaultIsToolwindowDefaultModeOverridden = false;
 
     public ApplicationSettings() {
@@ -65,6 +67,7 @@ public class ApplicationSettings {
         this.connectTimeout = rhs.connectTimeout;
         this.requestTimeout = rhs.requestTimeout;
         this.isApacheLoggingEnabled = rhs.isApacheLoggingEnabled;
+        this.isJsonDebugEnabled = rhs.isJsonDebugEnabled;
         this.isToolwindowDefaultModeOverridden = rhs.isToolwindowDefaultModeOverridden;
     }
 
@@ -90,6 +93,7 @@ public class ApplicationSettings {
                     && rhs.connectTimeout == connectTimeout
                     && rhs.requestTimeout == requestTimeout
                     && rhs.isApacheLoggingEnabled == isApacheLoggingEnabled
+                    && rhs.isJsonDebugEnabled == isJsonDebugEnabled
                     && rhs.isToolwindowDefaultModeOverridden == isToolwindowDefaultModeOverridden;
         }
     }
@@ -107,6 +111,6 @@ public class ApplicationSettings {
             // if that fails, we pretend there is no proxy. This might fail do to subtle changes in the HttpConfigurable class between intellij versions.
             proxyConfig = null;
         }
-        return new Config(apiKey, workspaceId, serverRoot, trackingRoot, isTrackingEnabled, connectTimeout, requestTimeout, isApacheLoggingEnabled, proxyConfig);
+        return new Config(apiKey, workspaceId, serverRoot, trackingRoot, isTrackingEnabled, connectTimeout, requestTimeout, isApacheLoggingEnabled, isJsonDebugEnabled, proxyConfig);
     }
 }

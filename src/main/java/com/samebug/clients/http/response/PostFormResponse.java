@@ -4,7 +4,7 @@ import com.samebug.clients.http.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class PostFormResponse<Result, FormError extends SamebugFormError> {
+public final class PostFormResponse<Result, FormError> {
     @Nullable
     private final Result result;
     @Nullable
@@ -14,25 +14,26 @@ public final class PostFormResponse<Result, FormError extends SamebugFormError> 
     @NotNull
     private final Type resultType;
 
-    public PostFormResponse(@NotNull Result result) {
+    public static <Result, FormError> PostFormResponse<Result, FormError> fromResult(@NotNull Result result) {
+        return new PostFormResponse<Result, FormError>(result, null, null);
+    }
+
+    public static <Result, FormError> PostFormResponse<Result, FormError> fromFormError(@NotNull FormError formError) {
+        return new PostFormResponse<Result, FormError>(null, formError, null);
+    }
+
+    public static <Result, FormError> PostFormResponse<Result, FormError> fromException(@NotNull SamebugClientException exception) {
+        return new PostFormResponse<Result, FormError>(null, null, exception);
+    }
+
+    private PostFormResponse(@Nullable Result result, @Nullable FormError formError, @Nullable SamebugClientException exception) {
         this.result = result;
-        this.formError = null;
-        this.exception = null;
-        resultType = Type.SUCCESS;
-    }
-
-    public PostFormResponse(@NotNull FormError formError) {
-        this.result = null;
         this.formError = formError;
-        this.exception = null;
-        resultType = Type.FORM_ERROR;
-    }
-
-    public PostFormResponse(@NotNull SamebugClientException exception) {
-        this.result = null;
-        this.formError = null;
         this.exception = exception;
-        resultType = Type.EXCEPTION;
+        if (result != null && formError == null && exception == null) resultType = Type.SUCCESS;
+        else if (result == null && formError != null && exception == null) resultType = Type.FORM_ERROR;
+        else if (result == null && formError == null && exception != null) resultType = Type.EXCEPTION;
+        else throw new IllegalArgumentException();
     }
 
     @NotNull

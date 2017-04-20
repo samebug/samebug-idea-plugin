@@ -16,8 +16,6 @@
 package com.samebug.clients.http.form;
 
 import com.samebug.clients.http.exceptions.FormException;
-import com.samebug.clients.http.exceptions.SamebugException;
-import com.samebug.clients.http.response.SamebugFormError;
 import org.jetbrains.annotations.NotNull;
 
 public final class CreateHelpRequest {
@@ -38,7 +36,8 @@ public final class CreateHelpRequest {
         this.context = context;
     }
 
-    public static final class Error implements SamebugFormError {}
+    public static final class Error {}
+
     public static final class BadRequest extends FormException {
         public final Error error;
 

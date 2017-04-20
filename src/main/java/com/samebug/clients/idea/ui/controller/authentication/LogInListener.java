@@ -35,7 +35,7 @@ public final class LogInListener implements ILogInForm.Listener {
 
     @Override
     public void logIn(final ILogInForm source, String email, String password) {
-        new LogInFormHandler(controller.view, source, new LogIn(email, password)) {
+        new LogInFormHandler(controller.view, source, new LogIn.Data(email, password)) {
             @Override
             protected void afterPostForm(LoggedInUser response) {
                 source.successPost();

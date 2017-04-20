@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.ui.controller.form;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.services.AuthenticationService;
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
 import com.samebug.clients.common.ui.frame.IFrame;
@@ -25,11 +26,12 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
 public abstract class LogInFormHandler extends PostFormHandler<LoggedInUser, LogIn.BadRequest> {
+    private final static Logger LOGGER = Logger.getInstance(LogInFormHandler.class);
     final IFrame frame;
     final ILogInForm form;
-    final LogIn data;
+    final LogIn.Data data;
 
-    public LogInFormHandler(IFrame frame, ILogInForm form, LogIn data) {
+    public LogInFormHandler(IFrame frame, ILogInForm form, LogIn.Data data) {
         this.frame = frame;
         this.form = form;
         this.data = data;
@@ -48,12 +50,24 @@ public abstract class LogInFormHandler extends PostFormHandler<LoggedInUser, Log
 
     @Override
     protected void handleBadRequest(LogIn.BadRequest fieldErrors) {
-        ILogInForm.BadRequest b = null;
+        ILogInForm.BadRequest.Email email = null;
+        ILogInForm.BadRequest.Password password = null;
+        for (LogIn.ErrorCode errorCode : fieldErrors.errorList.getErrorCodes()) {
+            switch (errorCode) {
+                case INVALID_CREDENTIALS:
+                    email = ILogInForm.BadRequest.Email.UNKNOWN_CREDENTIALS;
+                    password = ILogInForm.BadRequest.Password.UNKNOWN_CREDENTIALS;
+                    break;
+            }
+        }
+        ILogInForm.BadRequest b = new ILogInForm.BadRequest(email, password);
         form.failPost(b);
     }
 
     @Override
     protected void handleOtherClientExceptions(SamebugClientException exception) {
+        LOGGER.warn("Unhandled samebug client exception", exception);
         frame.popupError(MessageService.message("samebug.component.authentication.logIn.error.unhandled"));
+        form.failPost(null);
     }
 }

@@ -16,53 +16,37 @@
 package com.samebug.clients.http.form;
 
 import com.samebug.clients.http.exceptions.FormException;
-import com.samebug.clients.http.exceptions.SamebugException;
-import com.samebug.clients.http.response.SamebugFormError;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 public final class SignUp {
-    public static final String DISPLAY_NAME = "displayName";
-    public static final String EMAIL = "email";
-    public static final String PASSWORD = "password";
-    public static final String NEWSLETTER = "subscribedToNewsLetter";
-    public static final String E_EMAIL_INVALID = "Invalid email address";
-    public static final String E_EMAIL_LONG = "Email must not be more than 64 characters long";
-    public static final String E_EMAIL_TAKEN = "There is already an account using this email";
-    public static final String E_PASSWORD_SHORT = "Password must be at least 6 characters long";
-    public static final String E_DISPLAY_NAME_LONG = "Display name must not be more than 32 characters long";
-    public static final String E_DISPLAY_EMPTY = "This field is required";
+    public static final class Data {
+        public final String type;
+        @NotNull
+        public final String displayName;
+        @NotNull
+        public final String email;
+        @NotNull
+        public final String password;
 
-    public enum Errors { BAD_REQUEST, INVALID_EMAIL }
-
-    @NotNull
-    public final String displayName;
-    @NotNull
-    public final String email;
-    @NotNull
-    public final String password;
-    @NotNull
-    public final Boolean subscribedToNewsLetter;
-
-    public SignUp(@NotNull String displayName, @NotNull String email, @NotNull String password) {
-        this.displayName = displayName;
-        this.email = email;
-        this.password = password;
-        this.subscribedToNewsLetter = false;
-    }
-
-    public static final class Error implements SamebugFormError {
-        public List<Errors> getErrors() {
-            return null;
+        public Data(@NotNull String displayName, @NotNull String email, @NotNull String password) {
+            type = "signup-request";
+            this.displayName = displayName;
+            this.email = email;
+            this.password = password;
         }
     }
+
+    public enum ErrorCode {
+        EMAIL_USED, EMAIL_INVALID, EMAIL_LONG,
+        DISPLAYNAME_LONG, DISPLAYNAME_EMPTY,
+        PASSWORD_EMPTY
+    }
+
     public static final class BadRequest extends FormException {
-        public final Error error;
+        public final ErrorList<ErrorCode> errorList;
 
-        public BadRequest(Error error) {
-            this.error = error;
+        public BadRequest(ErrorList<ErrorCode> errorList) {
+            this.errorList = errorList;
         }
-
     }
 }
