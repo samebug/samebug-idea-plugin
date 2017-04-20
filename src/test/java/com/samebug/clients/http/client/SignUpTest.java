@@ -1,5 +1,6 @@
 package com.samebug.clients.http.client;
 
+import com.samebug.clients.http.entities2.authentication.AuthenticationResponse;
 import com.samebug.clients.http.form.SignUp;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
@@ -74,7 +75,7 @@ public class SignUpTest extends TestWithSamebugClient {
     }
     @Test
     public void signUp() throws Exception {
-        unauthenticatedClient.signUp(new SignUp.Data("test-8", "test-8@samebug.io", "123456"));
-        Assert.fail();
+        AuthenticationResponse r = unauthenticatedClient.signUp(new SignUp.Data("test-8", "test-8@samebug.io", "123456")).data;
+        Assert.assertEquals(r.getUser().getDisplayName(), "test-8");
     }
 }

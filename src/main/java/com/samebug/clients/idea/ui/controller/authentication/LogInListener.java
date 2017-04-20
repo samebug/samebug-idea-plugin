@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.ui.controller.authentication;
 
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
-import com.samebug.clients.http.entities.profile.LoggedInUser;
+import com.samebug.clients.http.entities2.authentication.AuthenticationResponse;
 import com.samebug.clients.http.form.LogIn;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.tracking.Events;
@@ -37,7 +37,7 @@ public final class LogInListener implements ILogInForm.Listener {
     public void logIn(final ILogInForm source, String email, String password) {
         new LogInFormHandler(controller.view, source, new LogIn.Data(email, password)) {
             @Override
-            protected void afterPostForm(LoggedInUser response) {
+            protected void afterPostForm(AuthenticationResponse response) {
                 source.successPost();
                 controller.twc.focusOnHelpRequestList();
                 TrackingService.trace(Events.registrationLogInSucceeded());

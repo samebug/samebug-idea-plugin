@@ -23,7 +23,6 @@ import com.samebug.clients.http.entities.bugmate.BugmatesResult;
 import com.samebug.clients.http.entities.helpRequest.IncomingHelpRequests;
 import com.samebug.clients.http.entities.helpRequest.MatchingHelpRequest;
 import com.samebug.clients.http.entities.helpRequest.MyHelpRequest;
-import com.samebug.clients.http.entities.profile.LoggedInUser;
 import com.samebug.clients.http.entities.profile.UserInfo;
 import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.search.CreatedSearch;
@@ -33,11 +32,14 @@ import com.samebug.clients.http.entities.solution.RestHit;
 import com.samebug.clients.http.entities.solution.Solutions;
 import com.samebug.clients.http.entities.solution.Tip;
 import com.samebug.clients.http.entities.tracking.TrackEvent;
+import com.samebug.clients.http.entities2.authentication.AuthenticationResponse;
+import com.samebug.clients.http.entities2.jsonapi.JsonErrors;
 import com.samebug.clients.http.exceptions.*;
 import com.samebug.clients.http.form.*;
 import com.samebug.clients.http.json.Json;
 import com.samebug.clients.http.response.GetResponse;
 import com.samebug.clients.http.response.PostFormResponse;
+import com.samebug.clients.http.entities2.jsonapi.JsonResource;
 import org.apache.http.Consts;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -257,19 +259,19 @@ public final class SamebugClient {
 
     public
     @NotNull
-    LoggedInUser logIn(@NotNull final LogIn.Data data) throws SamebugClientException, LogIn.BadRequest {
+    JsonResource<AuthenticationResponse, ?> logIn(@NotNull final LogIn.Data data) throws SamebugClientException, LogIn.BadRequest {
         final URL url = urlBuilder.logIn();
-        Type responseType = LoggedInUser.class;
-        Type badRequestType = new TypeToken<ErrorList<LogIn.ErrorCode>>() {}.getType();
-        HandlePostResponseJson<LoggedInUser, ErrorList<LogIn.ErrorCode>> request =
-                new HandlePostResponseJson<LoggedInUser, ErrorList<LogIn.ErrorCode>>(responseType, badRequestType) {
+        Type responseType = new TypeToken<JsonResource<AuthenticationResponse, ?>>() {}.getType();
+        Type badRequestType = new TypeToken<JsonErrors<LogIn.ErrorCode>>() {}.getType();
+        HandlePostResponseJson<JsonResource<AuthenticationResponse, ?>, JsonErrors<LogIn.ErrorCode>> request =
+                new HandlePostResponseJson<JsonResource<AuthenticationResponse, ?>, JsonErrors<LogIn.ErrorCode>>(responseType, badRequestType) {
             protected HttpPost internalCreateRequest() {
                 HttpPost request = new HttpPost(url.toString());
                 request.setEntity(new StringEntity(gson.toJson(data), Consts.UTF_8));
                 return request;
             }
         };
-        PostFormResponse<LoggedInUser, ErrorList<LogIn.ErrorCode>> response = rawClient.execute(request);
+        PostFormResponse<JsonResource<AuthenticationResponse, ?>, JsonErrors<LogIn.ErrorCode>> response = rawClient.execute(request);
         switch (response.getResultType()) {
             case SUCCESS:
                 return response.getResult();
@@ -284,18 +286,19 @@ public final class SamebugClient {
 
     public
     @NotNull
-    LoggedInUser signUp(@NotNull final SignUp.Data data) throws SamebugClientException, SignUp.BadRequest {
+    JsonResource<AuthenticationResponse, ?> signUp(@NotNull final SignUp.Data data) throws SamebugClientException, SignUp.BadRequest {
         final URL url = urlBuilder.signUp();
-        Type responseType = LoggedInUser.class;
-        Type badRequestType = new TypeToken<ErrorList<SignUp.ErrorCode>>() {}.getType();
-        HandlePostResponseJson<LoggedInUser, ErrorList<SignUp.ErrorCode>> request = new HandlePostResponseJson<LoggedInUser, ErrorList<SignUp.ErrorCode>>(responseType, badRequestType) {
+        Type responseType = new TypeToken<JsonResource<AuthenticationResponse, ?>>() {}.getType();
+        Type badRequestType = new TypeToken<JsonErrors<SignUp.ErrorCode>>() {}.getType();
+        HandlePostResponseJson<JsonResource<AuthenticationResponse, ?>, JsonErrors<SignUp.ErrorCode>> request =
+                new HandlePostResponseJson<JsonResource<AuthenticationResponse, ?>, JsonErrors<SignUp.ErrorCode>>(responseType, badRequestType) {
             protected HttpPost internalCreateRequest() {
                 HttpPost request = new HttpPost(url.toString());
                 request.setEntity(new StringEntity(gson.toJson(data), Consts.UTF_8));
                 return request;
             }
         };
-        PostFormResponse<LoggedInUser, ErrorList<SignUp.ErrorCode>> response = rawClient.execute(request);
+        PostFormResponse<JsonResource<AuthenticationResponse, ?>, JsonErrors<SignUp.ErrorCode>> response = rawClient.execute(request);
         switch (response.getResultType()) {
             case SUCCESS:
                 return response.getResult();
@@ -310,9 +313,10 @@ public final class SamebugClient {
 
     public
     @NotNull
-    LoggedInUser anonymousUse() throws SamebugClientException {
+    JsonResource<AuthenticationResponse, ?> anonymousUse() throws SamebugClientException {
         final URL url = urlBuilder.anonymousUse();
-        HandleSimplePostJson<LoggedInUser> request = new HandleSimplePostJson<LoggedInUser>(url, LoggedInUser.class);
+        HandleSimplePostJson<JsonResource<AuthenticationResponse, ?>> request =
+                new HandleSimplePostJson<JsonResource<AuthenticationResponse, ?>>(url, new TypeToken<JsonResource<AuthenticationResponse, ?>>() {}.getType());
         return extractGet(rawClient.execute(request));
     }
 

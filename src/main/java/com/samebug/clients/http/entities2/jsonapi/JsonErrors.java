@@ -1,22 +1,22 @@
-package com.samebug.clients.http.form;
+package com.samebug.clients.http.entities2.jsonapi;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ErrorList<Code extends Enum<Code>> {
+public final class JsonErrors<Code extends Enum<Code>> {
     @NotNull
-    public final List<Error<Code>> errors;
+    public final List<SamebugError<Code>> errors;
 
-    public ErrorList(@NotNull List<Error<Code>> errors) {
+    public JsonErrors(@NotNull List<SamebugError<Code>> errors) {
         this.errors = errors;
     }
 
     @NotNull
     public List<Code> getErrorCodes() {
         List<Code> l = new ArrayList<Code>(errors.size());
-        for (Error<Code> e : errors) {
+        for (SamebugError<Code> e : errors) {
             l.add(e.code);
         }
         return l;

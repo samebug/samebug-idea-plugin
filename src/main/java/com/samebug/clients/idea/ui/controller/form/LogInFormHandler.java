@@ -19,13 +19,13 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.services.AuthenticationService;
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
 import com.samebug.clients.common.ui.frame.IFrame;
-import com.samebug.clients.http.entities.profile.LoggedInUser;
+import com.samebug.clients.http.entities2.authentication.AuthenticationResponse;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.LogIn;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-public abstract class LogInFormHandler extends PostFormHandler<LoggedInUser, LogIn.BadRequest> {
+public abstract class LogInFormHandler extends PostFormHandler<AuthenticationResponse, LogIn.BadRequest> {
     private final static Logger LOGGER = Logger.getInstance(LogInFormHandler.class);
     final IFrame frame;
     final ILogInForm form;
@@ -43,7 +43,7 @@ public abstract class LogInFormHandler extends PostFormHandler<LoggedInUser, Log
     }
 
     @Override
-    protected LoggedInUser postForm() throws SamebugClientException, LogIn.BadRequest {
+    protected AuthenticationResponse postForm() throws SamebugClientException, LogIn.BadRequest {
         final AuthenticationService authenticationService = IdeaSamebugPlugin.getInstance().authenticationService;
         return authenticationService.logIn(data);
     }

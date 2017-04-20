@@ -1,6 +1,6 @@
 package com.samebug.clients.http.client;
 
-import com.samebug.clients.http.entities.profile.LoggedInUser;
+import com.samebug.clients.http.entities2.authentication.AuthenticationResponse;
 import com.samebug.clients.http.form.LogIn;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,13 +12,13 @@ public class LogInTest extends TestWithSamebugClient {
             unauthenticatedClient.logIn(new LogIn.Data("xxx", "xxx"));
             Assert.fail();
         } catch (LogIn.BadRequest b) {
-            Assert.assertArrayEquals(b.errorList.getErrorCodes().toArray(), new LogIn.ErrorCode[]{LogIn.ErrorCode.INVALID_CREDENTIALS});
+            Assert.assertArrayEquals(new LogIn.ErrorCode[]{LogIn.ErrorCode.INVALID_CREDENTIALS}, b.errorList.getErrorCodes().toArray());
         }
     }
 
     @Test
     public void logInWithValidCredentials() throws Exception {
-        LoggedInUser r = unauthenticatedClient.logIn(new LogIn.Data("testuser@samebug.io", "123456"));
-        Assert.assertEquals(r.displayName, "testuser");
+        AuthenticationResponse r = unauthenticatedClient.logIn(new LogIn.Data("testuser@samebug.io", "123456")).data;
+        Assert.assertEquals("testuser", r.getUser().getDisplayName());
     }
 }

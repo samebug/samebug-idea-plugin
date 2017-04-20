@@ -105,6 +105,7 @@ final class RestUrlBuilder {
         return resolve("user/statistics");
     }
 
+    // TODO
     @NotNull
     public URL anonymousUse() {
         return resolve("signup-anonymously");

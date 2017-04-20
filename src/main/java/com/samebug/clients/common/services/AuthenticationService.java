@@ -16,8 +16,8 @@
 package com.samebug.clients.common.services;
 
 import com.samebug.clients.http.client.SamebugClient;
-import com.samebug.clients.http.entities.profile.LoggedInUser;
 import com.samebug.clients.http.entities.profile.UserInfo;
+import com.samebug.clients.http.entities2.authentication.AuthenticationResponse;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.exceptions.SamebugException;
 import com.samebug.clients.http.form.LogIn;
@@ -39,31 +39,32 @@ public final class AuthenticationService {
     }
 
 
-    public LoggedInUser logIn(final LogIn.Data data) throws SamebugClientException, LogIn.BadRequest {
-        LoggedInUser result = client.logIn(data);
+    public AuthenticationResponse logIn(final LogIn.Data data) throws SamebugClientException, LogIn.BadRequest {
+        AuthenticationResponse result = client.logIn(data).data;
         updateSettings(result);
         return result;
     }
 
-    public LoggedInUser signUp(final SignUp.Data data) throws SamebugClientException, SignUp.BadRequest {
-        LoggedInUser result = client.signUp(data);
+    public AuthenticationResponse signUp(final SignUp.Data data) throws SamebugClientException, SignUp.BadRequest {
+        AuthenticationResponse result = client.signUp(data).data;
         updateSettings(result);
         return result;
     }
 
-    public LoggedInUser anonymousUse() throws SamebugClientException {
-        LoggedInUser result = client.anonymousUse();
+    public AuthenticationResponse anonymousUse() throws SamebugClientException {
+        AuthenticationResponse result = client.anonymousUse().data;
         updateSettings(result);
         return result;
     }
 
-    private void updateSettings(LoggedInUser user) {
+    private void updateSettings(AuthenticationResponse user) {
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
         ApplicationSettings oldSettings = plugin.getState();
         ApplicationSettings newSettings = new ApplicationSettings(oldSettings);
-        newSettings.apiKey = user.apiKey;
-        if (oldSettings.workspaceId == null) newSettings.workspaceId = user.defaultWorkspaceId;
-        newSettings.userId = user.userId;
+//        newSettings.apiKey = user.apiKey;
+        // TODO default workspace?
+        // if (oldSettings.workspaceId == null) newSettings.workspaceId = user.defaultWorkspaceId;
+//        newSettings.userId = user.userId;
         if (!oldSettings.equals(newSettings)) plugin.saveSettings(newSettings);
     }
 }

@@ -18,13 +18,13 @@ package com.samebug.clients.idea.ui.controller.form;
 import com.samebug.clients.common.services.AuthenticationService;
 import com.samebug.clients.common.ui.component.authentication.IAnonymousUseForm;
 import com.samebug.clients.common.ui.frame.IFrame;
-import com.samebug.clients.http.entities.profile.LoggedInUser;
+import com.samebug.clients.http.entities2.authentication.AuthenticationResponse;
 import com.samebug.clients.http.exceptions.FormException;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-public abstract class AnonymousUseFormHandler extends PostFormHandler<LoggedInUser, FormException> {
+public abstract class AnonymousUseFormHandler extends PostFormHandler<AuthenticationResponse, FormException> {
     final IFrame frame;
     final IAnonymousUseForm form;
 
@@ -39,7 +39,7 @@ public abstract class AnonymousUseFormHandler extends PostFormHandler<LoggedInUs
     }
 
     @Override
-    protected LoggedInUser postForm() throws SamebugClientException {
+    protected AuthenticationResponse postForm() throws SamebugClientException {
         final AuthenticationService authenticationService = IdeaSamebugPlugin.getInstance().authenticationService;
         return authenticationService.anonymousUse();
     }

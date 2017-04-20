@@ -6,8 +6,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.samebug.clients.http.entities.search.*;
 import com.samebug.clients.http.entities.solution.*;
-import com.samebug.clients.http.response.BasicRestError;
-import com.samebug.clients.http.response.RestError;
 import com.samebug.clients.http.entities.Author;
 import com.samebug.clients.http.entities.Exception;
 import com.samebug.clients.http.entities.StackTraceWithBreadCrumbs;
@@ -77,13 +75,6 @@ public class JsonTest {
     }
 
 
-    @Test
-    public void restError() {
-        BasicRestError x = gson.fromJson(stream("unknownApiKey"), BasicRestError.class);
-        Assert.assertTrue(x instanceof RestError);
-        checkFields(x);
-    }
-
     /**
      * Check if any of the fields are null that should not be null.
      * <p>
@@ -118,7 +109,6 @@ public class JsonTest {
             .put(Author.class, ImmutableList.<String>of("url", "avatarUrl"))
             .put(Exception.class, ImmutableList.<String>of("message"))
             .put(MarkResponse.class, ImmutableList.<String>of("id"))
-            .put(BasicRestError.class, ImmutableList.<String>of())
             .put(RestHit.class, ImmutableList.<String>of("markId"))
             .put(RestSolution.class, ImmutableList.<String>of())
             .put(Search.class, ImmutableList.<String>of("visitorId", "userId", "teamId"))

@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.http.form;
 
+import com.samebug.clients.http.entities2.jsonapi.JsonErrors;
 import com.samebug.clients.http.exceptions.FormException;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,9 +40,9 @@ public final class LogIn {
 
 
     public static final class BadRequest extends FormException {
-        public final ErrorList<ErrorCode> errorList;
+        public final JsonErrors<ErrorCode> errorList;
 
-        public BadRequest(ErrorList<ErrorCode> errorList) {
+        public BadRequest(JsonErrors<ErrorCode> errorList) {
             this.errorList = errorList;
         }
 

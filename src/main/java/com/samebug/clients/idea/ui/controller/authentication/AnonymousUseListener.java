@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.ui.controller.authentication;
 
 import com.samebug.clients.common.ui.component.authentication.IAnonymousUseForm;
-import com.samebug.clients.http.entities.profile.LoggedInUser;
+import com.samebug.clients.http.entities2.authentication.AuthenticationResponse;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.form.AnonymousUseFormHandler;
 import com.samebug.clients.swing.ui.modules.TrackingService;
@@ -32,7 +32,7 @@ public final class AnonymousUseListener implements IAnonymousUseForm.Listener {
     public void useAnonymously(final IAnonymousUseForm source) {
         new AnonymousUseFormHandler(controller.view, source) {
             @Override
-            protected void afterPostForm(LoggedInUser response) {
+            protected void afterPostForm(AuthenticationResponse response) {
                 source.successPost();
                 controller.twc.focusOnHelpRequestList();
                 TrackingService.trace(Events.registrationSignUpSucceeded("anonymous"));

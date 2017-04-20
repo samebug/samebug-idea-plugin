@@ -18,13 +18,13 @@ package com.samebug.clients.idea.ui.controller.form;
 import com.samebug.clients.common.services.AuthenticationService;
 import com.samebug.clients.common.ui.component.authentication.ISignUpForm;
 import com.samebug.clients.common.ui.frame.IFrame;
-import com.samebug.clients.http.entities.profile.LoggedInUser;
+import com.samebug.clients.http.entities2.authentication.AuthenticationResponse;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.SignUp;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-public abstract class SignUpFormHandler extends PostFormHandler<LoggedInUser, SignUp.BadRequest> {
+public abstract class SignUpFormHandler extends PostFormHandler<AuthenticationResponse, SignUp.BadRequest> {
     final IFrame frame;
     final ISignUpForm form;
     final SignUp.Data data;
@@ -41,7 +41,7 @@ public abstract class SignUpFormHandler extends PostFormHandler<LoggedInUser, Si
     }
 
     @Override
-    protected LoggedInUser postForm() throws SamebugClientException, SignUp.BadRequest {
+    protected AuthenticationResponse postForm() throws SamebugClientException, SignUp.BadRequest {
         final AuthenticationService authenticationService = IdeaSamebugPlugin.getInstance().authenticationService;
         return authenticationService.signUp(data);
     }
