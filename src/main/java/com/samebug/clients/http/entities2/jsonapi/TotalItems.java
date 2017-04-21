@@ -1,9 +1,12 @@
 package com.samebug.clients.http.entities2.jsonapi;
 
-public class TotalItems {
-    public final int total;
+import org.jetbrains.annotations.NotNull;
 
-    public TotalItems(int total) {
-        this.total = total;
+public final class TotalItems {
+    private Integer total;
+
+    @NotNull
+    public Integer getTotal() {
+        return total;
     }
 }

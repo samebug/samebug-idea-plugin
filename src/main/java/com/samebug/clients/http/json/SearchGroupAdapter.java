@@ -16,15 +16,17 @@
 package com.samebug.clients.http.json;
 
 import com.google.common.collect.ImmutableMap;
-import com.samebug.clients.http.entities.search.SearchGroup;
-import com.samebug.clients.http.entities.search.StackTraceSearchGroup;
-import com.samebug.clients.http.entities.search.TextSearchGroup;
+import com.samebug.clients.http.entities2.search.NonAccessibleSearchGroup;
+import com.samebug.clients.http.entities2.search.ReadableSearchGroup;
+import com.samebug.clients.http.entities2.search.SearchGroup;
+import com.samebug.clients.http.entities2.search.SearchableSearchGroup;
 
 public final class SearchGroupAdapter extends AbstractObjectAdapter<SearchGroup> {
     {
         typeClasses = ImmutableMap.<String, Class<? extends SearchGroup>>builder()
-                .put("stacktrace", StackTraceSearchGroup.class)
-                .put("text", TextSearchGroup.class)
+                .put("searchgroup-readable", ReadableSearchGroup.class)
+                .put("searchgroup-searchable", SearchableSearchGroup.class)
+                .put("searchgroup-nonaccessible", NonAccessibleSearchGroup.class)
                 .build();
     }
 }

@@ -32,8 +32,14 @@ import com.samebug.clients.http.entities.solution.RestHit;
 import com.samebug.clients.http.entities.solution.Solutions;
 import com.samebug.clients.http.entities.solution.Tip;
 import com.samebug.clients.http.entities.tracking.TrackEvent;
+import com.samebug.clients.http.entities2.jsonapi.TotalItems;
+import com.samebug.clients.http.entities2.meta.Relations;
+import com.samebug.clients.http.entities2.search.Search;
+import com.samebug.clients.http.entities2.search.SearchCreate;
 import com.samebug.clients.http.entities2.authentication.AuthenticationResponse;
 import com.samebug.clients.http.entities2.jsonapi.JsonErrors;
+import com.samebug.clients.http.entities2.search.SearchHit;
+import com.samebug.clients.http.entities2.solution.SolutionSlot;
 import com.samebug.clients.http.exceptions.*;
 import com.samebug.clients.http.form.*;
 import com.samebug.clients.http.json.Json;
@@ -95,33 +101,41 @@ public final class SamebugClient {
         return response;
     }
 
-    public
     @NotNull
-    CreatedSearch createSearch(@NotNull final String stacktrace) throws SamebugClientException {
+    public JsonResource<Search, Relations> createSearch(@NotNull final SearchCreate data) throws SamebugClientException {
         final URL url = urlBuilder.search();
-        HandleAuthenticatedGetJson<CreatedSearch> request = new HandleAuthenticatedGetJson<CreatedSearch>(CreatedSearch.class) {
+        Type responseType = new TypeToken<JsonResource<Search, Relations>>() {}.getType();
+        HandleAuthenticatedGetJson<JsonResource<Search, Relations>> request = new HandleAuthenticatedGetJson<JsonResource<Search, Relations>>(responseType) {
             protected HttpPost internalCreateRequest() {
                 HttpPost request = new HttpPost(url.toString());
-                request.setEntity(new UrlEncodedFormEntity(Collections.singletonList(new BasicNameValuePair("exception", stacktrace)), Consts.UTF_8));
+                request.setEntity(new StringEntity(gson.toJson(data), Consts.UTF_8));
                 return request;
             }
         };
         return extractGet(rawClient.execute(request));
     }
 
-    public
     @NotNull
-    SearchDetails getSearch(@NotNull final Integer searchId) throws SamebugClientException {
+    public JsonResource<Search, ?> getSearch(@NotNull final Integer searchId) throws SamebugClientException {
         final URL url = urlBuilder.search(searchId);
-        HandleSimpleGetJson<SearchDetails> request = new HandleSimpleGetJson<SearchDetails>(url, SearchDetails.class);
+        Type responseType = new TypeToken<JsonResource<Search, ?>>() {}.getType();
+        HandleSimpleGetJson<JsonResource<Search, ?>> request = new HandleSimpleGetJson<JsonResource<Search, ?>>(url, responseType);
         return extractGet(rawClient.execute(request));
     }
 
-    public
     @NotNull
-    Solutions getSolutions(@NotNull final Integer searchId) throws SamebugClientException {
+    public JsonResource<List<SearchHit>, TotalItems> getSolutions(@NotNull final Integer searchId) throws SamebugClientException {
         final URL url = urlBuilder.solutions(searchId);
-        HandleSimpleGetJson<Solutions> request = new HandleSimpleGetJson<Solutions>(url, Solutions.class);
+        Type responseType = new TypeToken<JsonResource<List<SearchHit>, TotalItems>>() {}.getType();
+        HandleSimpleGetJson<JsonResource<List<SearchHit>, TotalItems>> request = new HandleSimpleGetJson<JsonResource<List<SearchHit>, TotalItems>>(url, responseType);
+        return extractGet(rawClient.execute(request));
+    }
+
+    @NotNull
+    public JsonResource<List<SearchHit>, TotalItems> getTips(@NotNull final Integer searchId) throws SamebugClientException {
+        final URL url = urlBuilder.tips(searchId);
+        Type responseType = new TypeToken<JsonResource<List<SearchHit>, TotalItems>>() {}.getType();
+        HandleSimpleGetJson<JsonResource<List<SearchHit>, TotalItems>> request = new HandleSimpleGetJson<JsonResource<List<SearchHit>, TotalItems>>(url, responseType);
         return extractGet(rawClient.execute(request));
     }
 
@@ -352,6 +366,7 @@ public final class SamebugClient {
         HttpRequestBase createRequest() {
             HttpRequestBase request = internalCreateRequest();
             setJsonResponseType(request);
+            setJsonContentType(request);
             return request;
         }
 

@@ -37,7 +37,8 @@ public final class SolutionService {
     }
 
     public Solutions loadSolutions(final int searchId) throws SamebugClientException {
-        Solutions result = client.getSolutions(searchId);
+        // TODO
+        Solutions result = null; client.getSolutions(searchId);
         solutionStore.solutions.put(searchId, result);
         return result;
     }

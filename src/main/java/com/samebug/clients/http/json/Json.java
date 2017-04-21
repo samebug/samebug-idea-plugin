@@ -15,29 +15,31 @@
  */
 package com.samebug.clients.http.json;
 
-import com.google.gson.*;
-import com.samebug.clients.http.entities.search.Search;
-import com.samebug.clients.http.entities.search.SearchGroup;
-import com.samebug.clients.http.entities.solution.RestSolution;
-
-import java.util.Date;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.samebug.clients.http.entities2.mark.Mark;
+import com.samebug.clients.http.entities2.search.Search;
+import com.samebug.clients.http.entities2.search.SearchGroup;
+import com.samebug.clients.http.entities2.search.SearchHit;
+import com.samebug.clients.http.entities2.solution.Document;
+import com.samebug.clients.http.entities2.solution.SolutionSlot;
+import com.samebug.clients.http.entities2.user.SamebugUser;
+import com.samebug.clients.http.entities2.user.User;
 
 public class Json {
     public final static Gson gson;
 
     static {
-        // TODO is this a fine way of serialization of Date?
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
-                    @Override
-                    public Date deserialize(JsonElement json, java.lang.reflect.Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                        return new Date(json.getAsJsonPrimitive().getAsLong());
-                    }
-                }
-        );
-        gsonBuilder.registerTypeAdapter(RestSolution.class, new RestSolutionAdapter());
-        gsonBuilder.registerTypeAdapter(Search.class, new SearchAdapter());
+        gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         gsonBuilder.registerTypeAdapter(SearchGroup.class, new SearchGroupAdapter());
+        gsonBuilder.registerTypeAdapter(Search.class, new SearchAdapter());
+        gsonBuilder.registerTypeAdapter(User.class, new UserAdapter());
+        gsonBuilder.registerTypeAdapter(SamebugUser.class, new SamebugUserAdapter());
+        gsonBuilder.registerTypeAdapter(Document.class, new DocumentAdapter());
+        gsonBuilder.registerTypeAdapter(SolutionSlot.class, new SolutionSlotAdapter());
+        gsonBuilder.registerTypeAdapter(Mark.class, new MarkAdapter());
+        gsonBuilder.registerTypeAdapter(SearchHit.class, new SearchHitAdapter());
         gsonBuilder.registerTypeAdapterFactory(new EnumTypeAdapterFactory());
         gson = gsonBuilder.create();
     }

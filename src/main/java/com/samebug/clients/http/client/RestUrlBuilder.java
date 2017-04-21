@@ -47,7 +47,12 @@ final class RestUrlBuilder {
 
     @NotNull
     public URL solutions(@NotNull final Integer searchId) {
-        return resolve("search/" + searchId + "/solutions");
+        return resolve("search/" + searchId + "/external-solutions");
+    }
+
+    @NotNull
+    public URL tips(@NotNull final Integer searchId) {
+        return resolve("search/" + searchId + "/tips");
     }
 
     @NotNull

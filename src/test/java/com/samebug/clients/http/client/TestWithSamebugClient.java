@@ -11,7 +11,7 @@ public abstract class TestWithSamebugClient {
 
     protected final SamebugClient authenticatedClient = new SamebugClient(
             new Config(
-                    "cbac9adc-9466-4dbc-8033-d94135cac855", 1,
+                    "272fa735-866e-4b19-bafe-323c723c59d6", null,
                     "http://localhost:9000", null, false,
                     5000, 10000, false, true,
                     null
