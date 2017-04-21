@@ -1,4 +1,4 @@
-package com.samebug.clients.http.entities2.meta;
+package com.samebug.clients.http.entities2.jsonapi;
 
 import org.jetbrains.annotations.NotNull;
 

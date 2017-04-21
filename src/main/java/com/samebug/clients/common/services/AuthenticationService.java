@@ -40,19 +40,19 @@ public final class AuthenticationService {
 
 
     public AuthenticationResponse logIn(final LogIn.Data data) throws SamebugClientException, LogIn.BadRequest {
-        AuthenticationResponse result = client.logIn(data).data;
+        AuthenticationResponse result = client.logIn(data).getData();
         updateSettings(result);
         return result;
     }
 
     public AuthenticationResponse signUp(final SignUp.Data data) throws SamebugClientException, SignUp.BadRequest {
-        AuthenticationResponse result = client.signUp(data).data;
+        AuthenticationResponse result = client.signUp(data).getData();
         updateSettings(result);
         return result;
     }
 
     public AuthenticationResponse anonymousUse() throws SamebugClientException {
-        AuthenticationResponse result = client.anonymousUse().data;
+        AuthenticationResponse result = client.anonymousUse().getData();
         updateSettings(result);
         return result;
     }

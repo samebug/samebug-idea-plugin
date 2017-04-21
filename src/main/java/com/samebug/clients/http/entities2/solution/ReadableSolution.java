@@ -6,8 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 
-public final class ReadableSolution extends SolutionSlot {
-    private Date createdAt;
+public final class ReadableSolution<D extends Document> extends SolutionSlot<D> {
     private Date modified;
     private String exceptionType;
     private String message;
@@ -15,12 +14,6 @@ public final class ReadableSolution extends SolutionSlot {
     private RegisteredSamebugUser createdBy;
     private Integer workspaceId;
     private Integer marks;
-    private Document document;
-
-    @NotNull
-    public Date getCreatedAt() {
-        return createdAt;
-    }
 
     @NotNull
     public Date getModified() {
@@ -55,10 +48,5 @@ public final class ReadableSolution extends SolutionSlot {
     @NotNull
     public Integer getMarks() {
         return marks;
-    }
-
-    @NotNull
-    public Document getDocument() {
-        return document;
     }
 }
