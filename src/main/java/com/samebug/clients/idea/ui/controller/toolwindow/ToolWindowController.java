@@ -32,7 +32,6 @@ import com.samebug.clients.idea.messages.FocusListener;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
 import com.samebug.clients.idea.messages.IncomingTip;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
-import com.samebug.clients.idea.notifications.IncomingTipNotification;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.authentication.AuthenticationController;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;

@@ -33,7 +33,7 @@ public final class BugmateHit extends TransparentPanel implements IBugmateHit {
     public BugmateHit(Model model) {
         final NameLabel name = new NameLabel(model.displayName);
         final TimestampLabel timestamp = new TimestampLabel(model.nSeen, model.lastSeen);
-        final AvatarIcon avatar = new AvatarIcon(model.avatarUrl, AvatarSize);
+        final AvatarIcon avatar = new AvatarIcon(model.avatarUrl, AvatarSize, model.status);
 
         setLayout(new MigLayout("", "0[]10px[]0", "0[]0[]0"));
 

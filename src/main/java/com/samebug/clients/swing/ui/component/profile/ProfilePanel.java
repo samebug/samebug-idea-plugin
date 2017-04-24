@@ -37,7 +37,7 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
     private final NumberLabel thanks;
 
     public ProfilePanel(Model model) {
-        avatarIcon = new AvatarIcon(model.avatarUrl, AvatarIconSize);
+        avatarIcon = new AvatarIcon(model.avatarUrl, AvatarIconSize, model.status);
         SamebugLabel name = new SamebugLabel(model.name, FontService.demi(14));
         final JPanel glue = new TransparentPanel();
         messages = new MessageLabel(model.messages);

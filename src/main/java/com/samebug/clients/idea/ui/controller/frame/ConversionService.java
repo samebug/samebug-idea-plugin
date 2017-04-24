@@ -24,6 +24,7 @@ import com.samebug.clients.common.api.entities.profile.UserStats;
 import com.samebug.clients.common.api.entities.search.SearchDetails;
 import com.samebug.clients.common.api.entities.search.SearchInfo;
 import com.samebug.clients.common.api.entities.solution.*;
+import com.samebug.clients.common.ui.component.bugmate.ConnectionStatus;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateHit;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
@@ -45,6 +46,7 @@ import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestList;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListFrame;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListHeader;
 import com.samebug.clients.common.ui.frame.solution.*;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -104,7 +106,8 @@ public final class ConversionService {
         }
         final List<IBugmateHit.Model> bugmateHits = new ArrayList<IBugmateHit.Model>(bugmates.getBugmates().size());
         for (Bugmate b : bugmates.getBugmates()) {
-            IBugmateHit.Model model = new IBugmateHit.Model(b.getUserId(), b.getDisplayName(), b.getAvatarUrl(), b.getNumberOfSearches(), b.getLastSeen());
+            ConnectionStatus status = b.isOnline() ? ConnectionStatus.ONLINE : ConnectionStatus.UNDEFINED;
+            IBugmateHit.Model model = new IBugmateHit.Model(b.getUserId(), b.getDisplayName(), b.getAvatarUrl(), b.getNumberOfSearches(), b.getLastSeen(), status);
             bugmateHits.add(model);
         }
         String exceptionTitle = headLine(search);
@@ -116,8 +119,9 @@ public final class ConversionService {
     }
 
     public IProfilePanel.Model profilePanel(IncomingHelpRequests incomingRequests, UserInfo user, UserStats statistics) {
+        ConnectionStatus status = IdeaSamebugPlugin.getInstance().webSocketClientService.isConnected() ? ConnectionStatus.ONLINE : ConnectionStatus.OFFLINE;
         return new IProfilePanel.Model(incomingRequests.matches.size(), statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(),
-                user.getDisplayName(), user.getAvatarUrl());
+                user.getDisplayName(), user.getAvatarUrl(), status);
     }
 
     public ISolutionFrame.Model solutionFrame(SearchDetails search, Solutions solutions, BugmatesResult bugmates, IncomingHelpRequests incomingRequests,

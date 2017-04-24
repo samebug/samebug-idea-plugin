@@ -75,6 +75,8 @@ public abstract class ColorService {
     public final static Color[] ScrollbarThumb = new Color[]{new Color(0xD5D5D5), new Color(0x484A4B)};
     public final static Color[] ErrorBar = new Color[]{new Color(0xF8F4C8), new Color(0xF2EBAB)};
     public final static Color[] LoadingArc = new Color[]{new Color(0x3379A1), new Color(0x61B6E7)};
+    public final static Color[] OnlineStatus = new Color[]{new Color(0x6FF800), new Color(0x6FF800)};
+    public final static Color[] OfflineStatus = new Color[]{new Color(0xFF1B1B), new Color(0xFF1B1B)};
 
     public static final FormColors NormalForm = new FormColors(
             new Color[]{new Color(0xB2B2B2), new Color(0x666768)},

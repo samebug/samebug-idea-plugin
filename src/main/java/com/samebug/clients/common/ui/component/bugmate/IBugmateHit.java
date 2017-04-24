@@ -25,17 +25,19 @@ public interface IBugmateHit {
         public final URL avatarUrl;
         public final int nSeen;
         public final Date lastSeen;
+        public final ConnectionStatus status;
 
         public Model(Model rhs) {
-            this(rhs.userId, rhs.displayName, rhs.avatarUrl, rhs.nSeen, rhs.lastSeen);
+            this(rhs.userId, rhs.displayName, rhs.avatarUrl, rhs.nSeen, rhs.lastSeen, rhs.status);
         }
 
-        public Model(int userId, String displayName, URL avatarUrl, int nSeen, Date lastSeen) {
+        public Model(int userId, String displayName, URL avatarUrl, int nSeen, Date lastSeen, ConnectionStatus status) {
             this.userId = userId;
             this.displayName = displayName;
             this.avatarUrl = avatarUrl;
             this.nSeen = nSeen;
             this.lastSeen = lastSeen;
+            this.status = status;
         }
     }
 
