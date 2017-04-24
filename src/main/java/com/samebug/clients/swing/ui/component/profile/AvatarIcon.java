@@ -64,6 +64,7 @@ public final class AvatarIcon extends JPanel {
                 paintStatusDot(g2, ColorService.forCurrentTheme(ColorService.OfflineStatus));
                 break;
             case UNDEFINED:
+            default:
         }
     }
 

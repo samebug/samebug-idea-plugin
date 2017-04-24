@@ -114,8 +114,7 @@ public final class WebSocketClientService implements Disposable {
 
     public boolean isConnected() {
         WebSocketClient currentClient = client.get();
-        if (currentClient != null && currentClient.isOpen()) return true;
-        else return false;
+        return currentClient != null && currentClient.isOpen();
     }
 
     @Override
