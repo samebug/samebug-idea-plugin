@@ -95,6 +95,7 @@ public final class WebSocketClientService implements Disposable {
         if (wsConfig == null) return;
         if (System.currentTimeMillis() < timestampOfLastConnect + MinimalConnectBackoff) return;
 
+        LOGGER.info("Connecting websocket client");
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
@@ -102,10 +103,10 @@ public final class WebSocketClientService implements Disposable {
                     timestampOfLastConnect = System.currentTimeMillis();
                     WebSocketClient c = WebSocketClientFactory.create(wsConfig);
                     client.set(c);
-                    LOGGER.info("Successfully configured websocket client");
+                    LOGGER.info("Successfully connected websocket client");
                 } catch (Exception e) {
                     client.set(null);
-                    LOGGER.warn("Failed to configure websocket client", e);
+                    LOGGER.warn("Failed to connect websocket client", e);
                 }
             }
         });

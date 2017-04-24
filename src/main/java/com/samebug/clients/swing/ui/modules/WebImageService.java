@@ -76,7 +76,7 @@ public final class WebImageService {
         if (nonScaled == null) {
             try {
                 nonScaled = ImageIO.read(url);
-                cache.put(url, nonScaled);
+                if (nonScaled != null) cache.put(url, nonScaled);
             } catch (IOException e) {
                 // IMPROVE smoother handling of load failures.
                 // If we failed to download an image, than probably we should note this a failed-to-load url so it won't take much time to render second time.
