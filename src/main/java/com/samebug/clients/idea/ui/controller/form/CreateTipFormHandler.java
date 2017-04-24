@@ -21,16 +21,16 @@ import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.http.entities.solution.RestHit;
 import com.samebug.clients.http.entities.solution.Tip;
 import com.samebug.clients.http.exceptions.SamebugClientException;
-import com.samebug.clients.http.form.CreateTip;
+import com.samebug.clients.http.form.TipCreate;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-public abstract class CreateTipFormHandler extends PostFormHandler<RestHit<Tip>, CreateTip.BadRequest> {
+public abstract class CreateTipFormHandler extends PostFormHandler<RestHit<Tip>, TipCreate.BadRequest> {
     final IFrame frame;
     final IHelpOthersCTA form;
-    final CreateTip data;
+    final TipCreate data;
 
-    public CreateTipFormHandler(IFrame frame, IHelpOthersCTA form, CreateTip data) {
+    public CreateTipFormHandler(IFrame frame, IHelpOthersCTA form, TipCreate data) {
         this.frame = frame;
         this.form = form;
         this.data = data;
@@ -42,13 +42,13 @@ public abstract class CreateTipFormHandler extends PostFormHandler<RestHit<Tip>,
     }
 
     @Override
-    protected RestHit<Tip> postForm() throws SamebugClientException, CreateTip.BadRequest {
+    protected RestHit<Tip> postForm() throws SamebugClientException, TipCreate.BadRequest {
         final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
         return solutionService.postTip(data.searchId, data.body, data.sourceUrl, data.helpRequestId);
     }
 
     @Override
-    protected void handleBadRequest(CreateTip.BadRequest fieldErrors) {
+    protected void handleBadRequest(TipCreate.BadRequest fieldErrors) {
 //        if (CreateTip.BODY.equals(fieldError.key)) fieldErrors.add(fieldError);
 //        if (nonFormError.code.equals(CreateTip.E_TOO_SHORT)) fieldErrors.add(new FieldError(CreateTip.BODY, CreateTip.E_TOO_SHORT));
 //        else if (nonFormError.code.equals(CreateTip.E_TOO_LONG)) fieldErrors.add(new FieldError(CreateTip.BODY, CreateTip.E_TOO_LONG));

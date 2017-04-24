@@ -21,9 +21,9 @@ import com.samebug.clients.http.entities.solution.RestHit;
 import com.samebug.clients.http.entities.solution.Solutions;
 import com.samebug.clients.http.entities.solution.Tip;
 import com.samebug.clients.http.exceptions.SamebugClientException;
-import com.samebug.clients.http.form.CancelMark;
-import com.samebug.clients.http.form.CreateMark;
-import com.samebug.clients.http.form.CreateTip;
+import com.samebug.clients.http.form.MarkCancel;
+import com.samebug.clients.http.form.MarkCreate;
+import com.samebug.clients.http.form.TipCreate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,23 +38,24 @@ public final class SolutionService {
 
     public Solutions loadSolutions(final int searchId) throws SamebugClientException {
         // TODO
-        Solutions result = null; client.getSolutions(searchId);
+        Solutions result = null;
+        client.getSolutions(searchId);
         solutionStore.solutions.put(searchId, result);
         return result;
     }
 
     public RestHit<Tip> postTip(@NotNull final int searchId, @NotNull final String tip, @Nullable final String sourceUrl, @Nullable final String helpRequestId)
-            throws SamebugClientException, CreateTip.BadRequest {
+            throws SamebugClientException, TipCreate.BadRequest {
         RestHit<Tip> response = client.createTip(searchId, tip, sourceUrl, helpRequestId);
         solutionStore.solutions.get(searchId).getTips().add(0, response);
         return response;
     }
 
-    public MarkResponse postMark(final int searchId, final int solutionId) throws SamebugClientException, CreateMark.BadRequest {
+    public MarkResponse postMark(final int searchId, final int solutionId) throws SamebugClientException, MarkCreate.BadRequest {
         return client.postMark(searchId, solutionId);
     }
 
-    public MarkResponse retractMark(final int voteId) throws SamebugClientException, CancelMark.BadRequest {
-        return client.retractMark(voteId);
+    public MarkResponse retractMark(final int voteId) throws SamebugClientException, MarkCancel.BadRequest {
+        return client.cancelMark(voteId);
     }
 }

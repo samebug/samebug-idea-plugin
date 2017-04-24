@@ -15,11 +15,11 @@
  */
 package com.samebug.clients.idea.ui.controller.helpRequest;
 
+import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.http.entities.helpRequest.MatchingHelpRequest;
 import com.samebug.clients.http.entities.solution.RestHit;
 import com.samebug.clients.http.entities.solution.Tip;
-import com.samebug.clients.http.form.CreateTip;
-import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
+import com.samebug.clients.http.form.TipCreate;
 import com.samebug.clients.idea.ui.controller.form.CreateTipFormHandler;
 
 final class WriteTipListener implements IHelpOthersCTA.Listener {
@@ -35,7 +35,7 @@ final class WriteTipListener implements IHelpOthersCTA.Listener {
         assert helpRequest != null : "we just showed it, it should not be null";
         assert helpRequest.matchingGroup.lastSearchInfo != null : "our own search is always visible";
 
-        new CreateTipFormHandler(controller.view, source, new CreateTip(helpRequest.matchingGroup.lastSearchInfo.id, tipBody, null, controller.helpRequestId)) {
+        new CreateTipFormHandler(controller.view, source, new TipCreate(helpRequest.matchingGroup.lastSearchInfo.id, tipBody, null, controller.helpRequestId)) {
             @Override
             protected void afterPostForm(RestHit<Tip> response) {
                 // TODO animation

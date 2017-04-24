@@ -1,10 +1,10 @@
 package com.samebug.clients.http.json;
 
 import com.google.common.collect.ImmutableMap;
-import com.samebug.clients.http.entities2.user.ExternalUser;
-import com.samebug.clients.http.entities2.user.RegisteredSamebugUser;
-import com.samebug.clients.http.entities2.user.SamebugVisitor;
-import com.samebug.clients.http.entities2.user.User;
+import com.samebug.clients.http.entities.user.ExternalUser;
+import com.samebug.clients.http.entities.user.RegisteredSamebugUser;
+import com.samebug.clients.http.entities.user.SamebugVisitor;
+import com.samebug.clients.http.entities.user.User;
 
 public class UserAdapter extends AbstractObjectAdapter<User> {
     {

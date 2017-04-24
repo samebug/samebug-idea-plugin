@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.http.entities.helpRequest.IncomingHelpRequests;
 import com.samebug.clients.http.entities.helpRequest.MatchingHelpRequest;
+import com.samebug.clients.http.entities.helprequest.IncomingHelpRequests;
 
 public final class HelpRequestStore {
     IncomingHelpRequests incoming;

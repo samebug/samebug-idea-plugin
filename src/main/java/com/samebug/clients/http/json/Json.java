@@ -17,14 +17,14 @@ package com.samebug.clients.http.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.samebug.clients.http.entities2.mark.Mark;
-import com.samebug.clients.http.entities2.search.Search;
-import com.samebug.clients.http.entities2.search.SearchGroup;
-import com.samebug.clients.http.entities2.search.SearchHit;
-import com.samebug.clients.http.entities2.solution.Document;
-import com.samebug.clients.http.entities2.solution.SolutionSlot;
-import com.samebug.clients.http.entities2.user.SamebugUser;
-import com.samebug.clients.http.entities2.user.User;
+import com.samebug.clients.http.entities.mark.Mark;
+import com.samebug.clients.http.entities.search.Search;
+import com.samebug.clients.http.entities.search.SearchGroup;
+import com.samebug.clients.http.entities.search.SearchHit;
+import com.samebug.clients.http.entities.solution.Document;
+import com.samebug.clients.http.entities.solution.SolutionSlot;
+import com.samebug.clients.http.entities.user.SamebugUser;
+import com.samebug.clients.http.entities.user.User;
 
 public class Json {
     public final static Gson gson;

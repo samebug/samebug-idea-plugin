@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.http.form;
 
-import com.samebug.clients.http.entities2.jsonapi.JsonErrors;
+import com.samebug.clients.http.entities.jsonapi.JsonErrors;
 import com.samebug.clients.http.exceptions.FormException;
 import org.jetbrains.annotations.NotNull;
 

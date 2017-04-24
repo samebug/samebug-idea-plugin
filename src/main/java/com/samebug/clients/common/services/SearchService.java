@@ -18,7 +18,6 @@ package com.samebug.clients.common.services;
 import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.http.entities.search.CreatedSearch;
 import com.samebug.clients.http.entities.search.SearchDetails;
-import com.samebug.clients.http.entities2.search.SearchCreate;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 
 public final class SearchService {
@@ -41,7 +40,8 @@ public final class SearchService {
         final SamebugClient client = clientService.client;
         try {
             // TODO
-            SearchDetails result = null; client.getSearch(searchId);
+            SearchDetails result = null;
+            client.getSearch(searchId);
             store.searches.put(searchId, result);
             return result;
         } catch (SamebugClientException e) {

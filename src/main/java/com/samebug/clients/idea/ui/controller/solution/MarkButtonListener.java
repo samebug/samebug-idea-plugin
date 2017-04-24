@@ -15,10 +15,10 @@
  */
 package com.samebug.clients.idea.ui.controller.solution;
 
-import com.samebug.clients.http.entities.solution.MarkResponse;
-import com.samebug.clients.http.form.CancelMark;
-import com.samebug.clients.http.form.CreateMark;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
+import com.samebug.clients.http.entities.solution.MarkResponse;
+import com.samebug.clients.http.form.MarkCancel;
+import com.samebug.clients.http.form.MarkCreate;
 import com.samebug.clients.idea.ui.controller.form.CancelMarkFormHandler;
 import com.samebug.clients.idea.ui.controller.form.CreateMarkFormHandler;
 
@@ -33,7 +33,7 @@ final class MarkButtonListener implements IMarkButton.Listener {
     public void markClicked(final IMarkButton markButton, final Integer solutionId, final Integer markId) {
         if (markId == null) {
 
-            new CreateMarkFormHandler(controller.view, markButton, new CreateMark(controller.searchId, solutionId)) {
+            new CreateMarkFormHandler(controller.view, markButton, new MarkCreate(controller.searchId, solutionId)) {
                 @Override
                 protected void afterPostForm(MarkResponse response) {
                     final IMarkButton.Model newModel = controller.conversionService.convertMarkResponse(response);
@@ -41,7 +41,7 @@ final class MarkButtonListener implements IMarkButton.Listener {
                 }
             }.execute();
         } else {
-            new CancelMarkFormHandler(controller.view, markButton, new CancelMark(markId)) {
+            new CancelMarkFormHandler(controller.view, markButton, new MarkCancel(markId)) {
                 @Override
                 protected void afterPostForm(MarkResponse response) {
                     final IMarkButton.Model newModel = controller.conversionService.convertRetractedMarkResponse(response);

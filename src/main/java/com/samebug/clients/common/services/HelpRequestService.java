@@ -16,12 +16,13 @@
 package com.samebug.clients.common.services;
 
 import com.samebug.clients.http.client.SamebugClient;
-import com.samebug.clients.http.entities.helpRequest.IncomingHelpRequests;
 import com.samebug.clients.http.entities.helpRequest.MatchingHelpRequest;
 import com.samebug.clients.http.entities.helpRequest.MyHelpRequest;
+import com.samebug.clients.http.entities.helprequest.IncomingHelpRequests;
 import com.samebug.clients.http.exceptions.SamebugClientException;
-import com.samebug.clients.http.form.CreateHelpRequest;
-import com.samebug.clients.http.form.RevokeHelpRequest;
+import com.samebug.clients.http.form.HelpRequestCancel;
+import com.samebug.clients.http.form.HelpRequestCreate;
+import org.jetbrains.annotations.NotNull;
 
 public final class HelpRequestService {
     final ClientService clientService;
@@ -39,18 +40,23 @@ public final class HelpRequestService {
         return result;
     }
 
-    public MyHelpRequest createHelpRequest(final int searchId, final String context) throws SamebugClientException, CreateHelpRequest.BadRequest {
+    public MyHelpRequest createHelpRequest(@NotNull final HelpRequestCreate.Data data) throws SamebugClientException, HelpRequestCreate.BadRequest {
         final SamebugClient client = clientService.client;
-        return client.createHelpRequest(searchId, context);
+        // TODO
+        client.createHelpRequest(data);
+        return null;
     }
 
     public MatchingHelpRequest getHelpRequest(final String helpRequestId) throws SamebugClientException {
         final SamebugClient client = clientService.client;
-        return client.getHelpRequest(helpRequestId);
+        // TODO
+        return null; //client.getHelpRequest(helpRequestId);
     }
 
-    public MyHelpRequest revokeHelpRequest(final String helpRequestId) throws SamebugClientException, RevokeHelpRequest.BadRequest {
+    public MyHelpRequest revokeHelpRequest(final String helpRequestId) throws SamebugClientException, HelpRequestCancel.BadRequest {
         final SamebugClient client = clientService.client;
-        return client.revokeHelpRequest(helpRequestId);
+        // TODO
+        client.revokeHelpRequest(helpRequestId);
+        return null;
     }
 }

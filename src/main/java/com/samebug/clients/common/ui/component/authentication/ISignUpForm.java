@@ -34,7 +34,9 @@ public interface ISignUpForm {
         }
 
         public enum DisplayName {EMPTY, TOO_LONG}
+
         public enum Email {TAKEN, INVALID, LONG}
+
         public enum Password {SHORT}
 
     }

@@ -18,7 +18,6 @@ package com.samebug.clients.common.services;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.http.client.Config;
-import com.samebug.clients.http.client.ConnectionService;
 import com.samebug.clients.http.client.SamebugClient;
 import org.apache.log4j.Level;
 

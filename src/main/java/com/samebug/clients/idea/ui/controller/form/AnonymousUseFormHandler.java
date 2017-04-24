@@ -18,7 +18,7 @@ package com.samebug.clients.idea.ui.controller.form;
 import com.samebug.clients.common.services.AuthenticationService;
 import com.samebug.clients.common.ui.component.authentication.IAnonymousUseForm;
 import com.samebug.clients.common.ui.frame.IFrame;
-import com.samebug.clients.http.entities2.authentication.AuthenticationResponse;
+import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
 import com.samebug.clients.http.exceptions.FormException;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;

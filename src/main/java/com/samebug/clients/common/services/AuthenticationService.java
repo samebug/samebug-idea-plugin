@@ -16,8 +16,8 @@
 package com.samebug.clients.common.services;
 
 import com.samebug.clients.http.client.SamebugClient;
+import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
 import com.samebug.clients.http.entities.profile.UserInfo;
-import com.samebug.clients.http.entities2.authentication.AuthenticationResponse;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.exceptions.SamebugException;
 import com.samebug.clients.http.form.LogIn;

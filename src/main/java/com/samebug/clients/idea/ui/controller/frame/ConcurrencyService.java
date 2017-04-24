@@ -16,15 +16,15 @@
 package com.samebug.clients.idea.ui.controller.frame;
 
 import com.intellij.util.concurrency.FixedFuture;
+import com.samebug.clients.common.services.*;
 import com.samebug.clients.http.entities.bugmate.BugmatesResult;
-import com.samebug.clients.http.entities.helpRequest.IncomingHelpRequests;
 import com.samebug.clients.http.entities.helpRequest.MatchingHelpRequest;
+import com.samebug.clients.http.entities.helprequest.IncomingHelpRequests;
 import com.samebug.clients.http.entities.profile.UserInfo;
 import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.search.SearchDetails;
 import com.samebug.clients.http.entities.solution.Solutions;
 import com.samebug.clients.http.exceptions.SamebugClientException;
-import com.samebug.clients.common.services.*;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import java.util.concurrent.Callable;

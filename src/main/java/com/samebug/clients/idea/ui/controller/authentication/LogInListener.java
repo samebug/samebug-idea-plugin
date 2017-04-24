@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.ui.controller.authentication;
 
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
-import com.samebug.clients.http.entities2.authentication.AuthenticationResponse;
+import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
 import com.samebug.clients.http.form.LogIn;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.tracking.Events;

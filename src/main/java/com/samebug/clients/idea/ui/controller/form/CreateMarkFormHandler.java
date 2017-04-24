@@ -20,16 +20,16 @@ import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.http.entities.solution.MarkResponse;
 import com.samebug.clients.http.exceptions.SamebugClientException;
-import com.samebug.clients.http.form.CreateMark;
+import com.samebug.clients.http.form.MarkCreate;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-public abstract class CreateMarkFormHandler extends PostFormHandler<MarkResponse, CreateMark.BadRequest> {
+public abstract class CreateMarkFormHandler extends PostFormHandler<MarkResponse, MarkCreate.BadRequest> {
     final IFrame frame;
     final IMarkButton button;
-    final CreateMark data;
+    final MarkCreate data;
 
-    public CreateMarkFormHandler(IFrame frame, IMarkButton button, CreateMark data) {
+    public CreateMarkFormHandler(IFrame frame, IMarkButton button, MarkCreate data) {
         this.frame = frame;
         this.button = button;
         this.data = data;
@@ -41,13 +41,13 @@ public abstract class CreateMarkFormHandler extends PostFormHandler<MarkResponse
     }
 
     @Override
-    protected MarkResponse postForm() throws SamebugClientException, CreateMark.BadRequest {
+    protected MarkResponse postForm() throws SamebugClientException, MarkCreate.BadRequest {
         final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
         return solutionService.postMark(data.searchId, data.solutionId);
     }
 
     @Override
-    protected void handleBadRequest(CreateMark.BadRequest fieldErrors) {
+    protected void handleBadRequest(MarkCreate.BadRequest fieldErrors) {
 //        if (nonFormError.code.equals(CreateMark.E_ALREADY_MARKED)) globalErrors.add(MessageService.message("samebug.component.mark.cancel.error.alreadyCancelled"));
         button.interruptLoading();
     }

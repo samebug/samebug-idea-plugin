@@ -19,7 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.services.AuthenticationService;
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
 import com.samebug.clients.common.ui.frame.IFrame;
-import com.samebug.clients.http.entities2.authentication.AuthenticationResponse;
+import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.LogIn;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;

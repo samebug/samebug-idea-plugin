@@ -1,7 +1,7 @@
 package com.samebug.clients.http.json;
 
 import com.google.common.collect.ImmutableMap;
-import com.samebug.clients.http.entities2.mark.*;
+import com.samebug.clients.http.entities.mark.*;
 
 public class MarkAdapter extends AbstractObjectAdapter<Mark> {
     {

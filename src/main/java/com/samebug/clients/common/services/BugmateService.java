@@ -30,7 +30,9 @@ public final class BugmateService {
 
     public BugmatesResult loadBugmates(final int searchId) throws SamebugClientException {
         final SamebugClient client = clientService.client;
-        BugmatesResult result = client.getBugmates(searchId);
+        // TODO
+        BugmatesResult result = null;
+        client.getBugmates(searchId);
         bugmateStore.bugmates.put(searchId, result);
         return result;
     }

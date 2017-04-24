@@ -19,7 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.http.exceptions.FormException;
 import com.samebug.clients.http.exceptions.SamebugClientException;
-import com.samebug.clients.http.form.CreateHelpRequest;
+import com.samebug.clients.http.form.HelpRequestCreate;
 
 public abstract class PostFormHandler<T, E extends FormException> {
     private final static Logger LOGGER = Logger.getInstance(PostFormHandler.class);
@@ -67,7 +67,7 @@ public abstract class PostFormHandler<T, E extends FormException> {
     /**
      * Runs on background thread
      */
-    protected abstract T postForm() throws E, SamebugClientException, CreateHelpRequest.BadRequest;
+    protected abstract T postForm() throws E, SamebugClientException, HelpRequestCreate.BadRequest;
 
     /**
      * Runs on UI thread

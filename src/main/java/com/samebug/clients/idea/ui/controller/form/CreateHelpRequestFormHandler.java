@@ -20,16 +20,16 @@ import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.http.entities.helpRequest.MyHelpRequest;
 import com.samebug.clients.http.exceptions.SamebugClientException;
-import com.samebug.clients.http.form.CreateHelpRequest;
+import com.samebug.clients.http.form.HelpRequestCreate;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-public abstract class CreateHelpRequestFormHandler extends PostFormHandler<MyHelpRequest, CreateHelpRequest.BadRequest> {
+public abstract class CreateHelpRequestFormHandler extends PostFormHandler<MyHelpRequest, HelpRequestCreate.BadRequest> {
     final IFrame frame;
     final IAskForHelp form;
-    final CreateHelpRequest data;
+    final HelpRequestCreate.Data data;
 
-    public CreateHelpRequestFormHandler(IFrame frame, IAskForHelp form, CreateHelpRequest data) {
+    public CreateHelpRequestFormHandler(IFrame frame, IAskForHelp form, HelpRequestCreate.Data data) {
         this.frame = frame;
         this.form = form;
         this.data = data;
@@ -41,13 +41,13 @@ public abstract class CreateHelpRequestFormHandler extends PostFormHandler<MyHel
     }
 
     @Override
-    protected MyHelpRequest postForm() throws SamebugClientException, CreateHelpRequest.BadRequest {
+    protected MyHelpRequest postForm() throws SamebugClientException, HelpRequestCreate.BadRequest {
         final HelpRequestService helpRequestService = IdeaSamebugPlugin.getInstance().helpRequestService;
-        return helpRequestService.createHelpRequest(data.searchId, data.context);
+        return helpRequestService.createHelpRequest(data);
     }
 
     @Override
-    protected void handleBadRequest(CreateHelpRequest.BadRequest fieldErrors) {
+    protected void handleBadRequest(HelpRequestCreate.BadRequest fieldErrors) {
 //        if (CreateHelpRequest.CONTEXT.equals(fieldError.key)) fieldErrors.add(fieldError);
         // TODO reload?
 //        if (nonFormError.code.equals(CreateHelpRequest.E_DUPLICATE_HELP_REQUEST)) globalErrors.add(MessageService.message("samebug.component.helpRequest.ask.error.duplicate"));

@@ -2,7 +2,10 @@ package com.samebug.clients.http.json;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.reflect.TypeToken;
-import com.samebug.clients.http.entities2.solution.*;
+import com.samebug.clients.http.entities.solution.Document;
+import com.samebug.clients.http.entities.solution.ReadableSolution;
+import com.samebug.clients.http.entities.solution.SearchableSolution;
+import com.samebug.clients.http.entities.solution.SolutionSlot;
 
 public class SolutionSlotAdapter extends AbstractGenericObjectAdapter<SolutionSlot<Document>> {
     {

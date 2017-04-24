@@ -1,10 +1,10 @@
 package com.samebug.clients.http.json;
 
 import com.google.common.collect.ImmutableMap;
-import com.samebug.clients.http.entities2.search.NonAccessibleSearch;
-import com.samebug.clients.http.entities2.search.Search;
-import com.samebug.clients.http.entities2.search.StackTraceSearch;
-import com.samebug.clients.http.entities2.search.TextSearch;
+import com.samebug.clients.http.entities.search.NonAccessibleSearch;
+import com.samebug.clients.http.entities.search.Search;
+import com.samebug.clients.http.entities.search.StackTraceSearch;
+import com.samebug.clients.http.entities.search.TextSearch;
 
 public class SearchAdapter extends AbstractObjectAdapter<Search> {
     {

@@ -20,16 +20,16 @@ import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.http.entities.solution.MarkResponse;
 import com.samebug.clients.http.exceptions.SamebugClientException;
-import com.samebug.clients.http.form.CancelMark;
+import com.samebug.clients.http.form.MarkCancel;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-public abstract class CancelMarkFormHandler extends PostFormHandler<MarkResponse, CancelMark.BadRequest> {
+public abstract class CancelMarkFormHandler extends PostFormHandler<MarkResponse, MarkCancel.BadRequest> {
     final IFrame frame;
     final IMarkButton button;
-    final CancelMark data;
+    final MarkCancel data;
 
-    public CancelMarkFormHandler(IFrame frame, IMarkButton button, CancelMark data) {
+    public CancelMarkFormHandler(IFrame frame, IMarkButton button, MarkCancel data) {
         this.frame = frame;
         this.button = button;
         this.data = data;
@@ -41,13 +41,13 @@ public abstract class CancelMarkFormHandler extends PostFormHandler<MarkResponse
     }
 
     @Override
-    protected MarkResponse postForm() throws SamebugClientException, CancelMark.BadRequest {
+    protected MarkResponse postForm() throws SamebugClientException, MarkCancel.BadRequest {
         final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
         return solutionService.retractMark(data.markId);
     }
 
     @Override
-    protected void handleBadRequest(CancelMark.BadRequest fieldErrors) {
+    protected void handleBadRequest(MarkCancel.BadRequest fieldErrors) {
 //        if (nonFormError.code.equals(CreateMark.E_ALREADY_MARKED)) globalErrors.add(MessageService.message("samebug.component.mark.cancel.error.alreadyCancelled"));
         button.interruptLoading();
     }

@@ -1,9 +1,9 @@
 package com.samebug.clients.http.json;
 
 import com.google.common.collect.ImmutableMap;
-import com.samebug.clients.http.entities2.search.SearchHit;
-import com.samebug.clients.http.entities2.search.StackTraceSearchHit;
-import com.samebug.clients.http.entities2.search.TextSearchHit;
+import com.samebug.clients.http.entities.search.SearchHit;
+import com.samebug.clients.http.entities.search.StackTraceSearchHit;
+import com.samebug.clients.http.entities.search.TextSearchHit;
 
 public class SearchHitAdapter extends AbstractObjectAdapter<SearchHit> {
     {

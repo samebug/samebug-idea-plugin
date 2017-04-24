@@ -72,17 +72,17 @@ final class RestUrlBuilder {
 
     @NotNull
     public URL helpRequest() {
-        return resolve("helprequest");
+        return resolve("help-request");
     }
 
     @NotNull
     public URL revokeHelpRequest(String id) {
-        return resolve("helprequest/" + id + "/revoke");
+        return resolve("help-request/" + id + "/revoke");
     }
 
     @NotNull
     public URL getHelpRequest(String helpRequestId) {
-        return resolve("helprequest/" + helpRequestId);
+        return resolve("help-request/" + helpRequestId);
     }
 
     @NotNull
@@ -101,8 +101,8 @@ final class RestUrlBuilder {
     }
 
     @NotNull
-    public URL cancelMark() {
-        return resolve("mark/cancel");
+    public URL cancelMark(@NotNull final Integer markId) {
+        return resolve("mark/" + markId + "cancel");
     }
 
     @NotNull

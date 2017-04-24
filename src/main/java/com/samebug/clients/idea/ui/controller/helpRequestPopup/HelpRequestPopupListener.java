@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.idea.ui.controller.helpRequestPopup;
 
-import com.samebug.clients.http.entities.helpRequest.HelpRequest;
 import com.samebug.clients.common.ui.component.popup.IHelpRequestPopup;
+import com.samebug.clients.http.entities.helpRequest.HelpRequest;
 
 public final class HelpRequestPopupListener implements IHelpRequestPopup.Listener {
     final HelpRequestPopupController controller;

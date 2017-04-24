@@ -20,19 +20,19 @@ import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.http.entities.helpRequest.MyHelpRequest;
 import com.samebug.clients.http.exceptions.SamebugClientException;
-import com.samebug.clients.http.form.RevokeHelpRequest;
+import com.samebug.clients.http.form.HelpRequestCancel;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-public abstract class RevokeHelpRequestFormHandler extends PostFormHandler<MyHelpRequest, RevokeHelpRequest.BadRequest> {
+public abstract class RevokeHelpRequestFormHandler extends PostFormHandler<MyHelpRequest, HelpRequestCancel.BadRequest> {
     final IFrame frame;
     final IMyHelpRequest button;
-    final RevokeHelpRequest data;
+    final String helpRequestId;
 
-    public RevokeHelpRequestFormHandler(IFrame frame, IMyHelpRequest button, RevokeHelpRequest data) {
+    public RevokeHelpRequestFormHandler(IFrame frame, IMyHelpRequest button, String helpRequestId) {
         this.frame = frame;
         this.button = button;
-        this.data = data;
+        this.helpRequestId = helpRequestId;
     }
 
     @Override
@@ -41,13 +41,13 @@ public abstract class RevokeHelpRequestFormHandler extends PostFormHandler<MyHel
     }
 
     @Override
-    protected MyHelpRequest postForm() throws SamebugClientException, RevokeHelpRequest.BadRequest {
+    protected MyHelpRequest postForm() throws SamebugClientException, HelpRequestCancel.BadRequest {
         final HelpRequestService helpRequestService = IdeaSamebugPlugin.getInstance().helpRequestService;
-        return helpRequestService.revokeHelpRequest(data.helpRequestId);
+        return helpRequestService.revokeHelpRequest(helpRequestId);
     }
 
     @Override
-    protected void handleBadRequest(RevokeHelpRequest.BadRequest fieldErrors) {
+    protected void handleBadRequest(HelpRequestCancel.BadRequest fieldErrors) {
 //        if (nonFormError.code.equals(RevokeHelpRequest.E_ALREADY_REVOKED)) globalErrors.add(MessageService.message("samebug.component.helpRequest.revoke.error.alreadyRevoked"));
         button.failRevoke();
     }
