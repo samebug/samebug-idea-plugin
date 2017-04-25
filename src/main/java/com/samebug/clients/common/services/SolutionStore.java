@@ -15,21 +15,34 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.http.entities.solution.Solutions;
+import com.samebug.clients.http.entities.response.GetBugmates;
+import com.samebug.clients.http.entities.response.GetSolutions;
+import com.samebug.clients.http.entities.response.GetTips;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class SolutionStore {
-    final Map<Integer, Solutions> solutions;
+    final Map<Integer, GetSolutions> externalSolutions;
+    final Map<Integer, GetTips> tips;
+    final Map<Integer, GetBugmates> bugmates;
 
     public SolutionStore() {
-        this.solutions = new ConcurrentHashMap<Integer, Solutions>();
+        this.externalSolutions = new ConcurrentHashMap<Integer, GetSolutions>();
+        this.tips = new ConcurrentHashMap<Integer, GetTips>();
+        this.bugmates = new ConcurrentHashMap<Integer, GetBugmates>();
     }
 
-    public Solutions get(int searchId) {
-        // TODO def copy?
-        return solutions.get(searchId);
+    public GetSolutions getWebHits(int searchId) {
+        return externalSolutions.get(searchId);
+    }
+
+    public GetTips getTipHits(int searchId) {
+        return tips.get(searchId);
+    }
+
+    public GetBugmates getBugmates(int searchId) {
+        return bugmates.get(searchId);
     }
 
 }

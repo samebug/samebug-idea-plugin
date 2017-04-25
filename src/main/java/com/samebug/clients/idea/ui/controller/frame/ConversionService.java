@@ -39,13 +39,17 @@ import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListHeade
 import com.samebug.clients.common.ui.frame.solution.*;
 import com.samebug.clients.http.entities.bugmate.BugmateMatch;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
-import com.samebug.clients.http.entities.helprequest.IncomingHelpRequests;
+import com.samebug.clients.http.entities.helprequest.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.mark.MarkCancelled;
 import com.samebug.clients.http.entities.mark.MarkCreated;
+import com.samebug.clients.http.entities.notification.IncomingAnswer;
+import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.http.entities.profile.UserInfo;
 import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.response.GetBugmates;
-import com.samebug.clients.http.entities.search.*;
+import com.samebug.clients.http.entities.search.ReadableSearchGroup;
+import com.samebug.clients.http.entities.search.ReadableStackTraceSearch;
+import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.http.entities.solution.ExternalDocument;
 import com.samebug.clients.http.entities.solution.SamebugTip;
 import com.samebug.clients.http.entities.solution.SolutionSlot;
@@ -133,18 +137,18 @@ public final class ConversionService {
                 new IBugmateList.Model(bugmateHits, bugmates.getMeta().getTotal(), false);
         IAskForHelp.Model askForHelp = new IAskForHelp.Model(bugmates.getMeta().getTotal(), exceptionTitle);
         // TODO get the helprequest from somewhere?
-        IMyHelpRequest.Model myHelpRequest = (search.getGroup().getHelpRequestId() != null) ? new IMyHelpRequest.Model(search.group.helpRequest) : null;
+        IMyHelpRequest.Model myHelpRequest = (search.getGroup().getHelpRequestId() != null) ? new IMyHelpRequest.Model(null) : null;
         return new ITipResultsTab.Model(tipHits, bugmateList, askForHelp, myHelpRequest);
     }
 
-    public IProfilePanel.Model profilePanel(IncomingHelpRequests incomingRequests, UserInfo user, UserStats statistics) {
+    public IProfilePanel.Model profilePanel(IncomingHelpRequestList incomingRequests, UserInfo user, UserStats statistics) {
         ConnectionStatus status = IdeaSamebugPlugin.getInstance().webSocketClientService.isConnected() ? ConnectionStatus.ONLINE : ConnectionStatus.OFFLINE;
         return new IProfilePanel.Model(incomingRequests.matches.size(), statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(),
                 user.getDisplayName(), user.getAvatarUrl(), status);
     }
 
     public ISolutionFrame.Model solutionFrame(ReadableStackTraceSearch search, List<SearchHit<SamebugTip>> tipHits, List<SearchHit<ExternalDocument>> webHits,
-                                              GetBugmates bugmates, IncomingHelpRequests incomingRequests, UserInfo user, UserStats statistics) {
+                                              GetBugmates bugmates, IncomingHelpRequestList incomingRequests, UserInfo user, UserStats statistics) {
         IWebResultsTab.Model webResults = webResultsTab(webHits, false);
         ITipResultsTab.Model tipResults = tipResultsTab(search, tipHits, bugmates, false);
 
@@ -158,8 +162,8 @@ public final class ConversionService {
 
     public IHelpRequestHeader.Model helpRequestHeader(HelpRequest helpRequest) {
         RegisteredSamebugUser requester = helpRequest.getRequester();
-        SearchGroup accessibleSearchInfo = helpRequest.getSearchGroup();
-        return new IHelpRequestHeader.Model(headLine(accessibleSearchInfo), requester.getDisplayName(), requester.getAvatarUrl());
+        // TODO headLine(helpRequest)
+        return new IHelpRequestHeader.Model(null, requester.getDisplayName(), requester.getAvatarUrl());
     }
 
     public IHelpRequestTab.Model helpRequestTab(List<SearchHit<SamebugTip>> tipHits, HelpRequest helpRequest) {
@@ -175,7 +179,7 @@ public final class ConversionService {
 
 
     public IHelpRequestFrame.Model convertHelpRequestFrame(List<SearchHit<SamebugTip>> tipHits, List<SearchHit<ExternalDocument>> webHits, HelpRequest helpRequest,
-                                                           IncomingHelpRequests incomingRequests, UserInfo user, UserStats statistics) {
+                                                           IncomingHelpRequestList incomingRequests, UserInfo user, UserStats statistics) {
         IWebResultsTab.Model webResults = webResultsTab(webHits, true);
         IHelpRequestTab.Model helpRequestTab = helpRequestTab(tipHits, helpRequest);
         IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(0);
@@ -186,13 +190,13 @@ public final class ConversionService {
         return new IHelpRequestFrame.Model(tabs, header, profile);
     }
 
-    public IHelpRequestListFrame.Model convertHelpRequestListFrame(IncomingHelpRequests incomingRequests, UserInfo user, UserStats statistics) {
+    public IHelpRequestListFrame.Model convertHelpRequestListFrame(IncomingHelpRequestList incomingRequests, UserInfo user, UserStats statistics) {
         List<IHelpRequestPreview.Model> requestPreviews = new ArrayList<IHelpRequestPreview.Model>(incomingRequests.matches.size());
         for (HelpRequest r : incomingRequests.matches) {
             RegisteredSamebugUser requester = r.getRequester();
-            String exceptionBody = headLine(r.accessibleSearchInfo());
+            String exceptionBody = null; //TODO headLine(r.accessibleSearchInfo());
             IHelpRequestPreview.Model preview =
-                    new IHelpRequestPreview.Model(requester.getDisplayName(), requester.getAvatarUrl(), r.getCreatedAt(), r.viewedAt, r.getContext(), r.getId(), exceptionBody);
+                    new IHelpRequestPreview.Model(requester.getDisplayName(), requester.getAvatarUrl(), r.getCreatedAt(), null, r.getContext(), r.getId(), exceptionBody);
             requestPreviews.add(preview);
         }
         IHelpRequestList.Model requestList = new IHelpRequestList.Model(requestPreviews);
@@ -202,20 +206,19 @@ public final class ConversionService {
         return new IHelpRequestListFrame.Model(header, requestList, profile);
     }
 
-    public IHelpRequestPopup.Model convertHelpRequestPopup(HelpRequest incomingRequest) {
-        return new IHelpRequestPopup.Model(incomingRequest.getContext(), incomingRequest.getRequester().getDisplayName(), incomingRequest.getRequester().getAvatarUrl());
+    public IHelpRequestPopup.Model convertHelpRequestPopup(IncomingHelpRequest incomingRequest) {
+        HelpRequest hr = incomingRequest.getMatch().getHelpRequest();
+        return new IHelpRequestPopup.Model(hr.getContext(), hr.getRequester().getDisplayName(), hr.getRequester().getAvatarUrl());
     }
 
-    public IIncomingTipPopup.Model convertIncomingTipPopup(IncomingTip incomingTip) {
-        return new IIncomingTipPopup.Model(incomingTip.message, incomingTip.author.displayName, incomingTip.author.avatarUrl);
+    public IIncomingTipPopup.Model convertIncomingTipPopup(IncomingAnswer incomingTip) {
+        SamebugTip tip = incomingTip.getSolution().getDocument();
+        RegisteredSamebugUser author = tip.getAuthor();
+        return new IIncomingTipPopup.Model(tip.getMessage(), author.getDisplayName(), author.getAvatarUrl());
     }
 
     public static String headLine(ReadableStackTraceSearch search) {
         return headLine(search.getExceptionType(), search.getExceptionMessage());
-    }
-
-    public static String headLine(SearchInfo search) {
-        return headLine(search.typeName, search.message);
     }
 
     public static String headLine(@NotNull String typeName, @Nullable String message) {

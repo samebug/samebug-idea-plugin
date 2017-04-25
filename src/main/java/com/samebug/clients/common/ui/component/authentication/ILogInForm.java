@@ -31,9 +31,13 @@ public interface ILogInForm {
             this.password = password;
         }
 
-        public enum Email {UNKNOWN_CREDENTIALS}
+        public enum Email {
+            UNKNOWN_CREDENTIALS
+        }
 
-        public enum Password {UNKNOWN_CREDENTIALS}
+        public enum Password {
+            UNKNOWN_CREDENTIALS
+        }
     }
 
     interface Listener {

@@ -15,11 +15,11 @@
  */
 package com.samebug.clients.http.websocket;
 
-import com.samebug.clients.http.entities.helpRequest.IncomingTip;
-import com.samebug.clients.http.entities.helpRequest.MatchingHelpRequest;
+import com.samebug.clients.http.entities.notification.IncomingAnswer;
+import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 
 public interface NotificationHandler {
-    void helpRequestReceived(MatchingHelpRequest helpRequestNotification);
+    void helpRequestReceived(IncomingHelpRequest helpRequestNotification);
 
-    void tipReceived(IncomingTip tipNotification);
+    void tipReceived(IncomingAnswer tipNotification);
 }

@@ -16,9 +16,8 @@
 package com.samebug.clients.common.services;
 
 import com.samebug.clients.http.client.SamebugClient;
-import com.samebug.clients.http.entities.helpRequest.MatchingHelpRequest;
-import com.samebug.clients.http.entities.helpRequest.MyHelpRequest;
-import com.samebug.clients.http.entities.helprequest.IncomingHelpRequests;
+import com.samebug.clients.http.entities.helprequest.HelpRequest;
+import com.samebug.clients.http.entities.helprequest.IncomingHelpRequestList;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.HelpRequestCancel;
 import com.samebug.clients.http.form.HelpRequestCreate;
@@ -33,30 +32,25 @@ public final class HelpRequestService {
         this.store = store;
     }
 
-    public IncomingHelpRequests loadIncoming() throws SamebugClientException {
+    public IncomingHelpRequestList loadIncoming() throws SamebugClientException {
         final SamebugClient client = clientService.client;
-        IncomingHelpRequests result = client.getIncomingHelpRequests();
+        IncomingHelpRequestList result = client.getIncomingHelpRequests();
         store.incoming = result;
         return result;
     }
 
-    public MyHelpRequest createHelpRequest(@NotNull final HelpRequestCreate.Data data) throws SamebugClientException, HelpRequestCreate.BadRequest {
+    public HelpRequest createHelpRequest(@NotNull final HelpRequestCreate.Data data) throws SamebugClientException, HelpRequestCreate.BadRequest {
         final SamebugClient client = clientService.client;
-        // TODO
-        client.createHelpRequest(data);
-        return null;
+        return client.createHelpRequest(data);
     }
 
-    public MatchingHelpRequest getHelpRequest(final String helpRequestId) throws SamebugClientException {
+    public HelpRequest getHelpRequest(final String helpRequestId) throws SamebugClientException {
         final SamebugClient client = clientService.client;
-        // TODO
-        return null; //client.getHelpRequest(helpRequestId);
+        return client.getHelpRequest(helpRequestId);
     }
 
-    public MyHelpRequest revokeHelpRequest(final String helpRequestId) throws SamebugClientException, HelpRequestCancel.BadRequest {
+    public HelpRequest revokeHelpRequest(final String helpRequestId) throws SamebugClientException, HelpRequestCancel.BadRequest {
         final SamebugClient client = clientService.client;
-        // TODO
-        client.revokeHelpRequest(helpRequestId);
-        return null;
+        return client.revokeHelpRequest(helpRequestId);
     }
 }

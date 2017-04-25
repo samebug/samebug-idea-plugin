@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
-import com.samebug.clients.http.entities.helprequest.IncomingHelpRequests;
+import com.samebug.clients.http.entities.helprequest.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.jsonapi.JsonErrors;
 import com.samebug.clients.http.entities.mark.MarkCancelled;
 import com.samebug.clients.http.entities.mark.MarkCreated;
@@ -67,20 +67,20 @@ public final class SamebugClient {
     }
 
     @NotNull
-    public CreateSearch createSearch(@NotNull final SearchCreate data) throws SamebugClientException {
-        Builder.HandleGetJson<SearchCreate, CreateSearch> request = requestBuilder
+    public SearchRequest createSearch(@NotNull final SearchCreate data) throws SamebugClientException {
+        Builder.HandleGetJson<SearchCreate, SearchRequest> request = requestBuilder
                 .at(urlBuilder.search())
                 .posting(data)
-                .<CreateSearch>withResponse(CreateSearch.class)
+                .<SearchRequest>withResponse(SearchRequest.class)
                 .build();
         return extractGet(rawClient.execute(request));
     }
 
     @NotNull
-    public GetSearch getSearch(@NotNull final Integer searchId) throws SamebugClientException {
-        Builder.HandleGetJson<Object, GetSearch> request = requestBuilder
+    public SearchRequest getSearch(@NotNull final Integer searchId) throws SamebugClientException {
+        Builder.HandleGetJson<Object, SearchRequest> request = requestBuilder
                 .at(urlBuilder.search(searchId))
-                .<GetSearch>withResponse(GetSearch.class)
+                .<SearchRequest>withResponse(SearchRequest.class)
                 .build();
         return extractGet(rawClient.execute(request));
     }
@@ -113,10 +113,10 @@ public final class SamebugClient {
     }
 
     @NotNull
-    public IncomingHelpRequests getIncomingHelpRequests() throws SamebugClientException {
-        Builder.HandleGetJson<Object, IncomingHelpRequests> request = requestBuilder
+    public IncomingHelpRequestList getIncomingHelpRequests() throws SamebugClientException {
+        Builder.HandleGetJson<Object, IncomingHelpRequestList> request = requestBuilder
                 .at(urlBuilder.incomingHelpRequests())
-                .<IncomingHelpRequests>withResponse(IncomingHelpRequests.class)
+                .<IncomingHelpRequestList>withResponse(IncomingHelpRequestList.class)
                 .build();
         return extractGet(rawClient.execute(request));
     }
@@ -285,9 +285,8 @@ public final class SamebugClient {
         }
     }
 
-    public
     @NotNull
-    AuthenticationResponse anonymousUse() throws SamebugClientException {
+    public AuthenticationResponse anonymousUse() throws SamebugClientException {
         Builder.HandleGetJson<Object, AuthenticateRequest> request = requestBuilder
                 .at(urlBuilder.anonymousUse())
                 .unauthenticated()

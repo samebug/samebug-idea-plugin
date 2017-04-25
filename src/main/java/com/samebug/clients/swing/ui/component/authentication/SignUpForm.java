@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.authentication;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.ui.component.authentication.ISignUpForm;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
@@ -31,6 +32,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public final class SignUpForm extends JComponent implements ISignUpForm {
+    private final static Logger LOGGER = Logger.getInstance(SignUpForm.class);
     final FormField displayName;
     final FormField email;
     final PasswordFormField password;
@@ -101,6 +103,8 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
                 case TOO_LONG:
                     errorLabel.setText(MessageService.message("samebug.component.authentication.signUp.error.displayName.long"));
                     break;
+                default:
+                    LOGGER.warn("Unhandled error code " + errorCode);
             }
         }
     }
@@ -122,6 +126,8 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
                 case LONG:
                     errorLabel.setText(MessageService.message("samebug.component.authentication.signUp.error.email.long"));
                     break;
+                default:
+                    LOGGER.warn("Unhandled error code " + errorCode);
             }
         }
     }
@@ -137,6 +143,8 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
                 case SHORT:
                     errorLabel.setText(MessageService.message("samebug.component.authentication.signUp.error.password.short"));
                     break;
+                default:
+                    LOGGER.warn("Unhandled error code " + errorCode);
             }
         }
     }

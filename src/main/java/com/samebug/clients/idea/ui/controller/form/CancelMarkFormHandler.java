@@ -18,21 +18,21 @@ package com.samebug.clients.idea.ui.controller.form;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.common.ui.frame.IFrame;
-import com.samebug.clients.http.entities.solution.MarkResponse;
+import com.samebug.clients.http.entities.mark.MarkCancelled;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.MarkCancel;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-public abstract class CancelMarkFormHandler extends PostFormHandler<MarkResponse, MarkCancel.BadRequest> {
+public abstract class CancelMarkFormHandler extends PostFormHandler<MarkCancelled, MarkCancel.BadRequest> {
     final IFrame frame;
     final IMarkButton button;
-    final MarkCancel data;
+    final Integer data;
 
-    public CancelMarkFormHandler(IFrame frame, IMarkButton button, MarkCancel data) {
+    public CancelMarkFormHandler(IFrame frame, IMarkButton button, Integer markId) {
         this.frame = frame;
         this.button = button;
-        this.data = data;
+        this.data = markId;
     }
 
     @Override
@@ -41,9 +41,9 @@ public abstract class CancelMarkFormHandler extends PostFormHandler<MarkResponse
     }
 
     @Override
-    protected MarkResponse postForm() throws SamebugClientException, MarkCancel.BadRequest {
+    protected MarkCancelled postForm() throws SamebugClientException, MarkCancel.BadRequest {
         final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
-        return solutionService.retractMark(data.markId);
+        return solutionService.retractMark(data);
     }
 
     @Override

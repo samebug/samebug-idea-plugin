@@ -19,8 +19,8 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.http.client.Config;
-import com.samebug.clients.http.entities.helpRequest.IncomingTip;
-import com.samebug.clients.http.entities.helpRequest.MatchingHelpRequest;
+import com.samebug.clients.http.entities.notification.IncomingAnswer;
+import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.http.websocket.NotificationHandler;
 import com.samebug.clients.http.websocket.SamebugNotificationWatcher;
 import com.samebug.clients.http.websocket.WebSocketClient;
@@ -69,12 +69,12 @@ public final class WebSocketClientService implements Disposable {
             URI endpointUri = new URI(scheme, null, host, port, "/socket/notifications/websocket", null, null);
             final SamebugNotificationWatcher eventHandler = new SamebugNotificationWatcher(new NotificationHandler() {
                 @Override
-                public void helpRequestReceived(MatchingHelpRequest helpRequestNotification) {
-                    notificationController.incomingHelpRequest(helpRequestNotification.helpRequest);
+                public void helpRequestReceived(IncomingHelpRequest helpRequestNotification) {
+                    notificationController.incomingHelpRequest(helpRequestNotification);
                 }
 
                 @Override
-                public void tipReceived(IncomingTip tipNotification) {
+                public void tipReceived(IncomingAnswer tipNotification) {
                     notificationController.incomingTip(tipNotification);
                 }
             });

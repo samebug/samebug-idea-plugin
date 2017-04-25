@@ -86,7 +86,7 @@ public class SignUpTest extends TestWithSamebugClient {
 
     @Test
     public void signUp() throws Exception {
-        AuthenticationResponse r = unauthenticatedClient.signUp(new SignUp.Data("test-8", "test-8@samebug.io", "123456")).getData();
+        AuthenticationResponse r = unauthenticatedClient.signUp(new SignUp.Data("test-8", "test-8@samebug.io", "123456"));
         assertThat(r.getUser().getDisplayName(), equalTo("test-8"));
     }
 }

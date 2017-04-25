@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.authentication;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
@@ -33,6 +34,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public final class LogInForm extends JComponent implements ILogInForm {
+    private final static Logger LOGGER = Logger.getInstance(LogInForm.class);
     final FormField email;
     final PasswordFormField password;
     final SamebugButton logIn;
@@ -105,6 +107,8 @@ public final class LogInForm extends JComponent implements ILogInForm {
                 case UNKNOWN_CREDENTIALS:
                     errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.email.unknown"));
                     break;
+                default:
+                    LOGGER.warn("Unhandled error code " + errorCode);
             }
         }
     }
@@ -120,6 +124,8 @@ public final class LogInForm extends JComponent implements ILogInForm {
                 case UNKNOWN_CREDENTIALS:
                     errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.password.unknown"));
                     break;
+                default:
+                    LOGGER.warn("Unhandled error code " + errorCode);
             }
         }
     }

@@ -16,8 +16,7 @@
 package com.samebug.clients.idea.ui.controller.externalEvent;
 
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
-import com.samebug.clients.http.entities.helpRequest.HelpRequest;
-import com.samebug.clients.idea.messages.IncomingHelpRequest;
+import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 
 import javax.swing.*;
@@ -25,7 +24,7 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-public final class ProfileUpdateListener implements IncomingHelpRequest {
+public final class ProfileUpdateListener implements com.samebug.clients.idea.messages.IncomingHelpRequest {
     final BaseFrameController controller;
 
     public ProfileUpdateListener(final BaseFrameController controller) {
@@ -33,12 +32,12 @@ public final class ProfileUpdateListener implements IncomingHelpRequest {
     }
 
     @Override
-    public void showHelpRequest(HelpRequest helpRequest) {
+    public void showHelpRequest(IncomingHelpRequest helpRequest) {
         // nothing to do
     }
 
     @Override
-    public void addHelpRequest(HelpRequest helpRequest) {
+    public void addHelpRequest(IncomingHelpRequest helpRequest) {
         final Component view = (JComponent) controller.view;
         IProfilePanel profilePanel = null;
         java.util.List<Component> components = new LinkedList<Component>();

@@ -18,13 +18,13 @@ package com.samebug.clients.idea.ui.controller.form;
 import com.samebug.clients.common.services.HelpRequestService;
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.common.ui.frame.IFrame;
-import com.samebug.clients.http.entities.helpRequest.MyHelpRequest;
+import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.HelpRequestCancel;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-public abstract class RevokeHelpRequestFormHandler extends PostFormHandler<MyHelpRequest, HelpRequestCancel.BadRequest> {
+public abstract class RevokeHelpRequestFormHandler extends PostFormHandler<HelpRequest, HelpRequestCancel.BadRequest> {
     final IFrame frame;
     final IMyHelpRequest button;
     final String helpRequestId;
@@ -41,7 +41,7 @@ public abstract class RevokeHelpRequestFormHandler extends PostFormHandler<MyHel
     }
 
     @Override
-    protected MyHelpRequest postForm() throws SamebugClientException, HelpRequestCancel.BadRequest {
+    protected HelpRequest postForm() throws SamebugClientException, HelpRequestCancel.BadRequest {
         final HelpRequestService helpRequestService = IdeaSamebugPlugin.getInstance().helpRequestService;
         return helpRequestService.revokeHelpRequest(helpRequestId);
     }

@@ -24,7 +24,9 @@ import com.intellij.unscramble.AnalyzeStacktraceUtil;
 import com.samebug.clients.common.search.StackTraceListener;
 import com.samebug.clients.common.search.StackTraceMatcher;
 import com.samebug.clients.common.services.SearchService;
-import com.samebug.clients.http.entities.search.CreatedSearch;
+import com.samebug.clients.http.entities.response.SearchRequest;
+import com.samebug.clients.http.entities.search.Search;
+import com.samebug.clients.http.entities.search.StackTraceSearch;
 import com.samebug.clients.http.exceptions.BadRequest;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.exceptions.UserUnauthenticated;
@@ -127,10 +129,11 @@ final public class AnalyzeDialog extends DialogWrapper {
             }
             try {
                 // NOTE: this search post happens on the UI thread, but we own the UI thread as long as the dialog is opened.
-                CreatedSearch result = searchService.search(trace);
-                final int searchId = result.getSearchId();
+                SearchRequest result = searchService.search(trace);
+                Search search = result.getData();
+                final int searchId = search.getId();
 
-                if (result.getStackTraceId() == null) displayError(MessageService.message("samebug.menu.analyze.dialog.error.textSearch"));
+                if (!(search instanceof StackTraceSearch)) displayError(MessageService.message("samebug.menu.analyze.dialog.error.textSearch"));
                 else {
                     myProject.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchId);
                     TrackingService.trace(Events.searchSucceedInSearchDialog(searchId));

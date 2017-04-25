@@ -18,7 +18,7 @@ package com.samebug.clients.common.services;
 import com.samebug.clients.common.entities.search.RequestedSearch;
 import com.samebug.clients.common.entities.search.SavedSearch;
 import com.samebug.clients.common.entities.search.SearchInfo;
-import com.samebug.clients.http.entities.search.CreatedSearch;
+import com.samebug.clients.http.entities.response.SearchRequest;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,10 +37,10 @@ public final class SearchRequestService {
     }
 
     @Nullable
-    public SavedSearch searchSucceeded(SearchInfo searchInfo, RequestedSearch requestedSearch, CreatedSearch result) {
+    public SavedSearch searchSucceeded(SearchInfo searchInfo, RequestedSearch requestedSearch, SearchRequest result) {
         assert store.getRequest(searchInfo.requestId) == requestedSearch : "Promoting an illegal RequestedSearch";
         // promote from Requested to Saved
-        SavedSearch request = new SavedSearch(searchInfo, requestedSearch.getTrace(), result);
+        SavedSearch request = new SavedSearch(searchInfo, requestedSearch.getTrace(), result.getData(), result.getMeta());
         store.addRequest(request);
 
         return request;

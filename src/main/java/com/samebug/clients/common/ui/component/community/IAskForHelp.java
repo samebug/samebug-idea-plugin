@@ -37,7 +37,9 @@ public interface IAskForHelp {
     }
 
     final class BadRequest {
-        public enum Context {TOO_LONG}
+        public enum Context {
+            TOO_LONG
+        }
     }
 
     interface Listener {

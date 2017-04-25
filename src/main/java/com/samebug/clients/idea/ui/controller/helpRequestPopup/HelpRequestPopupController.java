@@ -23,7 +23,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.awt.RelativePoint;
 import com.samebug.clients.common.ui.component.popup.IHelpRequestPopup;
-import com.samebug.clients.http.entities.helpRequest.HelpRequest;
+import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.notifications.IncomingHelpRequestNotification;
 import com.samebug.clients.idea.tracking.Events;
@@ -42,20 +42,20 @@ public final class HelpRequestPopupController {
     final ToolWindowController twc;
     final Project myProject;
 
-    final Map<IHelpRequestPopup, HelpRequest> data;
+    final Map<IHelpRequestPopup, IncomingHelpRequest> data;
     final Map<IHelpRequestPopup, IncomingHelpRequestNotification> notifications;
     final Map<IHelpRequestPopup, Balloon> balloons;
 
     public HelpRequestPopupController(ToolWindowController twc, Project project) {
         this.twc = twc;
         this.myProject = project;
-        data = new HashMap<IHelpRequestPopup, HelpRequest>();
+        data = new HashMap<IHelpRequestPopup, IncomingHelpRequest>();
         notifications = new HashMap<IHelpRequestPopup, IncomingHelpRequestNotification>();
         balloons = new HashMap<IHelpRequestPopup, Balloon>();
     }
 
 
-    public void showIncomingHelpRequest(@NotNull HelpRequest helpRequest, @NotNull IncomingHelpRequestNotification notification) {
+    public void showIncomingHelpRequest(@NotNull IncomingHelpRequest helpRequest, @NotNull IncomingHelpRequestNotification notification) {
         IHelpRequestPopup.Model popupModel = IdeaSamebugPlugin.getInstance().conversionService.convertHelpRequestPopup(helpRequest);
         HelpRequestPopup popup = new HelpRequestPopup(popupModel);
 
@@ -77,7 +77,7 @@ public final class HelpRequestPopupController {
         balloons.put(popup, balloon);
         balloon.show(pointToShowPopup, Balloon.Position.atLeft);
 
-        TrackingService.trace(Events.helpRequestNotificationShow(helpRequest.id));
+        TrackingService.trace(Events.helpRequestNotificationShow(helpRequest.getMatch().getHelpRequest().getId()));
     }
 
     void hideAndRemoveIncomingHelpRequest(@NotNull IHelpRequestPopup view) {

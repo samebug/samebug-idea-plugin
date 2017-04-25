@@ -16,16 +16,18 @@
 package com.samebug.clients.common.services;
 
 import com.samebug.clients.http.client.SamebugClient;
-import com.samebug.clients.http.entities.solution.MarkResponse;
-import com.samebug.clients.http.entities.solution.RestHit;
-import com.samebug.clients.http.entities.solution.Solutions;
-import com.samebug.clients.http.entities.solution.Tip;
+import com.samebug.clients.http.entities.mark.MarkCancelled;
+import com.samebug.clients.http.entities.mark.MarkCreated;
+import com.samebug.clients.http.entities.response.GetBugmates;
+import com.samebug.clients.http.entities.response.GetSolutions;
+import com.samebug.clients.http.entities.response.GetTips;
+import com.samebug.clients.http.entities.solution.SamebugTip;
+import com.samebug.clients.http.entities.solution.SolutionSlot;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.MarkCancel;
 import com.samebug.clients.http.form.MarkCreate;
 import com.samebug.clients.http.form.TipCreate;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public final class SolutionService {
     final SamebugClient client;
@@ -36,26 +38,36 @@ public final class SolutionService {
         this.solutionStore = solutionStore;
     }
 
-    public Solutions loadSolutions(final int searchId) throws SamebugClientException {
-        // TODO
-        Solutions result = null;
-        client.getSolutions(searchId);
-        solutionStore.solutions.put(searchId, result);
+    public GetSolutions loadWebHits(final int searchId) throws SamebugClientException {
+        GetSolutions result = client.getSolutions(searchId);
+        solutionStore.externalSolutions.put(searchId, result);
         return result;
     }
 
-    public RestHit<Tip> postTip(@NotNull final int searchId, @NotNull final String tip, @Nullable final String sourceUrl, @Nullable final String helpRequestId)
+    public GetTips loadTipHits(final int searchId) throws SamebugClientException {
+        GetTips result = client.getTips(searchId);
+        solutionStore.tips.put(searchId, result);
+        return result;
+    }
+
+    public GetBugmates loadBugmates(final int searchId) throws SamebugClientException {
+        GetBugmates result = client.getBugmates(searchId);
+        solutionStore.bugmates.put(searchId, result);
+        return result;
+    }
+
+    public SolutionSlot<SamebugTip> postTip(@NotNull final TipCreate.Base data)
             throws SamebugClientException, TipCreate.BadRequest {
-        RestHit<Tip> response = client.createTip(searchId, tip, sourceUrl, helpRequestId);
-        solutionStore.solutions.get(searchId).getTips().add(0, response);
+        SolutionSlot<SamebugTip> response = client.createTip(data);
+        // TODO solutionStore.tips.get(searchId).getData().add(0, null);
         return response;
     }
 
-    public MarkResponse postMark(final int searchId, final int solutionId) throws SamebugClientException, MarkCreate.BadRequest {
-        return client.postMark(searchId, solutionId);
+    public MarkCreated postMark(final MarkCreate.Data data) throws SamebugClientException, MarkCreate.BadRequest {
+        return client.postMark(data);
     }
 
-    public MarkResponse retractMark(final int voteId) throws SamebugClientException, MarkCancel.BadRequest {
+    public MarkCancelled retractMark(final Integer voteId) throws SamebugClientException, MarkCancel.BadRequest {
         return client.cancelMark(voteId);
     }
 }

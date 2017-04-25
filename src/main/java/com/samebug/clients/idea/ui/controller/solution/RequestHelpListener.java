@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.ui.controller.solution;
 
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
-import com.samebug.clients.http.entities.helpRequest.MyHelpRequest;
+import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.form.HelpRequestCreate;
 import com.samebug.clients.idea.ui.controller.form.CreateHelpRequestFormHandler;
 
@@ -31,7 +31,7 @@ final class RequestHelpListener implements IAskForHelp.Listener {
     public void askBugmates(final IAskForHelp source, final String description) {
         new CreateHelpRequestFormHandler(controller.view, source, new HelpRequestCreate.Data(controller.searchId, description)) {
             @Override
-            protected void afterPostForm(MyHelpRequest response) {
+            protected void afterPostForm(HelpRequest response) {
                 controller.load();
             }
         }.execute();

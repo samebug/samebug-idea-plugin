@@ -17,7 +17,6 @@ package com.samebug.clients.swing.ui.component.bugmate;
 
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.common.ui.modules.TextService;
-import com.samebug.clients.http.entities.helpRequest.MyHelpRequest;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.label.TimestampLabel;
@@ -38,8 +37,8 @@ public final class RevokeHelpRequest extends JComponent implements IMyHelpReques
     private final SamebugButton revoke;
 
     public RevokeHelpRequest(Model model) {
-        helpRequestLabel = new HelpRequestBar(model.helpRequest);
-        revoke = new RevokeButton(model.helpRequest);
+        helpRequestLabel = new HelpRequestBar(model);
+        revoke = new RevokeButton(model);
 
         setLayout(new MigLayout("fillx", "0[]0", "0[]15px[]0"));
         add(helpRequestLabel, "cell 0 0, growx");
@@ -62,7 +61,7 @@ public final class RevokeHelpRequest extends JComponent implements IMyHelpReques
     }
 
     private final class HelpRequestBar extends SamebugPanel {
-        public HelpRequestBar(MyHelpRequest helpRequest) {
+        public HelpRequestBar(Model helpRequest) {
             final SamebugLabel text = new HelpRequestLabel(helpRequest.createdAt);
             setBackgroundColor(ColorService.Tip);
 
@@ -72,7 +71,7 @@ public final class RevokeHelpRequest extends JComponent implements IMyHelpReques
     }
 
     private final class RevokeButton extends SamebugButton {
-        public RevokeButton(final MyHelpRequest helpRequest) {
+        public RevokeButton(final Model helpRequest) {
             setText(MessageService.message("samebug.component.helpRequest.ask.revoke"));
             addMouseListener(new MouseAdapter() {
                 @Override

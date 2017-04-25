@@ -22,7 +22,7 @@ public class LogInTest extends TestWithSamebugClient {
 
     @Test
     public void logInWithValidCredentials() throws Exception {
-        AuthenticationResponse r = unauthenticatedClient.logIn(new LogIn.Data("testuser@samebug.io", "123456")).getData();
+        AuthenticationResponse r = unauthenticatedClient.logIn(new LogIn.Data("testuser@samebug.io", "123456"));
         assertThat(r.getUser().getDisplayName(), equalTo("testuser"));
     }
 }

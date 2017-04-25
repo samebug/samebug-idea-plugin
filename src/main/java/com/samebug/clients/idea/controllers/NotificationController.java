@@ -23,10 +23,9 @@ import com.intellij.openapi.actionSystem.DataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.samebug.clients.http.entities.helpRequest.HelpRequest;
-import com.samebug.clients.http.entities.helpRequest.IncomingTip;
+import com.samebug.clients.http.entities.notification.IncomingAnswer;
+import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.messages.IncomingHelpRequest;
 
 public final class NotificationController {
     public static final String PROFILE = "Samebug profile updates";
@@ -35,17 +34,17 @@ public final class NotificationController {
         NotificationsConfiguration.getNotificationsConfiguration().register(PROFILE, NotificationDisplayType.BALLOON, false);
     }
 
-    public void incomingHelpRequest(final HelpRequest helpRequest) {
+    public void incomingHelpRequest(final IncomingHelpRequest helpRequest) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
                 Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
                 for (Project p : openProjects) {
-                    p.getMessageBus().syncPublisher(IncomingHelpRequest.TOPIC).addHelpRequest(helpRequest);
+                    p.getMessageBus().syncPublisher(com.samebug.clients.idea.messages.IncomingHelpRequest.TOPIC).addHelpRequest(helpRequest);
                 }
                 if (openProjects.length != 0) {
                     Project projectToShowPopup = selectProjectToShowPopup(openProjects);
-                    projectToShowPopup.getMessageBus().syncPublisher(IncomingHelpRequest.TOPIC).showHelpRequest(helpRequest);
+                    projectToShowPopup.getMessageBus().syncPublisher(com.samebug.clients.idea.messages.IncomingHelpRequest.TOPIC).showHelpRequest(helpRequest);
                 }
             }
         });
@@ -54,7 +53,7 @@ public final class NotificationController {
         IdeaSamebugPlugin.getInstance().helpRequestStore.invalidate();
     }
 
-    public void incomingTip(final IncomingTip tip) {
+    public void incomingTip(final IncomingAnswer tip) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {

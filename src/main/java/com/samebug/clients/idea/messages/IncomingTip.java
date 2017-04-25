@@ -16,9 +16,10 @@
 package com.samebug.clients.idea.messages;
 
 import com.intellij.util.messages.Topic;
+import com.samebug.clients.http.entities.notification.IncomingAnswer;
 
 public interface IncomingTip {
     Topic<IncomingTip> TOPIC = Topic.create("incoming tip", IncomingTip.class);
 
-    void showTip(com.samebug.clients.http.entities.helpRequest.IncomingTip tip);
+    void showTip(IncomingAnswer tip);
 }

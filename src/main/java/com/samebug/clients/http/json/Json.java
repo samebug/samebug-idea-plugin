@@ -18,6 +18,7 @@ package com.samebug.clients.http.json;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.samebug.clients.http.entities.mark.Mark;
+import com.samebug.clients.http.entities.notification.Notification;
 import com.samebug.clients.http.entities.search.Search;
 import com.samebug.clients.http.entities.search.SearchGroup;
 import com.samebug.clients.http.entities.search.SearchHit;
@@ -40,6 +41,7 @@ public class Json {
         gsonBuilder.registerTypeAdapter(SolutionSlot.class, new SolutionSlotAdapter());
         gsonBuilder.registerTypeAdapter(Mark.class, new MarkAdapter());
         gsonBuilder.registerTypeAdapter(SearchHit.class, new SearchHitAdapter());
+        gsonBuilder.registerTypeAdapter(Notification.class, new NotificationAdapter());
         gsonBuilder.registerTypeAdapterFactory(new EnumTypeAdapterFactory());
         gson = gsonBuilder.create();
     }

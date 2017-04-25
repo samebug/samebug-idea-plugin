@@ -58,6 +58,8 @@ public abstract class LogInFormHandler extends PostFormHandler<AuthenticationRes
                     email = ILogInForm.BadRequest.Email.UNKNOWN_CREDENTIALS;
                     password = ILogInForm.BadRequest.Password.UNKNOWN_CREDENTIALS;
                     break;
+                default:
+                    LOGGER.warn("Unhandled error code " + errorCode);
             }
         }
         ILogInForm.BadRequest b = new ILogInForm.BadRequest(email, password);

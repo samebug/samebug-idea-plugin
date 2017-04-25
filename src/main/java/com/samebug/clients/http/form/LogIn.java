@@ -17,6 +17,7 @@ package com.samebug.clients.http.form;
 
 import com.samebug.clients.http.entities.jsonapi.JsonErrors;
 import com.samebug.clients.http.exceptions.FormException;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 public final class LogIn {
@@ -35,7 +36,7 @@ public final class LogIn {
     }
 
     public enum ErrorCode {
-        INVALID_CREDENTIALS
+        INVALID_CREDENTIALS, X
     }
 
 
@@ -46,5 +47,8 @@ public final class LogIn {
             this.errorList = errorList;
         }
 
+        public String toString() {
+            return super.toString() + ": " + StringUtils.join(errorList.getErrorCodes(), ", ");
+        }
     }
 }

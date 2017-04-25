@@ -24,7 +24,7 @@ import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestList;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListFrame;
-import com.samebug.clients.http.entities.helprequest.IncomingHelpRequests;
+import com.samebug.clients.http.entities.helprequest.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.profile.UserInfo;
 import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
@@ -82,12 +82,12 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
         view.setLoading();
         final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
-        final Future<IncomingHelpRequests> helpRequestsTask = concurrencyService.incomingHelpRequests(true);
+        final Future<IncomingHelpRequestList> helpRequestsTask = concurrencyService.incomingHelpRequests(true);
 
         load(helpRequestsTask, userInfoTask, userStatsTask);
     }
 
-    private void load(final Future<IncomingHelpRequests> helpRequestsTask,
+    private void load(final Future<IncomingHelpRequestList> helpRequestsTask,
                       final Future<UserInfo> userInfoTask,
                       final Future<UserStats> userStatsTask) {
         new LoadingTask() {

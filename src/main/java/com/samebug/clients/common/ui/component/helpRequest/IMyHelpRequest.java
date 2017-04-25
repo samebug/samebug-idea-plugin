@@ -15,8 +15,10 @@
  */
 package com.samebug.clients.common.ui.component.helpRequest;
 
-import com.samebug.clients.http.entities.helpRequest.MyHelpRequest;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Date;
 
 public interface IMyHelpRequest {
     void startRevoke();
@@ -26,16 +28,21 @@ public interface IMyHelpRequest {
     void successRevoke();
 
     final class Model {
-        // TODO this is a rest api entity in the ui model, remove it
         @NotNull
-        public final MyHelpRequest helpRequest;
+        public final String id;
+        @Nullable
+        public final Date createdAt;
+        @Nullable
+        public final String context;
 
         public Model(Model rhs) {
-            this(rhs.helpRequest);
+            this(rhs.id, rhs.createdAt, rhs.context);
         }
 
-        public Model(@NotNull MyHelpRequest helpRequest) {
-            this.helpRequest = helpRequest;
+        public Model(@NotNull String id, @Nullable Date createdAt, @Nullable String context) {
+            this.id = id;
+            this.createdAt = createdAt;
+            this.context = context;
         }
     }
 

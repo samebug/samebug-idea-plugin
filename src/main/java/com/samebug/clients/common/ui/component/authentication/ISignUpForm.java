@@ -33,11 +33,17 @@ public interface ISignUpForm {
             this.password = password;
         }
 
-        public enum DisplayName {EMPTY, TOO_LONG}
+        public enum DisplayName {
+            EMPTY, TOO_LONG
+        }
 
-        public enum Email {TAKEN, INVALID, LONG}
+        public enum Email {
+            TAKEN, INVALID, LONG
+        }
 
-        public enum Password {SHORT}
+        public enum Password {
+            SHORT
+        }
 
     }
 

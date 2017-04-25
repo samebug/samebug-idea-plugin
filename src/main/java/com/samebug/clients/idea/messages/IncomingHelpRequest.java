@@ -16,12 +16,11 @@
 package com.samebug.clients.idea.messages;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.http.entities.helpRequest.HelpRequest;
 
 public interface IncomingHelpRequest {
     Topic<IncomingHelpRequest> TOPIC = Topic.create("incoming help request", IncomingHelpRequest.class);
 
-    void showHelpRequest(HelpRequest helpRequest);
+    void showHelpRequest(com.samebug.clients.http.entities.notification.IncomingHelpRequest helpRequest);
 
-    void addHelpRequest(HelpRequest helpRequest);
+    void addHelpRequest(com.samebug.clients.http.entities.notification.IncomingHelpRequest helpRequest);
 }

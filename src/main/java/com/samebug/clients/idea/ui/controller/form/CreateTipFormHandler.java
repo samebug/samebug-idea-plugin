@@ -18,19 +18,19 @@ package com.samebug.clients.idea.ui.controller.form;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.frame.IFrame;
-import com.samebug.clients.http.entities.solution.RestHit;
-import com.samebug.clients.http.entities.solution.Tip;
+import com.samebug.clients.http.entities.solution.SamebugTip;
+import com.samebug.clients.http.entities.solution.SolutionSlot;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.TipCreate;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-public abstract class CreateTipFormHandler extends PostFormHandler<RestHit<Tip>, TipCreate.BadRequest> {
+public abstract class CreateTipFormHandler extends PostFormHandler<SolutionSlot<SamebugTip>, TipCreate.BadRequest> {
     final IFrame frame;
     final IHelpOthersCTA form;
-    final TipCreate data;
+    final TipCreate.Base data;
 
-    public CreateTipFormHandler(IFrame frame, IHelpOthersCTA form, TipCreate data) {
+    public CreateTipFormHandler(IFrame frame, IHelpOthersCTA form, TipCreate.Base data) {
         this.frame = frame;
         this.form = form;
         this.data = data;
@@ -42,9 +42,9 @@ public abstract class CreateTipFormHandler extends PostFormHandler<RestHit<Tip>,
     }
 
     @Override
-    protected RestHit<Tip> postForm() throws SamebugClientException, TipCreate.BadRequest {
+    protected SolutionSlot<SamebugTip> postForm() throws SamebugClientException, TipCreate.BadRequest {
         final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
-        return solutionService.postTip(data.searchId, data.body, data.sourceUrl, data.helpRequestId);
+        return solutionService.postTip(data);
     }
 
     @Override

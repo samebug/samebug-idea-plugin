@@ -51,6 +51,5 @@ public class LabelAndHitsTabHeader extends SamebugTabHeader {
 
         // hit label in selected state has a visually corrected color
         if (hitsLabel != null && selected) hitsLabel.setForeground(ColorService.forCurrentTheme(selectedHitColor));
-
     }
 }

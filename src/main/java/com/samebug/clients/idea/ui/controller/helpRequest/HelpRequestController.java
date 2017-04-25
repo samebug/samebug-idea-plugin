@@ -26,11 +26,12 @@ import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestFrame;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
-import com.samebug.clients.http.entities.helpRequest.MatchingHelpRequest;
-import com.samebug.clients.http.entities.helprequest.IncomingHelpRequests;
+import com.samebug.clients.http.entities.helprequest.HelpRequest;
+import com.samebug.clients.http.entities.helprequest.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.profile.UserInfo;
 import com.samebug.clients.http.entities.profile.UserStats;
-import com.samebug.clients.http.entities.solution.Solutions;
+import com.samebug.clients.http.entities.response.GetSolutions;
+import com.samebug.clients.http.entities.response.GetTips;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
@@ -103,8 +104,9 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
 
         final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
-        final Future<IncomingHelpRequests> incomingHelpRequestsTask = concurrencyService.incomingHelpRequests(false);
-        final Future<MatchingHelpRequest> helpRequestTask = concurrencyService.helpRequest(helpRequestId);
+        final Future<IncomingHelpRequestList> incomingHelpRequestsTask = concurrencyService.incomingHelpRequests(false);
+        // TODO here I should get a help request match?
+        final Future<HelpRequest> helpRequestTask = concurrencyService.helpRequest(helpRequestId);
 
         load(helpRequestTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);
     }
@@ -112,38 +114,40 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
     /**
      * Wait for the help request so we can decide which search id to use for showing the solutions
      */
-    private void load(final Future<MatchingHelpRequest> helpRequestTask,
-                      final Future<IncomingHelpRequests> incomingHelpRequestsTask,
+    private void load(final Future<HelpRequest> helpRequestTask,
+                      final Future<IncomingHelpRequestList> incomingHelpRequestsTask,
                       final Future<UserInfo> userInfoTask,
                       final Future<UserStats> userStatsTask) {
         new LoadingTask() {
             @Override
             protected void load() throws Exception {
-                MatchingHelpRequest helpRequest = helpRequestTask.get();
-                int accessibleSearchId = helpRequest.accessibleSearchInfo().id;
+                HelpRequest helpRequest = helpRequestTask.get();
+                int accessibleSearchId = helpRequest.getSearchId();
 
                 webResultsTabListener = new WebResultsTabListener(accessibleSearchId);
                 ListenerService.putListenerToComponent((JComponent) view, IWebResultsTab.Listener.class, webResultsTabListener);
                 webHitListener = new WebHitListener(accessibleSearchId);
                 ListenerService.putListenerToComponent((JComponent) view, IWebHit.Listener.class, webHitListener);
 
-                final Future<Solutions> solutionsTask = concurrencyService.solutions(accessibleSearchId);
-                HelpRequestController.this.load(solutionsTask, helpRequestTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);
+                final Future<GetSolutions> solutionsTask = concurrencyService.solutions(accessibleSearchId);
+                final Future<GetTips> tipsTask = concurrencyService.tips(accessibleSearchId);
+                HelpRequestController.this.load(solutionsTask, tipsTask, helpRequestTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);
             }
         }.executeInBackground();
 
     }
 
-    private void load(final Future<Solutions> solutionsTask,
-                      final Future<MatchingHelpRequest> helpRequestTask,
-                      final Future<IncomingHelpRequests> incomingHelpRequestsTask,
+    private void load(final Future<GetSolutions> solutionsTask,
+                      final Future<GetTips> tipsTask,
+                      final Future<HelpRequest> helpRequestTask,
+                      final Future<IncomingHelpRequestList> incomingHelpRequestsTask,
                       final Future<UserInfo> userInfoTask,
                       final Future<UserStats> userStatsTask) {
         new LoadingTask() {
             @Override
             protected void load() throws Exception {
-                final IHelpRequestFrame.Model model = conversionService.convertHelpRequestFrame(
-                        solutionsTask.get(), helpRequestTask.get(), incomingHelpRequestsTask.get(), userInfoTask.get(), userStatsTask.get());
+                final IHelpRequestFrame.Model model = conversionService.convertHelpRequestFrame(tipsTask.get().getData(), solutionsTask.get().getData(),
+                        helpRequestTask.get(), incomingHelpRequestsTask.get(), userInfoTask.get(), userStatsTask.get());
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                     @Override
                     public void run() {

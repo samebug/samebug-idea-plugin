@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.services;
+package com.samebug.clients.http.entities.notification;
 
-import com.samebug.clients.http.entities.bugmate.BugmatesResult;
+import com.samebug.clients.http.entities.helprequest.HelpRequest;
+import com.samebug.clients.http.entities.solution.SamebugTip;
+import com.samebug.clients.http.entities.solution.SolutionSlot;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+public final class IncomingAnswer extends Notification {
+    private SolutionSlot<SamebugTip> solution;
+    private HelpRequest request;
 
-public final class BugmateStore {
-    final Map<Integer, BugmatesResult> bugmates;
-
-    public BugmateStore() {
-        this.bugmates = new ConcurrentHashMap<Integer, BugmatesResult>();
+    public SolutionSlot<SamebugTip> getSolution() {
+        return solution;
     }
 
-    public BugmatesResult get(int searchId) {
-        // TODO def copy
-        return bugmates.get(searchId);
+    public HelpRequest getRequest() {
+        return request;
     }
 }

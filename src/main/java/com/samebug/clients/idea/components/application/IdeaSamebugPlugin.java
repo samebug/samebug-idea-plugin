@@ -65,8 +65,6 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public SearchRequestService searchRequestService;
     public SearchStore searchStore;
     public SearchService searchService;
-    public BugmateStore bugmateStore;
-    public BugmateService bugmateService;
     public HelpRequestStore helpRequestStore;
     public HelpRequestService helpRequestService;
     public AuthenticationService authenticationService;
@@ -124,15 +122,12 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         searchService = new SearchService(clientService, searchStore);
         searchRequestStore = new SearchRequestStore();
         searchRequestService = new SearchRequestService(searchRequestStore);
-        bugmateStore = new BugmateStore();
-        bugmateService = new BugmateService(clientService, bugmateStore);
         helpRequestStore = new HelpRequestStore();
         helpRequestService = new HelpRequestService(clientService, helpRequestStore);
         authenticationService = new AuthenticationService(client);
         conversionService = new ConversionService();
         concurrencyService = new ConcurrencyService(profileStore, profileService,
                 solutionStore, solutionService,
-                bugmateStore, bugmateService,
                 helpRequestStore, helpRequestService,
                 searchStore, searchService);
 

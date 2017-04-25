@@ -17,6 +17,7 @@ package com.samebug.clients.http.form;
 
 import com.samebug.clients.http.entities.jsonapi.JsonErrors;
 import com.samebug.clients.http.exceptions.FormException;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,6 +46,9 @@ public final class HelpRequestCreate {
         public BadRequest(JsonErrors<ErrorCode> errorList) {
             this.errorList = errorList;
         }
-    }
 
+        public String toString() {
+            return super.toString() + ": " + StringUtils.join(errorList.getErrorCodes(), ", ");
+        }
+    }
 }

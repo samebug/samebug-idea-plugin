@@ -17,10 +17,9 @@ package com.samebug.clients.http.form;
 
 import com.samebug.clients.http.entities.jsonapi.JsonErrors;
 import com.samebug.clients.http.exceptions.FormException;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.net.URL;
 
 public final class TipCreate {
     public static final String BODY = "tip";
@@ -34,42 +33,42 @@ public final class TipCreate {
     public static final String E_UNKNOWN_HELP_REQUEST = "UNKNOWN_HELP_REQUEST";
     public static final String E_NO_STACKTRACE = "NO_STACKTRACE";
 
-    public abstract class Base {
+    public static abstract class Base {
         public final String message;
-        public final URL sourceUrl;
+        public final String sourceUrl;
 
-        protected Base(@NotNull String message, @Nullable URL sourceUrl) {
+        protected Base(@NotNull String message, @Nullable String sourceUrl) {
             this.message = message;
             this.sourceUrl = sourceUrl;
         }
     }
 
-    public final class ForExternalSolution extends Base {
+    public static final class ForExternalSolution extends Base {
         public final String type = "tip-externalsolution";
         public final Integer solutionId;
 
-        protected ForExternalSolution(@NotNull String message, @Nullable URL sourceUrl, @NotNull Integer solutionId) {
+        public ForExternalSolution(@NotNull String message, @Nullable String sourceUrl, @NotNull Integer solutionId) {
             super(message, sourceUrl);
             this.solutionId = solutionId;
         }
     }
 
-    public final class ForSearch extends Base {
+    public static final class ForSearch extends Base {
         public final String type = "tip-search";
         public final Integer searchId;
 
-        protected ForSearch(@NotNull String message, @Nullable URL sourceUrl, @NotNull Integer searchId) {
+        public ForSearch(@NotNull String message, @Nullable String sourceUrl, @NotNull Integer searchId) {
             super(message, sourceUrl);
             this.searchId = searchId;
         }
     }
 
-    public final class ForHelpRequest extends Base {
+    public static final class ForHelpRequest extends Base {
         public final String type = "tip-helprequest";
         public final Integer searchId;
         public final String helpRequestId;
 
-        protected ForHelpRequest(@NotNull String message, @Nullable URL sourceUrl, @NotNull Integer searchId, @NotNull String helpRequestId) {
+        public ForHelpRequest(@NotNull String message, @Nullable String sourceUrl, @NotNull Integer searchId, @NotNull String helpRequestId) {
             super(message, sourceUrl);
             this.searchId = searchId;
             this.helpRequestId = helpRequestId;
@@ -85,6 +84,10 @@ public final class TipCreate {
 
         public BadRequest(JsonErrors<ErrorCode> errorList) {
             this.errorList = errorList;
+        }
+
+        public String toString() {
+            return super.toString() + ": " + StringUtils.join(errorList.getErrorCodes(), ", ");
         }
     }
 }

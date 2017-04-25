@@ -111,6 +111,8 @@ public class ApplicationSettings {
             // if that fails, we pretend there is no proxy. This might fail do to subtle changes in the HttpConfigurable class between intellij versions.
             proxyConfig = null;
         }
-        return new Config(apiKey, workspaceId, serverRoot, trackingRoot, isTrackingEnabled, connectTimeout, requestTimeout, isApacheLoggingEnabled, isJsonDebugEnabled, proxyConfig);
+        return new Config(apiKey, workspaceId, serverRoot,
+                trackingRoot, isTrackingEnabled, connectTimeout, requestTimeout,
+                isApacheLoggingEnabled, isJsonDebugEnabled, proxyConfig);
     }
 }

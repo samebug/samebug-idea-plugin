@@ -17,6 +17,7 @@ package com.samebug.clients.http.form;
 
 import com.samebug.clients.http.entities.jsonapi.JsonErrors;
 import com.samebug.clients.http.exceptions.FormException;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 public final class MarkCreate {
@@ -26,7 +27,7 @@ public final class MarkCreate {
     public static final String E_ALREADY_MARKED = "ALREADY_MARKED";
     public static final String E_NOT_YOUR_SEARCH = "NOT_YOUR_SEARCH";
 
-    public final class Data {
+    public static final class Data {
         public final String type = "mark-searchhit";
         public final Integer solutionId;
         public final Integer searchId;
@@ -46,6 +47,10 @@ public final class MarkCreate {
 
         public BadRequest(JsonErrors<ErrorCode> errorList) {
             this.errorList = errorList;
+        }
+
+        public String toString() {
+            return super.toString() + ": " + StringUtils.join(errorList.getErrorCodes(), ", ");
         }
     }
 }

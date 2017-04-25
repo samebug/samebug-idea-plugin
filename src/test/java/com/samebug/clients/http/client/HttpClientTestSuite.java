@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.helprequest;
+package com.samebug.clients.http.client;
 
-import java.util.List;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
-public final class IncomingHelpRequests {
-    public final List<HelpRequest> matches;
-
-    public IncomingHelpRequests(List<HelpRequest> matches) {
-        this.matches = matches;
-    }
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+        com.samebug.clients.http.client.get.HelpRequestTest.class,
+        com.samebug.clients.http.client.get.SearchTest.class
+})
+public class HttpClientTestSuite {
 }

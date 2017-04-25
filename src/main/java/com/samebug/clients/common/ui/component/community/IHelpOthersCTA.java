@@ -41,7 +41,9 @@ public interface IHelpOthersCTA {
 
         public final TipBody tipBody;
 
-        public enum TipBody {TOO_SHORT, TOO_LONG}
+        public enum TipBody {
+            TOO_SHORT, TOO_LONG
+        }
 
     }
 

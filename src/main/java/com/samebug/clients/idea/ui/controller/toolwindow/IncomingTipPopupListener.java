@@ -17,7 +17,7 @@ package com.samebug.clients.idea.ui.controller.toolwindow;
 
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
-import com.samebug.clients.http.entities.helpRequest.IncomingTip;
+import com.samebug.clients.http.entities.notification.IncomingAnswer;
 import com.samebug.clients.idea.notifications.IncomingTipNotification;
 
 public final class IncomingTipPopupListener implements com.samebug.clients.idea.messages.IncomingTip {
@@ -28,7 +28,7 @@ public final class IncomingTipPopupListener implements com.samebug.clients.idea.
     }
 
     @Override
-    public void showTip(IncomingTip tip) {
+    public void showTip(IncomingAnswer tip) {
         IncomingTipNotification n = new IncomingTipNotification(tip);
         NotificationDisplayType notificationType = NotificationsConfigurationImpl.getSettings(n.getGroupId()).getDisplayType();
         if (NotificationDisplayType.BALLOON == notificationType) {

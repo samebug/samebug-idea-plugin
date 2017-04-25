@@ -24,7 +24,9 @@ import com.samebug.clients.common.entities.search.SavedSearch;
 import com.samebug.clients.common.entities.search.SearchInfo;
 import com.samebug.clients.common.services.SearchRequestService;
 import com.samebug.clients.common.services.SearchService;
-import com.samebug.clients.http.entities.search.CreatedSearch;
+import com.samebug.clients.http.entities.response.SearchRequest;
+import com.samebug.clients.http.entities.search.Search;
+import com.samebug.clients.http.entities.search.StackTraceSearch;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.search.SearchRequestListener;
@@ -48,8 +50,10 @@ public class ConsoleSearchController implements StackTraceMatcherListener {
                 if (!project.isDisposed()) project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).newSearchRequest(requestedSearch);
 
                 try {
-                    CreatedSearch result = searchService.search(stackTrace);
-                    if (result.getStackTraceId() == null) {
+                    SearchRequest result = searchService.search(stackTrace);
+                    Search search = result.getData();
+                    // TODO readable stack trace search and stack trace search
+                    if (!(search instanceof StackTraceSearch)) {
                         // ignore text search
                         searchRequestService.searchFailed(searchInfo);
                         if (!project.isDisposed()) project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failedSearch(searchInfo);

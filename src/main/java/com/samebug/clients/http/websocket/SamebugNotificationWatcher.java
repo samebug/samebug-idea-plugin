@@ -16,22 +16,19 @@
 package com.samebug.clients.http.websocket;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.samebug.clients.http.entities.helpRequest.IncomingTip;
-import com.samebug.clients.http.entities.helpRequest.MatchingHelpRequest;
+import com.google.gson.JsonParseException;
+import com.samebug.clients.http.entities.notification.IncomingAnswer;
+import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
+import com.samebug.clients.http.entities.notification.Notification;
 import com.samebug.clients.http.json.Json;
 import io.netty.buffer.ByteBuf;
 
 public class SamebugNotificationWatcher implements WebSocketEventHandler {
     final static Gson gson = Json.gson;
-    private final JsonParser parser;
     private NotificationHandler handler;
 
     public SamebugNotificationWatcher(NotificationHandler handler) {
         this.handler = handler;
-        this.parser = new JsonParser();
     }
 
     @Override
@@ -41,12 +38,15 @@ public class SamebugNotificationWatcher implements WebSocketEventHandler {
 
     @Override
     public void text(String message) {
-        JsonObject obj = parser.parse(message).getAsJsonObject();
-        JsonElement tip = obj.get("tip");
-        if (tip == null) {
-            handler.helpRequestReceived(gson.fromJson(obj, MatchingHelpRequest.class));
-        } else {
-            handler.tipReceived(gson.fromJson(obj, IncomingTip.class));
+        try {
+            Notification n = gson.fromJson(message, Notification.class);
+            if (n instanceof IncomingHelpRequest) handler.helpRequestReceived((IncomingHelpRequest) n);
+            else if (n instanceof IncomingAnswer) handler.tipReceived((IncomingAnswer) n);
+            else {
+                // TODO report unhandled notification type
+            }
+        } catch (JsonParseException e) {
+            // TODO report parse error
         }
     }
 
