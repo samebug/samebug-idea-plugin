@@ -69,7 +69,7 @@ public final class AvatarIcon extends JPanel {
     }
 
     private void paintStatusDot(Graphics2D g2, Color c) {
-        g2.setColor(ColorService.forCurrentTheme(ColorService.OnlineStatus));
+        g2.setColor(c);
         g2.fillOval(2, 2, statusDotSize, statusDotSize);
     }
 }

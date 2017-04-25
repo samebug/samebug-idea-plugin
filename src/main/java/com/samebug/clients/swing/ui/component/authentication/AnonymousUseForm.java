@@ -20,6 +20,8 @@ import com.samebug.clients.common.ui.component.authentication.IAnonymousUseForm;
 import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
+import com.samebug.clients.swing.ui.frame.authentication.LogInTab;
+import com.samebug.clients.swing.ui.frame.authentication.SignUpTab;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import com.samebug.clients.swing.ui.modules.TrackingService;
@@ -65,7 +67,10 @@ public class AnonymousUseForm extends JComponent implements IAnonymousUseForm {
                     if (isEnabled()) {
                         getListener().useAnonymously(AnonymousUseForm.this);
                         String parentName = AnonymousUseForm.this.getParent().getName();
-                        String dialogType = parentName.contains("LogIn") ? "SignIn" : "SignUp";
+                        String dialogType;
+                        if (AnonymousUseForm.this.getParent() instanceof LogInTab)  dialogType = "SignIn";
+                        else if (AnonymousUseForm.this.getParent() instanceof SignUpTab) dialogType =  "SignUp";
+                        else dialogType = null;
                         TrackingService.trace(Events.registrationSend("anonymous", dialogType));
                     }
                 }

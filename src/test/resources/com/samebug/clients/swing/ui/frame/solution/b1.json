@@ -15,7 +15,8 @@
             "displayName": "Petra",
             "avatarUrl": null,
             "nSeen": 11,
-            "lastSeen": "2017-01-01T00:00:00"
+            "lastSeen": "2017-01-01T00:00:00",
+            "status": "ONLINE"
           }
         ],
         "numberOfOtherBugmates": 0,
@@ -33,7 +34,8 @@
     "tips": 48,
     "thanks": 15,
     "name": "Adam",
-    "avatarUrl": null
+    "avatarUrl": null,
+    "status": "ONLINE"
   },
   "header": {
     "title": "UnsupportedDriverException: Could not instantiate class"
