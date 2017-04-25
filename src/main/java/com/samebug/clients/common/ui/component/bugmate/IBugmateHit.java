@@ -31,6 +31,7 @@ public interface IBugmateHit {
         public final Integer nSeen;
         @NotNull
         public final Date lastSeen;
+        @NotNull
         public final ConnectionStatus status;
 
         public Model(Model rhs) {
