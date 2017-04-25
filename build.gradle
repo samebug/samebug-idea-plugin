@@ -75,7 +75,7 @@ license {
     }
     mapping {
         form = 'XML_STYLE'
-        java='SLASHSTAR_STYLE'
+        java = 'SLASHSTAR_STYLE'
     }
 
     include "**/*.java"
@@ -90,4 +90,17 @@ task checkstyle(type: Checkstyle) {
     exclude '**/gen/**'
 
     classpath = files()
+}
+
+test {
+    exclude 'com/samebug/clients/http/**'
+    exclude 'com/samebug/clients/swing/ui/**'
+}
+
+task httpTest(type: Test, description: 'Run http client tests') {
+    include 'com/samebug/clients/http/**'
+}
+
+task uiTest(type: Test, description: 'Run swing ui tests') {
+    include 'com/samebug/clients/swing/ui/**'
 }
