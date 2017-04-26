@@ -203,4 +203,6 @@ public final class WebImageService {
         } while (w != targetWidth || h != targetHeight);
         return ret;
     }
+
+    private WebImageService() {}
 }

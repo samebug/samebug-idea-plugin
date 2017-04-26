@@ -25,7 +25,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class TimedTasks {
-    final static Logger LOGGER = Logger.getInstance(TimedTasks.class);
+    static final Logger LOGGER = Logger.getInstance(TimedTasks.class);
 
     @NotNull
     final Timer timer;

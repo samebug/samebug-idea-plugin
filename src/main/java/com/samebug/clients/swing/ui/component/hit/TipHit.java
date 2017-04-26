@@ -85,7 +85,7 @@ public final class TipHit extends RoundedBackgroundPanel implements ITipHit {
     }
 
     private final class AuthorPanel extends TransparentPanel {
-        private final static int AvatarIconSize = 26;
+        private static final int AvatarIconSize = 26;
         private final SamebugLabel name;
         private final SamebugLabel timestamp;
 
@@ -120,7 +120,7 @@ public final class TipHit extends RoundedBackgroundPanel implements ITipHit {
     }
 
     final class MyFadeInAnimation extends FadeInAnimation {
-        public MyFadeInAnimation(int totalFrames) {
+        MyFadeInAnimation(int totalFrames) {
             super(TipHit.this, totalFrames);
         }
 

@@ -25,4 +25,5 @@ public final class ComponentService {
         return null;
     }
 
+    private ComponentService() {}
 }

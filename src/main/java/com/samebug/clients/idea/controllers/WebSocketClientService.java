@@ -40,8 +40,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public final class WebSocketClientService implements Disposable {
-    final static Logger LOGGER = Logger.getInstance(WebSocketClientService.class);
-    final static long MinimalConnectBackoff = 10000L;
+    static final Logger LOGGER = Logger.getInstance(WebSocketClientService.class);
+    static final long MinimalConnectBackoff = 10000L;
 
     final NotificationController notificationController;
     final AtomicReference<WebSocketClient> client;
@@ -150,5 +150,7 @@ final class WebSocketClientFactory {
             return null;
         }
     }
+
+    private WebSocketClientFactory() {}
 }
 

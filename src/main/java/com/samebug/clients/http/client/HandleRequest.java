@@ -54,8 +54,8 @@ final class Builder {
     private final Config config;
     private final Gson gson;
 
-    private final static boolean defaultAuthenticated = true;
-    private final static Object defaultPostData = null;
+    private static final boolean defaultAuthenticated = true;
+    private static final Object defaultPostData = null;
 
     Builder(Config config) {
         this.config = config;
@@ -67,7 +67,7 @@ final class Builder {
     }
 
 
-    public class HasUrl {
+    public final class HasUrl {
         private final URL url;
 
         private HasUrl(URL url) {
@@ -87,7 +87,7 @@ final class Builder {
         }
     }
 
-    public class HasAuth {
+    public final class HasAuth {
         private final URL url;
         private final boolean isAuthenticated;
 
@@ -101,7 +101,7 @@ final class Builder {
         }
     }
 
-    public class HasResponseType<ResponseType> {
+    public final class HasResponseType<ResponseType> {
         private final URL url;
         private final boolean isAuthenticated;
         private final Type responseType;
@@ -129,7 +129,7 @@ final class Builder {
         }
     }
 
-    public class HasPostData<ResponseType, PostDataType> {
+    public final class HasPostData<ResponseType, PostDataType> {
         private final URL url;
         private final boolean isAuthenticated;
         private final Type responseType;
@@ -151,7 +151,7 @@ final class Builder {
         }
     }
 
-    public class HasErrorType<PostDataType, ResponseType, ErrorType> {
+    public final class HasErrorType<PostDataType, ResponseType, ErrorType> {
         private final URL url;
         private final boolean isAuthenticated;
         private final Type responseType;

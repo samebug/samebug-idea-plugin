@@ -27,8 +27,8 @@ import com.samebug.clients.http.entities.solution.SolutionSlot;
 import com.samebug.clients.http.entities.user.SamebugUser;
 import com.samebug.clients.http.entities.user.User;
 
-public class Json {
-    public final static Gson gson;
+public final class Json {
+    public static final Gson gson;
 
     static {
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -45,4 +45,6 @@ public class Json {
         gsonBuilder.registerTypeAdapterFactory(new EnumTypeAdapterFactory());
         gson = gsonBuilder.create();
     }
+
+    private Json() {}
 }

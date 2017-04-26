@@ -26,7 +26,7 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
 public abstract class LogInFormHandler extends PostFormHandler<AuthenticationResponse, LogIn.BadRequest> {
-    private final static Logger LOGGER = Logger.getInstance(LogInFormHandler.class);
+    private static final Logger LOGGER = Logger.getInstance(LogInFormHandler.class);
     final IFrame frame;
     final ILogInForm form;
     final LogIn.Data data;

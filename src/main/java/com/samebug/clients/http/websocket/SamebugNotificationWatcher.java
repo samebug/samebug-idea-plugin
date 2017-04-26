@@ -24,7 +24,7 @@ import com.samebug.clients.http.json.Json;
 import io.netty.buffer.ByteBuf;
 
 public class SamebugNotificationWatcher implements WebSocketEventHandler {
-    final static Gson gson = Json.gson;
+    static final Gson gson = Json.gson;
     private NotificationHandler handler;
 
     public SamebugNotificationWatcher(NotificationHandler handler) {

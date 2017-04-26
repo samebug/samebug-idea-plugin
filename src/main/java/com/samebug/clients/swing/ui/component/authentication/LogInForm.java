@@ -34,7 +34,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public final class LogInForm extends JComponent implements ILogInForm {
-    private final static Logger LOGGER = Logger.getInstance(LogInForm.class);
+    private static final Logger LOGGER = Logger.getInstance(LogInForm.class);
     final FormField email;
     final PasswordFormField password;
     final SamebugButton logIn;
@@ -97,7 +97,7 @@ public final class LogInForm extends JComponent implements ILogInForm {
     }
 
     final class EmailField extends FormField<ILogInForm.BadRequest.Email> {
-        public EmailField() {
+        EmailField() {
             super(MessageService.message("samebug.component.authentication.email"));
         }
 
@@ -114,7 +114,7 @@ public final class LogInForm extends JComponent implements ILogInForm {
     }
 
     final class PasswordField extends PasswordFormField<ILogInForm.BadRequest.Password> {
-        public PasswordField() {
+        PasswordField() {
             super(MessageService.message("samebug.component.authentication.password"));
         }
 

@@ -28,7 +28,7 @@ import io.netty.util.CharsetUtil;
 import java.text.MessageFormat;
 
 public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
-    final private static Logger LOGGER = Logger.getInstance(WebSocketClientHandler.class);
+    private static final Logger LOGGER = Logger.getInstance(WebSocketClientHandler.class);
 
     private final WebSocketClientHandshaker handshaker;
     private WebSocketEventHandler eventHandler;

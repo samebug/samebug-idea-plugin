@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Method;
 
 
-final public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
+public final class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {

@@ -45,8 +45,8 @@ import java.awt.event.ActionEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-final public class AnalyzeDialog extends DialogWrapper {
-    final static Logger LOGGER = Logger.getInstance(AnalyzeDialog.class);
+public final class AnalyzeDialog extends DialogWrapper {
+    static final Logger LOGGER = Logger.getInstance(AnalyzeDialog.class);
     final Project myProject;
     JPanel panel;
     final JPanel warningPanel;
@@ -110,7 +110,7 @@ final public class AnalyzeDialog extends DialogWrapper {
         return new Action[]{getCancelAction(), searchAction};
     }
 
-    final protected class SamebugSearch extends DialogWrapperAction implements DumbAware {
+    protected final class SamebugSearch extends DialogWrapperAction implements DumbAware {
 
         public SamebugSearch() {
             super(MessageService.message("samebug.menu.analyze.dialog.samebugButton"));
@@ -160,7 +160,7 @@ final public class AnalyzeDialog extends DialogWrapper {
     }
 
     // TODO using the serious parser, get the typename and message and use them for google search
-    final protected class GoogleSearch extends DialogWrapperAction implements DumbAware {
+    protected final class GoogleSearch extends DialogWrapperAction implements DumbAware {
 
         public GoogleSearch() {
             super(MessageService.message("samebug.menu.analyze.dialog.googleButton"));
@@ -179,7 +179,7 @@ final public class AnalyzeDialog extends DialogWrapper {
     }
 
     // TODO get the serious parser
-    final protected class Parser implements StackTraceListener {
+    protected final class Parser implements StackTraceListener {
         final StackTraceMatcher parser;
         boolean found;
 

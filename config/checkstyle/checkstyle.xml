@@ -83,12 +83,13 @@
         <module name="WhitespaceAfter"/>
         <module name="WhitespaceAround">
             <property name="allowEmptyTypes" value="true"/>
+            <property name="allowEmptyConstructors" value="true"/>
         </module>
 
 
         <!-- Modifier Checks                                    -->
         <!-- See http://checkstyle.sf.net/config_modifiers.html -->
-        <!--module name="ModifierOrder"/-->
+        <module name="ModifierOrder"/>
         <module name="RedundantModifier"/>
 
 
@@ -106,7 +107,7 @@
         <!--module name="AvoidInlineConditionals"/-->
         <module name="CovariantEquals"/>
         <module name="EmptyStatement"/>
-        <!--<module name="EqualsAvoidNull"/>-->
+        <module name="EqualsAvoidNull"/>
         <module name="EqualsHashCode"/>
         <!--module name="HiddenField"/-->
         <module name="IllegalInstantiation"/>
@@ -119,9 +120,9 @@
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
         <!--module name="DesignForExtension"/-->
-        <!--module name="FinalClass"/-->
-        <!--module name="HideUtilityClassConstructor"/-->
-        <!--module name="InterfaceIsType"/-->
+        <module name="FinalClass"/>
+        <module name="HideUtilityClassConstructor"/>
+        <module name="InterfaceIsType"/>
         <!--module name="VisibilityModifier"/-->
 
 

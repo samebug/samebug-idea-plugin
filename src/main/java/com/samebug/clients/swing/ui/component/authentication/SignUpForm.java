@@ -32,7 +32,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public final class SignUpForm extends JComponent implements ISignUpForm {
-    private final static Logger LOGGER = Logger.getInstance(SignUpForm.class);
+    private static final Logger LOGGER = Logger.getInstance(SignUpForm.class);
     final FormField displayName;
     final FormField email;
     final PasswordFormField password;
@@ -90,7 +90,7 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
     }
 
     final class DisplayNameField extends FormField<ISignUpForm.BadRequest.DisplayName> {
-        public DisplayNameField() {
+        DisplayNameField() {
             super(MessageService.message("samebug.component.authentication.displayName"));
         }
 
@@ -110,7 +110,7 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
     }
 
     final class EmailField extends FormField<ISignUpForm.BadRequest.Email> {
-        public EmailField() {
+        EmailField() {
             super(MessageService.message("samebug.component.authentication.email"));
         }
 
@@ -133,7 +133,7 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
     }
 
     final class PasswordField extends PasswordFormField<ISignUpForm.BadRequest.Password> {
-        public PasswordField() {
+        PasswordField() {
             super(MessageService.message("samebug.component.authentication.password"));
         }
 

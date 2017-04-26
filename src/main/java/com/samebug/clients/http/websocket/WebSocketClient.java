@@ -41,7 +41,7 @@ import java.util.Map;
 
 
 public final class WebSocketClient implements Closeable {
-    final private static Logger LOGGER = Logger.getInstance(WebSocketClient.class);
+    private static final Logger LOGGER = Logger.getInstance(WebSocketClient.class);
 
     private final WebSocketConfig config;
     private final int port;

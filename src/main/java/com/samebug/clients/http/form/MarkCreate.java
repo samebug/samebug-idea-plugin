@@ -53,4 +53,6 @@ public final class MarkCreate {
             return super.toString() + ": " + StringUtils.join(errorList.getErrorCodes(), ", ");
         }
     }
+
+    private MarkCreate() {}
 }

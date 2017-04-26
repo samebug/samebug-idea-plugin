@@ -51,8 +51,8 @@ import java.util.concurrent.atomic.AtomicReference;
                 @Storage(id = "SamebugClient", file = "$APP_CONFIG$/SamebugClient.xml")
         }
 )
-final public class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<ApplicationSettings>, Disposable {
-    final private static Logger LOGGER = Logger.getInstance(IdeaSamebugPlugin.class);
+public final class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<ApplicationSettings>, Disposable {
+    private static final Logger LOGGER = Logger.getInstance(IdeaSamebugPlugin.class);
     private AtomicReference<ApplicationSettings> state = new AtomicReference<ApplicationSettings>(new ApplicationSettings());
 
     public WebUrlBuilder urlBuilder = new WebUrlBuilder(state.get().serverRoot);

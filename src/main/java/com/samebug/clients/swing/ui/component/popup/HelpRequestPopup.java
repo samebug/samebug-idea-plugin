@@ -32,7 +32,7 @@ import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
 
 public final class HelpRequestPopup extends SamebugPanel implements IHelpRequestPopup {
-    private final static int AvatarSize = 40;
+    private static final int AvatarSize = 40;
 
     public HelpRequestPopup(Model model) {
         final JComponent avatar = new AvatarIcon(model.avatarUrl, AvatarSize);
@@ -55,7 +55,7 @@ public final class HelpRequestPopup extends SamebugPanel implements IHelpRequest
     }
 
     final class RequestBody extends SamebugMultilineLabel {
-        public RequestBody(String body) {
+        RequestBody(String body) {
             setText(body);
             setFont(FontService.regular(14));
         }

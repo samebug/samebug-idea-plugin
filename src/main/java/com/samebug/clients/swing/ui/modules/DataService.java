@@ -46,4 +46,6 @@ public final class DataService {
             this.name = "samebug." + name;
         }
     }
+
+    private DataService() {}
 }

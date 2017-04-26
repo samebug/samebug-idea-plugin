@@ -29,9 +29,9 @@ final class RestUrlBuilder {
     @NotNull
     final URI gateway;
 
-    public RestUrlBuilder(@NotNull final String serverRoot) {
+    RestUrlBuilder(@NotNull final String serverRoot) {
         assert !serverRoot.endsWith("/");
-        if (serverRoot.equals("http://localhost:9000")) this.gateway = URI.create(serverRoot + "/");
+        if ("http://localhost:9000".equals(serverRoot)) this.gateway = URI.create(serverRoot + "/");
         else this.gateway = URI.create(serverRoot + "/").resolve("rest/");
     }
 

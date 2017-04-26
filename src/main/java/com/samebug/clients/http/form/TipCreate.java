@@ -33,7 +33,7 @@ public final class TipCreate {
     public static final String E_UNKNOWN_HELP_REQUEST = "UNKNOWN_HELP_REQUEST";
     public static final String E_NO_STACKTRACE = "NO_STACKTRACE";
 
-    public static abstract class Base {
+    public abstract static class Base {
         public final String message;
         public final String sourceUrl;
 
@@ -90,4 +90,6 @@ public final class TipCreate {
             return super.toString() + ": " + StringUtils.join(errorList.getErrorCodes(), ", ");
         }
     }
+
+    private TipCreate() {}
 }

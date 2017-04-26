@@ -18,7 +18,7 @@ public class HelpRequestTest extends TestWithSamebugClient {
     private static String testHelpRequestId = null;
 
     @Test
-    public void a_createHelpRequestOnAnOtherUsersSearch() throws Exception {
+    public void t01createHelpRequestOnAnOtherUsersSearch() throws Exception {
         try {
             authenticatedClient.createHelpRequest(new HelpRequestCreate.Data(5644, "xxx"));
             Assert.fail();
@@ -28,7 +28,7 @@ public class HelpRequestTest extends TestWithSamebugClient {
     }
 
     @Test
-    public void b_createHelpRequestWithALongContext() throws Exception {
+    public void t02createHelpRequestWithALongContext() throws Exception {
         String context = StringUtils.repeat("x", 257);
         try {
             authenticatedClient.createHelpRequest(new HelpRequestCreate.Data(5641, context));
@@ -39,7 +39,7 @@ public class HelpRequestTest extends TestWithSamebugClient {
     }
 
     @Test
-    public void c_createHelpRequestOnTextSearch() throws Exception {
+    public void t03createHelpRequestOnTextSearch() throws Exception {
         try {
             authenticatedClient.createHelpRequest(new HelpRequestCreate.Data(5646, "x"));
             Assert.fail();
@@ -49,7 +49,7 @@ public class HelpRequestTest extends TestWithSamebugClient {
     }
 
     @Test
-    public void d_createHelpRequest() throws Exception {
+    public void t04createHelpRequest() throws Exception {
         final HelpRequest helpRequest = authenticatedClient.createHelpRequest(new HelpRequestCreate.Data(5641, "x"));
         testHelpRequestId = helpRequest.getId();
         assertThat(helpRequest.getRequester().getDisplayName(), equalTo("testuser"));
@@ -57,7 +57,7 @@ public class HelpRequestTest extends TestWithSamebugClient {
     }
 
     @Test
-    public void e_createHelpRequestWhereItAlreadyExists() throws Exception {
+    public void t05createHelpRequestWhereItAlreadyExists() throws Exception {
         try {
             authenticatedClient.createHelpRequest(new HelpRequestCreate.Data(5641, "x"));
             Assert.fail();
@@ -68,14 +68,14 @@ public class HelpRequestTest extends TestWithSamebugClient {
 
 
     @Test
-    public void f_revokeHelpRequest() throws Exception {
+    public void t06revokeHelpRequest() throws Exception {
         assert testHelpRequestId != null;
         final HelpRequest revokedHelpRequest = authenticatedClient.revokeHelpRequest(testHelpRequestId);
         assertThat(revokedHelpRequest.getId(), equalTo(testHelpRequestId));
     }
 
     @Test
-    public void g_revokeAlreadyRevokedHelpRequest() throws Exception {
+    public void t07revokeAlreadyRevokedHelpRequest() throws Exception {
         assert testHelpRequestId != null;
         try {
             authenticatedClient.revokeHelpRequest(testHelpRequestId);

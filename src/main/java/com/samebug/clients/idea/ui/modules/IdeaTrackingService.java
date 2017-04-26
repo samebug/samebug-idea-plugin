@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class IdeaTrackingService extends TrackingService implements ConfigChangeListener {
-    private final static Logger LOGGER = Logger.getInstance(IdeaTrackingService.class);
+    private static final Logger LOGGER = Logger.getInstance(IdeaTrackingService.class);
     private ApplicationSettings config;
 
     public IdeaTrackingService(MessageBusConnection connection, ApplicationSettings config) {

@@ -284,4 +284,6 @@ public final class Events {
         if (v3 != null) result.put(k3, v3);
         return result;
     }
+
+    private Events() {}
 }

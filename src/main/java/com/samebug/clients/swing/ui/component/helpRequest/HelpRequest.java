@@ -32,7 +32,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRequest, IHelpOthersCTA {
-    private final static int AvatarSize = 40;
+    private static final int AvatarSize = 40;
     final ActionRow actions;
     final WriteTipArea writeTipArea;
 
@@ -76,7 +76,7 @@ public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRe
     }
 
     final class TitleLabel extends SamebugLabel {
-        public TitleLabel() {
+        TitleLabel() {
             setText(MessageService.message("samebug.component.helpRequest.answer.title"));
             setFont(FontService.regular(16));
             setForegroundColor(ColorService.TipText);
@@ -84,7 +84,7 @@ public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRe
     }
 
     final class DisplayName extends SamebugLabel {
-        public DisplayName(String name) {
+        DisplayName(String name) {
             super(name);
             setFont(FontService.demi(16));
             setForegroundColor(ColorService.TipText);
@@ -92,7 +92,7 @@ public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRe
     }
 
     final class HelpRequestBody extends SamebugMultilineLabel {
-        public HelpRequestBody(String body) {
+        HelpRequestBody(String body) {
             setText(body);
             setFont(FontService.regular(16));
             setForegroundColor(ColorService.TipText);
@@ -100,7 +100,7 @@ public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRe
     }
 
     final class SendButton extends SamebugButton {
-        public SendButton() {
+        SendButton() {
             super();
             setText(MessageService.message("samebug.component.tip.write.send"));
             setFilled(true);

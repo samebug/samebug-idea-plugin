@@ -45,7 +45,7 @@ import org.jetbrains.annotations.Nullable;
 import java.net.URL;
 
 public final class SamebugClient {
-    private final static Gson gson = Json.gson;
+    private static final Gson gson = Json.gson;
 
     private final Config config;
     private final RestUrlBuilder urlBuilder;

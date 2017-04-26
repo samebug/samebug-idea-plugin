@@ -33,7 +33,7 @@ import java.util.Map;
  * There could be multiple types of output (e.g. stdout and stderr), so this class
  * uses a {@link LogScannerFactory} instead of a single instance of a LogScanner.
  */
-final public class RunDebugAdapter extends ProcessAdapter {
+public final class RunDebugAdapter extends ProcessAdapter {
     public RunDebugAdapter(@NotNull LogScannerFactory scannerFactory) {
         this.scannerFactory = scannerFactory;
     }

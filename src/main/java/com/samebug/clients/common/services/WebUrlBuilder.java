@@ -24,7 +24,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 
-final public class WebUrlBuilder {
+public final class WebUrlBuilder {
     @NotNull
     final URI serverRoot;
 

@@ -30,7 +30,7 @@ import javax.swing.*;
 import java.util.concurrent.ExecutionException;
 
 public abstract class BaseFrameController<T extends IFrame> implements Disposable {
-    final static Logger LOGGER = Logger.getInstance(BaseFrameController.class);
+    static final Logger LOGGER = Logger.getInstance(BaseFrameController.class);
 
     public final ToolWindowController twc;
     public final Project myProject;

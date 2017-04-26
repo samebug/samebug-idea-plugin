@@ -26,7 +26,7 @@ import com.samebug.clients.idea.ui.controller.ConfigDialog;
 import com.samebug.clients.swing.ui.modules.IconService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-final public class ConfigureAction extends AnAction implements DumbAware {
+public final class ConfigureAction extends AnAction implements DumbAware {
     @Override
     public void actionPerformed(AnActionEvent e) {
         ShowSettingsUtil.getInstance().showSettingsDialog(ProjectManager.getInstance().getDefaultProject(), ConfigDialog.class);

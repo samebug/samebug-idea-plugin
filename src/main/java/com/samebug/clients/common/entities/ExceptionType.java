@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.common.entities;
 
-final public class ExceptionType {
+public final class ExceptionType {
     public final String fqn;
     public final String packageName;
     public final String className;
