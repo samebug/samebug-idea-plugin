@@ -7,7 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 public class SignUpTest extends TestWithSamebugClient {
@@ -17,7 +17,7 @@ public class SignUpTest extends TestWithSamebugClient {
             unauthenticatedClient.signUp(new SignUp.Data("poroszd", "daniel.poroszkai@samebug.io", "123456"));
             Assert.fail();
         } catch (SignUp.BadRequest b) {
-            Assert.assertArrayEquals(b.errorList.getErrorCodes().toArray(), new SignUp.ErrorCode[]{SignUp.ErrorCode.EMAIL_USED});
+            assertThat(b.errorList.getErrorCodes(), containsInAnyOrder(SignUp.ErrorCode.EMAIL_USED));
         }
     }
 
@@ -27,7 +27,7 @@ public class SignUpTest extends TestWithSamebugClient {
             unauthenticatedClient.signUp(new SignUp.Data("poroszd", "daniel.p", "123456"));
             Assert.fail();
         } catch (SignUp.BadRequest b) {
-            Assert.assertArrayEquals(b.errorList.getErrorCodes().toArray(), new SignUp.ErrorCode[]{SignUp.ErrorCode.EMAIL_INVALID});
+            assertThat(b.errorList.getErrorCodes(), containsInAnyOrder(SignUp.ErrorCode.EMAIL_INVALID));
         }
     }
 
@@ -38,7 +38,7 @@ public class SignUpTest extends TestWithSamebugClient {
             unauthenticatedClient.signUp(new SignUp.Data("poroszd", email + "@samebug.io", "123456"));
             Assert.fail();
         } catch (SignUp.BadRequest b) {
-            Assert.assertArrayEquals(b.errorList.getErrorCodes().toArray(), new SignUp.ErrorCode[]{SignUp.ErrorCode.EMAIL_LONG});
+            assertThat(b.errorList.getErrorCodes(), containsInAnyOrder(SignUp.ErrorCode.EMAIL_LONG));
         }
     }
 
@@ -49,7 +49,7 @@ public class SignUpTest extends TestWithSamebugClient {
             unauthenticatedClient.signUp(new SignUp.Data(displayName, "test-4@samebug.io", "123456"));
             Assert.fail();
         } catch (SignUp.BadRequest b) {
-            Assert.assertArrayEquals(b.errorList.getErrorCodes().toArray(), new SignUp.ErrorCode[]{SignUp.ErrorCode.DISPLAYNAME_LONG});
+            assertThat(b.errorList.getErrorCodes(), containsInAnyOrder(SignUp.ErrorCode.DISPLAYNAME_LONG));
         }
     }
 
@@ -59,7 +59,7 @@ public class SignUpTest extends TestWithSamebugClient {
             unauthenticatedClient.signUp(new SignUp.Data("", "test-5@samebug.io", "123456"));
             Assert.fail();
         } catch (SignUp.BadRequest b) {
-            Assert.assertArrayEquals(b.errorList.getErrorCodes().toArray(), new SignUp.ErrorCode[]{SignUp.ErrorCode.DISPLAYNAME_EMPTY});
+            assertThat(b.errorList.getErrorCodes(), containsInAnyOrder(SignUp.ErrorCode.DISPLAYNAME_EMPTY));
         }
     }
 
@@ -69,7 +69,7 @@ public class SignUpTest extends TestWithSamebugClient {
             unauthenticatedClient.signUp(new SignUp.Data("poroszd", "test-6@samebug.io", ""));
             Assert.fail();
         } catch (SignUp.BadRequest b) {
-            Assert.assertArrayEquals(b.errorList.getErrorCodes().toArray(), new SignUp.ErrorCode[]{SignUp.ErrorCode.PASSWORD_EMPTY});
+            assertThat(b.errorList.getErrorCodes(), containsInAnyOrder(SignUp.ErrorCode.PASSWORD_EMPTY));
         }
     }
 
@@ -79,8 +79,7 @@ public class SignUpTest extends TestWithSamebugClient {
             unauthenticatedClient.signUp(new SignUp.Data("", "daniel.poroszkai@samebug.io", ""));
             Assert.fail();
         } catch (SignUp.BadRequest b) {
-            Assert.assertArrayEquals(b.errorList.getErrorCodes().toArray(),
-                    new SignUp.ErrorCode[]{SignUp.ErrorCode.EMAIL_USED, SignUp.ErrorCode.DISPLAYNAME_EMPTY, SignUp.ErrorCode.PASSWORD_EMPTY});
+            assertThat(b.errorList.getErrorCodes(), containsInAnyOrder(SignUp.ErrorCode.EMAIL_USED, SignUp.ErrorCode.DISPLAYNAME_EMPTY, SignUp.ErrorCode.PASSWORD_EMPTY));
         }
     }
 

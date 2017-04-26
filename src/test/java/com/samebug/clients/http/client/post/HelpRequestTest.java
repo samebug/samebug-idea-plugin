@@ -10,7 +10,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -23,7 +23,7 @@ public class HelpRequestTest extends TestWithSamebugClient {
             authenticatedClient.createHelpRequest(new HelpRequestCreate.Data(5644, "xxx"));
             Assert.fail();
         } catch (HelpRequestCreate.BadRequest b) {
-            Assert.assertArrayEquals(new HelpRequestCreate.ErrorCode[]{HelpRequestCreate.ErrorCode.NOT_YOUR_SEARCH}, b.errorList.getErrorCodes().toArray());
+            assertThat(b.errorList.getErrorCodes(), containsInAnyOrder(HelpRequestCreate.ErrorCode.NOT_YOUR_SEARCH));
         }
     }
 
@@ -34,7 +34,7 @@ public class HelpRequestTest extends TestWithSamebugClient {
             authenticatedClient.createHelpRequest(new HelpRequestCreate.Data(5641, context));
             Assert.fail();
         } catch (HelpRequestCreate.BadRequest b) {
-            Assert.assertArrayEquals(new HelpRequestCreate.ErrorCode[]{HelpRequestCreate.ErrorCode.CONTEXT_TOO_LONG}, b.errorList.getErrorCodes().toArray());
+            assertThat(b.errorList.getErrorCodes(), containsInAnyOrder(HelpRequestCreate.ErrorCode.CONTEXT_TOO_LONG));
         }
     }
 
@@ -44,7 +44,7 @@ public class HelpRequestTest extends TestWithSamebugClient {
             authenticatedClient.createHelpRequest(new HelpRequestCreate.Data(5646, "x"));
             Assert.fail();
         } catch (HelpRequestCreate.BadRequest b) {
-            Assert.assertArrayEquals(new HelpRequestCreate.ErrorCode[]{HelpRequestCreate.ErrorCode.NOT_STACKTRACE_SEARCH}, b.errorList.getErrorCodes().toArray());
+            assertThat(b.errorList.getErrorCodes(), containsInAnyOrder(HelpRequestCreate.ErrorCode.NOT_STACKTRACE_SEARCH));
         }
     }
 
@@ -62,7 +62,7 @@ public class HelpRequestTest extends TestWithSamebugClient {
             authenticatedClient.createHelpRequest(new HelpRequestCreate.Data(5641, "x"));
             Assert.fail();
         } catch (HelpRequestCreate.BadRequest b) {
-            Assert.assertArrayEquals(new HelpRequestCreate.ErrorCode[]{HelpRequestCreate.ErrorCode.DUPLICATE_HELP_REQUEST}, b.errorList.getErrorCodes().toArray());
+            assertThat(b.errorList.getErrorCodes(), containsInAnyOrder(HelpRequestCreate.ErrorCode.DUPLICATE_HELP_REQUEST));
         }
     }
 
@@ -81,7 +81,7 @@ public class HelpRequestTest extends TestWithSamebugClient {
             authenticatedClient.revokeHelpRequest(testHelpRequestId);
             Assert.fail();
         } catch (HelpRequestCancel.BadRequest b) {
-            Assert.assertArrayEquals(new HelpRequestCancel.ErrorCode[]{HelpRequestCancel.ErrorCode.ALREADY_DEACTIVATED}, b.errorList.getErrorCodes().toArray());
+            assertThat(b.errorList.getErrorCodes(), containsInAnyOrder(HelpRequestCancel.ErrorCode.ALREADY_DEACTIVATED));
         }
     }
 }

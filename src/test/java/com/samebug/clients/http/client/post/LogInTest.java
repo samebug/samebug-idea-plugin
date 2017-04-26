@@ -6,7 +6,7 @@ import com.samebug.clients.http.form.LogIn;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 public class LogInTest extends TestWithSamebugClient {
@@ -16,7 +16,7 @@ public class LogInTest extends TestWithSamebugClient {
             unauthenticatedClient.logIn(new LogIn.Data("xxx", "xxx"));
             Assert.fail();
         } catch (LogIn.BadRequest b) {
-            Assert.assertArrayEquals(new LogIn.ErrorCode[]{LogIn.ErrorCode.INVALID_CREDENTIALS}, b.errorList.getErrorCodes().toArray());
+            assertThat(b.errorList.getErrorCodes(), containsInAnyOrder(LogIn.ErrorCode.INVALID_CREDENTIALS));
         }
     }
 
