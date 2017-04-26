@@ -175,16 +175,16 @@ public final class SamebugClient {
     @NotNull
     public SolutionSlot<SamebugTip> createTip(@NotNull final TipCreate.Base data) throws SamebugClientException, TipCreate.BadRequest {
         // NOTE: posting a tip includes downloading the source on the server side, which might take a while, so maybe we should allow longer timeout
-        Builder.HandlePostResponseJson<TipCreate.Base, SolutionSlot<SamebugTip>, JsonErrors<TipCreate.ErrorCode>> request = requestBuilder
+        Builder.HandlePostResponseJson<TipCreate.Base, CreateTipResponse, JsonErrors<TipCreate.ErrorCode>> request = requestBuilder
                 .at(urlBuilder.tip())
-                .<SolutionSlot<SamebugTip>>withResponse(new TypeToken<SolutionSlot<SamebugTip>>() {}.getType())
+                .<CreateTipResponse>withResponse(CreateTipResponse.class)
                 .posting(data)
                 .<JsonErrors<TipCreate.ErrorCode>>withErrors(new TypeToken<JsonErrors<TipCreate.ErrorCode>>() {}.getType())
                 .buildPost();
-        final PostFormResponse<SolutionSlot<SamebugTip>, JsonErrors<TipCreate.ErrorCode>> response = rawClient.execute(request);
+        final PostFormResponse<CreateTipResponse, JsonErrors<TipCreate.ErrorCode>> response = rawClient.execute(request);
         switch (response.getResultType()) {
             case SUCCESS:
-                return response.getResult();
+                return response.getResult().getData();
             case EXCEPTION:
                 throw response.getException();
             case FORM_ERROR:

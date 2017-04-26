@@ -76,7 +76,11 @@ public final class TipCreate {
     }
 
     public enum ErrorCode {
-        TOO_SHORT
+        UNKNOWN_HELP_REQUEST,
+        MESSAGE_TOO_SHORT, MESSAGE_TOO_LONG,
+        UNRECOGNIZED_SOURCE, UNREACHABLE_SOURCE,
+        NOT_STACKTRACE_SEARCH,
+        NOT_SEARCHABLE_SOLUTION
     }
 
     public static class BadRequest extends FormException {
