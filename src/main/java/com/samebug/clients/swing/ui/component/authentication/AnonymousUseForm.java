@@ -65,8 +65,8 @@ public class AnonymousUseForm extends JComponent implements IAnonymousUseForm {
                         getListener().useAnonymously(AnonymousUseForm.this);
                         String parentName = AnonymousUseForm.this.getParent().getName();
                         String dialogType;
-                        if (AnonymousUseForm.this.getParent() instanceof LogInTab)  dialogType = "SignIn";
-                        else if (AnonymousUseForm.this.getParent() instanceof SignUpTab) dialogType =  "SignUp";
+                        if (AnonymousUseForm.this.getParent() instanceof LogInTab) dialogType = "SignIn";
+                        else if (AnonymousUseForm.this.getParent() instanceof SignUpTab) dialogType = "SignUp";
                         else dialogType = null;
                         TrackingService.trace(Events.registrationSend("anonymous", dialogType));
                     }

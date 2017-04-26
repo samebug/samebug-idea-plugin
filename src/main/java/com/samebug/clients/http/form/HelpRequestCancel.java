@@ -21,7 +21,7 @@ import org.apache.commons.lang.StringUtils;
 
 public final class HelpRequestCancel {
     public enum ErrorCode {
-        ALREADY_REVOKED
+        ALREADY_DEACTIVATED
     }
 
     public static final class BadRequest extends FormException {

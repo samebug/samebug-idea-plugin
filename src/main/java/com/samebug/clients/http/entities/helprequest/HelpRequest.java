@@ -25,7 +25,7 @@ import java.util.Date;
 public final class HelpRequest {
     private String id;
     private RegisteredSamebugUser requester;
-    private Long workspaceId;
+    private Integer workspaceId;
     private Integer searchId;
     private SearchGroup searchGroup;
     private String context;
@@ -43,7 +43,7 @@ public final class HelpRequest {
     }
 
     @Nullable
-    public Long getWorkspaceId() {
+    public Integer getWorkspaceId() {
         return workspaceId;
     }
 

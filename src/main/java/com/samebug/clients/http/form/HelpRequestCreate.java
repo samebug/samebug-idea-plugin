@@ -37,7 +37,7 @@ public final class HelpRequestCreate {
     }
 
     public enum ErrorCode {
-        NOT_YOUR_SEARCH, DUPLICATE_HELP_REQUEST, NOT_STACKTRACE_SEARCH, NO_SUCH_SEARCH, TOO_LONG
+        NOT_YOUR_SEARCH, DUPLICATE_HELP_REQUEST, NOT_STACKTRACE_SEARCH, NO_SUCH_SEARCH, CONTEXT_TOO_LONG
     }
 
     public static final class BadRequest extends FormException {

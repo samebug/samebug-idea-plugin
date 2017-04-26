@@ -1,30 +1,87 @@
 package com.samebug.clients.http.client.post;
 
 import com.samebug.clients.http.client.TestWithSamebugClient;
+import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.form.HelpRequestCancel;
 import com.samebug.clients.http.form.HelpRequestCreate;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
+
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class HelpRequestTest extends TestWithSamebugClient {
+    private static String testHelpRequestId = null;
+
     @Test
-    public void createHelpRequest() throws Exception {
+    public void a_createHelpRequestOnAnOtherUsersSearch() throws Exception {
         try {
-            authenticatedClient.createHelpRequest(new HelpRequestCreate.Data(5645, "xxx"));
+            authenticatedClient.createHelpRequest(new HelpRequestCreate.Data(5644, "xxx"));
             Assert.fail();
         } catch (HelpRequestCreate.BadRequest b) {
-            Assert.assertArrayEquals(new HelpRequestCreate.ErrorCode[]{HelpRequestCreate.ErrorCode.NO_SUCH_SEARCH}, b.errorList.getErrorCodes().toArray());
+            Assert.assertArrayEquals(new HelpRequestCreate.ErrorCode[]{HelpRequestCreate.ErrorCode.NOT_YOUR_SEARCH}, b.errorList.getErrorCodes().toArray());
+        }
+    }
+
+    @Test
+    public void b_createHelpRequestWithALongContext() throws Exception {
+        String context = StringUtils.repeat("x", 257);
+        try {
+            authenticatedClient.createHelpRequest(new HelpRequestCreate.Data(5641, context));
+            Assert.fail();
+        } catch (HelpRequestCreate.BadRequest b) {
+            Assert.assertArrayEquals(new HelpRequestCreate.ErrorCode[]{HelpRequestCreate.ErrorCode.CONTEXT_TOO_LONG}, b.errorList.getErrorCodes().toArray());
+        }
+    }
+
+    @Test
+    public void c_createHelpRequestOnTextSearch() throws Exception {
+        try {
+            authenticatedClient.createHelpRequest(new HelpRequestCreate.Data(5646, "x"));
+            Assert.fail();
+        } catch (HelpRequestCreate.BadRequest b) {
+            Assert.assertArrayEquals(new HelpRequestCreate.ErrorCode[]{HelpRequestCreate.ErrorCode.NOT_STACKTRACE_SEARCH}, b.errorList.getErrorCodes().toArray());
+        }
+    }
+
+    @Test
+    public void d_createHelpRequest() throws Exception {
+        final HelpRequest helpRequest = authenticatedClient.createHelpRequest(new HelpRequestCreate.Data(5641, "x"));
+        testHelpRequestId = helpRequest.getId();
+        assertThat(helpRequest.getRequester().getDisplayName(), equalTo("testuser"));
+        assertThat(helpRequest.getWorkspaceId(), equalTo(4));
+    }
+
+    @Test
+    public void e_createHelpRequestWhereItAlreadyExists() throws Exception {
+        try {
+            authenticatedClient.createHelpRequest(new HelpRequestCreate.Data(5641, "x"));
+            Assert.fail();
+        } catch (HelpRequestCreate.BadRequest b) {
+            Assert.assertArrayEquals(new HelpRequestCreate.ErrorCode[]{HelpRequestCreate.ErrorCode.DUPLICATE_HELP_REQUEST}, b.errorList.getErrorCodes().toArray());
         }
     }
 
 
     @Test
-    public void revokeHelpRequest() throws Exception {
+    public void f_revokeHelpRequest() throws Exception {
+        assert testHelpRequestId != null;
+        final HelpRequest revokedHelpRequest = authenticatedClient.revokeHelpRequest(testHelpRequestId);
+        assertThat(revokedHelpRequest.getId(), equalTo(testHelpRequestId));
+    }
+
+    @Test
+    public void g_revokeAlreadyRevokedHelpRequest() throws Exception {
+        assert testHelpRequestId != null;
         try {
-            authenticatedClient.revokeHelpRequest("58fb434e4f679231ebde3b5c");
+            authenticatedClient.revokeHelpRequest(testHelpRequestId);
             Assert.fail();
         } catch (HelpRequestCancel.BadRequest b) {
-            Assert.assertArrayEquals(new HelpRequestCreate.ErrorCode[]{HelpRequestCreate.ErrorCode.NO_SUCH_SEARCH}, b.errorList.getErrorCodes().toArray());
+            Assert.assertArrayEquals(new HelpRequestCancel.ErrorCode[]{HelpRequestCancel.ErrorCode.ALREADY_DEACTIVATED}, b.errorList.getErrorCodes().toArray());
         }
     }
 }
