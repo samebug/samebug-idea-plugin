@@ -22,8 +22,8 @@ import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.awt.RelativePoint;
-import com.samebug.clients.common.api.entities.helpRequest.IncomingTip;
 import com.samebug.clients.common.ui.component.popup.IIncomingTipPopup;
+import com.samebug.clients.http.entities.notification.IncomingAnswer;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.notifications.IncomingTipNotification;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
@@ -40,20 +40,20 @@ public final class IncomingTipPopupController {
     final ToolWindowController twc;
     final Project myProject;
 
-    final Map<IIncomingTipPopup, IncomingTip> data;
+    final Map<IIncomingTipPopup, IncomingAnswer> data;
     final Map<IIncomingTipPopup, IncomingTipNotification> notifications;
     final Map<IIncomingTipPopup, Balloon> balloons;
 
     public IncomingTipPopupController(ToolWindowController twc, Project project) {
         this.twc = twc;
         this.myProject = project;
-        data = new HashMap<IIncomingTipPopup, IncomingTip>();
+        data = new HashMap<IIncomingTipPopup, IncomingAnswer>();
         notifications = new HashMap<IIncomingTipPopup, IncomingTipNotification>();
         balloons = new HashMap<IIncomingTipPopup, Balloon>();
     }
 
 
-    public void showIncomingTip(@NotNull IncomingTip incomingTip, @NotNull IncomingTipNotification notification) {
+    public void showIncomingTip(@NotNull IncomingAnswer incomingTip, @NotNull IncomingTipNotification notification) {
         IIncomingTipPopup.Model popupModel = IdeaSamebugPlugin.getInstance().conversionService.convertIncomingTipPopup(incomingTip);
         IncomingTipPopup popup = new IncomingTipPopup(popupModel);
 

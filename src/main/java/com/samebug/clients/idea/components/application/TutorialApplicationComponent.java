@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
                 @Storage(id = "SamebugTutorial", file = "$APP_CONFIG$/SamebugTutorial.xml")
         }
 )
-final public class TutorialApplicationComponent implements ApplicationComponent, PersistentStateComponent<TutorialSettings> {
+public final class TutorialApplicationComponent implements ApplicationComponent, PersistentStateComponent<TutorialSettings> {
     private TutorialSettings state = new TutorialSettings();
 
     @Override

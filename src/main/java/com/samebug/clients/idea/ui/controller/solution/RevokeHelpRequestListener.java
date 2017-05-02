@@ -15,9 +15,8 @@
  */
 package com.samebug.clients.idea.ui.controller.solution;
 
-import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
-import com.samebug.clients.common.api.form.RevokeHelpRequest;
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
+import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.idea.ui.controller.form.RevokeHelpRequestFormHandler;
 
 final class RevokeHelpRequestListener implements IMyHelpRequest.Listener {
@@ -29,10 +28,10 @@ final class RevokeHelpRequestListener implements IMyHelpRequest.Listener {
 
     @Override
     public void revokeHelpRequest(final IMyHelpRequest source, final String helpRequestId) {
-        new RevokeHelpRequestFormHandler(controller.view, source, new RevokeHelpRequest(helpRequestId)) {
+        new RevokeHelpRequestFormHandler(controller.view, source, helpRequestId) {
 
             @Override
-            protected void afterPostForm(MyHelpRequest response) {
+            protected void afterPostForm(HelpRequest response) {
                 source.successRevoke();
                 controller.load();
             }

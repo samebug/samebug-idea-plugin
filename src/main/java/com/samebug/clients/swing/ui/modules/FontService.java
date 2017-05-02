@@ -53,4 +53,6 @@ public final class FontService {
     public static Font demi(int size) {
         return StyleContext.getDefaultStyleContext().getFont(Bold, Font.PLAIN, size - 1);
     }
+
+    private FontService() {}
 }

@@ -28,7 +28,7 @@ import net.miginfocom.swing.MigLayout;
 import java.util.Date;
 
 public final class BugmateHit extends TransparentPanel implements IBugmateHit {
-    private final static int AvatarSize = 44;
+    private static final int AvatarSize = 44;
 
     public BugmateHit(Model model) {
         final NameLabel name = new NameLabel(model.displayName);

@@ -15,27 +15,22 @@
  */
 package com.samebug.clients.idea.ui.controller.form;
 
-import com.samebug.clients.common.api.client.RestError;
-import com.samebug.clients.common.api.entities.solution.RestHit;
-import com.samebug.clients.common.api.entities.solution.Tip;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.api.form.CreateTip;
-import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.common.ui.frame.IFrame;
+import com.samebug.clients.http.entities.solution.SamebugTip;
+import com.samebug.clients.http.entities.solution.SolutionSlot;
+import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.form.TipCreate;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-import java.util.List;
-
-public abstract class CreateTipFormHandler extends PostFormHandler<RestHit<Tip>> {
+public abstract class CreateTipFormHandler extends PostFormHandler<SolutionSlot<SamebugTip>, TipCreate.BadRequest> {
     final IFrame frame;
     final IHelpOthersCTA form;
-    final CreateTip data;
+    final TipCreate.Base data;
 
-    public CreateTipFormHandler(IFrame frame, IHelpOthersCTA form, CreateTip data) {
+    public CreateTipFormHandler(IFrame frame, IHelpOthersCTA form, TipCreate.Base data) {
         this.frame = frame;
         this.form = form;
         this.data = data;
@@ -47,40 +42,23 @@ public abstract class CreateTipFormHandler extends PostFormHandler<RestHit<Tip>>
     }
 
     @Override
-    protected RestHit<Tip> postForm() throws SamebugClientException {
+    protected SolutionSlot<SamebugTip> postForm() throws SamebugClientException, TipCreate.BadRequest {
         final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
-        return solutionService.postTip(data.searchId, data.body, data.sourceUrl, data.helpRequestId);
+        return solutionService.postTip(data);
     }
 
     @Override
-    protected void handleFieldError(FieldError fieldError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleFieldError(fieldError, globalErrors, fieldErrors);
-        if (CreateTip.BODY.equals(fieldError.key)) fieldErrors.add(fieldError);
-        else globalErrors.add(MessageService.message("samebug.error.pluginBug"));
+    protected void handleBadRequest(TipCreate.BadRequest fieldErrors) {
+//        if (CreateTip.BODY.equals(fieldError.key)) fieldErrors.add(fieldError);
+//        if (nonFormError.code.equals(CreateTip.E_TOO_SHORT)) fieldErrors.add(new FieldError(CreateTip.BODY, CreateTip.E_TOO_SHORT));
+//        else if (nonFormError.code.equals(CreateTip.E_TOO_LONG)) fieldErrors.add(new FieldError(CreateTip.BODY, CreateTip.E_TOO_LONG));
+        IHelpOthersCTA.BadRequest b = null;
+        form.failPostTipWithFormError(b);
     }
 
     @Override
-    protected void handleNonFormBadRequests(RestError nonFormError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleNonFormBadRequests(nonFormError, globalErrors, fieldErrors);
-        if (nonFormError.code.equals(CreateTip.E_TOO_SHORT)) fieldErrors.add(new FieldError(CreateTip.BODY, CreateTip.E_TOO_SHORT));
-        else if (nonFormError.code.equals(CreateTip.E_TOO_LONG)) fieldErrors.add(new FieldError(CreateTip.BODY, CreateTip.E_TOO_LONG));
-        else globalErrors.add(MessageService.message("samebug.component.tip.write.error.badRequest"));
-    }
-
-    @Override
-    protected void handleOtherClientExceptions(SamebugClientException exception, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleOtherClientExceptions(exception, globalErrors, fieldErrors);
-        globalErrors.add(MessageService.message("samebug.component.tip.write.error.unhandled"));
-    }
-
-    @Override
-    protected void showFieldErrors(List<FieldError> fieldErrors) throws FormMismatchException {
-        form.failPostTipWithFormError(fieldErrors);
-    }
-
-    @Override
-    protected void showGlobalErrors(List<String> globalErrors) {
-        // TODO showing more errors?
-        if (!globalErrors.isEmpty()) frame.popupError(globalErrors.get(0));
+    protected void handleOtherClientExceptions(SamebugClientException exception) {
+        frame.popupError(MessageService.message("samebug.component.tip.write.error.unhandled"));
+        form.failPostTipWithFormError(null);
     }
 }

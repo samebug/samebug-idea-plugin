@@ -15,14 +15,11 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
-import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.util.List;
 
 public final class RequestHelp extends JComponent implements IAskForHelp {
     final Model model;
@@ -43,7 +40,7 @@ public final class RequestHelp extends JComponent implements IAskForHelp {
     }
 
     @Override
-    public void failRequestTip(List<FieldError> errors) throws FormMismatchException {
+    public void failRequestTip(BadRequest errors) {
         if (tipScreen != null) {
             tipScreen.setFormErrors(errors);
             tipScreen.sendButton.revertFromLoadingAnimation();

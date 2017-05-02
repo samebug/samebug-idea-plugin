@@ -15,11 +15,11 @@
  */
 package com.samebug.clients.idea.ui.controller.solution;
 
-import com.samebug.clients.common.api.entities.solution.RestHit;
-import com.samebug.clients.common.api.entities.solution.Tip;
-import com.samebug.clients.common.api.form.CreateTip;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
+import com.samebug.clients.http.entities.solution.SamebugTip;
+import com.samebug.clients.http.entities.solution.SolutionSlot;
+import com.samebug.clients.http.form.TipCreate;
 import com.samebug.clients.idea.ui.controller.form.CreateTipFormHandler;
 import com.samebug.clients.swing.ui.component.community.writeTip.WriteTip;
 import com.samebug.clients.swing.ui.frame.solution.ResultTabs;
@@ -36,10 +36,11 @@ final class HelpOthersCTAListener implements IHelpOthersCTA.Listener {
 
     @Override
     public void postTip(final IHelpOthersCTA source, final String tipBody) {
-        new CreateTipFormHandler(controller.view, source, new CreateTip(controller.searchId, tipBody, null, null)) {
+        new CreateTipFormHandler(controller.view, source, new TipCreate.ForSearch(tipBody, null, controller.searchId)) {
             @Override
-            protected void afterPostForm(RestHit<Tip> response) {
-                ITipHit.Model tip = controller.conversionService.tipHit(response, false);
+            protected void afterPostForm(SolutionSlot<SamebugTip> response) {
+                // TODO search hit?
+                ITipHit.Model tip = controller.conversionService.tipHit(null, false);
 
                 WriteTip writeTip = ComponentService.findAncestor((Component) source, WriteTip.class);
                 assert writeTip != null;

@@ -10,13 +10,11 @@ import com.samebug.clients.swing.ui.frame.solution.ResultTabs;
 import com.samebug.clients.swing.ui.frame.solution.SolutionFrame;
 import com.samebug.clients.swing.ui.modules.ComponentService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.*;
 import java.util.Date;
 
-@Ignore
 public class SolutionFrameTest extends TestDialog {
     @Test
     public void everythingIsEmpty() {

@@ -15,12 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
-import com.samebug.clients.common.api.form.CreateTip;
-import com.samebug.clients.common.api.form.FieldError;
-import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
-import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
-import com.samebug.clients.common.ui.component.form.IForm;
+import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
@@ -35,10 +30,8 @@ import net.miginfocom.swing.MigLayout;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
 
-public class WriteTipScreen extends RoundedBackgroundPanel implements IForm {
+public class WriteTipScreen extends RoundedBackgroundPanel {
     final WriteTip writeTip;
     final SamebugLabel titleLabel;
     final WriteTipArea tipArea;
@@ -59,23 +52,12 @@ public class WriteTipScreen extends RoundedBackgroundPanel implements IForm {
         add(actionRow, "cell 0 2");
     }
 
-    public void setFormErrors(List<FieldError> errors) throws FormMismatchException {
-        List<FieldError> mismatched = new ArrayList<FieldError>();
-        for (FieldError f : errors) {
-            try {
-                if (CreateTip.BODY.equals(f.key)) tipArea.setFormError(f.code);
-                else throw new FieldNameMismatchException(f.key);
-            } catch (ErrorCodeMismatchException e) {
-                mismatched.add(f);
-            } catch (FieldNameMismatchException e) {
-                mismatched.add(f);
-            }
-        }
-        if (!mismatched.isEmpty()) throw new FormMismatchException(mismatched);
+    public void setFormErrors(IHelpOthersCTA.BadRequest errors) {
+        if (errors.tipBody != null) tipArea.setFormError(errors.tipBody);
         revalidate();
         repaint();
 
-        TrackingService.trace(Events.writeTipError(errors));
+//        TrackingService.trace(Events.writeTipError(errors));
     }
 
 

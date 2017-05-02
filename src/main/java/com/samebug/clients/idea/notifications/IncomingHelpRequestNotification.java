@@ -17,7 +17,7 @@ package com.samebug.clients.idea.notifications;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
-import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
+import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,10 +26,10 @@ import javax.swing.*;
 public class IncomingHelpRequestNotification extends Notification {
     public static final String GroupId = "Samebug help requests";
 
-    public IncomingHelpRequestNotification(HelpRequest helpRequest) {
+    public IncomingHelpRequestNotification(IncomingHelpRequest helpRequest) {
         super(GroupId,
-                MessageService.message("samebug.component.helpRequest.incoming.title", helpRequest.requester.displayName),
-                helpRequest.context,
+                MessageService.message("samebug.component.helpRequest.incoming.title", getRequesterName(helpRequest)),
+                getContext(helpRequest),
                 NotificationType.INFORMATION,
                 null);
 
@@ -45,5 +45,16 @@ public class IncomingHelpRequestNotification extends Notification {
     @Override
     public Icon getIcon() {
         return null;
+    }
+
+
+    private static String getContext(IncomingHelpRequest helpRequest) {
+        String context = helpRequest.getMatch().getHelpRequest().getContext();
+        // TODO what to say here?
+        return context == null ? "<no context>" : context;
+    }
+
+    private static String getRequesterName(IncomingHelpRequest helpRequest) {
+        return helpRequest.getMatch().getHelpRequest().getRequester().getDisplayName();
     }
 }

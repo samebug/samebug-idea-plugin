@@ -15,71 +15,38 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.api.client.ClientResponse;
-import com.samebug.clients.common.api.client.SamebugClient;
-import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
-import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
-import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
+import com.samebug.clients.http.client.SamebugClient;
+import com.samebug.clients.http.entities.helprequest.HelpRequest;
+import com.samebug.clients.http.entities.helprequest.IncomingHelpRequestList;
+import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.form.HelpRequestCancel;
+import com.samebug.clients.http.form.HelpRequestCreate;
+import org.jetbrains.annotations.NotNull;
 
 public final class HelpRequestService {
-    final ClientService clientService;
+    final SamebugClient client;
     final HelpRequestStore store;
 
-    public HelpRequestService(ClientService clientService, HelpRequestStore store) {
-        this.clientService = clientService;
+    public HelpRequestService(SamebugClient client, HelpRequestStore store) {
+        this.client = client;
         this.store = store;
     }
 
-    public IncomingHelpRequests loadIncoming() throws SamebugClientException {
-        final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<IncomingHelpRequests> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<IncomingHelpRequests>() {
-                    ClientResponse<IncomingHelpRequests> request() {
-                        return client.getIncomingHelpRequests();
-                    }
-
-                    protected void success(IncomingHelpRequests result) {
-                        store.incoming = result;
-                    }
-                };
-        return clientService.execute(requestHandler);
+    public IncomingHelpRequestList loadIncoming() throws SamebugClientException {
+        IncomingHelpRequestList result = client.getIncomingHelpRequests();
+        store.incoming = result;
+        return result;
     }
 
-    public MyHelpRequest createHelpRequest(final int searchId, final String context) throws SamebugClientException {
-        final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<MyHelpRequest> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<MyHelpRequest>() {
-                    ClientResponse<MyHelpRequest> request() {
-                        return client.createHelpRequest(searchId, context);
-                    }
-                };
-        return clientService.execute(requestHandler);
+    public HelpRequest createHelpRequest(@NotNull final HelpRequestCreate.Data data) throws SamebugClientException, HelpRequestCreate.BadRequest {
+        return client.createHelpRequest(data);
     }
 
-    public MatchingHelpRequest getHelpRequest(final String helpRequestId) throws SamebugClientException {
-        final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<MatchingHelpRequest> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<MatchingHelpRequest>() {
-                    ClientResponse<MatchingHelpRequest> request() {
-                        return client.getHelpRequest(helpRequestId);
-                    }
-                };
-        return clientService.execute(requestHandler);
+    public HelpRequest getHelpRequest(final String helpRequestId) throws SamebugClientException {
+        return client.getHelpRequest(helpRequestId);
     }
 
-    public MyHelpRequest revokeHelpRequest(final String helpRequestId) throws SamebugClientException {
-        final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<MyHelpRequest> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<MyHelpRequest>() {
-                    ClientResponse<MyHelpRequest> request() {
-                        return client.revokeHelpRequest(helpRequestId);
-                    }
-                };
-        return clientService.execute(requestHandler);
+    public HelpRequest revokeHelpRequest(final String helpRequestId) throws SamebugClientException, HelpRequestCancel.BadRequest {
+        return client.revokeHelpRequest(helpRequestId);
     }
 }

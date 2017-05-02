@@ -17,7 +17,7 @@ package com.samebug.clients.idea.tracking;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.common.api.entities.tracking.TrackEvent;
+import com.samebug.clients.http.entities.tracking.TrackEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +26,7 @@ import java.util.Map;
  * Use TrackBuilder to make sure that the creation of a TrackEvent will not leak exception to the caller.
  */
 public class TrackBuilder {
-    private final static Logger LOGGER = Logger.getInstance(TrackBuilder.class);
+    private static final Logger LOGGER = Logger.getInstance(TrackBuilder.class);
 
     private final Map<String, Object> fields;
     final Map<String, Object> data;
@@ -50,7 +50,7 @@ public class TrackBuilder {
         data.put(fieldName, value);
     }
 
-    final public TrackEvent getEvent() {
+    public final TrackEvent getEvent() {
         try {
             initDataFields();
             fields.put("data", data);

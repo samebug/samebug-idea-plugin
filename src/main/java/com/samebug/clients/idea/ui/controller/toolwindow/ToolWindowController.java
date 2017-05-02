@@ -17,7 +17,6 @@ package com.samebug.clients.idea.ui.controller.toolwindow;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ToolWindow;
@@ -48,9 +47,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-final public class ToolWindowController implements FocusListener, Disposable {
-    final static Logger LOGGER = Logger.getInstance(ToolWindowController.class);
-
+public final class ToolWindowController implements FocusListener, Disposable {
     @NotNull
     final Project project;
     ToolWindow toolWindow;

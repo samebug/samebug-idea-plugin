@@ -15,15 +15,10 @@
  */
 package com.samebug.clients.common.ui.component.community;
 
-import com.samebug.clients.common.api.form.FieldError;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
-
-import java.util.List;
-
 public interface IAskForHelp {
     void startRequestTip();
 
-    void failRequestTip(List<FieldError> errors) throws FormMismatchException;
+    void failRequestTip(BadRequest errors);
 
     void successRequestTip();
 
@@ -38,6 +33,12 @@ public interface IAskForHelp {
         public Model(int numberOfBugmates, String exceptionTitle) {
             this.numberOfBugmates = numberOfBugmates;
             this.exceptionTitle = exceptionTitle;
+        }
+    }
+
+    final class BadRequest {
+        public enum Context {
+            TOO_LONG
         }
     }
 

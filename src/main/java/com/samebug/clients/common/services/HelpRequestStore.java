@@ -15,23 +15,24 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
-import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
+import com.samebug.clients.http.entities.helprequest.HelpRequest;
+import com.samebug.clients.http.entities.helprequest.IncomingHelpRequestList;
+import org.jetbrains.annotations.NotNull;
 
 public final class HelpRequestStore {
-    IncomingHelpRequests incoming;
+    IncomingHelpRequestList incoming;
 
     public HelpRequestStore() {
 
     }
 
-    public IncomingHelpRequests get() {
+    public IncomingHelpRequestList get() {
         return incoming;
     }
 
-    public MatchingHelpRequest getHelpRequest(String id) {
-        for (MatchingHelpRequest h : incoming.matches) {
-            if (h.helpRequest.id.equals(id)) return h;
+    public HelpRequest getHelpRequest(@NotNull String id) {
+        for (HelpRequest h : incoming.matches) {
+            if (id.equals(h.getId())) return h;
         }
         return null;
     }

@@ -21,9 +21,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
 
-final public class BrowserUtil {
+public final class BrowserUtil {
     public static void browse(@NotNull URL url) {
         TrackingService.trace(Events.linkClick(url));
         com.intellij.ide.BrowserUtil.browse(url);
     }
+
+    private BrowserUtil() {}
 }

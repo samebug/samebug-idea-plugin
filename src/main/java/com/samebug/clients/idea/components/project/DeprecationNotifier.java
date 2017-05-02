@@ -21,17 +21,17 @@ import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.api.client.ConnectionStatus;
-import com.samebug.clients.common.services.ClientService;
+import com.samebug.clients.idea.components.application.IdeaConnectionService;
+import com.samebug.clients.http.response.ConnectionStatus;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-public final class DeprecationNotifier implements ClientService.ConnectionStatusListener {
+public final class DeprecationNotifier implements IdeaConnectionService.ConnectionStatusListener {
     private final Project myProject;
 
     public DeprecationNotifier(Project project) {
         myProject = project;
         MessageBusConnection projectConnection = myProject.getMessageBus().connect(project);
-        projectConnection.subscribe(ClientService.ConnectionStatusListener.TOPIC, this);
+        projectConnection.subscribe(IdeaConnectionService.ConnectionStatusListener.TOPIC, this);
     }
 
     @Override

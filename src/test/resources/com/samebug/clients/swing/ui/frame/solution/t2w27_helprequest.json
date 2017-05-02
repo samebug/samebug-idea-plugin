@@ -426,12 +426,9 @@
         "exceptionTitle": "UnsupportedDriverException: Could not instantiate class"
       },
       "myHelpRequest": {
-        "helpRequest": {
-          "id": "x",
-          "searchId": 1,
-          "content": "Please help!",
-          "createdAt": "2017-01-01T00:00:00"
-        }
+        "id": "x",
+        "context": "Please help!",
+        "createdAt": "2017-01-01T00:00:00"
       }
     }
   },

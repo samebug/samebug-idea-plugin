@@ -28,7 +28,7 @@ import java.util.Map;
  * <p>
  * However, converting the teamcity failed state to its actual presentation text is not trivially available, so we kind of hack it.
  */
-public class TeamCityDecoder {
+public final class TeamCityDecoder {
     public static boolean isTestFrameworkException(String line) {
         return line.startsWith("##teamcity[testFailed ");
     }
@@ -55,4 +55,6 @@ public class TeamCityDecoder {
             return ArrayUtils.EMPTY_STRING_ARRAY;
         }
     }
+
+    private TeamCityDecoder() {}
 }

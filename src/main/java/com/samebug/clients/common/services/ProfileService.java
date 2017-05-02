@@ -15,24 +15,23 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.api.client.ClientResponse;
-import com.samebug.clients.common.api.client.SamebugClient;
-import com.samebug.clients.common.api.entities.profile.UserInfo;
-import com.samebug.clients.common.api.entities.profile.UserStats;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
+import com.samebug.clients.http.client.SamebugClient;
+import com.samebug.clients.http.entities.profile.UserInfo;
+import com.samebug.clients.http.entities.profile.UserStats;
+import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class ProfileService {
     @NotNull
-    final ClientService clientService;
+    final SamebugClient client;
     @NotNull
     final ProfileStore store;
 
 
-    public ProfileService(@NotNull ClientService clientService, @NotNull ProfileStore store) {
-        this.clientService = clientService;
+    public ProfileService(@NotNull SamebugClient client, @NotNull ProfileStore store) {
+        this.client = client;
         this.store = store;
     }
 
@@ -42,46 +41,24 @@ public final class ProfileService {
     // When it will be separated, this method won't have to read the application settings.
     @Nullable
     public UserInfo loadUserInfo() throws SamebugClientException {
-        final SamebugClient client = clientService.client;
         final String apiKey = IdeaSamebugPlugin.getInstance().getState().apiKey;
+        final Integer workspaceId = IdeaSamebugPlugin.getInstance().getState().workspaceId;
 
         if (apiKey == null) return null;
         else {
-            ClientService.ConnectionAwareHttpRequest<UserInfo> requestHandler =
-                    new ClientService.ConnectionAwareHttpRequest<UserInfo>() {
-                        ClientResponse<UserInfo> request() {
-                            return client.getUserInfo(apiKey);
-                        }
-
-                        protected void success(UserInfo result) {
-                            store.user.set(result);
-                        }
-
-                        protected void fail(SamebugClientException e) {
-                            store.user.set(null);
-                        }
-                    };
-            return clientService.execute(requestHandler);
+            try {
+                UserInfo result = client.getUserInfo(apiKey, workspaceId);
+                store.user.set(result);
+                return result;
+            } catch (SamebugClientException e) {
+                return null;
+            }
         }
     }
 
     public UserStats loadUserStats() throws SamebugClientException {
-        final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<UserStats> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<UserStats>() {
-                    ClientResponse<UserStats> request() {
-                        return client.getUserStats();
-                    }
-
-                    protected void success(UserStats result) {
-                        store.statistics.set(result);
-                    }
-
-                    protected void fail(SamebugClientException e) {
-                        store.statistics.set(null);
-                    }
-                };
-        return clientService.execute(requestHandler);
+        UserStats result = client.getUserStats();
+        store.statistics.set(result);
+        return result;
     }
 }

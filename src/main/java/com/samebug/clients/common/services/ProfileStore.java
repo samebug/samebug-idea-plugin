@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.api.entities.profile.UserInfo;
-import com.samebug.clients.common.api.entities.profile.UserStats;
+import com.samebug.clients.http.entities.profile.UserInfo;
+import com.samebug.clients.http.entities.profile.UserStats;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

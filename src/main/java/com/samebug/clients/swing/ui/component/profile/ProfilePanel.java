@@ -28,7 +28,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public final class ProfilePanel extends TransparentPanel implements IProfilePanel {
-    private final static int AvatarIconSize = 26;
+    private static final int AvatarIconSize = 26;
 
     private final AvatarIcon avatarIcon;
     private final MessageLabel messages;

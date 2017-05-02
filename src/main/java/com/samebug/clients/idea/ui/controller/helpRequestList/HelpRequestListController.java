@@ -19,14 +19,14 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
-import com.samebug.clients.common.api.entities.profile.UserInfo;
-import com.samebug.clients.common.api.entities.profile.UserStats;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestList;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListFrame;
+import com.samebug.clients.http.entities.helprequest.IncomingHelpRequestList;
+import com.samebug.clients.http.entities.profile.UserInfo;
+import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
@@ -82,12 +82,12 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
         view.setLoading();
         final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
-        final Future<IncomingHelpRequests> helpRequestsTask = concurrencyService.incomingHelpRequests(true);
+        final Future<IncomingHelpRequestList> helpRequestsTask = concurrencyService.incomingHelpRequests(true);
 
         load(helpRequestsTask, userInfoTask, userStatsTask);
     }
 
-    private void load(final Future<IncomingHelpRequests> helpRequestsTask,
+    private void load(final Future<IncomingHelpRequestList> helpRequestsTask,
                       final Future<UserInfo> userInfoTask,
                       final Future<UserStats> userStatsTask) {
         new LoadingTask() {
@@ -113,7 +113,7 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
             // TODO help requests url
             UserInfo user = plugin.profileStore.getUser();
             if (user != null) {
-                int myUserId = user.getUserId();
+                int myUserId = user.getId();
                 URL url = plugin.urlBuilder.profile(myUserId);
                 BrowserUtil.browse(url);
             }

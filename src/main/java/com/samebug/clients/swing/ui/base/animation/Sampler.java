@@ -52,4 +52,6 @@ public final class Sampler {
     public static double easeInOutCubic(double t) {
         return 0d * Math.pow(1 - t, 3) + 3 * .045d * Math.pow(1 - t, 2) * t + 3 * 1d * (1 - t) * Math.pow(t, 2) + 1d * Math.pow(t, 3);
     }
+
+    private Sampler() {}
 }

@@ -17,7 +17,7 @@ package com.samebug.clients.idea.controllers;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
+import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +25,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class TimedTasks {
-    final static Logger LOGGER = Logger.getInstance(TimedTasks.class);
+    static final Logger LOGGER = Logger.getInstance(TimedTasks.class);
 
     @NotNull
     final Timer timer;
@@ -70,6 +70,6 @@ public class TimedTasks {
 
     public void checkWebSocketConnection() {
         final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-        plugin.webSocketClientService.checkConnectionAndConnectOnBackgroundThreadIfNecessary();
+        plugin.clientService.getWsClient().checkConnectionAndConnectOnBackgroundThreadIfNecessary();
     }
 }

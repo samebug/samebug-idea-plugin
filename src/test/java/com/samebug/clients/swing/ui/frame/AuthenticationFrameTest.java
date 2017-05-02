@@ -7,12 +7,10 @@ import com.samebug.clients.swing.ui.component.authentication.LogInForm;
 import com.samebug.clients.swing.ui.frame.authentication.AuthenticationFrame;
 import com.samebug.clients.swing.ui.frame.authentication.AuthenticationTabs;
 import com.samebug.clients.swing.ui.frame.authentication.LogInTab;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.swing.*;
 
-@Ignore
 public class AuthenticationFrameTest extends TestDialog {
     @Test
     public void authentication() {

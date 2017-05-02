@@ -49,7 +49,6 @@ public final class RequestHelpCTAScreen extends TransparentPanel {
                     }
                 }
             });
-
         }
     }
 }

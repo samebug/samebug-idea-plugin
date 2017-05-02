@@ -15,18 +15,26 @@
  */
 package com.samebug.clients.common.entities.search;
 
-import com.samebug.clients.common.api.entities.search.CreatedSearch;
+import com.samebug.clients.http.entities.jsonapi.Relations;
+import com.samebug.clients.http.entities.search.Search;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SavedSearch implements SearchRequest {
+    @NotNull
     private final String trace;
+    @NotNull
     private final SearchInfo searchInfo;
-    private final CreatedSearch savedSearch;
+    @NotNull
+    private final Search savedSearch;
+    @Nullable
+    private final Relations relations;
 
-    public SavedSearch(SearchInfo searchInfo, String trace, CreatedSearch savedSearch) {
+    public SavedSearch(@NotNull SearchInfo searchInfo, @NotNull String trace, @NotNull Search savedSearch, @Nullable Relations searchRelations) {
         this.searchInfo = searchInfo;
         this.savedSearch = savedSearch;
-        Integer lineOffset = savedSearch.getFirstLine();
+        this.relations = searchRelations;
+        Integer lineOffset = null; // TODO adjust with savedSearch.getFirstLine();
         if (lineOffset != null) {
             int startOffset = 0;
             for (int line = 0; line < lineOffset; ++line) {
@@ -45,12 +53,13 @@ public class SavedSearch implements SearchRequest {
     }
 
     @Override
+    @NotNull
     public SearchInfo getSearchInfo() {
         return searchInfo;
     }
 
     @NotNull
-    public CreatedSearch getSavedSearch() {
+    public Search getSavedSearch() {
         return savedSearch;
     }
 }

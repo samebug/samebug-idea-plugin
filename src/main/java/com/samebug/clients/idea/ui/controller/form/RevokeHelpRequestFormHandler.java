@@ -15,29 +15,24 @@
  */
 package com.samebug.clients.idea.ui.controller.form;
 
-import com.samebug.clients.common.api.client.RestError;
-import com.samebug.clients.common.api.entities.helpRequest.MyHelpRequest;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.api.form.FieldError;
-import com.samebug.clients.common.api.form.RevokeHelpRequest;
 import com.samebug.clients.common.services.HelpRequestService;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.common.ui.frame.IFrame;
+import com.samebug.clients.http.entities.helprequest.HelpRequest;
+import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.form.HelpRequestCancel;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
-import java.util.List;
-
-public abstract class RevokeHelpRequestFormHandler extends PostFormHandler<MyHelpRequest> {
+public abstract class RevokeHelpRequestFormHandler extends PostFormHandler<HelpRequest, HelpRequestCancel.BadRequest> {
     final IFrame frame;
     final IMyHelpRequest button;
-    final RevokeHelpRequest data;
+    final String helpRequestId;
 
-    public RevokeHelpRequestFormHandler(IFrame frame, IMyHelpRequest button, RevokeHelpRequest data) {
+    public RevokeHelpRequestFormHandler(IFrame frame, IMyHelpRequest button, String helpRequestId) {
         this.frame = frame;
         this.button = button;
-        this.data = data;
+        this.helpRequestId = helpRequestId;
     }
 
     @Override
@@ -46,37 +41,20 @@ public abstract class RevokeHelpRequestFormHandler extends PostFormHandler<MyHel
     }
 
     @Override
-    protected MyHelpRequest postForm() throws SamebugClientException {
+    protected HelpRequest postForm() throws SamebugClientException, HelpRequestCancel.BadRequest {
         final HelpRequestService helpRequestService = IdeaSamebugPlugin.getInstance().helpRequestService;
-        return helpRequestService.revokeHelpRequest(data.helpRequestId);
+        return helpRequestService.revokeHelpRequest(helpRequestId);
     }
 
     @Override
-    protected void handleFieldError(FieldError fieldError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleFieldError(fieldError, globalErrors, fieldErrors);
-        globalErrors.add(MessageService.message("samebug.error.pluginBug"));
-    }
-
-    @Override
-    protected void handleNonFormBadRequests(RestError nonFormError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleNonFormBadRequests(nonFormError, globalErrors, fieldErrors);
-        if (nonFormError.code.equals(RevokeHelpRequest.E_ALREADY_REVOKED)) globalErrors.add(MessageService.message("samebug.component.helpRequest.revoke.error.alreadyRevoked"));
-        else globalErrors.add(MessageService.message("samebug.component.helpRequest.revoke.error.badRequest"));
-    }
-
-    @Override
-    protected void handleOtherClientExceptions(SamebugClientException exception, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleOtherClientExceptions(exception, globalErrors, fieldErrors);
-        globalErrors.add(MessageService.message("samebug.component.helpRequest.revoke.error.unhandled"));
-    }
-
-    @Override
-    protected void showFieldErrors(List<FieldError> fieldErrors) throws FormMismatchException {
+    protected void handleBadRequest(HelpRequestCancel.BadRequest fieldErrors) {
+//        if (nonFormError.code.equals(RevokeHelpRequest.E_ALREADY_REVOKED)) globalErrors.add(MessageService.message("samebug.component.helpRequest.revoke.error.alreadyRevoked"));
         button.failRevoke();
     }
 
     @Override
-    protected void showGlobalErrors(List<String> globalErrors) {
-        if (!globalErrors.isEmpty()) frame.popupError(globalErrors.get(0));
+    protected void handleOtherClientExceptions(SamebugClientException exception) {
+        frame.popupError(MessageService.message("samebug.component.helpRequest.revoke.error.unhandled"));
+        button.failRevoke();
     }
 }

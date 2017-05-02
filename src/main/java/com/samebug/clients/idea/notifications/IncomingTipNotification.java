@@ -17,7 +17,7 @@ package com.samebug.clients.idea.notifications;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
-import com.samebug.clients.common.api.entities.helpRequest.IncomingTip;
+import com.samebug.clients.http.entities.notification.IncomingAnswer;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,10 +26,10 @@ import javax.swing.*;
 public class IncomingTipNotification extends Notification {
     public static final String GroupId = "Samebug tip";
 
-    public IncomingTipNotification(IncomingTip incomingTip) {
+    public IncomingTipNotification(IncomingAnswer incomingTip) {
         super(GroupId,
-                MessageService.message("samebug.notification.incomingTip.title", incomingTip.author.displayName),
-                incomingTip.message,
+                MessageService.message("samebug.notification.incomingTip.title", incomingTip.getSolution().getDocument().getAuthor().getDisplayName()),
+                incomingTip.getSolution().getDocument().getMessage(),
                 NotificationType.INFORMATION,
                 null);
 

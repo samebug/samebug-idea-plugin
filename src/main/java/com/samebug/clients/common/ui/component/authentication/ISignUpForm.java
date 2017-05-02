@@ -15,17 +15,37 @@
  */
 package com.samebug.clients.common.ui.component.authentication;
 
-import com.samebug.clients.common.api.form.FieldError;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
-
-import java.util.List;
-
 public interface ISignUpForm {
     void startPost();
 
-    void failPost(List<FieldError> errors) throws FormMismatchException;
+    void failPost(BadRequest errors);
 
     void successPost();
+
+    final class BadRequest {
+        public final DisplayName displayName;
+        public final Email email;
+        public final Password password;
+
+        public BadRequest(DisplayName displayName, Email email, Password password) {
+            this.displayName = displayName;
+            this.email = email;
+            this.password = password;
+        }
+
+        public enum DisplayName {
+            EMPTY, TOO_LONG
+        }
+
+        public enum Email {
+            TAKEN, INVALID, LONG
+        }
+
+        public enum Password {
+            SHORT
+        }
+
+    }
 
     interface Listener {
         void signUp(ISignUpForm source, String displayName, String email, String password);

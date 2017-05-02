@@ -29,7 +29,7 @@ import javax.swing.*;
 import java.text.MessageFormat;
 
 public final class IncomingTipPopup extends SamebugPanel implements IIncomingTipPopup {
-    private final static int AvatarSize = 40;
+    private static final int AvatarSize = 40;
 
     public IncomingTipPopup(Model model) {
         final JComponent avatar = new AvatarIcon(model.avatarUrl, AvatarSize);
@@ -47,7 +47,7 @@ public final class IncomingTipPopup extends SamebugPanel implements IIncomingTip
     }
 
     final class TipBody extends SamebugMultilineLabel {
-        public TipBody(String body) {
+        TipBody(String body) {
             setText(body);
             setFont(FontService.regular(14));
         }

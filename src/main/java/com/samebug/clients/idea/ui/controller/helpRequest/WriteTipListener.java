@@ -15,11 +15,11 @@
  */
 package com.samebug.clients.idea.ui.controller.helpRequest;
 
-import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
-import com.samebug.clients.common.api.entities.solution.RestHit;
-import com.samebug.clients.common.api.entities.solution.Tip;
-import com.samebug.clients.common.api.form.CreateTip;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
+import com.samebug.clients.http.entities.helprequest.HelpRequest;
+import com.samebug.clients.http.entities.solution.SamebugTip;
+import com.samebug.clients.http.entities.solution.SolutionSlot;
+import com.samebug.clients.http.form.TipCreate;
 import com.samebug.clients.idea.ui.controller.form.CreateTipFormHandler;
 
 final class WriteTipListener implements IHelpOthersCTA.Listener {
@@ -31,13 +31,14 @@ final class WriteTipListener implements IHelpOthersCTA.Listener {
 
     @Override
     public void postTip(final IHelpOthersCTA source, final String tipBody) {
-        final MatchingHelpRequest helpRequest = controller.helpRequestStore.getHelpRequest(controller.helpRequestId);
+        final HelpRequest helpRequest = controller.helpRequestStore.getHelpRequest(controller.helpRequestId);
         assert helpRequest != null : "we just showed it, it should not be null";
-        assert helpRequest.matchingGroup.lastSearchInfo != null : "our own search is always visible";
+        // TODO matching help request?
+//        assert helpRequest.matchingGroup.lastSearchInfo != null : "our own search is always visible";
 
-        new CreateTipFormHandler(controller.view, source, new CreateTip(helpRequest.matchingGroup.lastSearchInfo.id, tipBody, null, controller.helpRequestId)) {
+        new CreateTipFormHandler(controller.view, source, new TipCreate.ForHelpRequest(tipBody, null, helpRequest.getSearchId(), controller.helpRequestId)) {
             @Override
-            protected void afterPostForm(RestHit<Tip> response) {
+            protected void afterPostForm(SolutionSlot<SamebugTip> response) {
                 // TODO animation
                 controller.load();
             }

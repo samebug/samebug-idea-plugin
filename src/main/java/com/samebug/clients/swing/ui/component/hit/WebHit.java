@@ -49,7 +49,7 @@ public final class WebHit extends SamebugPanel implements IWebHit {
     }
 
     private final class TitlePanel extends TransparentPanel {
-        private final static int Size = 40;
+        private static final int Size = 40;
 
         {
             final SourceIcon sourceIcon = new SourceIcon();

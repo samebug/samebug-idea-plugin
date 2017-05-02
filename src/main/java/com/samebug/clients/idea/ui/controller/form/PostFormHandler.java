@@ -16,21 +16,11 @@
 package com.samebug.clients.idea.ui.controller.form;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.samebug.clients.common.api.client.FormRestError;
-import com.samebug.clients.common.api.client.RestError;
-import com.samebug.clients.common.api.exceptions.BadRequest;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.api.form.FieldError;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
-import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.http.exceptions.FormException;
+import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.form.HelpRequestCreate;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public abstract class PostFormHandler<T> {
-    private final static Logger LOGGER = Logger.getInstance(PostFormHandler.class);
-
+public abstract class PostFormHandler<T, E extends FormException> {
     public final void execute() {
         beforePostForm();
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
@@ -44,8 +34,21 @@ public abstract class PostFormHandler<T> {
                             afterPostForm(response);
                         }
                     });
-                } catch (SamebugClientException e) {
-                    handleException(e);
+                } catch (final SamebugClientException e) {
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            handleOtherClientExceptions(e);
+                        }
+                    });
+                } catch (final FormException e) {
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        @Override
+                        @SuppressWarnings("unchecked")
+                        public void run() {
+                            handleBadRequest((E) e);
+                        }
+                    });
                 }
             }
         });
@@ -61,7 +64,7 @@ public abstract class PostFormHandler<T> {
     /**
      * Runs on background thread
      */
-    protected abstract T postForm() throws SamebugClientException;
+    protected abstract T postForm() throws E, SamebugClientException, HelpRequestCreate.BadRequest;
 
     /**
      * Runs on UI thread
@@ -70,64 +73,16 @@ public abstract class PostFormHandler<T> {
     protected abstract void afterPostForm(T response);
 
     /**
-     * Runs on background thread
+     * Runs on UI thread.
+     * Guaranteed to be called if there was any error (if there were no field errors, the list will be empty).
+     * This is a place where you can update the form UI for a failed request.
      */
-    protected void handleFieldError(FieldError fieldError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        LOGGER.info("Form error: " + fieldError);
-    }
-
-    /**
-     * Runs on background thread
-     */
-    protected void handleNonFormBadRequests(RestError nonFormError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        LOGGER.info("Bad request: " + nonFormError);
-    }
-
-    /**
-     * Runs on background thread
-     */
-    protected void handleOtherClientExceptions(SamebugClientException exception, List<String> globalErrors, List<FieldError> fieldErrors) {
-        LOGGER.warn("Failed to post request", exception);
-    }
+    protected abstract void handleBadRequest(E fieldErrors);
 
     /**
      * Runs on UI thread.
      * Guaranteed to be called if there was any error (if there were no field errors, the list will be empty).
      * This is a place where you can update the form UI for a failed request.
      */
-    protected abstract void showFieldErrors(List<FieldError> fieldErrors) throws FormMismatchException;
-
-    protected abstract void showGlobalErrors(List<String> globalErrors);
-
-    private void handleException(SamebugClientException exception) {
-        final List<String> globalErrors = new ArrayList<String>();
-        final List<FieldError> fieldErrors = new ArrayList<FieldError>();
-
-        if (exception instanceof BadRequest) {
-            if (((BadRequest) exception).getRestError() instanceof FormRestError) {
-                FormRestError formError = (FormRestError) ((BadRequest) exception).getRestError();
-                for (FieldError fieldError : formError.getAllFieldErrors()) handleFieldError(fieldError, globalErrors, fieldErrors);
-            } else {
-                RestError otherError = (RestError) ((BadRequest) exception).getRestError();
-                handleNonFormBadRequests(otherError, globalErrors, fieldErrors);
-            }
-        } else {
-            handleOtherClientExceptions(exception, globalErrors, fieldErrors);
-        }
-
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    showFieldErrors(fieldErrors);
-                } catch (FormMismatchException formException) {
-                    LOGGER.warn("Unprocessed form errors", formException);
-                    globalErrors.add(MessageService.message("samebug.error.pluginBug"));
-                }
-
-                showGlobalErrors(globalErrors);
-            }
-        });
-    }
-
+    protected abstract void handleOtherClientExceptions(SamebugClientException exception);
 }
