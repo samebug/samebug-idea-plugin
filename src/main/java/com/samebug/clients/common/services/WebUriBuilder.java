@@ -15,20 +15,15 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.http.exceptions.IllegalUriException;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
-import java.net.URLEncoder;
 
-public final class WebUrlBuilder {
+public final class WebUriBuilder {
     @NotNull
     final URI serverRoot;
 
-    public WebUrlBuilder(@NotNull final String serverRoot) {
+    public WebUriBuilder(@NotNull final String serverRoot) {
         assert !serverRoot.endsWith("/");
         this.serverRoot = URI.create(serverRoot);
     }
@@ -39,42 +34,34 @@ public final class WebUrlBuilder {
     }
 
     @NotNull
-    public URL search(@NotNull final Integer searchId) {
+    public URI search(@NotNull final Integer searchId) {
         return resolveToRoot("/search/" + searchId);
     }
 
     @NotNull
-    public URL assets(@NotNull final String assetUri) {
+    public URI assets(@NotNull final String assetUri) {
         return resolveToRoot("/assets/" + assetUri);
     }
 
     @NotNull
-    public URL sourceIcon(@NotNull final String iconId) {
+    public URI sourceIcon(@NotNull final String iconId) {
         return resolveToRoot("/assets/images/sources/" + iconId + ".png");
     }
 
     @NotNull
-    public URL profile(@NotNull final int userId) {
+    public URI profile(@NotNull final int userId) {
         // TODO profile page url
         return resolveToRoot("/user/" + userId);
     }
 
     @NotNull
-    public URL forgottenPassword() {
+    public URI forgottenPassword() {
         // TODO forgotten password page
         return resolveToRoot("");
     }
 
     @NotNull
-    URL resolveToRoot(@NotNull final String uri) throws IllegalUriException {
-        try {
-            return serverRoot.resolve(uri).toURL();
-        } catch (MalformedURLException e) {
-            throw new IllegalUriException("Unable to resolve uri " + uri, e);
-        }
-    }
-
-    String enc(final String s) throws UnsupportedEncodingException {
-        return URLEncoder.encode(s, "utf-8");
+    URI resolveToRoot(@NotNull final String uri) {
+        return serverRoot.resolve(uri);
     }
 }

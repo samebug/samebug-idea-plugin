@@ -24,7 +24,7 @@ import com.samebug.clients.idea.ui.controller.form.LogInFormHandler;
 import com.samebug.clients.idea.ui.modules.BrowserUtil;
 import com.samebug.clients.swing.ui.modules.TrackingService;
 
-import java.net.URL;
+import java.net.URI;
 
 public final class LogInListener implements ILogInForm.Listener {
     final AuthenticationController controller;
@@ -47,7 +47,7 @@ public final class LogInListener implements ILogInForm.Listener {
 
     @Override
     public void forgotPassword(ILogInForm source) {
-        URL forgottenPasswordUrl = IdeaSamebugPlugin.getInstance().urlBuilder.forgottenPassword();
-        BrowserUtil.browse(forgottenPasswordUrl);
+        URI forgottenPasswordUri = IdeaSamebugPlugin.getInstance().uriBuilder.forgottenPassword();
+        BrowserUtil.browse(forgottenPasswordUri);
     }
 }

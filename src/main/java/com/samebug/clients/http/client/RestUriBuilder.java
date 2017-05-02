@@ -15,116 +15,109 @@
  */
 package com.samebug.clients.http.client;
 
-import com.samebug.clients.http.exceptions.IllegalUriException;
 import org.jetbrains.annotations.NotNull;
 
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 
-final class RestUrlBuilder {
+final class RestUriBuilder {
     @NotNull
     final URI gateway;
 
-    RestUrlBuilder(@NotNull final String serverRoot) {
+    RestUriBuilder(@NotNull final String serverRoot) {
         assert !serverRoot.endsWith("/");
         if ("http://localhost:9000".equals(serverRoot) || "http://127.0.0.1:9000".equals(serverRoot)) this.gateway = URI.create(serverRoot + "/");
         else this.gateway = URI.create(serverRoot + "/").resolve("rest/");
     }
 
     @NotNull
-    public URL search() {
+    public URI search() {
         return resolve("search");
     }
 
     @NotNull
-    public URL search(@NotNull final Integer searchId) {
+    public URI search(@NotNull final Integer searchId) {
         return resolve("search/" + searchId);
     }
 
     @NotNull
-    public URL solutions(@NotNull final Integer searchId) {
+    public URI solutions(@NotNull final Integer searchId) {
         return resolve("search/" + searchId + "/external-solutions");
     }
 
     @NotNull
-    public URL tips(@NotNull final Integer searchId) {
+    public URI tips(@NotNull final Integer searchId) {
         return resolve("search/" + searchId + "/tips");
     }
 
     @NotNull
-    public URL bugmates(@NotNull final Integer searchId) {
+    public URI bugmates(@NotNull final Integer searchId) {
         return resolve("search/" + searchId + "/bugmates");
     }
 
     @NotNull
-    public URL me() {
+    public URI me() {
         return resolve("auth/me");
     }
 
     @NotNull
-    public URL helpRequest() {
+    public URI helpRequest() {
         return resolve("help-request");
     }
 
     @NotNull
-    public URL revokeHelpRequest(String id) {
+    public URI revokeHelpRequest(String id) {
         return resolve("help-request/" + id + "/revoke");
     }
 
     @NotNull
-    public URL getHelpRequest(String helpRequestId) {
+    public URI getHelpRequest(String helpRequestId) {
         return resolve("help-request/" + helpRequestId);
     }
 
     @NotNull
-    public URL incomingHelpRequests() {
+    public URI incomingHelpRequests() {
         return resolve("incoming-helprequests");
     }
 
     @NotNull
-    public URL tip() {
+    public URI tip() {
         return resolve("tip");
     }
 
     @NotNull
-    public URL mark() {
+    public URI mark() {
         return resolve("mark");
     }
 
     @NotNull
-    public URL cancelMark(@NotNull final Integer markId) {
+    public URI cancelMark(@NotNull final Integer markId) {
         return resolve("mark/" + markId + "cancel");
     }
 
     @NotNull
-    public URL userStats() {
+    public URI userStats() {
         return resolve("user/statistics");
     }
 
     // TODO
     @NotNull
-    public URL anonymousUse() {
+    public URI anonymousUse() {
         return resolve("signup-anonymously");
     }
 
     @NotNull
-    public URL signUp() {
+    public URI signUp() {
         return resolve("auth/signup");
     }
 
     @NotNull
-    public URL logIn() {
+    public URI logIn() {
         return resolve("auth/signin");
     }
 
 
     @NotNull
-    URL resolve(@NotNull final String uri) throws IllegalUriException {
-        try {
-            return gateway.resolve(uri).toURL();
-        } catch (MalformedURLException e) {
-            throw new IllegalUriException("Unable to resolve uri " + uri, e);
-        }
+    URI resolve(@NotNull final String uri) {
+        return gateway.resolve(uri);
     }
 }

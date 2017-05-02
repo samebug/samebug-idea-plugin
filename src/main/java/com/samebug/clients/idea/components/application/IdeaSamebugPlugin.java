@@ -53,7 +53,7 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     private static final Logger LOGGER = Logger.getInstance(IdeaSamebugPlugin.class);
     private AtomicReference<ApplicationSettings> state = new AtomicReference<ApplicationSettings>(new ApplicationSettings());
 
-    public WebUrlBuilder urlBuilder = new WebUrlBuilder(state.get().serverRoot);
+    public WebUriBuilder uriBuilder = new WebUriBuilder(state.get().serverRoot);
     public IdeaClientService clientService;
     public ProfileStore profileStore;
     public ProfileService profileService;
@@ -173,7 +173,7 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         state.set(newSettings);
         try {
             if (clientService != null) clientService.configure(newSettings.getNetworkConfig());
-            urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
+            uriBuilder = new WebUriBuilder(newSettings.serverRoot);
             ApplicationManager.getApplication().getMessageBus().syncPublisher(ConfigChangeListener.TOPIC).configChange(oldSettings, newSettings);
         } finally {
             if (oldSettings.apiKey != newSettings.apiKey) TrackingService.trace(Events.changeApiKey());
@@ -186,6 +186,6 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         ApplicationSettings newSettings = new ApplicationSettings(state);
         this.state.set(newSettings);
         if (clientService != null) clientService.configure(newSettings.getNetworkConfig());
-        urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
+        uriBuilder = new WebUriBuilder(newSettings.serverRoot);
     }
 }

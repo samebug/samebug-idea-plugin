@@ -42,8 +42,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 
 public final class AnalyzeDialog extends DialogWrapper {
     static final Logger LOGGER = Logger.getInstance(AnalyzeDialog.class);
@@ -169,12 +168,8 @@ public final class AnalyzeDialog extends DialogWrapper {
         @Override
         protected void doAction(ActionEvent e) {
             final String trace = myEditorPanel.getText();
-            try {
-                URL url = new URL("https://www.google.hu/search?q=" + trace);
-                BrowserUtil.browse(url);
-            } catch (MalformedURLException e1) {
-                LOGGER.warn("Failed to open browser for google search", e1);
-            }
+            URI uri = URI.create("https://www.google.hu/search?q=" + trace);
+            BrowserUtil.browse(uri);
         }
     }
 

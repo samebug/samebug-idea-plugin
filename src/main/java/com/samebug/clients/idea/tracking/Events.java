@@ -21,6 +21,7 @@ import com.samebug.clients.common.entities.search.DebugSessionInfo;
 import com.samebug.clients.http.entities.tracking.TrackEvent;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -115,6 +116,14 @@ public final class Events {
             protected void initDataFields() {
                 add("page-type", "search/stacktrace");
                 add("searchId", searchId);
+            }
+        }.getEvent();
+    }
+
+    public static TrackEvent linkClick(final URI uri) {
+        return new TrackBuilder("Link", "Click") {
+            protected void initDataFields() {
+                add("url", uri.toString());
             }
         }.getEvent();
     }

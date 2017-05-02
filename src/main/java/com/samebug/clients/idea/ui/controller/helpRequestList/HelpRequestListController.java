@@ -40,7 +40,7 @@ import com.samebug.clients.swing.ui.frame.helpRequestList.HelpRequestListFrame;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 
 import javax.swing.*;
-import java.net.URL;
+import java.net.URI;
 import java.util.concurrent.Future;
 
 public final class HelpRequestListController extends BaseFrameController<IHelpRequestListFrame> implements Disposable {
@@ -114,8 +114,8 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
             UserInfo user = plugin.profileStore.getUser();
             if (user != null) {
                 int myUserId = user.getId();
-                URL url = plugin.urlBuilder.profile(myUserId);
-                BrowserUtil.browse(url);
+                URI uri = plugin.uriBuilder.profile(myUserId);
+                BrowserUtil.browse(uri);
             }
         }
     }

@@ -38,7 +38,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.net.URI;
-import java.net.URL;
 
 interface HandleRequest<T> {
     HttpRequestBase createRequest();
@@ -62,104 +61,104 @@ final class Builder {
         gson = Json.gson;
     }
 
-    public HasUrl at(URL url) {
-        return new HasUrl(url);
+    public HasUrl at(URI uri) {
+        return new HasUrl(uri);
     }
 
 
     public final class HasUrl {
-        private final URL url;
+        private final URI uri;
 
-        private HasUrl(URL url) {
-            this.url = url;
+        private HasUrl(URI uri) {
+            this.uri = uri;
         }
 
         public HasAuth authenticated() {
-            return new HasAuth(url, true);
+            return new HasAuth(uri, true);
         }
 
         public HasAuth unauthenticated() {
-            return new HasAuth(url, false);
+            return new HasAuth(uri, false);
         }
 
         public <ResponseType> HasResponseType<ResponseType> withResponse(Type responseType) {
-            return new HasResponseType<ResponseType>(url, defaultAuthenticated, responseType);
+            return new HasResponseType<ResponseType>(uri, defaultAuthenticated, responseType);
         }
     }
 
     public final class HasAuth {
-        private final URL url;
+        private final URI uri;
         private final boolean isAuthenticated;
 
-        private HasAuth(URL url, boolean isAuthenticated) {
-            this.url = url;
+        private HasAuth(URI uri, boolean isAuthenticated) {
+            this.uri = uri;
             this.isAuthenticated = isAuthenticated;
         }
 
         public <ResponseType> HasResponseType<ResponseType> withResponse(Type responseType) {
-            return new HasResponseType<ResponseType>(url, isAuthenticated, responseType);
+            return new HasResponseType<ResponseType>(uri, isAuthenticated, responseType);
         }
     }
 
     public final class HasResponseType<ResponseType> {
-        private final URL url;
+        private final URI uri;
         private final boolean isAuthenticated;
         private final Type responseType;
 
-        private HasResponseType(URL url, boolean isAuthenticated, Type responseType) {
-            this.url = url;
+        private HasResponseType(URI uri, boolean isAuthenticated, Type responseType) {
+            this.uri = uri;
             this.isAuthenticated = isAuthenticated;
             this.responseType = responseType;
         }
 
         public NotSendingHandler<ResponseType> buildGet() {
-            return new NotSendingHandler<ResponseType>(url, isAuthenticated, responseType, new HttpGet());
+            return new NotSendingHandler<ResponseType>(uri, isAuthenticated, responseType, new HttpGet());
         }
 
         public NotSendingHandler<ResponseType> buildPost() {
-            return new NotSendingHandler<ResponseType>(url, isAuthenticated, responseType, new HttpPost());
+            return new NotSendingHandler<ResponseType>(uri, isAuthenticated, responseType, new HttpPost());
         }
 
         public NotSendingHandler<ResponseType> buildPut() {
-            return new NotSendingHandler<ResponseType>(url, isAuthenticated, responseType, new HttpPut());
+            return new NotSendingHandler<ResponseType>(uri, isAuthenticated, responseType, new HttpPut());
         }
 
         public <PostDataType> HasPostData<ResponseType, PostDataType> posting(PostDataType postData) {
-            return new HasPostData<ResponseType, PostDataType>(url, isAuthenticated, responseType, postData);
+            return new HasPostData<ResponseType, PostDataType>(uri, isAuthenticated, responseType, postData);
         }
     }
 
     public final class HasPostData<ResponseType, PostDataType> {
-        private final URL url;
+        private final URI uri;
         private final boolean isAuthenticated;
         private final Type responseType;
         private final PostDataType postData;
 
-        private HasPostData(URL url, boolean isAuthenticated, Type responseType, PostDataType postData) {
-            this.url = url;
+        private HasPostData(URI uri, boolean isAuthenticated, Type responseType, PostDataType postData) {
+            this.uri = uri;
             this.isAuthenticated = isAuthenticated;
             this.responseType = responseType;
             this.postData = postData;
         }
 
         public SimplePostHandler<ResponseType, PostDataType> build() {
-            return new SimplePostHandler<ResponseType, PostDataType>(url, isAuthenticated, responseType, postData);
+            return new SimplePostHandler<ResponseType, PostDataType>(uri, isAuthenticated, responseType, postData);
         }
 
         public <ErrorType> HasErrorType<PostDataType, ResponseType, ErrorType> withErrors(Type errorType) {
-            return new HasErrorType<PostDataType, ResponseType, ErrorType>(url, isAuthenticated, responseType, postData, errorType);
+            return new HasErrorType<PostDataType, ResponseType, ErrorType>(uri, isAuthenticated, responseType, postData, errorType);
         }
     }
 
     public final class HasErrorType<PostDataType, ResponseType, ErrorType> {
-        private final URL url;
+        private final URI uri;
         private final boolean isAuthenticated;
         private final Type responseType;
         private final PostDataType postData;
         private final Type errorType;
 
-        private HasErrorType(URL url, boolean isAuthenticated, Type responseType, PostDataType postData, Type errorType) {
-            this.url = url;
+        private HasErrorType(URI uri, boolean isAuthenticated, Type responseType, PostDataType postData, Type errorType) {
+            this.uri = uri;
             this.isAuthenticated = isAuthenticated;
             this.responseType = responseType;
             this.postData = postData;
@@ -167,22 +166,22 @@ final class Builder {
         }
 
         public HandlePostResponseJson<PostDataType, ResponseType, ErrorType> buildPut() {
-            return new HandlePostResponseJson<PostDataType, ResponseType, ErrorType>(url, isAuthenticated, postData, responseType, errorType, "PUT");
+            return new HandlePostResponseJson<PostDataType, ResponseType, ErrorType>(uri, isAuthenticated, postData, responseType, errorType, "PUT");
         }
 
         public HandlePostResponseJson<PostDataType, ResponseType, ErrorType> buildPost() {
-            return new HandlePostResponseJson<PostDataType, ResponseType, ErrorType>(url, isAuthenticated, postData, responseType, errorType, "POST");
+            return new HandlePostResponseJson<PostDataType, ResponseType, ErrorType>(uri, isAuthenticated, postData, responseType, errorType, "POST");
         }
     }
 
 
     private abstract class HandleRequestBase<ResponseType> {
-        protected URL url;
+        protected URI uri;
         protected boolean isAuthenticated;
         protected Type responseType;
 
-        protected HandleRequestBase(URL url, boolean isAuthenticated, Type responseType) {
-            this.url = url;
+        protected HandleRequestBase(URI uri, boolean isAuthenticated, Type responseType) {
+            this.uri = uri;
             this.isAuthenticated = isAuthenticated;
             this.responseType = responseType;
         }
@@ -233,8 +232,8 @@ final class Builder {
     }
 
     public abstract class SimpleResponseHandler<ResponseType> extends HandleRequestBase<ResponseType> implements HandleRequest<GetResponse<ResponseType>> {
-        private SimpleResponseHandler(URL url, boolean isAuthenticated, Type responseType) {
-            super(url, isAuthenticated, responseType);
+        private SimpleResponseHandler(URI uri, boolean isAuthenticated, Type responseType) {
+            super(uri, isAuthenticated, responseType);
         }
 
         @Override
@@ -263,13 +262,12 @@ final class Builder {
     public final class NotSendingHandler<ResponseType> extends SimpleResponseHandler<ResponseType> {
         HttpRequestBase requestMethod;
 
-        private NotSendingHandler(URL url, boolean isAuthenticated, Type responseType, HttpRequestBase requestMethod) {
-            super(url, isAuthenticated, responseType);
+        private NotSendingHandler(URI uri, boolean isAuthenticated, Type responseType, HttpRequestBase requestMethod) {
+            super(uri, isAuthenticated, responseType);
             this.requestMethod = requestMethod;
         }
 
         public HttpRequestBase initiateRequest() {
-            final URI uri = URI.create(url.toString());
             requestMethod.setURI(uri);
             return requestMethod;
         }
@@ -278,13 +276,13 @@ final class Builder {
     public final class SimplePostHandler<ResponseType, PostDataType> extends SimpleResponseHandler<ResponseType> {
         PostDataType postData;
 
-        private SimplePostHandler(URL url, boolean isAuthenticated, Type responseType, PostDataType postData) {
-            super(url, isAuthenticated, responseType);
+        private SimplePostHandler(URI uri, boolean isAuthenticated, Type responseType, PostDataType postData) {
+            super(uri, isAuthenticated, responseType);
             this.postData = postData;
         }
 
         public HttpRequestBase initiateRequest() {
-            HttpRequestBase request = new HttpPost(url.toString());
+            HttpRequestBase request = new HttpPost(uri);
             ((HttpPost) request).setEntity(new StringEntity(gson.toJson(postData), Consts.UTF_8));
             request.setHeader("Content-Type", "application/json");
             return request;
@@ -297,15 +295,15 @@ final class Builder {
         private final PostDataType postData;
         private final HttpRequestBase request;
 
-        private HandlePostResponseJson(URL url, boolean isAuthenticated, PostDataType postData, Type responseType, Type formErrorType, String requestMethod) {
-            super(url, isAuthenticated, responseType);
+        private HandlePostResponseJson(URI uri, boolean isAuthenticated, PostDataType postData, Type responseType, Type formErrorType, String requestMethod) {
+            super(uri, isAuthenticated, responseType);
             this.formErrorType = formErrorType;
             this.postData = postData;
             if ("POST".equals(requestMethod)) {
-                request = new HttpPost(url.toString());
+                request = new HttpPost(uri);
                 if (postData != null) ((HttpPost) request).setEntity(new StringEntity(gson.toJson(postData), Consts.UTF_8));
             } else if ("PUT".equals(requestMethod)) {
-                request = new HttpPut(url.toString());
+                request = new HttpPut(uri);
                 if (postData != null) ((HttpPut) request).setEntity(new StringEntity(gson.toJson(postData), Consts.UTF_8));
             } else throw new IllegalArgumentException("Change requestMethod parameter so it's not stringly typed");
             if (postData != null) request.setHeader("Content-Type", "application/json");
