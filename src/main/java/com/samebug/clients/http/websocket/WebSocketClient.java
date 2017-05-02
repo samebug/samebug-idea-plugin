@@ -57,7 +57,7 @@ public final class WebSocketClient implements Closeable {
 
         this.port = port == -1 ? (isWss ? 443 : 80) : port;
         this.host = config.serverUri.getHost();
-        this.wsEndpoint = new URI(scheme, null, host, port, "/notifications", null, null);
+        this.wsEndpoint = new URI(scheme, null, host, port, "/notifications/websocket", null, null);
         this.eventHandler = config.eventHandler;
         this.group = config.group;
         this.sslContext = isWss ? SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build() : null;
