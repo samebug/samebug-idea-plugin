@@ -43,11 +43,11 @@ import java.net.URL;
 interface HandleRequest<T> {
     HttpRequestBase createRequest();
 
-    T onSuccess(final HttpResponse response);
+    T onSuccess(HttpResponse response);
 
-    T onBadRequest(final HttpResponse response);
+    T onBadRequest(HttpResponse response);
 
-    T onError(final SamebugClientException exception);
+    T onError(SamebugClientException exception);
 }
 
 final class Builder {

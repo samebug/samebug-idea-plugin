@@ -13,31 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.profile;
+package com.samebug.clients.http.entities.response;
 
-import com.samebug.clients.http.entities.user.SamebugWorkspace;
+import com.samebug.clients.http.entities.jsonapi.JsonResource;
+import com.samebug.clients.http.entities.profile.UserInfo;
 
-import java.net.URL;
-
-public final class UserInfo {
-    private Integer id;
-    private String displayName;
-    private URL avatarUrl;
-    private SamebugWorkspace workspace;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public URL getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    public SamebugWorkspace getWorkspace() {
-        return workspace;
-    }
+public final class GetUser extends JsonResource<UserInfo> {
 }

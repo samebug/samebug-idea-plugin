@@ -21,12 +21,6 @@ import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 public final class MarkCreate {
-    public static final String SOLUTION = "solution";
-    public static final String SEARCH = "search";
-
-    public static final String E_ALREADY_MARKED = "ALREADY_MARKED";
-    public static final String E_NOT_YOUR_SEARCH = "NOT_YOUR_SEARCH";
-
     public static final class Data {
         public final String type = "mark-searchhit";
         public final Integer solutionId;
@@ -39,7 +33,7 @@ public final class MarkCreate {
     }
 
     public enum ErrorCode {
-        TOO_SHORT
+        NOT_YOUR_SEARCH
     }
 
     public static class BadRequest extends FormException {

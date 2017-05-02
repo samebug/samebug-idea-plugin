@@ -30,7 +30,6 @@ import com.samebug.clients.http.entities.solution.SamebugTip;
 import com.samebug.clients.http.entities.solution.SolutionSlot;
 import com.samebug.clients.http.entities.tracking.TrackEvent;
 import com.samebug.clients.http.exceptions.SamebugClientException;
-import com.samebug.clients.http.exceptions.UnableToPrepareUrl;
 import com.samebug.clients.http.form.*;
 import com.samebug.clients.http.json.Json;
 import com.samebug.clients.http.response.GetResponse;
@@ -59,9 +58,23 @@ public final class SamebugClient {
         this.requestBuilder = new Builder(config);
     }
 
-    // TODO the server should accept the workspaceId
     @NotNull
-    public UserInfo getUserInfo(@NotNull final String apiKey) throws SamebugClientException, UnableToPrepareUrl {
+    public UserInfo getUserInfo(@NotNull final String apiKey, @Nullable final Integer workspaceId) throws SamebugClientException {
+        RawClient tmpClient = new RawClient(new Config(
+                apiKey, workspaceId, config.serverRoot, config.trackingRoot, config.isTrackingEnabled,
+                config.connectTimeout, config.requestTimeout, config.isApacheLoggingEnabled, config.isJsonDebugEnabled, config.proxy),
+                null
+        );
+        Builder.SimpleResponseHandler<GetUser> request = requestBuilder
+                .at(urlBuilder.me())
+                .<GetUser>withResponse(GetUser.class)
+                .buildGet();
+        return extractGet(tmpClient.execute(request)).getData();
+    }
+
+    @NotNull
+    public UserStats getUserStats() throws SamebugClientException {
+        final URL url = urlBuilder.userStats();
         // TODO
         return null;
     }
@@ -234,13 +247,6 @@ public final class SamebugClient {
             default:
                 throw new IllegalStateException();
         }
-    }
-
-    @NotNull
-    public UserStats getUserStats() throws SamebugClientException {
-        final URL url = urlBuilder.userStats();
-        // TODO
-        return null;
     }
 
     @NotNull

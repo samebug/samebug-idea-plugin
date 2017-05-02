@@ -34,7 +34,7 @@ public final class AuthenticationService {
     }
 
     public UserInfo apiKeyAuthentication(final String apiKey, @Nullable final Integer workspaceId) throws SamebugException {
-        return client.getUserInfo(apiKey);
+        return client.getUserInfo(apiKey, workspaceId);
         // TODO if workspaceId is null, save the returned default workspace id to application settings.
     }
 

@@ -16,14 +16,11 @@
 package com.samebug.clients.http.client;
 
 import com.samebug.clients.http.exceptions.IllegalUriException;
-import com.samebug.clients.http.exceptions.UnableToPrepareUrl;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLEncoder;
 
 final class RestUrlBuilder {
     @NotNull
@@ -61,13 +58,8 @@ final class RestUrlBuilder {
     }
 
     @NotNull
-    public URL checkApiKey(@NotNull final String apiKey) throws UnableToPrepareUrl {
-        try {
-            final String uri = "checkApiKey?apiKey=" + URLEncoder.encode(apiKey, "UTF-8");
-            return resolve(uri);
-        } catch (UnsupportedEncodingException e) {
-            throw new UnableToPrepareUrl("Unable to resolve uri with apiKey " + apiKey, e);
-        }
+    public URL me() {
+        return resolve("auth/me");
     }
 
     @NotNull
