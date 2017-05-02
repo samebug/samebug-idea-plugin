@@ -113,7 +113,7 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
             // TODO help requests url
             UserInfo user = plugin.profileStore.getUser();
             if (user != null) {
-                int myUserId = user.getUserId();
+                int myUserId = user.getId();
                 URL url = plugin.urlBuilder.profile(myUserId);
                 BrowserUtil.browse(url);
             }

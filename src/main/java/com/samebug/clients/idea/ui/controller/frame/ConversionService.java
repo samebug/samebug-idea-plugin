@@ -142,7 +142,7 @@ public final class ConversionService {
     }
 
     public IProfilePanel.Model profilePanel(IncomingHelpRequestList incomingRequests, UserInfo user, UserStats statistics) {
-        ConnectionStatus status = IdeaSamebugPlugin.getInstance().webSocketClientService.isConnected() ? ConnectionStatus.ONLINE : ConnectionStatus.OFFLINE;
+        ConnectionStatus status = IdeaSamebugPlugin.getInstance().clientService.getWsClient().isConnected() ? ConnectionStatus.ONLINE : ConnectionStatus.OFFLINE;
         return new IProfilePanel.Model(incomingRequests.matches.size(), statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(),
                 user.getDisplayName(), user.getAvatarUrl(), status);
     }

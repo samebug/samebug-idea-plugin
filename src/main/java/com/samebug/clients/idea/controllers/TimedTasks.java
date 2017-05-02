@@ -70,6 +70,6 @@ public class TimedTasks {
 
     public void checkWebSocketConnection() {
         final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-        plugin.webSocketClientService.checkConnectionAndConnectOnBackgroundThreadIfNecessary();
+        plugin.clientService.getWsClient().checkConnectionAndConnectOnBackgroundThreadIfNecessary();
     }
 }

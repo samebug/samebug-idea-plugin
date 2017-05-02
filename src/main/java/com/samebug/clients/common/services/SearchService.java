@@ -21,21 +21,19 @@ import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.SearchCreate;
 
 public final class SearchService {
-    final ClientService clientService;
+    final SamebugClient client;
     final SearchStore store;
 
-    public SearchService(ClientService clientService, SearchStore store) {
-        this.clientService = clientService;
+    public SearchService(SamebugClient client, SearchStore store) {
+        this.client = client;
         this.store = store;
     }
 
     public SearchRequest search(final String trace) throws SamebugClientException {
-        final SamebugClient client = clientService.client;
         return client.createSearch(new SearchCreate(trace));
     }
 
     public SearchRequest get(final int searchId) throws SamebugClientException {
-        final SamebugClient client = clientService.client;
         try {
             SearchRequest result = client.getSearch(searchId);
             store.searches.put(searchId, result);

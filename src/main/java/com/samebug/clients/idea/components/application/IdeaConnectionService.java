@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.services;
+package com.samebug.clients.idea.components.application;
 
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.Topic;

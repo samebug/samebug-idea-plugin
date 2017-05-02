@@ -15,8 +15,6 @@
  */
 package com.samebug.clients.http.websocket;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
@@ -28,8 +26,6 @@ import io.netty.util.CharsetUtil;
 import java.text.MessageFormat;
 
 public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
-    private static final Logger LOGGER = Logger.getInstance(WebSocketClientHandler.class);
-
     private final WebSocketClientHandshaker handshaker;
     private WebSocketEventHandler eventHandler;
     private ChannelPromise handshakeFuture;
@@ -58,8 +54,6 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         eventHandler.disconnected();
-        // IMPROVE try reconnect only after a few seconds
-        IdeaSamebugPlugin.getInstance().webSocketClientService.checkConnectionAndConnectOnBackgroundThreadIfNecessary();
     }
 
     @Override
@@ -91,7 +85,6 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        LOGGER.warn("Exception in websocket handler", cause);
         if (!handshakeFuture.isDone()) {
             handshakeFuture.setFailure(cause);
         }

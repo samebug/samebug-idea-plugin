@@ -18,17 +18,18 @@ package com.samebug.clients.http.websocket;
 import io.netty.channel.EventLoopGroup;
 
 import java.net.URI;
-import java.util.Map;
 
 public final class WebSocketConfig {
-    public final URI uri;
-    public final Map<String, Object> customHeaders;
+    public final URI serverUri;
+    public final String apiKey;
+    public final Integer workspaceId;
     public final WebSocketEventHandler eventHandler;
     public final EventLoopGroup group;
 
-    public WebSocketConfig(URI uri, Map<String, Object> customHeaders, WebSocketEventHandler eventHandler, EventLoopGroup group) {
-        this.uri = uri;
-        this.customHeaders = customHeaders;
+    public WebSocketConfig(URI serverUri, String apiKey, Integer workspaceId, WebSocketEventHandler eventHandler, EventLoopGroup group) {
+        this.serverUri = serverUri;
+        this.apiKey = apiKey;
+        this.workspaceId = workspaceId;
         this.eventHandler = eventHandler;
         this.group = group;
     }

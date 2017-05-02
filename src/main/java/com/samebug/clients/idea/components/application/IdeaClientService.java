@@ -13,33 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.services;
+package com.samebug.clients.idea.components.application;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBus;
 import com.samebug.clients.http.client.Config;
 import com.samebug.clients.http.client.SamebugClient;
+import com.samebug.clients.idea.controllers.NotificationController;
+import com.samebug.clients.idea.controllers.WebSocketClientService;
 import org.apache.log4j.Level;
 
-/**
- * NOTE: this service uses idea MessageBus only for convenience, any other observer implementation would do.
- */
-public final class ClientService {
+public final class IdeaClientService implements Disposable {
     SamebugClient client;
+    WebSocketClientService wsClient;
     IdeaConnectionService connectionService;
 
-    public ClientService(MessageBus messageBus) {
+    public IdeaClientService(MessageBus messageBus) {
         this.connectionService = new IdeaConnectionService(messageBus);
+        this.wsClient = new WebSocketClientService(new NotificationController());
     }
 
     public void configure(final Config config) {
         this.client = new SamebugClient(config, connectionService);
+        this.wsClient.configure(config);
 
         if (config.isApacheLoggingEnabled) enableApacheLogging();
     }
 
     public SamebugClient getClient() {
         return client;
+    }
+
+    public WebSocketClientService getWsClient() {
+        return wsClient;
     }
 
     public IdeaConnectionService getConnectionService() {
@@ -74,5 +81,10 @@ public final class ClientService {
         Logger.getInstance("org.apache.http.client.protocol.ResponseProcessCookies").setLevel(Level.DEBUG);
         Logger.getInstance("org.apache.http.impl.client.InternalHttpClient").setLevel(Level.DEBUG);
         Logger.getInstance("org.apache.http.client.protocol.RequestClientConnControl").setLevel(Level.DEBUG);
+    }
+
+    @Override
+    public void dispose() {
+        wsClient.dispose();
     }
 }

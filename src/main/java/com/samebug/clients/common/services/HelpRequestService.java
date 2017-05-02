@@ -24,33 +24,29 @@ import com.samebug.clients.http.form.HelpRequestCreate;
 import org.jetbrains.annotations.NotNull;
 
 public final class HelpRequestService {
-    final ClientService clientService;
+    final SamebugClient client;
     final HelpRequestStore store;
 
-    public HelpRequestService(ClientService clientService, HelpRequestStore store) {
-        this.clientService = clientService;
+    public HelpRequestService(SamebugClient client, HelpRequestStore store) {
+        this.client = client;
         this.store = store;
     }
 
     public IncomingHelpRequestList loadIncoming() throws SamebugClientException {
-        final SamebugClient client = clientService.client;
         IncomingHelpRequestList result = client.getIncomingHelpRequests();
         store.incoming = result;
         return result;
     }
 
     public HelpRequest createHelpRequest(@NotNull final HelpRequestCreate.Data data) throws SamebugClientException, HelpRequestCreate.BadRequest {
-        final SamebugClient client = clientService.client;
         return client.createHelpRequest(data);
     }
 
     public HelpRequest getHelpRequest(final String helpRequestId) throws SamebugClientException {
-        final SamebugClient client = clientService.client;
         return client.getHelpRequest(helpRequestId);
     }
 
     public HelpRequest revokeHelpRequest(final String helpRequestId) throws SamebugClientException, HelpRequestCancel.BadRequest {
-        final SamebugClient client = clientService.client;
         return client.revokeHelpRequest(helpRequestId);
     }
 }

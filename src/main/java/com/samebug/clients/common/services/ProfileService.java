@@ -19,20 +19,19 @@ import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.http.entities.profile.UserInfo;
 import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.exceptions.SamebugClientException;
-import com.samebug.clients.http.exceptions.UnableToPrepareUrl;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class ProfileService {
     @NotNull
-    final ClientService clientService;
+    final SamebugClient client;
     @NotNull
     final ProfileStore store;
 
 
-    public ProfileService(@NotNull ClientService clientService, @NotNull ProfileStore store) {
-        this.clientService = clientService;
+    public ProfileService(@NotNull SamebugClient client, @NotNull ProfileStore store) {
+        this.client = client;
         this.store = store;
     }
 
@@ -42,23 +41,22 @@ public final class ProfileService {
     // When it will be separated, this method won't have to read the application settings.
     @Nullable
     public UserInfo loadUserInfo() throws SamebugClientException {
-        final SamebugClient client = clientService.client;
         final String apiKey = IdeaSamebugPlugin.getInstance().getState().apiKey;
+        final Integer workspaceId = IdeaSamebugPlugin.getInstance().getState().workspaceId;
 
         if (apiKey == null) return null;
         else {
             try {
-                UserInfo result = client.getUserInfo(apiKey);
+                UserInfo result = client.getUserInfo(apiKey, workspaceId);
                 store.user.set(result);
                 return result;
-            } catch (UnableToPrepareUrl unableToPrepareUrl) {
+            } catch (SamebugClientException e) {
                 return null;
             }
         }
     }
 
     public UserStats loadUserStats() throws SamebugClientException {
-        final SamebugClient client = clientService.client;
         UserStats result = client.getUserStats();
         store.statistics.set(result);
         return result;

@@ -16,13 +16,26 @@
 package com.samebug.clients.http.entities.authentication;
 
 import com.samebug.clients.http.entities.user.RegisteredSamebugUser;
+import com.samebug.clients.http.entities.user.SamebugWorkspace;
 import org.jetbrains.annotations.NotNull;
 
 public final class AuthenticationResponse {
     private RegisteredSamebugUser user;
+    private String apiKey;
+    private SamebugWorkspace defaultWorkspace;
 
     @NotNull
     public RegisteredSamebugUser getUser() {
         return user;
+    }
+
+    @NotNull
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    @NotNull
+    public SamebugWorkspace getDefaultWorkspace() {
+        return defaultWorkspace;
     }
 }

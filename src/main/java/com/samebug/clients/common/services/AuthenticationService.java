@@ -57,14 +57,12 @@ public final class AuthenticationService {
         return result;
     }
 
-    private void updateSettings(AuthenticationResponse user) {
+    private void updateSettings(AuthenticationResponse response) {
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
         ApplicationSettings oldSettings = plugin.getState();
         ApplicationSettings newSettings = new ApplicationSettings(oldSettings);
-//        newSettings.apiKey = user.apiKey;
-        // TODO default workspace?
-        // if (oldSettings.workspaceId == null) newSettings.workspaceId = user.defaultWorkspaceId;
-//        newSettings.userId = user.userId;
+        newSettings.apiKey = response.getApiKey();
+        if (oldSettings.workspaceId == null) newSettings.workspaceId = response.getDefaultWorkspace().getId();
         if (!oldSettings.equals(newSettings)) plugin.saveSettings(newSettings);
     }
 }

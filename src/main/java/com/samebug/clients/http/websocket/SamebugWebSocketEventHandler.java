@@ -21,54 +21,21 @@ import com.samebug.clients.http.entities.notification.IncomingAnswer;
 import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.http.entities.notification.Notification;
 import com.samebug.clients.http.json.Json;
-import io.netty.buffer.ByteBuf;
 
-public class SamebugNotificationWatcher implements WebSocketEventHandler {
-    static final Gson gson = Json.gson;
+public abstract class SamebugWebSocketEventHandler implements WebSocketEventHandler {
+    private static final Gson gson = Json.gson;
     private NotificationHandler handler;
 
-    public SamebugNotificationWatcher(NotificationHandler handler) {
+    public SamebugWebSocketEventHandler(NotificationHandler handler) {
         this.handler = handler;
     }
 
-    @Override
-    public void connected() {
-
-    }
-
-    @Override
-    public void text(String message) {
-        try {
-            Notification n = gson.fromJson(message, Notification.class);
-            if (n instanceof IncomingHelpRequest) handler.helpRequestReceived((IncomingHelpRequest) n);
-            else if (n instanceof IncomingAnswer) handler.tipReceived((IncomingAnswer) n);
-            else {
-                // TODO report unhandled notification type
-            }
-        } catch (JsonParseException e) {
-            // TODO report parse error
+    protected void readMessage(String message) throws JsonParseException {
+        Notification n = gson.fromJson(message, Notification.class);
+        if (n instanceof IncomingHelpRequest) handler.helpRequestReceived((IncomingHelpRequest) n);
+        else if (n instanceof IncomingAnswer) handler.tipReceived((IncomingAnswer) n);
+        else {
+            // TODO report unhandled notification type
         }
     }
-
-    @Override
-    public void binary(ByteBuf content) {
-
-    }
-
-    @Override
-    public void closing(int statusCode, String reason) {
-
-    }
-
-    @Override
-    public void disconnected() {
-
-    }
-
-    @Override
-    public void handshakeSucceeded() {
-
-    }
-
-
 }

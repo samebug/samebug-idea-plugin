@@ -76,7 +76,7 @@ public final class SamebugClient {
     public UserStats getUserStats() throws SamebugClientException {
         final URL url = urlBuilder.userStats();
         // TODO
-        return null;
+        return new UserStats();
     }
 
     @NotNull

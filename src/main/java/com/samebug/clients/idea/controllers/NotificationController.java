@@ -25,16 +25,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.samebug.clients.http.entities.notification.IncomingAnswer;
 import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
+import com.samebug.clients.http.websocket.NotificationHandler;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 
-public final class NotificationController {
+public final class NotificationController implements NotificationHandler {
     public static final String PROFILE = "Samebug profile updates";
 
     public NotificationController() {
         NotificationsConfiguration.getNotificationsConfiguration().register(PROFILE, NotificationDisplayType.BALLOON, false);
     }
 
-    public void incomingHelpRequest(final IncomingHelpRequest helpRequest) {
+    @Override
+    public void helpRequestReceived(final IncomingHelpRequest helpRequest) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -53,7 +55,8 @@ public final class NotificationController {
         IdeaSamebugPlugin.getInstance().helpRequestStore.invalidate();
     }
 
-    public void incomingTip(final IncomingAnswer tip) {
+    @Override
+    public void tipReceived(final IncomingAnswer tip) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -83,4 +86,3 @@ public final class NotificationController {
         return projectToShowPopup;
     }
 }
-
