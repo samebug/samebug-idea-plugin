@@ -50,8 +50,7 @@ public class IncomingHelpRequestNotification extends Notification {
 
     private static String getContext(IncomingHelpRequest helpRequest) {
         String context = helpRequest.getMatch().getHelpRequest().getContext();
-        // TODO what to say here?
-        return context == null ? "<no context>" : context;
+        return context == null ? MessageService.message("samebug.notification.incomingHelpRequest.noContext") : context;
     }
 
     private static String getRequesterName(IncomingHelpRequest helpRequest) {
