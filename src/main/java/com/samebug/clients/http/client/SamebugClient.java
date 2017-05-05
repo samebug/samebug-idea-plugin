@@ -70,7 +70,7 @@ public final class SamebugClient {
                 .at(uriBuilder.me())
                 .<MeResource>withResponse(MeResource.class)
                 .buildGet();
-        return extractGet(rawClient.execute(request)).getData();
+        return extractResponse(rawClient.execute(request)).getData();
     }
 
     @NotNull
@@ -80,7 +80,7 @@ public final class SamebugClient {
                 .at(uriBuilder.userStats(config.userId))
                 .<UserStatsResource>withResponse(UserStatsResource.class)
                 .buildGet();
-        return extractGet(rawClient.execute(request)).getData();
+        return extractResponse(rawClient.execute(request)).getData();
     }
 
     @NotNull
@@ -90,7 +90,7 @@ public final class SamebugClient {
                 .<CreatedSearchResource>withResponse(CreatedSearchResource.class)
                 .posting(data)
                 .build();
-        return extractGet(rawClient.execute(request));
+        return extractResponse(rawClient.execute(request));
     }
 
     @NotNull
@@ -99,7 +99,7 @@ public final class SamebugClient {
                 .at(uriBuilder.searches(searchId))
                 .<SearchResource>withResponse(SearchResource.class)
                 .buildGet();
-        return extractGet(rawClient.execute(request)).getData();
+        return extractResponse(rawClient.execute(request)).getData();
     }
 
     @NotNull
@@ -108,7 +108,7 @@ public final class SamebugClient {
                 .at(uriBuilder.solutionsForSearch(searchId))
                 .<SolutionList>withResponse(SolutionList.class)
                 .buildGet();
-        return extractGet(rawClient.execute(request));
+        return extractResponse(rawClient.execute(request));
     }
 
     @NotNull
@@ -117,7 +117,7 @@ public final class SamebugClient {
                 .at(uriBuilder.tipsForSearch(searchId))
                 .<TipList>withResponse(TipList.class)
                 .buildGet();
-        return extractGet(rawClient.execute(request));
+        return extractResponse(rawClient.execute(request));
     }
 
     @NotNull
@@ -126,7 +126,7 @@ public final class SamebugClient {
                 .at(uriBuilder.bugmatesForSearch(searchId))
                 .<BugmateList>withResponse(BugmateList.class)
                 .buildGet();
-        return extractGet(rawClient.execute(request));
+        return extractResponse(rawClient.execute(request));
     }
 
     @NotNull
@@ -136,7 +136,7 @@ public final class SamebugClient {
                 .at(uriBuilder.incomingHelpRequests(config.userId))
                 .<IncomingHelpRequestList>withResponse(IncomingHelpRequestList.class)
                 .buildGet();
-        return extractGet(rawClient.execute(request));
+        return extractResponse(rawClient.execute(request));
     }
 
     @NotNull
@@ -145,7 +145,7 @@ public final class SamebugClient {
                 .at(uriBuilder.helpRequest(helpRequestId))
                 .<HelpRequestResource>withResponse(HelpRequestResource.class)
                 .buildGet();
-        return extractGet(rawClient.execute(request)).getData();
+        return extractResponse(rawClient.execute(request)).getData();
     }
 
     @NotNull
@@ -301,11 +301,11 @@ public final class SamebugClient {
     @NotNull
     public AuthenticationResponse anonymousUse() throws SamebugClientException {
         Builder.SimpleResponseHandler<AuthenticationResponseResource> request = requestBuilder
-                .at(uriBuilder.anonymousUse())
+                .at(uriBuilder.anonymousSignUp())
                 .unauthenticated()
                 .<AuthenticationResponseResource>withResponse(AuthenticationResponseResource.class)
                 .buildPost();
-        return extractGet(rawClient.execute(request)).getData();
+        return extractResponse(rawClient.execute(request)).getData();
     }
 
     public HttpRequestBase trace(@NotNull final TrackEvent event) {
@@ -317,7 +317,7 @@ public final class SamebugClient {
     }
 
 
-    private <T> T extractGet(GetResponse<T> response) throws SamebugClientException {
+    private <T> T extractResponse(GetResponse<T> response) throws SamebugClientException {
         switch (response.getResultType()) {
             case SUCCESS:
                 return response.getResult();

@@ -89,10 +89,9 @@ final class RestUriBuilder {
         return resolve("users/" + userId + "stats");
     }
 
-    // TODO
     @NotNull
-    public URI anonymousUse() {
-        return resolve("signup-anonymously");
+    public URI anonymousSignUp() {
+        return resolve("auth/signup-anonymously");
     }
 
     @NotNull

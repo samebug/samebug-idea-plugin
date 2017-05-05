@@ -7,8 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 public class SignUpTest extends TestWithSamebugClient {
@@ -82,6 +81,12 @@ public class SignUpTest extends TestWithSamebugClient {
         } catch (SignUp.BadRequest b) {
             assertThat(b.errorList.getErrorCodes(), containsInAnyOrder(SignUp.ErrorCode.EMAIL_USED, SignUp.ErrorCode.DISPLAYNAME_EMPTY, SignUp.ErrorCode.PASSWORD_EMPTY));
         }
+    }
+
+    @Test
+    public void signUpAnonymously() throws Exception {
+        AuthenticationResponse r = unauthenticatedClient.anonymousUse();
+        assertThat(r.getUser(), notNullValue());
     }
 
     @Test
