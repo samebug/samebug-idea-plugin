@@ -15,10 +15,9 @@
  */
 package com.samebug.clients.common.entities.search;
 
-import com.samebug.clients.http.entities.jsonapi.Relations;
+import com.samebug.clients.http.entities.jsonapi.NewSearchMeta;
 import com.samebug.clients.http.entities.search.Search;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class SavedSearch implements SearchRequest {
     @NotNull
@@ -27,23 +26,16 @@ public class SavedSearch implements SearchRequest {
     private final SearchInfo searchInfo;
     @NotNull
     private final Search savedSearch;
-    @Nullable
-    private final Relations relations;
 
-    public SavedSearch(@NotNull SearchInfo searchInfo, @NotNull String trace, @NotNull Search savedSearch, @Nullable Relations searchRelations) {
+    public SavedSearch(@NotNull final SearchInfo searchInfo, @NotNull final String trace, @NotNull final Search savedSearch, @NotNull final NewSearchMeta searchRelations) {
         this.searchInfo = searchInfo;
         this.savedSearch = savedSearch;
-        this.relations = searchRelations;
-        Integer lineOffset = null; // TODO adjust with savedSearch.getFirstLine();
-        if (lineOffset != null) {
-            int startOffset = 0;
-            for (int line = 0; line < lineOffset; ++line) {
-                startOffset = trace.indexOf("\n", startOffset) + 1;
-            }
-            this.trace = trace.substring(startOffset);
-        } else {
-            this.trace = trace;
+        Integer lineOffset = searchRelations.getFirstLine();
+        int startOffset = 0;
+        for (int line = 0; line < lineOffset; ++line) {
+            startOffset = trace.indexOf("\n", startOffset) + 1;
         }
+        this.trace = trace.substring(startOffset);
     }
 
     @Override

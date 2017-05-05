@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.response;
+package com.samebug.clients.http.entities.jsonapi;
 
-import com.samebug.clients.http.entities.helprequest.HelpRequest;
-import com.samebug.clients.http.entities.jsonapi.JsonResource;
+import com.samebug.clients.http.entities.mark.Mark;
 
-public final class CreateHelpRequest extends JsonResource<HelpRequest> {
+public final class MarkResource extends JsonResource<Mark> {
 }

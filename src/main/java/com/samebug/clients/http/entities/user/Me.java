@@ -13,30 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.profile;
+package com.samebug.clients.http.entities.user;
 
-import com.samebug.clients.http.entities.user.SamebugWorkspace;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.URL;
 
-public final class UserInfo {
+public final class Me {
     private Integer id;
     private String displayName;
     private URL avatarUrl;
     private SamebugWorkspace workspace;
 
+    @NotNull
     public Integer getId() {
         return id;
     }
 
+    @NotNull
     public String getDisplayName() {
         return displayName;
     }
 
+    @NotNull
     public URL getAvatarUrl() {
         return avatarUrl;
     }
 
+    @Nullable
     public SamebugWorkspace getWorkspace() {
         return workspace;
     }

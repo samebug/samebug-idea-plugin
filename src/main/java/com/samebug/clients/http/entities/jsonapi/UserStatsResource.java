@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.response;
+package com.samebug.clients.http.entities.jsonapi;
 
-import com.samebug.clients.http.entities.jsonapi.JsonResource;
-import com.samebug.clients.http.entities.search.SearchHit;
-import com.samebug.clients.http.entities.solution.SamebugTip;
+import com.samebug.clients.http.entities.profile.UserStats;
 
-public final class CreateTipResponse extends JsonResource<SearchHit<SamebugTip>> {
+public final class UserStatsResource extends JsonResource<UserStats> {
 }

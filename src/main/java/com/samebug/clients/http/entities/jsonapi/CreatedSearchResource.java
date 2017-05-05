@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.response;
+package com.samebug.clients.http.entities.jsonapi;
 
-import com.samebug.clients.http.entities.jsonapi.JsonResourceWithMeta;
-import com.samebug.clients.http.entities.jsonapi.Relations;
 import com.samebug.clients.http.entities.search.Search;
 
-public final class CreatedSearch extends JsonResourceWithMeta<Search, Relations> {
+public final class CreatedSearchResource extends JsonResourceWithMeta<Search, NewSearchMeta> {
 }

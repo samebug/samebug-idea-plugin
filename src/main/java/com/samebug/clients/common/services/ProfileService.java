@@ -16,8 +16,8 @@
 package com.samebug.clients.common.services;
 
 import com.samebug.clients.http.client.SamebugClient;
-import com.samebug.clients.http.entities.profile.UserInfo;
 import com.samebug.clients.http.entities.profile.UserStats;
+import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -40,14 +40,14 @@ public final class ProfileService {
     // - return profile information about the user
     // When it will be separated, this method won't have to read the application settings.
     @Nullable
-    public UserInfo loadUserInfo() throws SamebugClientException {
+    public Me loadUserInfo() throws SamebugClientException {
         final String apiKey = IdeaSamebugPlugin.getInstance().getState().apiKey;
         final Integer workspaceId = IdeaSamebugPlugin.getInstance().getState().workspaceId;
 
         if (apiKey == null) return null;
         else {
             try {
-                UserInfo result = client.getUserInfo(apiKey, workspaceId);
+                Me result = client.getUserInfo(apiKey, workspaceId);
                 store.user.set(result);
                 return result;
             } catch (SamebugClientException e) {

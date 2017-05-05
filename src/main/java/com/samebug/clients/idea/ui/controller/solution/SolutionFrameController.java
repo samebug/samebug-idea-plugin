@@ -29,11 +29,14 @@ import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.solution.ISearchHeaderPanel;
 import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
-import com.samebug.clients.http.entities.profile.UserInfo;
+import com.samebug.clients.http.entities.jsonapi.BugmateList;
+import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
+import com.samebug.clients.http.entities.jsonapi.SolutionList;
+import com.samebug.clients.http.entities.jsonapi.TipList;
 import com.samebug.clients.http.entities.profile.UserStats;
-import com.samebug.clients.http.entities.response.*;
 import com.samebug.clients.http.entities.search.ReadableStackTraceSearch;
 import com.samebug.clients.http.entities.search.Search;
+import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
 import com.samebug.clients.idea.tracking.Events;
@@ -117,31 +120,31 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
 
     public void load() {
         view.setLoading();
-        final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
+        final Future<Me> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
         final Future<IncomingHelpRequestList> incomingHelpRequestsTask = concurrencyService.incomingHelpRequests(false);
-        final Future<GetSolutions> solutionsTask = concurrencyService.solutions(searchId);
-        final Future<GetTips> tipsTask = concurrencyService.tips(searchId);
-        final Future<GetBugmates> bugmatesTask = concurrencyService.bugmates(searchId);
-        final Future<CreatedSearch> searchTask = concurrencyService.search(searchId);
+        final Future<SolutionList> solutionsTask = concurrencyService.solutions(searchId);
+        final Future<TipList> tipsTask = concurrencyService.tips(searchId);
+        final Future<BugmateList> bugmatesTask = concurrencyService.bugmates(searchId);
+        final Future<Search> searchTask = concurrencyService.search(searchId);
         load(solutionsTask, tipsTask, bugmatesTask, searchTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);
     }
 
-    private void load(final Future<GetSolutions> solutionsTask,
-                      final Future<GetTips> tipsTask,
-                      final Future<GetBugmates> bugmatesTask,
-                      final Future<CreatedSearch> searchTask,
+    private void load(final Future<SolutionList> solutionsTask,
+                      final Future<TipList> tipsTask,
+                      final Future<BugmateList> bugmatesTask,
+                      final Future<Search> searchTask,
                       final Future<IncomingHelpRequestList> incomingHelpRequestsTask,
-                      final Future<UserInfo> userInfoTask,
+                      final Future<Me> userInfoTask,
                       final Future<UserStats> userStatsTask) {
         new LoadingTask() {
             @Override
             protected void load() throws Exception {
-                Search search = searchTask.get().getData();
+                Search search = searchTask.get();
                 // TODO
                 assert search instanceof ReadableStackTraceSearch;
                 final SolutionFrame.Model model =
-                        conversionService.solutionFrame((ReadableStackTraceSearch) searchTask.get().getData(),
+                        conversionService.solutionFrame((ReadableStackTraceSearch) searchTask.get(),
                                 tipsTask.get().getData(), solutionsTask.get().getData(), bugmatesTask.get(), incomingHelpRequestsTask.get(),
                                 userInfoTask.get(), userStatsTask.get());
                 ApplicationManager.getApplication().invokeLater(new Runnable() {

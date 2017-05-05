@@ -21,7 +21,7 @@ import org.apache.commons.lang.StringUtils;
 
 public final class MarkCreate {
     public enum ErrorCode {
-        NOT_YOUR_SEARCH
+        NO_SUCH_SOLUTION
     }
 
     public static class BadRequest extends FormException {

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.response;
+package com.samebug.clients.http.entities.jsonapi;
 
-import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
-import com.samebug.clients.http.entities.jsonapi.JsonResource;
+import com.samebug.clients.http.entities.bugmate.BugmateMatch;
 
-public final class AuthenticateRequest extends JsonResource<AuthenticationResponse> {
+import java.util.List;
+
+public final class BugmateList extends JsonResourceWithMeta<List<BugmateMatch>, TotalItems> {
 }

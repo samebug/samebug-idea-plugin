@@ -15,34 +15,53 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.http.entities.response.GetBugmates;
-import com.samebug.clients.http.entities.response.GetSolutions;
-import com.samebug.clients.http.entities.response.GetTips;
+import com.samebug.clients.http.entities.jsonapi.BugmateList;
+import com.samebug.clients.http.entities.jsonapi.SolutionList;
+import com.samebug.clients.http.entities.jsonapi.TipList;
+import com.samebug.clients.http.entities.search.SearchHit;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class SolutionStore {
-    final Map<Integer, GetSolutions> externalSolutions;
-    final Map<Integer, GetTips> tips;
-    final Map<Integer, GetBugmates> bugmates;
+    final Map<Integer, SolutionList> externalSolutions;
+    final Map<Integer, TipList> tips;
+    final Map<Integer, BugmateList> bugmates;
 
     public SolutionStore() {
-        this.externalSolutions = new ConcurrentHashMap<Integer, GetSolutions>();
-        this.tips = new ConcurrentHashMap<Integer, GetTips>();
-        this.bugmates = new ConcurrentHashMap<Integer, GetBugmates>();
+        this.externalSolutions = new ConcurrentHashMap<Integer, SolutionList>();
+        this.tips = new ConcurrentHashMap<Integer, TipList>();
+        this.bugmates = new ConcurrentHashMap<Integer, BugmateList>();
     }
 
-    public GetSolutions getWebHits(int searchId) {
+    public SolutionList getWebHits(int searchId) {
         return externalSolutions.get(searchId);
     }
 
-    public GetTips getTipHits(int searchId) {
+    @Nullable
+    public SearchHit getHit(int searchId, int solutionId) {
+        SearchHit result = null;
+        SolutionList list = externalSolutions.get(searchId);
+        if (list != null) {
+            for (SearchHit h : list.getData()) {
+                if (h.getSolution().getId() == solutionId) result = h;
+            }
+        }
+        TipList tipsList = tips.get(searchId);
+        if (list != null) {
+            for (SearchHit h : tipsList.getData()) {
+                if (h.getSolution().getId() == solutionId) result = h;
+            }
+        }
+        return result;
+    }
+
+    public TipList getTipHits(int searchId) {
         return tips.get(searchId);
     }
 
-    public GetBugmates getBugmates(int searchId) {
+    public BugmateList getBugmates(int searchId) {
         return bugmates.get(searchId);
     }
-
 }

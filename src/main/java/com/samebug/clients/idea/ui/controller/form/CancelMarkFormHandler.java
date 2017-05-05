@@ -18,25 +18,28 @@ package com.samebug.clients.idea.ui.controller.form;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.common.ui.frame.IFrame;
-import com.samebug.clients.http.entities.mark.MarkCancelled;
+import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.MarkCancel;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class CancelMarkFormHandler extends PostFormHandler<MarkCancelled, MarkCancel.BadRequest> {
+public abstract class CancelMarkFormHandler extends PostFormHandler<SearchHit, MarkCancel.BadRequest> {
     @NotNull
     final IFrame frame;
     @NotNull
     final IMarkButton button;
     @NotNull
-    final Integer data;
+    final Integer markId;
+    @NotNull
+    final Integer searchId;
 
-    public CancelMarkFormHandler(@NotNull final IFrame frame, @NotNull final IMarkButton button, @NotNull final Integer markId) {
+    public CancelMarkFormHandler(@NotNull final IFrame frame, @NotNull final IMarkButton button, @NotNull final Integer markId, @NotNull final Integer searchId) {
         this.frame = frame;
         this.button = button;
-        this.data = markId;
+        this.markId = markId;
+        this.searchId = searchId;
     }
 
     @Override
@@ -45,9 +48,9 @@ public abstract class CancelMarkFormHandler extends PostFormHandler<MarkCancelle
     }
 
     @Override
-    protected MarkCancelled postForm() throws SamebugClientException, MarkCancel.BadRequest {
+    protected SearchHit postForm() throws SamebugClientException, MarkCancel.BadRequest {
         final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
-        return solutionService.retractMark(data);
+        return solutionService.retractMark(searchId, markId);
     }
 
     @Override

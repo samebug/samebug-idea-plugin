@@ -69,16 +69,6 @@ public class TipTest extends TestWithSamebugClient {
     }
 
     @Test
-    public void createTipOnSolutionClone() throws Exception {
-        try {
-            authenticatedClient.createTip(2366, new NewSearchHit(new NewSolution(new NewTip("great tip", null))));
-            Assert.fail();
-        } catch (TipCreate.BadRequest b) {
-            assertThat(b.errorList.getErrorCodes(), containsInAnyOrder(TipCreate.ErrorCode.NOT_SEARCHABLE_SOLUTION));
-        }
-    }
-
-    @Test
     public void createTipOnSomeoneElsesSearch() throws Exception {
         try {
             authenticatedClient.createTip(5637, new NewSearchHit(new NewSolution(new NewTip("great tip", null))));

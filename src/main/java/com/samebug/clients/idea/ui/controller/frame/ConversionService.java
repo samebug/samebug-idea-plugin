@@ -40,20 +40,18 @@ import com.samebug.clients.common.ui.frame.solution.*;
 import com.samebug.clients.http.entities.bugmate.BugmateMatch;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
-import com.samebug.clients.http.entities.mark.MarkCancelled;
-import com.samebug.clients.http.entities.mark.MarkCreated;
+import com.samebug.clients.http.entities.jsonapi.BugmateList;
+import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.notification.IncomingAnswer;
 import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
-import com.samebug.clients.http.entities.profile.UserInfo;
 import com.samebug.clients.http.entities.profile.UserStats;
-import com.samebug.clients.http.entities.response.GetBugmates;
-import com.samebug.clients.http.entities.response.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.search.ReadableSearchGroup;
 import com.samebug.clients.http.entities.search.ReadableStackTraceSearch;
 import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.http.entities.solution.ExternalDocument;
 import com.samebug.clients.http.entities.solution.SamebugTip;
 import com.samebug.clients.http.entities.solution.SolutionSlot;
+import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.http.entities.user.RegisteredSamebugUser;
 import com.samebug.clients.http.entities.user.SamebugUser;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
@@ -66,14 +64,6 @@ import java.util.List;
 
 public final class ConversionService {
     public ConversionService() {
-    }
-
-    public IMarkButton.Model convertMarkResponse(MarkCreated response) {
-        return new IMarkButton.Model(response.getVotes().getVotesOnDocument(), response.getMark().getId(), true);
-    }
-
-    public IMarkButton.Model convertRetractedMarkResponse(MarkCancelled response) {
-        return new IMarkButton.Model(response.getVotes().getVotesOnDocument(), null, true);
     }
 
     /**
@@ -108,7 +98,7 @@ public final class ConversionService {
         return new IWebResultsTab.Model(webHits);
     }
 
-    public ITipResultsTab.Model tipResultsTab(ReadableStackTraceSearch search, List<SearchHit<SamebugTip>> solutions, GetBugmates bugmates, boolean disabled) {
+    public ITipResultsTab.Model tipResultsTab(ReadableStackTraceSearch search, List<SearchHit<SamebugTip>> solutions, BugmateList bugmates, boolean disabled) {
         final List<ITipHit.Model> tipHits = new ArrayList<ITipHit.Model>(solutions.size());
         for (SearchHit<SamebugTip> tipSolution : solutions) {
             ITipHit.Model tipHit = tipHit(tipSolution, disabled);
@@ -142,14 +132,14 @@ public final class ConversionService {
         return new ITipResultsTab.Model(tipHits, bugmateList, askForHelp, myHelpRequest);
     }
 
-    public IProfilePanel.Model profilePanel(IncomingHelpRequestList incomingRequests, UserInfo user, UserStats statistics) {
+    public IProfilePanel.Model profilePanel(IncomingHelpRequestList incomingRequests, Me user, UserStats statistics) {
         ConnectionStatus status = IdeaSamebugPlugin.getInstance().clientService.getWsClient().isConnected() ? ConnectionStatus.ONLINE : ConnectionStatus.OFFLINE;
         return new IProfilePanel.Model(incomingRequests.getMeta().getTotal(), statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(),
                 user.getDisplayName(), user.getAvatarUrl(), status);
     }
 
     public ISolutionFrame.Model solutionFrame(ReadableStackTraceSearch search, List<SearchHit<SamebugTip>> tipHits, List<SearchHit<ExternalDocument>> webHits,
-                                              GetBugmates bugmates, IncomingHelpRequestList incomingRequests, UserInfo user, UserStats statistics) {
+                                              BugmateList bugmates, IncomingHelpRequestList incomingRequests, Me user, UserStats statistics) {
         IWebResultsTab.Model webResults = webResultsTab(webHits, false);
         ITipResultsTab.Model tipResults = tipResultsTab(search, tipHits, bugmates, false);
 
@@ -180,7 +170,7 @@ public final class ConversionService {
 
 
     public IHelpRequestFrame.Model convertHelpRequestFrame(List<SearchHit<SamebugTip>> tipHits, List<SearchHit<ExternalDocument>> webHits, HelpRequest helpRequest,
-                                                           IncomingHelpRequestList incomingRequests, UserInfo user, UserStats statistics) {
+                                                           IncomingHelpRequestList incomingRequests, Me user, UserStats statistics) {
         IWebResultsTab.Model webResults = webResultsTab(webHits, true);
         IHelpRequestTab.Model helpRequestTab = helpRequestTab(tipHits, helpRequest);
         IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(0);
@@ -191,7 +181,7 @@ public final class ConversionService {
         return new IHelpRequestFrame.Model(tabs, header, profile);
     }
 
-    public IHelpRequestListFrame.Model convertHelpRequestListFrame(IncomingHelpRequestList incomingRequests, UserInfo user, UserStats statistics) {
+    public IHelpRequestListFrame.Model convertHelpRequestListFrame(IncomingHelpRequestList incomingRequests, Me user, UserStats statistics) {
         List<IHelpRequestPreview.Model> requestPreviews = new ArrayList<IHelpRequestPreview.Model>(incomingRequests.getData().size());
         for (HelpRequestMatch m : incomingRequests.getData()) {
             HelpRequest r = m.getHelpRequest();

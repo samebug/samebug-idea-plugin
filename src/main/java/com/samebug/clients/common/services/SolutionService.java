@@ -16,12 +16,11 @@
 package com.samebug.clients.common.services;
 
 import com.samebug.clients.http.client.SamebugClient;
-import com.samebug.clients.http.entities.mark.MarkCancelled;
-import com.samebug.clients.http.entities.mark.MarkCreated;
+import com.samebug.clients.http.entities.jsonapi.BugmateList;
+import com.samebug.clients.http.entities.jsonapi.SolutionList;
+import com.samebug.clients.http.entities.jsonapi.TipList;
+import com.samebug.clients.http.entities.mark.Mark;
 import com.samebug.clients.http.entities.mark.NewMark;
-import com.samebug.clients.http.entities.response.GetBugmates;
-import com.samebug.clients.http.entities.response.GetSolutions;
-import com.samebug.clients.http.entities.response.GetTips;
 import com.samebug.clients.http.entities.search.NewSearchHit;
 import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.http.entities.solution.SamebugTip;
@@ -30,6 +29,7 @@ import com.samebug.clients.http.form.MarkCancel;
 import com.samebug.clients.http.form.MarkCreate;
 import com.samebug.clients.http.form.TipCreate;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class SolutionService {
     final SamebugClient client;
@@ -40,20 +40,20 @@ public final class SolutionService {
         this.solutionStore = solutionStore;
     }
 
-    public GetSolutions loadWebHits(final int searchId) throws SamebugClientException {
-        GetSolutions result = client.getSolutions(searchId);
+    public SolutionList loadWebHits(final int searchId) throws SamebugClientException {
+        SolutionList result = client.getSolutions(searchId);
         solutionStore.externalSolutions.put(searchId, result);
         return result;
     }
 
-    public GetTips loadTipHits(final int searchId) throws SamebugClientException {
-        GetTips result = client.getTips(searchId);
+    public TipList loadTipHits(final int searchId) throws SamebugClientException {
+        TipList result = client.getTips(searchId);
         solutionStore.tips.put(searchId, result);
         return result;
     }
 
-    public GetBugmates loadBugmates(final int searchId) throws SamebugClientException {
-        GetBugmates result = client.getBugmates(searchId);
+    public BugmateList loadBugmates(final int searchId) throws SamebugClientException {
+        BugmateList result = client.getBugmates(searchId);
         solutionStore.bugmates.put(searchId, result);
         return result;
     }
@@ -65,11 +65,18 @@ public final class SolutionService {
         return response;
     }
 
-    public MarkCreated postMark(@NotNull final Integer searchId, @NotNull final NewMark data) throws SamebugClientException, MarkCreate.BadRequest {
-        return client.postMark(searchId, data);
+    @Nullable
+    public SearchHit postMark(@NotNull final Integer searchId, @NotNull final NewMark data) throws SamebugClientException, MarkCreate.BadRequest {
+        Mark mark = client.postMark(searchId, data);
+        SearchHit hit = solutionStore.getHit(searchId, mark.getSolutionId());
+        if (hit != null) hit.setActiveMark(mark);
+        return hit;
     }
 
-    public MarkCancelled retractMark(final Integer voteId) throws SamebugClientException, MarkCancel.BadRequest {
-        return client.cancelMark(voteId);
+    public SearchHit retractMark(@NotNull final Integer searchId, @NotNull final Integer voteId) throws SamebugClientException, MarkCancel.BadRequest {
+        Mark mark = client.cancelMark(voteId);
+        SearchHit hit = solutionStore.getHit(searchId, mark.getSolutionId());
+        if (hit != null) hit.setActiveMark(null);
+        return hit;
     }
 }

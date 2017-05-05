@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.response;
+package com.samebug.clients.http.entities.jsonapi;
 
-import com.samebug.clients.http.entities.bugmate.BugmateMatch;
-import com.samebug.clients.http.entities.jsonapi.JsonResourceWithMeta;
-import com.samebug.clients.http.entities.jsonapi.TotalItems;
+import com.samebug.clients.http.entities.search.SearchHit;
+import com.samebug.clients.http.entities.solution.SamebugTip;
 
 import java.util.List;
 
-public final class GetBugmates extends JsonResourceWithMeta<List<BugmateMatch>, TotalItems> {
+public final class TipList extends JsonResourceWithMeta<List<SearchHit<SamebugTip>>, TotalItems> {
 }

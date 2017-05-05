@@ -16,9 +16,8 @@
 package com.samebug.clients.idea.ui.controller.solution;
 
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
-import com.samebug.clients.http.entities.mark.MarkCancelled;
-import com.samebug.clients.http.entities.mark.MarkCreated;
 import com.samebug.clients.http.entities.mark.NewMark;
+import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.idea.ui.controller.form.CancelMarkFormHandler;
 import com.samebug.clients.idea.ui.controller.form.CreateMarkFormHandler;
 import org.jetbrains.annotations.NotNull;
@@ -38,17 +37,21 @@ final class MarkButtonListener implements IMarkButton.Listener {
 
             new CreateMarkFormHandler(controller.view, markButton, new NewMark(solutionId), controller.searchId) {
                 @Override
-                protected void afterPostForm(MarkCreated response) {
-                    final IMarkButton.Model newModel = controller.conversionService.convertMarkResponse(response);
-                    markButton.update(newModel);
+                protected void afterPostForm(SearchHit response) {
+                    if (response != null) {
+                        final IMarkButton.Model newModel = controller.conversionService.convertMarkPanel(response, false);
+                        markButton.update(newModel);
+                    }
                 }
             }.execute();
         } else {
-            new CancelMarkFormHandler(controller.view, markButton, markId) {
+            new CancelMarkFormHandler(controller.view, markButton, markId, controller.searchId) {
                 @Override
-                protected void afterPostForm(MarkCancelled response) {
-                    final IMarkButton.Model newModel = controller.conversionService.convertRetractedMarkResponse(response);
-                    markButton.update(newModel);
+                protected void afterPostForm(SearchHit response) {
+                    if (response != null) {
+                        final IMarkButton.Model newModel = controller.conversionService.convertMarkPanel(response, false);
+                        markButton.update(newModel);
+                    }
                 }
             }.execute();
         }

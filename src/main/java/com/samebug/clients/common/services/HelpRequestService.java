@@ -18,7 +18,7 @@ package com.samebug.clients.common.services;
 import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.entities.helprequest.NewHelpRequest;
-import com.samebug.clients.http.entities.response.IncomingHelpRequestList;
+import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.HelpRequestCancel;
 import com.samebug.clients.http.form.HelpRequestCreate;

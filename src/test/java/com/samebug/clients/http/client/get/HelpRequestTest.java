@@ -2,7 +2,7 @@ package com.samebug.clients.http.client.get;
 
 import com.samebug.clients.http.client.TestWithSamebugClient;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
-import com.samebug.clients.http.entities.response.IncomingHelpRequestList;
+import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.search.ReadableSearchGroup;
 import com.samebug.clients.http.entities.search.SearchableSearchGroup;
 import org.junit.Test;

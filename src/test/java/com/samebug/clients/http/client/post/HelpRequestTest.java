@@ -4,7 +4,6 @@ import com.samebug.clients.http.client.TestWithSamebugClient;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.entities.helprequest.NewHelpRequest;
 import com.samebug.clients.http.exceptions.UserUnauthorized;
-import com.samebug.clients.http.form.HelpRequestCancel;
 import com.samebug.clients.http.form.HelpRequestCreate;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
@@ -12,8 +11,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -79,11 +77,7 @@ public class HelpRequestTest extends TestWithSamebugClient {
     @Test
     public void t07revokeAlreadyRevokedHelpRequest() throws Exception {
         assert testHelpRequestId != null;
-        try {
-            authenticatedClient.cancelHelpRequest(testHelpRequestId);
-            Assert.fail();
-        } catch (HelpRequestCancel.BadRequest b) {
-            assertThat(b.errorList.getErrorCodes(), containsInAnyOrder(HelpRequestCancel.ErrorCode.ALREADY_DEACTIVATED));
-        }
+        final HelpRequest helpRequest = authenticatedClient.cancelHelpRequest(testHelpRequestId);
+        assertThat(helpRequest.getRevokedAt(), notNullValue());
     }
 }

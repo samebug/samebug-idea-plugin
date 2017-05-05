@@ -17,7 +17,7 @@ package com.samebug.clients.common.services;
 
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
-import com.samebug.clients.http.entities.response.IncomingHelpRequestList;
+import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

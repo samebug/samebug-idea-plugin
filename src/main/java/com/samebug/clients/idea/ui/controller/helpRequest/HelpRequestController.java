@@ -27,11 +27,11 @@ import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestFrame;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
-import com.samebug.clients.http.entities.profile.UserInfo;
+import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
+import com.samebug.clients.http.entities.jsonapi.SolutionList;
+import com.samebug.clients.http.entities.jsonapi.TipList;
 import com.samebug.clients.http.entities.profile.UserStats;
-import com.samebug.clients.http.entities.response.GetSolutions;
-import com.samebug.clients.http.entities.response.GetTips;
-import com.samebug.clients.http.entities.response.IncomingHelpRequestList;
+import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
@@ -104,7 +104,7 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
         webResultsTabListener = null;
         ListenerService.removeListenerFromComponent((JComponent) view, IWebResultsTab.Listener.class);
 
-        final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
+        final Future<Me> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
         final Future<IncomingHelpRequestList> incomingHelpRequestsTask = concurrencyService.incomingHelpRequests(false);
         // TODO here I should get a help request match?
@@ -118,7 +118,7 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
      */
     private void load(final Future<HelpRequest> helpRequestTask,
                       final Future<IncomingHelpRequestList> incomingHelpRequestsTask,
-                      final Future<UserInfo> userInfoTask,
+                      final Future<Me> userInfoTask,
                       final Future<UserStats> userStatsTask) {
         new LoadingTask() {
             @Override
@@ -131,19 +131,19 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
                 webHitListener = new WebHitListener(accessibleSearchId);
                 ListenerService.putListenerToComponent((JComponent) view, IWebHit.Listener.class, webHitListener);
 
-                final Future<GetSolutions> solutionsTask = concurrencyService.solutions(accessibleSearchId);
-                final Future<GetTips> tipsTask = concurrencyService.tips(accessibleSearchId);
+                final Future<SolutionList> solutionsTask = concurrencyService.solutions(accessibleSearchId);
+                final Future<TipList> tipsTask = concurrencyService.tips(accessibleSearchId);
                 HelpRequestController.this.load(solutionsTask, tipsTask, helpRequestTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);
             }
         }.executeInBackground();
 
     }
 
-    private void load(final Future<GetSolutions> solutionsTask,
-                      final Future<GetTips> tipsTask,
+    private void load(final Future<SolutionList> solutionsTask,
+                      final Future<TipList> tipsTask,
                       final Future<HelpRequest> helpRequestTask,
                       final Future<IncomingHelpRequestList> incomingHelpRequestsTask,
-                      final Future<UserInfo> userInfoTask,
+                      final Future<Me> userInfoTask,
                       final Future<UserStats> userStatsTask) {
         new LoadingTask() {
             @Override

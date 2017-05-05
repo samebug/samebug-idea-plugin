@@ -20,19 +20,17 @@ import com.google.gson.reflect.TypeToken;
 import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.entities.helprequest.NewHelpRequest;
-import com.samebug.clients.http.entities.jsonapi.JsonErrors;
-import com.samebug.clients.http.entities.jsonapi.JsonResource;
-import com.samebug.clients.http.entities.mark.MarkCancelled;
-import com.samebug.clients.http.entities.mark.MarkCreated;
+import com.samebug.clients.http.entities.jsonapi.*;
+import com.samebug.clients.http.entities.mark.Mark;
 import com.samebug.clients.http.entities.mark.NewMark;
-import com.samebug.clients.http.entities.profile.UserInfo;
 import com.samebug.clients.http.entities.profile.UserStats;
-import com.samebug.clients.http.entities.response.*;
 import com.samebug.clients.http.entities.search.NewSearch;
 import com.samebug.clients.http.entities.search.NewSearchHit;
+import com.samebug.clients.http.entities.search.Search;
 import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.http.entities.solution.SamebugTip;
 import com.samebug.clients.http.entities.tracking.TrackEvent;
+import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.exceptions.UserUnauthenticated;
 import com.samebug.clients.http.form.*;
@@ -46,17 +44,20 @@ import org.apache.http.entity.StringEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Type;
-
 public final class SamebugClient {
+    @NotNull
     private static final Gson gson = Json.gson;
 
+    @NotNull
     private final Config config;
+    @NotNull
     private final RestUriBuilder uriBuilder;
+    @NotNull
     private final RawClient rawClient;
+    @NotNull
     private final Builder requestBuilder;
 
-    public SamebugClient(@NotNull final Config config, @Nullable ConnectionService connectionService) {
+    public SamebugClient(@NotNull final Config config, @Nullable final ConnectionService connectionService) {
         this.config = new Config(config);
         this.uriBuilder = new RestUriBuilder(config.serverRoot);
         this.rawClient = new RawClient(config, connectionService);
@@ -64,15 +65,15 @@ public final class SamebugClient {
     }
 
     @NotNull
-    public UserInfo getUserInfo(@NotNull final String apiKey, @Nullable final Integer workspaceId) throws SamebugClientException {
+    public Me getUserInfo(@NotNull final String apiKey, @Nullable final Integer workspaceId) throws SamebugClientException {
         RawClient tmpClient = new RawClient(new Config(
                 apiKey, null, workspaceId, config.serverRoot, config.trackingRoot, config.isTrackingEnabled,
                 config.connectTimeout, config.requestTimeout, config.isApacheLoggingEnabled, config.isJsonDebugEnabled, config.proxy),
                 null
         );
-        Builder.SimpleResponseHandler<GetUser> request = requestBuilder
+        Builder.SimpleResponseHandler<MeResource> request = requestBuilder
                 .at(uriBuilder.me())
-                .<GetUser>withResponse(GetUser.class)
+                .<MeResource>withResponse(MeResource.class)
                 .buildGet();
         return extractGet(tmpClient.execute(request)).getData();
     }
@@ -80,56 +81,55 @@ public final class SamebugClient {
     @NotNull
     public UserStats getUserStats() throws SamebugClientException {
         if (config.userId == null) throw new UserUnauthenticated();
-        Type responseType = new TypeToken<JsonResource<UserStats>>() {}.getType();
-        Builder.SimpleResponseHandler<JsonResource<UserStats>> request = requestBuilder
+        Builder.SimpleResponseHandler<UserStatsResource> request = requestBuilder
                 .at(uriBuilder.userStats(config.userId))
-                .<JsonResource<UserStats>>withResponse(responseType)
+                .<UserStatsResource>withResponse(UserStatsResource.class)
                 .buildGet();
         return extractGet(rawClient.execute(request)).getData();
     }
 
     @NotNull
-    public CreatedSearch createSearch(@NotNull final NewSearch data) throws SamebugClientException {
-        Builder.SimplePostHandler<CreatedSearch, NewSearch> request = requestBuilder
+    public CreatedSearchResource createSearch(@NotNull final NewSearch data) throws SamebugClientException {
+        Builder.SimplePostHandler<CreatedSearchResource, NewSearch> request = requestBuilder
                 .at(uriBuilder.searches())
-                .<CreatedSearch>withResponse(CreatedSearch.class)
+                .<CreatedSearchResource>withResponse(CreatedSearchResource.class)
                 .posting(data)
                 .build();
         return extractGet(rawClient.execute(request));
     }
 
     @NotNull
-    public CreatedSearch getSearch(@NotNull final Integer searchId) throws SamebugClientException {
-        Builder.SimpleResponseHandler<CreatedSearch> request = requestBuilder
+    public Search getSearch(@NotNull final Integer searchId) throws SamebugClientException {
+        Builder.SimpleResponseHandler<SearchResource> request = requestBuilder
                 .at(uriBuilder.searches(searchId))
-                .<CreatedSearch>withResponse(CreatedSearch.class)
+                .<SearchResource>withResponse(SearchResource.class)
                 .buildGet();
-        return extractGet(rawClient.execute(request));
+        return extractGet(rawClient.execute(request)).getData();
     }
 
     @NotNull
-    public GetSolutions getSolutions(@NotNull final Integer searchId) throws SamebugClientException {
-        Builder.SimpleResponseHandler<GetSolutions> request = requestBuilder
+    public SolutionList getSolutions(@NotNull final Integer searchId) throws SamebugClientException {
+        Builder.SimpleResponseHandler<SolutionList> request = requestBuilder
                 .at(uriBuilder.solutionsForSearch(searchId))
-                .<GetSolutions>withResponse(GetSolutions.class)
+                .<SolutionList>withResponse(SolutionList.class)
                 .buildGet();
         return extractGet(rawClient.execute(request));
     }
 
     @NotNull
-    public GetTips getTips(@NotNull final Integer searchId) throws SamebugClientException {
-        Builder.SimpleResponseHandler<GetTips> request = requestBuilder
+    public TipList getTips(@NotNull final Integer searchId) throws SamebugClientException {
+        Builder.SimpleResponseHandler<TipList> request = requestBuilder
                 .at(uriBuilder.tipsForSearch(searchId))
-                .<GetTips>withResponse(GetTips.class)
+                .<TipList>withResponse(TipList.class)
                 .buildGet();
         return extractGet(rawClient.execute(request));
     }
 
     @NotNull
-    public GetBugmates getBugmates(@NotNull final Integer searchId) throws SamebugClientException {
-        Builder.SimpleResponseHandler<GetBugmates> request = requestBuilder
+    public BugmateList getBugmates(@NotNull final Integer searchId) throws SamebugClientException {
+        Builder.SimpleResponseHandler<BugmateList> request = requestBuilder
                 .at(uriBuilder.bugmatesForSearch(searchId))
-                .<GetBugmates>withResponse(GetBugmates.class)
+                .<BugmateList>withResponse(BugmateList.class)
                 .buildGet();
         return extractGet(rawClient.execute(request));
     }
@@ -145,23 +145,23 @@ public final class SamebugClient {
     }
 
     @NotNull
-    public HelpRequest getHelpRequest(String helpRequestId) throws SamebugClientException {
-        Builder.SimpleResponseHandler<GetHelpRequest> request = requestBuilder
+    public HelpRequest getHelpRequest(@NotNull final String helpRequestId) throws SamebugClientException {
+        Builder.SimpleResponseHandler<HelpRequestResource> request = requestBuilder
                 .at(uriBuilder.helpRequest(helpRequestId))
-                .<GetHelpRequest>withResponse(GetHelpRequest.class)
+                .<HelpRequestResource>withResponse(HelpRequestResource.class)
                 .buildGet();
         return extractGet(rawClient.execute(request)).getData();
     }
 
     @NotNull
     public HelpRequest createHelpRequest(@NotNull final Integer searchId, @NotNull final NewHelpRequest data) throws SamebugClientException, HelpRequestCreate.BadRequest {
-        Builder.HandlePostResponseJson<NewHelpRequest, CreateHelpRequest, JsonErrors<HelpRequestCreate.ErrorCode>> request = requestBuilder
+        Builder.HandlePostResponseJson<NewHelpRequest, HelpRequestResource, JsonErrors<HelpRequestCreate.ErrorCode>> request = requestBuilder
                 .at(uriBuilder.helpRequests(searchId))
-                .<CreateHelpRequest>withResponse(CreateHelpRequest.class)
+                .<HelpRequestResource>withResponse(HelpRequestResource.class)
                 .posting(data)
                 .<JsonErrors<HelpRequestCreate.ErrorCode>>withErrors(new TypeToken<JsonErrors<HelpRequestCreate.ErrorCode>>() {}.getType())
                 .buildPost();
-        final PostFormResponse<CreateHelpRequest, JsonErrors<HelpRequestCreate.ErrorCode>> response = rawClient.execute(request);
+        final PostFormResponse<HelpRequestResource, JsonErrors<HelpRequestCreate.ErrorCode>> response = rawClient.execute(request);
         switch (response.getResultType()) {
             case SUCCESS:
                 return response.getResult().getData();
@@ -176,13 +176,13 @@ public final class SamebugClient {
 
     @NotNull
     public HelpRequest cancelHelpRequest(@NotNull final String helpRequestId) throws SamebugClientException, HelpRequestCancel.BadRequest {
-        Builder.HandlePostResponseJson<?, CreateHelpRequest, JsonErrors<HelpRequestCancel.ErrorCode>> request = requestBuilder
+        Builder.HandlePostResponseJson<?, HelpRequestResource, JsonErrors<HelpRequestCancel.ErrorCode>> request = requestBuilder
                 .at(uriBuilder.helpRequest(helpRequestId))
-                .<CreateHelpRequest>withResponse(CreateHelpRequest.class)
+                .<HelpRequestResource>withResponse(HelpRequestResource.class)
                 .posting(null)
                 .<JsonErrors<HelpRequestCancel.ErrorCode>>withErrors(new TypeToken<JsonErrors<HelpRequestCancel.ErrorCode>>() {}.getType())
                 .buildDelete();
-        final PostFormResponse<CreateHelpRequest, JsonErrors<HelpRequestCancel.ErrorCode>> response = rawClient.execute(request);
+        final PostFormResponse<HelpRequestResource, JsonErrors<HelpRequestCancel.ErrorCode>> response = rawClient.execute(request);
         switch (response.getResultType()) {
             case SUCCESS:
                 return response.getResult().getData();
@@ -198,13 +198,13 @@ public final class SamebugClient {
     @NotNull
     public SearchHit<SamebugTip> createTip(@NotNull final Integer searchId, @NotNull final NewSearchHit data) throws SamebugClientException, TipCreate.BadRequest {
         // NOTE: posting a tip includes downloading the source on the server side, which might take a while, so maybe we should allow longer timeout
-        Builder.HandlePostResponseJson<NewSearchHit, CreateTipResponse, JsonErrors<TipCreate.ErrorCode>> request = requestBuilder
+        Builder.HandlePostResponseJson<NewSearchHit, CreateTipResource, JsonErrors<TipCreate.ErrorCode>> request = requestBuilder
                 .at(uriBuilder.tipsForSearch(searchId))
-                .<CreateTipResponse>withResponse(CreateTipResponse.class)
+                .<CreateTipResource>withResponse(CreateTipResource.class)
                 .posting(data)
                 .<JsonErrors<TipCreate.ErrorCode>>withErrors(new TypeToken<JsonErrors<TipCreate.ErrorCode>>() {}.getType())
                 .buildPost();
-        final PostFormResponse<CreateTipResponse, JsonErrors<TipCreate.ErrorCode>> response = rawClient.execute(request);
+        final PostFormResponse<CreateTipResource, JsonErrors<TipCreate.ErrorCode>> response = rawClient.execute(request);
         switch (response.getResultType()) {
             case SUCCESS:
                 return response.getResult().getData();
@@ -218,17 +218,17 @@ public final class SamebugClient {
     }
 
     @NotNull
-    public MarkCreated postMark(@NotNull final Integer searchId, @NotNull final NewMark data) throws SamebugClientException, MarkCreate.BadRequest {
-        Builder.HandlePostResponseJson<NewMark, MarkCreated, JsonErrors<MarkCreate.ErrorCode>> request = requestBuilder
+    public Mark postMark(@NotNull final Integer searchId, @NotNull final NewMark data) throws SamebugClientException, MarkCreate.BadRequest {
+        Builder.HandlePostResponseJson<NewMark, MarkResource, JsonErrors<MarkCreate.ErrorCode>> request = requestBuilder
                 .at(uriBuilder.marksForSearch(searchId))
-                .<MarkCreated>withResponse(MarkCreated.class)
+                .<MarkResource>withResponse(MarkResource.class)
                 .posting(data)
                 .<JsonErrors<MarkCreate.ErrorCode>>withErrors(new TypeToken<JsonErrors<MarkCreate.ErrorCode>>() {}.getType())
                 .buildPost();
-        final PostFormResponse<MarkCreated, JsonErrors<MarkCreate.ErrorCode>> response = rawClient.execute(request);
+        final PostFormResponse<MarkResource, JsonErrors<MarkCreate.ErrorCode>> response = rawClient.execute(request);
         switch (response.getResultType()) {
             case SUCCESS:
-                return response.getResult();
+                return response.getResult().getData();
             case EXCEPTION:
                 throw response.getException();
             case FORM_ERROR:
@@ -239,17 +239,17 @@ public final class SamebugClient {
     }
 
     @NotNull
-    public MarkCancelled cancelMark(@NotNull final Integer markId) throws SamebugClientException, MarkCancel.BadRequest {
-        Builder.HandlePostResponseJson<?, MarkCancelled, JsonErrors<MarkCancel.ErrorCode>> request = requestBuilder
+    public Mark cancelMark(@NotNull final Integer markId) throws SamebugClientException, MarkCancel.BadRequest {
+        Builder.HandlePostResponseJson<?, MarkResource, JsonErrors<MarkCancel.ErrorCode>> request = requestBuilder
                 .at(uriBuilder.mark(markId))
-                .<MarkCancelled>withResponse(MarkCancelled.class)
+                .<MarkResource>withResponse(MarkResource.class)
                 .posting(null)
                 .<JsonErrors<MarkCancel.ErrorCode>>withErrors(new TypeToken<JsonErrors<MarkCancel.ErrorCode>>() {}.getType())
                 .buildDelete();
-        final PostFormResponse<MarkCancelled, JsonErrors<MarkCancel.ErrorCode>> response = rawClient.execute(request);
+        final PostFormResponse<MarkResource, JsonErrors<MarkCancel.ErrorCode>> response = rawClient.execute(request);
         switch (response.getResultType()) {
             case SUCCESS:
-                return response.getResult();
+                return response.getResult().getData();
             case EXCEPTION:
                 throw response.getException();
             case FORM_ERROR:
@@ -261,14 +261,14 @@ public final class SamebugClient {
 
     @NotNull
     public AuthenticationResponse logIn(@NotNull final LogIn.Data data) throws SamebugClientException, LogIn.BadRequest {
-        Builder.HandlePostResponseJson<LogIn.Data, AuthenticateRequest, JsonErrors<LogIn.ErrorCode>> request = requestBuilder
+        Builder.HandlePostResponseJson<LogIn.Data, AuthenticationResponseResource, JsonErrors<LogIn.ErrorCode>> request = requestBuilder
                 .at(uriBuilder.logIn())
                 .unauthenticated()
-                .<AuthenticateRequest>withResponse(AuthenticateRequest.class)
+                .<AuthenticationResponseResource>withResponse(AuthenticationResponseResource.class)
                 .posting(data)
                 .<JsonErrors<LogIn.ErrorCode>>withErrors(new TypeToken<JsonErrors<LogIn.ErrorCode>>() {}.getType())
                 .buildPost();
-        final PostFormResponse<AuthenticateRequest, JsonErrors<LogIn.ErrorCode>> response = rawClient.execute(request);
+        final PostFormResponse<AuthenticationResponseResource, JsonErrors<LogIn.ErrorCode>> response = rawClient.execute(request);
         switch (response.getResultType()) {
             case SUCCESS:
                 return response.getResult().getData();
@@ -283,14 +283,14 @@ public final class SamebugClient {
 
     @NotNull
     public AuthenticationResponse signUp(@NotNull final SignUp.Data data) throws SamebugClientException, SignUp.BadRequest {
-        Builder.HandlePostResponseJson<SignUp.Data, AuthenticateRequest, JsonErrors<SignUp.ErrorCode>> request = requestBuilder
+        Builder.HandlePostResponseJson<SignUp.Data, AuthenticationResponseResource, JsonErrors<SignUp.ErrorCode>> request = requestBuilder
                 .at(uriBuilder.signUp())
                 .unauthenticated()
-                .<AuthenticateRequest>withResponse(AuthenticateRequest.class)
+                .<AuthenticationResponseResource>withResponse(AuthenticationResponseResource.class)
                 .posting(data)
                 .<JsonErrors<SignUp.ErrorCode>>withErrors(new TypeToken<JsonErrors<SignUp.ErrorCode>>() {}.getType())
                 .buildPost();
-        final PostFormResponse<AuthenticateRequest, JsonErrors<SignUp.ErrorCode>> response = rawClient.execute(request);
+        final PostFormResponse<AuthenticationResponseResource, JsonErrors<SignUp.ErrorCode>> response = rawClient.execute(request);
         switch (response.getResultType()) {
             case SUCCESS:
                 return response.getResult().getData();
@@ -305,10 +305,10 @@ public final class SamebugClient {
 
     @NotNull
     public AuthenticationResponse anonymousUse() throws SamebugClientException {
-        Builder.SimpleResponseHandler<AuthenticateRequest> request = requestBuilder
+        Builder.SimpleResponseHandler<AuthenticationResponseResource> request = requestBuilder
                 .at(uriBuilder.anonymousUse())
                 .unauthenticated()
-                .<AuthenticateRequest>withResponse(AuthenticateRequest.class)
+                .<AuthenticationResponseResource>withResponse(AuthenticationResponseResource.class)
                 .buildPost();
         return extractGet(rawClient.execute(request)).getData();
     }

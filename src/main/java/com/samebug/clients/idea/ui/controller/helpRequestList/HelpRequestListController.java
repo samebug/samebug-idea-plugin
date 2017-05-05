@@ -24,9 +24,9 @@ import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestList;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListFrame;
-import com.samebug.clients.http.entities.profile.UserInfo;
+import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.profile.UserStats;
-import com.samebug.clients.http.entities.response.IncomingHelpRequestList;
+import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
@@ -80,7 +80,7 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
 
     public void load() {
         view.setLoading();
-        final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
+        final Future<Me> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
         final Future<IncomingHelpRequestList> helpRequestsTask = concurrencyService.incomingHelpRequests(true);
 
@@ -88,7 +88,7 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
     }
 
     private void load(final Future<IncomingHelpRequestList> helpRequestsTask,
-                      final Future<UserInfo> userInfoTask,
+                      final Future<Me> userInfoTask,
                       final Future<UserStats> userStatsTask) {
         new LoadingTask() {
             @Override
@@ -111,7 +111,7 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
         public void moreClicked() {
             IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
             // TODO help requests url
-            UserInfo user = plugin.profileStore.getUser();
+            Me user = plugin.profileStore.getUser();
             if (user != null) {
                 int myUserId = user.getId();
                 URI uri = plugin.uriBuilder.profile(myUserId);

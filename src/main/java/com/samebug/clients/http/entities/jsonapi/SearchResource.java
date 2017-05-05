@@ -13,13 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.response;
+package com.samebug.clients.http.entities.jsonapi;
 
-import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
-import com.samebug.clients.http.entities.jsonapi.JsonResourceWithMeta;
-import com.samebug.clients.http.entities.jsonapi.TotalItems;
+import com.samebug.clients.http.entities.search.Search;
 
-import java.util.List;
-
-public final class IncomingHelpRequestList extends JsonResourceWithMeta<List<HelpRequestMatch>, TotalItems> {
+public final class SearchResource extends JsonResource<Search> {
 }

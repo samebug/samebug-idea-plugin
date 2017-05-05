@@ -71,7 +71,7 @@ final class RestUriBuilder {
 
     @NotNull
     public URI marksForSearch(@NotNull final Integer searchId) {
-        return resolve("searches" + searchId + "marks");
+        return resolve("searches/" + searchId + "/marks");
     }
 
     @NotNull

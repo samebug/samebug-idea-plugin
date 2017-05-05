@@ -17,7 +17,7 @@ package com.samebug.clients.common.services;
 
 import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
-import com.samebug.clients.http.entities.profile.UserInfo;
+import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.exceptions.SamebugException;
 import com.samebug.clients.http.form.LogIn;
@@ -33,7 +33,7 @@ public final class AuthenticationService {
         this.client = client;
     }
 
-    public UserInfo apiKeyAuthentication(final String apiKey, @Nullable final Integer workspaceId) throws SamebugException {
+    public Me apiKeyAuthentication(final String apiKey, @Nullable final Integer workspaceId) throws SamebugException {
         return client.getUserInfo(apiKey, workspaceId);
         // TODO if workspaceId is null, save the returned default workspace id to application settings.
     }

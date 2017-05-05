@@ -13,21 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.common.services;
+package com.samebug.clients.http.entities.jsonapi;
 
-import com.samebug.clients.http.entities.search.Search;
+import com.samebug.clients.http.entities.user.Me;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-public final class SearchStore {
-    final Map<Integer, Search> searches;
-
-    public SearchStore() {
-        this.searches = new ConcurrentHashMap<Integer, Search>();
-    }
-
-    public Search get(int searchId) {
-        return searches.get(searchId);
-    }
+public final class MeResource extends JsonResource<Me> {
 }
