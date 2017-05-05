@@ -17,28 +17,33 @@ package com.samebug.clients.idea.ui.controller.helpRequest;
 
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
+import com.samebug.clients.http.entities.search.NewSearchHit;
+import com.samebug.clients.http.entities.search.SearchHit;
+import com.samebug.clients.http.entities.solution.NewSolution;
+import com.samebug.clients.http.entities.solution.NewTip;
 import com.samebug.clients.http.entities.solution.SamebugTip;
-import com.samebug.clients.http.entities.solution.SolutionSlot;
-import com.samebug.clients.http.form.TipCreate;
 import com.samebug.clients.idea.ui.controller.form.CreateTipFormHandler;
+import org.jetbrains.annotations.NotNull;
 
 final class WriteTipListener implements IHelpOthersCTA.Listener {
+    @NotNull
     final HelpRequestController controller;
 
-    public WriteTipListener(final HelpRequestController controller) {
+    WriteTipListener(final HelpRequestController controller) {
         this.controller = controller;
     }
 
     @Override
-    public void postTip(final IHelpOthersCTA source, final String tipBody) {
+    public void postTip(@NotNull final IHelpOthersCTA source, @NotNull final String tipBody) {
         final HelpRequest helpRequest = controller.helpRequestStore.getHelpRequest(controller.helpRequestId);
         assert helpRequest != null : "we just showed it, it should not be null";
         // TODO matching help request?
 //        assert helpRequest.matchingGroup.lastSearchInfo != null : "our own search is always visible";
 
-        new CreateTipFormHandler(controller.view, source, new TipCreate.ForHelpRequest(tipBody, null, helpRequest.getSearchId(), controller.helpRequestId)) {
+        NewSearchHit formData = new NewSearchHit(new NewSolution(new NewTip(tipBody, null), controller.helpRequestId));
+        new CreateTipFormHandler(controller.view, source, formData, helpRequest.getSearchId()) {
             @Override
-            protected void afterPostForm(SolutionSlot<SamebugTip> response) {
+            protected void afterPostForm(SearchHit<SamebugTip> response) {
                 // TODO animation
                 controller.load();
             }

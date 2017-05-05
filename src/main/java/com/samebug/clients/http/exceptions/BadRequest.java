@@ -18,4 +18,8 @@ package com.samebug.clients.http.exceptions;
 public class BadRequest extends SamebugClientException {
     public BadRequest() {
     }
+
+    public BadRequest(String message) {
+        super(message);
+    }
 }

@@ -13,22 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.form;
+package com.samebug.clients.http.entities.mark;
 
 import org.jetbrains.annotations.NotNull;
 
-public final class SearchCreate {
-    public final String type;
+public final class NewMark {
     @NotNull
-    private final String stacktrace;
-
-    public SearchCreate(@NotNull String stacktrace) {
-        this.stacktrace = stacktrace;
-        type = "stacktrace-search";
-    }
-
+    public final String type = "new--mark";
     @NotNull
-    public String getStacktrace() {
-        return stacktrace;
+    public final Integer solutionId;
+
+    public NewMark(@NotNull final Integer solutionId) {
+        this.solutionId = solutionId;
     }
 }

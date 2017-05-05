@@ -16,10 +16,13 @@
 package com.samebug.clients.common.services;
 
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
-import com.samebug.clients.http.entities.helprequest.IncomingHelpRequestList;
+import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
+import com.samebug.clients.http.entities.response.IncomingHelpRequestList;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class HelpRequestStore {
+    @Nullable
     IncomingHelpRequestList incoming;
 
     public HelpRequestStore() {
@@ -30,11 +33,15 @@ public final class HelpRequestStore {
         return incoming;
     }
 
-    public HelpRequest getHelpRequest(@NotNull String id) {
-        for (HelpRequest h : incoming.matches) {
-            if (id.equals(h.getId())) return h;
+    @Nullable
+    public HelpRequest getHelpRequest(@NotNull final String id) {
+        HelpRequest match = null;
+        if (incoming != null) {
+            for (HelpRequestMatch h : incoming.getData()) {
+                if (id.equals(h.getHelpRequest().getId())) match = h.getHelpRequest();
+            }
         }
-        return null;
+        return match;
     }
 
     public void invalidate() {

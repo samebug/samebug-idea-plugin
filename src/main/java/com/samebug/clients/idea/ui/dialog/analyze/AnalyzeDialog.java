@@ -24,7 +24,7 @@ import com.intellij.unscramble.AnalyzeStacktraceUtil;
 import com.samebug.clients.common.search.StackTraceListener;
 import com.samebug.clients.common.search.StackTraceMatcher;
 import com.samebug.clients.common.services.SearchService;
-import com.samebug.clients.http.entities.response.SearchRequest;
+import com.samebug.clients.http.entities.response.CreatedSearch;
 import com.samebug.clients.http.entities.search.Search;
 import com.samebug.clients.http.entities.search.StackTraceSearch;
 import com.samebug.clients.http.exceptions.BadRequest;
@@ -128,7 +128,7 @@ public final class AnalyzeDialog extends DialogWrapper {
             }
             try {
                 // NOTE: this search post happens on the UI thread, but we own the UI thread as long as the dialog is opened.
-                SearchRequest result = searchService.search(trace);
+                CreatedSearch result = searchService.search(trace);
                 Search search = result.getData();
                 final int searchId = search.getId();
 

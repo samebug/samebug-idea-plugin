@@ -1,9 +1,9 @@
 package com.samebug.clients.http.websocket;
 
 import com.samebug.clients.http.client.TestWithSamebugClient;
+import com.samebug.clients.http.entities.helprequest.NewHelpRequest;
 import com.samebug.clients.http.entities.notification.IncomingAnswer;
 import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
-import com.samebug.clients.http.form.HelpRequestCreate;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.nio.NioEventLoopGroup;
 import org.junit.Before;
@@ -25,7 +25,7 @@ public class WebSocketClientTest extends TestWithSamebugClient {
         WebSocketConfig config = new WebSocketConfig(URI.create("http://localhost:9000"), "355be195-c10b-11e5-a334-000d3a317492", 1,
                 new TestHandler(), new NioEventLoopGroup(1, Executors.newSingleThreadExecutor()));
         WebSocketClient wsClient = new WebSocketClient(config);
-        authenticatedClient.createHelpRequest(new HelpRequestCreate.Data(5641, null));
+        authenticatedClient.createHelpRequest(5641, new NewHelpRequest(null));
         Thread.sleep(2500);
         assertThat(receivedSomeMessage, equalTo(true));
     }

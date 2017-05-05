@@ -21,6 +21,8 @@ public final class Config {
     @Nullable
     public final String apiKey;
     @Nullable
+    public final Integer userId;
+    @Nullable
     public final Integer workspaceId;
     public final String serverRoot;
     public final String trackingRoot;
@@ -32,11 +34,12 @@ public final class Config {
     @Nullable
     public final ProxyConfig proxy;
 
-    public Config(@Nullable String apiKey, @Nullable Integer workspaceId,
+    public Config(@Nullable String apiKey, @Nullable Integer userId, @Nullable Integer workspaceId,
                   String serverRoot, String trackingRoot, boolean isTrackingEnabled,
                   int connectTimeout, int requestTimeout, boolean isApacheLoggingEnabled,
                   boolean isJsonDebugEnabled, @Nullable ProxyConfig proxy) {
         this.apiKey = apiKey;
+        this.userId = userId;
         this.workspaceId = workspaceId;
         this.serverRoot = serverRoot;
         this.trackingRoot = trackingRoot;
@@ -50,6 +53,7 @@ public final class Config {
 
     public Config(final Config rhs) {
         this.apiKey = rhs.apiKey;
+        this.userId = rhs.userId;
         this.workspaceId = rhs.workspaceId;
         this.serverRoot = rhs.serverRoot;
         this.trackingRoot = rhs.trackingRoot;

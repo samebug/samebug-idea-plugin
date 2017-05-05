@@ -13,11 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.response;
+package com.samebug.clients.http.entities.search;
 
-import com.samebug.clients.http.entities.jsonapi.JsonResourceWithMeta;
-import com.samebug.clients.http.entities.jsonapi.Relations;
-import com.samebug.clients.http.entities.search.Search;
+import com.samebug.clients.http.entities.solution.NewSolution;
+import org.jetbrains.annotations.NotNull;
 
-public final class SearchRequest extends JsonResourceWithMeta<Search, Relations> {
+public final class NewSearchHit {
+    @NotNull
+    public final String type = "new--search-hit";
+    @NotNull
+    public final NewSolution solution;
+
+    public NewSearchHit(@NotNull final NewSolution solution) {
+        this.solution = solution;
+    }
 }

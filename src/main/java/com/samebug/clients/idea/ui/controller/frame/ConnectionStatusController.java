@@ -19,9 +19,9 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.idea.components.application.IdeaConnectionService;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.http.response.ConnectionStatus;
+import com.samebug.clients.idea.components.application.IdeaConnectionService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 
 public final class ConnectionStatusController implements IdeaConnectionService.ConnectionStatusListener, Disposable {

@@ -26,10 +26,7 @@ import com.samebug.clients.http.response.GetResponse;
 import com.samebug.clients.http.response.PostFormResponse;
 import org.apache.http.Consts;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 
 import java.io.IOException;
@@ -54,7 +51,6 @@ final class Builder {
     private final Gson gson;
 
     private static final boolean defaultAuthenticated = true;
-    private static final Object defaultPostData = null;
 
     Builder(Config config) {
         this.config = config;
@@ -163,6 +159,10 @@ final class Builder {
             this.responseType = responseType;
             this.postData = postData;
             this.errorType = errorType;
+        }
+
+        public HandlePostResponseJson<PostDataType, ResponseType, ErrorType> buildDelete() {
+            return new HandlePostResponseJson<PostDataType, ResponseType, ErrorType>(uri, isAuthenticated, postData, responseType, errorType, "DELETE");
         }
 
         public HandlePostResponseJson<PostDataType, ResponseType, ErrorType> buildPut() {
@@ -305,6 +305,8 @@ final class Builder {
             } else if ("PUT".equals(requestMethod)) {
                 request = new HttpPut(uri);
                 if (postData != null) ((HttpPut) request).setEntity(new StringEntity(gson.toJson(postData), Consts.UTF_8));
+            } else if ("DELETE".equals(requestMethod)) {
+                request = new HttpDelete(uri);
             } else throw new IllegalArgumentException("Change requestMethod parameter so it's not stringly typed");
             if (postData != null) request.setHeader("Content-Type", "application/json");
         }

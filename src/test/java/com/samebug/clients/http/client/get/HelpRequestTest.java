@@ -2,6 +2,7 @@ package com.samebug.clients.http.client.get;
 
 import com.samebug.clients.http.client.TestWithSamebugClient;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
+import com.samebug.clients.http.entities.response.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.search.ReadableSearchGroup;
 import com.samebug.clients.http.entities.search.SearchableSearchGroup;
 import org.junit.Test;
@@ -13,6 +14,8 @@ import static org.junit.Assert.assertThat;
 public class HelpRequestTest extends TestWithSamebugClient {
     @Test
     public void getIncomingHelpRequests() throws Exception {
+        final IncomingHelpRequestList helpRequests = authenticatedClient.getIncomingHelpRequests();
+        assertThat(helpRequests.getMeta().getTotal(), equalTo(1));
     }
 
     @Test

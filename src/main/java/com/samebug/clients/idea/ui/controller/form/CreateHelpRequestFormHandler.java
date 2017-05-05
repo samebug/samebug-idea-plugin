@@ -19,20 +19,24 @@ import com.samebug.clients.common.services.HelpRequestService;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
+import com.samebug.clients.http.entities.helprequest.NewHelpRequest;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.HelpRequestCreate;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class CreateHelpRequestFormHandler extends PostFormHandler<HelpRequest, HelpRequestCreate.BadRequest> {
     final IFrame frame;
     final IAskForHelp form;
-    final HelpRequestCreate.Data data;
+    final NewHelpRequest data;
+    final Integer searchId;
 
-    public CreateHelpRequestFormHandler(IFrame frame, IAskForHelp form, HelpRequestCreate.Data data) {
+    public CreateHelpRequestFormHandler(IFrame frame, IAskForHelp form, NewHelpRequest data, @NotNull Integer searchId) {
         this.frame = frame;
         this.form = form;
         this.data = data;
+        this.searchId = searchId;
     }
 
     @Override
@@ -43,7 +47,7 @@ public abstract class CreateHelpRequestFormHandler extends PostFormHandler<HelpR
     @Override
     protected HelpRequest postForm() throws SamebugClientException, HelpRequestCreate.BadRequest {
         final HelpRequestService helpRequestService = IdeaSamebugPlugin.getInstance().helpRequestService;
-        return helpRequestService.createHelpRequest(data);
+        return helpRequestService.createHelpRequest(searchId, data);
     }
 
     @Override

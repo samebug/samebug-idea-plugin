@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.jsonapi;
+package com.samebug.clients.http.entities.search;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public final class SamebugError<Code> {
+public final class NewSearch {
+    public final String type;
     @NotNull
-    public final Code code;
-    @Nullable
-    public final String detail;
+    public final String query;
 
-    public SamebugError(@NotNull Code code, @Nullable String detail) {
-        this.code = code;
-        this.detail = detail;
+    public NewSearch(@NotNull String query) {
+        type = "new--search";
+        this.query = query;
     }
 }

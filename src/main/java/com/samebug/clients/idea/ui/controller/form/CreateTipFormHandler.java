@@ -18,22 +18,30 @@ package com.samebug.clients.idea.ui.controller.form;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.frame.IFrame;
+import com.samebug.clients.http.entities.search.NewSearchHit;
+import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.http.entities.solution.SamebugTip;
-import com.samebug.clients.http.entities.solution.SolutionSlot;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.TipCreate;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import org.jetbrains.annotations.NotNull;
 
-public abstract class CreateTipFormHandler extends PostFormHandler<SolutionSlot<SamebugTip>, TipCreate.BadRequest> {
+public abstract class CreateTipFormHandler extends PostFormHandler<SearchHit<SamebugTip>, TipCreate.BadRequest> {
+    @NotNull
     final IFrame frame;
+    @NotNull
     final IHelpOthersCTA form;
-    final TipCreate.Base data;
+    @NotNull
+    final NewSearchHit data;
+    @NotNull
+    final Integer searchId;
 
-    public CreateTipFormHandler(IFrame frame, IHelpOthersCTA form, TipCreate.Base data) {
+    public CreateTipFormHandler(@NotNull final IFrame frame, @NotNull final IHelpOthersCTA form, @NotNull final NewSearchHit data, @NotNull final Integer searchId) {
         this.frame = frame;
         this.form = form;
         this.data = data;
+        this.searchId = searchId;
     }
 
     @Override
@@ -42,9 +50,9 @@ public abstract class CreateTipFormHandler extends PostFormHandler<SolutionSlot<
     }
 
     @Override
-    protected SolutionSlot<SamebugTip> postForm() throws SamebugClientException, TipCreate.BadRequest {
+    protected SearchHit<SamebugTip> postForm() throws SamebugClientException, TipCreate.BadRequest {
         final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
-        return solutionService.postTip(data);
+        return solutionService.postTip(searchId, data);
     }
 
     @Override

@@ -72,7 +72,7 @@ public final class RequestHelpScreen extends JComponent {
     }
 
     private final class SendButton extends SamebugButton {
-        public SendButton() {
+        SendButton() {
             super(MessageService.message("samebug.component.helpRequest.ask.send"), true);
         }
     }

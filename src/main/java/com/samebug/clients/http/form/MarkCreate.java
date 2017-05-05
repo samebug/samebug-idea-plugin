@@ -18,20 +18,8 @@ package com.samebug.clients.http.form;
 import com.samebug.clients.http.entities.jsonapi.JsonErrors;
 import com.samebug.clients.http.exceptions.FormException;
 import org.apache.commons.lang.StringUtils;
-import org.jetbrains.annotations.NotNull;
 
 public final class MarkCreate {
-    public static final class Data {
-        public final String type = "mark-searchhit";
-        public final Integer solutionId;
-        public final Integer searchId;
-
-        public Data(@NotNull Integer solutionId, @NotNull Integer searchId) {
-            this.solutionId = solutionId;
-            this.searchId = searchId;
-        }
-    }
-
     public enum ErrorCode {
         NOT_YOUR_SEARCH
     }

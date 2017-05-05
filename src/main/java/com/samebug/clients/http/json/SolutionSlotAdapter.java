@@ -25,8 +25,8 @@ import com.samebug.clients.http.entities.solution.SolutionSlot;
 public class SolutionSlotAdapter extends AbstractGenericObjectAdapter<SolutionSlot<Document>> {
     {
         typeClasses = ImmutableMap.<String, TypeToken<? extends SolutionSlot<Document>>>builder()
-                .put("solution-readable", new TypeToken<ReadableSolution<Document>>() {})
-                .put("solution-searchable", new TypeToken<SearchableSolution<Document>>() {})
+                .put("solution--readable", new TypeToken<ReadableSolution<Document>>() {})
+                .put("solution--searchable", new TypeToken<SearchableSolution<Document>>() {})
                 .build();
     }
 }

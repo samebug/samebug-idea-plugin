@@ -13,19 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.jsonapi;
+package com.samebug.clients.http.entities.solution;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class SamebugError<Code> {
+public final class NewSolution {
     @NotNull
-    public final Code code;
+    public final String type = "new--solution";
+    @NotNull
+    public final NewTip document;
     @Nullable
-    public final String detail;
+    public final String responseToHelpRequestId;
 
-    public SamebugError(@NotNull Code code, @Nullable String detail) {
-        this.code = code;
-        this.detail = detail;
+    public NewSolution(@NotNull final NewTip document) {
+        this(document, null);
+    }
+
+    public NewSolution(@NotNull final NewTip document, @Nullable final String responseToHelpRequestId) {
+        this.document = document;
+        this.responseToHelpRequestId = responseToHelpRequestId;
     }
 }

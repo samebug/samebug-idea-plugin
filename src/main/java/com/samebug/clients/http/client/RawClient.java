@@ -115,6 +115,7 @@ public final class RawClient {
         final int statusCode = httpResponse.getStatusLine().getStatusCode();
         switch (statusCode) {
             case HttpStatus.SC_OK:
+            case HttpStatus.SC_CREATED:
                 connectionStatus.successfullyAuthenticated = true;
                 return handler.onSuccess(httpResponse);
             case HttpStatus.SC_BAD_REQUEST:

@@ -15,12 +15,16 @@
  */
 package com.samebug.clients.http.entities.helprequest;
 
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public final class IncomingHelpRequestList {
-    public final List<HelpRequest> matches;
+public final class NewHelpRequest {
+    @NotNull
+    public final String type = "new--help-request";
+    @Nullable
+    public final String context;
 
-    public IncomingHelpRequestList(List<HelpRequest> matches) {
-        this.matches = matches;
+    public NewHelpRequest(@Nullable final String context) {
+        this.context = context;
     }
 }

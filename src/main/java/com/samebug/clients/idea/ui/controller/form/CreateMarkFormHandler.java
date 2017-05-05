@@ -19,20 +19,28 @@ import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.http.entities.mark.MarkCreated;
+import com.samebug.clients.http.entities.mark.NewMark;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.MarkCreate;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class CreateMarkFormHandler extends PostFormHandler<MarkCreated, MarkCreate.BadRequest> {
+    @NotNull
     final IFrame frame;
+    @NotNull
     final IMarkButton button;
-    final MarkCreate.Data data;
+    @NotNull
+    final NewMark data;
+    @NotNull
+    final Integer searchId;
 
-    public CreateMarkFormHandler(IFrame frame, IMarkButton button, MarkCreate.Data data) {
+    public CreateMarkFormHandler(@NotNull final IFrame frame, @NotNull final IMarkButton button, @NotNull final NewMark data, @NotNull final Integer searchId) {
         this.frame = frame;
         this.button = button;
         this.data = data;
+        this.searchId = searchId;
     }
 
     @Override
@@ -43,7 +51,7 @@ public abstract class CreateMarkFormHandler extends PostFormHandler<MarkCreated,
     @Override
     protected MarkCreated postForm() throws SamebugClientException, MarkCreate.BadRequest {
         final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
-        return solutionService.postMark(data);
+        return solutionService.postMark(searchId, data);
     }
 
     @Override

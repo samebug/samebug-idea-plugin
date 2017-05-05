@@ -19,17 +19,22 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
-import com.samebug.clients.http.entities.helprequest.IncomingHelpRequestList;
+import com.samebug.clients.http.entities.helprequest.NewHelpRequest;
 import com.samebug.clients.http.entities.jsonapi.JsonErrors;
+import com.samebug.clients.http.entities.jsonapi.JsonResource;
 import com.samebug.clients.http.entities.mark.MarkCancelled;
 import com.samebug.clients.http.entities.mark.MarkCreated;
+import com.samebug.clients.http.entities.mark.NewMark;
 import com.samebug.clients.http.entities.profile.UserInfo;
 import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.response.*;
+import com.samebug.clients.http.entities.search.NewSearch;
+import com.samebug.clients.http.entities.search.NewSearchHit;
+import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.http.entities.solution.SamebugTip;
-import com.samebug.clients.http.entities.solution.SolutionSlot;
 import com.samebug.clients.http.entities.tracking.TrackEvent;
 import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.exceptions.UserUnauthenticated;
 import com.samebug.clients.http.form.*;
 import com.samebug.clients.http.json.Json;
 import com.samebug.clients.http.response.GetResponse;
@@ -41,7 +46,7 @@ import org.apache.http.entity.StringEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.net.URI;
+import java.lang.reflect.Type;
 
 public final class SamebugClient {
     private static final Gson gson = Json.gson;
@@ -61,7 +66,7 @@ public final class SamebugClient {
     @NotNull
     public UserInfo getUserInfo(@NotNull final String apiKey, @Nullable final Integer workspaceId) throws SamebugClientException {
         RawClient tmpClient = new RawClient(new Config(
-                apiKey, workspaceId, config.serverRoot, config.trackingRoot, config.isTrackingEnabled,
+                apiKey, null, workspaceId, config.serverRoot, config.trackingRoot, config.isTrackingEnabled,
                 config.connectTimeout, config.requestTimeout, config.isApacheLoggingEnabled, config.isJsonDebugEnabled, config.proxy),
                 null
         );
@@ -74,26 +79,30 @@ public final class SamebugClient {
 
     @NotNull
     public UserStats getUserStats() throws SamebugClientException {
-        final URI url = uriBuilder.userStats();
-        // TODO
-        return new UserStats();
+        if (config.userId == null) throw new UserUnauthenticated();
+        Type responseType = new TypeToken<JsonResource<UserStats>>() {}.getType();
+        Builder.SimpleResponseHandler<JsonResource<UserStats>> request = requestBuilder
+                .at(uriBuilder.userStats(config.userId))
+                .<JsonResource<UserStats>>withResponse(responseType)
+                .buildGet();
+        return extractGet(rawClient.execute(request)).getData();
     }
 
     @NotNull
-    public SearchRequest createSearch(@NotNull final SearchCreate data) throws SamebugClientException {
-        Builder.SimplePostHandler<SearchRequest, SearchCreate> request = requestBuilder
-                .at(uriBuilder.search())
-                .<SearchRequest>withResponse(SearchRequest.class)
+    public CreatedSearch createSearch(@NotNull final NewSearch data) throws SamebugClientException {
+        Builder.SimplePostHandler<CreatedSearch, NewSearch> request = requestBuilder
+                .at(uriBuilder.searches())
+                .<CreatedSearch>withResponse(CreatedSearch.class)
                 .posting(data)
                 .build();
         return extractGet(rawClient.execute(request));
     }
 
     @NotNull
-    public SearchRequest getSearch(@NotNull final Integer searchId) throws SamebugClientException {
-        Builder.SimpleResponseHandler<SearchRequest> request = requestBuilder
-                .at(uriBuilder.search(searchId))
-                .<SearchRequest>withResponse(SearchRequest.class)
+    public CreatedSearch getSearch(@NotNull final Integer searchId) throws SamebugClientException {
+        Builder.SimpleResponseHandler<CreatedSearch> request = requestBuilder
+                .at(uriBuilder.searches(searchId))
+                .<CreatedSearch>withResponse(CreatedSearch.class)
                 .buildGet();
         return extractGet(rawClient.execute(request));
     }
@@ -101,7 +110,7 @@ public final class SamebugClient {
     @NotNull
     public GetSolutions getSolutions(@NotNull final Integer searchId) throws SamebugClientException {
         Builder.SimpleResponseHandler<GetSolutions> request = requestBuilder
-                .at(uriBuilder.solutions(searchId))
+                .at(uriBuilder.solutionsForSearch(searchId))
                 .<GetSolutions>withResponse(GetSolutions.class)
                 .buildGet();
         return extractGet(rawClient.execute(request));
@@ -110,7 +119,7 @@ public final class SamebugClient {
     @NotNull
     public GetTips getTips(@NotNull final Integer searchId) throws SamebugClientException {
         Builder.SimpleResponseHandler<GetTips> request = requestBuilder
-                .at(uriBuilder.tips(searchId))
+                .at(uriBuilder.tipsForSearch(searchId))
                 .<GetTips>withResponse(GetTips.class)
                 .buildGet();
         return extractGet(rawClient.execute(request));
@@ -119,7 +128,7 @@ public final class SamebugClient {
     @NotNull
     public GetBugmates getBugmates(@NotNull final Integer searchId) throws SamebugClientException {
         Builder.SimpleResponseHandler<GetBugmates> request = requestBuilder
-                .at(uriBuilder.bugmates(searchId))
+                .at(uriBuilder.bugmatesForSearch(searchId))
                 .<GetBugmates>withResponse(GetBugmates.class)
                 .buildGet();
         return extractGet(rawClient.execute(request));
@@ -127,8 +136,9 @@ public final class SamebugClient {
 
     @NotNull
     public IncomingHelpRequestList getIncomingHelpRequests() throws SamebugClientException {
+        if (config.userId == null) throw new UserUnauthenticated();
         Builder.SimpleResponseHandler<IncomingHelpRequestList> request = requestBuilder
-                .at(uriBuilder.incomingHelpRequests())
+                .at(uriBuilder.incomingHelpRequests(config.userId))
                 .<IncomingHelpRequestList>withResponse(IncomingHelpRequestList.class)
                 .buildGet();
         return extractGet(rawClient.execute(request));
@@ -137,16 +147,16 @@ public final class SamebugClient {
     @NotNull
     public HelpRequest getHelpRequest(String helpRequestId) throws SamebugClientException {
         Builder.SimpleResponseHandler<GetHelpRequest> request = requestBuilder
-                .at(uriBuilder.getHelpRequest(helpRequestId))
+                .at(uriBuilder.helpRequest(helpRequestId))
                 .<GetHelpRequest>withResponse(GetHelpRequest.class)
                 .buildGet();
         return extractGet(rawClient.execute(request)).getData();
     }
 
     @NotNull
-    public HelpRequest createHelpRequest(@NotNull final HelpRequestCreate.Data data) throws SamebugClientException, HelpRequestCreate.BadRequest {
-        Builder.HandlePostResponseJson<HelpRequestCreate.Data, CreateHelpRequest, JsonErrors<HelpRequestCreate.ErrorCode>> request = requestBuilder
-                .at(uriBuilder.helpRequest())
+    public HelpRequest createHelpRequest(@NotNull final Integer searchId, @NotNull final NewHelpRequest data) throws SamebugClientException, HelpRequestCreate.BadRequest {
+        Builder.HandlePostResponseJson<NewHelpRequest, CreateHelpRequest, JsonErrors<HelpRequestCreate.ErrorCode>> request = requestBuilder
+                .at(uriBuilder.helpRequests(searchId))
                 .<CreateHelpRequest>withResponse(CreateHelpRequest.class)
                 .posting(data)
                 .<JsonErrors<HelpRequestCreate.ErrorCode>>withErrors(new TypeToken<JsonErrors<HelpRequestCreate.ErrorCode>>() {}.getType())
@@ -165,13 +175,13 @@ public final class SamebugClient {
     }
 
     @NotNull
-    public HelpRequest revokeHelpRequest(String helpRequestId) throws SamebugClientException, HelpRequestCancel.BadRequest {
+    public HelpRequest cancelHelpRequest(@NotNull final String helpRequestId) throws SamebugClientException, HelpRequestCancel.BadRequest {
         Builder.HandlePostResponseJson<?, CreateHelpRequest, JsonErrors<HelpRequestCancel.ErrorCode>> request = requestBuilder
-                .at(uriBuilder.revokeHelpRequest(helpRequestId))
+                .at(uriBuilder.helpRequest(helpRequestId))
                 .<CreateHelpRequest>withResponse(CreateHelpRequest.class)
                 .posting(null)
                 .<JsonErrors<HelpRequestCancel.ErrorCode>>withErrors(new TypeToken<JsonErrors<HelpRequestCancel.ErrorCode>>() {}.getType())
-                .buildPut();
+                .buildDelete();
         final PostFormResponse<CreateHelpRequest, JsonErrors<HelpRequestCancel.ErrorCode>> response = rawClient.execute(request);
         switch (response.getResultType()) {
             case SUCCESS:
@@ -186,10 +196,10 @@ public final class SamebugClient {
     }
 
     @NotNull
-    public SolutionSlot<SamebugTip> createTip(@NotNull final TipCreate.Base data) throws SamebugClientException, TipCreate.BadRequest {
+    public SearchHit<SamebugTip> createTip(@NotNull final Integer searchId, @NotNull final NewSearchHit data) throws SamebugClientException, TipCreate.BadRequest {
         // NOTE: posting a tip includes downloading the source on the server side, which might take a while, so maybe we should allow longer timeout
-        Builder.HandlePostResponseJson<TipCreate.Base, CreateTipResponse, JsonErrors<TipCreate.ErrorCode>> request = requestBuilder
-                .at(uriBuilder.tip())
+        Builder.HandlePostResponseJson<NewSearchHit, CreateTipResponse, JsonErrors<TipCreate.ErrorCode>> request = requestBuilder
+                .at(uriBuilder.tipsForSearch(searchId))
                 .<CreateTipResponse>withResponse(CreateTipResponse.class)
                 .posting(data)
                 .<JsonErrors<TipCreate.ErrorCode>>withErrors(new TypeToken<JsonErrors<TipCreate.ErrorCode>>() {}.getType())
@@ -208,9 +218,9 @@ public final class SamebugClient {
     }
 
     @NotNull
-    public MarkCreated postMark(@NotNull final MarkCreate.Data data) throws SamebugClientException, MarkCreate.BadRequest {
-        Builder.HandlePostResponseJson<MarkCreate.Data, MarkCreated, JsonErrors<MarkCreate.ErrorCode>> request = requestBuilder
-                .at(uriBuilder.mark())
+    public MarkCreated postMark(@NotNull final Integer searchId, @NotNull final NewMark data) throws SamebugClientException, MarkCreate.BadRequest {
+        Builder.HandlePostResponseJson<NewMark, MarkCreated, JsonErrors<MarkCreate.ErrorCode>> request = requestBuilder
+                .at(uriBuilder.marksForSearch(searchId))
                 .<MarkCreated>withResponse(MarkCreated.class)
                 .posting(data)
                 .<JsonErrors<MarkCreate.ErrorCode>>withErrors(new TypeToken<JsonErrors<MarkCreate.ErrorCode>>() {}.getType())
@@ -231,11 +241,11 @@ public final class SamebugClient {
     @NotNull
     public MarkCancelled cancelMark(@NotNull final Integer markId) throws SamebugClientException, MarkCancel.BadRequest {
         Builder.HandlePostResponseJson<?, MarkCancelled, JsonErrors<MarkCancel.ErrorCode>> request = requestBuilder
-                .at(uriBuilder.cancelMark(markId))
+                .at(uriBuilder.mark(markId))
                 .<MarkCancelled>withResponse(MarkCancelled.class)
                 .posting(null)
                 .<JsonErrors<MarkCancel.ErrorCode>>withErrors(new TypeToken<JsonErrors<MarkCancel.ErrorCode>>() {}.getType())
-                .buildPost();
+                .buildDelete();
         final PostFormResponse<MarkCancelled, JsonErrors<MarkCancel.ErrorCode>> response = rawClient.execute(request);
         switch (response.getResultType()) {
             case SUCCESS:

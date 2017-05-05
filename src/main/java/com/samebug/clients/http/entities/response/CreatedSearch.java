@@ -13,20 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.json;
+package com.samebug.clients.http.entities.response;
 
-import com.google.common.collect.ImmutableMap;
-import com.samebug.clients.http.entities.search.NonAccessibleSearch;
+import com.samebug.clients.http.entities.jsonapi.JsonResourceWithMeta;
+import com.samebug.clients.http.entities.jsonapi.Relations;
 import com.samebug.clients.http.entities.search.Search;
-import com.samebug.clients.http.entities.search.StackTraceSearch;
-import com.samebug.clients.http.entities.search.TextSearch;
 
-public class SearchAdapter extends AbstractObjectAdapter<Search> {
-    {
-        typeClasses = ImmutableMap.<String, Class<? extends Search>>builder()
-                .put("stack-trace-search", StackTraceSearch.class)
-                .put("text-search", TextSearch.class)
-                .put("non-accessible-search", NonAccessibleSearch.class)
-                .build();
-    }
+public final class CreatedSearch extends JsonResourceWithMeta<Search, Relations> {
 }

@@ -39,7 +39,7 @@ import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListHeade
 import com.samebug.clients.common.ui.frame.solution.*;
 import com.samebug.clients.http.entities.bugmate.BugmateMatch;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
-import com.samebug.clients.http.entities.helprequest.IncomingHelpRequestList;
+import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
 import com.samebug.clients.http.entities.mark.MarkCancelled;
 import com.samebug.clients.http.entities.mark.MarkCreated;
 import com.samebug.clients.http.entities.notification.IncomingAnswer;
@@ -47,6 +47,7 @@ import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.http.entities.profile.UserInfo;
 import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.response.GetBugmates;
+import com.samebug.clients.http.entities.response.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.search.ReadableSearchGroup;
 import com.samebug.clients.http.entities.search.ReadableStackTraceSearch;
 import com.samebug.clients.http.entities.search.SearchHit;
@@ -143,7 +144,7 @@ public final class ConversionService {
 
     public IProfilePanel.Model profilePanel(IncomingHelpRequestList incomingRequests, UserInfo user, UserStats statistics) {
         ConnectionStatus status = IdeaSamebugPlugin.getInstance().clientService.getWsClient().isConnected() ? ConnectionStatus.ONLINE : ConnectionStatus.OFFLINE;
-        return new IProfilePanel.Model(incomingRequests.matches.size(), statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(),
+        return new IProfilePanel.Model(incomingRequests.getMeta().getTotal(), statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(),
                 user.getDisplayName(), user.getAvatarUrl(), status);
     }
 
@@ -191,8 +192,9 @@ public final class ConversionService {
     }
 
     public IHelpRequestListFrame.Model convertHelpRequestListFrame(IncomingHelpRequestList incomingRequests, UserInfo user, UserStats statistics) {
-        List<IHelpRequestPreview.Model> requestPreviews = new ArrayList<IHelpRequestPreview.Model>(incomingRequests.matches.size());
-        for (HelpRequest r : incomingRequests.matches) {
+        List<IHelpRequestPreview.Model> requestPreviews = new ArrayList<IHelpRequestPreview.Model>(incomingRequests.getData().size());
+        for (HelpRequestMatch m : incomingRequests.getData()) {
+            HelpRequest r = m.getHelpRequest();
             RegisteredSamebugUser requester = r.getRequester();
             String exceptionBody = null; //TODO headLine(r.accessibleSearchInfo());
             IHelpRequestPreview.Model preview =
@@ -200,7 +202,7 @@ public final class ConversionService {
             requestPreviews.add(preview);
         }
         IHelpRequestList.Model requestList = new IHelpRequestList.Model(requestPreviews);
-        IHelpRequestListHeader.Model header = new IHelpRequestListHeader.Model(incomingRequests.matches.size());
+        IHelpRequestListHeader.Model header = new IHelpRequestListHeader.Model(incomingRequests.getMeta().getTotal());
         IProfilePanel.Model profile = profilePanel(incomingRequests, user, statistics);
 
         return new IHelpRequestListFrame.Model(header, requestList, profile);

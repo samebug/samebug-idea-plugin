@@ -6,7 +6,8 @@ import com.samebug.clients.http.form.LogIn;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 public class LogInTest extends TestWithSamebugClient {

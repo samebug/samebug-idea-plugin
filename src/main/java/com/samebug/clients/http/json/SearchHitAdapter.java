@@ -23,8 +23,8 @@ import com.samebug.clients.http.entities.search.TextSearchHit;
 public class SearchHitAdapter extends AbstractObjectAdapter<SearchHit> {
     {
         typeClasses = ImmutableMap.<String, Class<? extends SearchHit>>builder()
-                .put("search-text-hit", TextSearchHit.class)
-                .put("search-stacktrace-hit", StackTraceSearchHit.class)
+                .put("hit--search-text", TextSearchHit.class)
+                .put("hit--stack-trace-search", StackTraceSearchHit.class)
                 .build();
     }
 }

@@ -27,11 +27,11 @@ import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestFrame;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
-import com.samebug.clients.http.entities.helprequest.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.profile.UserInfo;
 import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.response.GetSolutions;
 import com.samebug.clients.http.entities.response.GetTips;
+import com.samebug.clients.http.entities.response.IncomingHelpRequestList;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
@@ -44,11 +44,13 @@ import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.swing.ui.frame.helpRequest.HelpRequestFrame;
 import com.samebug.clients.swing.ui.modules.ListenerService;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.concurrent.Future;
 
 public final class HelpRequestController extends BaseFrameController<IHelpRequestFrame> implements Disposable {
+    @NotNull
     final String helpRequestId;
 
     final RefreshListener refreshListener;
@@ -62,7 +64,7 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
     final HelpRequestStore helpRequestStore;
 
 
-    public HelpRequestController(ToolWindowController twc, Project project, final String helpRequestId) {
+    public HelpRequestController(ToolWindowController twc, Project project, @NotNull final String helpRequestId) {
         super(twc, project, new HelpRequestFrame());
         this.helpRequestId = helpRequestId;
 

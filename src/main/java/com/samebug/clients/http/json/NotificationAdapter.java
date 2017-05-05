@@ -23,8 +23,8 @@ import com.samebug.clients.http.entities.notification.Notification;
 public class NotificationAdapter extends AbstractObjectAdapter<Notification> {
     {
         typeClasses = ImmutableMap.<String, Class<? extends Notification>>builder()
-                .put("incoming-help-request", IncomingHelpRequest.class)
-                .put("incoming-answer", IncomingAnswer.class)
+                .put("incoming--help-request", IncomingHelpRequest.class)
+                .put("incoming--answer", IncomingAnswer.class)
                 .build();
     }
 }

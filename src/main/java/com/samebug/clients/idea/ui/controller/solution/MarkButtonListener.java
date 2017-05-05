@@ -18,22 +18,25 @@ package com.samebug.clients.idea.ui.controller.solution;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.http.entities.mark.MarkCancelled;
 import com.samebug.clients.http.entities.mark.MarkCreated;
-import com.samebug.clients.http.form.MarkCreate;
+import com.samebug.clients.http.entities.mark.NewMark;
 import com.samebug.clients.idea.ui.controller.form.CancelMarkFormHandler;
 import com.samebug.clients.idea.ui.controller.form.CreateMarkFormHandler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 final class MarkButtonListener implements IMarkButton.Listener {
+    @NotNull
     final SolutionFrameController controller;
 
-    public MarkButtonListener(final SolutionFrameController controller) {
+    MarkButtonListener(@NotNull final SolutionFrameController controller) {
         this.controller = controller;
     }
 
     @Override
-    public void markClicked(final IMarkButton markButton, final Integer solutionId, final Integer markId) {
+    public void markClicked(@NotNull final IMarkButton markButton, @NotNull final Integer solutionId, @Nullable final Integer markId) {
         if (markId == null) {
 
-            new CreateMarkFormHandler(controller.view, markButton, new MarkCreate.Data(controller.searchId, solutionId)) {
+            new CreateMarkFormHandler(controller.view, markButton, new NewMark(solutionId), controller.searchId) {
                 @Override
                 protected void afterPostForm(MarkCreated response) {
                     final IMarkButton.Model newModel = controller.conversionService.convertMarkResponse(response);

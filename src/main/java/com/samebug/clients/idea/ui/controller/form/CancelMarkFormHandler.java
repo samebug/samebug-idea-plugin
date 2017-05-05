@@ -23,13 +23,17 @@ import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.MarkCancel;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class CancelMarkFormHandler extends PostFormHandler<MarkCancelled, MarkCancel.BadRequest> {
+    @NotNull
     final IFrame frame;
+    @NotNull
     final IMarkButton button;
+    @NotNull
     final Integer data;
 
-    public CancelMarkFormHandler(IFrame frame, IMarkButton button, Integer markId) {
+    public CancelMarkFormHandler(@NotNull final IFrame frame, @NotNull final IMarkButton button, @NotNull final Integer markId) {
         this.frame = frame;
         this.button = button;
         this.data = markId;

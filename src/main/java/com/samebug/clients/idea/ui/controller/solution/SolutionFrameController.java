@@ -29,13 +29,9 @@ import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.solution.ISearchHeaderPanel;
 import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
-import com.samebug.clients.http.entities.helprequest.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.profile.UserInfo;
 import com.samebug.clients.http.entities.profile.UserStats;
-import com.samebug.clients.http.entities.response.GetBugmates;
-import com.samebug.clients.http.entities.response.GetSolutions;
-import com.samebug.clients.http.entities.response.GetTips;
-import com.samebug.clients.http.entities.response.SearchRequest;
+import com.samebug.clients.http.entities.response.*;
 import com.samebug.clients.http.entities.search.ReadableStackTraceSearch;
 import com.samebug.clients.http.entities.search.Search;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
@@ -127,14 +123,14 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
         final Future<GetSolutions> solutionsTask = concurrencyService.solutions(searchId);
         final Future<GetTips> tipsTask = concurrencyService.tips(searchId);
         final Future<GetBugmates> bugmatesTask = concurrencyService.bugmates(searchId);
-        final Future<SearchRequest> searchTask = concurrencyService.search(searchId);
+        final Future<CreatedSearch> searchTask = concurrencyService.search(searchId);
         load(solutionsTask, tipsTask, bugmatesTask, searchTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);
     }
 
     private void load(final Future<GetSolutions> solutionsTask,
                       final Future<GetTips> tipsTask,
                       final Future<GetBugmates> bugmatesTask,
-                      final Future<SearchRequest> searchTask,
+                      final Future<CreatedSearch> searchTask,
                       final Future<IncomingHelpRequestList> incomingHelpRequestsTask,
                       final Future<UserInfo> userInfoTask,
                       final Future<UserStats> userStatsTask) {

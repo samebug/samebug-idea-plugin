@@ -3,10 +3,10 @@ package com.samebug.clients.http.client.get;
 import com.samebug.clients.http.client.TestWithSamebugClient;
 import com.samebug.clients.http.entities.bugmate.BugmateMatch;
 import com.samebug.clients.http.entities.jsonapi.TotalItems;
+import com.samebug.clients.http.entities.response.CreatedSearch;
 import com.samebug.clients.http.entities.response.GetBugmates;
 import com.samebug.clients.http.entities.response.GetSolutions;
 import com.samebug.clients.http.entities.response.GetTips;
-import com.samebug.clients.http.entities.response.SearchRequest;
 import com.samebug.clients.http.entities.search.ReadableSearchGroup;
 import com.samebug.clients.http.entities.search.SearchableSearchGroup;
 import com.samebug.clients.http.entities.search.StackTraceSearch;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 public class SearchTest extends TestWithSamebugClient {
     @Test
     public void getSearch() throws Exception {
-        SearchRequest search = authenticatedClient.getSearch(5641);
+        CreatedSearch search = authenticatedClient.getSearch(5641);
         assertThat(search.getData(), instanceOf(StackTraceSearch.class));
         StackTraceSearch s = (StackTraceSearch) search.getData();
         assertThat(s.getUser().getDisplayName(), equalTo("testuser"));

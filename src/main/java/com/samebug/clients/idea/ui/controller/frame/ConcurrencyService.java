@@ -18,13 +18,9 @@ package com.samebug.clients.idea.ui.controller.frame;
 import com.intellij.util.concurrency.FixedFuture;
 import com.samebug.clients.common.services.*;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
-import com.samebug.clients.http.entities.helprequest.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.profile.UserInfo;
 import com.samebug.clients.http.entities.profile.UserStats;
-import com.samebug.clients.http.entities.response.GetBugmates;
-import com.samebug.clients.http.entities.response.GetSolutions;
-import com.samebug.clients.http.entities.response.GetTips;
-import com.samebug.clients.http.entities.response.SearchRequest;
+import com.samebug.clients.http.entities.response.*;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import org.jetbrains.ide.PooledThreadExecutor;
 
@@ -133,10 +129,10 @@ public final class ConcurrencyService {
         });
     }
 
-    public Future<SearchRequest> search(final int searchId) {
-        return executor.submit(new Callable<SearchRequest>() {
+    public Future<CreatedSearch> search(final int searchId) {
+        return executor.submit(new Callable<CreatedSearch>() {
             @Override
-            public SearchRequest call() throws SamebugClientException {
+            public CreatedSearch call() throws SamebugClientException {
                 return searchService.get(searchId);
             }
         });

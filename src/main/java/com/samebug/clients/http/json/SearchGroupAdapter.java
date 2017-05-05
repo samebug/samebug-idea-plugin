@@ -24,9 +24,9 @@ import com.samebug.clients.http.entities.search.SearchableSearchGroup;
 public final class SearchGroupAdapter extends AbstractObjectAdapter<SearchGroup> {
     {
         typeClasses = ImmutableMap.<String, Class<? extends SearchGroup>>builder()
-                .put("searchgroup-readable", ReadableSearchGroup.class)
-                .put("searchgroup-searchable", SearchableSearchGroup.class)
-                .put("searchgroup-nonaccessible", NonAccessibleSearchGroup.class)
+                .put("search-group--readable", ReadableSearchGroup.class)
+                .put("search-group--searchable", SearchableSearchGroup.class)
+                .put("search-group--non-accessible", NonAccessibleSearchGroup.class)
                 .build();
     }
 }

@@ -21,7 +21,7 @@ import java.net.URI;
 
 final class RestUriBuilder {
     @NotNull
-    final URI gateway;
+    private final URI gateway;
 
     RestUriBuilder(@NotNull final String serverRoot) {
         assert !serverRoot.endsWith("/");
@@ -30,28 +30,28 @@ final class RestUriBuilder {
     }
 
     @NotNull
-    public URI search() {
-        return resolve("search");
+    public URI searches() {
+        return resolve("searches");
     }
 
     @NotNull
-    public URI search(@NotNull final Integer searchId) {
-        return resolve("search/" + searchId);
+    public URI searches(@NotNull final Integer searchId) {
+        return resolve("searches/" + searchId);
     }
 
     @NotNull
-    public URI solutions(@NotNull final Integer searchId) {
-        return resolve("search/" + searchId + "/external-solutions");
+    public URI solutionsForSearch(@NotNull final Integer searchId) {
+        return resolve("searches/" + searchId + "/external-solutions");
     }
 
     @NotNull
-    public URI tips(@NotNull final Integer searchId) {
-        return resolve("search/" + searchId + "/tips");
+    public URI tipsForSearch(@NotNull final Integer searchId) {
+        return resolve("searches/" + searchId + "/tips");
     }
 
     @NotNull
-    public URI bugmates(@NotNull final Integer searchId) {
-        return resolve("search/" + searchId + "/bugmates");
+    public URI bugmatesForSearch(@NotNull final Integer searchId) {
+        return resolve("searches/" + searchId + "/bugmates");
     }
 
     @NotNull
@@ -60,43 +60,33 @@ final class RestUriBuilder {
     }
 
     @NotNull
-    public URI helpRequest() {
-        return resolve("help-request");
+    public URI helpRequests(@NotNull final Integer searchId) {
+        return resolve("searches/" + searchId + "/help-requests");
     }
 
     @NotNull
-    public URI revokeHelpRequest(String id) {
-        return resolve("help-request/" + id + "/revoke");
+    public URI helpRequest(String helpRequestId) {
+        return resolve("help-requests/" + helpRequestId);
     }
 
     @NotNull
-    public URI getHelpRequest(String helpRequestId) {
-        return resolve("help-request/" + helpRequestId);
+    public URI marksForSearch(@NotNull final Integer searchId) {
+        return resolve("searches" + searchId + "marks");
     }
 
     @NotNull
-    public URI incomingHelpRequests() {
-        return resolve("incoming-helprequests");
+    public URI mark(@NotNull final Integer markId) {
+        return resolve("marks/" + markId);
     }
 
     @NotNull
-    public URI tip() {
-        return resolve("tip");
+    public URI incomingHelpRequests(@NotNull final Integer userId) {
+        return resolve("users/" + userId + "/help-requests");
     }
 
     @NotNull
-    public URI mark() {
-        return resolve("mark");
-    }
-
-    @NotNull
-    public URI cancelMark(@NotNull final Integer markId) {
-        return resolve("mark/" + markId + "cancel");
-    }
-
-    @NotNull
-    public URI userStats() {
-        return resolve("user/statistics");
+    public URI userStats(@NotNull final Integer userId) {
+        return resolve("users/" + userId + "stats");
     }
 
     // TODO
@@ -117,7 +107,7 @@ final class RestUriBuilder {
 
 
     @NotNull
-    URI resolve(@NotNull final String uri) {
+    private URI resolve(@NotNull final String uri) {
         return gateway.resolve(uri);
     }
 }

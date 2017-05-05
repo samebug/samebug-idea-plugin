@@ -13,19 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.jsonapi;
+package com.samebug.clients.http.entities.response;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
+import com.samebug.clients.http.entities.jsonapi.JsonResourceWithMeta;
+import com.samebug.clients.http.entities.jsonapi.TotalItems;
 
-public final class SamebugError<Code> {
-    @NotNull
-    public final Code code;
-    @Nullable
-    public final String detail;
+import java.util.List;
 
-    public SamebugError(@NotNull Code code, @Nullable String detail) {
-        this.code = code;
-        this.detail = detail;
-    }
+public final class IncomingHelpRequestList extends JsonResourceWithMeta<List<HelpRequestMatch>, TotalItems> {
 }

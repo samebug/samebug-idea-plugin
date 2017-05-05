@@ -18,11 +18,13 @@ package com.samebug.clients.common.services;
 import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.http.entities.mark.MarkCancelled;
 import com.samebug.clients.http.entities.mark.MarkCreated;
+import com.samebug.clients.http.entities.mark.NewMark;
 import com.samebug.clients.http.entities.response.GetBugmates;
 import com.samebug.clients.http.entities.response.GetSolutions;
 import com.samebug.clients.http.entities.response.GetTips;
+import com.samebug.clients.http.entities.search.NewSearchHit;
+import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.http.entities.solution.SamebugTip;
-import com.samebug.clients.http.entities.solution.SolutionSlot;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.MarkCancel;
 import com.samebug.clients.http.form.MarkCreate;
@@ -56,15 +58,15 @@ public final class SolutionService {
         return result;
     }
 
-    public SolutionSlot<SamebugTip> postTip(@NotNull final TipCreate.Base data)
+    public SearchHit<SamebugTip> postTip(@NotNull final Integer searchId, @NotNull final NewSearchHit data)
             throws SamebugClientException, TipCreate.BadRequest {
-        SolutionSlot<SamebugTip> response = client.createTip(data);
-        // TODO solutionStore.tips.get(searchId).getData().add(0, null);
+        SearchHit<SamebugTip> response = client.createTip(searchId, data);
+        solutionStore.tips.get(searchId).getData().add(0, null);
         return response;
     }
 
-    public MarkCreated postMark(final MarkCreate.Data data) throws SamebugClientException, MarkCreate.BadRequest {
-        return client.postMark(data);
+    public MarkCreated postMark(@NotNull final Integer searchId, @NotNull final NewMark data) throws SamebugClientException, MarkCreate.BadRequest {
+        return client.postMark(searchId, data);
     }
 
     public MarkCancelled retractMark(final Integer voteId) throws SamebugClientException, MarkCancel.BadRequest {

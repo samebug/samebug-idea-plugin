@@ -18,24 +18,8 @@ package com.samebug.clients.http.form;
 import com.samebug.clients.http.entities.jsonapi.JsonErrors;
 import com.samebug.clients.http.exceptions.FormException;
 import org.apache.commons.lang.StringUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public final class HelpRequestCreate {
-    public static final class Data {
-        public final String type;
-        @NotNull
-        public final Integer searchId;
-        @Nullable
-        public final String context;
-
-        public Data(@NotNull Integer searchId, @Nullable String context) {
-            type = "help-request-create";
-            this.searchId = searchId;
-            this.context = context;
-        }
-    }
-
     public enum ErrorCode {
         NOT_YOUR_SEARCH, DUPLICATE_HELP_REQUEST, NOT_STACKTRACE_SEARCH, NO_SUCH_SEARCH, CONTEXT_TOO_LONG
     }

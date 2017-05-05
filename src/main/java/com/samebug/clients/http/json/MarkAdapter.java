@@ -21,10 +21,10 @@ import com.samebug.clients.http.entities.mark.*;
 public class MarkAdapter extends AbstractObjectAdapter<Mark> {
     {
         typeClasses = ImmutableMap.<String, Class<? extends Mark>>builder()
-                .put("mark-crashdoc", CrashDochMark.class)
-                .put("mark-solution", SolutionViewMark.class)
-                .put("mark-textsearch", TextSearchMark.class)
-                .put("mark-stacktracesearch", StackTraceSearchMark.class)
+                .put("crash-doc--mark", CrashDochMark.class)
+                .put("solution--mark", SolutionViewMark.class)
+                .put("text-search--mark", TextSearchMark.class)
+                .put("stack-trace-search--mark", StackTraceSearchMark.class)
                 .build();
     }
 }
