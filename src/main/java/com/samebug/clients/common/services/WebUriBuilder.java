@@ -50,14 +50,12 @@ public final class WebUriBuilder {
 
     @NotNull
     public URI profile(@NotNull final int userId) {
-        // TODO profile page url
         return resolveToRoot("/user/" + userId);
     }
 
     @NotNull
-    public URI forgottenPassword() {
-        // TODO forgotten password page
-        return resolveToRoot("");
+    public URI forgottenPassword(@NotNull final int userId) {
+        return resolveToRoot("/user/" + userId);
     }
 
     @NotNull

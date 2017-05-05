@@ -19,7 +19,6 @@ import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.http.exceptions.SamebugClientException;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,24 +34,14 @@ public final class ProfileService {
         this.store = store;
     }
 
-    // TODO this is a bit different from other services, as ClientService.getUserInfo has two different purpose currently
-    // - check if an apiKey is valid
-    // - return profile information about the user
-    // When it will be separated, this method won't have to read the application settings.
     @Nullable
     public Me loadUserInfo() throws SamebugClientException {
-        final String apiKey = IdeaSamebugPlugin.getInstance().getState().apiKey;
-        final Integer workspaceId = IdeaSamebugPlugin.getInstance().getState().workspaceId;
-
-        if (apiKey == null) return null;
-        else {
-            try {
-                Me result = client.getUserInfo(apiKey, workspaceId);
-                store.user.set(result);
-                return result;
-            } catch (SamebugClientException e) {
-                return null;
-            }
+        try {
+            Me result = client.getUserInfo();
+            store.user.set(result);
+            return result;
+        } catch (SamebugClientException e) {
+            return null;
         }
     }
 

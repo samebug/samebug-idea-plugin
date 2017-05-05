@@ -87,7 +87,7 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
                 ApplicationSettings settings = state.get();
                 if (settings.apiKey != null) {
                     try {
-                        authenticationService.apiKeyAuthentication(settings.apiKey, settings.workspaceId);
+                        authenticationService.apiKeyAuthentication();
                     } catch (SamebugException ignored) {
                     }
                 }

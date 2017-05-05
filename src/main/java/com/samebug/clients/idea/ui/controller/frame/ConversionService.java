@@ -46,8 +46,8 @@ import com.samebug.clients.http.entities.notification.IncomingAnswer;
 import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.search.ReadableSearchGroup;
-import com.samebug.clients.http.entities.search.ReadableStackTraceSearch;
 import com.samebug.clients.http.entities.search.SearchHit;
+import com.samebug.clients.http.entities.search.StackTraceSearch;
 import com.samebug.clients.http.entities.solution.ExternalDocument;
 import com.samebug.clients.http.entities.solution.SamebugTip;
 import com.samebug.clients.http.entities.solution.SolutionSlot;
@@ -98,7 +98,7 @@ public final class ConversionService {
         return new IWebResultsTab.Model(webHits);
     }
 
-    public ITipResultsTab.Model tipResultsTab(ReadableStackTraceSearch search, List<SearchHit<SamebugTip>> solutions, BugmateList bugmates, boolean disabled) {
+    public ITipResultsTab.Model tipResultsTab(StackTraceSearch search, List<SearchHit<SamebugTip>> solutions, BugmateList bugmates, HelpRequest helpRequest, boolean disabled) {
         final List<ITipHit.Model> tipHits = new ArrayList<ITipHit.Model>(solutions.size());
         for (SearchHit<SamebugTip> tipSolution : solutions) {
             ITipHit.Model tipHit = tipHit(tipSolution, disabled);
@@ -123,12 +123,9 @@ public final class ConversionService {
             bugmateHits.add(model);
         }
         String exceptionTitle = headLine(search);
-        // TODO remove evenMoreExists
-        IBugmateList.Model bugmateList =
-                new IBugmateList.Model(bugmateHits, bugmates.getMeta().getTotal(), false);
+        IBugmateList.Model bugmateList = new IBugmateList.Model(bugmateHits, bugmates.getMeta().getTotal());
         IAskForHelp.Model askForHelp = new IAskForHelp.Model(bugmates.getMeta().getTotal(), exceptionTitle);
-        // TODO get the helprequest from somewhere?
-        IMyHelpRequest.Model myHelpRequest = (search.getGroup().getHelpRequestId() != null) ? new IMyHelpRequest.Model(null) : null;
+        IMyHelpRequest.Model myHelpRequest = (helpRequest != null) ? new IMyHelpRequest.Model(helpRequest.getId(), helpRequest.getCreatedAt(), helpRequest.getContext()) : null;
         return new ITipResultsTab.Model(tipHits, bugmateList, askForHelp, myHelpRequest);
     }
 
@@ -138,10 +135,10 @@ public final class ConversionService {
                 user.getDisplayName(), user.getAvatarUrl(), status);
     }
 
-    public ISolutionFrame.Model solutionFrame(ReadableStackTraceSearch search, List<SearchHit<SamebugTip>> tipHits, List<SearchHit<ExternalDocument>> webHits,
-                                              BugmateList bugmates, IncomingHelpRequestList incomingRequests, Me user, UserStats statistics) {
+    public ISolutionFrame.Model solutionFrame(StackTraceSearch search, List<SearchHit<SamebugTip>> tipHits, List<SearchHit<ExternalDocument>> webHits,
+                                              BugmateList bugmates, HelpRequest helpRequest, IncomingHelpRequestList incomingRequests, Me user, UserStats statistics) {
         IWebResultsTab.Model webResults = webResultsTab(webHits, false);
-        ITipResultsTab.Model tipResults = tipResultsTab(search, tipHits, bugmates, false);
+        ITipResultsTab.Model tipResults = tipResultsTab(search, tipHits, bugmates, helpRequest, false);
 
         IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(bugmates.getMeta().getTotal());
         String exceptionTitle = headLine(search);
@@ -209,7 +206,8 @@ public final class ConversionService {
         return new IIncomingTipPopup.Model(tip.getMessage(), author.getDisplayName(), author.getAvatarUrl());
     }
 
-    public static String headLine(ReadableStackTraceSearch search) {
+    public static String headLine(StackTraceSearch search) {
+        // TODO make sure the search is readable
         return headLine(search.getExceptionType(), search.getExceptionMessage());
     }
 

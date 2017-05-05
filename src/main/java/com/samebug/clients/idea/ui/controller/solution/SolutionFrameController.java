@@ -18,6 +18,7 @@ package com.samebug.clients.idea.ui.controller.solution;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.concurrency.FixedFuture;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
@@ -29,13 +30,16 @@ import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.solution.ISearchHeaderPanel;
 import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
+import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.entities.jsonapi.BugmateList;
 import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.jsonapi.SolutionList;
 import com.samebug.clients.http.entities.jsonapi.TipList;
 import com.samebug.clients.http.entities.profile.UserStats;
-import com.samebug.clients.http.entities.search.ReadableStackTraceSearch;
+import com.samebug.clients.http.entities.search.ReadableSearchGroup;
 import com.samebug.clients.http.entities.search.Search;
+import com.samebug.clients.http.entities.search.SearchGroup;
+import com.samebug.clients.http.entities.search.StackTraceSearch;
 import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
@@ -130,6 +134,9 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
         load(solutionsTask, tipsTask, bugmatesTask, searchTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);
     }
 
+    /**
+     * Wait for the help request so we can decide which search id to use for showing the solutions
+     */
     private void load(final Future<SolutionList> solutionsTask,
                       final Future<TipList> tipsTask,
                       final Future<BugmateList> bugmatesTask,
@@ -141,11 +148,38 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
             @Override
             protected void load() throws Exception {
                 Search search = searchTask.get();
+                assert search instanceof StackTraceSearch;
+                SearchGroup group = ((StackTraceSearch) search).getGroup();
+                assert group instanceof ReadableSearchGroup;
+                String myHelpRequestId = ((ReadableSearchGroup) group).getHelpRequestId();
+
+                final Future<HelpRequest> helpRequestTask;
+                if (myHelpRequestId == null) helpRequestTask = new FixedFuture<HelpRequest>(null);
+                else helpRequestTask = concurrencyService.helpRequest(myHelpRequestId);
+
+                SolutionFrameController.this.load(solutionsTask, tipsTask, bugmatesTask, helpRequestTask, searchTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);
+            }
+        }.executeInBackground();
+
+    }
+
+    private void load(final Future<SolutionList> solutionsTask,
+                      final Future<TipList> tipsTask,
+                      final Future<BugmateList> bugmatesTask,
+                      final Future<HelpRequest> helpRequestTask,
+                      final Future<Search> searchTask,
+                      final Future<IncomingHelpRequestList> incomingHelpRequestsTask,
+                      final Future<Me> userInfoTask,
+                      final Future<UserStats> userStatsTask) {
+        new LoadingTask() {
+            @Override
+            protected void load() throws Exception {
+                Search search = searchTask.get();
                 // TODO
-                assert search instanceof ReadableStackTraceSearch;
+                assert search instanceof StackTraceSearch;
                 final SolutionFrame.Model model =
-                        conversionService.solutionFrame((ReadableStackTraceSearch) searchTask.get(),
-                                tipsTask.get().getData(), solutionsTask.get().getData(), bugmatesTask.get(), incomingHelpRequestsTask.get(),
+                        conversionService.solutionFrame((StackTraceSearch) searchTask.get(),
+                                tipsTask.get().getData(), solutionsTask.get().getData(), bugmatesTask.get(), helpRequestTask.get(), incomingHelpRequestsTask.get(),
                                 userInfoTask.get(), userStatsTask.get());
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                     @Override

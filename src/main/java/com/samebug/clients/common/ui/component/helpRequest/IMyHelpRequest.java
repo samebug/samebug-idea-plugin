@@ -47,7 +47,6 @@ public interface IMyHelpRequest {
     }
 
     interface Listener {
-        // TODO the UI should not know the help request id, it should come from the controller
         void revokeHelpRequest(IMyHelpRequest source, String helpRequestId);
     }
 }

@@ -17,9 +17,12 @@ package com.samebug.clients.http.websocket;
 
 import com.samebug.clients.http.entities.notification.IncomingAnswer;
 import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
+import com.samebug.clients.http.entities.notification.Notification;
 
 public interface NotificationHandler {
     void helpRequestReceived(IncomingHelpRequest helpRequestNotification);
 
     void tipReceived(IncomingAnswer tipNotification);
+
+    void otherNotificationType(Notification notification);
 }

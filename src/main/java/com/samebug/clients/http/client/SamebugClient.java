@@ -65,17 +65,12 @@ public final class SamebugClient {
     }
 
     @NotNull
-    public Me getUserInfo(@NotNull final String apiKey, @Nullable final Integer workspaceId) throws SamebugClientException {
-        RawClient tmpClient = new RawClient(new Config(
-                apiKey, null, workspaceId, config.serverRoot, config.trackingRoot, config.isTrackingEnabled,
-                config.connectTimeout, config.requestTimeout, config.isApacheLoggingEnabled, config.isJsonDebugEnabled, config.proxy),
-                null
-        );
+    public Me getUserInfo() throws SamebugClientException {
         Builder.SimpleResponseHandler<MeResource> request = requestBuilder
                 .at(uriBuilder.me())
                 .<MeResource>withResponse(MeResource.class)
                 .buildGet();
-        return extractGet(tmpClient.execute(request)).getData();
+        return extractGet(rawClient.execute(request)).getData();
     }
 
     @NotNull

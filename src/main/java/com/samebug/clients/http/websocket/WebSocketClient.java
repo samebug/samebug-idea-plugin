@@ -61,7 +61,7 @@ public final class WebSocketClient implements Closeable {
         this.eventHandler = config.eventHandler;
         this.group = config.group;
         this.sslContext = isWss ? SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build() : null;
-        // TODO blocks on the main thread!
+        // IMPROVE the constructor blocks the thread with networking!
         this.channel = connect();
     }
 

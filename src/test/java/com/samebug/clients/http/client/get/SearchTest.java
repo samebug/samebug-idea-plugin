@@ -2,7 +2,10 @@ package com.samebug.clients.http.client.get;
 
 import com.samebug.clients.http.client.TestWithSamebugClient;
 import com.samebug.clients.http.entities.bugmate.BugmateMatch;
-import com.samebug.clients.http.entities.jsonapi.*;
+import com.samebug.clients.http.entities.jsonapi.BugmateList;
+import com.samebug.clients.http.entities.jsonapi.SolutionList;
+import com.samebug.clients.http.entities.jsonapi.TipList;
+import com.samebug.clients.http.entities.jsonapi.TotalItems;
 import com.samebug.clients.http.entities.search.ReadableSearchGroup;
 import com.samebug.clients.http.entities.search.Search;
 import com.samebug.clients.http.entities.search.SearchableSearchGroup;

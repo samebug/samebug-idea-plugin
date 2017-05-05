@@ -21,14 +21,17 @@ import com.intellij.notification.NotificationsConfiguration;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DataKeys;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.samebug.clients.http.entities.notification.IncomingAnswer;
 import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
+import com.samebug.clients.http.entities.notification.Notification;
 import com.samebug.clients.http.websocket.NotificationHandler;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 
 public final class NotificationController implements NotificationHandler {
+    static final Logger LOGGER = Logger.getInstance(NotificationController.class);
     public static final String PROFILE = "Samebug profile updates";
 
     public NotificationController() {
@@ -68,6 +71,11 @@ public final class NotificationController implements NotificationHandler {
             }
         });
         // TODO invalidate solution list for search for which the tip was written
+    }
+
+    @Override
+    public void otherNotificationType(Notification notification) {
+        LOGGER.warn("Unhandled incoming notification: " + notification);
     }
 
     private Project selectProjectToShowPopup(Project[] openProjects) {

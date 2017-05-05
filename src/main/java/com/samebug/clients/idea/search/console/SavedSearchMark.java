@@ -31,7 +31,7 @@ import javax.swing.*;
 final class SavedSearchMark extends SearchMark {
     private final SavedSearch search;
 
-    public SavedSearchMark(SavedSearch search) {
+    SavedSearchMark(SavedSearch search) {
         this.search = search;
     }
 

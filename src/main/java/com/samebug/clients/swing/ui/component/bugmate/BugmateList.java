@@ -59,7 +59,7 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
                 bugmateHits.add(hit);
             }
 
-            // TODO generalize it if necessary, for 4 items it's fine
+            // IMPROVE generalize it if necessary, for 4 items it's fine
             if (bugmateHits.size() <= 2) {
                 setLayout(new MigLayout("fillx", "0[]20px:push[]0", "0[]0"));
             } else {

@@ -110,7 +110,6 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
         @Override
         public void moreClicked() {
             IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-            // TODO help requests url
             Me user = plugin.profileStore.getUser();
             if (user != null) {
                 int myUserId = user.getId();

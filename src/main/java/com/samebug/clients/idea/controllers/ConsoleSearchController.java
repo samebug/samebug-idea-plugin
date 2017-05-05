@@ -52,7 +52,6 @@ public class ConsoleSearchController implements StackTraceMatcherListener {
                 try {
                     CreatedSearchResource result = searchService.search(stackTrace);
                     Search search = result.getData();
-                    // TODO readable stack trace search and stack trace search
                     if (!(search instanceof StackTraceSearch)) {
                         // ignore text search
                         searchRequestService.searchFailed(searchInfo);

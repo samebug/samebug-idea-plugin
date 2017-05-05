@@ -18,12 +18,14 @@ package com.samebug.clients.common.services;
 import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
 import com.samebug.clients.http.entities.user.Me;
+import com.samebug.clients.http.entities.user.SamebugWorkspace;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.exceptions.SamebugException;
 import com.samebug.clients.http.form.LogIn;
 import com.samebug.clients.http.form.SignUp;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class AuthenticationService {
@@ -33,9 +35,9 @@ public final class AuthenticationService {
         this.client = client;
     }
 
-    public Me apiKeyAuthentication(final String apiKey, @Nullable final Integer workspaceId) throws SamebugException {
-        return client.getUserInfo(apiKey, workspaceId);
-        // TODO if workspaceId is null, save the returned default workspace id to application settings.
+    public void apiKeyAuthentication() throws SamebugException {
+        final Me userInfo = client.getUserInfo();
+        updateSettings(userInfo.getId(), userInfo.getWorkspace());
     }
 
 
@@ -58,11 +60,25 @@ public final class AuthenticationService {
     }
 
     private void updateSettings(AuthenticationResponse response) {
+        updateSettings(response.getApiKey(), response.getUser().getId(), response.getDefaultWorkspace());
+    }
+
+    private void updateSettings(@NotNull final Integer userId, @Nullable final SamebugWorkspace currentWorkspace) {
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
         ApplicationSettings oldSettings = plugin.getState();
         ApplicationSettings newSettings = new ApplicationSettings(oldSettings);
-        newSettings.apiKey = response.getApiKey();
-        if (oldSettings.workspaceId == null) newSettings.workspaceId = response.getDefaultWorkspace().getId();
+        newSettings.userId = userId;
+        if (currentWorkspace != null) newSettings.workspaceId = currentWorkspace.getId();
+        if (!oldSettings.equals(newSettings)) plugin.saveSettings(newSettings);
+    }
+
+    private void updateSettings(@NotNull final String apiKey, @NotNull final Integer userId, @NotNull final SamebugWorkspace currentWorkspace) {
+        IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
+        ApplicationSettings oldSettings = plugin.getState();
+        ApplicationSettings newSettings = new ApplicationSettings(oldSettings);
+        newSettings.apiKey = apiKey;
+        newSettings.userId = userId;
+        newSettings.workspaceId = currentWorkspace.getId();
         if (!oldSettings.equals(newSettings)) plugin.saveSettings(newSettings);
     }
 }

@@ -104,7 +104,6 @@ public abstract class BaseFrameController<T extends IFrame> implements Disposabl
         }
 
         protected void handleSamebugClientException(final SamebugClientException e) {
-            // TODO error with loading, bad connection, bad apikey, server error, etc
             LOGGER.warn("Error during loading solutions", e);
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override

@@ -4,6 +4,7 @@ import com.samebug.clients.http.client.TestWithSamebugClient;
 import com.samebug.clients.http.entities.helprequest.NewHelpRequest;
 import com.samebug.clients.http.entities.notification.IncomingAnswer;
 import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
+import com.samebug.clients.http.entities.notification.Notification;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.nio.NioEventLoopGroup;
 import org.junit.Before;
@@ -82,6 +83,12 @@ public class WebSocketClientTest extends TestWithSamebugClient {
         @Override
         public void tipReceived(IncomingAnswer tipNotification) {
             receivedSomeMessage = true;
+        }
+
+        @Override
+
+        public void otherNotificationType(Notification notification) {
+            System.err.println("Unhandled incoming notification: " + notification);
         }
     }
 }

@@ -34,8 +34,6 @@ public abstract class SamebugWebSocketEventHandler implements WebSocketEventHand
         Notification n = gson.fromJson(message, Notification.class);
         if (n instanceof IncomingHelpRequest) handler.helpRequestReceived((IncomingHelpRequest) n);
         else if (n instanceof IncomingAnswer) handler.tipReceived((IncomingAnswer) n);
-        else {
-            // TODO report unhandled notification type
-        }
+        else handler.otherNotificationType(n);
     }
 }

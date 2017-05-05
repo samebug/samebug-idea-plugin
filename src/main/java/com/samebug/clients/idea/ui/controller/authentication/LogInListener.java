@@ -17,6 +17,7 @@ package com.samebug.clients.idea.ui.controller.authentication;
 
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
 import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
+import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.http.form.LogIn;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.tracking.Events;
@@ -47,7 +48,12 @@ public final class LogInListener implements ILogInForm.Listener {
 
     @Override
     public void forgotPassword(ILogInForm source) {
-        URI forgottenPasswordUri = IdeaSamebugPlugin.getInstance().uriBuilder.forgottenPassword();
-        BrowserUtil.browse(forgottenPasswordUri);
+        IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
+        Me user = plugin.profileStore.getUser();
+        if (user != null) {
+            int myUserId = user.getId();
+            URI forgottenPasswordUri = plugin.uriBuilder.forgottenPassword(myUserId);
+            BrowserUtil.browse(forgottenPasswordUri);
+        }
     }
 }

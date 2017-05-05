@@ -22,13 +22,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public final class RegisteredSamebugUser extends SamebugUser {
-    private Long id;
+    private Integer id;
     private String displayName;
     private String slug;
     private Boolean isOnline;
 
     @NotNull
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 

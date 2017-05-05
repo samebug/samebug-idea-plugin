@@ -21,16 +21,14 @@ public interface IBugmateList {
     final class Model {
         public final List<IBugmateHit.Model> bugmateHits;
         public final int numberOfOtherBugmates;
-        public final boolean evenMoreExists;
 
         public Model(Model rhs) {
-            this(rhs.bugmateHits, rhs.numberOfOtherBugmates, rhs.evenMoreExists);
+            this(rhs.bugmateHits, rhs.numberOfOtherBugmates);
         }
 
-        public Model(List<IBugmateHit.Model> bugmateHits, int numberOfOtherBugmates, boolean evenMoreExists) {
+        public Model(List<IBugmateHit.Model> bugmateHits, int numberOfOtherBugmates) {
             this.bugmateHits = bugmateHits;
             this.numberOfOtherBugmates = numberOfOtherBugmates;
-            this.evenMoreExists = evenMoreExists;
         }
     }
 }
