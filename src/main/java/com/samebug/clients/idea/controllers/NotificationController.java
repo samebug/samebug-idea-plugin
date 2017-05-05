@@ -70,7 +70,6 @@ public final class NotificationController implements NotificationHandler {
                 }
             }
         });
-        // TODO invalidate solution list for search for which the tip was written
     }
 
     @Override
