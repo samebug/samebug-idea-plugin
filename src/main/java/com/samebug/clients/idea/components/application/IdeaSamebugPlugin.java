@@ -57,7 +57,6 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public IdeaClientService clientService;
     public ProfileStore profileStore;
     public ProfileService profileService;
-    public SolutionStore solutionStore;
     public SolutionService solutionService;
     public SearchRequestStore searchRequestStore;
     public SearchRequestService searchRequestService;
@@ -112,8 +111,7 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         SamebugClient client = clientService.getClient();
         profileStore = new ProfileStore();
         profileService = new ProfileService(client, profileStore);
-        solutionStore = new SolutionStore();
-        solutionService = new SolutionService(client, solutionStore);
+        solutionService = new SolutionService(client);
         searchStore = new SearchStore();
         searchService = new SearchService(client, searchStore);
         searchRequestStore = new SearchRequestStore();
@@ -123,7 +121,7 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         authenticationService = new AuthenticationService(client);
         conversionService = new ConversionService();
         concurrencyService = new ConcurrencyService(profileStore, profileService,
-                solutionStore, solutionService,
+                solutionService,
                 helpRequestStore, helpRequestService,
                 searchStore, searchService);
 

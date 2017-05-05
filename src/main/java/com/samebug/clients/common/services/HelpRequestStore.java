@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
 import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
 import org.jetbrains.annotations.NotNull;
@@ -34,11 +33,11 @@ public final class HelpRequestStore {
     }
 
     @Nullable
-    public HelpRequest getHelpRequest(@NotNull final String id) {
-        HelpRequest match = null;
+    public HelpRequestMatch getIncomingHelpRequest(@NotNull final String id) {
+        HelpRequestMatch match = null;
         if (incoming != null) {
             for (HelpRequestMatch h : incoming.getData()) {
-                if (id.equals(h.getHelpRequest().getId())) match = h.getHelpRequest();
+                if (id.equals(h.getHelpRequest().getId())) match = h;
             }
         }
         return match;

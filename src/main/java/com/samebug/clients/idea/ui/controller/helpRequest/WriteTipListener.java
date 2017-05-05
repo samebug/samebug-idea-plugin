@@ -17,6 +17,7 @@ package com.samebug.clients.idea.ui.controller.helpRequest;
 
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
+import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
 import com.samebug.clients.http.entities.search.NewSearchHit;
 import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.http.entities.solution.NewSolution;
@@ -35,12 +36,13 @@ final class WriteTipListener implements IHelpOthersCTA.Listener {
 
     @Override
     public void postTip(@NotNull final IHelpOthersCTA source, @NotNull final String tipBody) {
-        final HelpRequest helpRequest = controller.helpRequestStore.getHelpRequest(controller.helpRequestId);
-        assert helpRequest != null : "we just showed it, it should not be null";
+        final HelpRequestMatch match = controller.getHelpRequestMatch();
+        final HelpRequest helpRequest = match.getHelpRequest();
+        final String helpRequestId = helpRequest.getId();
         // TODO matching help request?
 //        assert helpRequest.matchingGroup.lastSearchInfo != null : "our own search is always visible";
 
-        NewSearchHit formData = new NewSearchHit(new NewSolution(new NewTip(tipBody, null), controller.helpRequestId));
+        NewSearchHit formData = new NewSearchHit(new NewSolution(new NewTip(tipBody, null), helpRequestId));
         new CreateTipFormHandler(controller.view, source, formData, helpRequest.getSearchId()) {
             @Override
             protected void afterPostForm(SearchHit<SamebugTip> response) {

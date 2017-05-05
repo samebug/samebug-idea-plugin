@@ -26,6 +26,7 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.FocusListener;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
@@ -112,10 +113,16 @@ public final class ToolWindowController implements FocusListener, Disposable {
     }
 
     public void focusOnHelpRequest(String helpRequestId) {
-        HelpRequestController controller = new HelpRequestController(this, project, helpRequestId);
-        controller.load();
-        openTab(controller, MessageService.message("samebug.toolwindow.helpRequest.tabName"));
-        TrackingService.trace(Events.showHelpRequestScreen(controller, helpRequestId));
+        HelpRequestMatch match = IdeaSamebugPlugin.getInstance().helpRequestStore.getIncomingHelpRequest(helpRequestId);
+        if (match != null) {
+            HelpRequestController controller = new HelpRequestController(this, project, match);
+            controller.load();
+            openTab(controller, MessageService.message("samebug.toolwindow.helpRequest.tabName"));
+            TrackingService.trace(Events.showHelpRequestScreen(controller, helpRequestId));
+        } else {
+            // TODO error message?
+            currentFrame.view.popupError("");
+        }
     }
 
     @Override

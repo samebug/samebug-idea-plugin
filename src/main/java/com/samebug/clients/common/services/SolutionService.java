@@ -33,50 +33,40 @@ import org.jetbrains.annotations.Nullable;
 
 public final class SolutionService {
     final SamebugClient client;
-    final SolutionStore solutionStore;
 
-    public SolutionService(SamebugClient client, SolutionStore solutionStore) {
+    public SolutionService(SamebugClient client) {
         this.client = client;
-        this.solutionStore = solutionStore;
     }
 
     public SolutionList loadWebHits(final int searchId) throws SamebugClientException {
         SolutionList result = client.getSolutions(searchId);
-        solutionStore.externalSolutions.put(searchId, result);
         return result;
     }
 
     public TipList loadTipHits(final int searchId) throws SamebugClientException {
         TipList result = client.getTips(searchId);
-        solutionStore.tips.put(searchId, result);
         return result;
     }
 
     public BugmateList loadBugmates(final int searchId) throws SamebugClientException {
         BugmateList result = client.getBugmates(searchId);
-        solutionStore.bugmates.put(searchId, result);
         return result;
     }
 
     public SearchHit<SamebugTip> postTip(@NotNull final Integer searchId, @NotNull final NewSearchHit data)
             throws SamebugClientException, TipCreate.BadRequest {
         SearchHit<SamebugTip> response = client.createTip(searchId, data);
-        solutionStore.tips.get(searchId).getData().add(0, null);
         return response;
     }
 
     @Nullable
-    public SearchHit postMark(@NotNull final Integer searchId, @NotNull final NewMark data) throws SamebugClientException, MarkCreate.BadRequest {
+    public Mark postMark(@NotNull final Integer searchId, @NotNull final NewMark data) throws SamebugClientException, MarkCreate.BadRequest {
         Mark mark = client.postMark(searchId, data);
-        SearchHit hit = solutionStore.getHit(searchId, mark.getSolutionId());
-        if (hit != null) hit.setActiveMark(mark);
-        return hit;
+        return mark;
     }
 
-    public SearchHit retractMark(@NotNull final Integer searchId, @NotNull final Integer voteId) throws SamebugClientException, MarkCancel.BadRequest {
+    public Mark retractMark(@NotNull final Integer voteId) throws SamebugClientException, MarkCancel.BadRequest {
         Mark mark = client.cancelMark(voteId);
-        SearchHit hit = solutionStore.getHit(searchId, mark.getSolutionId());
-        if (hit != null) hit.setActiveMark(null);
-        return hit;
+        return mark;
     }
 }

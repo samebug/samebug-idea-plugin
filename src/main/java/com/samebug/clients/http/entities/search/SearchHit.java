@@ -43,10 +43,6 @@ public abstract class SearchHit<D extends Document> {
         return activeMark;
     }
 
-    public void setActiveMark(@Nullable final Mark activeMark) {
-        this.activeMark = activeMark;
-    }
-
     @NotNull
     public final Votes getVotes() {
         return votes;

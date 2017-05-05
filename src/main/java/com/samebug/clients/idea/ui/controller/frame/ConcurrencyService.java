@@ -36,7 +36,6 @@ public final class ConcurrencyService {
     private final ExecutorService executor;
     private final ProfileStore profileStore;
     private final ProfileService profileService;
-    private final SolutionStore solutionStore;
     private final SolutionService solutionService;
     private final HelpRequestStore helpRequestStore;
     private final HelpRequestService helpRequestService;
@@ -44,10 +43,9 @@ public final class ConcurrencyService {
     private final SearchService searchService;
 
     public ConcurrencyService(ProfileStore profileStore, ProfileService profileService,
-                              SolutionStore solutionStore, SolutionService solutionService,
+                              SolutionService solutionService,
                               HelpRequestStore helpRequestStore, HelpRequestService helpRequestService,
                               SearchStore searchStore, SearchService searchService) {
-        this.solutionStore = solutionStore;
         this.profileStore = profileStore;
         this.profileService = profileService;
         this.solutionService = solutionService;
@@ -81,36 +79,30 @@ public final class ConcurrencyService {
     }
 
     public Future<SolutionList> solutions(final int searchId) {
-        SolutionList current = solutionStore.getWebHits(searchId);
-        if (current == null) return executor.submit(new Callable<SolutionList>() {
+        return executor.submit(new Callable<SolutionList>() {
             @Override
             public SolutionList call() throws SamebugClientException {
                 return solutionService.loadWebHits(searchId);
             }
         });
-        else return new FixedFuture<SolutionList>(current);
     }
 
     public Future<TipList> tips(final int searchId) {
-        TipList current = solutionStore.getTipHits(searchId);
-        if (current == null) return executor.submit(new Callable<TipList>() {
+        return executor.submit(new Callable<TipList>() {
             @Override
             public TipList call() throws SamebugClientException {
                 return solutionService.loadTipHits(searchId);
             }
         });
-        else return new FixedFuture<TipList>(current);
     }
 
     public Future<BugmateList> bugmates(final int searchId) {
-        BugmateList current = solutionStore.getBugmates(searchId);
-        if (current == null) return executor.submit(new Callable<BugmateList>() {
+        return executor.submit(new Callable<BugmateList>() {
             @Override
             public BugmateList call() throws SamebugClientException {
                 return solutionService.loadBugmates(searchId);
             }
         });
-        else return new FixedFuture<BugmateList>(current);
     }
 
     public Future<IncomingHelpRequestList> incomingHelpRequests(boolean forceReload) {

@@ -148,13 +148,15 @@ public final class ConversionService {
         return new ISolutionFrame.Model(resultTabs, header, profile);
     }
 
-    public IHelpRequestHeader.Model helpRequestHeader(HelpRequest helpRequest) {
+    public IHelpRequestHeader.Model helpRequestHeader(HelpRequestMatch helpRequestMatch) {
+        HelpRequest helpRequest = helpRequestMatch.getHelpRequest();
         RegisteredSamebugUser requester = helpRequest.getRequester();
         // TODO headLine(helpRequest)
         return new IHelpRequestHeader.Model(null, requester.getDisplayName(), requester.getAvatarUrl());
     }
 
-    public IHelpRequestTab.Model helpRequestTab(List<SearchHit<SamebugTip>> tipHits, HelpRequest helpRequest) {
+    public IHelpRequestTab.Model helpRequestTab(List<SearchHit<SamebugTip>> tipHits, HelpRequestMatch helpRequestMatch) {
+        HelpRequest helpRequest = helpRequestMatch.getHelpRequest();
         final List<ITipHit.Model> tipHitModels = new ArrayList<ITipHit.Model>(tipHits.size());
         for (SearchHit<SamebugTip> tipSolution : tipHits) {
             ITipHit.Model tipHit = tipHit(tipSolution, true);
@@ -166,13 +168,13 @@ public final class ConversionService {
     }
 
 
-    public IHelpRequestFrame.Model convertHelpRequestFrame(List<SearchHit<SamebugTip>> tipHits, List<SearchHit<ExternalDocument>> webHits, HelpRequest helpRequest,
+    public IHelpRequestFrame.Model convertHelpRequestFrame(List<SearchHit<SamebugTip>> tipHits, List<SearchHit<ExternalDocument>> webHits, HelpRequestMatch helpRequestMatch,
                                                            IncomingHelpRequestList incomingRequests, Me user, UserStats statistics) {
         IWebResultsTab.Model webResults = webResultsTab(webHits, true);
-        IHelpRequestTab.Model helpRequestTab = helpRequestTab(tipHits, helpRequest);
+        IHelpRequestTab.Model helpRequestTab = helpRequestTab(tipHits, helpRequestMatch);
         IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(0);
         IHelpRequestTabs.Model tabs = new IHelpRequestTabs.Model(webResults, helpRequestTab, cta);
-        IHelpRequestHeader.Model header = helpRequestHeader(helpRequest);
+        IHelpRequestHeader.Model header = helpRequestHeader(helpRequestMatch);
         IProfilePanel.Model profile = profilePanel(incomingRequests, user, statistics);
 
         return new IHelpRequestFrame.Model(tabs, header, profile);

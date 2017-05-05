@@ -16,8 +16,8 @@
 package com.samebug.clients.idea.ui.controller.solution;
 
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
+import com.samebug.clients.http.entities.mark.Mark;
 import com.samebug.clients.http.entities.mark.NewMark;
-import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.idea.ui.controller.form.CancelMarkFormHandler;
 import com.samebug.clients.idea.ui.controller.form.CreateMarkFormHandler;
 import org.jetbrains.annotations.NotNull;
@@ -37,21 +37,19 @@ final class MarkButtonListener implements IMarkButton.Listener {
 
             new CreateMarkFormHandler(controller.view, markButton, new NewMark(solutionId), controller.searchId) {
                 @Override
-                protected void afterPostForm(SearchHit response) {
-                    if (response != null) {
-                        final IMarkButton.Model newModel = controller.conversionService.convertMarkPanel(response, false);
-                        markButton.update(newModel);
-                    }
+                protected void afterPostForm(Mark response) {
+                    final IMarkButton.Model oldModel = markButton.getModel();
+                    final IMarkButton.Model newModel = new IMarkButton.Model(oldModel.marks + 1, response.getId(), oldModel.userCanMark);
+                    markButton.update(newModel);
                 }
             }.execute();
         } else {
-            new CancelMarkFormHandler(controller.view, markButton, markId, controller.searchId) {
+            new CancelMarkFormHandler(controller.view, markButton, markId) {
                 @Override
-                protected void afterPostForm(SearchHit response) {
-                    if (response != null) {
-                        final IMarkButton.Model newModel = controller.conversionService.convertMarkPanel(response, false);
-                        markButton.update(newModel);
-                    }
+                protected void afterPostForm(Mark response) {
+                    final IMarkButton.Model oldModel = markButton.getModel();
+                    final IMarkButton.Model newModel = new IMarkButton.Model(oldModel.marks - 1, null, oldModel.userCanMark);
+                    markButton.update(newModel);
                 }
             }.execute();
         }

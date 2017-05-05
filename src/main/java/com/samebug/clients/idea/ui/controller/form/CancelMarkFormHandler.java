@@ -18,28 +18,25 @@ package com.samebug.clients.idea.ui.controller.form;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.common.ui.frame.IFrame;
-import com.samebug.clients.http.entities.search.SearchHit;
+import com.samebug.clients.http.entities.mark.Mark;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.MarkCancel;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class CancelMarkFormHandler extends PostFormHandler<SearchHit, MarkCancel.BadRequest> {
+public abstract class CancelMarkFormHandler extends PostFormHandler<Mark, MarkCancel.BadRequest> {
     @NotNull
     final IFrame frame;
     @NotNull
     final IMarkButton button;
     @NotNull
     final Integer markId;
-    @NotNull
-    final Integer searchId;
 
-    public CancelMarkFormHandler(@NotNull final IFrame frame, @NotNull final IMarkButton button, @NotNull final Integer markId, @NotNull final Integer searchId) {
+    public CancelMarkFormHandler(@NotNull final IFrame frame, @NotNull final IMarkButton button, @NotNull final Integer markId) {
         this.frame = frame;
         this.button = button;
         this.markId = markId;
-        this.searchId = searchId;
     }
 
     @Override
@@ -48,9 +45,9 @@ public abstract class CancelMarkFormHandler extends PostFormHandler<SearchHit, M
     }
 
     @Override
-    protected SearchHit postForm() throws SamebugClientException, MarkCancel.BadRequest {
+    protected Mark postForm() throws SamebugClientException, MarkCancel.BadRequest {
         final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
-        return solutionService.retractMark(searchId, markId);
+        return solutionService.retractMark(markId);
     }
 
     @Override

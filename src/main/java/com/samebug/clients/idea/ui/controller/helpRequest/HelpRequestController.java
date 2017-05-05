@@ -26,7 +26,7 @@ import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestFrame;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
-import com.samebug.clients.http.entities.helprequest.HelpRequest;
+import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
 import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.jsonapi.SolutionList;
 import com.samebug.clients.http.entities.jsonapi.TipList;
@@ -51,7 +51,7 @@ import java.util.concurrent.Future;
 
 public final class HelpRequestController extends BaseFrameController<IHelpRequestFrame> implements Disposable {
     @NotNull
-    final String helpRequestId;
+    final HelpRequestMatch helpRequestMatch;
 
     final RefreshListener refreshListener;
     final ProfileUpdateListener profileUpdateListener;
@@ -64,9 +64,9 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
     final HelpRequestStore helpRequestStore;
 
 
-    public HelpRequestController(ToolWindowController twc, Project project, @NotNull final String helpRequestId) {
+    public HelpRequestController(ToolWindowController twc, Project project, @NotNull final HelpRequestMatch helpRequestMatch) {
         super(twc, project, new HelpRequestFrame());
-        this.helpRequestId = helpRequestId;
+        this.helpRequestMatch = helpRequestMatch;
 
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
         helpRequestStore = plugin.helpRequestStore;
@@ -83,6 +83,12 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
         writeTipListener = new WriteTipListener(this);
         ListenerService.putListenerToComponent(frame, IHelpOthersCTA.Listener.class, writeTipListener);
 
+        int accessibleSearchId = helpRequestMatch.getHelpRequest().getSearchId();
+        webResultsTabListener = new WebResultsTabListener(accessibleSearchId);
+        ListenerService.putListenerToComponent((JComponent) view, IWebResultsTab.Listener.class, webResultsTabListener);
+        webHitListener = new WebHitListener(accessibleSearchId);
+        ListenerService.putListenerToComponent((JComponent) view, IWebHit.Listener.class, webHitListener);
+
         MessageBusConnection projectConnection = myProject.getMessageBus().connect(this);
         refreshListener = new RefreshListener(this);
         projectConnection.subscribe(RefreshTimestampsListener.TOPIC, refreshListener);
@@ -90,8 +96,8 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
         projectConnection.subscribe(IncomingHelpRequest.TOPIC, profileUpdateListener);
     }
 
-    public String getHelpRequestId() {
-        return helpRequestId;
+    public HelpRequestMatch getHelpRequestMatch() {
+        return helpRequestMatch;
     }
 
 
@@ -99,49 +105,18 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
         // TODO every controllers should also make sure to set the loading screen when starting to load content
         view.setLoading();
 
-        webHitListener = null;
-        ListenerService.removeListenerFromComponent((JComponent) view, IWebHit.Listener.class);
-        webResultsTabListener = null;
-        ListenerService.removeListenerFromComponent((JComponent) view, IWebResultsTab.Listener.class);
-
+        final int accessibleSearchId = helpRequestMatch.getHelpRequest().getSearchId();
         final Future<Me> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
         final Future<IncomingHelpRequestList> incomingHelpRequestsTask = concurrencyService.incomingHelpRequests(false);
-        // TODO here I should get a help request match?
-        final Future<HelpRequest> helpRequestTask = concurrencyService.helpRequest(helpRequestId);
+        final Future<SolutionList> solutionsTask = concurrencyService.solutions(accessibleSearchId);
+        final Future<TipList> tipsTask = concurrencyService.tips(accessibleSearchId);
 
-        load(helpRequestTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);
-    }
-
-    /**
-     * Wait for the help request so we can decide which search id to use for showing the solutions
-     */
-    private void load(final Future<HelpRequest> helpRequestTask,
-                      final Future<IncomingHelpRequestList> incomingHelpRequestsTask,
-                      final Future<Me> userInfoTask,
-                      final Future<UserStats> userStatsTask) {
-        new LoadingTask() {
-            @Override
-            protected void load() throws Exception {
-                HelpRequest helpRequest = helpRequestTask.get();
-                int accessibleSearchId = helpRequest.getSearchId();
-
-                webResultsTabListener = new WebResultsTabListener(accessibleSearchId);
-                ListenerService.putListenerToComponent((JComponent) view, IWebResultsTab.Listener.class, webResultsTabListener);
-                webHitListener = new WebHitListener(accessibleSearchId);
-                ListenerService.putListenerToComponent((JComponent) view, IWebHit.Listener.class, webHitListener);
-
-                final Future<SolutionList> solutionsTask = concurrencyService.solutions(accessibleSearchId);
-                final Future<TipList> tipsTask = concurrencyService.tips(accessibleSearchId);
-                HelpRequestController.this.load(solutionsTask, tipsTask, helpRequestTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);
-            }
-        }.executeInBackground();
-
+        load(solutionsTask, tipsTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);
     }
 
     private void load(final Future<SolutionList> solutionsTask,
                       final Future<TipList> tipsTask,
-                      final Future<HelpRequest> helpRequestTask,
                       final Future<IncomingHelpRequestList> incomingHelpRequestsTask,
                       final Future<Me> userInfoTask,
                       final Future<UserStats> userStatsTask) {
@@ -149,7 +124,7 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
             @Override
             protected void load() throws Exception {
                 final IHelpRequestFrame.Model model = conversionService.convertHelpRequestFrame(tipsTask.get().getData(), solutionsTask.get().getData(),
-                        helpRequestTask.get(), incomingHelpRequestsTask.get(), userInfoTask.get(), userStatsTask.get());
+                        helpRequestMatch, incomingHelpRequestsTask.get(), userInfoTask.get(), userStatsTask.get());
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                     @Override
                     public void run() {

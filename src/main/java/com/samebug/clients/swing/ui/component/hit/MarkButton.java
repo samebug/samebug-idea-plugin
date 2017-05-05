@@ -55,7 +55,6 @@ public final class MarkButton extends ActionButton implements IMarkButton {
         normalState();
         revalidate();
         repaint();
-
     }
 
     public void setLoading() {
@@ -64,6 +63,10 @@ public final class MarkButton extends ActionButton implements IMarkButton {
 
     public void interruptLoading() {
         revertFromLoadingAnimation();
+    }
+
+    public Model getModel() {
+        return model;
     }
 
     public void update(Model model) {

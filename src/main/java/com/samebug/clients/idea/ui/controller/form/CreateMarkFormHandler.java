@@ -18,15 +18,15 @@ package com.samebug.clients.idea.ui.controller.form;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.common.ui.frame.IFrame;
+import com.samebug.clients.http.entities.mark.Mark;
 import com.samebug.clients.http.entities.mark.NewMark;
-import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.MarkCreate;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class CreateMarkFormHandler extends PostFormHandler<SearchHit, MarkCreate.BadRequest> {
+public abstract class CreateMarkFormHandler extends PostFormHandler<Mark, MarkCreate.BadRequest> {
     @NotNull
     final IFrame frame;
     @NotNull
@@ -49,7 +49,7 @@ public abstract class CreateMarkFormHandler extends PostFormHandler<SearchHit, M
     }
 
     @Override
-    protected SearchHit postForm() throws SamebugClientException, MarkCreate.BadRequest {
+    protected Mark postForm() throws SamebugClientException, MarkCreate.BadRequest {
         final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
         return solutionService.postMark(searchId, data);
     }
