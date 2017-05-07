@@ -28,23 +28,27 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-final class SavedSearchMark extends SearchMark {
+final class SavedSearchGutterIcon extends SearchMark {
     private final SavedSearch search;
 
-    SavedSearchMark(SavedSearch search) {
+    SavedSearchGutterIcon(SavedSearch search) {
         this.search = search;
     }
 
     @NotNull
     @Override
     public Icon getIcon() {
+        if (search.hasTip()) return IconService.gutterTip;
+        else if (search.hasHelpRequest()) return IconService.gutterHelpRequest;
+        else if (search.hasBugmate()) return IconService.gutterSamebug;
+        else if (search.hasWebHit()) return IconService.gutterSamebug;
         return IconService.gutterSamebug;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof SavedSearchMark) {
-            SavedSearchMark rhs = (SavedSearchMark) o;
+        if (o instanceof SavedSearchGutterIcon) {
+            SavedSearchGutterIcon rhs = (SavedSearchGutterIcon) o;
             return rhs.search.equals(search);
         } else {
             return false;
@@ -64,7 +68,7 @@ final class SavedSearchMark extends SearchMark {
     @Override
     @NotNull
     public String getTooltipText() {
-        TrackingService.trace(Events.gutterIconHover(search.getSavedSearch().getId()));
+        TrackingService.trace(Events.gutterIconHover(search.getSearchId()));
         return MessageService.message("samebug.gutter.savedSearch.tooltip");
     }
 
@@ -73,7 +77,7 @@ final class SavedSearchMark extends SearchMark {
         return new AnAction() {
             @Override
             public void actionPerformed(AnActionEvent e) {
-                Integer searchId = search.getSavedSearch().getId();
+                Integer searchId = search.getSearchId();
                 Project project = getEventProject(e);
                 if (project != null) {
                     TrackingService.trace(Events.gutterIconClicked(searchId));

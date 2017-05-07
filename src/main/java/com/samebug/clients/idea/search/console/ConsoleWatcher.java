@@ -178,8 +178,8 @@ public class ConsoleWatcher extends DocumentAdapter implements SearchRequestList
 
     private static SearchMark createMarker(SearchRequest request) {
         final SearchMark mark;
-        if (request instanceof RequestedSearch) mark = new RequestedSearchMark((RequestedSearch) request);
-        else if (request instanceof SavedSearch) mark = new SavedSearchMark((SavedSearch) request);
+        if (request instanceof RequestedSearch) mark = new RequestedSearchGutterIcon((RequestedSearch) request);
+        else if (request instanceof SavedSearch) mark = new SavedSearchGutterIcon((SavedSearch) request);
         else mark = null;
         return mark;
     }

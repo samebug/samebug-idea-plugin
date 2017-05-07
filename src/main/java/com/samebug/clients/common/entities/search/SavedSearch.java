@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.common.entities.search;
 
+import com.samebug.clients.http.entities.jsonapi.CreatedSearchResource;
 import com.samebug.clients.http.entities.jsonapi.NewSearchMeta;
-import com.samebug.clients.http.entities.search.Search;
 import org.jetbrains.annotations.NotNull;
 
 public class SavedSearch implements SearchRequest {
@@ -25,12 +25,13 @@ public class SavedSearch implements SearchRequest {
     @NotNull
     private final SearchInfo searchInfo;
     @NotNull
-    private final Search savedSearch;
+    private final CreatedSearchResource savedSearch;
 
-    public SavedSearch(@NotNull final SearchInfo searchInfo, @NotNull final String trace, @NotNull final Search savedSearch, @NotNull final NewSearchMeta searchRelations) {
+    public SavedSearch(@NotNull final SearchInfo searchInfo, @NotNull final String trace, @NotNull final CreatedSearchResource savedSearch) {
         this.searchInfo = searchInfo;
         this.savedSearch = savedSearch;
-        Integer lineOffset = searchRelations.getFirstLine();
+        final NewSearchMeta meta = savedSearch.getMeta();
+        Integer lineOffset = meta.getFirstLine();
         int startOffset = 0;
         for (int line = 0; line < lineOffset; ++line) {
             startOffset = trace.indexOf("\n", startOffset) + 1;
@@ -51,7 +52,20 @@ public class SavedSearch implements SearchRequest {
     }
 
     @NotNull
-    public Search getSavedSearch() {
-        return savedSearch;
+    public Integer getSearchId() {
+        return savedSearch.getData().getId();
+    }
+
+    public boolean hasTip() {
+        return savedSearch.getMeta().getHasTips();
+    }
+    public boolean hasHelpRequest() {
+        return savedSearch.getMeta().getHasHelpRequests();
+    }
+    public boolean hasBugmate() {
+        return savedSearch.getMeta().getHasBugmates();
+    }
+    public boolean hasWebHit() {
+        return savedSearch.getMeta().getHasExternalSolutions();
     }
 }

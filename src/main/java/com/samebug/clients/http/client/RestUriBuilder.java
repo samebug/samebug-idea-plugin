@@ -81,12 +81,12 @@ final class RestUriBuilder {
 
     @NotNull
     public URI incomingHelpRequests(@NotNull final Integer userId) {
-        return resolve("users/" + userId + "/help-requests");
+        return resolve("users/" + userId + "/incoming-help-requests");
     }
 
     @NotNull
     public URI userStats(@NotNull final Integer userId) {
-        return resolve("users/" + userId + "stats");
+        return resolve("users/" + userId + "/stats");
     }
 
     @NotNull

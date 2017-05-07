@@ -40,7 +40,7 @@ public final class SearchRequestService {
     public SavedSearch searchSucceeded(SearchInfo searchInfo, RequestedSearch requestedSearch, CreatedSearchResource result) {
         assert store.getRequest(searchInfo.requestId) == requestedSearch : "Promoting an illegal RequestedSearch";
         // promote from Requested to Saved
-        SavedSearch request = new SavedSearch(searchInfo, requestedSearch.getTrace(), result.getData(), result.getMeta());
+        SavedSearch request = new SavedSearch(searchInfo, requestedSearch.getTrace(), result);
         store.addRequest(request);
 
         return request;

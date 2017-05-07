@@ -22,10 +22,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-final class RequestedSearchMark extends SearchMark {
+final class RequestedSearchGutterIcon extends SearchMark {
     private final RequestedSearch search;
 
-    public RequestedSearchMark(RequestedSearch search) {
+    RequestedSearchGutterIcon(RequestedSearch search) {
         this.search = search;
     }
 
@@ -37,8 +37,8 @@ final class RequestedSearchMark extends SearchMark {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof RequestedSearchMark) {
-            RequestedSearchMark rhs = (RequestedSearchMark) o;
+        if (o instanceof RequestedSearchGutterIcon) {
+            RequestedSearchGutterIcon rhs = (RequestedSearchGutterIcon) o;
             return rhs.search.equals(search);
         } else {
             return false;

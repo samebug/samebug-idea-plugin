@@ -48,8 +48,10 @@ public abstract class IconService {
     public static final Icon twSamebug = IconLoader.getIcon("/com/samebug/toolwindow/samebug.png");
     public static final Icon twBolt = IconLoader.getIcon("/com/samebug/toolwindow/bolt.png");
 
-    public static final Icon gutterSamebug = IconLoader.getIcon("/com/samebug/icons/gutter/samebug-15x15.png");
     public static final Icon gutterLoading = IconLoader.getIcon("/com/samebug/icons/gutter/loading.gif");
+    public static final Icon gutterSamebug = IconLoader.getIcon("/com/samebug/icons/gutter/samebug-15x15.png");
+    public static final Icon gutterTip = IconLoader.getIcon("/com/samebug/icons/gutter/tip.png");
+    public static final Icon gutterHelpRequest = IconLoader.getIcon("/com/samebug/icons/gutter/helpRequest.png");
 
     public static final Icon cogwheel = IconLoader.getIcon("/com/samebug/icons/cogwheel.png");
     public static final Icon cogwheelTodo = IconLoader.getIcon("/com/samebug/icons/cogwheel-todo.png");

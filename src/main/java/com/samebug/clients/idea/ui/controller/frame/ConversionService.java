@@ -131,7 +131,7 @@ public final class ConversionService {
 
     public IProfilePanel.Model profilePanel(IncomingHelpRequestList incomingRequests, Me user, UserStats statistics) {
         ConnectionStatus status = IdeaSamebugPlugin.getInstance().clientService.getWsClient().isConnected() ? ConnectionStatus.ONLINE : ConnectionStatus.OFFLINE;
-        return new IProfilePanel.Model(incomingRequests.getMeta().getTotal(), statistics.getNumberOfMarks(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(),
+        return new IProfilePanel.Model(incomingRequests.getMeta().getTotal(), statistics.getNumberOfVotes(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(),
                 user.getDisplayName(), user.getAvatarUrl(), status);
     }
 
