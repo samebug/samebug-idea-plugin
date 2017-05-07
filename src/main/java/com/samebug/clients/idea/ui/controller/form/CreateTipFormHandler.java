@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.ui.controller.form;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.frame.IFrame;
@@ -28,6 +29,7 @@ import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class CreateTipFormHandler extends PostFormHandler<SearchHit<SamebugTip>, TipCreate.BadRequest> {
+    private static final Logger LOGGER = Logger.getInstance(CreateTipFormHandler.class);
     @NotNull
     final IFrame frame;
     @NotNull
@@ -57,11 +59,26 @@ public abstract class CreateTipFormHandler extends PostFormHandler<SearchHit<Sam
 
     @Override
     protected void handleBadRequest(TipCreate.BadRequest fieldErrors) {
-//        if (CreateTip.BODY.equals(fieldError.key)) fieldErrors.add(fieldError);
-//        if (nonFormError.code.equals(CreateTip.E_TOO_SHORT)) fieldErrors.add(new FieldError(CreateTip.BODY, CreateTip.E_TOO_SHORT));
-//        else if (nonFormError.code.equals(CreateTip.E_TOO_LONG)) fieldErrors.add(new FieldError(CreateTip.BODY, CreateTip.E_TOO_LONG));
-        IHelpOthersCTA.BadRequest b = null;
-        form.failPostTipWithFormError(b);
+        IHelpOthersCTA.BadRequest.TipBody tipBody = null;
+        for (TipCreate.ErrorCode errorCode : fieldErrors.errorList.getErrorCodes()) {
+            switch (errorCode) {
+                case MESSAGE_TOO_SHORT:
+                    tipBody = IHelpOthersCTA.BadRequest.TipBody.TOO_SHORT;
+                    break;
+                case MESSAGE_TOO_LONG:
+                    tipBody = IHelpOthersCTA.BadRequest.TipBody.TOO_LONG;
+                    break;
+                default:
+                    LOGGER.warn("Unhandled error code " + errorCode);
+            }
+        }
+        if (tipBody != null) {
+            IHelpOthersCTA.BadRequest b = new IHelpOthersCTA.BadRequest(tipBody);
+            form.failPostTipWithFormError(b);
+        } else {
+            frame.popupError(MessageService.message("samebug.component.tip.write.error.unhandled"));
+            form.failPostTipWithFormError(null);
+        }
     }
 
     @Override

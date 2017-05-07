@@ -20,17 +20,6 @@ import com.samebug.clients.http.exceptions.FormException;
 import org.apache.commons.lang.StringUtils;
 
 public final class TipCreate {
-    public static final String BODY = "tip";
-    public static final String E_TOO_SHORT = "MESSAGE_TOO_SHORT";
-    public static final String E_TOO_LONG = "MESSAGE_TOO_LONG";
-    public static final String E_NOT_YOUR_SEARCH = "NOT_YOUR_SEARCH";
-    public static final String E_NOT_EXCEPTION_SEARCH = "NOT_EXCEPTION_SEARCH";
-    public static final String E_UNKNOWN_SEARCH = "UNKNOWN_SEARCH";
-    public static final String E_UNREACHABLE_SOURCE = "UNREACHABLE_SOURCE";
-    public static final String E_UNRECOGNIZED_SOURCE = "UNRECOGNIZED_SOURCE";
-    public static final String E_UNKNOWN_HELP_REQUEST = "UNKNOWN_HELP_REQUEST";
-    public static final String E_NO_STACKTRACE = "NO_STACKTRACE";
-
     public enum ErrorCode {
         UNKNOWN_HELP_REQUEST,
         MESSAGE_TOO_SHORT, MESSAGE_TOO_LONG,

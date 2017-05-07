@@ -35,8 +35,8 @@ import java.awt.event.MouseEvent;
 
 public final class LogInForm extends JComponent implements ILogInForm {
     private static final Logger LOGGER = Logger.getInstance(LogInForm.class);
-    final FormField email;
-    final PasswordFormField password;
+    final FormField<BadRequest.Email> email;
+    final PasswordFormField<BadRequest.Password> password;
     final SamebugButton logIn;
     final LinkLabel forgotPassword;
 
@@ -80,8 +80,8 @@ public final class LogInForm extends JComponent implements ILogInForm {
     @Override
     public void failPost(BadRequest errors) {
         logIn.revertFromLoadingAnimation();
-//        if (f.key.equals(LogIn.EMAIL)) email.setFormError(f.code);
-//        else if (f.key.equals(LogIn.PASSWORD)) password.setFormError(f.code);
+        if (errors.email != null) email.setFormError(errors.email);
+        if (errors.password != null) password.setFormError(errors.password);
 //        TrackingService.trace(Events.registrationError("SignIn", errors));
     }
 

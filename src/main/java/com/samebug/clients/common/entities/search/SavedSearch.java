@@ -59,12 +59,15 @@ public class SavedSearch implements SearchRequest {
     public boolean hasTip() {
         return savedSearch.getMeta().getHasTips();
     }
+
     public boolean hasHelpRequest() {
         return savedSearch.getMeta().getHasHelpRequests();
     }
+
     public boolean hasBugmate() {
         return savedSearch.getMeta().getHasBugmates();
     }
+
     public boolean hasWebHit() {
         return savedSearch.getMeta().getHasExternalSolutions();
     }

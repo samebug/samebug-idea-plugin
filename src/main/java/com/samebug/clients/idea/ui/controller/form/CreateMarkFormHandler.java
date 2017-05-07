@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.ui.controller.form;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.common.ui.frame.IFrame;
@@ -27,6 +28,7 @@ import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class CreateMarkFormHandler extends PostFormHandler<Mark, MarkCreate.BadRequest> {
+    private static final Logger LOGGER = Logger.getInstance(CreateMarkFormHandler.class);
     @NotNull
     final IFrame frame;
     @NotNull
@@ -56,7 +58,10 @@ public abstract class CreateMarkFormHandler extends PostFormHandler<Mark, MarkCr
 
     @Override
     protected void handleBadRequest(MarkCreate.BadRequest fieldErrors) {
-//        if (nonFormError.code.equals(CreateMark.E_ALREADY_MARKED)) globalErrors.add(MessageService.message("samebug.component.mark.cancel.error.alreadyCancelled"));
+        for (MarkCreate.ErrorCode errorCode : fieldErrors.errorList.getErrorCodes()) {
+            LOGGER.warn("Unhandled error code " + errorCode);
+        }
+        frame.popupError(MessageService.message("samebug.component.mark.create.error.unhandled"));
         button.interruptLoading();
     }
 

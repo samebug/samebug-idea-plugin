@@ -36,7 +36,7 @@ public final class LogIn {
     }
 
     public enum ErrorCode {
-        INVALID_CREDENTIALS, X
+        INVALID_CREDENTIALS
     }
 
 

@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.ui.controller.form;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.services.HelpRequestService;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.common.ui.frame.IFrame;
@@ -27,6 +28,7 @@ import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class CreateHelpRequestFormHandler extends PostFormHandler<HelpRequest, HelpRequestCreate.BadRequest> {
+    private static final Logger LOGGER = Logger.getInstance(CreateHelpRequestFormHandler.class);
     final IFrame frame;
     final IAskForHelp form;
     final NewHelpRequest data;
@@ -52,11 +54,23 @@ public abstract class CreateHelpRequestFormHandler extends PostFormHandler<HelpR
 
     @Override
     protected void handleBadRequest(HelpRequestCreate.BadRequest fieldErrors) {
-//        if (CreateHelpRequest.CONTEXT.equals(fieldError.key)) fieldErrors.add(fieldError);
-        // TODO reload?
-//        if (nonFormError.code.equals(CreateHelpRequest.E_DUPLICATE_HELP_REQUEST)) globalErrors.add(MessageService.message("samebug.component.helpRequest.ask.error.duplicate"));
-        IAskForHelp.BadRequest b = null;
-        form.failRequestTip(b);
+        IAskForHelp.BadRequest.Context context = null;
+        for (HelpRequestCreate.ErrorCode errorCode : fieldErrors.errorList.getErrorCodes()) {
+            switch (errorCode) {
+                case CONTEXT_TOO_LONG:
+                    context = IAskForHelp.BadRequest.Context.TOO_LONG;
+                    break;
+                default:
+                    LOGGER.warn("Unhandled error code " + errorCode);
+            }
+        }
+        if (context != null) {
+            IAskForHelp.BadRequest b = new IAskForHelp.BadRequest(context);
+            form.failRequestTip(b);
+        } else {
+            frame.popupError(MessageService.message("samebug.component.helpRequest.ask.error.unhandled"));
+            form.failRequestTip(null);
+        }
     }
 
     @Override

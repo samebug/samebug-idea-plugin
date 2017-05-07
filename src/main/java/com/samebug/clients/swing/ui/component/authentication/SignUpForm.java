@@ -33,9 +33,9 @@ import java.awt.event.MouseEvent;
 
 public final class SignUpForm extends JComponent implements ISignUpForm {
     private static final Logger LOGGER = Logger.getInstance(SignUpForm.class);
-    final FormField displayName;
-    final FormField email;
-    final PasswordFormField password;
+    final FormField<BadRequest.DisplayName> displayName;
+    final FormField<BadRequest.Email> email;
+    final PasswordFormField<BadRequest.Password> password;
     final SamebugButton signUp;
 
     {
@@ -71,9 +71,9 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
     @Override
     public void failPost(BadRequest errors) {
         signUp.revertFromLoadingAnimation();
-//        if (f.key.equals(SignUp.DISPLAY_NAME)) displayName.setFormError(f.code);
-//        else if (f.key.equals(SignUp.EMAIL)) email.setFormError(f.code);
-//        else if (f.key.equals(SignUp.PASSWORD)) password.setFormError(f.code);
+        if (errors.displayName != null) displayName.setFormError(errors.displayName);
+        if (errors.email != null) email.setFormError(errors.email);
+        if (errors.password != null) password.setFormError(errors.password);
 //        TrackingService.trace(Events.registrationError("SignUp", errors));
     }
 

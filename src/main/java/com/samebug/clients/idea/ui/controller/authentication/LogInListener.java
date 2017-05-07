@@ -50,6 +50,7 @@ public final class LogInListener implements ILogInForm.Listener {
     public void forgotPassword(ILogInForm source) {
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
         Me user = plugin.profileStore.getUser();
+        // TODO, well, probably we will not know the user id if he is not logged in...
         if (user != null) {
             int myUserId = user.getId();
             URI forgottenPasswordUri = plugin.uriBuilder.forgottenPassword(myUserId);

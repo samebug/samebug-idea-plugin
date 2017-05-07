@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.ui.controller.form;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.services.HelpRequestService;
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.common.ui.frame.IFrame;
@@ -25,6 +26,7 @@ import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
 
 public abstract class RevokeHelpRequestFormHandler extends PostFormHandler<HelpRequest, HelpRequestCancel.BadRequest> {
+    private static final Logger LOGGER = Logger.getInstance(RevokeHelpRequestFormHandler.class);
     final IFrame frame;
     final IMyHelpRequest button;
     final String helpRequestId;
@@ -48,7 +50,10 @@ public abstract class RevokeHelpRequestFormHandler extends PostFormHandler<HelpR
 
     @Override
     protected void handleBadRequest(HelpRequestCancel.BadRequest fieldErrors) {
-//        if (nonFormError.code.equals(RevokeHelpRequest.E_ALREADY_REVOKED)) globalErrors.add(MessageService.message("samebug.component.helpRequest.revoke.error.alreadyRevoked"));
+        for (HelpRequestCancel.ErrorCode errorCode : fieldErrors.errorList.getErrorCodes()) {
+            LOGGER.warn("Unhandled error code " + errorCode);
+        }
+        frame.popupError(MessageService.message("samebug.component.helpRequest.revoke.error.unhandled"));
         button.failRevoke();
     }
 

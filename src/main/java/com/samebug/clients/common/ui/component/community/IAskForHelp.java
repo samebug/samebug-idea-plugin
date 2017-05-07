@@ -37,6 +37,12 @@ public interface IAskForHelp {
     }
 
     final class BadRequest {
+        public BadRequest(Context context) {
+            this.context = context;
+        }
+
+        public final Context context;
+
         public enum Context {
             TOO_LONG
         }

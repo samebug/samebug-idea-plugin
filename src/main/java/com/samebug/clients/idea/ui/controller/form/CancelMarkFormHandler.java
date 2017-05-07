@@ -52,7 +52,7 @@ public abstract class CancelMarkFormHandler extends PostFormHandler<Mark, MarkCa
 
     @Override
     protected void handleBadRequest(MarkCancel.BadRequest fieldErrors) {
-//        if (nonFormError.code.equals(CreateMark.E_ALREADY_MARKED)) globalErrors.add(MessageService.message("samebug.component.mark.cancel.error.alreadyCancelled"));
+        frame.popupError(MessageService.message("samebug.component.mark.cancel.error.unhandled"));
         button.interruptLoading();
     }
 
