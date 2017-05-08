@@ -21,6 +21,7 @@ import com.samebug.clients.http.exceptions.UserUnauthenticated;
 import com.samebug.clients.http.exceptions.UserUnauthorized;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.swing.ui.modules.MessageService;
 
 import javax.swing.*;
 import java.net.URI;
@@ -48,7 +49,6 @@ public class ConfigDialogPanel {
     }
 
     public void apply() throws ConfigurationException {
-        // TODO move messages to property file
         final ApplicationSettings settings = fromUI();
         try {
             try {
@@ -59,7 +59,7 @@ public class ConfigDialogPanel {
                 }
                 URI.create(settings.serverRoot);
             } catch (Exception e) {
-                throw new ConfigurationException(settings.serverRoot + " is not a valid URI");
+                throw new ConfigurationException(MessageService.message("samebug.configure.error.invalidUrl", settings.serverRoot));
             }
             try {
                 final String trackingRoot = settings.trackingRoot;
@@ -69,7 +69,7 @@ public class ConfigDialogPanel {
                 }
                 URI.create(settings.trackingRoot);
             } catch (Exception e) {
-                throw new ConfigurationException(settings.trackingRoot + " is not a valid URI");
+                throw new ConfigurationException(MessageService.message("samebug.configure.error.invalidUrl", settings.trackingRoot));
             }
             IdeaSamebugPlugin.getInstance().saveSettings(settings);
             currentConfig = settings;
@@ -77,13 +77,13 @@ public class ConfigDialogPanel {
                 // IMPROVE: this is an http call on the UI thread. It would be nice to do this in the background and show a progress indicator.
                 IdeaSamebugPlugin.getInstance().authenticationService.apiKeyAuthentication();
             } catch (UserUnauthenticated e) {
-                throw new ConfigurationException("This is an invalid API key! Set it to empty and use your username-password to log in, or check it on the website.");
+                throw new ConfigurationException(MessageService.message("samebug.configure.error.apiKey"));
             } catch (UserUnauthorized e) {
-                throw new ConfigurationException("You don't have permission to this workspace! Set it to 0 to use your default workspace.");
+                throw new ConfigurationException(MessageService.message("samebug.configure.error.workspace"));
             } catch (SamebugClientException ignored) {
             }
         } catch (Exception e) {
-            throw new ConfigurationException("Failed to save configuration: " + e.getMessage());
+            throw new ConfigurationException(MessageService.message("samebug.configure.error.unknown", e.getMessage()));
         }
     }
 
