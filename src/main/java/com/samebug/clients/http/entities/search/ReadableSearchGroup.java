@@ -26,6 +26,8 @@ public final class ReadableSearchGroup extends SearchGroup {
     private Date lastSeen;
     private Integer numberOfSearches;
     private String helpRequestId;
+    private String exceptionType;
+    private String exceptionMessage;
 
     @NotNull
     public Integer getLastSearchId() {
@@ -50,5 +52,15 @@ public final class ReadableSearchGroup extends SearchGroup {
     @Nullable
     public String getHelpRequestId() {
         return helpRequestId;
+    }
+
+    @NotNull
+    public String getExceptionType() {
+        return exceptionType;
+    }
+
+    @Nullable
+    public String getExceptionMessage() {
+        return exceptionMessage;
     }
 }

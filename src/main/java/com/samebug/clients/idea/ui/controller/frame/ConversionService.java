@@ -46,6 +46,7 @@ import com.samebug.clients.http.entities.notification.IncomingAnswer;
 import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.search.ReadableSearchGroup;
+import com.samebug.clients.http.entities.search.SearchGroup;
 import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.http.entities.search.StackTraceSearch;
 import com.samebug.clients.http.entities.solution.ExternalDocument;
@@ -151,8 +152,7 @@ public final class ConversionService {
     public IHelpRequestHeader.Model helpRequestHeader(HelpRequestMatch helpRequestMatch) {
         HelpRequest helpRequest = helpRequestMatch.getHelpRequest();
         RegisteredSamebugUser requester = helpRequest.getRequester();
-        // TODO headLine(helpRequest)
-        return new IHelpRequestHeader.Model(null, requester.getDisplayName(), requester.getAvatarUrl());
+        return new IHelpRequestHeader.Model(headLine(helpRequestMatch), requester.getDisplayName(), requester.getAvatarUrl());
     }
 
     public IHelpRequestTab.Model helpRequestTab(List<SearchHit<SamebugTip>> tipHits, HelpRequestMatch helpRequestMatch) {
@@ -185,9 +185,9 @@ public final class ConversionService {
         for (HelpRequestMatch m : incomingRequests.getData()) {
             HelpRequest r = m.getHelpRequest();
             RegisteredSamebugUser requester = r.getRequester();
-            String exceptionBody = null; //TODO headLine(r.accessibleSearchInfo());
-            IHelpRequestPreview.Model preview =
-                    new IHelpRequestPreview.Model(requester.getDisplayName(), requester.getAvatarUrl(), r.getCreatedAt(), m.getViewedAt(), r.getContext(), r.getId(), exceptionBody);
+            String exceptionBody = headLine(m);
+            IHelpRequestPreview.Model preview = new IHelpRequestPreview.Model(requester.getDisplayName(), requester.getAvatarUrl(), r.getCreatedAt(),
+                    m.getViewedAt(), r.getContext(), r.getId(), exceptionBody);
             requestPreviews.add(preview);
         }
         IHelpRequestList.Model requestList = new IHelpRequestList.Model(requestPreviews);
@@ -211,6 +211,14 @@ public final class ConversionService {
     public static String headLine(StackTraceSearch search) {
         // TODO make sure the search is readable
         return headLine(search.getExceptionType(), search.getExceptionMessage());
+    }
+
+    public static String headLine(HelpRequestMatch helpRequestMatch) {
+        ReadableSearchGroup readableSearchGroup;
+        SearchGroup requestGroup = helpRequestMatch.getHelpRequest().getSearchGroup();
+        if (requestGroup instanceof ReadableSearchGroup) readableSearchGroup = (ReadableSearchGroup) requestGroup;
+        else readableSearchGroup = helpRequestMatch.getMatchingGroup();
+        return headLine(readableSearchGroup.getExceptionType(), readableSearchGroup.getExceptionMessage());
     }
 
     public static String headLine(@NotNull String typeName, @Nullable String message) {
