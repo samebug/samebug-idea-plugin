@@ -20,11 +20,14 @@ import com.samebug.clients.http.entities.user.SamebugUser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Date;
+
 public final class HelpRequestMatch {
     private HelpRequest helpRequest;
     private SamebugUser bugmate;
     private Integer workspaceId;
     private SearchGroup matchingGroup;
+    private Date viewedAt;
 
     @NotNull
     public HelpRequest getHelpRequest() {
@@ -44,5 +47,10 @@ public final class HelpRequestMatch {
     @NotNull
     public SearchGroup getMatchingGroup() {
         return matchingGroup;
+    }
+
+    @Nullable
+    public Date getViewedAt() {
+        return viewedAt;
     }
 }

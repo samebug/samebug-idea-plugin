@@ -187,7 +187,7 @@ public final class ConversionService {
             RegisteredSamebugUser requester = r.getRequester();
             String exceptionBody = null; //TODO headLine(r.accessibleSearchInfo());
             IHelpRequestPreview.Model preview =
-                    new IHelpRequestPreview.Model(requester.getDisplayName(), requester.getAvatarUrl(), r.getCreatedAt(), null, r.getContext(), r.getId(), exceptionBody);
+                    new IHelpRequestPreview.Model(requester.getDisplayName(), requester.getAvatarUrl(), r.getCreatedAt(), m.getViewedAt(), r.getContext(), r.getId(), exceptionBody);
             requestPreviews.add(preview);
         }
         IHelpRequestList.Model requestList = new IHelpRequestList.Model(requestPreviews);
