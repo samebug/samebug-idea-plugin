@@ -21,6 +21,7 @@ import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.modules.*;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,13 +31,49 @@ import java.awt.event.MouseEvent;
 public final class ProfilePanel extends TransparentPanel implements IProfilePanel {
     private static final int AvatarIconSize = 26;
 
-    private final AvatarIcon avatarIcon;
-    private final MessageLabel messages;
-    private final NumberLabel marks;
-    private final NumberLabel tips;
-    private final NumberLabel thanks;
+    private Model model;
+    private AvatarIcon avatarIcon;
+    private MessageLabel messages;
+    private NumberLabel marks;
+    private NumberLabel tips;
+    private NumberLabel thanks;
 
-    public ProfilePanel(Model model) {
+    public ProfilePanel(@NotNull final Model model) {
+        this.model = model;
+        updateState();
+    }
+
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        // Border is set here so the color will be updated on theme change
+        Color borderColor = ColorService.forCurrentTheme(ColorService.Separator);
+        setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 0, 0, 0, borderColor),
+                BorderFactory.createEmptyBorder(0, 20, 0, 20)
+        ));
+    }
+
+    private Listener getListener() {
+        return ListenerService.getListener(this, IProfilePanel.Listener.class);
+    }
+
+
+    @Override
+    @NotNull
+    public Model getModel() {
+        return model;
+    }
+
+    @Override
+    public void setModel(@NotNull final Model model) {
+        this.model = model;
+        updateState();
+    }
+
+    private void updateState() {
+        removeAll();
+
         avatarIcon = new AvatarIcon(model.avatarUrl, AvatarIconSize, model.status);
         SamebugLabel name = new SamebugLabel(model.name, FontService.demi(14));
         final JPanel glue = new TransparentPanel();
@@ -55,6 +92,9 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
         add(tips, "");
         add(thanks, "");
 
+        repaint();
+        revalidate();
+
         messages.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -62,26 +102,6 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
                 TrackingService.trace(Events.openIncomingRequests());
             }
         });
-    }
-
-    @Override
-    public void updateUI() {
-        super.updateUI();
-        // Border is set here so the color will be updated on theme change
-        Color borderColor = ColorService.forCurrentTheme(ColorService.Separator);
-        setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(1, 0, 0, 0, borderColor),
-                BorderFactory.createEmptyBorder(0, 20, 0, 20)
-        ));
-    }
-
-    private Listener getListener() {
-        return ListenerService.getListener(this, IProfilePanel.Listener.class);
-    }
-
-    @Override
-    public void increaseMessages() {
-        messages.setNumber(messages.getNumber() + 1);
     }
 }
 

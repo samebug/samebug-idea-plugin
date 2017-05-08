@@ -16,9 +16,12 @@
 package com.samebug.clients.idea.components.application;
 
 import com.google.gson.JsonParseException;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.samebug.clients.common.ui.component.bugmate.ConnectionStatus;
 import com.samebug.clients.http.websocket.NotificationHandler;
 import com.samebug.clients.http.websocket.SamebugWebSocketEventHandler;
+import com.samebug.clients.idea.messages.WebSocketStatusUpdate;
 import io.netty.buffer.ByteBuf;
 
 public final class IdeaWebSocketEventHandler extends SamebugWebSocketEventHandler {
@@ -30,11 +33,14 @@ public final class IdeaWebSocketEventHandler extends SamebugWebSocketEventHandle
 
     @Override
     public void connected() {
+        LOGGER.trace("WS client connected");
 
+        ApplicationManager.getApplication().getMessageBus().syncPublisher(WebSocketStatusUpdate.TOPIC).updateConnectionStatus(ConnectionStatus.ONLINE);
     }
 
     @Override
     public void text(String text) {
+        LOGGER.trace("WS client received message:\n" + text);
         try {
             readMessage(text);
         } catch (JsonParseException e) {
@@ -44,22 +50,26 @@ public final class IdeaWebSocketEventHandler extends SamebugWebSocketEventHandle
 
     @Override
     public void binary(ByteBuf content) {
-
+        LOGGER.trace("WS client received binary message");
     }
 
     @Override
     public void closing(int statusCode, String reason) {
-
+        LOGGER.trace("WS client is closing (" + statusCode + "): " + reason);
     }
 
     @Override
     public void disconnected() {
+        LOGGER.trace("WS client disconnected");
+
+        ApplicationManager.getApplication().getMessageBus().syncPublisher(WebSocketStatusUpdate.TOPIC).updateConnectionStatus(ConnectionStatus.OFFLINE);
+
         // IMPROVE try reconnect only after a few seconds
         IdeaSamebugPlugin.getInstance().clientService.getWsClient().checkConnectionAndConnectOnBackgroundThreadIfNecessary();
     }
 
     @Override
     public void handshakeSucceeded() {
-
+        LOGGER.trace("WS client handshakeSucceeded");
     }
 }

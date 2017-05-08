@@ -25,7 +25,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.services.*;
-import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.http.exceptions.SamebugException;
 import com.samebug.clients.idea.controllers.ConsoleSearchController;
 import com.samebug.clients.idea.controllers.TimedTasks;
@@ -108,17 +107,16 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         connection = messageBus.connect(this);
         clientService = new IdeaClientService(messageBus);
         clientService.configure(state.get().getNetworkConfig());
-        SamebugClient client = clientService.getClient();
         profileStore = new ProfileStore();
-        profileService = new ProfileService(client, profileStore);
-        solutionService = new SolutionService(client);
+        profileService = new ProfileService(clientService, profileStore);
+        solutionService = new SolutionService(clientService);
         searchStore = new SearchStore();
-        searchService = new SearchService(client, searchStore);
+        searchService = new SearchService(clientService, searchStore);
         searchRequestStore = new SearchRequestStore();
         searchRequestService = new SearchRequestService(searchRequestStore);
         helpRequestStore = new HelpRequestStore();
-        helpRequestService = new HelpRequestService(client, helpRequestStore);
-        authenticationService = new AuthenticationService(client);
+        helpRequestService = new HelpRequestService(clientService, helpRequestStore);
+        authenticationService = new AuthenticationService(clientService);
         conversionService = new ConversionService();
         concurrencyService = new ConcurrencyService(profileStore, profileService,
                 solutionService,
@@ -168,14 +166,26 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public void saveSettings(final ApplicationSettings settings) {
         ApplicationSettings oldSettings = state.get();
         ApplicationSettings newSettings = new ApplicationSettings(settings);
+
+        // If authentication data (apiKey or workspace id) is changed, we have to do some cleanup
+        if (!equals(newSettings.apiKey, oldSettings.apiKey)) {
+            // clear the userId, which is a derived data.
+            newSettings.userId = null;
+        }
+        if (!equals(newSettings.apiKey, oldSettings.apiKey) || !equals(newSettings.workspaceId, oldSettings.workspaceId)) {
+            // clear the caches
+            helpRequestStore.invalidate();
+            profileStore.invalidate();
+        }
+
         state.set(newSettings);
         try {
             if (clientService != null) clientService.configure(newSettings.getNetworkConfig());
             uriBuilder = new WebUriBuilder(newSettings.serverRoot);
             ApplicationManager.getApplication().getMessageBus().syncPublisher(ConfigChangeListener.TOPIC).configChange(oldSettings, newSettings);
         } finally {
-            if (oldSettings.apiKey != newSettings.apiKey) TrackingService.trace(Events.changeApiKey());
-            if (oldSettings.workspaceId != newSettings.workspaceId) TrackingService.trace(Events.changeWorkspace());
+            if (!equals(newSettings.apiKey, oldSettings.apiKey)) TrackingService.trace(Events.changeApiKey());
+            if (!equals(newSettings.workspaceId, oldSettings.workspaceId)) TrackingService.trace(Events.changeWorkspace());
         }
     }
 
@@ -185,5 +195,10 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         this.state.set(newSettings);
         if (clientService != null) clientService.configure(newSettings.getNetworkConfig());
         uriBuilder = new WebUriBuilder(newSettings.serverRoot);
+    }
+
+    // TODO lifted java 8 Objects.equals, remove it when we use java 8
+    private static boolean equals(Object a, Object b) {
+        return (a == b) || (a != null && a.equals(b));
     }
 }

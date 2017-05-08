@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
 import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.http.entities.user.SamebugWorkspace;
@@ -29,36 +28,37 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class AuthenticationService {
-    final SamebugClient client;
+    final ClientService clientService;
 
-    public AuthenticationService(SamebugClient client) {
-        this.client = client;
+    public AuthenticationService(ClientService clientService) {
+        this.clientService = clientService;
     }
 
     public void apiKeyAuthentication() throws SamebugException {
-        final Me userInfo = client.getUserInfo();
+        final Me userInfo = clientService.getClient().getUserInfo();
         updateSettings(userInfo.getId(), userInfo.getWorkspace());
     }
 
 
     public AuthenticationResponse logIn(final LogIn.Data data) throws SamebugClientException, LogIn.BadRequest {
-        AuthenticationResponse result = client.logIn(data);
+        AuthenticationResponse result = clientService.getClient().logIn(data);
         updateSettings(result);
         return result;
     }
 
     public AuthenticationResponse signUp(final SignUp.Data data) throws SamebugClientException, SignUp.BadRequest {
-        AuthenticationResponse result = client.signUp(data);
+        AuthenticationResponse result = clientService.getClient().signUp(data);
         updateSettings(result);
         return result;
     }
 
     public AuthenticationResponse anonymousUse() throws SamebugClientException {
-        AuthenticationResponse result = client.anonymousUse();
+        AuthenticationResponse result = clientService.getClient().anonymousUse();
         updateSettings(result);
         return result;
     }
 
+    // TODO make this class abstract, and implement the updateSettings in the Idea-specialization.
     private void updateSettings(AuthenticationResponse response) {
         updateSettings(response.getApiKey(), response.getUser().getId(), response.getDefaultWorkspace());
     }

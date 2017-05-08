@@ -16,11 +16,15 @@
 package com.samebug.clients.common.ui.component.profile;
 
 import com.samebug.clients.common.ui.component.bugmate.ConnectionStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
 
 public interface IProfilePanel {
-    void increaseMessages();
+    @NotNull
+    Model getModel();
+
+    void setModel(@NotNull Model model);
 
     final class Model {
         public final int messages;

@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.entities.helprequest.NewHelpRequest;
 import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
@@ -26,34 +25,34 @@ import org.jetbrains.annotations.NotNull;
 
 public final class HelpRequestService {
     @NotNull
-    final SamebugClient client;
+    final ClientService clientService;
     @NotNull
     final HelpRequestStore store;
 
-    public HelpRequestService(@NotNull final SamebugClient client, @NotNull final HelpRequestStore store) {
-        this.client = client;
+    public HelpRequestService(@NotNull final ClientService clientService, @NotNull final HelpRequestStore store) {
+        this.clientService = clientService;
         this.store = store;
     }
 
     @NotNull
     public IncomingHelpRequestList loadIncoming() throws SamebugClientException {
-        IncomingHelpRequestList result = client.getIncomingHelpRequests();
+        IncomingHelpRequestList result = clientService.getClient().getIncomingHelpRequests();
         store.incoming = result;
         return result;
     }
 
     @NotNull
     public HelpRequest createHelpRequest(@NotNull final Integer searchId, @NotNull final NewHelpRequest data) throws SamebugClientException, HelpRequestCreate.BadRequest {
-        return client.createHelpRequest(searchId, data);
+        return clientService.getClient().createHelpRequest(searchId, data);
     }
 
     @NotNull
     public HelpRequest getHelpRequest(@NotNull final String helpRequestId) throws SamebugClientException {
-        return client.getHelpRequest(helpRequestId);
+        return clientService.getClient().getHelpRequest(helpRequestId);
     }
 
     @NotNull
     public HelpRequest revokeHelpRequest(@NotNull final String helpRequestId) throws SamebugClientException, HelpRequestCancel.BadRequest {
-        return client.cancelHelpRequest(helpRequestId);
+        return clientService.getClient().cancelHelpRequest(helpRequestId);
     }
 }

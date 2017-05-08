@@ -15,38 +15,32 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public final class ProfileService {
     @NotNull
-    final SamebugClient client;
+    final ClientService clientService;
     @NotNull
     final ProfileStore store;
 
 
-    public ProfileService(@NotNull SamebugClient client, @NotNull ProfileStore store) {
-        this.client = client;
+    public ProfileService(@NotNull ClientService clientService, @NotNull ProfileStore store) {
+        this.clientService = clientService;
         this.store = store;
     }
 
-    @Nullable
+    @NotNull
     public Me loadUserInfo() throws SamebugClientException {
-        try {
-            Me result = client.getUserInfo();
-            store.user.set(result);
-            return result;
-        } catch (SamebugClientException e) {
-            return null;
-        }
+        Me result = clientService.getClient().getUserInfo();
+        store.user.set(result);
+        return result;
     }
 
     public UserStats loadUserStats() throws SamebugClientException {
-        UserStats result = client.getUserStats();
+        UserStats result = clientService.getClient().getUserStats();
         store.statistics.set(result);
         return result;
     }

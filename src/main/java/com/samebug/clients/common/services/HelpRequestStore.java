@@ -28,6 +28,7 @@ public final class HelpRequestStore {
 
     }
 
+    @Nullable
     public IncomingHelpRequestList get() {
         return incoming;
     }

@@ -34,7 +34,9 @@ import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
+import com.samebug.clients.idea.messages.ProfileUpdate;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
+import com.samebug.clients.idea.messages.WebSocketStatusUpdate;
 import com.samebug.clients.idea.ui.controller.component.ProfileListener;
 import com.samebug.clients.idea.ui.controller.component.WebHitListener;
 import com.samebug.clients.idea.ui.controller.component.WebResultsTabListener;
@@ -94,6 +96,8 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
         projectConnection.subscribe(RefreshTimestampsListener.TOPIC, refreshListener);
         profileUpdateListener = new ProfileUpdateListener(this);
         projectConnection.subscribe(IncomingHelpRequest.TOPIC, profileUpdateListener);
+        projectConnection.subscribe(ProfileUpdate.TOPIC, profileUpdateListener);
+        projectConnection.subscribe(WebSocketStatusUpdate.TOPIC, profileUpdateListener);
     }
 
     public HelpRequestMatch getHelpRequestMatch() {

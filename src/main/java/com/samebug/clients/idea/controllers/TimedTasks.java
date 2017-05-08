@@ -17,8 +17,10 @@ package com.samebug.clients.idea.controllers;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.idea.messages.ProfileUpdate;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Timer;
@@ -60,7 +62,8 @@ public class TimedTasks {
             @Override
             public void run() {
                 try {
-                    plugin.profileService.loadUserStats();
+                    UserStats stats = plugin.profileService.loadUserStats();
+                    ApplicationManager.getApplication().getMessageBus().syncPublisher(ProfileUpdate.TOPIC).updateProfileStatistics(stats);
                 } catch (SamebugClientException e) {
                     LOGGER.warn("Failed to execute loadUserStats", e);
                 }

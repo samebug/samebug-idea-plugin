@@ -16,6 +16,9 @@
 package com.samebug.clients.idea.ui.layout;
 
 import com.intellij.openapi.options.ConfigurationException;
+import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.exceptions.UserUnauthenticated;
+import com.samebug.clients.http.exceptions.UserUnauthorized;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 
@@ -45,6 +48,7 @@ public class ConfigDialogPanel {
     }
 
     public void apply() throws ConfigurationException {
+        // TODO move messages to property file
         final ApplicationSettings settings = fromUI();
         try {
             try {
@@ -69,7 +73,15 @@ public class ConfigDialogPanel {
             }
             IdeaSamebugPlugin.getInstance().saveSettings(settings);
             currentConfig = settings;
-            IdeaSamebugPlugin.getInstance().checkAuthenticationInTheBackgroundWithCurrentConfig();
+            try {
+                // IMPROVE: this is an http call on the UI thread. It would be nice to do this in the background and show a progress indicator.
+                IdeaSamebugPlugin.getInstance().authenticationService.apiKeyAuthentication();
+            } catch (UserUnauthenticated e) {
+                throw new ConfigurationException("This is an invalid API key! Set it to empty and use your username-password to log in, or check it on the website.");
+            } catch (UserUnauthorized e) {
+                throw new ConfigurationException("You don't have permission to this workspace! Set it to 0 to use your default workspace.");
+            } catch (SamebugClientException ignored) {
+            }
         } catch (Exception e) {
             throw new ConfigurationException("Failed to save configuration: " + e.getMessage());
         }
@@ -77,19 +89,6 @@ public class ConfigDialogPanel {
 
     public void reset() {
         toUI(currentConfig);
-    }
-
-    // Apparently, IntelliJ's way to reset to defaults seems to be simply deleting the config files.
-    public void resetToDefaults() {
-        final ApplicationSettings settings = currentConfig;
-        settings.workspaceId = ApplicationSettings.defaultWorkspaceId;
-        settings.serverRoot = ApplicationSettings.defaultServerRoot;
-        settings.trackingRoot = ApplicationSettings.defaultTrackingRoot;
-        settings.isTrackingEnabled = ApplicationSettings.defaultIsTrackingEnabled;
-        settings.connectTimeout = ApplicationSettings.defaultConnectTimeout;
-        settings.requestTimeout = ApplicationSettings.defaultRequestTimeout;
-        settings.isApacheLoggingEnabled = ApplicationSettings.defaultIsApacheLoggingEnabled;
-        toUI(settings);
     }
 
     ApplicationSettings fromUI() {

@@ -18,13 +18,15 @@ package com.samebug.clients.idea.components.application;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.messages.MessageBus;
+import com.samebug.clients.common.services.ClientService;
 import com.samebug.clients.http.client.Config;
 import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.idea.controllers.NotificationController;
 import com.samebug.clients.idea.controllers.WebSocketClientService;
 import org.apache.log4j.Level;
+import org.jetbrains.annotations.NotNull;
 
-public final class IdeaClientService implements Disposable {
+public final class IdeaClientService implements ClientService, Disposable {
     SamebugClient client;
     WebSocketClientService wsClient;
     IdeaConnectionService connectionService;
@@ -41,6 +43,7 @@ public final class IdeaClientService implements Disposable {
         if (config.isApacheLoggingEnabled) enableApacheLogging();
     }
 
+    @NotNull
     public SamebugClient getClient() {
         return client;
     }

@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.http.entities.jsonapi.BugmateList;
 import com.samebug.clients.http.entities.jsonapi.SolutionList;
 import com.samebug.clients.http.entities.jsonapi.TipList;
@@ -32,41 +31,41 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class SolutionService {
-    final SamebugClient client;
+    final ClientService clientService;
 
-    public SolutionService(SamebugClient client) {
-        this.client = client;
+    public SolutionService(ClientService clientService) {
+        this.clientService = clientService;
     }
 
     public SolutionList loadWebHits(final int searchId) throws SamebugClientException {
-        SolutionList result = client.getSolutions(searchId);
+        SolutionList result = clientService.getClient().getSolutions(searchId);
         return result;
     }
 
     public TipList loadTipHits(final int searchId) throws SamebugClientException {
-        TipList result = client.getTips(searchId);
+        TipList result = clientService.getClient().getTips(searchId);
         return result;
     }
 
     public BugmateList loadBugmates(final int searchId) throws SamebugClientException {
-        BugmateList result = client.getBugmates(searchId);
+        BugmateList result = clientService.getClient().getBugmates(searchId);
         return result;
     }
 
     public SearchHit<SamebugTip> postTip(@NotNull final Integer searchId, @NotNull final NewSearchHit data)
             throws SamebugClientException, TipCreate.BadRequest {
-        SearchHit<SamebugTip> response = client.createTip(searchId, data);
+        SearchHit<SamebugTip> response = clientService.getClient().createTip(searchId, data);
         return response;
     }
 
     @Nullable
     public Mark postMark(@NotNull final Integer searchId, @NotNull final NewMark data) throws SamebugClientException, MarkCreate.BadRequest {
-        Mark mark = client.postMark(searchId, data);
+        Mark mark = clientService.getClient().postMark(searchId, data);
         return mark;
     }
 
     public Mark retractMark(@NotNull final Integer voteId) throws SamebugClientException, MarkCancel.BadRequest {
-        Mark mark = client.cancelMark(voteId);
+        Mark mark = clientService.getClient().cancelMark(voteId);
         return mark;
     }
 }

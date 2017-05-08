@@ -29,7 +29,9 @@ import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
+import com.samebug.clients.idea.messages.ProfileUpdate;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
+import com.samebug.clients.idea.messages.WebSocketStatusUpdate;
 import com.samebug.clients.idea.ui.controller.component.ProfileListener;
 import com.samebug.clients.idea.ui.controller.externalEvent.ProfileUpdateListener;
 import com.samebug.clients.idea.ui.controller.externalEvent.RefreshListener;
@@ -76,6 +78,8 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
         projectConnection.subscribe(RefreshTimestampsListener.TOPIC, refreshListener);
         profileUpdateListener = new ProfileUpdateListener(this);
         projectConnection.subscribe(IncomingHelpRequest.TOPIC, profileUpdateListener);
+        projectConnection.subscribe(ProfileUpdate.TOPIC, profileUpdateListener);
+        projectConnection.subscribe(WebSocketStatusUpdate.TOPIC, profileUpdateListener);
     }
 
     public void load() {

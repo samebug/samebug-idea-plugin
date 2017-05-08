@@ -42,7 +42,9 @@ import com.samebug.clients.http.entities.search.SearchGroup;
 import com.samebug.clients.http.entities.search.StackTraceSearch;
 import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
+import com.samebug.clients.idea.messages.ProfileUpdate;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
+import com.samebug.clients.idea.messages.WebSocketStatusUpdate;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.component.ProfileListener;
 import com.samebug.clients.idea.ui.controller.component.WebHitListener;
@@ -115,7 +117,8 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
 
         profileUpdateListener = new ProfileUpdateListener(this);
         projectConnection.subscribe(IncomingHelpRequest.TOPIC, profileUpdateListener);
-
+        projectConnection.subscribe(ProfileUpdate.TOPIC, profileUpdateListener);
+        projectConnection.subscribe(WebSocketStatusUpdate.TOPIC, profileUpdateListener);
     }
 
     public int getSearchId() {
