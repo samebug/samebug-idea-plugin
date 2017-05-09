@@ -124,7 +124,6 @@ public final class ConversionService {
             } else {
                 status = ConnectionStatus.UNDEFINED;
             }
-            // TODO how to show the bugmate when his group is only searchable?
             IBugmateHit.Model model = new IBugmateHit.Model(mate.getDisplayName(), mate.getAvatarUrl(), nMateHasSeenThisSearch, lastTimeMateHasSeenThisSearch, status);
             bugmateHits.add(model);
         }

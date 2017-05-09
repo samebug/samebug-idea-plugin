@@ -29,7 +29,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public final class WriteTipArea extends JComponent {
-    static final int MaxCharacters = 140;
+    static final int MaxCharacters = 256;
 
     final String placeholder;
     final BorderedArea borderedArea;
