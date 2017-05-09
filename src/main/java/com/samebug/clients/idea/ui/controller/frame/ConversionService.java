@@ -45,10 +45,7 @@ import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.notification.IncomingAnswer;
 import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.http.entities.profile.UserStats;
-import com.samebug.clients.http.entities.search.ReadableSearchGroup;
-import com.samebug.clients.http.entities.search.SearchGroup;
-import com.samebug.clients.http.entities.search.SearchHit;
-import com.samebug.clients.http.entities.search.StackTraceSearch;
+import com.samebug.clients.http.entities.search.*;
 import com.samebug.clients.http.entities.solution.ExternalDocument;
 import com.samebug.clients.http.entities.solution.SamebugTip;
 import com.samebug.clients.http.entities.solution.SolutionSlot;
@@ -108,8 +105,16 @@ public final class ConversionService {
         final List<IBugmateHit.Model> bugmateHits = new ArrayList<IBugmateHit.Model>(bugmates.getData().size());
         for (BugmateMatch b : bugmates.getData()) {
             SamebugUser mate = b.getBugmate();
-            Integer nMateHasSeenThisSearch = (b.getMatchingGroup() instanceof ReadableSearchGroup) ? ((ReadableSearchGroup) b.getMatchingGroup()).getNumberOfSearches() : null;
-            Date lastTimeMateHasSeenThisSearch = (b.getMatchingGroup() instanceof ReadableSearchGroup) ? ((ReadableSearchGroup) b.getMatchingGroup()).getLastSeen() : null;
+            final SearchGroup g = b.getMatchingGroup();
+            final Integer nMateHasSeenThisSearch;
+            final Date lastTimeMateHasSeenThisSearch;
+            if (g instanceof ReadableSearchGroup) {
+                nMateHasSeenThisSearch = ((ReadableSearchGroup) g).getNumberOfSearches();
+                lastTimeMateHasSeenThisSearch = ((ReadableSearchGroup) g).getLastSeen();
+            } else if (g instanceof SearchableSearchGroup) {
+                nMateHasSeenThisSearch = ((SearchableSearchGroup) g).getNumberOfSearches();
+                lastTimeMateHasSeenThisSearch = ((SearchableSearchGroup) g).getLastSeen();
+            } else throw new IllegalArgumentException();
             ConnectionStatus status;
             if (b.getBugmate() instanceof RegisteredSamebugUser) {
                 final RegisteredSamebugUser bugmate = (RegisteredSamebugUser) b.getBugmate();

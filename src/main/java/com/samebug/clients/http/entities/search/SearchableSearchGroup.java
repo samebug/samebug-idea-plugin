@@ -15,5 +15,27 @@
  */
 package com.samebug.clients.http.entities.search;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Date;
+
 public final class SearchableSearchGroup extends SearchGroup {
+    private Date firstSeen;
+    private Date lastSeen;
+    private Integer numberOfSearches;
+
+    @NotNull
+    public Date getFirstSeen() {
+        return firstSeen;
+    }
+
+    @NotNull
+    public Date getLastSeen() {
+        return lastSeen;
+    }
+
+    @NotNull
+    public Integer getNumberOfSearches() {
+        return numberOfSearches;
+    }
 }
