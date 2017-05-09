@@ -24,6 +24,7 @@ import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
@@ -62,9 +63,8 @@ public final class WriteRequestArea extends JComponent {
         return borderedArea.getText();
     }
 
-    public void setFormError(IAskForHelp.BadRequest.Context errorCode) {
+    public void setFormError(@NotNull final IAskForHelp.BadRequest.Context errorCode) {
         borderedArea.setError(true);
-        if (errorCode == null) return;
         switch (errorCode) {
             case TOO_LONG:
                 errorLabel.setText(MessageService.message("samebug.component.helpRequest.ask.error.long"));
@@ -78,7 +78,7 @@ public final class WriteRequestArea extends JComponent {
     final class BorderedArea extends LengthRestrictedArea {
         final JComponent exceptionPreview;
 
-        public BorderedArea() {
+        BorderedArea() {
             super(ColorService.NormalForm);
             exceptionPreview = new MyExceptionPreview();
 
@@ -107,7 +107,7 @@ public final class WriteRequestArea extends JComponent {
         }
 
         private final class MyExceptionPreview extends ExceptionPreview {
-            public MyExceptionPreview() {
+            MyExceptionPreview() {
                 super(requestHelp.model.exceptionTitle);
                 setBackgroundColor(ColorService.Tip);
                 setForegroundColor(ColorService.TipText);
@@ -116,7 +116,7 @@ public final class WriteRequestArea extends JComponent {
     }
 
     final class ErrorLabel extends SamebugMultilineLabel {
-        public ErrorLabel() {
+        ErrorLabel() {
             setForegroundColor(ColorService.NormalForm.error);
             setFont(FontService.regular(12));
             setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));

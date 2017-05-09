@@ -24,6 +24,7 @@ import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.HelpRequestCancel;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class RevokeHelpRequestFormHandler extends PostFormHandler<HelpRequest, HelpRequestCancel.BadRequest> {
     private static final Logger LOGGER = Logger.getInstance(RevokeHelpRequestFormHandler.class);
@@ -42,6 +43,7 @@ public abstract class RevokeHelpRequestFormHandler extends PostFormHandler<HelpR
         button.startRevoke();
     }
 
+    @NotNull
     @Override
     protected HelpRequest postForm() throws SamebugClientException, HelpRequestCancel.BadRequest {
         final HelpRequestService helpRequestService = IdeaSamebugPlugin.getInstance().helpRequestService;
@@ -49,7 +51,7 @@ public abstract class RevokeHelpRequestFormHandler extends PostFormHandler<HelpR
     }
 
     @Override
-    protected void handleBadRequest(HelpRequestCancel.BadRequest fieldErrors) {
+    protected void handleBadRequest(@NotNull HelpRequestCancel.BadRequest fieldErrors) {
         for (HelpRequestCancel.ErrorCode errorCode : fieldErrors.errorList.getErrorCodes()) {
             LOGGER.warn("Unhandled error code " + errorCode);
         }
@@ -58,7 +60,7 @@ public abstract class RevokeHelpRequestFormHandler extends PostFormHandler<HelpR
     }
 
     @Override
-    protected void handleOtherClientExceptions(SamebugClientException exception) {
+    protected void handleOtherClientExceptions(@NotNull SamebugClientException exception) {
         frame.popupError(MessageService.message("samebug.component.helpRequest.revoke.error.unhandled"));
         button.failRevoke();
     }

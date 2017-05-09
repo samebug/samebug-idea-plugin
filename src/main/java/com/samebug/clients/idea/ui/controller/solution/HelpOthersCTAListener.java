@@ -43,7 +43,7 @@ final class HelpOthersCTAListener implements IHelpOthersCTA.Listener {
         NewSearchHit formData = new NewSearchHit(new NewSolution(new NewTip(tipBody, null)));
         new CreateTipFormHandler(controller.view, source, formData, controller.searchId) {
             @Override
-            protected void afterPostForm(SearchHit<SamebugTip> response) {
+            protected void afterPostForm(@NotNull SearchHit<SamebugTip> response) {
                 ITipHit.Model tip = controller.conversionService.tipHit(response, false);
 
                 WriteTip writeTip = ComponentService.findAncestor((Component) source, WriteTip.class);

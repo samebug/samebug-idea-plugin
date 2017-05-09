@@ -20,6 +20,7 @@ import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.form.AnonymousUseFormHandler;
 import com.samebug.clients.swing.ui.modules.TrackingService;
+import org.jetbrains.annotations.NotNull;
 
 public final class AnonymousUseListener implements IAnonymousUseForm.Listener {
     final AuthenticationController controller;
@@ -32,7 +33,7 @@ public final class AnonymousUseListener implements IAnonymousUseForm.Listener {
     public void useAnonymously(final IAnonymousUseForm source) {
         new AnonymousUseFormHandler(controller.view, source) {
             @Override
-            protected void afterPostForm(AuthenticationResponse response) {
+            protected void afterPostForm(@NotNull AuthenticationResponse response) {
                 source.successPost();
                 controller.twc.focusOnHelpRequestList();
                 TrackingService.trace(Events.registrationSignUpSucceeded("anonymous"));

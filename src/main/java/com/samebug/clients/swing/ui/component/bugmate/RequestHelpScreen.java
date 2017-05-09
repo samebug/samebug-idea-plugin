@@ -22,6 +22,7 @@ import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
@@ -63,8 +64,8 @@ public final class RequestHelpScreen extends JComponent {
         });
     }
 
-    public void setFormErrors(IAskForHelp.BadRequest errors) {
-//        if (CreateHelpRequest.CONTEXT.equals(f.key)) writeRequestArea.setFormError(f.code);
+    public void setFormErrors(@NotNull final IAskForHelp.BadRequest errors) {
+        if (errors.context != null) writeRequestArea.setFormError(errors.context);
         revalidate();
         repaint();
 

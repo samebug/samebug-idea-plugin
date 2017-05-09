@@ -27,6 +27,7 @@ import com.samebug.clients.swing.ui.component.community.writeTip.WriteTipArea;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
 import com.samebug.clients.swing.ui.modules.*;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -66,9 +67,11 @@ public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRe
     }
 
     @Override
-    public void failPostTipWithFormError(BadRequest errors) {
+    public void failPostTipWithFormError(@Nullable final BadRequest errors) {
         actions.sendButton.revertFromLoadingAnimation();
-//        if (CreateTip.BODY.equals(f.key)) writeTipArea.setFormError(f.code);
+        if (errors != null) {
+            if (errors.tipBody != null) writeTipArea.setFormError(errors.tipBody);
+        }
         revalidate();
         repaint();
 

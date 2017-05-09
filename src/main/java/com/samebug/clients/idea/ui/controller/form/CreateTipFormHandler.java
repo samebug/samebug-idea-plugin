@@ -51,6 +51,7 @@ public abstract class CreateTipFormHandler extends PostFormHandler<SearchHit<Sam
         form.startPostTip();
     }
 
+    @NotNull
     @Override
     protected SearchHit<SamebugTip> postForm() throws SamebugClientException, TipCreate.BadRequest {
         final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
@@ -58,7 +59,7 @@ public abstract class CreateTipFormHandler extends PostFormHandler<SearchHit<Sam
     }
 
     @Override
-    protected void handleBadRequest(TipCreate.BadRequest fieldErrors) {
+    protected void handleBadRequest(@NotNull final TipCreate.BadRequest fieldErrors) {
         IHelpOthersCTA.BadRequest.TipBody tipBody = null;
         for (TipCreate.ErrorCode errorCode : fieldErrors.errorList.getErrorCodes()) {
             switch (errorCode) {
@@ -82,7 +83,7 @@ public abstract class CreateTipFormHandler extends PostFormHandler<SearchHit<Sam
     }
 
     @Override
-    protected void handleOtherClientExceptions(SamebugClientException exception) {
+    protected void handleOtherClientExceptions(@NotNull SamebugClientException exception) {
         frame.popupError(MessageService.message("samebug.component.tip.write.error.unhandled"));
         form.failPostTipWithFormError(null);
     }

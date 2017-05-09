@@ -24,6 +24,7 @@ import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.LogIn;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class LogInFormHandler extends PostFormHandler<AuthenticationResponse, LogIn.BadRequest> {
     private static final Logger LOGGER = Logger.getInstance(LogInFormHandler.class);
@@ -42,6 +43,7 @@ public abstract class LogInFormHandler extends PostFormHandler<AuthenticationRes
         form.startPost();
     }
 
+    @NotNull
     @Override
     protected AuthenticationResponse postForm() throws SamebugClientException, LogIn.BadRequest {
         final AuthenticationService authenticationService = IdeaSamebugPlugin.getInstance().authenticationService;
@@ -49,7 +51,7 @@ public abstract class LogInFormHandler extends PostFormHandler<AuthenticationRes
     }
 
     @Override
-    protected void handleBadRequest(LogIn.BadRequest fieldErrors) {
+    protected void handleBadRequest(@NotNull LogIn.BadRequest fieldErrors) {
         ILogInForm.BadRequest.Email email = null;
         ILogInForm.BadRequest.Password password = null;
         for (LogIn.ErrorCode errorCode : fieldErrors.errorList.getErrorCodes()) {
@@ -67,7 +69,7 @@ public abstract class LogInFormHandler extends PostFormHandler<AuthenticationRes
     }
 
     @Override
-    protected void handleOtherClientExceptions(SamebugClientException exception) {
+    protected void handleOtherClientExceptions(@NotNull SamebugClientException exception) {
         LOGGER.warn("Unhandled samebug client exception", exception);
         frame.popupError(MessageService.message("samebug.component.authentication.logIn.error.unhandled"));
         form.failPost(null);

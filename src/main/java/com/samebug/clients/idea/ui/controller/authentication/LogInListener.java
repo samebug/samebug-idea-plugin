@@ -24,6 +24,7 @@ import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.form.LogInFormHandler;
 import com.samebug.clients.idea.ui.modules.BrowserUtil;
 import com.samebug.clients.swing.ui.modules.TrackingService;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.URI;
 
@@ -38,7 +39,7 @@ public final class LogInListener implements ILogInForm.Listener {
     public void logIn(final ILogInForm source, String email, String password) {
         new LogInFormHandler(controller.view, source, new LogIn.Data(email, password)) {
             @Override
-            protected void afterPostForm(AuthenticationResponse response) {
+            protected void afterPostForm(@NotNull AuthenticationResponse response) {
                 source.successPost();
                 controller.twc.focusOnHelpRequestList();
                 TrackingService.trace(Events.registrationLogInSucceeded());

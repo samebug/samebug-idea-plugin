@@ -18,6 +18,7 @@ package com.samebug.clients.swing.ui.component.bugmate;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -40,9 +41,9 @@ public final class RequestHelp extends JComponent implements IAskForHelp {
     }
 
     @Override
-    public void failRequestTip(BadRequest errors) {
+    public void failRequestTip(@Nullable final BadRequest errors) {
         if (tipScreen != null) {
-            tipScreen.setFormErrors(errors);
+            if (errors != null) tipScreen.setFormErrors(errors);
             tipScreen.sendButton.revertFromLoadingAnimation();
         }
     }

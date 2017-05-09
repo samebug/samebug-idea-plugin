@@ -46,6 +46,7 @@ public abstract class CreateHelpRequestFormHandler extends PostFormHandler<HelpR
         form.startRequestTip();
     }
 
+    @NotNull
     @Override
     protected HelpRequest postForm() throws SamebugClientException, HelpRequestCreate.BadRequest {
         final HelpRequestService helpRequestService = IdeaSamebugPlugin.getInstance().helpRequestService;
@@ -53,7 +54,7 @@ public abstract class CreateHelpRequestFormHandler extends PostFormHandler<HelpR
     }
 
     @Override
-    protected void handleBadRequest(HelpRequestCreate.BadRequest fieldErrors) {
+    protected void handleBadRequest(@NotNull HelpRequestCreate.BadRequest fieldErrors) {
         IAskForHelp.BadRequest.Context context = null;
         for (HelpRequestCreate.ErrorCode errorCode : fieldErrors.errorList.getErrorCodes()) {
             switch (errorCode) {
@@ -74,7 +75,7 @@ public abstract class CreateHelpRequestFormHandler extends PostFormHandler<HelpR
     }
 
     @Override
-    protected void handleOtherClientExceptions(SamebugClientException exception) {
+    protected void handleOtherClientExceptions(@NotNull SamebugClientException exception) {
         frame.popupError(MessageService.message("samebug.component.helpRequest.ask.error.unhandled"));
         form.failRequestTip(null);
     }

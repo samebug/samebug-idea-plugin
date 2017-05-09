@@ -109,7 +109,7 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
         // TODO every controllers should also make sure to set the loading screen when starting to load content
         view.setLoading();
 
-        final int accessibleSearchId = helpRequestMatch.getHelpRequest().getSearchId();
+        final int accessibleSearchId = helpRequestMatch.getMatchingGroup().getLastSearchId();
         final Future<Me> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
         final Future<IncomingHelpRequestList> incomingHelpRequestsTask = concurrencyService.incomingHelpRequests(false);

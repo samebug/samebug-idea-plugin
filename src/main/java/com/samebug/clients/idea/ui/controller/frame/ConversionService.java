@@ -129,7 +129,7 @@ public final class ConversionService {
             bugmateHits.add(model);
         }
         String exceptionTitle = headLine(search);
-        IBugmateList.Model bugmateList = new IBugmateList.Model(bugmateHits, bugmates.getMeta().getTotal());
+        IBugmateList.Model bugmateList = new IBugmateList.Model(bugmateHits, bugmates.getMeta().getTotal() - bugmateHits.size());
         IAskForHelp.Model askForHelp = new IAskForHelp.Model(bugmates.getMeta().getTotal(), exceptionTitle);
         IMyHelpRequest.Model myHelpRequest = (helpRequest != null) ? new IMyHelpRequest.Model(helpRequest.getId(), helpRequest.getCreatedAt(), helpRequest.getContext()) : null;
         return new ITipResultsTab.Model(tipHits, bugmateList, askForHelp, myHelpRequest);

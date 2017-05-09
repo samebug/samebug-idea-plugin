@@ -37,7 +37,7 @@ final class MarkButtonListener implements IMarkButton.Listener {
 
             new CreateMarkFormHandler(controller.view, markButton, new NewMark(solutionId), controller.searchId) {
                 @Override
-                protected void afterPostForm(Mark response) {
+                protected void afterPostForm(@NotNull Mark response) {
                     final IMarkButton.Model oldModel = markButton.getModel();
                     final IMarkButton.Model newModel = new IMarkButton.Model(oldModel.marks + 1, response.getId(), oldModel.userCanMark);
                     markButton.update(newModel);
@@ -46,7 +46,7 @@ final class MarkButtonListener implements IMarkButton.Listener {
         } else {
             new CancelMarkFormHandler(controller.view, markButton, markId) {
                 @Override
-                protected void afterPostForm(Mark response) {
+                protected void afterPostForm(@NotNull Mark response) {
                     final IMarkButton.Model oldModel = markButton.getModel();
                     final IMarkButton.Model newModel = new IMarkButton.Model(oldModel.marks - 1, null, oldModel.userCanMark);
                     markButton.update(newModel);

@@ -19,6 +19,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.samebug.clients.http.exceptions.FormException;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.HelpRequestCreate;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class PostFormHandler<T, E extends FormException> {
     public final void execute() {
@@ -64,25 +65,26 @@ public abstract class PostFormHandler<T, E extends FormException> {
     /**
      * Runs on background thread
      */
+    @NotNull
     protected abstract T postForm() throws E, SamebugClientException, HelpRequestCreate.BadRequest;
 
     /**
      * Runs on UI thread
      * This is a place where you can update the form UI for a successful request.
      */
-    protected abstract void afterPostForm(T response);
+    protected abstract void afterPostForm(@NotNull T response);
 
     /**
      * Runs on UI thread.
      * Guaranteed to be called if there was any error (if there were no field errors, the list will be empty).
      * This is a place where you can update the form UI for a failed request.
      */
-    protected abstract void handleBadRequest(E fieldErrors);
+    protected abstract void handleBadRequest(@NotNull E fieldErrors);
 
     /**
      * Runs on UI thread.
      * Guaranteed to be called if there was any error (if there were no field errors, the list will be empty).
      * This is a place where you can update the form UI for a failed request.
      */
-    protected abstract void handleOtherClientExceptions(SamebugClientException exception);
+    protected abstract void handleOtherClientExceptions(@NotNull SamebugClientException exception);
 }

@@ -50,6 +50,7 @@ public abstract class CreateMarkFormHandler extends PostFormHandler<Mark, MarkCr
         button.setLoading();
     }
 
+    @NotNull
     @Override
     protected Mark postForm() throws SamebugClientException, MarkCreate.BadRequest {
         final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
@@ -57,7 +58,7 @@ public abstract class CreateMarkFormHandler extends PostFormHandler<Mark, MarkCr
     }
 
     @Override
-    protected void handleBadRequest(MarkCreate.BadRequest fieldErrors) {
+    protected void handleBadRequest(@NotNull MarkCreate.BadRequest fieldErrors) {
         for (MarkCreate.ErrorCode errorCode : fieldErrors.errorList.getErrorCodes()) {
             LOGGER.warn("Unhandled error code " + errorCode);
         }
@@ -66,7 +67,7 @@ public abstract class CreateMarkFormHandler extends PostFormHandler<Mark, MarkCr
     }
 
     @Override
-    protected void handleOtherClientExceptions(SamebugClientException exception) {
+    protected void handleOtherClientExceptions(@NotNull SamebugClientException exception) {
         frame.popupError(MessageService.message("samebug.component.mark.create.error.unhandled"));
         button.interruptLoading();
     }

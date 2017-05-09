@@ -19,6 +19,7 @@ import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.entities.helprequest.NewHelpRequest;
 import com.samebug.clients.idea.ui.controller.form.CreateHelpRequestFormHandler;
+import org.jetbrains.annotations.NotNull;
 
 final class RequestHelpListener implements IAskForHelp.Listener {
     final SolutionFrameController controller;
@@ -31,7 +32,7 @@ final class RequestHelpListener implements IAskForHelp.Listener {
     public void askBugmates(final IAskForHelp source, final String description) {
         new CreateHelpRequestFormHandler(controller.view, source, new NewHelpRequest(description), controller.searchId) {
             @Override
-            protected void afterPostForm(HelpRequest response) {
+            protected void afterPostForm(@NotNull HelpRequest response) {
                 controller.load();
             }
         }.execute();

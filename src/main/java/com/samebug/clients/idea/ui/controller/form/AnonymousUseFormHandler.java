@@ -23,6 +23,7 @@ import com.samebug.clients.http.exceptions.FormException;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class AnonymousUseFormHandler extends PostFormHandler<AuthenticationResponse, FormException> {
     final IFrame frame;
@@ -38,6 +39,7 @@ public abstract class AnonymousUseFormHandler extends PostFormHandler<Authentica
         form.startPost();
     }
 
+    @NotNull
     @Override
     protected AuthenticationResponse postForm() throws SamebugClientException {
         final AuthenticationService authenticationService = IdeaSamebugPlugin.getInstance().authenticationService;
@@ -45,12 +47,12 @@ public abstract class AnonymousUseFormHandler extends PostFormHandler<Authentica
     }
 
     @Override
-    protected void handleBadRequest(FormException fieldErrors) {
+    protected void handleBadRequest(@NotNull FormException fieldErrors) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    protected void handleOtherClientExceptions(SamebugClientException exception) {
+    protected void handleOtherClientExceptions(@NotNull SamebugClientException exception) {
         frame.popupError(MessageService.message("samebug.component.authentication.anonymousUse.error.unhandled"));
     }
 }

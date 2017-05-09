@@ -22,6 +22,7 @@ import com.samebug.clients.swing.ui.modules.MessageService;
 import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
@@ -55,10 +56,10 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
     }
 
     @Override
-    public void failPostTipWithFormError(BadRequest errors) {
+    public void failPostTipWithFormError(@Nullable final BadRequest errors) {
         if (tipScreen != null) {
             tipScreen.actionRow.sendButton.revertFromLoadingAnimation();
-            tipScreen.setFormErrors(errors);
+            if (errors != null) tipScreen.setFormErrors(errors);
         }
     }
 

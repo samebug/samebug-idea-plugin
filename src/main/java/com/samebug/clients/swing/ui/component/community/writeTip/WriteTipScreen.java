@@ -27,6 +27,7 @@ import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -52,7 +53,7 @@ public class WriteTipScreen extends RoundedBackgroundPanel {
         add(actionRow, "cell 0 2");
     }
 
-    public void setFormErrors(IHelpOthersCTA.BadRequest errors) {
+    public void setFormErrors(@NotNull final IHelpOthersCTA.BadRequest errors) {
         if (errors.tipBody != null) tipArea.setFormError(errors.tipBody);
         revalidate();
         repaint();

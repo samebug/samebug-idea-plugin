@@ -44,6 +44,7 @@ public abstract class CancelMarkFormHandler extends PostFormHandler<Mark, MarkCa
         button.setLoading();
     }
 
+    @NotNull
     @Override
     protected Mark postForm() throws SamebugClientException, MarkCancel.BadRequest {
         final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
@@ -51,13 +52,13 @@ public abstract class CancelMarkFormHandler extends PostFormHandler<Mark, MarkCa
     }
 
     @Override
-    protected void handleBadRequest(MarkCancel.BadRequest fieldErrors) {
+    protected void handleBadRequest(@NotNull MarkCancel.BadRequest fieldErrors) {
         frame.popupError(MessageService.message("samebug.component.mark.cancel.error.unhandled"));
         button.interruptLoading();
     }
 
     @Override
-    protected void handleOtherClientExceptions(SamebugClientException exception) {
+    protected void handleOtherClientExceptions(@NotNull SamebugClientException exception) {
         frame.popupError(MessageService.message("samebug.component.mark.cancel.error.unhandled"));
         button.interruptLoading();
     }

@@ -39,13 +39,12 @@ final class WriteTipListener implements IHelpOthersCTA.Listener {
         final HelpRequestMatch match = controller.getHelpRequestMatch();
         final HelpRequest helpRequest = match.getHelpRequest();
         final String helpRequestId = helpRequest.getId();
-        // TODO matching help request?
-//        assert helpRequest.matchingGroup.lastSearchInfo != null : "our own search is always visible";
+        final Integer accessibleSearchId = match.getMatchingGroup().getLastSearchId();
 
         NewSearchHit formData = new NewSearchHit(new NewSolution(new NewTip(tipBody, null), helpRequestId));
-        new CreateTipFormHandler(controller.view, source, formData, helpRequest.getSearchId()) {
+        new CreateTipFormHandler(controller.view, source, formData, accessibleSearchId) {
             @Override
-            protected void afterPostForm(SearchHit<SamebugTip> response) {
+            protected void afterPostForm(@NotNull SearchHit<SamebugTip> response) {
                 // TODO animation
                 controller.load();
             }

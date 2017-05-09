@@ -21,6 +21,7 @@ import com.samebug.clients.http.form.SignUp;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.form.SignUpFormHandler;
 import com.samebug.clients.swing.ui.modules.TrackingService;
+import org.jetbrains.annotations.NotNull;
 
 public final class SignUpListener implements ISignUpForm.Listener {
     final AuthenticationController controller;
@@ -33,7 +34,7 @@ public final class SignUpListener implements ISignUpForm.Listener {
     public void signUp(final ISignUpForm source, String displayName, String email, String password) {
         new SignUpFormHandler(controller.view, source, new SignUp.Data(displayName, email, password)) {
             @Override
-            protected void afterPostForm(AuthenticationResponse response) {
+            protected void afterPostForm(@NotNull AuthenticationResponse response) {
                 source.successPost();
                 controller.twc.focusOnHelpRequestList();
                 TrackingService.trace(Events.registrationSignUpSucceeded("credentials"));
