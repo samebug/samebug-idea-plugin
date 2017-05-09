@@ -71,13 +71,20 @@ public class ConfigDialogPanel {
             } catch (Exception e) {
                 throw new ConfigurationException(MessageService.message("samebug.configure.error.invalidUrl", settings.trackingRoot));
             }
+
+            // If the api key is changed, clear the userId, which is a derived data.
+            if (!equals(settings.apiKey, currentConfig.apiKey)) {
+                settings.userId = null;
+            }
+
             IdeaSamebugPlugin.getInstance().saveSettings(settings);
             currentConfig = settings;
             try {
                 // IMPROVE: this is an http call on the UI thread. It would be nice to do this in the background and show a progress indicator.
+                // We have to wait the authentication result, because this will set the previously cleared userId.
                 IdeaSamebugPlugin.getInstance().authenticationService.apiKeyAuthentication();
             } catch (UserUnauthenticated e) {
-                throw new ConfigurationException(MessageService.message("samebug.configure.error.apiKey"));
+                if (currentConfig.apiKey != null) throw new ConfigurationException(MessageService.message("samebug.configure.error.apiKey"));
             } catch (UserUnauthorized e) {
                 throw new ConfigurationException(MessageService.message("samebug.configure.error.workspace"));
             } catch (SamebugClientException ignored) {
@@ -113,5 +120,10 @@ public class ConfigDialogPanel {
         requestTimeout.setValue(settings.requestTimeout);
         apacheLogging.setSelected(settings.isApacheLoggingEnabled);
         tracking.setSelected(settings.isTrackingEnabled);
+    }
+
+    // TODO lifted java 8 Objects.equals, remove it when we use java 8
+    private static boolean equals(Object a, Object b) {
+        return (a == b) || (a != null && a.equals(b));
     }
 }

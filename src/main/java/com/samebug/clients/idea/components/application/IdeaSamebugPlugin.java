@@ -168,10 +168,6 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         ApplicationSettings newSettings = new ApplicationSettings(settings);
 
         // If authentication data (apiKey or workspace id) is changed, we have to do some cleanup
-        if (!equals(newSettings.apiKey, oldSettings.apiKey)) {
-            // clear the userId, which is a derived data.
-            newSettings.userId = null;
-        }
         if (!equals(newSettings.apiKey, oldSettings.apiKey) || !equals(newSettings.workspaceId, oldSettings.workspaceId)) {
             // clear the caches
             helpRequestStore.invalidate();
