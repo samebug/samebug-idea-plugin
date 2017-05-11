@@ -17,9 +17,10 @@ package com.samebug.clients.idea.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.project.DumbAware;
 import com.samebug.clients.idea.ui.dialog.analyze.AnalyzeDialog;
 
-public class Analyze extends AnAction {
+public class Analyze extends AnAction implements DumbAware {
     @Override
     public void actionPerformed(AnActionEvent e) {
         AnalyzeDialog dialog = new AnalyzeDialog(e.getProject());

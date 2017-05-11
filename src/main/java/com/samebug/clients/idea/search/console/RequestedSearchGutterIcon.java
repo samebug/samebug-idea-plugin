@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.search.console;
 
+import com.intellij.openapi.project.DumbAware;
 import com.samebug.clients.common.entities.search.RequestedSearch;
 import com.samebug.clients.swing.ui.modules.IconService;
 import com.samebug.clients.swing.ui.modules.MessageService;
@@ -22,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-final class RequestedSearchGutterIcon extends SearchMark {
+final class RequestedSearchGutterIcon extends SearchMark implements DumbAware {
     private final RequestedSearch search;
 
     RequestedSearchGutterIcon(RequestedSearch search) {
@@ -52,7 +53,7 @@ final class RequestedSearchGutterIcon extends SearchMark {
 
     @Override
     public boolean isNavigateAction() {
-        return true;
+        return false;
     }
 
     @Override

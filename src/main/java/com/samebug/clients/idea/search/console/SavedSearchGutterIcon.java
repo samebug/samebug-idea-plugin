@@ -17,6 +17,7 @@ package com.samebug.clients.idea.search.console;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.entities.search.SavedSearch;
 import com.samebug.clients.idea.messages.FocusListener;
@@ -28,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-final class SavedSearchGutterIcon extends SearchMark {
+final class SavedSearchGutterIcon extends SearchMark implements DumbAware {
     private final SavedSearch search;
 
     SavedSearchGutterIcon(SavedSearch search) {
@@ -69,7 +70,11 @@ final class SavedSearchGutterIcon extends SearchMark {
     @NotNull
     public String getTooltipText() {
         TrackingService.trace(Events.gutterIconHover(search.getSearchId()));
-        return MessageService.message("samebug.gutter.savedSearch.tooltip");
+        if (search.hasTip()) return MessageService.message("samebug.gutter.savedSearch.hasTip.tooltip");
+        else if (search.hasHelpRequest()) return MessageService.message("samebug.gutter.savedSearch.hasHelpRequest.tooltip");
+        else if (search.hasBugmate()) return MessageService.message("samebug.gutter.savedSearch.hasBugmates.tooltip");
+        else if (search.hasWebHit()) return MessageService.message("samebug.gutter.savedSearch.hasSolutions.tooltip");
+        return MessageService.message("samebug.gutter.savedSearch.nothing.tooltip");
     }
 
     @NotNull
