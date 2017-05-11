@@ -18,8 +18,8 @@ package com.samebug.clients.http.json;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.samebug.clients.http.entities.notification.Notification;
-import com.samebug.clients.http.entities.search.Search;
-import com.samebug.clients.http.entities.search.SearchHit;
+import com.samebug.clients.http.entities.search.HitScore;
+import com.samebug.clients.http.entities.search.QueryInfo;
 import com.samebug.clients.http.entities.solution.Document;
 import com.samebug.clients.http.entities.user.SamebugUser;
 import com.samebug.clients.http.entities.user.User;
@@ -30,11 +30,11 @@ public final class Json {
     static {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-        gsonBuilder.registerTypeAdapter(Search.class, new QueryInfoAdapter());
+        gsonBuilder.registerTypeAdapter(QueryInfo.class, new QueryInfoAdapter());
         gsonBuilder.registerTypeAdapter(User.class, new UserAdapter());
         gsonBuilder.registerTypeAdapter(SamebugUser.class, new SamebugUserAdapter());
         gsonBuilder.registerTypeAdapter(Document.class, new DocumentAdapter());
-        gsonBuilder.registerTypeAdapter(SearchHit.class, new HitScoreAdapter());
+        gsonBuilder.registerTypeAdapter(HitScore.class, new HitScoreAdapter());
         gsonBuilder.registerTypeAdapter(Notification.class, new NotificationAdapter());
         gsonBuilder.registerTypeAdapterFactory(new EnumTypeAdapterFactory());
         gson = gsonBuilder.create();

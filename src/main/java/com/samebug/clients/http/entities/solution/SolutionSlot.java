@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 
-public abstract class SolutionSlot<D extends Document> {
+public final class SolutionSlot<D extends Document> {
     private Integer id;
     private Date createdAt;
     private Date modified;
@@ -33,7 +33,7 @@ public abstract class SolutionSlot<D extends Document> {
     private String responseToHelpRequestId;
 
     @NotNull
-    public final Integer getId() {
+    public Integer getId() {
         return id;
     }
 

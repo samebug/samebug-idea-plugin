@@ -215,7 +215,7 @@ public final class ConversionService {
     }
 
     public static String headLine(HelpRequestMatch helpRequestMatch) {
-        QueryInfo searchInfo = helpRequestMatch.getMatchingGroup().getLastSeachInfo();
+        QueryInfo searchInfo = helpRequestMatch.getMatchingGroup().getLastSearchInfo();
         assert searchInfo != null : "User should always see his own group's query info";
         return headLine(searchInfo);
     }

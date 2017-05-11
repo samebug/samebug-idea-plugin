@@ -26,7 +26,7 @@ public final class SearchGroup {
     private Date firstSeen;
     private Date lastSeen;
     private Integer numberOfSearches;
-    private QueryInfo lastSeachInfo;
+    private QueryInfo lastSearchInfo;
     private Integer lastSearchId;
     private String helpRequestId;
 
@@ -51,8 +51,8 @@ public final class SearchGroup {
     }
 
     @Nullable
-    public QueryInfo getLastSeachInfo() {
-        return lastSeachInfo;
+    public QueryInfo getLastSearchInfo() {
+        return lastSearchInfo;
     }
 
     @Nullable

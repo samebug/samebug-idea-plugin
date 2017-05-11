@@ -36,7 +36,7 @@ public class SearchTest extends TestWithSamebugClient {
         final TotalItems meta = solutions.getMeta();
         final SolutionSlot<ExternalDocument> s = solutions.getData().get(0).getSolution();
         assertThat(meta.getTotal(), equalTo(1));
-        assertThat(s, instanceOf(ReadableSolution.class));
+        assertThat(s.getStackTraceInfo(), notNullValue());
         assertThat(s.getId(), equalTo(88424));
     }
 
@@ -46,9 +46,9 @@ public class SearchTest extends TestWithSamebugClient {
         final TotalItems meta = tips.getMeta();
         final SolutionSlot<SamebugTip> s = tips.getData().get(0).getSolution();
         assertThat(meta.getTotal(), equalTo(1));
-        assertThat(s, instanceOf(SearchableSolution.class));
         assertThat(s.getId(), equalTo(301986));
         assertThat(s.getDocument().getMessage(), equalTo("Hello, I hope this helps"));
+        assertThat(s.getStackTraceInfo(), nullValue());
     }
 
 
@@ -59,7 +59,7 @@ public class SearchTest extends TestWithSamebugClient {
 
         BugmateMatch poroszdMatch = r.getData().get(0);
         SearchGroup poroszdGroup = poroszdMatch.getMatchingGroup();
-        QueryInfo q = poroszdGroup.getLastSeachInfo();
+        QueryInfo q = poroszdGroup.getLastSearchInfo();
         assertThat(poroszdMatch.getBugmate(), instanceOf(RegisteredSamebugUser.class));
         assertThat(poroszdMatch.getBugmate().getDisplayName(), equalTo("poroszd"));
         assertThat(q, notNullValue());
@@ -72,6 +72,7 @@ public class SearchTest extends TestWithSamebugClient {
         BugmateMatch rpMatch = r.getData().get(1);
         assertThat(rpMatch.getBugmate(), instanceOf(RegisteredSamebugUser.class));
         assertThat(rpMatch.getBugmate().getDisplayName(), equalTo("rp"));
-        assertThat(rpMatch.getMatchingGroup().getLastSeachInfo(), instanceOf(StackTraceInfo.class));
+        assertThat(rpMatch.getMatchingGroup().getNumberOfSearches(), equalTo(1));
+        assertThat(rpMatch.getMatchingGroup().getLastSearchInfo(), nullValue());
     }
 }
