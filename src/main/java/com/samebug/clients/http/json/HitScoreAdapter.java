@@ -16,17 +16,15 @@
 package com.samebug.clients.http.json;
 
 import com.google.common.collect.ImmutableMap;
-import com.samebug.clients.http.entities.search.NonAccessibleSearch;
-import com.samebug.clients.http.entities.search.Search;
-import com.samebug.clients.http.entities.search.StackTraceSearch;
-import com.samebug.clients.http.entities.search.TextSearch;
+import com.samebug.clients.http.entities.search.HitScore;
+import com.samebug.clients.http.entities.search.StackTraceSearchHitScore;
+import com.samebug.clients.http.entities.search.TextSearchHitScore;
 
-public class SearchAdapter extends AbstractObjectAdapter<Search> {
+public class HitScoreAdapter extends AbstractObjectAdapter<HitScore> {
     {
-        typeClasses = ImmutableMap.<String, Class<? extends Search>>builder()
-                .put("stack-trace-search", StackTraceSearch.class)
-                .put("text-search", TextSearch.class)
-                .put("non-accessible-search", NonAccessibleSearch.class)
+        typeClasses = ImmutableMap.<String, Class<? extends HitScore>>builder()
+                .put("hit-score--text-search", TextSearchHitScore.class)
+                .put("hit-score--stack-trace-search", StackTraceSearchHitScore.class)
                 .build();
     }
 }

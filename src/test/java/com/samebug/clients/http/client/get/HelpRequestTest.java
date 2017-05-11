@@ -3,8 +3,7 @@ package com.samebug.clients.http.client.get;
 import com.samebug.clients.http.client.TestWithSamebugClient;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
-import com.samebug.clients.http.entities.search.ReadableSearchGroup;
-import com.samebug.clients.http.entities.search.SearchableSearchGroup;
+import com.samebug.clients.http.entities.search.StackTraceInfo;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -22,14 +21,14 @@ public class HelpRequestTest extends TestWithSamebugClient {
     public void getMyHelpRequest() throws Exception {
         final HelpRequest helpRequest = authenticatedClient.getHelpRequest("58fb434e4f679231ebde3b5c");
         assertThat(helpRequest.getRequester().getDisplayName(), equalTo("testuser"));
-        assertThat(helpRequest.getSearchGroup(), instanceOf(ReadableSearchGroup.class));
-        assertThat(((ReadableSearchGroup) helpRequest.getSearchGroup()).getLastSearchId(), equalTo(5645));
+        assertThat(helpRequest.getSearchGroup().getLastSearchId(), equalTo(5645));
+        assertThat(helpRequest.getSearchGroup().getLastSeachInfo(), instanceOf(StackTraceInfo.class));
     }
 
     @Test
     public void getOthersHelpRequest() throws Exception {
         final HelpRequest helpRequest = authenticatedClient.getHelpRequest("58fb403d4f679231ebde3b55");
         assertThat(helpRequest.getRequester().getDisplayName(), equalTo("rp"));
-        assertThat(helpRequest.getSearchGroup(), instanceOf(SearchableSearchGroup.class));
+        assertThat(helpRequest.getSearchGroup().getLastSeachInfo(), instanceOf(StackTraceInfo.class));
     }
 }

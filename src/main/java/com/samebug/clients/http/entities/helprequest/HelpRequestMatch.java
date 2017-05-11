@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.http.entities.helprequest;
 
-import com.samebug.clients.http.entities.search.ReadableSearchGroup;
+import com.samebug.clients.http.entities.search.SearchGroup;
 import com.samebug.clients.http.entities.user.SamebugUser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +26,7 @@ public final class HelpRequestMatch {
     private HelpRequest helpRequest;
     private SamebugUser bugmate;
     private Integer workspaceId;
-    private ReadableSearchGroup matchingGroup;
+    private SearchGroup matchingGroup;
     private Date viewedAt;
 
     @NotNull
@@ -45,7 +45,7 @@ public final class HelpRequestMatch {
     }
 
     @NotNull
-    public ReadableSearchGroup getMatchingGroup() {
+    public SearchGroup getMatchingGroup() {
         return matchingGroup;
     }
 

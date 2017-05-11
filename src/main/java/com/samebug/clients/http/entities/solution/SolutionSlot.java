@@ -15,18 +15,36 @@
  */
 package com.samebug.clients.http.entities.solution;
 
+import com.samebug.clients.http.entities.search.StackTraceInfo;
+import com.samebug.clients.http.entities.user.RegisteredSamebugUser;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 
 public abstract class SolutionSlot<D extends Document> {
     private Integer id;
     private Date createdAt;
+    private Date modified;
     private D document;
+    private RegisteredSamebugUser createdBy;
+    private Integer workspaceId;
+    private StackTraceInfo stackTraceInfo;
+    private String responseToHelpRequestId;
+
+    @NotNull
+    public final Integer getId() {
+        return id;
+    }
 
     @NotNull
     public Date getCreatedAt() {
         return createdAt;
+    }
+
+    @NotNull
+    public Date getModified() {
+        return modified;
     }
 
     @NotNull
@@ -35,7 +53,22 @@ public abstract class SolutionSlot<D extends Document> {
     }
 
     @NotNull
-    public final Integer getId() {
-        return id;
+    public RegisteredSamebugUser getCreatedBy() {
+        return createdBy;
+    }
+
+    @Nullable
+    public Integer getWorkspaceId() {
+        return workspaceId;
+    }
+
+    @Nullable
+    public StackTraceInfo getStackTraceInfo() {
+        return stackTraceInfo;
+    }
+
+    @Nullable
+    public String getResponseToHelpRequestId() {
+        return responseToHelpRequestId;
     }
 }

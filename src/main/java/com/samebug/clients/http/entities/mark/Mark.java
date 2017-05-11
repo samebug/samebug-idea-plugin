@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 
-public abstract class Mark {
+public final class Mark {
     private Integer id;
     private SamebugUser markedBy;
     private Integer workspaceId;
@@ -30,32 +30,32 @@ public abstract class Mark {
     private Integer solutionId;
 
     @NotNull
-    public final Integer getId() {
+    public Integer getId() {
         return id;
     }
 
     @NotNull
-    public final SamebugUser getMarkedBy() {
+    public SamebugUser getMarkedBy() {
         return markedBy;
     }
 
     @Nullable
-    public final Integer getWorkspaceId() {
+    public Integer getWorkspaceId() {
         return workspaceId;
     }
 
     @NotNull
-    public final Date getTimestamp() {
+    public Date getTimestamp() {
         return timestamp;
     }
 
     @Nullable
-    public final Date getCancelTimestamp() {
+    public Date getCancelTimestamp() {
         return cancelTimestamp;
     }
 
     @NotNull
-    public final Integer getSolutionId() {
+    public Integer getSolutionId() {
         return solutionId;
     }
 }

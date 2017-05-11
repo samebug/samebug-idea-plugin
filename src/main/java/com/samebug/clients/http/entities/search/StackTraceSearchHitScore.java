@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.mark;
+package com.samebug.clients.http.entities.search;
 
-import com.samebug.clients.http.entities.missing.QualifiedCall;
 import org.jetbrains.annotations.NotNull;
 
-public final class CrashDochMark extends Mark {
-    private QualifiedCall crashedAt;
+public final class StackTraceSearchHitScore extends HitScore {
+    private Integer level;
 
     @NotNull
-    public QualifiedCall getCrashedAt() {
-        return crashedAt;
+    public Integer getLevel() {
+        return level;
     }
 }

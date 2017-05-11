@@ -17,7 +17,7 @@ package com.samebug.clients.http.entities.search;
 
 import org.jetbrains.annotations.NotNull;
 
-public final class TextSearchHit extends SearchHit {
+public final class TextSearchHitScore extends HitScore {
     private Double score;
 
     @NotNull

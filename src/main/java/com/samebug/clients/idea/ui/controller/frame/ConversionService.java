@@ -96,7 +96,7 @@ public final class ConversionService {
         return new IWebResultsTab.Model(webHits);
     }
 
-    public ITipResultsTab.Model tipResultsTab(StackTraceSearch search, List<SearchHit<SamebugTip>> solutions, BugmateList bugmates, HelpRequest helpRequest, boolean disabled) {
+    public ITipResultsTab.Model tipResultsTab(Search search, List<SearchHit<SamebugTip>> solutions, BugmateList bugmates, HelpRequest helpRequest, boolean disabled) {
         final List<ITipHit.Model> tipHits = new ArrayList<ITipHit.Model>(solutions.size());
         for (SearchHit<SamebugTip> tipSolution : solutions) {
             ITipHit.Model tipHit = tipHit(tipSolution, disabled);
@@ -106,15 +106,8 @@ public final class ConversionService {
         for (BugmateMatch b : bugmates.getData()) {
             SamebugUser mate = b.getBugmate();
             final SearchGroup g = b.getMatchingGroup();
-            final Integer nMateHasSeenThisSearch;
-            final Date lastTimeMateHasSeenThisSearch;
-            if (g instanceof ReadableSearchGroup) {
-                nMateHasSeenThisSearch = ((ReadableSearchGroup) g).getNumberOfSearches();
-                lastTimeMateHasSeenThisSearch = ((ReadableSearchGroup) g).getLastSeen();
-            } else if (g instanceof SearchableSearchGroup) {
-                nMateHasSeenThisSearch = ((SearchableSearchGroup) g).getNumberOfSearches();
-                lastTimeMateHasSeenThisSearch = ((SearchableSearchGroup) g).getLastSeen();
-            } else throw new IllegalArgumentException();
+            final Integer nMateHasSeenThisSearch = g.getNumberOfSearches();
+            final Date lastTimeMateHasSeenThisSearch = g.getLastSeen();
             ConnectionStatus status;
             if (b.getBugmate() instanceof RegisteredSamebugUser) {
                 final RegisteredSamebugUser bugmate = (RegisteredSamebugUser) b.getBugmate();
@@ -127,7 +120,7 @@ public final class ConversionService {
             IBugmateHit.Model model = new IBugmateHit.Model(mate.getDisplayName(), mate.getAvatarUrl(), nMateHasSeenThisSearch, lastTimeMateHasSeenThisSearch, status);
             bugmateHits.add(model);
         }
-        String exceptionTitle = headLine(search);
+        String exceptionTitle = headLine(search.getQueryInfo());
         IBugmateList.Model bugmateList = new IBugmateList.Model(bugmateHits, bugmates.getMeta().getTotal() - bugmateHits.size());
         IAskForHelp.Model askForHelp = new IAskForHelp.Model(bugmates.getMeta().getTotal(), exceptionTitle);
         IMyHelpRequest.Model myHelpRequest = (helpRequest != null) ? new IMyHelpRequest.Model(helpRequest.getId(), helpRequest.getCreatedAt(), helpRequest.getContext()) : null;
@@ -140,13 +133,13 @@ public final class ConversionService {
                 user.getDisplayName(), user.getAvatarUrl(), status);
     }
 
-    public ISolutionFrame.Model solutionFrame(StackTraceSearch search, List<SearchHit<SamebugTip>> tipHits, List<SearchHit<ExternalDocument>> webHits,
+    public ISolutionFrame.Model solutionFrame(Search search, List<SearchHit<SamebugTip>> tipHits, List<SearchHit<ExternalDocument>> webHits,
                                               BugmateList bugmates, HelpRequest helpRequest, IncomingHelpRequestList incomingRequests, Me user, UserStats statistics) {
         IWebResultsTab.Model webResults = webResultsTab(webHits, false);
         ITipResultsTab.Model tipResults = tipResultsTab(search, tipHits, bugmates, helpRequest, false);
 
         IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(bugmates.getMeta().getTotal());
-        String exceptionTitle = headLine(search);
+        String exceptionTitle = headLine(search.getQueryInfo());
         IResultTabs.Model resultTabs = new IResultTabs.Model(webResults, tipResults, cta);
         ISearchHeaderPanel.Model header = new ISearchHeaderPanel.Model(exceptionTitle);
         IProfilePanel.Model profile = profilePanel(incomingRequests, user, statistics);
@@ -212,17 +205,19 @@ public final class ConversionService {
         return new IIncomingTipPopup.Model(tip.getMessage(), author.getDisplayName(), author.getAvatarUrl());
     }
 
-    public static String headLine(StackTraceSearch search) {
-        // TODO make sure the search is readable
-        return headLine(search.getExceptionType(), search.getExceptionMessage());
+    public static String headLine(QueryInfo search) {
+        if (search instanceof StackTraceInfo) {
+            StackTraceInfo i = (StackTraceInfo) search;
+            return headLine(i.getExceptionType(), i.getExceptionMessage());
+        } else {
+            throw new IllegalArgumentException(search + " is not stack trace");
+        }
     }
 
     public static String headLine(HelpRequestMatch helpRequestMatch) {
-        ReadableSearchGroup readableSearchGroup;
-        SearchGroup requestGroup = helpRequestMatch.getHelpRequest().getSearchGroup();
-        if (requestGroup instanceof ReadableSearchGroup) readableSearchGroup = (ReadableSearchGroup) requestGroup;
-        else readableSearchGroup = helpRequestMatch.getMatchingGroup();
-        return headLine(readableSearchGroup.getExceptionType(), readableSearchGroup.getExceptionMessage());
+        QueryInfo searchInfo = helpRequestMatch.getMatchingGroup().getLastSeachInfo();
+        assert searchInfo != null : "User should always see his own group's query info";
+        return headLine(searchInfo);
     }
 
     public static String headLine(@NotNull String typeName, @Nullable String message) {

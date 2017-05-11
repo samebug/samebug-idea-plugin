@@ -6,26 +6,27 @@ import com.samebug.clients.http.entities.jsonapi.BugmateList;
 import com.samebug.clients.http.entities.jsonapi.SolutionList;
 import com.samebug.clients.http.entities.jsonapi.TipList;
 import com.samebug.clients.http.entities.jsonapi.TotalItems;
-import com.samebug.clients.http.entities.search.ReadableSearchGroup;
+import com.samebug.clients.http.entities.search.QueryInfo;
 import com.samebug.clients.http.entities.search.Search;
-import com.samebug.clients.http.entities.search.SearchableSearchGroup;
-import com.samebug.clients.http.entities.search.StackTraceSearch;
+import com.samebug.clients.http.entities.search.SearchGroup;
+import com.samebug.clients.http.entities.search.StackTraceInfo;
 import com.samebug.clients.http.entities.solution.*;
 import com.samebug.clients.http.entities.user.RegisteredSamebugUser;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class SearchTest extends TestWithSamebugClient {
     @Test
     public void getSearch() throws Exception {
         Search search = authenticatedClient.getSearch(5641);
-        assertThat(search, instanceOf(StackTraceSearch.class));
-        StackTraceSearch s = (StackTraceSearch) search;
-        assertThat(s.getUser().getDisplayName(), equalTo("testuser"));
+        QueryInfo q = search.getQueryInfo();
+        assertThat(q, instanceOf(StackTraceInfo.class));
+        StackTraceInfo s = (StackTraceInfo) q;
+        assertThat(search.getUser().getDisplayName(), equalTo("testuser"));
+        assertThat(s.getExceptionType(), equalTo("java.net.ConnectException"));
     }
 
 
@@ -57,15 +58,20 @@ public class SearchTest extends TestWithSamebugClient {
         Assert.assertEquals(2, r.getMeta().getTotal().intValue());
 
         BugmateMatch poroszdMatch = r.getData().get(0);
+        SearchGroup poroszdGroup = poroszdMatch.getMatchingGroup();
+        QueryInfo q = poroszdGroup.getLastSeachInfo();
         assertThat(poroszdMatch.getBugmate(), instanceOf(RegisteredSamebugUser.class));
         assertThat(poroszdMatch.getBugmate().getDisplayName(), equalTo("poroszd"));
-        assertThat(poroszdMatch.getMatchingGroup(), instanceOf(ReadableSearchGroup.class));
-        assertThat(((ReadableSearchGroup) poroszdMatch.getMatchingGroup()).getLastSearchId(), equalTo(5644));
-        assertThat(((ReadableSearchGroup) poroszdMatch.getMatchingGroup()).getHelpRequestId(), equalTo("58fb40604f679231ebde3b58"));
+        assertThat(q, notNullValue());
+        assertThat(q, instanceOf(StackTraceInfo.class));
+        StackTraceInfo s = (StackTraceInfo) q;
+        assertThat(s.getExceptionType(), equalTo("java.net.ConnectException"));
+        assertThat(poroszdGroup.getLastSearchId(), equalTo(5644));
+        assertThat(poroszdGroup.getHelpRequestId(), equalTo("58fb40604f679231ebde3b58"));
 
         BugmateMatch rpMatch = r.getData().get(1);
         assertThat(rpMatch.getBugmate(), instanceOf(RegisteredSamebugUser.class));
         assertThat(rpMatch.getBugmate().getDisplayName(), equalTo("rp"));
-        assertThat(rpMatch.getMatchingGroup(), instanceOf(SearchableSearchGroup.class));
+        assertThat(rpMatch.getMatchingGroup().getLastSeachInfo(), instanceOf(StackTraceInfo.class));
     }
 }
