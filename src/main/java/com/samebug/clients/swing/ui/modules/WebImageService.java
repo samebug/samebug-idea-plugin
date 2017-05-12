@@ -27,7 +27,7 @@ import java.net.URL;
 import java.util.Hashtable;
 
 public final class WebImageService {
-    private static Hashtable<URL, BufferedImage> cache = new Hashtable<URL, BufferedImage>();
+    private static Hashtable<String, BufferedImage> cache = new Hashtable<String, BufferedImage>();
     private static Hashtable<ScaledKey, BufferedImage> scaledCache = new Hashtable<ScaledKey, BufferedImage>();
     private static BufferedImage avatarPlaceholder;
     private static BufferedImage[] webSourceIcon;
@@ -72,11 +72,12 @@ public final class WebImageService {
 
     @Nullable
     public static BufferedImage getImage(@NotNull URL url) {
-        BufferedImage nonScaled = cache.get(url);
+        String urlString = url.toExternalForm();
+        BufferedImage nonScaled = cache.get(urlString);
         if (nonScaled == null) {
             try {
                 nonScaled = ImageIO.read(url);
-                cache.put(url, nonScaled);
+                if (nonScaled != null) cache.put(urlString, nonScaled);
             } catch (IOException e) {
                 // IMPROVE smoother handling of load failures.
                 // If we failed to download an image, than probably we should note this a failed-to-load url so it won't take much time to render second time.
@@ -107,12 +108,12 @@ public final class WebImageService {
     }
 
     protected static final class ScaledKey {
-        final URL src;
+        final String src;
         final int height;
         final int width;
 
         public ScaledKey(URL src, int width, int height) {
-            this.src = src;
+            this.src = src.toExternalForm();
             this.height = height;
             this.width = width;
         }
@@ -203,4 +204,6 @@ public final class WebImageService {
         } while (w != targetWidth || h != targetHeight);
         return ret;
     }
+
+    private WebImageService() {}
 }

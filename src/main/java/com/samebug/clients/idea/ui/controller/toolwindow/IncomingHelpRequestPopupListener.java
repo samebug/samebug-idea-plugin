@@ -17,11 +17,10 @@ package com.samebug.clients.idea.ui.controller.toolwindow;
 
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
-import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
-import com.samebug.clients.idea.messages.IncomingHelpRequest;
+import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.idea.notifications.IncomingHelpRequestNotification;
 
-public final class IncomingHelpRequestPopupListener implements IncomingHelpRequest {
+public final class IncomingHelpRequestPopupListener implements com.samebug.clients.idea.messages.IncomingHelpRequest {
     final ToolWindowController twc;
 
     public IncomingHelpRequestPopupListener(ToolWindowController twc) {
@@ -29,7 +28,7 @@ public final class IncomingHelpRequestPopupListener implements IncomingHelpReque
     }
 
     @Override
-    public void showHelpRequest(HelpRequest helpRequest) {
+    public void showHelpRequest(IncomingHelpRequest helpRequest) {
         IncomingHelpRequestNotification n = new IncomingHelpRequestNotification(helpRequest);
         NotificationDisplayType notificationType = NotificationsConfigurationImpl.getSettings(n.getGroupId()).getDisplayType();
         if (NotificationDisplayType.BALLOON == notificationType) {
@@ -43,7 +42,7 @@ public final class IncomingHelpRequestPopupListener implements IncomingHelpReque
     }
 
     @Override
-    public void addHelpRequest(HelpRequest helpRequest) {
+    public void addHelpRequest(IncomingHelpRequest helpRequest) {
         // nothing to do
     }
 }

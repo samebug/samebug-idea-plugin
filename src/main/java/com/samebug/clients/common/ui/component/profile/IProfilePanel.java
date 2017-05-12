@@ -15,10 +15,16 @@
  */
 package com.samebug.clients.common.ui.component.profile;
 
+import com.samebug.clients.common.ui.component.bugmate.ConnectionStatus;
+import org.jetbrains.annotations.NotNull;
+
 import java.net.URL;
 
 public interface IProfilePanel {
-    void increaseMessages();
+    @NotNull
+    Model getModel();
+
+    void setModel(@NotNull Model model);
 
     final class Model {
         public final int messages;
@@ -27,18 +33,20 @@ public interface IProfilePanel {
         public final int thanks;
         public final String name;
         public final URL avatarUrl;
+        public final ConnectionStatus status;
 
         public Model(Model rhs) {
-            this(rhs.messages, rhs.marks, rhs.tips, rhs.thanks, rhs.name, rhs.avatarUrl);
+            this(rhs.messages, rhs.marks, rhs.tips, rhs.thanks, rhs.name, rhs.avatarUrl, rhs.status);
         }
 
-        public Model(int messages, int marks, int tips, int thanks, String name, URL avatarUrl) {
+        public Model(int messages, int marks, int tips, int thanks, String name, URL avatarUrl, ConnectionStatus status) {
             this.messages = messages;
             this.marks = marks;
             this.tips = tips;
             this.thanks = thanks;
             this.name = name;
             this.avatarUrl = avatarUrl;
+            this.status = status;
         }
     }
 

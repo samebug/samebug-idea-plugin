@@ -15,26 +15,20 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
-import com.samebug.clients.common.api.form.CreateHelpRequest;
-import com.samebug.clients.common.api.form.FieldError;
-import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
-import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
-import com.samebug.clients.common.ui.component.form.IForm;
+import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
 
-public final class RequestHelpScreen extends JComponent implements IForm {
+public final class RequestHelpScreen extends JComponent {
     final WriteRequestArea writeRequestArea;
     final SamebugButton sendButton;
     final LinkLabel cancelButton;
@@ -70,28 +64,16 @@ public final class RequestHelpScreen extends JComponent implements IForm {
         });
     }
 
-    @Override
-    public void setFormErrors(List<FieldError> errors) throws FormMismatchException {
-        List<FieldError> mismatched = new ArrayList<FieldError>();
-        for (FieldError f : errors) {
-            try {
-                if (CreateHelpRequest.CONTEXT.equals(f.key)) writeRequestArea.setFormError(f.code);
-                else throw new FieldNameMismatchException(f.key);
-            } catch (ErrorCodeMismatchException e) {
-                mismatched.add(f);
-            } catch (FieldNameMismatchException e) {
-                mismatched.add(f);
-            }
-        }
-        if (!mismatched.isEmpty()) throw new FormMismatchException(mismatched);
+    public void setFormErrors(@NotNull final IAskForHelp.BadRequest errors) {
+        if (errors.context != null) writeRequestArea.setFormError(errors.context);
         revalidate();
         repaint();
 
-        TrackingService.trace(Events.helpRequestError(errors));
+//        TrackingService.trace(Events.helpRequestError(errors));
     }
 
     private final class SendButton extends SamebugButton {
-        public SendButton() {
+        SendButton() {
             super(MessageService.message("samebug.component.helpRequest.ask.send"), true);
         }
     }

@@ -15,29 +15,36 @@
  */
 package com.samebug.clients.idea.ui.controller.helpRequest;
 
-import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
-import com.samebug.clients.common.api.entities.solution.RestHit;
-import com.samebug.clients.common.api.entities.solution.Tip;
-import com.samebug.clients.common.api.form.CreateTip;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
+import com.samebug.clients.http.entities.helprequest.HelpRequest;
+import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
+import com.samebug.clients.http.entities.search.NewSearchHit;
+import com.samebug.clients.http.entities.search.SearchHit;
+import com.samebug.clients.http.entities.solution.NewSolution;
+import com.samebug.clients.http.entities.solution.NewTip;
+import com.samebug.clients.http.entities.solution.SamebugTip;
 import com.samebug.clients.idea.ui.controller.form.CreateTipFormHandler;
+import org.jetbrains.annotations.NotNull;
 
 final class WriteTipListener implements IHelpOthersCTA.Listener {
+    @NotNull
     final HelpRequestController controller;
 
-    public WriteTipListener(final HelpRequestController controller) {
+    WriteTipListener(final HelpRequestController controller) {
         this.controller = controller;
     }
 
     @Override
-    public void postTip(final IHelpOthersCTA source, final String tipBody) {
-        final MatchingHelpRequest helpRequest = controller.helpRequestStore.getHelpRequest(controller.helpRequestId);
-        assert helpRequest != null : "we just showed it, it should not be null";
-        assert helpRequest.matchingGroup.lastSearchInfo != null : "our own search is always visible";
+    public void postTip(@NotNull final IHelpOthersCTA source, @NotNull final String tipBody) {
+        final HelpRequestMatch match = controller.getHelpRequestMatch();
+        final HelpRequest helpRequest = match.getHelpRequest();
+        final String helpRequestId = helpRequest.getId();
+        final Integer accessibleSearchId = match.getMatchingGroup().getLastSearchId();
 
-        new CreateTipFormHandler(controller.view, source, new CreateTip(helpRequest.matchingGroup.lastSearchInfo.id, tipBody, null, controller.helpRequestId)) {
+        NewSearchHit formData = new NewSearchHit(new NewSolution(new NewTip(tipBody, null), helpRequestId));
+        new CreateTipFormHandler(controller.view, source, formData, accessibleSearchId) {
             @Override
-            protected void afterPostForm(RestHit<Tip> response) {
+            protected void afterPostForm(@NotNull SearchHit<SamebugTip> response) {
                 // TODO animation
                 controller.load();
             }

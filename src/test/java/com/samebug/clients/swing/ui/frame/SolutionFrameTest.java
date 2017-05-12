@@ -10,13 +10,11 @@ import com.samebug.clients.swing.ui.frame.solution.ResultTabs;
 import com.samebug.clients.swing.ui.frame.solution.SolutionFrame;
 import com.samebug.clients.swing.ui.modules.ComponentService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.*;
 import java.util.Date;
 
-@Ignore
 public class SolutionFrameTest extends TestDialog {
     @Test
     public void everythingIsEmpty() {
@@ -46,6 +44,11 @@ public class SolutionFrameTest extends TestDialog {
     @Test
     public void twoTipsAndTwentysevenWebHits() {
         waitToInitializeUI("solution/t2w27.json").showDialog();
+    }
+
+    @Test
+    public void international() {
+        waitToInitializeUI("solution/international.json").showDialog();
     }
 
     @Test

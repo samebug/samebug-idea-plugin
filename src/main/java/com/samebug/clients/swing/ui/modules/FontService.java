@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.swing.ui.modules;
 
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,11 +40,19 @@ public final class FontService {
         ge.registerFont(regular);
     }
 
+    // IMPROVE: Now we use a logical font, which is primary Montserrat and falls back to system default.
+    // However, this might have problems:
+    //   - We have not checked if the default font works for e.g. a chinese OS
+    //   - The by-character fallback will probably look ugly for languages with mixed glyphs.
+    //     It will definitely happen when they use e.g. symbols like underscore or number in their display name.
+    // On the other hand, it seems to require a lot of work and we won't do it unless somebody complains.
     public static Font regular(int size) {
-        return new Font(Regular, Font.PLAIN, size - 1);
+        return StyleContext.getDefaultStyleContext().getFont(Regular, Font.PLAIN, size - 1);
     }
 
     public static Font demi(int size) {
-        return new Font(Bold, Font.PLAIN, size - 1);
+        return StyleContext.getDefaultStyleContext().getFont(Bold, Font.PLAIN, size - 1);
     }
+
+    private FontService() {}
 }

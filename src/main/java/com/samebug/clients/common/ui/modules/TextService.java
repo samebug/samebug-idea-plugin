@@ -52,4 +52,6 @@ public final class TextService {
     public static String olderTimestamp(Date date) {
         return older.format(date);
     }
+
+    private TextService() {}
 }

@@ -15,26 +15,24 @@
  */
 package com.samebug.clients.idea.ui.controller.form;
 
-import com.samebug.clients.common.api.client.RestError;
-import com.samebug.clients.common.api.entities.profile.LoggedInUser;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.api.form.FieldError;
-import com.samebug.clients.common.api.form.SignUp;
+import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.services.AuthenticationService;
 import com.samebug.clients.common.ui.component.authentication.ISignUpForm;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.common.ui.frame.IFrame;
+import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
+import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.form.SignUp;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
-public abstract class SignUpFormHandler extends PostFormHandler<LoggedInUser> {
+public abstract class SignUpFormHandler extends PostFormHandler<AuthenticationResponse, SignUp.BadRequest> {
+    private static final Logger LOGGER = Logger.getInstance(SignUpFormHandler.class);
     final IFrame frame;
     final ISignUpForm form;
-    final SignUp data;
+    final SignUp.Data data;
 
-    public SignUpFormHandler(IFrame frame, ISignUpForm form, SignUp data) {
+    public SignUpFormHandler(IFrame frame, ISignUpForm form, SignUp.Data data) {
         this.frame = frame;
         this.form = form;
         this.data = data;
@@ -45,41 +43,54 @@ public abstract class SignUpFormHandler extends PostFormHandler<LoggedInUser> {
         form.startPost();
     }
 
+    @NotNull
     @Override
-    protected LoggedInUser postForm() throws SamebugClientException {
+    protected AuthenticationResponse postForm() throws SamebugClientException, SignUp.BadRequest {
         final AuthenticationService authenticationService = IdeaSamebugPlugin.getInstance().authenticationService;
         return authenticationService.signUp(data);
     }
 
     @Override
-    protected void handleFieldError(FieldError fieldError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleFieldError(fieldError, globalErrors, fieldErrors);
-        if (fieldError.key.equals(SignUp.EMAIL)) fieldErrors.add(fieldError);
-        else if (fieldError.key.equals((SignUp.PASSWORD))) fieldErrors.add(fieldError);
-        else if (fieldError.key.equals((SignUp.DISPLAY_NAME))) fieldErrors.add(fieldError);
-        else globalErrors.add(MessageService.message("samebug.error.pluginBug"));
+    protected void handleBadRequest(@NotNull SignUp.BadRequest fieldErrors) {
+        ISignUpForm.BadRequest.DisplayName displayName = null;
+        ISignUpForm.BadRequest.Email email = null;
+        ISignUpForm.BadRequest.Password password = null;
+        for (SignUp.ErrorCode errorCode : fieldErrors.errorList.getErrorCodes()) {
+            switch (errorCode) {
+                case EMAIL_USED:
+                    email = ISignUpForm.BadRequest.Email.TAKEN;
+                    break;
+                case EMAIL_INVALID:
+                    email = ISignUpForm.BadRequest.Email.INVALID;
+                    break;
+                case EMAIL_LONG:
+                    email = ISignUpForm.BadRequest.Email.LONG;
+                    break;
+                case DISPLAYNAME_LONG:
+                    displayName = ISignUpForm.BadRequest.DisplayName.TOO_LONG;
+                    break;
+                case DISPLAYNAME_EMPTY:
+                    displayName = ISignUpForm.BadRequest.DisplayName.EMPTY;
+                    break;
+                case PASSWORD_EMPTY:
+                    password = ISignUpForm.BadRequest.Password.SHORT;
+                    break;
+                default:
+                    LOGGER.warn("Unhandled error code " + errorCode);
+            }
+        }
+        if (displayName != null || email != null || password != null) {
+            ISignUpForm.BadRequest b = new ISignUpForm.BadRequest(displayName, email, password);
+            form.failPost(b);
+        } else {
+            frame.popupError(MessageService.message("samebug.component.authentication.signUp.error.unhandled"));
+            form.failPost(null);
+        }
     }
 
     @Override
-    protected void handleNonFormBadRequests(RestError nonFormError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleNonFormBadRequests(nonFormError, globalErrors, fieldErrors);
-        globalErrors.add(MessageService.message("samebug.component.authentication.signUp.error.badRequest"));
-    }
-
-    @Override
-    protected void handleOtherClientExceptions(SamebugClientException exception, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleOtherClientExceptions(exception, globalErrors, fieldErrors);
-        globalErrors.add(MessageService.message("samebug.component.authentication.signUp.error.unhandled"));
-    }
-
-    @Override
-    protected void showFieldErrors(List<FieldError> fieldErrors) throws FormMismatchException {
-        form.failPost(fieldErrors);
-    }
-
-    @Override
-    protected void showGlobalErrors(List<String> globalErrors) {
-        if (!globalErrors.isEmpty()) frame.popupError(globalErrors.get(0));
+    protected void handleOtherClientExceptions(@NotNull SamebugClientException exception) {
+        frame.popupError(MessageService.message("samebug.component.authentication.signUp.error.unhandled"));
+        form.failPost(null);
     }
 }
-

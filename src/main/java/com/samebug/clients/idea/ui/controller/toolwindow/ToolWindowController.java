@@ -17,7 +17,6 @@ package com.samebug.clients.idea.ui.controller.toolwindow;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.ToolWindow;
@@ -27,9 +26,11 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.FocusListener;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
+import com.samebug.clients.idea.messages.IncomingTip;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.authentication.AuthenticationController;
@@ -37,6 +38,7 @@ import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.helpRequest.HelpRequestController;
 import com.samebug.clients.idea.ui.controller.helpRequestList.HelpRequestListController;
 import com.samebug.clients.idea.ui.controller.helpRequestPopup.HelpRequestPopupController;
+import com.samebug.clients.idea.ui.controller.incomingTipPopup.IncomingTipPopupController;
 import com.samebug.clients.idea.ui.controller.solution.SolutionFrameController;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import com.samebug.clients.swing.ui.modules.TrackingService;
@@ -46,9 +48,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-final public class ToolWindowController implements FocusListener, Disposable {
-    final static Logger LOGGER = Logger.getInstance(ToolWindowController.class);
-
+public final class ToolWindowController implements FocusListener, Disposable {
     @NotNull
     final Project project;
     ToolWindow toolWindow;
@@ -56,9 +56,11 @@ final public class ToolWindowController implements FocusListener, Disposable {
 
     final Timer dateLabelRefresher;
     final IncomingHelpRequestPopupListener incomingHelpRequestPopupListener;
+    final IncomingTipPopupListener incomingTipPopupListener;
     final ConfigChangeListener configChangeListener;
 
     final HelpRequestPopupController helpRequestPopupController;
+    final IncomingTipPopupController incomingTipPopupController;
 
     public ToolWindowController(@NotNull final Project project) {
         this.project = project;
@@ -77,11 +79,14 @@ final public class ToolWindowController implements FocusListener, Disposable {
         dateLabelRefresher.start();
 
         incomingHelpRequestPopupListener = new IncomingHelpRequestPopupListener(this);
+        incomingTipPopupListener = new IncomingTipPopupListener(this);
         configChangeListener = new ConfigChangeListener(this);
         helpRequestPopupController = new HelpRequestPopupController(this, project);
+        incomingTipPopupController = new IncomingTipPopupController(this, project);
         MessageBusConnection connection = project.getMessageBus().connect(project);
         connection.subscribe(FocusListener.TOPIC, this);
         connection.subscribe(IncomingHelpRequest.TOPIC, incomingHelpRequestPopupListener);
+        connection.subscribe(IncomingTip.TOPIC, incomingTipPopupListener);
     }
 
     public void initToolWindow(@NotNull ToolWindow toolWindow) {
@@ -108,10 +113,16 @@ final public class ToolWindowController implements FocusListener, Disposable {
     }
 
     public void focusOnHelpRequest(String helpRequestId) {
-        HelpRequestController controller = new HelpRequestController(this, project, helpRequestId);
-        controller.load();
-        openTab(controller, MessageService.message("samebug.toolwindow.helpRequest.tabName"));
-        TrackingService.trace(Events.showHelpRequestScreen(controller, helpRequestId));
+        HelpRequestMatch match = IdeaSamebugPlugin.getInstance().helpRequestStore.getIncomingHelpRequest(helpRequestId);
+        if (match != null) {
+            HelpRequestController controller = new HelpRequestController(this, project, match);
+            controller.load();
+            openTab(controller, MessageService.message("samebug.toolwindow.helpRequest.tabName"));
+            TrackingService.trace(Events.showHelpRequestScreen(controller, helpRequestId));
+        } else {
+            // TODO error message?
+            currentFrame.view.popupError("");
+        }
     }
 
     @Override
@@ -160,7 +171,7 @@ final public class ToolWindowController implements FocusListener, Disposable {
         // This requestFocus seems to fix it, but
         //   - I don't know why
         //   - I don't know if it has any side effects
-//        toolwindowCM.requestFocus(newToolWindowTab, true);
+        toolwindowCM.requestFocus(newToolWindowTab, true);
         toolWindow.show(null);
         JComponent view = (JComponent) currentFrame.view;
         view.revalidate();

@@ -15,84 +15,57 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.api.client.ClientResponse;
-import com.samebug.clients.common.api.client.SamebugClient;
-import com.samebug.clients.common.api.entities.solution.MarkResponse;
-import com.samebug.clients.common.api.entities.solution.RestHit;
-import com.samebug.clients.common.api.entities.solution.Solutions;
-import com.samebug.clients.common.api.entities.solution.Tip;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
+import com.samebug.clients.http.entities.jsonapi.BugmateList;
+import com.samebug.clients.http.entities.jsonapi.SolutionList;
+import com.samebug.clients.http.entities.jsonapi.TipList;
+import com.samebug.clients.http.entities.mark.Mark;
+import com.samebug.clients.http.entities.mark.NewMark;
+import com.samebug.clients.http.entities.search.NewSearchHit;
+import com.samebug.clients.http.entities.search.SearchHit;
+import com.samebug.clients.http.entities.solution.SamebugTip;
+import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.form.MarkCancel;
+import com.samebug.clients.http.form.MarkCreate;
+import com.samebug.clients.http.form.TipCreate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class SolutionService {
     final ClientService clientService;
-    final SolutionStore solutionStore;
 
-    public SolutionService(ClientService clientService, SolutionStore solutionStore) {
+    public SolutionService(ClientService clientService) {
         this.clientService = clientService;
-        this.solutionStore = solutionStore;
     }
 
-    public Solutions loadSolutions(final int searchId) throws SamebugClientException {
-        final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<Solutions> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<Solutions>() {
-                    ClientResponse<Solutions> request() {
-                        return client.getSolutions(searchId);
-                    }
-
-                    protected void success(Solutions result) {
-                        solutionStore.solutions.put(searchId, result);
-                    }
-
-                    protected void fail(SamebugClientException e) {
-//                        solutionStore.solutions.remove(searchId);
-                    }
-                };
-        return clientService.execute(requestHandler);
+    public SolutionList loadWebHits(final int searchId) throws SamebugClientException {
+        SolutionList result = clientService.getClient().getSolutions(searchId);
+        return result;
     }
 
-    public RestHit<Tip> postTip(@NotNull final int searchId, @NotNull final String tip, @Nullable final String sourceUrl, @Nullable final String helpRequestId)
-            throws SamebugClientException {
-        final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<RestHit<Tip>> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<RestHit<Tip>>() {
-                    ClientResponse<RestHit<Tip>> request() {
-                        return client.createTip(searchId, tip, sourceUrl, helpRequestId);
-                    }
-
-                    protected void success(RestHit<Tip> response) {
-                        // TODO thread safety
-                        solutionStore.solutions.get(searchId).getTips().add(0, response);
-                    }
-                };
-        return clientService.execute(requestHandler);
+    public TipList loadTipHits(final int searchId) throws SamebugClientException {
+        TipList result = clientService.getClient().getTips(searchId);
+        return result;
     }
 
-    public MarkResponse postMark(final int searchId, final int solutionId) throws SamebugClientException {
-        final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<MarkResponse> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<MarkResponse>() {
-                    ClientResponse<MarkResponse> request() {
-                        return client.postMark(searchId, solutionId);
-                    }
-                };
-        return clientService.execute(requestHandler);
+    public BugmateList loadBugmates(final int searchId) throws SamebugClientException {
+        BugmateList result = clientService.getClient().getBugmates(searchId);
+        return result;
     }
 
-    public MarkResponse retractMark(final int voteId) throws SamebugClientException {
-        final SamebugClient client = clientService.client;
+    public SearchHit<SamebugTip> postTip(@NotNull final Integer searchId, @NotNull final NewSearchHit data)
+            throws SamebugClientException, TipCreate.BadRequest {
+        SearchHit<SamebugTip> response = clientService.getClient().createTip(searchId, data);
+        return response;
+    }
 
-        ClientService.ConnectionAwareHttpRequest<MarkResponse> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<MarkResponse>() {
-                    ClientResponse<MarkResponse> request() {
-                        return client.retractMark(voteId);
-                    }
-                };
-        return clientService.execute(requestHandler);
+    @Nullable
+    public Mark postMark(@NotNull final Integer searchId, @NotNull final NewMark data) throws SamebugClientException, MarkCreate.BadRequest {
+        Mark mark = clientService.getClient().postMark(searchId, data);
+        return mark;
+    }
+
+    public Mark retractMark(@NotNull final Integer voteId) throws SamebugClientException, MarkCancel.BadRequest {
+        Mark mark = clientService.getClient().cancelMark(voteId);
+        return mark;
     }
 }

@@ -19,17 +19,19 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
-import com.samebug.clients.common.api.entities.profile.UserInfo;
-import com.samebug.clients.common.api.entities.profile.UserStats;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestList;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListFrame;
+import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
+import com.samebug.clients.http.entities.profile.UserStats;
+import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
+import com.samebug.clients.idea.messages.ProfileUpdate;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
+import com.samebug.clients.idea.messages.WebSocketStatusUpdate;
 import com.samebug.clients.idea.ui.controller.component.ProfileListener;
 import com.samebug.clients.idea.ui.controller.externalEvent.ProfileUpdateListener;
 import com.samebug.clients.idea.ui.controller.externalEvent.RefreshListener;
@@ -40,7 +42,7 @@ import com.samebug.clients.swing.ui.frame.helpRequestList.HelpRequestListFrame;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 
 import javax.swing.*;
-import java.net.URL;
+import java.net.URI;
 import java.util.concurrent.Future;
 
 public final class HelpRequestListController extends BaseFrameController<IHelpRequestListFrame> implements Disposable {
@@ -76,19 +78,21 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
         projectConnection.subscribe(RefreshTimestampsListener.TOPIC, refreshListener);
         profileUpdateListener = new ProfileUpdateListener(this);
         projectConnection.subscribe(IncomingHelpRequest.TOPIC, profileUpdateListener);
+        projectConnection.subscribe(ProfileUpdate.TOPIC, profileUpdateListener);
+        projectConnection.subscribe(WebSocketStatusUpdate.TOPIC, profileUpdateListener);
     }
 
     public void load() {
         view.setLoading();
-        final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
+        final Future<Me> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
-        final Future<IncomingHelpRequests> helpRequestsTask = concurrencyService.incomingHelpRequests(true);
+        final Future<IncomingHelpRequestList> helpRequestsTask = concurrencyService.incomingHelpRequests(true);
 
         load(helpRequestsTask, userInfoTask, userStatsTask);
     }
 
-    private void load(final Future<IncomingHelpRequests> helpRequestsTask,
-                      final Future<UserInfo> userInfoTask,
+    private void load(final Future<IncomingHelpRequestList> helpRequestsTask,
+                      final Future<Me> userInfoTask,
                       final Future<UserStats> userStatsTask) {
         new LoadingTask() {
             @Override
@@ -110,12 +114,11 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
         @Override
         public void moreClicked() {
             IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-            // TODO help requests url
-            UserInfo user = plugin.profileStore.getUser();
+            Me user = plugin.profileStore.getUser();
             if (user != null) {
-                int myUserId = user.getUserId();
-                URL url = plugin.urlBuilder.profile(myUserId);
-                BrowserUtil.browse(url);
+                int myUserId = user.getId();
+                URI uri = plugin.uriBuilder.profile(myUserId);
+                BrowserUtil.browse(uri);
             }
         }
     }

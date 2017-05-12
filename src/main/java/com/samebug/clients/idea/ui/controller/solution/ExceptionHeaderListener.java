@@ -19,18 +19,18 @@ import com.samebug.clients.common.ui.frame.solution.ISearchHeaderPanel;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.modules.BrowserUtil;
 
-import java.net.URL;
+import java.net.URI;
 
 final class ExceptionHeaderListener implements ISearchHeaderPanel.Listener {
     final SolutionFrameController controller;
 
-    public ExceptionHeaderListener(final SolutionFrameController controller) {
+    ExceptionHeaderListener(final SolutionFrameController controller) {
         this.controller = controller;
     }
 
     @Override
     public void titleClicked() {
-        final URL searchUrl = IdeaSamebugPlugin.getInstance().urlBuilder.search(controller.searchId);
-        BrowserUtil.browse(searchUrl);
+        final URI searchUri = IdeaSamebugPlugin.getInstance().uriBuilder.search(controller.searchId);
+        BrowserUtil.browse(searchUri);
     }
 }

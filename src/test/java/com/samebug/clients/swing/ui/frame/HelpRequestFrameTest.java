@@ -2,10 +2,8 @@ package com.samebug.clients.swing.ui.frame;
 
 import com.samebug.clients.swing.ui.TestDialog;
 import com.samebug.clients.swing.ui.frame.helpRequest.HelpRequestFrame;
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
 public class HelpRequestFrameTest extends TestDialog {
     @Test
     public void zeroTipsAndZeroWebHits() {

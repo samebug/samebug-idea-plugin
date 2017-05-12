@@ -121,7 +121,7 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
         }
     }
 
-    private final static class Separator extends SamebugPanel {
+    private static final class Separator extends SamebugPanel {
         private static final int TopHeight = 20;
         private static final int BottomHeight = 16;
 
@@ -160,7 +160,7 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
 
     private final class MyFadeOut extends FadeOutAnimation {
 
-        public MyFadeOut(int totalFrames) {
+        MyFadeOut(int totalFrames) {
             super(WebResultsTab.this, totalFrames);
         }
 

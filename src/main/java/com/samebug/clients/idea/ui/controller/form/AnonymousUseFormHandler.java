@@ -15,29 +15,23 @@
  */
 package com.samebug.clients.idea.ui.controller.form;
 
-import com.samebug.clients.common.api.client.RestError;
-import com.samebug.clients.common.api.entities.profile.LoggedInUser;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.api.form.AnonymousUse;
-import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.services.AuthenticationService;
 import com.samebug.clients.common.ui.component.authentication.IAnonymousUseForm;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.common.ui.frame.IFrame;
+import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
+import com.samebug.clients.http.exceptions.FormException;
+import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
-public abstract class AnonymousUseFormHandler extends PostFormHandler<LoggedInUser> {
+public abstract class AnonymousUseFormHandler extends PostFormHandler<AuthenticationResponse, FormException> {
     final IFrame frame;
     final IAnonymousUseForm form;
-    final AnonymousUse data;
 
-    public AnonymousUseFormHandler(IFrame frame, IAnonymousUseForm form, AnonymousUse data) {
+    public AnonymousUseFormHandler(IFrame frame, IAnonymousUseForm form) {
         this.frame = frame;
         this.form = form;
-        this.data = data;
     }
 
     @Override
@@ -45,37 +39,20 @@ public abstract class AnonymousUseFormHandler extends PostFormHandler<LoggedInUs
         form.startPost();
     }
 
+    @NotNull
     @Override
-    protected LoggedInUser postForm() throws SamebugClientException {
+    protected AuthenticationResponse postForm() throws SamebugClientException {
         final AuthenticationService authenticationService = IdeaSamebugPlugin.getInstance().authenticationService;
-        return authenticationService.anonymousUse(data);
+        return authenticationService.anonymousUse();
     }
 
     @Override
-    protected void handleFieldError(FieldError fieldError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleFieldError(fieldError, globalErrors, fieldErrors);
-        globalErrors.add(MessageService.message("samebug.error.pluginBug"));
+    protected void handleBadRequest(@NotNull FormException fieldErrors) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    protected void handleNonFormBadRequests(RestError nonFormError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleNonFormBadRequests(nonFormError, globalErrors, fieldErrors);
-        globalErrors.add(MessageService.message("samebug.component.authentication.anonymousUse.error.badRequest"));
-    }
-
-    @Override
-    protected void handleOtherClientExceptions(SamebugClientException exception, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleOtherClientExceptions(exception, globalErrors, fieldErrors);
-        globalErrors.add(MessageService.message("samebug.component.authentication.anonymousUse.error.unhandled"));
-    }
-
-    @Override
-    protected void showFieldErrors(List<FieldError> fieldErrors) throws FormMismatchException {
-        form.failPost(fieldErrors);
-    }
-
-    @Override
-    protected void showGlobalErrors(List<String> globalErrors) {
-        if (!globalErrors.isEmpty()) frame.popupError(globalErrors.get(0));
+    protected void handleOtherClientExceptions(@NotNull SamebugClientException exception) {
+        frame.popupError(MessageService.message("samebug.component.authentication.anonymousUse.error.unhandled"));
     }
 }

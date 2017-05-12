@@ -125,7 +125,7 @@ public abstract class LengthRestrictedArea extends SamebugPanel {
         }
     }
 
-    protected static class LengthCounter extends SamebugLabel {
+    protected static final class LengthCounter extends SamebugLabel {
         private final int MaxLength;
 
         public LengthCounter(int maxLength) {
@@ -141,7 +141,7 @@ public abstract class LengthRestrictedArea extends SamebugPanel {
         }
     }
 
-    private final static class LengthListener implements DocumentListener {
+    private static final class LengthListener implements DocumentListener {
         private final LengthCounter lengthCounter;
 
         LengthListener(LengthCounter lengthCounter) {

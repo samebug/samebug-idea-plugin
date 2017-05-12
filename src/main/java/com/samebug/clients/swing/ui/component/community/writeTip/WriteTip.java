@@ -15,20 +15,18 @@
  */
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
-import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 
 public final class WriteTip extends JComponent implements IHelpOthersCTA {
     final IHelpOthersCTA.Model model;
@@ -58,10 +56,10 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
     }
 
     @Override
-    public void failPostTipWithFormError(List<FieldError> errors) throws FormMismatchException {
+    public void failPostTipWithFormError(@Nullable final BadRequest errors) {
         if (tipScreen != null) {
             tipScreen.actionRow.sendButton.revertFromLoadingAnimation();
-            tipScreen.setFormErrors(errors);
+            if (errors != null) tipScreen.setFormErrors(errors);
         }
     }
 

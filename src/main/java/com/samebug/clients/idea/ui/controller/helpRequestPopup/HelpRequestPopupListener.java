@@ -15,8 +15,8 @@
  */
 package com.samebug.clients.idea.ui.controller.helpRequestPopup;
 
-import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
 import com.samebug.clients.common.ui.component.popup.IHelpRequestPopup;
+import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 
 public final class HelpRequestPopupListener implements IHelpRequestPopup.Listener {
     final HelpRequestPopupController controller;
@@ -27,9 +27,9 @@ public final class HelpRequestPopupListener implements IHelpRequestPopup.Listene
 
     @Override
     public void answerClick(IHelpRequestPopup source) {
-        HelpRequest helpRequest = controller.data.get(source);
+        IncomingHelpRequest helpRequest = controller.data.get(source);
         assert helpRequest != null;
-        controller.twc.focusOnHelpRequest(helpRequest.id);
+        controller.twc.focusOnHelpRequest(helpRequest.getMatch().getHelpRequest().getId());
 
         controller.hideAndRemoveIncomingHelpRequest(source);
     }

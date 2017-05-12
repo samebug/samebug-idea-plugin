@@ -17,11 +17,11 @@ package com.samebug.clients.idea.tracking;
 
 
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.common.api.entities.tracking.TrackEvent;
-import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.entities.search.DebugSessionInfo;
+import com.samebug.clients.http.entities.tracking.TrackEvent;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -120,6 +120,14 @@ public final class Events {
         }.getEvent();
     }
 
+    public static TrackEvent linkClick(final URI uri) {
+        return new TrackBuilder("Link", "Click") {
+            protected void initDataFields() {
+                add("url", uri.toString());
+            }
+        }.getEvent();
+    }
+
     public static TrackEvent linkClick(final URL url) {
         return new TrackBuilder("Link", "Click") {
             protected void initDataFields() {
@@ -148,7 +156,7 @@ public final class Events {
         return event("Registration", "Send", mapOf("login", login, "dialogType", dialogType));
     }
 
-    public static TrackEvent registrationError(String dialogType, List<FieldError> errors) {
+    public static TrackEvent registrationError(String dialogType, List<String> errors) {
         return event("Registration", "FormError", mapOf("dialogType", dialogType, "errors", errors));
     }
 
@@ -172,7 +180,7 @@ public final class Events {
         return event("WriteTip", "Cancel");
     }
 
-    public static TrackEvent writeTipError(List<FieldError> errors) {
+    public static TrackEvent writeTipError(List<String> errors) {
         return event("WriteTip", "FormError", mapOf("errors", errors));
     }
 
@@ -216,7 +224,7 @@ public final class Events {
         return event("WriteHelpRequest", "Cancel");
     }
 
-    public static TrackEvent helpRequestError(List<FieldError> errors) {
+    public static TrackEvent helpRequestError(List<String> errors) {
         return event("WriteHelpRequest", "FormError", mapOf("errors", errors));
     }
 
@@ -285,4 +293,6 @@ public final class Events {
         if (v3 != null) result.put(k3, v3);
         return result;
     }
+
+    private Events() {}
 }

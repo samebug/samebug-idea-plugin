@@ -35,7 +35,7 @@ import java.text.MessageFormat;
 import java.util.Date;
 
 public final class HelpRequestPreview extends RoundedBackgroundPanel implements IHelpRequestPreview {
-    private final static int AvatarSize = 40;
+    private static final int AvatarSize = 40;
 
     public HelpRequestPreview(final Model model) {
         setBackgroundColor(ColorService.Tip);
@@ -66,7 +66,7 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
     }
 
     final class DisplayName extends SamebugLabel {
-        public DisplayName(String name) {
+        DisplayName(String name) {
             super(name);
             setFont(FontService.demi(16));
             setForegroundColor(ColorService.TipText);
@@ -74,7 +74,7 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
     }
 
     final class HelpRequestBody extends SamebugLabel {
-        public HelpRequestBody(String body, boolean viewedByMe) {
+        HelpRequestBody(String body, boolean viewedByMe) {
             super(body);
             if (viewedByMe) setFont(FontService.regular(16));
             else setFont(FontService.demi(16));
@@ -85,7 +85,7 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
     final class InfoBar extends SamebugLabel implements TimestampLabel {
         private final Date createdAt;
 
-        public InfoBar(Date createdAt) {
+        InfoBar(Date createdAt) {
             this.createdAt = createdAt;
             setHorizontalAlignment(SwingConstants.RIGHT);
             setFont(FontService.regular(12));
@@ -100,7 +100,7 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
     }
 
     final class ExceptionPreview extends SamebugLabel {
-        public ExceptionPreview(String body, boolean viewedByMe) {
+        ExceptionPreview(String body, boolean viewedByMe) {
             super(body);
             if (viewedByMe) setFont(FontService.regular(16));
             else setFont(FontService.demi(16));

@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-final public class ConfigDialog implements Configurable {
+public final class ConfigDialog implements Configurable {
     ConfigDialogPanel dialog = null;
 
     @Nls

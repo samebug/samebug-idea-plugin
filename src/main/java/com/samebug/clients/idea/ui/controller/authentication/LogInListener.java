@@ -15,16 +15,18 @@
  */
 package com.samebug.clients.idea.ui.controller.authentication;
 
-import com.samebug.clients.common.api.entities.profile.LoggedInUser;
-import com.samebug.clients.common.api.form.LogIn;
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
+import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
+import com.samebug.clients.http.entities.user.Me;
+import com.samebug.clients.http.form.LogIn;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.form.LogInFormHandler;
 import com.samebug.clients.idea.ui.modules.BrowserUtil;
 import com.samebug.clients.swing.ui.modules.TrackingService;
+import org.jetbrains.annotations.NotNull;
 
-import java.net.URL;
+import java.net.URI;
 
 public final class LogInListener implements ILogInForm.Listener {
     final AuthenticationController controller;
@@ -35,9 +37,9 @@ public final class LogInListener implements ILogInForm.Listener {
 
     @Override
     public void logIn(final ILogInForm source, String email, String password) {
-        new LogInFormHandler(controller.view, source, new LogIn(email, password)) {
+        new LogInFormHandler(controller.view, source, new LogIn.Data(email, password)) {
             @Override
-            protected void afterPostForm(LoggedInUser response) {
+            protected void afterPostForm(@NotNull AuthenticationResponse response) {
                 source.successPost();
                 controller.twc.focusOnHelpRequestList();
                 TrackingService.trace(Events.registrationLogInSucceeded());
@@ -47,7 +49,13 @@ public final class LogInListener implements ILogInForm.Listener {
 
     @Override
     public void forgotPassword(ILogInForm source) {
-        URL forgottenPasswordUrl = IdeaSamebugPlugin.getInstance().urlBuilder.forgottenPassword();
-        BrowserUtil.browse(forgottenPasswordUrl);
+        IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
+        Me user = plugin.profileStore.getUser();
+        // TODO, well, probably we will not know the user id if he is not logged in...
+        if (user != null) {
+            int myUserId = user.getId();
+            URI forgottenPasswordUri = plugin.uriBuilder.forgottenPassword(myUserId);
+            BrowserUtil.browse(forgottenPasswordUri);
+        }
     }
 }

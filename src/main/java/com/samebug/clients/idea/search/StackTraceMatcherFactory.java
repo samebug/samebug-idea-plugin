@@ -45,5 +45,4 @@ public class StackTraceMatcherFactory implements LogScannerFactory {
             if (!myProject.isDisposed()) myProject.getMessageBus().syncPublisher(StackTraceMatcherListener.TOPIC).stackTraceFound(myProject, sessionInfo, stacktrace);
         }
     }
-
 }

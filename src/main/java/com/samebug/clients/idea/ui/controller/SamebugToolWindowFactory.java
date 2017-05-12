@@ -24,8 +24,6 @@ import com.intellij.openapi.wm.ToolWindowType;
 import com.intellij.openapi.wm.impl.ToolWindowImpl;
 import com.intellij.openapi.wm.impl.ToolWindowManagerImpl;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
-import com.samebug.clients.idea.components.application.ApplicationSettings;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.components.project.SamebugProjectComponent;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Method;
 
 
-final public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
+public final class SamebugToolWindowFactory implements ToolWindowFactory, DumbAware {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
@@ -70,17 +68,6 @@ final public class SamebugToolWindowFactory implements ToolWindowFactory, DumbAw
                 });
             }
         } catch (Exception ignored) {
-        }
-
-        // TODO this is to override the toolwindow mode for those users who had a pre-0.14.0 samebug installation. This will be safe to remove after, well, 2017-05-01.
-        ApplicationSettings settings = IdeaSamebugPlugin.getInstance().getState();
-        if (!settings.isToolwindowDefaultModeOverridden) {
-            try {
-                toolWindow.setType(ToolWindowType.SLIDING, null);
-                toolWindow.setAutoHide(true);
-            } catch (Exception ignored) {
-            }
-            settings.isToolwindowDefaultModeOverridden = true;
         }
     }
 }

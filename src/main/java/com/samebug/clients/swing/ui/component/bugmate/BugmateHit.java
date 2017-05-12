@@ -28,12 +28,12 @@ import net.miginfocom.swing.MigLayout;
 import java.util.Date;
 
 public final class BugmateHit extends TransparentPanel implements IBugmateHit {
-    private final static int AvatarSize = 44;
+    private static final int AvatarSize = 44;
 
     public BugmateHit(Model model) {
         final NameLabel name = new NameLabel(model.displayName);
         final TimestampLabel timestamp = new TimestampLabel(model.nSeen, model.lastSeen);
-        final AvatarIcon avatar = new AvatarIcon(model.avatarUrl, AvatarSize);
+        final AvatarIcon avatar = new AvatarIcon(model.avatarUrl, AvatarSize, model.status);
 
         setLayout(new MigLayout("", "0[]10px[]0", "0[]0[]0"));
 
