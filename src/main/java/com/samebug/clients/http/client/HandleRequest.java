@@ -27,7 +27,9 @@ import com.samebug.clients.http.response.PostFormResponse;
 import org.apache.http.Consts;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.*;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +37,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 interface HandleRequest<T> {
     HttpRequestBase createRequest();
@@ -75,6 +78,14 @@ final class Builder {
 
         public HasAuth unauthenticated() {
             return new HasAuth(uri, false);
+        }
+
+        public HasUrl parameter(@NotNull final String key, @NotNull final String value) {
+            try {
+                return new HasUrl(new URIBuilder(uri).addParameter(key, value).build());
+            } catch (URISyntaxException e) {
+                throw new IllegalArgumentException("Could not add parameter (" + key + " - " + value + ") to uri " + uri, e);
+            }
         }
 
         public <ResponseType> HasResponseType<ResponseType> withResponse(Type responseType) {

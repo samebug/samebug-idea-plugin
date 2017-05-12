@@ -106,6 +106,7 @@ public final class SamebugClient {
     public SolutionList getSolutions(@NotNull final Integer searchId) throws SamebugClientException {
         Builder.SimpleResponseHandler<SolutionList> request = requestBuilder
                 .at(uriBuilder.solutionsForSearch(searchId))
+                .parameter("max", "20")
                 .<SolutionList>withResponse(SolutionList.class)
                 .buildGet();
         return extractResponse(rawClient.execute(request));
@@ -115,6 +116,7 @@ public final class SamebugClient {
     public TipList getTips(@NotNull final Integer searchId) throws SamebugClientException {
         Builder.SimpleResponseHandler<TipList> request = requestBuilder
                 .at(uriBuilder.tipsForSearch(searchId))
+                .parameter("max", "20")
                 .<TipList>withResponse(TipList.class)
                 .buildGet();
         return extractResponse(rawClient.execute(request));
@@ -124,6 +126,7 @@ public final class SamebugClient {
     public BugmateList getBugmates(@NotNull final Integer searchId) throws SamebugClientException {
         Builder.SimpleResponseHandler<BugmateList> request = requestBuilder
                 .at(uriBuilder.bugmatesForSearch(searchId))
+                .parameter("max", "4")
                 .<BugmateList>withResponse(BugmateList.class)
                 .buildGet();
         return extractResponse(rawClient.execute(request));
