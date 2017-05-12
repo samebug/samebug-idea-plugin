@@ -22,29 +22,35 @@ import com.samebug.clients.http.entities.solution.SolutionSlot;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class SearchHit<D extends Document> {
+public final class SearchHit<D extends Document> {
     private SolutionSlot<D> solution;
     private Boolean isMarkable;
     private Mark activeMark;
     private Votes votes;
+    private HitScore score;
 
     @NotNull
-    public final SolutionSlot<D> getSolution() {
+    public SolutionSlot<D> getSolution() {
         return solution;
     }
 
     @NotNull
-    public final Boolean getMarkable() {
+    public Boolean getMarkable() {
         return isMarkable;
     }
 
     @Nullable
-    public final Mark getActiveMark() {
+    public Mark getActiveMark() {
         return activeMark;
     }
 
     @NotNull
-    public final Votes getVotes() {
+    public Votes getVotes() {
         return votes;
+    }
+
+    @NotNull
+    public HitScore getScore() {
+        return score;
     }
 }

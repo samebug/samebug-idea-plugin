@@ -16,17 +16,15 @@
 package com.samebug.clients.http.json;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.reflect.TypeToken;
-import com.samebug.clients.http.entities.solution.Document;
-import com.samebug.clients.http.entities.solution.ReadableSolution;
-import com.samebug.clients.http.entities.solution.SearchableSolution;
-import com.samebug.clients.http.entities.solution.SolutionSlot;
+import com.samebug.clients.http.entities.search.QueryInfo;
+import com.samebug.clients.http.entities.search.StackTraceInfo;
+import com.samebug.clients.http.entities.search.TextSearchInfo;
 
-public class SolutionSlotAdapter extends AbstractGenericObjectAdapter<SolutionSlot<Document>> {
+public class QueryInfoAdapter extends AbstractObjectAdapter<QueryInfo> {
     {
-        typeClasses = ImmutableMap.<String, TypeToken<? extends SolutionSlot<Document>>>builder()
-                .put("solution--readable", new TypeToken<ReadableSolution<Document>>() {})
-                .put("solution--searchable", new TypeToken<SearchableSolution<Document>>() {})
+        typeClasses = ImmutableMap.<String, Class<? extends QueryInfo>>builder()
+                .put("query-info--stack-trace", StackTraceInfo.class)
+                .put("query-info--text", TextSearchInfo.class)
                 .build();
     }
 }

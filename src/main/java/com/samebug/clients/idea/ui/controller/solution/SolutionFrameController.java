@@ -36,10 +36,8 @@ import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.jsonapi.SolutionList;
 import com.samebug.clients.http.entities.jsonapi.TipList;
 import com.samebug.clients.http.entities.profile.UserStats;
-import com.samebug.clients.http.entities.search.ReadableSearchGroup;
 import com.samebug.clients.http.entities.search.Search;
 import com.samebug.clients.http.entities.search.SearchGroup;
-import com.samebug.clients.http.entities.search.StackTraceSearch;
 import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
 import com.samebug.clients.idea.messages.ProfileUpdate;
@@ -151,10 +149,8 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
             @Override
             protected void load() throws Exception {
                 Search search = searchTask.get();
-                assert search instanceof StackTraceSearch;
-                SearchGroup group = ((StackTraceSearch) search).getGroup();
-                assert group instanceof ReadableSearchGroup;
-                String myHelpRequestId = ((ReadableSearchGroup) group).getHelpRequestId();
+                SearchGroup group = search.getGroup();
+                String myHelpRequestId = group.getHelpRequestId();
 
                 final Future<HelpRequest> helpRequestTask;
                 if (myHelpRequestId == null) helpRequestTask = new FixedFuture<HelpRequest>(null);
@@ -178,10 +174,8 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
             @Override
             protected void load() throws Exception {
                 Search search = searchTask.get();
-                // TODO
-                assert search instanceof StackTraceSearch;
                 final SolutionFrame.Model model =
-                        conversionService.solutionFrame((StackTraceSearch) searchTask.get(),
+                        conversionService.solutionFrame(searchTask.get(),
                                 tipsTask.get().getData(), solutionsTask.get().getData(), bugmatesTask.get(), helpRequestTask.get(), incomingHelpRequestsTask.get(),
                                 userInfoTask.get(), userStatsTask.get());
                 ApplicationManager.getApplication().invokeLater(new Runnable() {

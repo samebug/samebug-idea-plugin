@@ -15,13 +15,47 @@
  */
 package com.samebug.clients.http.entities.search;
 
+import com.samebug.clients.http.entities.user.SamebugUser;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public abstract class Search {
+import java.util.Date;
+
+public final class Search {
     private Integer id;
+    private SearchGroup group;
+    private Date timestamp;
+    private SamebugUser user;
+    private Integer workspaceId;
+    private QueryInfo queryInfo;
 
     @NotNull
-    public final Integer getId() {
+    public Integer getId() {
         return id;
+    }
+
+    @NotNull
+    public SearchGroup getGroup() {
+        return group;
+    }
+
+    @NotNull
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    @NotNull
+    public SamebugUser getUser() {
+        return user;
+    }
+
+    @Nullable
+    public Integer getWorkspaceId() {
+        return workspaceId;
+    }
+
+    @NotNull
+    public QueryInfo getQueryInfo() {
+        return queryInfo;
     }
 }

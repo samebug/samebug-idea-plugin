@@ -16,12 +16,52 @@
 package com.samebug.clients.http.entities.search;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public abstract class SearchGroup {
-    protected String id;
+import java.util.Date;
+
+public final class SearchGroup {
+    private String id;
+
+    private Date firstSeen;
+    private Date lastSeen;
+    private Integer numberOfSearches;
+    private QueryInfo lastSearchInfo;
+    private Integer lastSearchId;
+    private String helpRequestId;
 
     @NotNull
-    public final String getId() {
+    public String getId() {
         return id;
+    }
+
+    @NotNull
+    public Date getFirstSeen() {
+        return firstSeen;
+    }
+
+    @NotNull
+    public Date getLastSeen() {
+        return lastSeen;
+    }
+
+    @NotNull
+    public Integer getNumberOfSearches() {
+        return numberOfSearches;
+    }
+
+    @Nullable
+    public QueryInfo getLastSearchInfo() {
+        return lastSearchInfo;
+    }
+
+    @Nullable
+    public Integer getLastSearchId() {
+        return lastSearchId;
+    }
+
+    @Nullable
+    public String getHelpRequestId() {
+        return helpRequestId;
     }
 }

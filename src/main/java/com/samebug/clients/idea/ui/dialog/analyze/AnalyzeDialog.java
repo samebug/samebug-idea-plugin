@@ -26,7 +26,7 @@ import com.samebug.clients.common.search.StackTraceMatcher;
 import com.samebug.clients.common.services.SearchService;
 import com.samebug.clients.http.entities.jsonapi.CreatedSearchResource;
 import com.samebug.clients.http.entities.search.Search;
-import com.samebug.clients.http.entities.search.StackTraceSearch;
+import com.samebug.clients.http.entities.search.StackTraceInfo;
 import com.samebug.clients.http.exceptions.BadRequest;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.exceptions.UserUnauthenticated;
@@ -132,7 +132,7 @@ public final class AnalyzeDialog extends DialogWrapper {
                 Search search = result.getData();
                 final int searchId = search.getId();
 
-                if (!(search instanceof StackTraceSearch)) displayError(MessageService.message("samebug.menu.analyze.dialog.error.textSearch"));
+                if (!(search.getQueryInfo() instanceof StackTraceInfo)) displayError(MessageService.message("samebug.menu.analyze.dialog.error.textSearch"));
                 else {
                     myProject.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchId);
                     TrackingService.trace(Events.searchSucceedInSearchDialog(searchId));
