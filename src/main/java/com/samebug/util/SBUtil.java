@@ -13,28 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.search;
+package com.samebug.util;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-public final class StackTraceInfo extends QueryInfo {
-    private String exceptionType;
-    private String exceptionMessage;
-    private String exceptionMessageSlug;
-
-    @NotNull
-    public String getExceptionType() {
-        return exceptionType;
+public final class SBUtil {
+    // IMPROVE remove this after upgrading to Java 8
+    public static boolean equals(Object a, Object b) {
+        return (a == b) || (a != null && a.equals(b));
     }
 
-    @Nullable
-    public String getExceptionMessage() {
-        return exceptionMessage;
-    }
 
-    @Nullable
-    public String getExceptionMessageSlug() {
-        return exceptionMessageSlug;
-    }
+    private SBUtil() {}
 }

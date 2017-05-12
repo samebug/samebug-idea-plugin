@@ -98,10 +98,8 @@ public final class WebSocketClientService implements Disposable {
                 LOGGER.warn("Error on closing websocket", e);
             }
         }
-        if (wsConfig != null) {
-            // TODO do we want to handle this future?
-            wsConfig.group.shutdownGracefully();
-        }
+        // NOTE: this service is a singleton, this shutdown happens when exiting IDEA
+        group.shutdownGracefully();
     }
 }
 

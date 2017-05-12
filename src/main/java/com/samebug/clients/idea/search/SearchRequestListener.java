@@ -20,7 +20,7 @@ import com.samebug.clients.common.entities.search.RequestedSearch;
 import com.samebug.clients.common.entities.search.SavedSearch;
 import com.samebug.clients.common.entities.search.SearchInfo;
 
-// TODO extend this interface to introduce more detailed search results, like text search, tip/bugmate results, etc.
+// NOTE extend this interface to introduce more detailed search results, like text search, tip/bugmate results, etc.
 public interface SearchRequestListener {
     Topic<SearchRequestListener> TOPIC = Topic.create("Request stacktrace search", SearchRequestListener.class);
 

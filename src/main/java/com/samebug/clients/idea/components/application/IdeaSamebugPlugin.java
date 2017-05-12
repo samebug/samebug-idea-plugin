@@ -34,6 +34,7 @@ import com.samebug.clients.idea.ui.controller.frame.ConversionService;
 import com.samebug.clients.idea.ui.controller.toolwindow.ConfigChangeListener;
 import com.samebug.clients.idea.ui.modules.*;
 import com.samebug.clients.swing.ui.modules.*;
+import com.samebug.util.SBUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -168,7 +169,7 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         ApplicationSettings newSettings = new ApplicationSettings(settings);
 
         // If authentication data (apiKey or workspace id) is changed, we have to do some cleanup
-        if (!equals(newSettings.apiKey, oldSettings.apiKey) || !equals(newSettings.workspaceId, oldSettings.workspaceId)) {
+        if (!SBUtil.equals(newSettings.apiKey, oldSettings.apiKey) || !SBUtil.equals(newSettings.workspaceId, oldSettings.workspaceId)) {
             // clear the caches
             helpRequestStore.invalidate();
             profileStore.invalidate();
@@ -180,8 +181,8 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
             uriBuilder = new WebUriBuilder(newSettings.serverRoot);
             ApplicationManager.getApplication().getMessageBus().syncPublisher(ConfigChangeListener.TOPIC).configChange(oldSettings, newSettings);
         } finally {
-            if (!equals(newSettings.apiKey, oldSettings.apiKey)) TrackingService.trace(Events.changeApiKey());
-            if (!equals(newSettings.workspaceId, oldSettings.workspaceId)) TrackingService.trace(Events.changeWorkspace());
+            if (!SBUtil.equals(newSettings.apiKey, oldSettings.apiKey)) TrackingService.trace(Events.changeApiKey());
+            if (!SBUtil.equals(newSettings.workspaceId, oldSettings.workspaceId)) TrackingService.trace(Events.changeWorkspace());
         }
     }
 
@@ -191,10 +192,5 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         this.state.set(newSettings);
         if (clientService != null) clientService.configure(newSettings.getNetworkConfig());
         uriBuilder = new WebUriBuilder(newSettings.serverRoot);
-    }
-
-    // TODO lifted java 8 Objects.equals, remove it when we use java 8
-    private static boolean equals(Object a, Object b) {
-        return (a == b) || (a != null && a.equals(b));
     }
 }

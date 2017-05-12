@@ -17,7 +17,6 @@ package com.samebug.clients.swing.ui.component.bugmate;
 
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.swing.ui.base.form.LengthRestrictedArea;
-import com.samebug.clients.swing.ui.base.form.MaxCharactersConstraints;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.component.helpRequest.ExceptionPreview;
 import com.samebug.clients.swing.ui.modules.ColorService;
@@ -27,7 +26,6 @@ import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.text.AbstractDocument;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -88,7 +86,6 @@ public final class WriteRequestArea extends JComponent {
             add(exceptionPreview, "cell 0 2, wmin 0, growx");
 
             setBackgroundColor(ColorService.Background);
-            ((AbstractDocument) myEditableArea.getDocument()).setDocumentFilter(new MaxCharactersConstraints(MaxOvershootCharacters));
         }
 
         @Override

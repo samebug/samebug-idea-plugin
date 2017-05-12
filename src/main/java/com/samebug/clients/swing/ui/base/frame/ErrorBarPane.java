@@ -31,7 +31,7 @@ public class ErrorBarPane extends JLayeredPane {
     protected final int ShowPopupForMillis = 5000;
 
     protected Component mainComponent;
-    // TODO probably we will need multiple error bars in a vertical flow
+    // IMPROVE probably we will need multiple error bars in a vertical flow
     protected ErrorBar errorBar;
     protected Timer timer;
 

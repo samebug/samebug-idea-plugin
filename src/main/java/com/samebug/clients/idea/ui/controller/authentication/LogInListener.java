@@ -17,7 +17,6 @@ package com.samebug.clients.idea.ui.controller.authentication;
 
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
 import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
-import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.http.form.LogIn;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.tracking.Events;
@@ -49,13 +48,9 @@ public final class LogInListener implements ILogInForm.Listener {
 
     @Override
     public void forgotPassword(ILogInForm source) {
+        // TODO make a password recovery request to the server, and tell the user to check emails?
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-        Me user = plugin.profileStore.getUser();
-        // TODO, well, probably we will not know the user id if he is not logged in...
-        if (user != null) {
-            int myUserId = user.getId();
-            URI forgottenPasswordUri = plugin.uriBuilder.forgottenPassword(myUserId);
-            BrowserUtil.browse(forgottenPasswordUri);
-        }
+        URI forgottenPasswordUri = plugin.uriBuilder.getServerRoot();
+        BrowserUtil.browse(forgottenPasswordUri);
     }
 }

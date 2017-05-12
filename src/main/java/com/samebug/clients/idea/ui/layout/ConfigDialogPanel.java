@@ -22,6 +22,7 @@ import com.samebug.clients.http.exceptions.UserUnauthorized;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.util.SBUtil;
 
 import javax.swing.*;
 import java.net.URI;
@@ -73,7 +74,7 @@ public class ConfigDialogPanel {
             }
 
             // If the api key is changed, clear the userId, which is a derived data.
-            if (!equals(settings.apiKey, currentConfig.apiKey)) {
+            if (!SBUtil.equals(settings.apiKey, currentConfig.apiKey)) {
                 settings.userId = null;
             }
 
@@ -120,10 +121,5 @@ public class ConfigDialogPanel {
         requestTimeout.setValue(settings.requestTimeout);
         apacheLogging.setSelected(settings.isApacheLoggingEnabled);
         tracking.setSelected(settings.isTrackingEnabled);
-    }
-
-    // TODO lifted java 8 Objects.equals, remove it when we use java 8
-    private static boolean equals(Object a, Object b) {
-        return (a == b) || (a != null && a.equals(b));
     }
 }

@@ -32,7 +32,7 @@ public class HitsLabel extends SamebugLabel {
 
     public HitsLabel(int size) {
         this.size = size;
-        // TODO it would be nice to generalize
+        // IMPROVE it would be nice to generalize
         int fontSize;
         if (size == SMALL) {
             fontSize = 10;

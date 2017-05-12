@@ -65,7 +65,7 @@ public class LoadingAnimation extends JComponent {
     private class MyAnimator extends Animator {
         private int currentFrame;
 
-        public MyAnimator() {
+        MyAnimator() {
             super("loading", 36, 1000, true);
         }
 
@@ -82,7 +82,7 @@ public class LoadingAnimation extends JComponent {
             g2.drawOval(thickness / 2, thickness / 2, size - 2 * (thickness / 2) - 1, size - 2 * (thickness / 2) - 1);
         }
 
-        // TODO we can extract most of the computations to arrays if there is a preformance issue
+        // IMPROVE we can extract most of the computations to arrays if there is a performance issue
         private GradientPaint gradient(float arcCenterDegrees) {
             Color counterPoint = new Color(arcColor.getRed(), arcColor.getGreen(), arcColor.getBlue(), 0);
 

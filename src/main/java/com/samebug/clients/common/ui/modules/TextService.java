@@ -24,7 +24,7 @@ import java.util.Locale;
 
 public final class TextService {
     static final PrettyTime pretty = new PrettyTime(Locale.US);
-    // TODO can't we use java 8 api?
+    // IMPROVE can't we use java 8 api?
     static final DateFormat recent = new SimpleDateFormat("HH:mm");
     static final DateFormat older = new SimpleDateFormat("yyyy.MM.dd");
 

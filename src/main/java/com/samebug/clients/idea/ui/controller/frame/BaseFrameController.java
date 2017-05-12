@@ -79,7 +79,6 @@ public abstract class BaseFrameController<T extends IFrame> implements Disposabl
 
 
         protected void handleInterruptedException(InterruptedException e) {
-            // TODO not sure when could it happen, probably safe to retry
             LOGGER.warn("Loading interrupted", e);
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
