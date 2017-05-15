@@ -19,7 +19,6 @@ import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestTabs;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.base.tabbedPane.SamebugTabHeader;
 import com.samebug.clients.swing.ui.base.tabbedPane.SamebugTabbedPane;
-import com.samebug.clients.swing.ui.frame.solution.WebResultsTab;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import com.samebug.clients.swing.ui.modules.TrackingService;
 

@@ -21,7 +21,7 @@ import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.base.scrollPane.SamebugScrollPane;
 import com.samebug.clients.swing.ui.component.helpRequest.HelpRequest;
-import com.samebug.clients.swing.ui.component.hit.TipHit;
+import com.samebug.clients.swing.ui.component.hit.NonMarkableTipHit;
 import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
@@ -34,14 +34,14 @@ public final class HelpRequestTab extends TransparentPanel implements IHelpReque
     private final JScrollPane scrollPane;
     private final SamebugPanel contentPanel;
     private final HelpRequest request;
-    private final java.util.List<TipHit> tipHits;
+    private final java.util.List<NonMarkableTipHit> tipHits;
 
     public HelpRequestTab(Model model) {
         request = new HelpRequest(model.helpRequest);
-        tipHits = new ArrayList<TipHit>();
+        tipHits = new ArrayList<NonMarkableTipHit>();
         for (int i = 0; i < model.tipHits.size(); i++) {
-            TipHit.Model m = model.tipHits.get(i);
-            TipHit hit = new TipHit(m);
+            NonMarkableTipHit.Model m = model.tipHits.get(i);
+            NonMarkableTipHit hit = new NonMarkableTipHit(m);
             tipHits.add(hit);
         }
 
@@ -79,7 +79,7 @@ public final class HelpRequestTab extends TransparentPanel implements IHelpReque
             for (int i = 0; i < tipHits.size(); i++) {
                 if (i == 0) add(Box.createRigidArea(new Dimension(0, 10)));
                 else add(Box.createRigidArea(new Dimension(0, 20)));
-                TipHit hit = tipHits.get(i);
+                NonMarkableTipHit hit = tipHits.get(i);
                 add(hit);
             }
         }

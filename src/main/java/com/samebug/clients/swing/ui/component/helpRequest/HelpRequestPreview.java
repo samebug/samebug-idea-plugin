@@ -18,14 +18,12 @@ package com.samebug.clients.swing.ui.component.helpRequest;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
 import com.samebug.clients.common.ui.modules.TextService;
 import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.label.TimestampLabel;
 import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
-import com.samebug.clients.swing.ui.modules.ColorService;
-import com.samebug.clients.swing.ui.modules.FontService;
-import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
+import com.samebug.clients.swing.ui.modules.*;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -45,14 +43,16 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
         final SamebugLabel helpRequestBody = new HelpRequestBody(model.helpRequestBody, viewedByMe);
         final InfoBar infos = new InfoBar(model.createdAt);
         final SamebugLabel exceptionBody = new ExceptionPreview(model.exceptionBody, viewedByMe);
+        final ResponseButton responseButton = new ResponseButton();
 
-        setLayout(new MigLayout("fillx", MessageFormat.format("20px[{0}px!]10px[250px, fill]20px", AvatarSize), "20px[]0[]15px[]20px"));
+        setLayout(new MigLayout("fillx", MessageFormat.format("20px[{0}px!]10px[250px, fill]20px", AvatarSize), "20px[]0[]15px[]20px[]10px"));
 
         add(avatar, "cell 0 0, spany 2");
         add(diplayName, "cell 1 0");
         add(infos, "cell 1 0, top left");
         add(helpRequestBody, "cell 1 1, wmin 0");
         add(exceptionBody, "cell 1 2, wmin 0");
+        add(responseButton, "cell 0 3, spanx 2");
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -113,5 +113,16 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
 
     private Listener getListener() {
         return ListenerService.getListener(this, Listener.class);
+    }
+}
+
+final class ResponseButton extends SamebugButton {
+    ResponseButton() {
+        super();
+        setText(MessageService.message("samebug.frame.helpRequestList.response"));
+        setFilled(true);
+        setInteractionColors(ColorService.MarkInteraction);
+        setBackgroundColor(ColorService.Tip);
+        setFont(FontService.demi(14));
     }
 }

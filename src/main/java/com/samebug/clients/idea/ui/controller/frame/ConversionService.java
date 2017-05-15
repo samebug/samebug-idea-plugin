@@ -64,28 +64,25 @@ public final class ConversionService {
     public ConversionService() {
     }
 
-    /**
-     * When showing the hits for a help request, then marking is disabled. This parameter flows through the whole conversion call tree.
-     */
-    public IMarkButton.Model convertMarkPanel(SearchHit hit, boolean disabled) {
-        boolean userCanMark = disabled ? false : hit.getMarkable();
+    public IMarkButton.Model convertMarkPanel(SearchHit hit) {
+        boolean userCanMark = hit.getMarkable();
         Integer activeMarkId = hit.getActiveMark() == null ? null : hit.getActiveMark().getId();
         return new IMarkButton.Model(hit.getVotes().getVotesOnDocument(), activeMarkId, userCanMark);
     }
 
-    public ITipHit.Model tipHit(SearchHit<SamebugTip> hit, boolean disabled) {
+    public ITipHit.Model tipHit(SearchHit<SamebugTip> hit) {
         SamebugTip tip = hit.getSolution().getDocument();
-        IMarkButton.Model mark = convertMarkPanel(hit, disabled);
+        IMarkButton.Model mark = convertMarkPanel(hit);
         RegisteredSamebugUser author = tip.getAuthor();
         return new ITipHit.Model(tip.getMessage(), hit.getSolution().getId(), tip.getCreatedAt(), author.getDisplayName(), author.getAvatarUrl(), mark);
     }
 
-    public IWebResultsTab.Model webResultsTab(List<SearchHit<ExternalDocument>> solutions, boolean disabled) {
+    public IWebResultsTab.Model webResultsTab(List<SearchHit<ExternalDocument>> solutions) {
         final List<IWebHit.Model> webHits = new ArrayList<IWebHit.Model>(solutions.size());
         for (SearchHit<ExternalDocument> externalHit : solutions) {
             SolutionSlot<ExternalDocument> externalSolution = externalHit.getSolution();
             ExternalDocument doc = externalSolution.getDocument();
-            IMarkButton.Model mark = convertMarkPanel(externalHit, disabled);
+            IMarkButton.Model mark = convertMarkPanel(externalHit);
             IWebHit.Model webHit =
                     new IWebHit.Model(doc.getTitle(), doc.getUrl(), externalSolution.getId(),
                             externalSolution.getCreatedAt(), doc.getAuthor().getDisplayName(),
@@ -96,10 +93,10 @@ public final class ConversionService {
         return new IWebResultsTab.Model(webHits);
     }
 
-    public ITipResultsTab.Model tipResultsTab(Search search, List<SearchHit<SamebugTip>> solutions, BugmateList bugmates, HelpRequest helpRequest, boolean disabled) {
+    public ITipResultsTab.Model tipResultsTab(Search search, List<SearchHit<SamebugTip>> solutions, BugmateList bugmates, HelpRequest helpRequest) {
         final List<ITipHit.Model> tipHits = new ArrayList<ITipHit.Model>(solutions.size());
         for (SearchHit<SamebugTip> tipSolution : solutions) {
-            ITipHit.Model tipHit = tipHit(tipSolution, disabled);
+            ITipHit.Model tipHit = tipHit(tipSolution);
             tipHits.add(tipHit);
         }
         final List<IBugmateHit.Model> bugmateHits = new ArrayList<IBugmateHit.Model>(bugmates.getData().size());
@@ -135,8 +132,8 @@ public final class ConversionService {
 
     public ISolutionFrame.Model solutionFrame(Search search, List<SearchHit<SamebugTip>> tipHits, List<SearchHit<ExternalDocument>> webHits,
                                               BugmateList bugmates, HelpRequest helpRequest, IncomingHelpRequestList incomingRequests, Me user, UserStats statistics) {
-        IWebResultsTab.Model webResults = webResultsTab(webHits, false);
-        ITipResultsTab.Model tipResults = tipResultsTab(search, tipHits, bugmates, helpRequest, false);
+        IWebResultsTab.Model webResults = webResultsTab(webHits);
+        ITipResultsTab.Model tipResults = tipResultsTab(search, tipHits, bugmates, helpRequest);
 
         IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(bugmates.getMeta().getTotal());
         String exceptionTitle = headLine(search.getQueryInfo());
@@ -156,7 +153,7 @@ public final class ConversionService {
         HelpRequest helpRequest = helpRequestMatch.getHelpRequest();
         final List<ITipHit.Model> tipHitModels = new ArrayList<ITipHit.Model>(tipHits.size());
         for (SearchHit<SamebugTip> tipSolution : tipHits) {
-            ITipHit.Model tipHit = tipHit(tipSolution, true);
+            ITipHit.Model tipHit = tipHit(tipSolution);
             tipHitModels.add(tipHit);
         }
         RegisteredSamebugUser requester = helpRequest.getRequester();
@@ -167,7 +164,7 @@ public final class ConversionService {
 
     public IHelpRequestFrame.Model convertHelpRequestFrame(List<SearchHit<SamebugTip>> tipHits, List<SearchHit<ExternalDocument>> webHits, HelpRequestMatch helpRequestMatch,
                                                            IncomingHelpRequestList incomingRequests, Me user, UserStats statistics) {
-        IWebResultsTab.Model webResults = webResultsTab(webHits, true);
+        IWebResultsTab.Model webResults = webResultsTab(webHits);
         IHelpRequestTab.Model helpRequestTab = helpRequestTab(tipHits, helpRequestMatch);
         IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(0);
         IHelpRequestTabs.Model tabs = new IHelpRequestTabs.Model(webResults, helpRequestTab, cta);

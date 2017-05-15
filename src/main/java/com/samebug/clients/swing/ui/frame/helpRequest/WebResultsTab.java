@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui.frame.solution;
+package com.samebug.clients.swing.ui.frame.helpRequest;
 
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
@@ -26,7 +26,7 @@ import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.base.scrollPane.SamebugScrollPane;
 import com.samebug.clients.swing.ui.component.community.writeTip.WriteTip;
-import com.samebug.clients.swing.ui.component.hit.MarkableWebHit;
+import com.samebug.clients.swing.ui.component.hit.NonMarkableWebHit;
 import com.samebug.clients.swing.ui.modules.*;
 import net.miginfocom.swing.MigLayout;
 
@@ -42,17 +42,17 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
 
     private final JScrollPane scrollPane;
     private final JPanel contentPanel;
-    private final List<MarkableWebHit> webHits;
+    private final List<NonMarkableWebHit> webHits;
 
     private ComponentAnimation myAnimation;
 
     public WebResultsTab(Model model, IHelpOthersCTA.Model ctaModel) {
         this.ctaModel = new IHelpOthersCTA.Model(ctaModel);
 
-        webHits = new ArrayList<MarkableWebHit>();
+        webHits = new ArrayList<NonMarkableWebHit>();
         for (int i = 0; i < model.webHits.size(); i++) {
-            MarkableWebHit.Model m = model.webHits.get(i);
-            MarkableWebHit hit = new MarkableWebHit(m);
+            NonMarkableWebHit.Model m = model.webHits.get(i);
+            NonMarkableWebHit hit = new NonMarkableWebHit(m);
             webHits.add(hit);
         }
 
@@ -114,7 +114,7 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
             // webHits is required to be initialized here (the hit views are actually added to the list)
             for (int i = 0; i < webHits.size(); i++) {
                 if (i != 0) add(new Separator(), gbc);
-                MarkableWebHit hit = webHits.get(i);
+                NonMarkableWebHit hit = webHits.get(i);
                 add(hit, gbc);
                 DataService.putData(hit, DataService.WebHitIndex, i);
             }
@@ -155,7 +155,7 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
     }
 
     private Listener getListener() {
-        return ListenerService.getListener(this, IWebResultsTab.Listener.class);
+        return ListenerService.getListener(this, Listener.class);
     }
 
     private final class MyFadeOut extends FadeOutAnimation {

@@ -29,7 +29,7 @@ import com.samebug.clients.swing.ui.component.bugmate.BugmateList;
 import com.samebug.clients.swing.ui.component.bugmate.RequestHelp;
 import com.samebug.clients.swing.ui.component.bugmate.RevokeHelpRequest;
 import com.samebug.clients.swing.ui.component.community.writeTip.WriteTip;
-import com.samebug.clients.swing.ui.component.hit.TipHit;
+import com.samebug.clients.swing.ui.component.hit.MarkableTipHit;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -39,15 +39,15 @@ import java.util.List;
 
 public final class TipResultsTab extends TransparentPanel implements ITipResultsTab {
     private final ContentPanel contentPanel;
-    private final List<TipHit> tipHits;
+    private final List<MarkableTipHit> tipHits;
 
     private ComponentAnimation myAnimation;
 
     public TipResultsTab(Model model, IHelpOthersCTA.Model ctaModel) {
-        tipHits = new ArrayList<TipHit>();
+        tipHits = new ArrayList<MarkableTipHit>();
         for (int i = 0; i < model.tipHits.size(); i++) {
-            TipHit.Model m = model.tipHits.get(i);
-            TipHit hit = new TipHit(m);
+            MarkableTipHit.Model m = model.tipHits.get(i);
+            MarkableTipHit hit = new MarkableTipHit(m);
             tipHits.add(hit);
         }
         contentPanel = new ContentPanel(ctaModel, model.bugmateList, model.myHelpRequest, model.askForHelp);
@@ -76,7 +76,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
     }
 
     public ControllableAnimation animatedAddTip(final ITipHit.Model model, final int tipFloatInFrames) {
-        final TipHit newTip = new TipHit(model);
+        final MarkableTipHit newTip = new MarkableTipHit(model);
         return contentPanel.addTip(newTip, tipHits, tipFloatInFrames);
     }
 
@@ -103,7 +103,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
             }
         }
 
-        void setContent(List<TipHit> tipHits) {
+        void setContent(List<MarkableTipHit> tipHits) {
             removeAll();
             listPanel.setContent(tipHits);
             if (tipHits.size() > 0 && bugmateListModel.bugmateHits.size() > 0) {
@@ -145,7 +145,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
             validate();
         }
 
-        ControllableAnimation addTip(final TipHit newTip, final List<TipHit> tipHits, int tipFloatInFrames) {
+        ControllableAnimation addTip(final MarkableTipHit newTip, final List<MarkableTipHit> tipHits, int tipFloatInFrames) {
             if (contentPanelAnimation != null) contentPanelAnimation.forceFinish();
 
             contentPanelAnimation = new GrowFromTop(tipFloatInFrames, newTip.getPreferredSize().height);
@@ -186,12 +186,12 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         }
 
-        void setContent(List<TipHit> tipHits) {
+        void setContent(List<MarkableTipHit> tipHits) {
             removeAll();
             for (int i = 0; i < tipHits.size(); i++) {
                 if (i == 0) add(Box.createRigidArea(new Dimension(0, 10)));
                 else add(Box.createRigidArea(new Dimension(0, 20)));
-                TipHit hit = tipHits.get(i);
+                MarkableTipHit hit = tipHits.get(i);
                 add(hit);
             }
         }

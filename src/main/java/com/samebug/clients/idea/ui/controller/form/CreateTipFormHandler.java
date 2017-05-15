@@ -50,7 +50,7 @@ public abstract class CreateTipFormHandler extends PostFormHandler<SearchHit<Sam
 
     @Override
     protected final void afterPostForm(@NotNull SearchHit<SamebugTip> response) {
-        ITipHit.Model tip = IdeaSamebugPlugin.getInstance().conversionService.tipHit(response, false);
+        ITipHit.Model tip = IdeaSamebugPlugin.getInstance().conversionService.tipHit(response);
         afterPostFormUI(tip);
     }
 

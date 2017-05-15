@@ -20,54 +20,42 @@ import com.samebug.clients.common.ui.modules.TextService;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.label.TimestampLabel;
 import com.samebug.clients.swing.ui.base.multiline.LinkMultilineLabel;
-import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.modules.*;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
 
-public final class WebHit extends SamebugPanel implements IWebHit {
-    private final Model model;
+final class WebHitTitlePanel extends TransparentPanel {
+    private static final int Size = 40;
+    private final IWebHit.Model model;
 
-    private final MarkButton markButton;
+    WebHitTitlePanel(@NotNull final IWebHit webHit, @NotNull final IWebHit.Model model) {
+        this.model = model;
 
-    public WebHit(Model model) {
-        this.model = new Model(model);
+        final SourceIcon sourceIcon = new SourceIcon();
+        final TitleLabel title = new TitleLabel();
+        final SourceLabel source = new SourceLabel();
 
-        DataService.putData(this, DataService.SolutionId, model.solutionId);
-        markButton = new MarkButton(model.mark);
-        final TitlePanel titlePanel = new TitlePanel();
+        setLayout(new MigLayout("", "0[]9px[]0", "0[]0[]0"));
+        add(sourceIcon, MessageFormat.format("w {0}px!, h {0}px!, cell 0 0, span 1 2, ay top", Size));
+        add(title, MessageFormat.format("wmin 0, hmax {0}px, growx, cell 1 0", Size));
+        add(source, "wmin 0, growx, cell 1 1");
 
-        setLayout(new MigLayout("fillx", "0[300px]0", "0[]16px[]0"));
-
-        add(titlePanel, "growx, cell 0 0");
-        add(markButton, "cell 0 1");
+        title.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                getListener().urlClicked(webHit, model.url);
+            }
+        });
     }
 
-    private final class TitlePanel extends TransparentPanel {
-        private static final int Size = 40;
-
-        {
-            final SourceIcon sourceIcon = new SourceIcon();
-            final TitleLabel title = new TitleLabel();
-            final SourceLabel source = new SourceLabel();
-
-            setLayout(new MigLayout("", "0[]9px[]0", "0[]0[]0"));
-            add(sourceIcon, MessageFormat.format("w {0}px!, h {0}px!, cell 0 0, span 1 2, ay top", Size));
-            add(title, MessageFormat.format("wmin 0, hmax {0}px, growx, cell 1 0", Size));
-            add(source, "wmin 0, growx, cell 1 1");
-
-            title.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    getListener().urlClicked(WebHit.this, model.url);
-                }
-            });
-        }
+    private IWebHit.Listener getListener() {
+        return ListenerService.getListener(this, IWebHit.Listener.class);
     }
 
     private final class TitleLabel extends LinkMultilineLabel {
@@ -81,7 +69,7 @@ public final class WebHit extends SamebugPanel implements IWebHit {
             if (getLineCount() <= 1) {
                 return new Dimension(Integer.MAX_VALUE, 18);
             } else {
-                return new Dimension(Integer.MAX_VALUE, TitlePanel.Size);
+                return new Dimension(Integer.MAX_VALUE, WebHitTitlePanel.Size);
             }
         }
     }
@@ -95,8 +83,7 @@ public final class WebHit extends SamebugPanel implements IWebHit {
         public void updateRelativeTimestamp() {
             String sourceText;
             final String timestamp = TextService.prettyTime(model.createdAt);
-            if (model.createdBy == null) sourceText = MessageService.message("samebug.component.webHit.sourceLabel.withoutAuthor", model.sourceName, timestamp);
-            else sourceText = MessageService.message("samebug.component.webHit.sourceLabel.withAuthor", model.sourceName, timestamp, model.createdBy);
+            sourceText = MessageService.message("samebug.component.webHit.sourceLabel.withAuthor", model.sourceName, timestamp, model.createdBy);
             setText(sourceText);
         }
     }
@@ -105,7 +92,7 @@ public final class WebHit extends SamebugPanel implements IWebHit {
         private final Image[] sourceIcon;
 
         {
-            sourceIcon = WebImageService.getSource(model.sourceIcon, TitlePanel.Size, TitlePanel.Size);
+            sourceIcon = WebImageService.getSource(model.sourceIcon, WebHitTitlePanel.Size, WebHitTitlePanel.Size);
         }
 
         @Override
@@ -113,10 +100,6 @@ public final class WebHit extends SamebugPanel implements IWebHit {
             Graphics2D g2 = DrawService.init(g);
             g2.drawImage(ColorService.forCurrentTheme(sourceIcon), 0, 0, null, null);
         }
-    }
-
-    private Listener getListener() {
-        return ListenerService.getListener(this, IWebHit.Listener.class);
     }
 
 }
