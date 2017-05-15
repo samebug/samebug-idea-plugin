@@ -17,13 +17,13 @@ package com.samebug.clients.idea.ui.controller.solution;
 
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
+import com.samebug.clients.common.ui.frame.solution.IResultTabs;
 import com.samebug.clients.http.entities.search.NewSearchHit;
 import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.http.entities.solution.NewSolution;
 import com.samebug.clients.http.entities.solution.NewTip;
 import com.samebug.clients.http.entities.solution.SamebugTip;
 import com.samebug.clients.idea.ui.controller.form.CreateTipFormHandler;
-import com.samebug.clients.swing.ui.component.community.writeTip.WriteTip;
 import com.samebug.clients.swing.ui.frame.solution.ResultTabs;
 import com.samebug.clients.swing.ui.modules.ComponentService;
 import org.jetbrains.annotations.NotNull;
@@ -46,13 +46,14 @@ final class HelpOthersCTAListener implements IHelpOthersCTA.Listener {
             protected void afterPostForm(@NotNull SearchHit<SamebugTip> response) {
                 ITipHit.Model tip = controller.conversionService.tipHit(response, false);
 
-                WriteTip writeTip = ComponentService.findAncestor((Component) source, WriteTip.class);
+                IHelpOthersCTA writeTip = ComponentService.findAncestor((Component) source, IHelpOthersCTA.class);
                 assert writeTip != null;
-                ResultTabs resultTabs = ComponentService.findAncestor(writeTip, ResultTabs.class);
+                IResultTabs resultTabs = ComponentService.findAncestor((Component) writeTip, IResultTabs.class);
                 assert resultTabs != null;
 
-                writeTip.successPostTip();
-                resultTabs.animatedAddTip(tip);
+                writeTip.successPostTip(tip);
+                // TODO move this method to interface
+                ((ResultTabs) resultTabs).animatedAddTip(tip);
             }
         }.execute();
     }

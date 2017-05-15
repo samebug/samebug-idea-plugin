@@ -66,10 +66,10 @@ public class SolutionFrameTest extends TestDialog {
         ListenerService.putListenerToComponent(f, IHelpOthersCTA.Listener.class, new IHelpOthersCTA.Listener() {
             @Override
             public void postTip(IHelpOthersCTA source, String tipBody) {
-                // TODO can be helpRequest
                 WriteTip writeTip = ComponentService.findAncestor((Component) source, WriteTip.class);
                 ResultTabs resultTabs = ComponentService.findAncestor(writeTip, ResultTabs.class);
-
+                writeTip.successPostTip(new ITipHit.Model(tipBody, 1, new Date(), "me", null,
+                        new IMarkButton.Model(0, null, false)));
                 resultTabs.animatedAddTip(new ITipHit.Model(tipBody, 0, new Date(), "me", null,
                         new IMarkButton.Model(0, 0, true)));
             }

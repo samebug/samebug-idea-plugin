@@ -15,10 +15,13 @@
  */
 package com.samebug.clients.common.ui.component.community;
 
+import com.samebug.clients.common.ui.component.hit.ITipHit;
+import org.jetbrains.annotations.NotNull;
+
 public interface IHelpOthersCTA {
     void startPostTip();
 
-    void successPostTip();
+    void successPostTip(@NotNull ITipHit.Model tip);
 
     void failPostTipWithFormError(BadRequest errors);
 

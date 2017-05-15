@@ -64,7 +64,7 @@ public final class ResultTabs extends SamebugTabbedPane implements IResultTabs {
 
         private ControllableAnimation animationChain;
 
-        public ShowNewTipAnimation(final ITipHit.Model model) {
+        ShowNewTipAnimation(final ITipHit.Model model) {
             // TODO the Animator should compute its totalFrames from the internal ControllableAnimation
             super("ShowNewTipAnimation", FadeOutFrames + FadeInFrames + TipFloatInFrames, CycleDuration, false);
 

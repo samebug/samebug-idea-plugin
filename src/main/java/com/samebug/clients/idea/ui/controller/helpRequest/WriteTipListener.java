@@ -16,6 +16,7 @@
 package com.samebug.clients.idea.ui.controller.helpRequest;
 
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
+import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
 import com.samebug.clients.http.entities.search.NewSearchHit;
@@ -45,8 +46,9 @@ final class WriteTipListener implements IHelpOthersCTA.Listener {
         new CreateTipFormHandler(controller.view, source, formData, accessibleSearchId) {
             @Override
             protected void afterPostForm(@NotNull SearchHit<SamebugTip> response) {
+                ITipHit.Model tip = controller.conversionService.tipHit(response, false);
                 // TODO animation
-                controller.load();
+                source.successPostTip(tip);
             }
         }.execute();
     }

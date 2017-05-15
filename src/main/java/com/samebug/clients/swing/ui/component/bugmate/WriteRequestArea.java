@@ -30,7 +30,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public final class WriteRequestArea extends JComponent {
-    public static final int MaxOvershootCharacters = 300;
     public static final int MaxCharacters = 256;
 
     final RequestHelp requestHelp;

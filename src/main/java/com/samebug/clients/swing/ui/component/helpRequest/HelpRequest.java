@@ -17,128 +17,85 @@ package com.samebug.clients.swing.ui.component.helpRequest;
 
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequest;
-import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.swing.ui.base.button.SamebugButton;
+import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
-import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
-import com.samebug.clients.swing.ui.component.community.writeTip.WriteTipArea;
-import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
-import com.samebug.clients.swing.ui.modules.*;
+import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.FontService;
+import com.samebug.clients.swing.ui.modules.ListenerService;
+import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 public final class HelpRequest extends RoundedBackgroundPanel implements IHelpRequest, IHelpOthersCTA {
-    private static final int AvatarSize = 40;
-    final ActionRow actions;
-    final WriteTipArea writeTipArea;
+    static final int AvatarSize = 40;
+    private NonAnsweredHelpRequestScreen nonAnsweredSceen;
+    private AnsweredHelpRequestScreen answeredScreen;
 
     public HelpRequest(IHelpRequest.Model model) {
-        final SamebugLabel titleLabel = new TitleLabel();
-        final AvatarIcon avatar = new AvatarIcon(model.avatarUrl, AvatarSize);
-        final SamebugLabel displayName = new DisplayName(model.displayName);
-        final HelpRequestBody helpRequestBody = new HelpRequestBody(model.helpRequestBody);
-        writeTipArea = new WriteTipArea(MessageService.message("samebug.component.helpRequest.answer.placeholder", model.displayName));
-        actions = new ActionRow();
-
-        setBackgroundColor(ColorService.Tip);
-        setLayout(new MigLayout("fillx", "20px[40px!]10px[300px, fill]20px", "20px[]20px[]0[]30px[]10px[]20px"));
-        add(titleLabel, "cell 0 0, spanx 2");
-        add(avatar, "cell 0 1, spany 2, top");
-        add(displayName, "cell 1 1, growx");
-        add(helpRequestBody, "cell 1 2, wmin 0");
-        add(writeTipArea, "cell 0 3, wmin 0, spanx 2, growx");
-        add(actions, "cell 0 4, spanx 2, growx");
-
+        nonAnsweredSceen = new NonAnsweredHelpRequestScreen(this, model);
+        setLayout(new MigLayout("fillx", "0[fill]0", "0[fill]0"));
+        add(nonAnsweredSceen);
     }
 
     @Override
     public void startPostTip() {
-        actions.sendButton.changeToLoadingAnimation();
+        if (nonAnsweredSceen != null) nonAnsweredSceen.actions.sendButton.changeToLoadingAnimation();
     }
 
     @Override
-    public void successPostTip() {
-        actions.sendButton.revertFromLoadingAnimation();
+    public void successPostTip(@NotNull ITipHit.Model tip) {
+        if (nonAnsweredSceen != null) {
+            nonAnsweredSceen.actions.sendButton.revertFromLoadingAnimation();
+            answeredScreen = new AnsweredHelpRequestScreen(this, nonAnsweredSceen.model, tip);
+
+            nonAnsweredSceen = null;
+            removeAll();
+            add(answeredScreen);
+        }
     }
 
     @Override
     public void failPostTipWithFormError(@Nullable final BadRequest errors) {
-        actions.sendButton.revertFromLoadingAnimation();
-        if (errors != null) {
-            if (errors.tipBody != null) writeTipArea.setFormError(errors.tipBody);
-        }
-        revalidate();
-        repaint();
+        if (nonAnsweredSceen != null) {
+            nonAnsweredSceen.actions.sendButton.revertFromLoadingAnimation();
+            if (errors != null) {
+                if (errors.tipBody != null) nonAnsweredSceen.writeTipArea.setFormError(errors.tipBody);
+            }
+            revalidate();
+            repaint();
 
 //        TrackingService.trace(Events.writeTipError(errors));
-    }
-
-    final class TitleLabel extends SamebugLabel {
-        TitleLabel() {
-            setText(MessageService.message("samebug.component.helpRequest.answer.title"));
-            setFont(FontService.regular(16));
-            setForegroundColor(ColorService.TipText);
         }
-    }
-
-    final class DisplayName extends SamebugLabel {
-        DisplayName(String name) {
-            super(name);
-            setFont(FontService.demi(16));
-            setForegroundColor(ColorService.TipText);
-        }
-    }
-
-    final class HelpRequestBody extends SamebugMultilineLabel {
-        HelpRequestBody(String body) {
-            setText(body);
-            setFont(FontService.regular(16));
-            setForegroundColor(ColorService.TipText);
-        }
-    }
-
-    final class SendButton extends SamebugButton {
-        SendButton() {
-            super();
-            setText(MessageService.message("samebug.component.tip.write.send"));
-            setFilled(true);
-            setInteractionColors(ColorService.MarkInteraction);
-            setBackgroundColor(ColorService.Tip);
-            setFont(FontService.demi(14));
-            addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    if (isEnabled()) {
-                        getListener().postTip(HelpRequest.this, writeTipArea.getText());
-                        TrackingService.trace(Events.writeTipSend());
-                    }
-                }
-            });
-        }
-    }
-
-    final class ActionRow extends TransparentPanel {
-        final SendButton sendButton;
-
-        {
-            sendButton = new SendButton();
-            // TODO postponed feature
-//            final SamebugLabel why = new SamebugLabel(MessageService.message("samebug.component.helpRequest.answer.explain"));
-//            why.setHorizontalAlignment(SwingConstants.RIGHT);
-
-            setLayout(new MigLayout("fillx", "0[]0", "0[]0"));
-            add(sendButton);
-        }
-
     }
 
     Listener getListener() {
         return ListenerService.getListener(this, Listener.class);
     }
+}
 
+final class HelpRequestTitleLabel extends SamebugLabel {
+    HelpRequestTitleLabel() {
+        setText(MessageService.message("samebug.component.helpRequest.answer.title"));
+        setFont(FontService.regular(16));
+        setForegroundColor(ColorService.TipText);
+    }
+}
+
+final class DisplayName extends SamebugLabel {
+    DisplayName(String name) {
+        super(name);
+        setFont(FontService.demi(16));
+        setForegroundColor(ColorService.TipText);
+    }
+}
+
+final class HelpRequestBody extends SamebugMultilineLabel {
+    HelpRequestBody(String body) {
+        setText(body);
+        setFont(FontService.regular(16));
+        setForegroundColor(ColorService.TipText);
+    }
 }

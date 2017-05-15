@@ -16,6 +16,7 @@
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
+import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import com.samebug.clients.swing.ui.modules.MessageService;
@@ -50,7 +51,7 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
     }
 
     @Override
-    public void successPostTip() {
+    public void successPostTip(@NotNull ITipHit.Model tip) {
         // TODO do we have to properly close the loading animation on the send button?
         if (ctaScreen == null) changeToClosedState();
     }
