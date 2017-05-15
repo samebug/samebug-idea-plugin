@@ -124,5 +124,11 @@ final class ResponseButton extends SamebugButton {
         setInteractionColors(ColorService.MarkInteraction);
         setBackgroundColor(ColorService.Tip);
         setFont(FontService.demi(14));
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                ResponseButton.this.getParent().dispatchEvent(e);
+            }
+        });
     }
 }
