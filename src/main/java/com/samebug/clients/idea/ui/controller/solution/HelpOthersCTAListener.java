@@ -19,20 +19,21 @@ import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.solution.IResultTabs;
 import com.samebug.clients.http.entities.search.NewSearchHit;
-import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.http.entities.solution.NewSolution;
 import com.samebug.clients.http.entities.solution.NewTip;
-import com.samebug.clients.http.entities.solution.SamebugTip;
+import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.idea.ui.controller.form.CreateTipFormHandler;
 import com.samebug.clients.swing.ui.frame.solution.ResultTabs;
 import com.samebug.clients.swing.ui.modules.ComponentService;
+import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
 final class HelpOthersCTAListener implements IHelpOthersCTA.Listener {
     @NotNull
-    final SolutionFrameController controller;
+    private final SolutionFrameController controller;
 
     HelpOthersCTAListener(@NotNull final SolutionFrameController controller) {
         this.controller = controller;
@@ -41,19 +42,33 @@ final class HelpOthersCTAListener implements IHelpOthersCTA.Listener {
     @Override
     public void postTip(@NotNull final IHelpOthersCTA source, @NotNull final String tipBody) {
         NewSearchHit formData = new NewSearchHit(new NewSolution(new NewTip(tipBody, null)));
-        new CreateTipFormHandler(controller.view, source, formData, controller.searchId) {
-            @Override
-            protected void afterPostForm(@NotNull SearchHit<SamebugTip> response) {
-                ITipHit.Model tip = controller.conversionService.tipHit(response, false);
 
-                IHelpOthersCTA writeTip = ComponentService.findAncestor((Component) source, IHelpOthersCTA.class);
-                assert writeTip != null;
-                IResultTabs resultTabs = ComponentService.findAncestor((Component) writeTip, IResultTabs.class);
+        new CreateTipFormHandler(formData, controller.searchId) {
+            @Override
+            protected void beforePostForm() {
+                source.startPostTip();
+            }
+
+            @Override
+            protected void afterPostFormUI(@NotNull ITipHit.Model tip) {
+                IResultTabs resultTabs = ComponentService.findAncestor((Component) source, IResultTabs.class);
                 assert resultTabs != null;
 
-                writeTip.successPostTip(tip);
+                source.successPostTip(tip);
                 // TODO move this method to interface
                 ((ResultTabs) resultTabs).animatedAddTip(tip);
+            }
+
+            @Override
+            protected void handleBadRequestUI(@Nullable IHelpOthersCTA.BadRequest errors) {
+                if (errors == null) controller.view.popupError(MessageService.message("samebug.component.tip.write.error.unhandled"));
+                source.failPostTipWithFormError(errors);
+            }
+
+            @Override
+            protected void handleOtherClientExceptions(@NotNull SamebugClientException exception) {
+                controller.view.popupError(MessageService.message("samebug.component.tip.write.error.unhandled"));
+                source.failPostTipWithFormError(null);
             }
         }.execute();
     }

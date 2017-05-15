@@ -18,7 +18,6 @@ package com.samebug.clients.idea.ui.controller.form;
 import com.intellij.openapi.application.ApplicationManager;
 import com.samebug.clients.http.exceptions.FormException;
 import com.samebug.clients.http.exceptions.SamebugClientException;
-import com.samebug.clients.http.form.HelpRequestCreate;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class PostFormHandler<T, E extends FormException> {
@@ -66,7 +65,7 @@ public abstract class PostFormHandler<T, E extends FormException> {
      * Runs on background thread
      */
     @NotNull
-    protected abstract T postForm() throws E, SamebugClientException, HelpRequestCreate.BadRequest;
+    protected abstract T postForm() throws E, SamebugClientException;
 
     /**
      * Runs on UI thread

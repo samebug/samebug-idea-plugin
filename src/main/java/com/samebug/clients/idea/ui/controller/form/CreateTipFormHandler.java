@@ -18,48 +18,45 @@ package com.samebug.clients.idea.ui.controller.form;
 import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
-import com.samebug.clients.common.ui.frame.IFrame;
+import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.http.entities.search.NewSearchHit;
 import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.http.entities.solution.SamebugTip;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.TipCreate;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class CreateTipFormHandler extends PostFormHandler<SearchHit<SamebugTip>, TipCreate.BadRequest> {
     private static final Logger LOGGER = Logger.getInstance(CreateTipFormHandler.class);
-    @NotNull
-    final IFrame frame;
-    @NotNull
-    final IHelpOthersCTA form;
+
     @NotNull
     final NewSearchHit data;
     @NotNull
     final Integer searchId;
 
-    public CreateTipFormHandler(@NotNull final IFrame frame, @NotNull final IHelpOthersCTA form, @NotNull final NewSearchHit data, @NotNull final Integer searchId) {
-        this.frame = frame;
-        this.form = form;
+    public CreateTipFormHandler(@NotNull final NewSearchHit data, @NotNull final Integer searchId) {
         this.data = data;
         this.searchId = searchId;
     }
 
-    @Override
-    protected void beforePostForm() {
-        form.startPostTip();
-    }
-
     @NotNull
     @Override
-    protected SearchHit<SamebugTip> postForm() throws SamebugClientException, TipCreate.BadRequest {
+    protected final SearchHit<SamebugTip> postForm() throws SamebugClientException, TipCreate.BadRequest {
         final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
         return solutionService.postTip(searchId, data);
     }
 
     @Override
-    protected void handleBadRequest(@NotNull final TipCreate.BadRequest fieldErrors) {
+    protected final void afterPostForm(@NotNull SearchHit<SamebugTip> response) {
+        ITipHit.Model tip = IdeaSamebugPlugin.getInstance().conversionService.tipHit(response, false);
+        afterPostFormUI(tip);
+    }
+
+    @Override
+    protected final void handleBadRequest(@NotNull final TipCreate.BadRequest fieldErrors) {
+        IHelpOthersCTA.BadRequest error = null;
         IHelpOthersCTA.BadRequest.TipBody tipBody = null;
         for (TipCreate.ErrorCode errorCode : fieldErrors.errorList.getErrorCodes()) {
             switch (errorCode) {
@@ -73,18 +70,12 @@ public abstract class CreateTipFormHandler extends PostFormHandler<SearchHit<Sam
                     LOGGER.warn("Unhandled error code " + errorCode);
             }
         }
-        if (tipBody != null) {
-            IHelpOthersCTA.BadRequest b = new IHelpOthersCTA.BadRequest(tipBody);
-            form.failPostTipWithFormError(b);
-        } else {
-            frame.popupError(MessageService.message("samebug.component.tip.write.error.unhandled"));
-            form.failPostTipWithFormError(null);
-        }
+        if (tipBody != null) error = new IHelpOthersCTA.BadRequest(tipBody);
+        handleBadRequestUI(error);
     }
 
-    @Override
-    protected void handleOtherClientExceptions(@NotNull SamebugClientException exception) {
-        frame.popupError(MessageService.message("samebug.component.tip.write.error.unhandled"));
-        form.failPostTipWithFormError(null);
-    }
+    protected abstract void afterPostFormUI(@NotNull ITipHit.Model tip);
+
+    protected abstract void handleBadRequestUI(@Nullable IHelpOthersCTA.BadRequest errors);
+
 }

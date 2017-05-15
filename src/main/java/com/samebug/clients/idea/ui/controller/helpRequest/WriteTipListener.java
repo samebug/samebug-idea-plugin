@@ -20,12 +20,13 @@ import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
 import com.samebug.clients.http.entities.search.NewSearchHit;
-import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.http.entities.solution.NewSolution;
 import com.samebug.clients.http.entities.solution.NewTip;
-import com.samebug.clients.http.entities.solution.SamebugTip;
+import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.idea.ui.controller.form.CreateTipFormHandler;
+import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 final class WriteTipListener implements IHelpOthersCTA.Listener {
     @NotNull
@@ -43,12 +44,27 @@ final class WriteTipListener implements IHelpOthersCTA.Listener {
         final Integer accessibleSearchId = match.getMatchingGroup().getLastSearchId();
 
         NewSearchHit formData = new NewSearchHit(new NewSolution(new NewTip(tipBody, null), helpRequestId));
-        new CreateTipFormHandler(controller.view, source, formData, accessibleSearchId) {
+        new CreateTipFormHandler(formData, accessibleSearchId) {
             @Override
-            protected void afterPostForm(@NotNull SearchHit<SamebugTip> response) {
-                ITipHit.Model tip = controller.conversionService.tipHit(response, false);
-                // TODO animation
+            protected void beforePostForm() {
+                source.startPostTip();
+            }
+
+            @Override
+            protected void afterPostFormUI(@NotNull ITipHit.Model tip) {
                 source.successPostTip(tip);
+            }
+
+            @Override
+            protected void handleBadRequestUI(@Nullable IHelpOthersCTA.BadRequest errors) {
+                if (errors == null) controller.view.popupError(MessageService.message("samebug.component.tip.write.error.unhandled"));
+                source.failPostTipWithFormError(errors);
+            }
+
+            @Override
+            protected void handleOtherClientExceptions(@NotNull SamebugClientException exception) {
+                controller.view.popupError(MessageService.message("samebug.component.tip.write.error.unhandled"));
+                source.failPostTipWithFormError(null);
             }
         }.execute();
     }
