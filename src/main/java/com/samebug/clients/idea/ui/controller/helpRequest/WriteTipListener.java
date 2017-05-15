@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.ui.controller.helpRequest;
 
+import com.samebug.clients.common.entities.search.ReadableSearchGroup;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
@@ -32,16 +33,17 @@ final class WriteTipListener implements IHelpOthersCTA.Listener {
     @NotNull
     final HelpRequestController controller;
 
-    WriteTipListener(final HelpRequestController controller) {
+    WriteTipListener(@NotNull final HelpRequestController controller) {
         this.controller = controller;
     }
 
     @Override
     public void postTip(@NotNull final IHelpOthersCTA source, @NotNull final String tipBody) {
         final HelpRequestMatch match = controller.getHelpRequestMatch();
+        final ReadableSearchGroup readableGroup = controller.getReadableSearchGroup();
         final HelpRequest helpRequest = match.getHelpRequest();
         final String helpRequestId = helpRequest.getId();
-        final Integer accessibleSearchId = match.getMatchingGroup().getLastSearchId();
+        final Integer accessibleSearchId = readableGroup.getLastSearchId();
 
         NewSearchHit formData = new NewSearchHit(new NewSolution(new NewTip(tipBody, null), helpRequestId));
         new CreateTipFormHandler(formData, accessibleSearchId) {

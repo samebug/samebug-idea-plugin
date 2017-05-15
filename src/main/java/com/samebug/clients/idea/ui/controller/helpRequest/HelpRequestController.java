@@ -19,6 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.entities.search.ReadableSearchGroup;
 import com.samebug.clients.common.services.HelpRequestStore;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.hit.IWebHit;
@@ -54,6 +55,8 @@ import java.util.concurrent.Future;
 public final class HelpRequestController extends BaseFrameController<IHelpRequestFrame> implements Disposable {
     @NotNull
     final HelpRequestMatch helpRequestMatch;
+    @NotNull
+    final ReadableSearchGroup readableGroup;
 
     final RefreshListener refreshListener;
     final ProfileUpdateListener profileUpdateListener;
@@ -66,9 +69,10 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
     final HelpRequestStore helpRequestStore;
 
 
-    public HelpRequestController(ToolWindowController twc, Project project, @NotNull final HelpRequestMatch helpRequestMatch) {
+    public HelpRequestController(ToolWindowController twc, Project project, @NotNull final HelpRequestMatch helpRequestMatch, @NotNull final ReadableSearchGroup readableGroup) {
         super(twc, project, new HelpRequestFrame());
         this.helpRequestMatch = helpRequestMatch;
+        this.readableGroup = readableGroup;
 
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
         helpRequestStore = plugin.helpRequestStore;
@@ -100,8 +104,14 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
         projectConnection.subscribe(WebSocketStatusUpdate.TOPIC, profileUpdateListener);
     }
 
+    @NotNull
     public HelpRequestMatch getHelpRequestMatch() {
         return helpRequestMatch;
+    }
+
+    @NotNull
+    public ReadableSearchGroup getReadableSearchGroup() {
+        return readableGroup;
     }
 
 
@@ -109,7 +119,7 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
         // TODO every controllers should also make sure to set the loading screen when starting to load content
         view.setLoading();
 
-        final int accessibleSearchId = helpRequestMatch.getMatchingGroup().getLastSearchId();
+        final int accessibleSearchId = readableGroup.getLastSearchId();
         final Future<Me> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
         final Future<IncomingHelpRequestList> incomingHelpRequestsTask = concurrencyService.incomingHelpRequests(false);

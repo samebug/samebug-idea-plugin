@@ -44,8 +44,8 @@ public final class ResultTabs extends SamebugTabbedPane implements IResultTabs {
         webResultsTab = new WebResultsTab(model.webResults, model.cta);
         tipResultsTab = new TipResultsTab(model.tipResults, model.cta);
 
-        tipResultsTabHeader = (LabelAndHitsTabHeader) addLabeledTab(MessageService.message("samebug.component.solutionFrame.tips.tabName"), tipHits, tipResultsTab);
-        webResultsTabHeader = (LabelAndHitsTabHeader) addLabeledTab(MessageService.message("samebug.component.solutionFrame.webSolutions.tabName"), webHits, webResultsTab);
+        tipResultsTabHeader = (LabelAndHitsTabHeader) addLabeledTab(MessageService.message("samebug.component.tipResultsTab.tabName"), tipHits, tipResultsTab);
+        webResultsTabHeader = (LabelAndHitsTabHeader) addLabeledTab(MessageService.message("samebug.component.webResultsTab.tabName"), webHits, webResultsTab);
         // TODO setSelectedIndex(0) does not work because that is already selected
         tipResultsTabHeader.setSelected(true);
 

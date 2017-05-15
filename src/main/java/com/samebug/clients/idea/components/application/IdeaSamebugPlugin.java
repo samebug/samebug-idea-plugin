@@ -122,7 +122,7 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         concurrencyService = new ConcurrencyService(profileStore, profileService,
                 solutionService,
                 helpRequestStore, helpRequestService,
-                searchStore, searchService);
+                searchService);
 
         TimedTasks timedTasks = new TimedTasks();
         ConsoleSearchController consoleSearchController = new ConsoleSearchController(messageBus.connect(this));

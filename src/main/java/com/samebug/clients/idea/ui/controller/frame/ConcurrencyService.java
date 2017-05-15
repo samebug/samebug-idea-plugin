@@ -39,19 +39,17 @@ public final class ConcurrencyService {
     private final SolutionService solutionService;
     private final HelpRequestStore helpRequestStore;
     private final HelpRequestService helpRequestService;
-    private final SearchStore searchStore;
     private final SearchService searchService;
 
     public ConcurrencyService(ProfileStore profileStore, ProfileService profileService,
                               SolutionService solutionService,
                               HelpRequestStore helpRequestStore, HelpRequestService helpRequestService,
-                              SearchStore searchStore, SearchService searchService) {
+                              SearchService searchService) {
         this.profileStore = profileStore;
         this.profileService = profileService;
         this.solutionService = solutionService;
         this.helpRequestStore = helpRequestStore;
         this.helpRequestService = helpRequestService;
-        this.searchStore = searchStore;
         this.searchService = searchService;
         executor = PooledThreadExecutor.INSTANCE;
     }

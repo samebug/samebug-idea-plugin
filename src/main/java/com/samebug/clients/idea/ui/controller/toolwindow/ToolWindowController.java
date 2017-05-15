@@ -26,6 +26,8 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.entities.search.ReadableSearchGroup;
+import com.samebug.clients.http.entities.EntityUtils;
 import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.FocusListener;
@@ -115,13 +117,17 @@ public final class ToolWindowController implements FocusListener, Disposable {
     public void focusOnHelpRequest(String helpRequestId) {
         HelpRequestMatch match = IdeaSamebugPlugin.getInstance().helpRequestStore.getIncomingHelpRequest(helpRequestId);
         if (match != null) {
-            HelpRequestController controller = new HelpRequestController(this, project, match);
-            controller.load();
-            openTab(controller, MessageService.message("samebug.toolwindow.helpRequest.tabName"));
-            TrackingService.trace(Events.showHelpRequestScreen(controller, helpRequestId));
+            ReadableSearchGroup readableGroup = EntityUtils.getReadableStackTraceSearchGroup(match);
+            if (readableGroup != null) {
+                HelpRequestController controller = new HelpRequestController(this, project, match, readableGroup);
+                controller.load();
+                openTab(controller, MessageService.message("samebug.toolwindow.helpRequest.tabName"));
+                TrackingService.trace(Events.showHelpRequestScreen(controller, helpRequestId));
+            } else {
+                currentFrame.view.popupError("samebug.frame.helpRequestList.openHelpRequest.error.notReadable");
+            }
         } else {
-            // TODO error message?
-            currentFrame.view.popupError("");
+            currentFrame.view.popupError("samebug.frame.helpRequestList.openHelpRequest.error.gone");
         }
     }
 
