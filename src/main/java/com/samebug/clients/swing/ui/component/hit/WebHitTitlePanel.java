@@ -77,6 +77,7 @@ final class WebHitTitlePanel extends TransparentPanel {
     private final class SourceLabel extends SamebugLabel implements TimestampLabel {
         {
             setFont(FontService.regular(12));
+            updateRelativeTimestamp();
         }
 
         @Override
