@@ -57,7 +57,7 @@ public class LoadingAnimation extends JComponent {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         Graphics2D g2 = DrawService.init(g);
         animator.paint(g2);
     }
@@ -72,7 +72,7 @@ public class LoadingAnimation extends JComponent {
         @Override
         public void paintNow(int frame, int totalFrames, int cycle) {
             currentFrame = frame;
-            repaint();
+            paintImmediately(0, 0, size, size);
         }
 
         public void paint(Graphics2D g2) {

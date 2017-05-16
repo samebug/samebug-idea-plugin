@@ -60,7 +60,7 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
     }
 
     private final class ContentPanel extends SamebugPanel {
-        public ContentPanel() {
+        ContentPanel() {
             if (previews.isEmpty()) {
                 final EmptyListPanel emptyPanel = new EmptyListPanel();
                 setLayout(new MigLayout("fillx", "20px[fill]0", "0[]0"));
@@ -74,7 +74,7 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
     }
 
     private final class ListPanel extends TransparentPanel {
-        public ListPanel() {
+        ListPanel() {
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
             // webHits is required to be initialized here (the hit views are actually added to the list)
@@ -100,8 +100,6 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
                     setLayout(new MigLayout("fillx", "40px[300px]40px", "40px[]27px[]40px"));
                     add(emptylabel, "cell 0 0, al center");
                     add(description, "cell 0 1, growx, wmin 0");
-                    // TODO: after a change in the layout, it seems that revalidate-repaint is sometimes not enough in IntelliJ
-                    validate();
                     revalidate();
                     repaint();
                 }

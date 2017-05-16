@@ -106,7 +106,7 @@ public abstract class BasicFrame extends ErrorBarPane implements IFrame {
     protected abstract FrameListener getListener();
 
     private final class LoadingPanel extends TransparentPanel {
-        public LoadingPanel() {
+        LoadingPanel() {
             final LoadingAnimation animation = new LoadingAnimation(40);
             final CenteredMultilineLabel label = new CenteredMultilineLabel();
             label.setText(MessageService.message("samebug.frame.loading"));
@@ -117,7 +117,7 @@ public abstract class BasicFrame extends ErrorBarPane implements IFrame {
     }
 
     private class ErrorPanel extends TransparentPanel {
-        public ErrorPanel(String description, String buttonLabel, MouseListener mouseListener) {
+        ErrorPanel(String description, String buttonLabel, MouseListener mouseListener) {
             final JLabel alertImage = new JLabel(IconService.alert());
             final CenteredMultilineLabel label = new CenteredMultilineLabel();
             label.setText(description);
@@ -148,19 +148,19 @@ public abstract class BasicFrame extends ErrorBarPane implements IFrame {
     }
 
     private final class ConnectionErrorPanel extends ErrorPanel {
-        public ConnectionErrorPanel() {
+        ConnectionErrorPanel() {
             super(MessageService.message("samebug.component.error.connection.description"), null, null);
         }
     }
 
     private final class GeneralErrorPanel extends ErrorPanel {
-        public GeneralErrorPanel() {
+        GeneralErrorPanel() {
             super(MessageService.message("samebug.component.error.general.description"), null, null);
         }
     }
 
     private final class NetworkErrorPanel extends ErrorPanel {
-        public NetworkErrorPanel() {
+        NetworkErrorPanel() {
             super(MessageService.message("samebug.component.error.network.description"),
                     MessageService.message("samebug.component.error.network.button"),
                     new MouseAdapter() {
@@ -174,7 +174,7 @@ public abstract class BasicFrame extends ErrorBarPane implements IFrame {
     }
 
     private final class AuthenticationErrorPanel extends ErrorPanel {
-        public AuthenticationErrorPanel() {
+        AuthenticationErrorPanel() {
             super(MessageService.message("samebug.component.error.authentication.description"),
                     MessageService.message("samebug.component.error.authentication.button"),
                     new MouseAdapter() {

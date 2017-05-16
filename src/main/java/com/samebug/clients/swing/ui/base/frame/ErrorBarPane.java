@@ -30,7 +30,7 @@ public class ErrorBarPane extends JLayeredPane {
     protected final int ErrorBarGap = 50;
     protected final int ShowPopupForMillis = 5000;
 
-    protected Component mainComponent;
+    protected JComponent mainComponent;
     // IMPROVE probably we will need multiple error bars in a vertical flow
     protected ErrorBar errorBar;
     protected Timer timer;
@@ -59,14 +59,12 @@ public class ErrorBarPane extends JLayeredPane {
         updateUI();
     }
 
-    public void addMainComponent(Component c) {
+    public void addMainComponent(JComponent c) {
         assert EventQueue.isDispatchThread();
         if (mainComponent != null) remove(mainComponent);
         mainComponent = c;
         add(mainComponent, MainLayer);
         repositionMainComponent();
-        revalidate();
-        repaint();
     }
 
     public void addErrorBar(ErrorBar c) {
@@ -111,6 +109,8 @@ public class ErrorBarPane extends JLayeredPane {
 
     protected void repositionMainComponent() {
         mainComponent.setBounds(0, 0, getWidth(), getHeight());
+        revalidate();
+        repaint();
     }
 
     protected void repositionErrorBar() {
