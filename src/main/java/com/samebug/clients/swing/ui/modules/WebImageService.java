@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.swing.ui.modules;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,20 +23,22 @@ import org.jetbrains.annotations.Nullable;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Hashtable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class WebImageService {
-    private static Hashtable<String, BufferedImage> cache = new Hashtable<String, BufferedImage>();
-    private static Hashtable<ScaledKey, BufferedImage> scaledCache = new Hashtable<ScaledKey, BufferedImage>();
+    private static Map<String, BufferedImage> cache = new ConcurrentHashMap<String, BufferedImage>();
+    private static Map<ScaledKey, BufferedImage> scaledCache = new ConcurrentHashMap<ScaledKey, BufferedImage>();
     private static BufferedImage avatarPlaceholder;
     private static BufferedImage[] webSourceIcon;
 
     public static void install() {
         final URL avatarPlaceholderUrl = WebImageService.class.getResource("/com/samebug/cache/images/avatar-placeholder.png");
         assert avatarPlaceholderUrl != null : "Failed to find avatar placeholder image";
-        avatarPlaceholder = getImage(avatarPlaceholderUrl);
+        avatarPlaceholder = getImage(avatarPlaceholderUrl, null);
         assert avatarPlaceholder != null : "Failed to load avatar placeholder image";
 
         final URL[] webSourceIconUrl = sourceIconUrl("web");
@@ -43,18 +46,18 @@ public final class WebImageService {
         assert webSourceIconUrl[1] != null : "Failed to find web source icon for Darcula theme";
         webSourceIcon = new BufferedImage[webSourceIconUrl.length];
         for (int i = 0; i < webSourceIconUrl.length; ++i) {
-            webSourceIcon[i] = getImage(webSourceIconUrl[i]);
+            webSourceIcon[i] = getImage(webSourceIconUrl[i], null);
             assert webSourceIcon[i] != null : "Failed to load web source icon image";
         }
     }
 
     @NotNull
-    public static BufferedImage getAvatar(@Nullable URL avatarUrl, int width, int height) {
+    public static BufferedImage getAvatar(@Nullable URL avatarUrl, int width, int height, @NotNull ImageObserver observer) {
         if (avatarUrl == null) return getScaledInstance(avatarPlaceholder, width, height);
         else {
-            BufferedImage nonScaledAvatar = getImage(avatarUrl);
-            if (nonScaledAvatar == null) nonScaledAvatar = avatarPlaceholder;
-            return getScaled(avatarUrl, nonScaledAvatar, width, height);
+            BufferedImage nonScaledAvatar = getImage(avatarUrl, observer);
+            if (nonScaledAvatar == null) return getScaledInstance(avatarPlaceholder, width, height);
+            else return getScaled(avatarUrl, nonScaledAvatar, width, height);
         }
     }
 
@@ -63,7 +66,7 @@ public final class WebImageService {
         URL[] urls = sourceIconUrl(iconName);
         BufferedImage[] icons = new BufferedImage[urls.length];
         for (int i = 0; i < urls.length; ++i) {
-            BufferedImage nonScaled = getImage(urls[i]);
+            BufferedImage nonScaled = getImage(urls[i], null);
             if (nonScaled == null) nonScaled = webSourceIcon[i];
             icons[i] = getScaled(urls[i], nonScaled, width, height);
         }
@@ -71,21 +74,41 @@ public final class WebImageService {
     }
 
     @Nullable
-    public static BufferedImage getImage(@NotNull URL url) {
-        String urlString = url.toExternalForm();
-        BufferedImage nonScaled = cache.get(urlString);
-        if (nonScaled == null) {
-            try {
-                nonScaled = ImageIO.read(url);
-                if (nonScaled != null) cache.put(urlString, nonScaled);
-            } catch (IOException e) {
-                // IMPROVE smoother handling of load failures.
-                // If we failed to download an image, than probably we should note this a failed-to-load url so it won't take much time to render second time.
-                // However, to do this, we also have to take care of some expiration, i.e. when should we try again loading this image
-                nonScaled = null;
+    public static BufferedImage getImage(@NotNull final URL url, @Nullable final ImageObserver observer) {
+        final String urlString = url.toExternalForm();
+        BufferedImage cachedImage = cache.get(urlString);
+        if (cachedImage != null) return cachedImage;
+        else {
+            // IMPROVE currently, if we call getImage with the same url multiple times simultaneously, it will be downloaded multiple times.
+            if (observer == null) {
+                return readImageAndSaveToCache(url);
+            } else {
+                ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        BufferedImage loadedImage = readImageAndSaveToCache(url);
+                        if (loadedImage != null) observer.imageUpdate(loadedImage, ImageObserver.ALLBITS, 0, 0, loadedImage.getWidth(), loadedImage.getHeight());
+                    }
+                });
+                return null;
             }
         }
-        return nonScaled;
+    }
+
+    @Nullable
+    private static BufferedImage readImageAndSaveToCache(@NotNull URL url) {
+        String urlString = url.toExternalForm();
+        BufferedImage loadedImage;
+        try {
+            loadedImage = ImageIO.read(url);
+            if (loadedImage != null) cache.put(urlString, loadedImage);
+        } catch (IOException ignored) {
+            // IMPROVE smoother handling of load failures.
+            // If we failed to download an image, than probably we should note this a failed-to-load url so it won't take much time to render second time.
+            // However, to do this, we also have to take care of some expiration, i.e. when should we try again loading this image
+            loadedImage = null;
+        }
+        return loadedImage;
     }
 
     @NotNull

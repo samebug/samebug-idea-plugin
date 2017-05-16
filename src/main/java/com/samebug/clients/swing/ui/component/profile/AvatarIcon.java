@@ -27,7 +27,7 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 
 public final class AvatarIcon extends JPanel {
-    private final BufferedImage avatar;
+    private BufferedImage avatar;
     private final int size;
     private final ConnectionStatus status;
     private final int statusDotSize;
@@ -38,7 +38,7 @@ public final class AvatarIcon extends JPanel {
 
     public AvatarIcon(URL avatarUrl, int size, ConnectionStatus status) {
         this.size = size;
-        avatar = WebImageService.getAvatar(avatarUrl, size, size);
+        avatar = WebImageService.getAvatar(avatarUrl, size, size, this);
         this.status = status;
         statusDotSize = size / 5;
         setOpaque(false);
@@ -71,5 +71,16 @@ public final class AvatarIcon extends JPanel {
     private void paintStatusDot(Graphics2D g2, Color c) {
         g2.setColor(c);
         g2.fillOval(2, 2, statusDotSize, statusDotSize);
+    }
+
+    @Override
+    public boolean imageUpdate(Image img, int infoflags, int x, int y, int w, int h) {
+        if (img instanceof BufferedImage) {
+            avatar = (BufferedImage) img;
+            repaint();
+            return false;
+        } else {
+            return true;
+        }
     }
 }
