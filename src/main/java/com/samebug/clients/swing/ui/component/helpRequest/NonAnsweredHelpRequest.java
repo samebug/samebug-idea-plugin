@@ -19,7 +19,9 @@ import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequest;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.swing.ui.base.animation.ComponentAnimation;
+import com.samebug.clients.swing.ui.base.animation.ComponentAnimationController;
+import com.samebug.clients.swing.ui.base.animation.IAnimatedComponent;
+import com.samebug.clients.swing.ui.base.animation.PaintableAnimation;
 import com.samebug.clients.swing.ui.base.animation.ShrinkAwayAnimation;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
@@ -36,16 +38,18 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public final class NonAnsweredHelpRequest extends RoundedBackgroundPanel implements IHelpRequest, IHelpOthersCTA {
+public final class NonAnsweredHelpRequest extends RoundedBackgroundPanel implements IAnimatedComponent, IHelpRequest, IHelpOthersCTA {
     static final int AvatarSize = 40;
 
     final ActionRow actions;
     final WriteTipArea writeTipArea;
     final IHelpRequest.Model model;
 
-    private ComponentAnimation myAnimation;
+    @NotNull
+    private final ComponentAnimationController myAnimationController;
 
     public NonAnsweredHelpRequest(@NotNull IHelpRequest.Model model) {
+        myAnimationController = new ComponentAnimationController(this);
         this.model = model;
         final SamebugLabel titleLabel = new HelpRequestTitleLabel();
         final AvatarIcon avatar = new AvatarIcon(model.avatarUrl, AvatarSize);
@@ -89,18 +93,21 @@ public final class NonAnsweredHelpRequest extends RoundedBackgroundPanel impleme
 
     @Override
     public void paint(Graphics g) {
-        if (myAnimation == null || !myAnimation.isRunning()) super.paint(g);
-        else myAnimation.paint(g);
+        myAnimationController.paint(g);
+    }
+
+    @Override
+    public void paintOriginalComponent(Graphics g) {
+        super.paint(g);
     }
 
     public IHelpRequest.Model getModel() {
         return model;
     }
 
-    public ComponentAnimation shrinkAway(final int frames, final int shrinkToSize) {
-        if (myAnimation != null) myAnimation.forceFinish();
-
-        myAnimation = new ShrinkAway(frames, getHeight() - shrinkToSize);
+    public PaintableAnimation shrinkAway(int shrinkToSize) {
+        PaintableAnimation myAnimation = new ShrinkAway(getHeight() - shrinkToSize);
+        myAnimationController.prepareNewAnimation(myAnimation);
         return myAnimation;
     }
 
@@ -143,9 +150,8 @@ public final class NonAnsweredHelpRequest extends RoundedBackgroundPanel impleme
     }
 
     private final class ShrinkAway extends ShrinkAwayAnimation {
-
-        ShrinkAway(int tipFloatInFrames, int shrinkPixels) {
-            super(tipFloatInFrames, NonAnsweredHelpRequest.this, shrinkPixels);
+        ShrinkAway(int shrinkPixels) {
+            super(30, NonAnsweredHelpRequest.this, shrinkPixels);
         }
 
         @Override
@@ -154,5 +160,4 @@ public final class NonAnsweredHelpRequest extends RoundedBackgroundPanel impleme
             repaint();
         }
     }
-
 }

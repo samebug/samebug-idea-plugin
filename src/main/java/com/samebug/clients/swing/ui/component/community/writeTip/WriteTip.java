@@ -52,7 +52,6 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
 
     @Override
     public void successPostTip(@NotNull ITipHit.Model tip) {
-        // TODO do we have to properly close the loading animation on the send button?
         if (ctaScreen == null) changeToClosedState();
     }
 

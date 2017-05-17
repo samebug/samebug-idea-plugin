@@ -16,8 +16,6 @@
 package com.samebug.clients.swing.ui.base.animation;
 
 /**
- * TODO probably we will have some bugs/unexpected behaviours at the animation boundaries, but atm I can't tell what is a sound behaviour.
- * TODO also check for off-by-one errors
  * IMPROVE check overflows
  */
 public final class ChainedAnimation extends ControllableAnimation {

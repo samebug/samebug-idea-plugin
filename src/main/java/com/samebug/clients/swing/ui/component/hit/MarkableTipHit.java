@@ -16,9 +16,7 @@
 package com.samebug.clients.swing.ui.component.hit;
 
 import com.samebug.clients.common.ui.component.hit.ITipHit;
-import com.samebug.clients.swing.ui.base.animation.ComponentAnimation;
-import com.samebug.clients.swing.ui.base.animation.ControllableAnimation;
-import com.samebug.clients.swing.ui.base.animation.FadeInAnimation;
+import com.samebug.clients.swing.ui.base.animation.*;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
@@ -27,15 +25,18 @@ import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 
-public final class MarkableTipHit extends RoundedBackgroundPanel implements ITipHit {
+public final class MarkableTipHit extends RoundedBackgroundPanel implements IAnimatedComponent, ITipHit {
 
-    private ComponentAnimation myAnimation;
+    @NotNull
+    private final ComponentAnimationController myAnimationController;
 
     public MarkableTipHit(Model model) {
+        myAnimationController = new ComponentAnimationController(this);
         setBackgroundColor(ColorService.Tip);
         DataService.putData(this, DataService.SolutionId, model.solutionId);
         SamebugLabel tipLabel = new SamebugLabel(MessageService.message("samebug.component.tipHit.title"), FontService.regular(14));
@@ -55,20 +56,25 @@ public final class MarkableTipHit extends RoundedBackgroundPanel implements ITip
         add(author, "cell 0 2, align right");
     }
 
-    public ControllableAnimation fadeIn(int totalFrames) {
-        myAnimation = new MyFadeInAnimation(totalFrames);
+    public ControllableAnimation fadeIn() {
+        PaintableAnimation myAnimation = new MyFadeInAnimation();
+        myAnimationController.prepareNewAnimation(myAnimation);
         return myAnimation;
     }
 
     @Override
     public void paint(Graphics g) {
-        if (myAnimation == null || !myAnimation.isRunning()) super.paint(g);
-        else myAnimation.paint(g);
+        myAnimationController.paint(g);
+    }
+
+    @Override
+    public void paintOriginalComponent(Graphics g) {
+        super.paint(g);
     }
 
     final class MyFadeInAnimation extends FadeInAnimation {
-        MyFadeInAnimation(int totalFrames) {
-            super(MarkableTipHit.this, totalFrames);
+        MyFadeInAnimation() {
+            super(MarkableTipHit.this, 30);
         }
 
         @Override

@@ -21,7 +21,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public abstract class ShrinkAwayAnimation extends ComponentAnimation {
+public abstract class ShrinkAwayAnimation extends PaintableAnimation {
     protected final JComponent myComponent;
     protected BufferedImage myComponentImage;
     protected final Dimension myShrinkedSize;
@@ -49,7 +49,6 @@ public abstract class ShrinkAwayAnimation extends ComponentAnimation {
                 graphics.dispose();
             }
         });
-
     }
 
     @Override

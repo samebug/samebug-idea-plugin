@@ -18,9 +18,7 @@ package com.samebug.clients.swing.ui.frame.helpRequest;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequest;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestTab;
-import com.samebug.clients.swing.ui.base.animation.ComponentAnimation;
 import com.samebug.clients.swing.ui.base.animation.ControllableAnimation;
-import com.samebug.clients.swing.ui.base.animation.FadeInAnimation;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
@@ -47,9 +45,6 @@ public final class HelpRequestTab extends TransparentPanel implements IHelpReque
     private AnsweredHelpRequest response;
     private final java.util.List<NonMarkableTipHit> tipHits;
 
-    @Nullable
-    private ComponentAnimation myAnimation;
-
     public HelpRequestTab(Model model) {
         request = new NonAnsweredHelpRequest(model.helpRequest);
         tipHits = new ArrayList<NonMarkableTipHit>();
@@ -68,13 +63,13 @@ public final class HelpRequestTab extends TransparentPanel implements IHelpReque
         add(scrollPane);
     }
 
-    public ControllableAnimation animatedAddResponse(@NotNull final ITipHit.Model newTipModel, final int requestFadeOutFrames, final int responseFadeInFrames) {
+    public ControllableAnimation animatedAddResponse(@NotNull final ITipHit.Model newTipModel) {
         assert response == null : "This help request is already in answered state";
 
         IHelpRequest.Model helpRequestModel = request.getModel();
         response = new AnsweredHelpRequest(helpRequestModel, newTipModel);
-        ControllableAnimation shrinkAwayHelpRequest = request.shrinkAway(requestFadeOutFrames, response.getPreferredSize().height);
-        ControllableAnimation fadeInResponse = response.fadeIn(responseFadeInFrames);
+        ControllableAnimation shrinkAwayHelpRequest = request.shrinkAway(response.getPreferredSize().height);
+        ControllableAnimation fadeInResponse = response.fadeIn();
         fadeInResponse.runBeforeStart(new Runnable() {
             @Override
             public void run() {
@@ -85,12 +80,6 @@ public final class HelpRequestTab extends TransparentPanel implements IHelpReque
         });
 
         return shrinkAwayHelpRequest.andThen(fadeInResponse);
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        if (myAnimation == null || !myAnimation.isRunning()) super.paint(g);
-        else myAnimation.paint(g);
     }
 
     private final class ContentPanel extends SamebugPanel {
@@ -121,25 +110,6 @@ public final class HelpRequestTab extends TransparentPanel implements IHelpReque
                 NonMarkableTipHit hit = tipHits.get(i);
                 add(hit);
             }
-        }
-    }
-
-    private final class MyFadeInAnimation extends FadeInAnimation {
-
-        MyFadeInAnimation(int totalFrames) {
-            super(HelpRequestTab.this, totalFrames);
-            runBeforeStart(new Runnable() {
-                @Override
-                public void run() {
-                    if (myAnimation != null) myAnimation.forceFinish();
-                    myAnimation = MyFadeInAnimation.this;
-                }
-            });
-        }
-
-        @Override
-        protected void doFinish() {
-            HelpRequestTab.this.repaint();
         }
     }
 }

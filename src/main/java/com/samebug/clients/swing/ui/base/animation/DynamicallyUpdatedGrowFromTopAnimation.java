@@ -21,7 +21,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public abstract class DynamicallyUpdatedGrowFromTopAnimation extends ComponentAnimation {
+public abstract class DynamicallyUpdatedGrowFromTopAnimation extends PaintableAnimation {
     protected final JComponent myComponent;
     protected final Dimension myGrownSize;
     protected final int growPixels;
@@ -31,6 +31,7 @@ public abstract class DynamicallyUpdatedGrowFromTopAnimation extends ComponentAn
     protected DynamicallyUpdatedGrowFromTopAnimation(int totalFrames, JComponent myComponent, int growPixels) {
         super(totalFrames);
         this.myComponent = myComponent;
+        assert myComponent instanceof IAnimatedComponent : "This component should be an IAnimatedComponent";
         this.myGrownSize = myComponent.getSize();
         this.growPixels = growPixels;
         assert myGrownSize.height >= growPixels : "Cannot grow " + growPixels + " pixels because its final size is less than that";
@@ -56,10 +57,7 @@ public abstract class DynamicallyUpdatedGrowFromTopAnimation extends ComponentAn
         // IMPROVE probably it can be done without writing to image first, using clipRect?
         BufferedImage myComponentImage = new BufferedImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = myComponentImage.createGraphics();
-        // TODO this is hacky, changing away from running state so the owner component will render normally (ignoring the animation)
-        myState = State.INITIALIZED;
-        myComponent.paint(graphics);
-        myState = State.RUNNING;
+        ((IAnimatedComponent) myComponent).paintOriginalComponent(graphics);
         graphics.dispose();
 
         Graphics2D g2 = DrawService.init(g);

@@ -18,9 +18,9 @@ package com.samebug.clients.swing.ui.frame.solution;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
 import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.swing.ui.base.animation.ComponentAnimation;
 import com.samebug.clients.swing.ui.base.animation.ControllableAnimation;
 import com.samebug.clients.swing.ui.base.animation.FadeOutAnimation;
+import com.samebug.clients.swing.ui.base.animation.PaintableAnimation;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
@@ -44,7 +44,7 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
     private final JPanel contentPanel;
     private final List<MarkableWebHit> webHits;
 
-    private ComponentAnimation myAnimation;
+    private PaintableAnimation myAnimation;
 
     public WebResultsTab(Model model, IHelpOthersCTA.Model ctaModel) {
         this.ctaModel = new IHelpOthersCTA.Model(ctaModel);

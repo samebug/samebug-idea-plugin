@@ -17,9 +17,7 @@ package com.samebug.clients.swing.ui.component.helpRequest;
 
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequest;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
-import com.samebug.clients.swing.ui.base.animation.ComponentAnimation;
-import com.samebug.clients.swing.ui.base.animation.ControllableAnimation;
-import com.samebug.clients.swing.ui.base.animation.FadeInAnimation;
+import com.samebug.clients.swing.ui.base.animation.*;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
@@ -31,12 +29,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
-public final class AnsweredHelpRequest extends RoundedBackgroundPanel {
+public final class AnsweredHelpRequest extends RoundedBackgroundPanel implements IAnimatedComponent {
     final ITipHit.Model tipModel;
 
-    private ComponentAnimation myAnimation;
+    @NotNull
+    private final ComponentAnimationController myAnimationController;
 
     public AnsweredHelpRequest(@NotNull IHelpRequest.Model hrModel, @NotNull ITipHit.Model tipModel) {
+        myAnimationController = new ComponentAnimationController(this);
         this.tipModel = tipModel;
         final SamebugLabel tipTitleLabel = new ResponseTitleLabel();
         final TipBody tipBody = new TipBody(tipModel.message);
@@ -47,20 +47,25 @@ public final class AnsweredHelpRequest extends RoundedBackgroundPanel {
         add(tipBody, "cell 0 1, wmin 0, spanx 2, growx");
     }
 
-    public ControllableAnimation fadeIn(int totalFrames) {
-        myAnimation = new MyFadeInAnimation(totalFrames);
+    public ControllableAnimation fadeIn() {
+        PaintableAnimation myAnimation = new MyFadeInAnimation();
+        myAnimationController.prepareNewAnimation(myAnimation);
         return myAnimation;
     }
 
     @Override
     public void paint(Graphics g) {
-        if (myAnimation == null || !myAnimation.isRunning()) super.paint(g);
-        else myAnimation.paint(g);
+        myAnimationController.paint(g);
+    }
+
+    @Override
+    public void paintOriginalComponent(Graphics g) {
+        super.paint(g);
     }
 
     final class MyFadeInAnimation extends FadeInAnimation {
-        MyFadeInAnimation(int totalFrames) {
-            super(AnsweredHelpRequest.this, totalFrames);
+        MyFadeInAnimation() {
+            super(AnsweredHelpRequest.this, 30);
         }
 
         @Override

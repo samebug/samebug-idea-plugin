@@ -21,7 +21,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-abstract class FadeAnimation extends ComponentAnimation {
+abstract class FadeAnimation extends PaintableAnimation {
     protected final JComponent myComponent;
     protected BufferedImage myComponentImage;
     private final boolean myFadeIn;

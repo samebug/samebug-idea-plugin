@@ -15,19 +15,27 @@
  */
 package com.samebug.clients.swing.ui.base.animation;
 
-import java.awt.*;
+import org.jetbrains.annotations.NotNull;
 
-public abstract class ComponentAnimation extends ControllableAnimation {
+public final class SequenceAnimator extends Animator {
+    private final ControllableAnimation animation;
 
-    public ComponentAnimation(int totalFrames) {
-        super(totalFrames);
+
+    public SequenceAnimator(@NotNull ControllableAnimation animation, int cycleDuration) {
+        super("Animator", animation.myTotalFrames, cycleDuration, false);
+        this.animation = animation;
+        animation.start();
     }
 
-    public final void paint(Graphics g) {
-        assert myState == State.RUNNING : "Animation painted in state " + myState;
-        assert EventQueue.isDispatchThread();
-        doPaint(g);
+    @Override
+    public void paintNow(int frame, int totalFrames, int cycle) {
+        animation.doSetFrame(frame);
     }
 
-    protected abstract void doPaint(Graphics g);
+    @Override
+    public void animationDone() {
+        super.animationDone();
+        animation.finish();
+    }
+
 }
