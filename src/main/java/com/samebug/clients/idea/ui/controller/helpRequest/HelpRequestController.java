@@ -114,9 +114,7 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
         return readableGroup;
     }
 
-
     public void load() {
-        // TODO every controllers should also make sure to set the loading screen when starting to load content
         view.setLoading();
 
         final int accessibleSearchId = readableGroup.getLastSearchId();
@@ -126,14 +124,6 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
         final Future<SolutionList> solutionsTask = concurrencyService.solutions(accessibleSearchId);
         final Future<TipList> tipsTask = concurrencyService.tips(accessibleSearchId);
 
-        load(solutionsTask, tipsTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);
-    }
-
-    private void load(final Future<SolutionList> solutionsTask,
-                      final Future<TipList> tipsTask,
-                      final Future<IncomingHelpRequestList> incomingHelpRequestsTask,
-                      final Future<Me> userInfoTask,
-                      final Future<UserStats> userStatsTask) {
         new LoadingTask() {
             @Override
             protected void load() throws Exception {

@@ -79,11 +79,10 @@ public final class AnalyzeDialog extends DialogWrapper {
 
     @Override
     public JComponent getPreferredFocusedComponent() {
-        // TODO focus on search button
-        return myEditorPanel.getEditorComponent();
+        return getButton(searchAction);
     }
 
-    // TODO call this on editor input/periodically
+    // IMPROVE call this on editor input/periodically
     protected void displayWarningIfNotStackTrace() {
         final String trace = myEditorPanel.getText();
         boolean hasStackTrace = new Parser().hasStackTrace(trace);
@@ -158,7 +157,7 @@ public final class AnalyzeDialog extends DialogWrapper {
         }
     }
 
-    // TODO using the serious parser, get the typename and message and use them for google search
+    // IMPROVE using the serious parser, get the typename and message and use them for google search
     protected final class GoogleSearch extends DialogWrapperAction implements DumbAware {
 
         public GoogleSearch() {
@@ -173,7 +172,7 @@ public final class AnalyzeDialog extends DialogWrapper {
         }
     }
 
-    // TODO get the serious parser
+    // IMPROVE get the serious parser
     protected final class Parser implements StackTraceListener {
         final StackTraceMatcher parser;
         boolean found;

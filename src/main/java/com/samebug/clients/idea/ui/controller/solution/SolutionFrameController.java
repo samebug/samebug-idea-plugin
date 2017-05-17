@@ -125,6 +125,7 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
 
     public void load() {
         view.setLoading();
+
         final Future<Me> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
         final Future<IncomingHelpRequestList> incomingHelpRequestsTask = concurrencyService.incomingHelpRequests(false);
@@ -132,22 +133,11 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
         final Future<TipList> tipsTask = concurrencyService.tips(searchId);
         final Future<BugmateList> bugmatesTask = concurrencyService.bugmates(searchId);
         final Future<Search> searchTask = concurrencyService.search(searchId);
-        load(solutionsTask, tipsTask, bugmatesTask, searchTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);
-    }
 
-    /**
-     * Wait for the help request so we can decide which search id to use for showing the solutions
-     */
-    private void load(final Future<SolutionList> solutionsTask,
-                      final Future<TipList> tipsTask,
-                      final Future<BugmateList> bugmatesTask,
-                      final Future<Search> searchTask,
-                      final Future<IncomingHelpRequestList> incomingHelpRequestsTask,
-                      final Future<Me> userInfoTask,
-                      final Future<UserStats> userStatsTask) {
         new LoadingTask() {
             @Override
             protected void load() throws Exception {
+                // Wait for the search to see our help request id on that search, so we can load and show that help request.
                 Search search = searchTask.get();
                 SearchGroup group = search.getGroup();
                 String myHelpRequestId = group.getHelpRequestId();
@@ -156,38 +146,25 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
                 if (myHelpRequestId == null) helpRequestTask = new FixedFuture<HelpRequest>(null);
                 else helpRequestTask = concurrencyService.helpRequest(myHelpRequestId);
 
-                SolutionFrameController.this.load(solutionsTask, tipsTask, bugmatesTask, helpRequestTask, searchTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);
-            }
-        }.executeInBackground();
-
-    }
-
-    private void load(final Future<SolutionList> solutionsTask,
-                      final Future<TipList> tipsTask,
-                      final Future<BugmateList> bugmatesTask,
-                      final Future<HelpRequest> helpRequestTask,
-                      final Future<Search> searchTask,
-                      final Future<IncomingHelpRequestList> incomingHelpRequestsTask,
-                      final Future<Me> userInfoTask,
-                      final Future<UserStats> userStatsTask) {
-        new LoadingTask() {
-            @Override
-            protected void load() throws Exception {
-                Search search = searchTask.get();
-                final SolutionFrame.Model model =
-                        conversionService.solutionFrame(searchTask.get(),
-                                tipsTask.get().getData(), solutionsTask.get().getData(), bugmatesTask.get(), helpRequestTask.get(), incomingHelpRequestsTask.get(),
-                                userInfoTask.get(), userStatsTask.get());
-                ApplicationManager.getApplication().invokeLater(new Runnable() {
+                new LoadingTask() {
                     @Override
-                    public void run() {
-                        view.loadingSucceeded(model);
+                    protected void load() throws Exception {
+                        final SolutionFrame.Model model =
+                                conversionService.solutionFrame(searchTask.get(),
+                                        tipsTask.get().getData(), solutionsTask.get().getData(), bugmatesTask.get(), helpRequestTask.get(), incomingHelpRequestsTask.get(),
+                                        userInfoTask.get(), userStatsTask.get());
+                        ApplicationManager.getApplication().invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.loadingSucceeded(model);
+                            }
+                        });
+                        List<IWebHit.Model> solutions = model.resultTabs.webResults.webHits;
+                        for (int i = 0; i < solutions.size(); ++i) {
+                            TrackingService.trace(Events.solutionDisplay(solutions.get(i).solutionId, i));
+                        }
                     }
-                });
-                List<IWebHit.Model> solutions = model.resultTabs.webResults.webHits;
-                for (int i = 0; i < solutions.size(); ++i) {
-                    TrackingService.trace(Events.solutionDisplay(solutions.get(i).solutionId, i));
-                }
+                }.executeInBackground();
             }
         }.executeInBackground();
     }

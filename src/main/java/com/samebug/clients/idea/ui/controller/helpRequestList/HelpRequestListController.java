@@ -84,16 +84,11 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
 
     public void load() {
         view.setLoading();
+
         final Future<Me> userInfoTask = concurrencyService.userInfo();
         final Future<UserStats> userStatsTask = concurrencyService.userStats();
         final Future<IncomingHelpRequestList> helpRequestsTask = concurrencyService.incomingHelpRequests(true);
 
-        load(helpRequestsTask, userInfoTask, userStatsTask);
-    }
-
-    private void load(final Future<IncomingHelpRequestList> helpRequestsTask,
-                      final Future<Me> userInfoTask,
-                      final Future<UserStats> userStatsTask) {
         new LoadingTask() {
             @Override
             protected void load() throws Exception {
