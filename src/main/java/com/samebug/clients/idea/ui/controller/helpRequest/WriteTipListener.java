@@ -18,6 +18,7 @@ package com.samebug.clients.idea.ui.controller.helpRequest;
 import com.samebug.clients.common.entities.search.ReadableSearchGroup;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
+import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestTabs;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
 import com.samebug.clients.http.entities.search.NewSearchHit;
@@ -25,9 +26,13 @@ import com.samebug.clients.http.entities.solution.NewSolution;
 import com.samebug.clients.http.entities.solution.NewTip;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.idea.ui.controller.form.CreateTipFormHandler;
+import com.samebug.clients.swing.ui.component.helpRequest.NonAnsweredHelpRequest;
+import com.samebug.clients.swing.ui.modules.ComponentService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.awt.*;
 
 final class WriteTipListener implements IHelpOthersCTA.Listener {
     @NotNull
@@ -54,7 +59,12 @@ final class WriteTipListener implements IHelpOthersCTA.Listener {
 
             @Override
             protected void afterPostFormUI(@NotNull ITipHit.Model tip) {
+                IHelpRequestTabs tabs = ComponentService.findAncestor((Component) source, IHelpRequestTabs.class);
+                assert tabs != null;
+
                 source.successPostTip(tip);
+                if (source instanceof NonAnsweredHelpRequest) tabs.sentResponse(tip);
+                else controller.load();
             }
 
             @Override

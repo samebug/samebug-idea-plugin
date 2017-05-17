@@ -5,7 +5,6 @@ import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
 import com.samebug.clients.swing.ui.TestDialog;
-import com.samebug.clients.swing.ui.component.community.writeTip.WriteTip;
 import com.samebug.clients.swing.ui.frame.solution.ResultTabs;
 import com.samebug.clients.swing.ui.frame.solution.SolutionFrame;
 import com.samebug.clients.swing.ui.modules.ComponentService;
@@ -66,12 +65,13 @@ public class SolutionFrameTest extends TestDialog {
         ListenerService.putListenerToComponent(f, IHelpOthersCTA.Listener.class, new IHelpOthersCTA.Listener() {
             @Override
             public void postTip(IHelpOthersCTA source, String tipBody) {
-                WriteTip writeTip = ComponentService.findAncestor((Component) source, WriteTip.class);
-                ResultTabs resultTabs = ComponentService.findAncestor(writeTip, ResultTabs.class);
-                writeTip.successPostTip(new ITipHit.Model(tipBody, 1, new Date(), "me", null,
-                        new IMarkButton.Model(0, null, false)));
-                resultTabs.animatedAddTip(new ITipHit.Model(tipBody, 0, new Date(), "me", null,
-                        new IMarkButton.Model(0, 0, true)));
+                ITipHit.Model newTip = new ITipHit.Model(tipBody, 1, new Date(), "me", null,
+                        new IMarkButton.Model(0, null, false));
+                ResultTabs tabs = ComponentService.findAncestor((Component) source, ResultTabs.class);
+                assert tabs != null;
+
+                source.successPostTip(newTip);
+                tabs.tipWritten(newTip);
             }
         });
     }

@@ -3,6 +3,7 @@ package com.samebug.clients.swing.ui.frame;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
+import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestTabs;
 import com.samebug.clients.swing.ui.TestDialog;
 import com.samebug.clients.swing.ui.frame.helpRequest.HelpRequestFrame;
 import com.samebug.clients.swing.ui.modules.ComponentService;
@@ -33,11 +34,14 @@ public class HelpRequestFrameTest extends TestDialog {
         ListenerService.putListenerToComponent(f, IHelpOthersCTA.Listener.class, new IHelpOthersCTA.Listener() {
             @Override
             public void postTip(IHelpOthersCTA source, String tipBody) {
-                IHelpOthersCTA writeTip = ComponentService.findAncestor((Component) source, IHelpOthersCTA.class);
-                writeTip.successPostTip(new ITipHit.Model(tipBody, 1, new Date(), "me", null,
-                        new IMarkButton.Model(0, null, false)));
+                ITipHit.Model newTip = new ITipHit.Model(tipBody, 1, new Date(), "me", null,
+                        new IMarkButton.Model(0, null, false));
+                IHelpRequestTabs tabs = ComponentService.findAncestor((Component) source, IHelpRequestTabs.class);
+                assert tabs != null;
+
+                source.successPostTip(newTip);
+                tabs.sentResponse(newTip);
             }
         });
-
     }
 }

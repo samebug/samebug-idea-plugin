@@ -16,8 +16,12 @@
 package com.samebug.clients.common.ui.frame.solution;
 
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
+import com.samebug.clients.common.ui.component.hit.ITipHit;
+import org.jetbrains.annotations.NotNull;
 
 public interface IResultTabs {
+    void tipWritten(@NotNull ITipHit.Model tip);
+
     final class Model {
         public final IWebResultsTab.Model webResults;
         public final ITipResultsTab.Model tipResults;

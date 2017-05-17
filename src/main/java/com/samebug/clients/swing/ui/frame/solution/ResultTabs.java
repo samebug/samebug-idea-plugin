@@ -24,6 +24,7 @@ import com.samebug.clients.swing.ui.base.tabbedPane.LabelAndHitsTabHeader;
 import com.samebug.clients.swing.ui.base.tabbedPane.SamebugTabbedPane;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import com.samebug.clients.swing.ui.modules.TrackingService;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -52,7 +53,7 @@ public final class ResultTabs extends SamebugTabbedPane implements IResultTabs {
         addChangeListener(new TabChangeTracker());
     }
 
-    public void animatedAddTip(ITipHit.Model model) {
+    public void tipWritten(@NotNull ITipHit.Model model) {
         new ShowNewTipAnimation(model).resume();
     }
 

@@ -15,16 +15,24 @@
  */
 package com.samebug.clients.swing.ui.frame.helpRequest;
 
+import com.samebug.clients.common.ui.component.helpRequest.IHelpRequest;
+import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestTab;
+import com.samebug.clients.swing.ui.base.animation.ComponentAnimation;
+import com.samebug.clients.swing.ui.base.animation.ControllableAnimation;
+import com.samebug.clients.swing.ui.base.animation.FadeInAnimation;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.base.scrollPane.SamebugScrollPane;
-import com.samebug.clients.swing.ui.component.helpRequest.HelpRequest;
+import com.samebug.clients.swing.ui.component.helpRequest.AnsweredHelpRequest;
+import com.samebug.clients.swing.ui.component.helpRequest.NonAnsweredHelpRequest;
 import com.samebug.clients.swing.ui.component.hit.NonMarkableTipHit;
 import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,11 +41,17 @@ import java.util.ArrayList;
 public final class HelpRequestTab extends TransparentPanel implements IHelpRequestTab {
     private final JScrollPane scrollPane;
     private final SamebugPanel contentPanel;
-    private final HelpRequest request;
+    @NotNull
+    private final NonAnsweredHelpRequest request;
+    @Nullable
+    private AnsweredHelpRequest response;
     private final java.util.List<NonMarkableTipHit> tipHits;
 
+    @Nullable
+    private ComponentAnimation myAnimation;
+
     public HelpRequestTab(Model model) {
-        request = new HelpRequest(model.helpRequest);
+        request = new NonAnsweredHelpRequest(model.helpRequest);
         tipHits = new ArrayList<NonMarkableTipHit>();
         for (int i = 0; i < model.tipHits.size(); i++) {
             NonMarkableTipHit.Model m = model.tipHits.get(i);
@@ -52,6 +66,31 @@ public final class HelpRequestTab extends TransparentPanel implements IHelpReque
 
         setLayout(new BorderLayout());
         add(scrollPane);
+    }
+
+    public ControllableAnimation animatedAddResponse(@NotNull final ITipHit.Model newTipModel, final int requestFadeOutFrames, final int responseFadeInFrames) {
+        assert response == null : "This help request is already in answered state";
+
+        IHelpRequest.Model helpRequestModel = request.getModel();
+        response = new AnsweredHelpRequest(helpRequestModel, newTipModel);
+        ControllableAnimation shrinkAwayHelpRequest = request.shrinkAway(requestFadeOutFrames, response.getPreferredSize().height);
+        ControllableAnimation fadeInResponse = response.fadeIn(responseFadeInFrames);
+        fadeInResponse.runBeforeStart(new Runnable() {
+            @Override
+            public void run() {
+                contentPanel.remove(0);
+                contentPanel.add(response, 0);
+                contentPanel.validate();
+            }
+        });
+
+        return shrinkAwayHelpRequest.andThen(fadeInResponse);
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        if (myAnimation == null || !myAnimation.isRunning()) super.paint(g);
+        else myAnimation.paint(g);
     }
 
     private final class ContentPanel extends SamebugPanel {
@@ -82,6 +121,25 @@ public final class HelpRequestTab extends TransparentPanel implements IHelpReque
                 NonMarkableTipHit hit = tipHits.get(i);
                 add(hit);
             }
+        }
+    }
+
+    private final class MyFadeInAnimation extends FadeInAnimation {
+
+        MyFadeInAnimation(int totalFrames) {
+            super(HelpRequestTab.this, totalFrames);
+            runBeforeStart(new Runnable() {
+                @Override
+                public void run() {
+                    if (myAnimation != null) myAnimation.forceFinish();
+                    myAnimation = MyFadeInAnimation.this;
+                }
+            });
+        }
+
+        @Override
+        protected void doFinish() {
+            HelpRequestTab.this.repaint();
         }
     }
 }

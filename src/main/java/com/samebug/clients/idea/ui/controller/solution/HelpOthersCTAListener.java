@@ -23,7 +23,6 @@ import com.samebug.clients.http.entities.solution.NewSolution;
 import com.samebug.clients.http.entities.solution.NewTip;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.idea.ui.controller.form.CreateTipFormHandler;
-import com.samebug.clients.swing.ui.frame.solution.ResultTabs;
 import com.samebug.clients.swing.ui.modules.ComponentService;
 import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
@@ -55,8 +54,7 @@ final class HelpOthersCTAListener implements IHelpOthersCTA.Listener {
                 assert resultTabs != null;
 
                 source.successPostTip(tip);
-                // TODO move this method to interface
-                ((ResultTabs) resultTabs).animatedAddTip(tip);
+                resultTabs.tipWritten(tip);
             }
 
             @Override

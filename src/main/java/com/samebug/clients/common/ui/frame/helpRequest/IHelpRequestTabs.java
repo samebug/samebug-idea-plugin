@@ -16,9 +16,13 @@
 package com.samebug.clients.common.ui.frame.helpRequest;
 
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
+import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
+import org.jetbrains.annotations.NotNull;
 
 public interface IHelpRequestTabs {
+    void sentResponse(@NotNull ITipHit.Model tip);
+
     final class Model {
         public final IWebResultsTab.Model webResults;
         public final IHelpRequestTab.Model helpRequest;

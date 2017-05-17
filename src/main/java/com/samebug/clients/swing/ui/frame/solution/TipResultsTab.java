@@ -199,7 +199,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
 
     private final class MyFadeInAnimation extends FadeInAnimation {
 
-        public MyFadeInAnimation(int totalFrames) {
+        MyFadeInAnimation(int totalFrames) {
             super(TipResultsTab.this, totalFrames);
             runBeforeStart(new Runnable() {
                 @Override
@@ -221,7 +221,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
 
     private final class MyFadeOutAnimation extends FadeOutAnimation {
 
-        public MyFadeOutAnimation(int totalFrames) {
+        MyFadeOutAnimation(int totalFrames) {
             super(TipResultsTab.this, totalFrames);
             runBeforeStart(new Runnable() {
                 @Override

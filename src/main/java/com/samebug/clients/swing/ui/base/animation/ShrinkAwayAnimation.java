@@ -21,16 +21,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-abstract class FadeAnimation extends ComponentAnimation {
+public abstract class ShrinkAwayAnimation extends ComponentAnimation {
     protected final JComponent myComponent;
     protected BufferedImage myComponentImage;
-    private final boolean myFadeIn;
+    protected final Dimension myShrinkedSize;
+    protected final int shrinkPixels;
+    protected final int[] offsets;
+    protected int currentOffset;
     protected double myRatio = 0;
 
-    FadeAnimation(JComponent component, int totalFrames, boolean fadeIn) {
+    protected ShrinkAwayAnimation(int totalFrames, final JComponent myComponent, int shrinkPixels) {
         super(totalFrames);
-        myComponent = component;
-        myFadeIn = fadeIn;
+        this.myComponent = myComponent;
+        this.myShrinkedSize = new Dimension(myComponent.getWidth(), myComponent.getHeight() - shrinkPixels);
+        this.shrinkPixels = shrinkPixels;
+        assert myShrinkedSize.height > 0 : "Cannot shrink " + shrinkPixels + " pixels, the component is smaller";
+        assert shrinkPixels > 0 : "Cannot shrink " + shrinkPixels + " pixels, that's negative";
+        this.offsets = Sampler.easeInOutCubic(shrinkPixels, totalFrames);
         runBeforeStart(new Runnable() {
             @Override
             public void run() {
@@ -42,23 +49,36 @@ abstract class FadeAnimation extends ComponentAnimation {
                 graphics.dispose();
             }
         });
+
     }
 
     @Override
-    public final void doStart() {
+    protected void doStart() {
+        currentOffset = this.shrinkPixels;
+        myComponent.setSize(new Dimension(myShrinkedSize.width, myShrinkedSize.height + currentOffset));
+        myComponent.revalidate();
     }
 
     @Override
     public final void doSetFrame(int frame) {
-        double linearProgress = Math.max(0, Math.min(1, (double) frame / myTotalFrames));
-        if (!myFadeIn) linearProgress = 1 - linearProgress;
+        double linearProgress = 1 - Math.max(0, Math.min(1, (double) frame / myTotalFrames));
         myRatio = (1 - Math.cos(Math.PI * linearProgress)) / 2;
+
+        currentOffset = shrinkPixels - offsets[frame];
+        myComponent.setMinimumSize(new Dimension(myShrinkedSize.width, myShrinkedSize.height + currentOffset));
+        myComponent.setPreferredSize(new Dimension(myShrinkedSize.width, myShrinkedSize.height + currentOffset));
+        myComponent.setMaximumSize(new Dimension(myShrinkedSize.width, myShrinkedSize.height + currentOffset));
+        myComponent.setSize(new Dimension(myShrinkedSize.width, myShrinkedSize.height + currentOffset));
+        myComponent.revalidate();
     }
 
     @Override
     public final void doPaint(Graphics g) {
         Graphics2D g2 = DrawService.init(g);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) myRatio));
-        g2.drawImage(myComponentImage, 0, 0, myComponent.getWidth(), myComponent.getHeight(), myComponent);
+        g2.drawImage(myComponentImage,
+                0, 0, myComponent.getWidth(), myComponent.getHeight(),
+                0, 0, myComponent.getWidth(), myComponent.getHeight(),
+                myComponent);
     }
 }

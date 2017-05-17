@@ -68,5 +68,4 @@ public abstract class DynamicallyUpdatedGrowFromTopAnimation extends ComponentAn
                 0, currentOffset, myComponent.getWidth(), currentOffset + myComponent.getHeight(),
                 myComponent);
     }
-
 }
