@@ -24,18 +24,16 @@ import java.awt.image.BufferedImage;
 public abstract class ShrinkAwayAnimation extends PaintableAnimation {
     protected final JComponent myComponent;
     protected BufferedImage myComponentImage;
-    protected final Dimension myShrinkedSize;
+    protected Dimension myShrinkedSize;
     protected final int shrinkPixels;
     protected final int[] offsets;
     protected int currentOffset;
     protected double myRatio = 0;
 
-    protected ShrinkAwayAnimation(int totalFrames, final JComponent myComponent, int shrinkPixels) {
+    protected ShrinkAwayAnimation(int totalFrames, final JComponent myComponent, final int shrinkPixels) {
         super(totalFrames);
         this.myComponent = myComponent;
-        this.myShrinkedSize = new Dimension(myComponent.getWidth(), myComponent.getHeight() - shrinkPixels);
         this.shrinkPixels = shrinkPixels;
-        assert myShrinkedSize.height > 0 : "Cannot shrink " + shrinkPixels + " pixels, the component is smaller";
         assert shrinkPixels > 0 : "Cannot shrink " + shrinkPixels + " pixels, that's negative";
         this.offsets = Sampler.easeInOutCubic(shrinkPixels, totalFrames);
         runBeforeStart(new Runnable() {
@@ -43,6 +41,8 @@ public abstract class ShrinkAwayAnimation extends PaintableAnimation {
             public void run() {
                 // TODO does this work properly on Retina?
                 // in the intellij code they used  myComponentImage = UIUtil.createImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                myShrinkedSize = new Dimension(myComponent.getPreferredSize().width, myComponent.getPreferredSize().height - shrinkPixels);
+                assert myShrinkedSize.height > 0 : "Cannot shrink " + shrinkPixels + " pixels, the component is smaller";
                 myComponentImage = new BufferedImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);
                 Graphics2D graphics = myComponentImage.createGraphics();
                 myComponent.paint(graphics);
@@ -76,8 +76,8 @@ public abstract class ShrinkAwayAnimation extends PaintableAnimation {
         Graphics2D g2 = DrawService.init(g);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) myRatio));
         g2.drawImage(myComponentImage,
-                0, 0, myComponent.getWidth(), myComponent.getHeight(),
-                0, 0, myComponent.getWidth(), myComponent.getHeight(),
+                0, 0, myComponent.getPreferredSize().width, myComponent.getPreferredSize().height,
+                0, 0, myComponent.getPreferredSize().width, myComponent.getPreferredSize().height,
                 myComponent);
     }
 }

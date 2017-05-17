@@ -36,7 +36,7 @@ abstract class FadeAnimation extends PaintableAnimation {
             public void run() {
                 // TODO does this work properly on Retina?
                 // in the intellij code they used  myComponentImage = UIUtil.createImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                myComponentImage = new BufferedImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                myComponentImage = new BufferedImage(myComponent.getPreferredSize().width, myComponent.getPreferredSize().height, BufferedImage.TYPE_INT_ARGB);
                 Graphics2D graphics = myComponentImage.createGraphics();
                 myComponent.paint(graphics);
                 graphics.dispose();
@@ -53,12 +53,13 @@ abstract class FadeAnimation extends PaintableAnimation {
         double linearProgress = Math.max(0, Math.min(1, (double) frame / myTotalFrames));
         if (!myFadeIn) linearProgress = 1 - linearProgress;
         myRatio = (1 - Math.cos(Math.PI * linearProgress)) / 2;
+        myComponent.repaint();
     }
 
     @Override
     public final void doPaint(Graphics g) {
         Graphics2D g2 = DrawService.init(g);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) myRatio));
-        g2.drawImage(myComponentImage, 0, 0, myComponent.getWidth(), myComponent.getHeight(), myComponent);
+        g2.drawImage(myComponentImage, 0, 0, myComponent.getPreferredSize().width, myComponent.getPreferredSize().height, myComponent);
     }
 }
