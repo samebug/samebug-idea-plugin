@@ -37,11 +37,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public final class RawClient {
-    static final String USER_AGENT = "Samebug-Idea-Client/2.0.0";
     static final int TrackingRequestTimeout_Millis = 3000;
     static final int MaxConnections = 20;
 
@@ -58,6 +59,16 @@ public final class RawClient {
         HttpClientBuilder httpBuilder = HttpClientBuilder.create();
         requestConfigBuilder = RequestConfig.custom();
         CredentialsProvider provider = new BasicCredentialsProvider();
+        String buildVersion = null;
+        try {
+            Properties buildProperties = new Properties();
+            InputStream in = getClass().getResourceAsStream("/com/samebug/clients/http/build.properties");
+            buildProperties.load(in);
+            in.close();
+            buildVersion = buildProperties.getProperty("version");
+        } catch (Exception ignored) {
+        }
+        final String myUserAgent = buildVersion != null ? "Samebug-HttpClient/" + buildVersion : "Samebug-HttpClient";
 
         requestConfigBuilder.setConnectTimeout(config.connectTimeout).setSocketTimeout(config.requestTimeout).setConnectionRequestTimeout(500);
         final ProxyConfig proxySettings = config.proxy;
@@ -73,7 +84,7 @@ public final class RawClient {
         defaultRequestConfig = requestConfigBuilder.build();
         trackingConfig = requestConfigBuilder.setSocketTimeout(TrackingRequestTimeout_Millis).build();
         List<BasicHeader> defaultHeaders = new ArrayList<BasicHeader>();
-        defaultHeaders.add(new BasicHeader("User-Agent", USER_AGENT));
+        defaultHeaders.add(new BasicHeader("User-Agent", config.appUserAgent + " " + myUserAgent));
 
         httpClient = httpBuilder.setDefaultRequestConfig(defaultRequestConfig)
                 .setMaxConnTotal(MaxConnections).setMaxConnPerRoute(MaxConnections)

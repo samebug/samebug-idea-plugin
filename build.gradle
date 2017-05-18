@@ -53,6 +53,17 @@ sourceSets {
     }
 }
 
+// build properties to resource files
+import org.apache.tools.ant.filters.*
+processResources {
+    filesMatching('**/build.properties') {
+        filter ReplaceTokens, tokens: [
+                "httpClient.version": project.property("version")
+        ]
+    }
+}
+
+
 repositories {
     mavenCentral()
 }

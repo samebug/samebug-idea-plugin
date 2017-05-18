@@ -15,9 +15,6 @@
  */
 package com.samebug.clients.idea.components.application;
 
-import com.intellij.util.net.HttpConfigurable;
-import com.samebug.clients.http.client.Config;
-import com.samebug.clients.http.client.ProxyConfig;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -96,23 +93,5 @@ public class ApplicationSettings {
                     && rhs.isJsonDebugEnabled == isJsonDebugEnabled
                     && rhs.isToolwindowDefaultModeOverridden == isToolwindowDefaultModeOverridden;
         }
-    }
-
-    public Config getNetworkConfig() {
-        ProxyConfig proxyConfig;
-        try {
-            final HttpConfigurable iConfig = HttpConfigurable.getInstance();
-            if (iConfig.isHttpProxyEnabledForUrl(serverRoot)) {
-                proxyConfig = new ProxyConfig(iConfig.PROXY_HOST, iConfig.PROXY_PORT, iConfig.getProxyLogin(), iConfig.getPlainProxyPassword());
-            } else {
-                proxyConfig = null;
-            }
-        } catch (Exception ignored) {
-            // if that fails, we pretend there is no proxy. This might fail do to subtle changes in the HttpConfigurable class between intellij versions.
-            proxyConfig = null;
-        }
-        return new Config(apiKey, userId, workspaceId, serverRoot,
-                trackingRoot, isTrackingEnabled, connectTimeout, requestTimeout,
-                isApacheLoggingEnabled, isJsonDebugEnabled, proxyConfig);
     }
 }

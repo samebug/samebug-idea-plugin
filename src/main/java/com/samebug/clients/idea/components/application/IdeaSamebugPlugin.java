@@ -15,16 +15,23 @@
  */
 package com.samebug.clients.idea.components.application;
 
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+import com.intellij.util.net.HttpConfigurable;
 import com.samebug.clients.common.services.*;
+import com.samebug.clients.http.client.Config;
+import com.samebug.clients.http.client.ProxyConfig;
 import com.samebug.clients.http.exceptions.SamebugException;
 import com.samebug.clients.idea.controllers.ConsoleSearchController;
 import com.samebug.clients.idea.controllers.TimedTasks;
@@ -53,6 +60,7 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     private static final Logger LOGGER = Logger.getInstance(IdeaSamebugPlugin.class);
     private AtomicReference<ApplicationSettings> state = new AtomicReference<ApplicationSettings>(new ApplicationSettings());
 
+    public String applicationUserAgent;
     public WebUriBuilder uriBuilder = new WebUriBuilder(state.get().serverRoot);
     public IdeaClientService clientService;
     public ProfileStore profileStore;
@@ -96,6 +104,13 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
 
     @Override
     public void initComponent() {
+        ApplicationInfo appInfo = ApplicationInfo.getInstance();
+        IdeaPluginDescriptor plugin = PluginManager.getPlugin(PluginId.getId("Samebug"));
+        assert plugin != null : "Samebug plugin is not registered!";
+        applicationUserAgent = "Samebug-Plugin" + "/" + plugin.getVersion()
+                + " IntelliJ/" + appInfo.getApiVersion()
+                + " (" + System.getProperty("os.name") + "/" + System.getProperty("os.version") + ")";
+
         try {
             FontService.registerFonts();
         } catch (IOException e) {
@@ -107,7 +122,7 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
         connection = messageBus.connect(this);
         clientService = new IdeaClientService(messageBus);
-        clientService.configure(state.get().getNetworkConfig());
+        clientService.configure(getNetworkConfig(state.get()));
         profileStore = new ProfileStore();
         profileService = new ProfileService(clientService, profileStore);
         solutionService = new SolutionService(clientService);
@@ -177,7 +192,7 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
 
         state.set(newSettings);
         try {
-            if (clientService != null) clientService.configure(newSettings.getNetworkConfig());
+            if (clientService != null) clientService.configure(getNetworkConfig(newSettings));
             uriBuilder = new WebUriBuilder(newSettings.serverRoot);
             ApplicationManager.getApplication().getMessageBus().syncPublisher(ConfigChangeListener.TOPIC).configChange(oldSettings, newSettings);
         } finally {
@@ -190,7 +205,26 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public void loadState(ApplicationSettings state) {
         ApplicationSettings newSettings = new ApplicationSettings(state);
         this.state.set(newSettings);
-        if (clientService != null) clientService.configure(newSettings.getNetworkConfig());
+        if (clientService != null) clientService.configure(getNetworkConfig(newSettings));
         uriBuilder = new WebUriBuilder(newSettings.serverRoot);
+    }
+
+    @NotNull
+    private Config getNetworkConfig(@NotNull ApplicationSettings settings) {
+        ProxyConfig proxyConfig;
+        try {
+            final HttpConfigurable iConfig = HttpConfigurable.getInstance();
+            if (iConfig.isHttpProxyEnabledForUrl(settings.serverRoot)) {
+                proxyConfig = new ProxyConfig(iConfig.PROXY_HOST, iConfig.PROXY_PORT, iConfig.getProxyLogin(), iConfig.getPlainProxyPassword());
+            } else {
+                proxyConfig = null;
+            }
+        } catch (Exception ignored) {
+            // if that fails, we pretend there is no proxy. This might fail do to subtle changes in the HttpConfigurable class between intellij versions.
+            proxyConfig = null;
+        }
+        return new Config(settings.apiKey, settings.userId, settings.workspaceId, settings.serverRoot,
+                settings.trackingRoot, settings.isTrackingEnabled, settings.connectTimeout, settings.requestTimeout,
+                settings.isApacheLoggingEnabled, settings.isJsonDebugEnabled, proxyConfig, applicationUserAgent);
     }
 }
