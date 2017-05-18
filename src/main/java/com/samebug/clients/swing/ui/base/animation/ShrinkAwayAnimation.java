@@ -23,7 +23,6 @@ import java.awt.image.BufferedImage;
 
 public abstract class ShrinkAwayAnimation extends PaintableAnimation {
     protected final JComponent myComponent;
-    protected BufferedImage myComponentImage;
     protected Dimension myShrinkedSize;
     protected final int shrinkPixels;
     protected final int[] offsets;
@@ -39,14 +38,8 @@ public abstract class ShrinkAwayAnimation extends PaintableAnimation {
         runBeforeStart(new Runnable() {
             @Override
             public void run() {
-                // TODO does this work properly on Retina?
-                // in the intellij code they used  myComponentImage = UIUtil.createImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                myShrinkedSize = new Dimension(myComponent.getPreferredSize().width, myComponent.getPreferredSize().height - shrinkPixels);
+                myShrinkedSize = new Dimension(myComponent.getWidth(), myComponent.getHeight() - shrinkPixels);
                 assert myShrinkedSize.height > 0 : "Cannot shrink " + shrinkPixels + " pixels, the component is smaller";
-                myComponentImage = new BufferedImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                Graphics2D graphics = myComponentImage.createGraphics();
-                myComponent.paint(graphics);
-                graphics.dispose();
             }
         });
     }
@@ -73,11 +66,14 @@ public abstract class ShrinkAwayAnimation extends PaintableAnimation {
 
     @Override
     public final void doPaint(Graphics g) {
+        BufferedImage myComponentImage = new BufferedImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = myComponentImage.createGraphics();
+        ((IAnimatedComponent) myComponent).paintOriginalComponent(graphics);
+        graphics.dispose();
+
         Graphics2D g2 = DrawService.init(g);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) myRatio));
-        g2.drawImage(myComponentImage,
-                0, 0, myComponent.getPreferredSize().width, myComponent.getPreferredSize().height,
-                0, 0, myComponent.getPreferredSize().width, myComponent.getPreferredSize().height,
-                myComponent);
+        g2.drawImage(myComponentImage, 0, 0, myComponent.getWidth(), myComponent.getHeight(), myComponent);
+        myComponent.repaint();
     }
 }

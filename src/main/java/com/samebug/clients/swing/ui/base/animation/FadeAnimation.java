@@ -23,7 +23,6 @@ import java.awt.image.BufferedImage;
 
 abstract class FadeAnimation extends PaintableAnimation {
     protected final JComponent myComponent;
-    protected BufferedImage myComponentImage;
     private final boolean myFadeIn;
     protected double myRatio = 0;
 
@@ -31,17 +30,6 @@ abstract class FadeAnimation extends PaintableAnimation {
         super(totalFrames);
         myComponent = component;
         myFadeIn = fadeIn;
-        runBeforeStart(new Runnable() {
-            @Override
-            public void run() {
-                // TODO does this work properly on Retina?
-                // in the intellij code they used  myComponentImage = UIUtil.createImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                myComponentImage = new BufferedImage(myComponent.getPreferredSize().width, myComponent.getPreferredSize().height, BufferedImage.TYPE_INT_ARGB);
-                Graphics2D graphics = myComponentImage.createGraphics();
-                myComponent.paint(graphics);
-                graphics.dispose();
-            }
-        });
     }
 
     @Override
@@ -58,8 +46,13 @@ abstract class FadeAnimation extends PaintableAnimation {
 
     @Override
     public final void doPaint(Graphics g) {
+        BufferedImage myComponentImage = new BufferedImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = myComponentImage.createGraphics();
+        ((IAnimatedComponent) myComponent).paintOriginalComponent(graphics);
+        graphics.dispose();
+
         Graphics2D g2 = DrawService.init(g);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) myRatio));
-        g2.drawImage(myComponentImage, 0, 0, myComponent.getPreferredSize().width, myComponent.getPreferredSize().height, myComponent);
+        g2.drawImage(myComponentImage, 0, 0, myComponent.getWidth(), myComponent.getHeight(), myComponent);
     }
 }
