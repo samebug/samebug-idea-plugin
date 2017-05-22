@@ -16,11 +16,15 @@
 package com.samebug.clients.idea.ui.controller.authentication;
 
 import com.samebug.clients.common.ui.component.authentication.IAnonymousUseForm;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
-import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.form.AnonymousUseFormHandler;
-import com.samebug.clients.swing.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
+import com.samebug.clients.swing.ui.modules.DataService;
 import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
 
 public final class AnonymousUseListener implements IAnonymousUseForm.Listener {
     final AuthenticationController controller;
@@ -31,12 +35,16 @@ public final class AnonymousUseListener implements IAnonymousUseForm.Listener {
 
     @Override
     public void useAnonymously(final IAnonymousUseForm source) {
+        final JComponent sourceComponent = (JComponent) source;
+        final String authenticationTransactionId = DataService.getData(sourceComponent, TrackingKeys.AuthenticationTransaction);
+
+        TrackingService.trace(SwingRawEvent.authenticationSubmit(sourceComponent, authenticationTransactionId));
         new AnonymousUseFormHandler(controller.view, source) {
             @Override
             protected void afterPostForm(@NotNull AuthenticationResponse response) {
                 source.successPost();
                 controller.twc.focusOnHelpRequestList();
-                TrackingService.trace(Events.registrationSignUpSucceeded("anonymous"));
+                TrackingService.trace(SwingRawEvent.authenticationSucceeded(sourceComponent, authenticationTransactionId, response));
             }
         }.execute();
     }

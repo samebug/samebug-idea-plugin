@@ -18,11 +18,11 @@ package com.samebug.clients.idea.ui.controller.form;
 import com.samebug.clients.common.services.AuthenticationService;
 import com.samebug.clients.common.ui.component.authentication.IAnonymousUseForm;
 import com.samebug.clients.common.ui.frame.IFrame;
+import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
 import com.samebug.clients.http.exceptions.FormException;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class AnonymousUseFormHandler extends PostFormHandler<AuthenticationResponse, FormException> {

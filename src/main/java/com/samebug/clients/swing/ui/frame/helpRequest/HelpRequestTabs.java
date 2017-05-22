@@ -17,13 +17,13 @@ package com.samebug.clients.swing.ui.frame.helpRequest;
 
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestTabs;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
 import com.samebug.clients.swing.ui.base.animation.ControllableAnimation;
 import com.samebug.clients.swing.ui.base.animation.SequenceAnimator;
 import com.samebug.clients.swing.ui.base.tabbedPane.SamebugTabHeader;
 import com.samebug.clients.swing.ui.base.tabbedPane.SamebugTabbedPane;
-import com.samebug.clients.swing.ui.modules.MessageService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.ChangeEvent;
@@ -60,8 +60,7 @@ public final class HelpRequestTabs extends SamebugTabbedPane implements IHelpReq
     final class TabChangeTracker implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent e) {
-            String dialogType = getSelectedIndex() == 0 ? "HelpRequest" : "WebHits";
-            TrackingService.trace(Events.helpRequestDialogSwitched(dialogType));
+            TrackingService.trace(SwingRawEvent.tabSwitch(HelpRequestTabs.this));
         }
     }
 }

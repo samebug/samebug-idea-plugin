@@ -18,7 +18,8 @@ package com.samebug.clients.swing.ui.component.helpRequest;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequest;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.animation.ComponentAnimationController;
 import com.samebug.clients.swing.ui.base.animation.IAnimatedComponent;
 import com.samebug.clients.swing.ui.base.animation.PaintableAnimation;
@@ -29,7 +30,10 @@ import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.component.community.writeTip.WriteTipArea;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
-import com.samebug.clients.swing.ui.modules.*;
+import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.DataService;
+import com.samebug.clients.swing.ui.modules.FontService;
+import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -87,8 +91,6 @@ public final class NonAnsweredHelpRequest extends RoundedBackgroundPanel impleme
         }
         revalidate();
         repaint();
-
-//        TrackingService.trace(Events.writeTipError(errors));
     }
 
     @Override
@@ -123,12 +125,12 @@ public final class NonAnsweredHelpRequest extends RoundedBackgroundPanel impleme
             setInteractionColors(ColorService.MarkInteraction);
             setBackgroundColor(ColorService.Tip);
             setFont(FontService.demi(14));
+            DataService.putData(this, TrackingKeys.Label, getText());
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (isEnabled()) {
                         getListener().postTip(NonAnsweredHelpRequest.this, writeTipArea.getText());
-                        TrackingService.trace(Events.writeTipSend());
                     }
                 }
             });

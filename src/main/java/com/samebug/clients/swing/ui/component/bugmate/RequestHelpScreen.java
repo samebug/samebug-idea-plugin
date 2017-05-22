@@ -16,11 +16,13 @@
 package com.samebug.clients.swing.ui.component.bugmate;
 
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
-import com.samebug.clients.swing.ui.modules.MessageService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
+import com.samebug.clients.swing.ui.modules.DataService;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,6 +39,7 @@ public final class RequestHelpScreen extends JComponent {
         writeRequestArea = new WriteRequestArea(requestHelp);
         sendButton = new SendButton();
         cancelButton = new LinkLabel(MessageService.message("samebug.component.helpRequest.ask.cancel"));
+        DataService.putData(cancelButton, TrackingKeys.Label, cancelButton.getText());
 
         setLayout(new MigLayout("fillx", "0[]0", "0[]10px[]10px[]0"));
         add(writeRequestArea, "cell 0 0, growx");
@@ -48,7 +51,6 @@ public final class RequestHelpScreen extends JComponent {
             public void mouseClicked(MouseEvent e) {
                 if (isEnabled()) {
                     requestHelp.getListener().askBugmates(requestHelp, writeRequestArea.getText());
-                    TrackingService.trace(Events.helpRequestSend());
                 }
             }
         });
@@ -58,7 +60,7 @@ public final class RequestHelpScreen extends JComponent {
             public void mouseClicked(MouseEvent e) {
                 if (isEnabled()) {
                     requestHelp.changeToClosedState();
-                    TrackingService.trace(Events.helpRequestCancel());
+                    TrackingService.trace(SwingRawEvent.buttonClick(cancelButton));
                 }
             }
         });
@@ -68,13 +70,12 @@ public final class RequestHelpScreen extends JComponent {
         if (errors.context != null) writeRequestArea.setFormError(errors.context);
         revalidate();
         repaint();
-
-//        TrackingService.trace(Events.helpRequestError(errors));
     }
 
     private final class SendButton extends SamebugButton {
         SendButton() {
             super(MessageService.message("samebug.component.helpRequest.ask.send"), true);
+            DataService.putData(this, TrackingKeys.Label, getText());
         }
     }
 }

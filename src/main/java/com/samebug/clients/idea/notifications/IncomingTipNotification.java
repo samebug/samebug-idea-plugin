@@ -17,8 +17,8 @@ package com.samebug.clients.idea.notifications;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
+import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.http.entities.notification.IncomingAnswer;
-import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;

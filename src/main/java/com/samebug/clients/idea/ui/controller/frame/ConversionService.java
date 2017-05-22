@@ -74,7 +74,9 @@ public final class ConversionService {
         SamebugTip tip = hit.getSolution().getDocument();
         IMarkButton.Model mark = convertMarkPanel(hit);
         RegisteredSamebugUser author = tip.getAuthor();
-        return new ITipHit.Model(tip.getMessage(), hit.getSolution().getId(), tip.getCreatedAt(), author.getDisplayName(), author.getAvatarUrl(), mark);
+        Integer solutionMatchLevel = hit.getScore() instanceof StackTraceSearchHitScore ? ((StackTraceSearchHitScore) hit.getScore()).getLevel() : 0;
+        return new ITipHit.Model(tip.getMessage(), hit.getSolution().getId(), solutionMatchLevel, tip.getId(),
+                tip.getCreatedAt(), author.getDisplayName(), author.getAvatarUrl(), mark);
     }
 
     public IWebResultsTab.Model webResultsTab(List<SearchHit<ExternalDocument>> solutions) {
@@ -83,8 +85,9 @@ public final class ConversionService {
             SolutionSlot<ExternalDocument> externalSolution = externalHit.getSolution();
             ExternalDocument doc = externalSolution.getDocument();
             IMarkButton.Model mark = convertMarkPanel(externalHit);
+            Integer solutionMatchLevel = externalHit.getScore() instanceof StackTraceSearchHitScore ? ((StackTraceSearchHitScore) externalHit.getScore()).getLevel() : 0;
             IWebHit.Model webHit =
-                    new IWebHit.Model(doc.getTitle(), doc.getUrl(), externalSolution.getId(),
+                    new IWebHit.Model(doc.getTitle(), doc.getUrl(), externalSolution.getId(), solutionMatchLevel, doc.getId(),
                             externalSolution.getCreatedAt(), doc.getAuthor().getDisplayName(),
                             doc.getSource().getName(), doc.getSource().getIcon(),
                             mark);

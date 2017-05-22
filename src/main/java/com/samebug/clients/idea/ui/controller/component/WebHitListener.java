@@ -16,10 +16,11 @@
 package com.samebug.clients.idea.ui.controller.component;
 
 import com.samebug.clients.common.ui.component.hit.IWebHit;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.idea.ui.modules.BrowserUtil;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.modules.DataService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 
 import javax.swing.*;
 import java.net.URL;
@@ -34,12 +35,8 @@ public final class WebHitListener implements IWebHit.Listener {
     @Override
     public void urlClicked(IWebHit source, URL url) {
         BrowserUtil.browse(url);
-        try {
-            JComponent hit = (JComponent) source;
-            Integer solutionId = DataService.getData(hit, DataService.SolutionId);
-            Integer index = DataService.getData(hit, DataService.WebHitIndex);
-            TrackingService.trace(Events.solutionClick(mySearchId, solutionId, index));
-        } catch (Exception ignored) {
-        }
+        JComponent hit = (JComponent) source;
+        String transactionId = DataService.getData(hit, TrackingKeys.SolutionTransaction);
+        TrackingService.trace(SwingRawEvent.solutionClick(hit, transactionId));
     }
 }

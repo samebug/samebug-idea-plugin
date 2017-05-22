@@ -16,9 +16,12 @@
 package com.samebug.clients.idea.ui.controller.solution;
 
 import com.samebug.clients.common.ui.frame.solution.ISearchHeaderPanel;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.modules.BrowserUtil;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
 
+import javax.swing.*;
 import java.net.URI;
 
 final class ExceptionHeaderListener implements ISearchHeaderPanel.Listener {
@@ -29,8 +32,9 @@ final class ExceptionHeaderListener implements ISearchHeaderPanel.Listener {
     }
 
     @Override
-    public void titleClicked() {
+    public void titleClicked(ISearchHeaderPanel source) {
         final URI searchUri = IdeaSamebugPlugin.getInstance().uriBuilder.search(controller.searchId);
         BrowserUtil.browse(searchUri);
+        TrackingService.trace(SwingRawEvent.linkClick((JComponent) source, searchUri));
     }
 }

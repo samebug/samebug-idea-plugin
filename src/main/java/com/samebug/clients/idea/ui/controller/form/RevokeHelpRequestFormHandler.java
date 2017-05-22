@@ -19,11 +19,11 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.services.HelpRequestService;
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.common.ui.frame.IFrame;
+import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.HelpRequestCancel;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class RevokeHelpRequestFormHandler extends PostFormHandler<HelpRequest, HelpRequestCancel.BadRequest> {

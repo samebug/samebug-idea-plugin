@@ -15,11 +15,12 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
-import com.samebug.clients.swing.ui.modules.MessageService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
+import com.samebug.clients.swing.ui.modules.DataService;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.event.MouseAdapter;
@@ -40,12 +41,13 @@ public final class RequestHelpCTAScreen extends TransparentPanel {
     final class AskButton extends SamebugButton {
         {
             setText(MessageService.message("samebug.component.bugmate.list.ask"));
+            DataService.putData(this, TrackingKeys.Label, getText());
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (isEnabled()) {
                         requestHelp.changeToOpenState();
-                        TrackingService.trace(Events.helpRequestOpen());
+                        SwingRawEvent.helpRequestHookTrigger(AskButton.this, DataService.getData(AskButton.this, TrackingKeys.HelpRequestTransaction));
                     }
                 }
             });

@@ -24,6 +24,9 @@ import com.intellij.unscramble.AnalyzeStacktraceUtil;
 import com.samebug.clients.common.search.StackTraceListener;
 import com.samebug.clients.common.search.StackTraceMatcher;
 import com.samebug.clients.common.services.SearchService;
+import com.samebug.clients.common.tracking.Location;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.entities.jsonapi.CreatedSearchResource;
 import com.samebug.clients.http.entities.search.Search;
 import com.samebug.clients.http.entities.search.StackTraceInfo;
@@ -32,10 +35,10 @@ import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.exceptions.UserUnauthenticated;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.FocusListener;
-import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.modules.BrowserUtil;
-import com.samebug.clients.swing.ui.modules.MessageService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
+import com.samebug.clients.swing.ui.modules.DataService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,14 +56,15 @@ public final class AnalyzeDialog extends DialogWrapper {
 
     AnalyzeStacktraceUtil.StacktraceEditorPanel myEditorPanel;
 
-    public AnalyzeDialog(Project project) {
+    public AnalyzeDialog(Project project, String transactionId) {
         super(project);
         myProject = project;
         panel = new JPanel();
         warningPanel = new JPanel();
         searchAction = new SamebugSearch();
         setTitle(MessageService.message("samebug.menu.analyze.dialog.title"));
-        TrackingService.trace(Events.openSearchDialog());
+        DataService.putData(panel, TrackingKeys.SearchTransaction, transactionId);
+        DataService.putData(panel, TrackingKeys.Location, new Location.SearchDialog());
         init();
     }
 
@@ -116,7 +120,7 @@ public final class AnalyzeDialog extends DialogWrapper {
 
         @Override
         protected void doAction(ActionEvent e) {
-            TrackingService.trace(Events.searchInSearchDialog());
+            TrackingService.trace(SwingRawEvent.searchSubmit(panel, DataService.getData(panel, TrackingKeys.SearchTransaction)));
             final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
             final SearchService searchService = plugin.searchService;
             final String trace = myEditorPanel.getText();
@@ -134,7 +138,7 @@ public final class AnalyzeDialog extends DialogWrapper {
                 if (!(search.getQueryInfo() instanceof StackTraceInfo)) displayError(MessageService.message("samebug.menu.analyze.dialog.error.textSearch"));
                 else {
                     myProject.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchId);
-                    TrackingService.trace(Events.searchSucceedInSearchDialog(searchId));
+                    TrackingService.trace(SwingRawEvent.searchCreate(panel, DataService.getData(panel, TrackingKeys.SearchTransaction), search));
                     AnalyzeDialog.this.close(OK_EXIT_CODE);
                 }
             } catch (BadRequest e1) {

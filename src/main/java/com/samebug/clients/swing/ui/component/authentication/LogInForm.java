@@ -17,14 +17,16 @@ package com.samebug.clients.swing.ui.component.authentication;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.MessageService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -57,7 +59,7 @@ public final class LogInForm extends JComponent implements ILogInForm {
             public void mouseClicked(MouseEvent e) {
                 if (forgotPassword.isEnabled()) {
                     getListener().forgotPassword(LogInForm.this);
-                    TrackingService.trace(Events.registrationForgottenPasswordClicked());
+                    TrackingService.trace(SwingRawEvent.buttonClick(LogInForm.this));
                 }
             }
         });
@@ -82,7 +84,6 @@ public final class LogInForm extends JComponent implements ILogInForm {
         logIn.revertFromLoadingAnimation();
         if (errors.email != null) email.setFormError(errors.email);
         if (errors.password != null) password.setFormError(errors.password);
-//        TrackingService.trace(Events.registrationError("SignIn", errors));
     }
 
     @Override
@@ -93,7 +94,6 @@ public final class LogInForm extends JComponent implements ILogInForm {
 
     private void sendForm() {
         getListener().logIn(LogInForm.this, email.getText(), password.getText());
-        TrackingService.trace(Events.registrationSend("credentials", "SignIn"));
     }
 
     final class EmailField extends FormField<ILogInForm.BadRequest.Email> {
@@ -134,6 +134,7 @@ public final class LogInForm extends JComponent implements ILogInForm {
         {
             setFilled(true);
             setText(MessageService.message("samebug.component.authentication.logIn"));
+            DataService.putData(this, TrackingKeys.Label, getText());
         }
     }
 
@@ -141,6 +142,7 @@ public final class LogInForm extends JComponent implements ILogInForm {
         {
             setText(MessageService.message("samebug.component.authentication.forgotPassword"));
             setFont(FontService.demi(14));
+            DataService.putData(this, TrackingKeys.Label, getText());
         }
     }
 

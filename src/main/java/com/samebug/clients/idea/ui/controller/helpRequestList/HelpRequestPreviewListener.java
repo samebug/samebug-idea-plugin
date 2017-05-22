@@ -16,6 +16,10 @@
 package com.samebug.clients.idea.ui.controller.helpRequestList;
 
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
+import com.samebug.clients.swing.tracking.TrackingKeys;
+import com.samebug.clients.swing.ui.modules.DataService;
+
+import javax.swing.*;
 
 final class HelpRequestPreviewListener implements IHelpRequestPreview.Listener {
 
@@ -28,6 +32,7 @@ final class HelpRequestPreviewListener implements IHelpRequestPreview.Listener {
 
     @Override
     public void previewClicked(IHelpRequestPreview source, String helpRequestId) {
-        controller.twc.focusOnHelpRequest(helpRequestId);
+        final String transactionId = DataService.getData((JComponent) source, TrackingKeys.WriteTipTransaction);
+        controller.twc.focusOnHelpRequest(helpRequestId, transactionId);
     }
 }

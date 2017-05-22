@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui.modules;
+package com.samebug.clients.common.ui.modules;
 
 
 import org.jetbrains.annotations.NotNull;

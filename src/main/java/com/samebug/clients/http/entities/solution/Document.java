@@ -23,6 +23,7 @@ import java.util.Date;
 public abstract class Document {
     private URL url;
     private Date createdAt;
+    private String id;
 
     @NotNull
     public final URL getUrl() {
@@ -32,5 +33,10 @@ public abstract class Document {
     @NotNull
     public final Date getCreatedAt() {
         return createdAt;
+    }
+
+    @NotNull
+    public final String getId() {
+        return id;
     }
 }

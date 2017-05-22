@@ -22,18 +22,23 @@ public interface ITipHit {
     final class Model {
         public final String message;
         public final int solutionId;
+        public final Integer solutionMatchLevel;
+        public final String documentId;
         public final Date createdAt;
         public final String createdBy;
         public final URL createdByAvatarUrl;
         public final IMarkButton.Model mark;
 
         public Model(Model rhs) {
-            this(rhs.message, rhs.solutionId, rhs.createdAt, rhs.createdBy, rhs.createdByAvatarUrl, rhs.mark);
+            this(rhs.message, rhs.solutionId, rhs.solutionMatchLevel, rhs.documentId, rhs.createdAt, rhs.createdBy, rhs.createdByAvatarUrl, rhs.mark);
         }
 
-        public Model(String message, int solutionId, Date createdAt, String createdBy, URL createdByAvatarUrl, IMarkButton.Model mark) {
+        public Model(String message, int solutionId, Integer solutionMatchLevel, String documentId, Date createdAt, String createdBy, URL createdByAvatarUrl,
+                     IMarkButton.Model mark) {
             this.message = message;
             this.solutionId = solutionId;
+            this.solutionMatchLevel = solutionMatchLevel;
+            this.documentId = documentId;
             this.createdAt = createdAt;
             this.createdBy = createdBy;
             this.createdByAvatarUrl = createdByAvatarUrl;

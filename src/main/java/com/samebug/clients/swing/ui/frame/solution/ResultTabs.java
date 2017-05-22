@@ -17,13 +17,13 @@ package com.samebug.clients.swing.ui.frame.solution;
 
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.solution.IResultTabs;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
 import com.samebug.clients.swing.ui.base.animation.ControllableAnimation;
 import com.samebug.clients.swing.ui.base.animation.SequenceAnimator;
 import com.samebug.clients.swing.ui.base.tabbedPane.LabelAndHitsTabHeader;
 import com.samebug.clients.swing.ui.base.tabbedPane.SamebugTabbedPane;
-import com.samebug.clients.swing.ui.modules.MessageService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.event.ChangeEvent;
@@ -92,8 +92,7 @@ public final class ResultTabs extends SamebugTabbedPane implements IResultTabs {
     final class TabChangeTracker implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent e) {
-            String dialogType = getSelectedIndex() == 0 ? "Tips" : "WebHits";
-            TrackingService.trace(Events.solutionDialogSwitched(dialogType));
+            TrackingService.trace(SwingRawEvent.tabSwitch(ResultTabs.this));
         }
     }
 }

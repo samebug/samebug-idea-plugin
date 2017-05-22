@@ -15,10 +15,10 @@
  */
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
+import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.base.panel.EmphasizedPanel;
-import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;

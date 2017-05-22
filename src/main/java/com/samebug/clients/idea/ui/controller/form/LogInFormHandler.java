@@ -19,11 +19,11 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.services.AuthenticationService;
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
 import com.samebug.clients.common.ui.frame.IFrame;
+import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.form.LogIn;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.swing.ui.modules.MessageService;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class LogInFormHandler extends PostFormHandler<AuthenticationResponse, LogIn.BadRequest> {

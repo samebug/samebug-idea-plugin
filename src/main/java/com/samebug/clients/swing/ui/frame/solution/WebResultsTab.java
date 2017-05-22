@@ -15,9 +15,14 @@
  */
 package com.samebug.clients.swing.ui.frame.solution;
 
+import com.samebug.clients.common.tracking.Funnel;
+import com.samebug.clients.common.tracking.PageTabs;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.animation.ControllableAnimation;
 import com.samebug.clients.swing.ui.base.animation.FadeOutAnimation;
 import com.samebug.clients.swing.ui.base.animation.PaintableAnimation;
@@ -27,7 +32,10 @@ import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.base.scrollPane.SamebugScrollPane;
 import com.samebug.clients.swing.ui.component.community.writeTip.WriteTip;
 import com.samebug.clients.swing.ui.component.hit.MarkableWebHit;
-import com.samebug.clients.swing.ui.modules.*;
+import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.DataService;
+import com.samebug.clients.swing.ui.modules.DrawService;
+import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -47,12 +55,14 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
     private PaintableAnimation myAnimation;
 
     public WebResultsTab(Model model, IHelpOthersCTA.Model ctaModel) {
+        DataService.putData(this, TrackingKeys.PageTab, PageTabs.Search.ExternalWebHits);
         this.ctaModel = new IHelpOthersCTA.Model(ctaModel);
 
         webHits = new ArrayList<MarkableWebHit>();
         for (int i = 0; i < model.webHits.size(); i++) {
             MarkableWebHit.Model m = model.webHits.get(i);
             MarkableWebHit hit = new MarkableWebHit(m);
+            DataService.putData(hit, TrackingKeys.SolutionTransaction, Funnel.newTransactionId());
             webHits.add(hit);
         }
 
@@ -116,7 +126,7 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
                 if (i != 0) add(new Separator(), gbc);
                 MarkableWebHit hit = webHits.get(i);
                 add(hit, gbc);
-                DataService.putData(hit, DataService.WebHitIndex, i);
+                DataService.putData(hit, DataService.SolutionHitIndex, i);
             }
         }
     }
@@ -144,11 +154,12 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
     private final class MoreButton extends SamebugButton {
         {
             setText(MessageService.message("samebug.component.webResults.more"));
+            DataService.putData(this, TrackingKeys.Label, getText());
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     getListener().moreClicked();
-                    TrackingService.trace(Events.more());
+                    TrackingService.trace(SwingRawEvent.buttonClick(MoreButton.this));
                 }
             });
         }

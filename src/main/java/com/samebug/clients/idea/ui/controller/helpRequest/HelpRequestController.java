@@ -21,12 +21,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.entities.search.ReadableSearchGroup;
 import com.samebug.clients.common.services.HelpRequestStore;
+import com.samebug.clients.common.tracking.Location;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.hit.IWebHit;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestFrame;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
 import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.jsonapi.SolutionList;
@@ -45,7 +47,9 @@ import com.samebug.clients.idea.ui.controller.externalEvent.ProfileUpdateListene
 import com.samebug.clients.idea.ui.controller.externalEvent.RefreshListener;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.frame.helpRequest.HelpRequestFrame;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import org.jetbrains.annotations.NotNull;
 
@@ -78,7 +82,6 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
         helpRequestStore = plugin.helpRequestStore;
 
         JComponent frame = (JComponent) view;
-
         frameListener = new HelpRequestFrameListener(this);
         ListenerService.putListenerToComponent(frame, IFrame.FrameListener.class, frameListener);
         ListenerService.putListenerToComponent(frame, IHelpRequestFrame.Listener.class, frameListener);
@@ -133,6 +136,9 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
                     @Override
                     public void run() {
                         view.loadingSucceeded(model);
+                        JComponent frame = (JComponent) view;
+                        DataService.putData(frame, TrackingKeys.Location, new Location.HelpRequest(helpRequestMatch.getHelpRequest().getId()));
+                        DataService.putData(frame, TrackingKeys.PageViewId, TrackingService.newPageViewId());
                     }
                 });
             }

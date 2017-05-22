@@ -15,12 +15,15 @@
  */
 package com.samebug.clients.swing.ui.frame.solution;
 
+import com.samebug.clients.common.tracking.Funnel;
+import com.samebug.clients.common.tracking.PageTabs;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.solution.ITipResultsTab;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.animation.*;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
@@ -30,6 +33,7 @@ import com.samebug.clients.swing.ui.component.bugmate.RequestHelp;
 import com.samebug.clients.swing.ui.component.bugmate.RevokeHelpRequest;
 import com.samebug.clients.swing.ui.component.community.writeTip.WriteTip;
 import com.samebug.clients.swing.ui.component.hit.MarkableTipHit;
+import com.samebug.clients.swing.ui.modules.DataService;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,11 +50,13 @@ public final class TipResultsTab extends TransparentPanel implements IAnimatedCo
     private final ComponentAnimationController myAnimationController;
 
     public TipResultsTab(Model model, IHelpOthersCTA.Model ctaModel) {
+        DataService.putData(this, TrackingKeys.PageTab, PageTabs.Search.TipHits);
         myAnimationController = new ComponentAnimationController(this);
         tipHits = new ArrayList<MarkableTipHit>();
         for (int i = 0; i < model.tipHits.size(); i++) {
             MarkableTipHit.Model m = model.tipHits.get(i);
             MarkableTipHit hit = new MarkableTipHit(m);
+            DataService.putData(hit, TrackingKeys.SolutionTransaction, Funnel.newTransactionId());
             tipHits.add(hit);
         }
         contentPanel = new ContentPanel(ctaModel, model.bugmateList, model.myHelpRequest, model.askForHelp);

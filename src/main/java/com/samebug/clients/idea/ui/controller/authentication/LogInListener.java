@@ -16,15 +16,18 @@
 package com.samebug.clients.idea.ui.controller.authentication;
 
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
 import com.samebug.clients.http.form.LogIn;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.form.LogInFormHandler;
 import com.samebug.clients.idea.ui.modules.BrowserUtil;
-import com.samebug.clients.swing.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
+import com.samebug.clients.swing.ui.modules.DataService;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.net.URI;
 
 public final class LogInListener implements ILogInForm.Listener {
@@ -36,12 +39,16 @@ public final class LogInListener implements ILogInForm.Listener {
 
     @Override
     public void logIn(final ILogInForm source, String email, String password) {
+        final JComponent sourceComponent = (JComponent) source;
+        final String authenticationTransactionId = DataService.getData(sourceComponent, TrackingKeys.AuthenticationTransaction);
+
+        TrackingService.trace(SwingRawEvent.authenticationSubmit(sourceComponent, authenticationTransactionId));
         new LogInFormHandler(controller.view, source, new LogIn.Data(email, password)) {
             @Override
             protected void afterPostForm(@NotNull AuthenticationResponse response) {
                 source.successPost();
                 controller.twc.focusOnHelpRequestList();
-                TrackingService.trace(Events.registrationLogInSucceeded());
+                TrackingService.trace(SwingRawEvent.authenticationSucceeded(sourceComponent, authenticationTransactionId, response));
             }
         }.execute();
     }

@@ -15,7 +15,10 @@
  */
 package com.samebug.clients.swing.ui.frame.helpRequestList;
 
+import com.samebug.clients.common.tracking.Funnel;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestList;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.CenteredMultilineLabel;
@@ -24,8 +27,8 @@ import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.base.scrollPane.SamebugScrollPane;
 import com.samebug.clients.swing.ui.component.helpRequest.HelpRequestPreview;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -45,6 +48,7 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
         for (int i = 0; i < model.requestPreviews.size(); i++) {
             HelpRequestPreview.Model m = model.requestPreviews.get(i);
             HelpRequestPreview hit = new HelpRequestPreview(m);
+            DataService.putData(hit, TrackingKeys.WriteTipTransaction, Funnel.newTransactionId());
             previews.add(hit);
         }
 

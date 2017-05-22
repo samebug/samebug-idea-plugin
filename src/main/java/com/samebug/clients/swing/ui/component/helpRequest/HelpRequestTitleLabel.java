@@ -15,10 +15,10 @@
  */
 package com.samebug.clients.swing.ui.component.helpRequest;
 
+import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
-import com.samebug.clients.swing.ui.modules.MessageService;
 
 final class HelpRequestTitleLabel extends SamebugLabel {
     HelpRequestTitleLabel() {

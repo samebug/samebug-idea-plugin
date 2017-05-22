@@ -51,7 +51,7 @@ public final class SearchHeaderPanel extends SamebugPanel implements ISearchHead
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    getListener().titleClicked();
+                    getListener().titleClicked(SearchHeaderPanel.this);
                 }
             });
         }

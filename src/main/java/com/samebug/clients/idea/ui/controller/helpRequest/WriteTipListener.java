@@ -19,19 +19,27 @@ import com.samebug.clients.common.entities.search.ReadableSearchGroup;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestTabs;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
 import com.samebug.clients.http.entities.search.NewSearchHit;
+import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.http.entities.solution.NewSolution;
 import com.samebug.clients.http.entities.solution.NewTip;
+import com.samebug.clients.http.entities.solution.SamebugTip;
 import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.controller.form.CreateTipFormHandler;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.component.helpRequest.NonAnsweredHelpRequest;
 import com.samebug.clients.swing.ui.modules.ComponentService;
-import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.modules.DataService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.awt.*;
 
 final class WriteTipListener implements IHelpOthersCTA.Listener {
@@ -51,6 +59,10 @@ final class WriteTipListener implements IHelpOthersCTA.Listener {
         final Integer accessibleSearchId = readableGroup.getLastSearchId();
 
         NewSearchHit formData = new NewSearchHit(new NewSolution(new NewTip(tipBody, null), helpRequestId));
+        final JComponent sourceComponent = (JComponent) source;
+        final String transactionId = DataService.getData(sourceComponent, TrackingKeys.WriteTipTransaction);
+
+        TrackingService.trace(SwingRawEvent.writeTipSubmit(sourceComponent, transactionId));
         new CreateTipFormHandler(formData, accessibleSearchId) {
             @Override
             protected void beforePostForm() {
@@ -58,13 +70,16 @@ final class WriteTipListener implements IHelpOthersCTA.Listener {
             }
 
             @Override
-            protected void afterPostFormUI(@NotNull ITipHit.Model tip) {
+            protected void afterPostForm(@NotNull SearchHit<SamebugTip> response) {
+                ITipHit.Model tip = IdeaSamebugPlugin.getInstance().conversionService.tipHit(response);
                 IHelpRequestTabs tabs = ComponentService.findAncestor((Component) source, IHelpRequestTabs.class);
                 assert tabs != null;
 
                 source.successPostTip(tip);
                 if (source instanceof NonAnsweredHelpRequest) tabs.sentResponse(tip);
                 else controller.load();
+
+                TrackingService.trace(SwingRawEvent.writeTipCreate(sourceComponent, transactionId, response));
             }
 
             @Override

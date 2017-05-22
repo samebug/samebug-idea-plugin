@@ -18,16 +18,24 @@ package com.samebug.clients.idea.ui.controller.solution;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.solution.IResultTabs;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.entities.search.NewSearchHit;
+import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.http.entities.solution.NewSolution;
 import com.samebug.clients.http.entities.solution.NewTip;
+import com.samebug.clients.http.entities.solution.SamebugTip;
 import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.controller.form.CreateTipFormHandler;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.modules.ComponentService;
-import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.modules.DataService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.awt.*;
 
 final class HelpOthersCTAListener implements IHelpOthersCTA.Listener {
@@ -42,6 +50,10 @@ final class HelpOthersCTAListener implements IHelpOthersCTA.Listener {
     public void postTip(@NotNull final IHelpOthersCTA source, @NotNull final String tipBody) {
         NewSearchHit formData = new NewSearchHit(new NewSolution(new NewTip(tipBody, null)));
 
+        final JComponent sourceComponent = (JComponent) source;
+        final String transactionId = DataService.getData(sourceComponent, TrackingKeys.WriteTipTransaction);
+
+        TrackingService.trace(SwingRawEvent.writeTipSubmit(sourceComponent, transactionId));
         new CreateTipFormHandler(formData, controller.searchId) {
             @Override
             protected void beforePostForm() {
@@ -49,12 +61,14 @@ final class HelpOthersCTAListener implements IHelpOthersCTA.Listener {
             }
 
             @Override
-            protected void afterPostFormUI(@NotNull ITipHit.Model tip) {
+            protected void afterPostForm(@NotNull SearchHit<SamebugTip> response) {
+                ITipHit.Model tip = IdeaSamebugPlugin.getInstance().conversionService.tipHit(response);
                 IResultTabs resultTabs = ComponentService.findAncestor((Component) source, IResultTabs.class);
                 assert resultTabs != null;
 
                 source.successPostTip(tip);
                 resultTabs.tipWritten(tip);
+                TrackingService.trace(SwingRawEvent.writeTipCreate(sourceComponent, transactionId, response));
             }
 
             @Override

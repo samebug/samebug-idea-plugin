@@ -15,7 +15,10 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
+import com.samebug.clients.common.tracking.Funnel;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
+import com.samebug.clients.swing.tracking.TrackingKeys;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Nullable;
@@ -29,6 +32,7 @@ public final class RequestHelp extends JComponent implements IAskForHelp {
     private RequestHelpScreen tipScreen;
 
     public RequestHelp(Model model) {
+        DataService.putData(this, TrackingKeys.HelpRequestTransaction, Funnel.newTransactionId());
         this.model = model;
         setLayout(new MigLayout("fillx", "0[fill]0", "0[fill]0"));
         changeToClosedState();

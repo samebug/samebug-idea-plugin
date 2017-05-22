@@ -20,6 +20,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.concurrency.FixedFuture;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.tracking.Location;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
@@ -30,6 +31,7 @@ import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.solution.ISearchHeaderPanel;
 import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.entities.jsonapi.BugmateList;
 import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
@@ -43,7 +45,6 @@ import com.samebug.clients.idea.messages.IncomingHelpRequest;
 import com.samebug.clients.idea.messages.ProfileUpdate;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
 import com.samebug.clients.idea.messages.WebSocketStatusUpdate;
-import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.component.ProfileListener;
 import com.samebug.clients.idea.ui.controller.component.WebHitListener;
 import com.samebug.clients.idea.ui.controller.component.WebResultsTabListener;
@@ -51,12 +52,12 @@ import com.samebug.clients.idea.ui.controller.externalEvent.ProfileUpdateListene
 import com.samebug.clients.idea.ui.controller.externalEvent.RefreshListener;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.frame.solution.SolutionFrame;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 
 import javax.swing.*;
-import java.util.List;
 import java.util.concurrent.Future;
 
 public final class SolutionFrameController extends BaseFrameController<ISolutionFrame> implements Disposable {
@@ -157,12 +158,11 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
                             @Override
                             public void run() {
                                 view.loadingSucceeded(model);
+                                JComponent frame = (JComponent) view;
+                                DataService.putData(frame, TrackingKeys.Location, new Location.Search(searchId));
+                                DataService.putData(frame, TrackingKeys.PageViewId, TrackingService.newPageViewId());
                             }
                         });
-                        List<IWebHit.Model> solutions = model.resultTabs.webResults.webHits;
-                        for (int i = 0; i < solutions.size(); ++i) {
-                            TrackingService.trace(Events.solutionDisplay(solutions.get(i).solutionId, i));
-                        }
                     }
                 }.executeInBackground();
             }

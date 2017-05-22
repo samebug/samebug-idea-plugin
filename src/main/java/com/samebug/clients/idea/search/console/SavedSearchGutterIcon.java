@@ -20,11 +20,11 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.entities.search.SavedSearch;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.idea.messages.FocusListener;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.idea.tracking.IdeaRawEvent;
 import com.samebug.clients.swing.ui.modules.IconService;
-import com.samebug.clients.swing.ui.modules.MessageService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -69,7 +69,6 @@ final class SavedSearchGutterIcon extends SearchMark implements DumbAware {
     @Override
     @NotNull
     public String getTooltipText() {
-        TrackingService.trace(Events.gutterIconHover(search.getSearchId()));
         if (search.hasTip()) return MessageService.message("samebug.gutter.savedSearch.hasTip.tooltip");
         else if (search.hasHelpRequest()) return MessageService.message("samebug.gutter.savedSearch.hasHelpRequest.tooltip");
         else if (search.hasBugmate()) return MessageService.message("samebug.gutter.savedSearch.hasBugmates.tooltip");
@@ -85,8 +84,8 @@ final class SavedSearchGutterIcon extends SearchMark implements DumbAware {
                 Integer searchId = search.getSearchId();
                 Project project = getEventProject(e);
                 if (project != null) {
-                    TrackingService.trace(Events.gutterIconClicked(searchId));
                     project.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchId);
+                    TrackingService.trace(IdeaRawEvent.gutterIconClick(searchId));
                 }
             }
         };

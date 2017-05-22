@@ -23,29 +23,4 @@ public final class TrackEvent {
     }
 
     public Map<String, Object> fields;
-
-    @SuppressWarnings("unchecked")
-    public String unsafePresentation() {
-        StringBuilder b = new StringBuilder();
-        b.append(fields.get("category"));
-        b.append(" - ");
-        b.append(fields.get("action"));
-        Object data = fields.get("data");
-        if (data != null) {
-            assert data instanceof Map;
-            Map<String, Object> dataMap = (Map<String, Object>) data;
-            if (!dataMap.isEmpty()) {
-                b.append(" [");
-                for (Map.Entry<String, Object> dataField : dataMap.entrySet()) {
-                    b.append(dataField.getKey());
-                    b.append(": ");
-                    b.append(dataField.getValue());
-                    b.append(", ");
-                }
-                b.setLength(b.length() - 2);
-                b.append("]");
-            }
-        }
-        return b.toString();
-    }
 }

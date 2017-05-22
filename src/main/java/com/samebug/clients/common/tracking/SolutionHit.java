@@ -13,24 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui.modules;
+package com.samebug.clients.common.tracking;
 
-import com.samebug.clients.http.entities.tracking.TrackEvent;
+public final class SolutionHit {
+    public final Integer solutionId;
+    public final Integer position;
+    public final Integer level;
+    public final String documentId;
 
-public abstract class TrackingService {
-    private static TrackingService INSTANCE = new TrackingService() {
-        @Override
-        protected void internalTrace(TrackEvent event) {
-        }
-    };
-
-    public static void install(TrackingService instance) {
-        INSTANCE = instance;
+    public SolutionHit(Integer solutionId, Integer position, Integer level, String documentId) {
+        this.solutionId = solutionId;
+        this.position = position;
+        this.level = level;
+        this.documentId = documentId;
     }
-
-    public static void trace(final TrackEvent event) {
-        INSTANCE.internalTrace(event);
-    }
-
-    protected abstract void internalTrace(final TrackEvent event);
 }

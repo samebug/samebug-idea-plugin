@@ -16,15 +16,19 @@
 package com.samebug.clients.swing.ui.component.bugmate;
 
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
+import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.common.ui.modules.TextService;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.label.TimestampLabel;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -61,7 +65,7 @@ public final class RevokeHelpRequest extends JComponent implements IMyHelpReques
     }
 
     private final class HelpRequestBar extends SamebugPanel {
-        public HelpRequestBar(Model helpRequest) {
+        HelpRequestBar(Model helpRequest) {
             final SamebugLabel text = new HelpRequestLabel(helpRequest.createdAt);
             setBackgroundColor(ColorService.Tip);
 
@@ -71,12 +75,16 @@ public final class RevokeHelpRequest extends JComponent implements IMyHelpReques
     }
 
     private final class RevokeButton extends SamebugButton {
-        public RevokeButton(final Model helpRequest) {
+        RevokeButton(final Model helpRequest) {
             setText(MessageService.message("samebug.component.helpRequest.ask.revoke"));
+            DataService.putData(this, TrackingKeys.Label, getText());
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (isEnabled()) getListener().revokeHelpRequest(RevokeHelpRequest.this, helpRequest.id);
+                    if (isEnabled()) {
+                        getListener().revokeHelpRequest(RevokeHelpRequest.this, helpRequest.id);
+                        TrackingService.trace(SwingRawEvent.buttonClick(RevokeButton.this));
+                    }
                 }
             });
         }
@@ -85,7 +93,7 @@ public final class RevokeHelpRequest extends JComponent implements IMyHelpReques
     private final class HelpRequestLabel extends SamebugLabel implements TimestampLabel {
         private final Date timestamp;
 
-        public HelpRequestLabel(Date timestamp) {
+        HelpRequestLabel(Date timestamp) {
             this.timestamp = timestamp;
             setFont(FontService.regular(16));
             setForegroundColor(ColorService.TipText);

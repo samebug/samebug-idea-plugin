@@ -17,12 +17,12 @@ package com.samebug.clients.swing.ui.component.authentication;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.ui.component.authentication.ISignUpForm;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.MessageService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -74,7 +74,6 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
         if (errors.displayName != null) displayName.setFormError(errors.displayName);
         if (errors.email != null) email.setFormError(errors.email);
         if (errors.password != null) password.setFormError(errors.password);
-//        TrackingService.trace(Events.registrationError("SignUp", errors));
     }
 
     @Override
@@ -85,7 +84,6 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
 
     private void sendForm() {
         getListener().signUp(SignUpForm.this, displayName.getText(), email.getText(), password.getText());
-        TrackingService.trace(Events.registrationSend("credentials", "SignUp"));
     }
 
     final class DisplayNameField extends FormField<ISignUpForm.BadRequest.DisplayName> {
@@ -152,6 +150,7 @@ public final class SignUpForm extends JComponent implements ISignUpForm {
         {
             setFilled(true);
             setText(MessageService.message("samebug.component.authentication.signUp"));
+            DataService.putData(this, TrackingKeys.Label, getText());
         }
     }
 

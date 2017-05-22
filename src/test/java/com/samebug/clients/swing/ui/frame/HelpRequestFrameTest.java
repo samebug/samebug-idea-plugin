@@ -34,7 +34,7 @@ public class HelpRequestFrameTest extends TestDialog {
         ListenerService.putListenerToComponent(f, IHelpOthersCTA.Listener.class, new IHelpOthersCTA.Listener() {
             @Override
             public void postTip(IHelpOthersCTA source, String tipBody) {
-                ITipHit.Model newTip = new ITipHit.Model(tipBody, 1, new Date(), "me", null,
+                ITipHit.Model newTip = new ITipHit.Model(tipBody, 1, 0, "doc", new Date(), "me", null,
                         new IMarkButton.Model(0, null, false));
                 IHelpRequestTabs tabs = ComponentService.findAncestor((Component) source, IHelpRequestTabs.class);
                 assert tabs != null;

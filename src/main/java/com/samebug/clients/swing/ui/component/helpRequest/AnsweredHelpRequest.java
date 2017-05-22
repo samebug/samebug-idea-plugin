@@ -17,13 +17,13 @@ package com.samebug.clients.swing.ui.component.helpRequest;
 
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequest;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
+import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.swing.ui.base.animation.*;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
-import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 

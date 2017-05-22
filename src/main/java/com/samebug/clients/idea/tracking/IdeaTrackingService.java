@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.modules;
+package com.samebug.clients.idea.tracking;
 
 import com.intellij.ide.DataManager;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
@@ -26,21 +26,24 @@ import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.client.SamebugClient;
-import com.samebug.clients.http.entities.tracking.TrackEvent;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.ConfigChangeListener;
-import com.samebug.clients.idea.tracking.TrackBuilder;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 
 import javax.swing.*;
+import javax.xml.bind.DatatypeConverter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 
 public final class IdeaTrackingService extends TrackingService implements ConfigChangeListener {
     private static final Logger LOGGER = Logger.getInstance(IdeaTrackingService.class);
     private ApplicationSettings config;
+    private AtomicLong lastEventTimestamp = new AtomicLong(System.currentTimeMillis());
+    private String currentSessionId = UUID.randomUUID().toString();
 
     public IdeaTrackingService(MessageBusConnection connection, ApplicationSettings config) {
         connection.subscribe(ConfigChangeListener.TOPIC, this);
@@ -52,75 +55,79 @@ public final class IdeaTrackingService extends TrackingService implements Config
         config = newSettings;
     }
 
-    protected void internalTrace(TrackEvent event) {
-        if (config.isTrackingEnabled && event != null) {
+    protected void internalTrace(com.samebug.clients.common.tracking.RawEvent rawEvent) {
+        if (config.isTrackingEnabled && rawEvent != null) {
             try {
                 try {
-                    addAppInfo(event);
+                    addAgent(rawEvent);
                 } catch (Exception ignored) {
                 }
                 try {
-                    addUserInfo(event);
+                    addUser(rawEvent);
                 } catch (Exception ignored) {
                 }
                 try {
-                    if (!event.fields.containsKey("project")) addProjectInfo(event);
+                    addProject(rawEvent);
                 } catch (Exception ignored) {
                 }
                 try {
-                    addEnvironmentInfo(event);
+                    addContext(rawEvent);
                 } catch (Exception ignored) {
                 }
                 SamebugClient client = IdeaSamebugPlugin.getInstance().clientService.getClient();
-                client.trace(event);
+                client.trace(rawEvent.getEvent());
             } catch (Exception e) {
                 LOGGER.debug("Failed to report tracking event", e);
             }
         }
     }
 
-    // IMPROVE TrackEvent is not pure
-    private void addAppInfo(TrackEvent e) {
-        Map<String, String> intellijInfo = new HashMap<String, String>();
-        LookAndFeel laf = UIManager.getLookAndFeel();
-        ApplicationInfo appInfo = ApplicationInfo.getInstance();
-        if (laf != null) intellijInfo.put("lookAndFeel", laf.getName());
-        intellijInfo.put("ideaApiVersion", appInfo.getApiVersion());
-        intellijInfo.put("ideaFullVersion", appInfo.getFullVersion());
-        intellijInfo.put("ideaVersionName", appInfo.getVersionName());
-        e.fields.put("intellijInfo", intellijInfo);
+    private void addAgent(com.samebug.clients.common.tracking.RawEvent e) {
+        final Map<String, String> agent = new HashMap<String, String>();
+        final LookAndFeel laf = UIManager.getLookAndFeel();
+        final ApplicationInfo appInfo = ApplicationInfo.getInstance();
+        final IdeaPluginDescriptor plugin = PluginManager.getPlugin(PluginId.getId("Samebug"));
+        final String pluginVersion = plugin == null ? null : plugin.getVersion();
+        final String instanceId = config.instanceId;
 
-        IdeaPluginDescriptor plugin = PluginManager.getPlugin(PluginId.getId("Samebug"));
-        String pluginVersion = plugin == null ? null : plugin.getVersion();
-        if (pluginVersion != null) e.fields.put("pluginVersion", pluginVersion);
+        agent.put("type", "intellij-plugin");
+        if (laf != null) agent.put("lookAndFeel", laf.getName());
+        if (pluginVersion != null) agent.put("pluginVersion", pluginVersion);
+        if (instanceId != null) agent.put("instanceId", instanceId);
+        agent.put("isRetina", Boolean.toString(UIUtil.isRetina()));
+        agent.put("intellijBuild", appInfo.getApiVersion());
+        e.withField("agent", agent);
     }
 
-    private void addUserInfo(TrackEvent e) {
+    private void addUser(com.samebug.clients.common.tracking.RawEvent e) {
+        Map<String, String> user = new HashMap<String, String>();
         Integer userId = config.userId;
-        if (userId != null) e.fields.put("userId", userId);
+        if (userId != null) user.put("userId", userId.toString());
 
         Integer workspaceId = config.workspaceId;
-        if (workspaceId != null) e.fields.put("workspaceId", workspaceId);
+        if (workspaceId != null) user.put("workspaceId", workspaceId.toString());
 
-        String instanceId = config.instanceId;
-        if (instanceId != null) e.fields.put("instanceId", instanceId);
+        e.withField("user", user);
     }
 
-    private void addProjectInfo(TrackEvent e) {
+    private void addProject(com.samebug.clients.common.tracking.RawEvent e) {
         // get project from focus
         DataContext dataContext = DataManager.getInstance().getDataContextFromFocus().getResult();
         Project project = DataKeys.PROJECT.getData(dataContext);
 
-        if (project != null) e.fields.put("project", TrackBuilder.projectData(project));
+        if (project != null) {
+            e.withField("projectName", project.getName());
+        }
     }
 
-    private void addEnvironmentInfo(TrackEvent e) {
-        Map<String, String> environmentInfo = new HashMap<String, String>();
-        environmentInfo.put("os_name", System.getProperty("os.name"));
-        environmentInfo.put("os_version", System.getProperty("os.version"));
-        environmentInfo.put("java_version", System.getProperty("java.version"));
-        environmentInfo.put("java_runtime_version", System.getProperty("java.runtime.version"));
-        environmentInfo.put("is_retina", Boolean.toString(UIUtil.isRetina()));
-        e.fields.put("environmentInfo", environmentInfo);
+    protected void addContext(com.samebug.clients.common.tracking.RawEvent e) {
+        String timestamp = DatatypeConverter.printDateTime(java.util.Calendar.getInstance());
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastEventTimestamp.getAndSet(currentTime) > SESSION_TIMEOUT_MS) {
+            currentSessionId = UUID.randomUUID().toString();
+        }
+        e.withField("localTime", timestamp);
+        e.withField("eventId", UUID.randomUUID().toString());
+        e.withField("sessionId", currentSessionId);
     }
 }

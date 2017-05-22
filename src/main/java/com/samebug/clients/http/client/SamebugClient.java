@@ -38,7 +38,6 @@ import com.samebug.clients.http.json.Json;
 import com.samebug.clients.http.response.GetResponse;
 import com.samebug.clients.http.response.PostFormResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.jetbrains.annotations.NotNull;
@@ -311,12 +310,12 @@ public final class SamebugClient {
         return extractResponse(rawClient.execute(request)).getData();
     }
 
-    public HttpRequestBase trace(@NotNull final TrackEvent event) {
+    public void trace(@NotNull final TrackEvent event) throws SamebugClientException {
         HttpPost post = new HttpPost(config.trackingRoot);
         post.addHeader("Content-Type", "application/json");
         final String json = gson.toJson(event.fields);
         post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
-        return post;
+        rawClient.executeTracking(post);
     }
 
 

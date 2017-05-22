@@ -16,16 +16,18 @@
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.FontService;
-import com.samebug.clients.swing.ui.modules.MessageService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
@@ -71,6 +73,7 @@ public class WriteTipScreen extends RoundedBackgroundPanel {
             cancelButton = new LinkLabel(MessageService.message("samebug.component.tip.write.cancel"));
             cancelButton.setInteractionColors(ColorService.MarkInteraction);
             cancelButton.setFont(FontService.demi(14));
+            DataService.putData(cancelButton, TrackingKeys.Label, cancelButton.getText());
 
             setLayout(new MigLayout("", "0[]20px[]:push", "0[]0"));
             add(sendButton);
@@ -80,7 +83,7 @@ public class WriteTipScreen extends RoundedBackgroundPanel {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     writeTip.changeToClosedState();
-                    TrackingService.trace(Events.writeTipCancel());
+                    TrackingService.trace(SwingRawEvent.buttonClick(cancelButton));
                 }
             });
 
@@ -90,18 +93,18 @@ public class WriteTipScreen extends RoundedBackgroundPanel {
     }
 
     final class SendTipButton extends SamebugButton {
-        public SendTipButton() {
+        SendTipButton() {
             super(MessageService.message("samebug.component.tip.write.send"), true);
             setInteractionColors(ColorService.MarkInteraction);
             setBackgroundColor(ColorService.Tip);
             setFont(FontService.demi(14));
 
+            DataService.putData(this, TrackingKeys.Label, getText());
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (isEnabled()) {
                         writeTip.getListener().postTip(writeTip, tipArea.getText());
-                        TrackingService.trace(Events.writeTipSend());
                     }
                 }
             });

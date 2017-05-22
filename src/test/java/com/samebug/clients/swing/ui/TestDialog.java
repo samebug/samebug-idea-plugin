@@ -16,6 +16,8 @@
 package com.samebug.clients.swing.ui;
 
 import com.google.gson.*;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.idea.ui.modules.IdeaMessageService;
 import com.samebug.clients.swing.ui.modules.*;
 import com.samebug.clients.swing.ui.testModules.TestColorService;

@@ -15,14 +15,21 @@
  */
 package com.samebug.clients.swing.ui.component.hit;
 
+import com.samebug.clients.common.tracking.SolutionHit;
 import com.samebug.clients.common.ui.component.hit.IWebHit;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
+import com.samebug.clients.swing.ui.base.listener.AncestorListenerAdapter;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.modules.DataService;
 import net.miginfocom.swing.MigLayout;
 
+import javax.swing.event.AncestorEvent;
+
 public final class NonMarkableWebHit extends SamebugPanel implements IWebHit {
 
-    public NonMarkableWebHit(Model model) {
+    public NonMarkableWebHit(final Model model) {
         DataService.putData(this, DataService.SolutionId, model.solutionId);
 
         final WebHitTitlePanel titlePanel = new WebHitTitlePanel(this, model);
@@ -30,6 +37,17 @@ public final class NonMarkableWebHit extends SamebugPanel implements IWebHit {
         setLayout(new MigLayout("fillx", "0[300px]0", "0[]0"));
 
         add(titlePanel, "growx, cell 0 0");
+
+        addAncestorListener(new AncestorListenerAdapter() {
+            @Override
+            public void ancestorAdded(AncestorEvent event) {
+                DataService.putData(NonMarkableWebHit.this, TrackingKeys.SolutionHit, new SolutionHit(
+                        model.solutionId, DataService.getData(NonMarkableWebHit.this, DataService.SolutionHitIndex), model.solutionMatchLevel, model.documentId)
+                );
+                final String transactionId = DataService.getData(NonMarkableWebHit.this, TrackingKeys.SolutionTransaction);
+                TrackingService.trace(SwingRawEvent.solutionDisplay(NonMarkableWebHit.this, transactionId));
+            }
+        });
     }
 }
 

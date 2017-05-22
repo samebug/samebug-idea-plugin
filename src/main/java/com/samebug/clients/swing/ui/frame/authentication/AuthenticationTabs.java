@@ -15,14 +15,14 @@
  */
 package com.samebug.clients.swing.ui.frame.authentication;
 
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
 import com.samebug.clients.swing.ui.base.tabbedPane.CenterTabbedPaneUI;
 import com.samebug.clients.swing.ui.base.tabbedPane.LabelTabHeader;
 import com.samebug.clients.swing.ui.base.tabbedPane.SamebugTabHeader;
 import com.samebug.clients.swing.ui.base.tabbedPane.SamebugTabbedPane;
 import com.samebug.clients.swing.ui.modules.ColorService;
-import com.samebug.clients.swing.ui.modules.MessageService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -59,8 +59,7 @@ public class AuthenticationTabs extends SamebugTabbedPane {
 
         @Override
         public void stateChanged(ChangeEvent e) {
-            String dialogType = getSelectedIndex() == 0 ? "SignUp" : "SignIn";
-            TrackingService.trace(Events.registrationDialogSwitched(dialogType));
+            TrackingService.trace(SwingRawEvent.tabSwitch(AuthenticationTabs.this));
         }
     }
 }

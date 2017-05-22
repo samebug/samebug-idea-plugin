@@ -19,11 +19,13 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.tracking.Location;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestList;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListFrame;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
 import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.user.Me;
@@ -38,7 +40,9 @@ import com.samebug.clients.idea.ui.controller.externalEvent.RefreshListener;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import com.samebug.clients.idea.ui.modules.BrowserUtil;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.frame.helpRequestList.HelpRequestListFrame;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 
 import javax.swing.*;
@@ -98,6 +102,9 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
                     @Override
                     public void run() {
                         view.loadingSucceeded(model);
+                        JComponent frame = (JComponent) view;
+                        DataService.putData(frame, TrackingKeys.Location, new Location.HelpRequestList());
+                        DataService.putData(frame, TrackingKeys.PageViewId, TrackingService.newPageViewId());
                     }
                 });
             }

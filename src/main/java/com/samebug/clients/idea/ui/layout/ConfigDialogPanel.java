@@ -16,12 +16,12 @@
 package com.samebug.clients.idea.ui.layout;
 
 import com.intellij.openapi.options.ConfigurationException;
+import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.exceptions.UserUnauthenticated;
 import com.samebug.clients.http.exceptions.UserUnauthorized;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.swing.ui.modules.MessageService;
 import com.samebug.util.SBUtil;
 
 import javax.swing.*;

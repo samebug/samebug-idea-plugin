@@ -30,16 +30,22 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.net.HttpConfigurable;
 import com.samebug.clients.common.services.*;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.client.Config;
 import com.samebug.clients.http.client.ProxyConfig;
 import com.samebug.clients.http.exceptions.SamebugException;
 import com.samebug.clients.idea.controllers.ConsoleSearchController;
 import com.samebug.clients.idea.controllers.TimedTasks;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.idea.tracking.IdeaRawEvent;
+import com.samebug.clients.idea.tracking.IdeaTrackingService;
 import com.samebug.clients.idea.ui.controller.frame.ConcurrencyService;
 import com.samebug.clients.idea.ui.controller.frame.ConversionService;
 import com.samebug.clients.idea.ui.controller.toolwindow.ConfigChangeListener;
-import com.samebug.clients.idea.ui.modules.*;
+import com.samebug.clients.idea.ui.modules.IdeaColorService;
+import com.samebug.clients.idea.ui.modules.IdeaIconService;
+import com.samebug.clients.idea.ui.modules.IdeaListenerService;
+import com.samebug.clients.idea.ui.modules.IdeaMessageService;
 import com.samebug.clients.swing.ui.modules.*;
 import com.samebug.util.SBUtil;
 import org.jetbrains.annotations.NotNull;
@@ -196,8 +202,8 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
             uriBuilder = new WebUriBuilder(newSettings.serverRoot);
             ApplicationManager.getApplication().getMessageBus().syncPublisher(ConfigChangeListener.TOPIC).configChange(oldSettings, newSettings);
         } finally {
-            if (!SBUtil.equals(newSettings.apiKey, oldSettings.apiKey)) TrackingService.trace(Events.changeApiKey());
-            if (!SBUtil.equals(newSettings.workspaceId, oldSettings.workspaceId)) TrackingService.trace(Events.changeWorkspace());
+            if (!SBUtil.equals(newSettings.apiKey, oldSettings.apiKey)) TrackingService.trace(IdeaRawEvent.changeApiKey());
+            if (!SBUtil.equals(newSettings.workspaceId, oldSettings.workspaceId)) TrackingService.trace(IdeaRawEvent.changeWorkspace());
         }
     }
 

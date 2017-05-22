@@ -16,10 +16,14 @@
 package com.samebug.clients.swing.ui.component.profile;
 
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
-import com.samebug.clients.swing.ui.modules.*;
+import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.FontService;
+import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
@@ -99,7 +103,7 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
             @Override
             public void mouseClicked(MouseEvent e) {
                 getListener().messagesClicked();
-                TrackingService.trace(Events.openIncomingRequests());
+                TrackingService.trace(SwingRawEvent.buttonClick(ProfilePanel.this));
             }
         });
     }

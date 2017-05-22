@@ -18,7 +18,6 @@ package com.samebug.clients.idea.ui.controller.form;
 import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
-import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.http.entities.search.NewSearchHit;
 import com.samebug.clients.http.entities.search.SearchHit;
 import com.samebug.clients.http.entities.solution.SamebugTip;
@@ -49,12 +48,6 @@ public abstract class CreateTipFormHandler extends PostFormHandler<SearchHit<Sam
     }
 
     @Override
-    protected final void afterPostForm(@NotNull SearchHit<SamebugTip> response) {
-        ITipHit.Model tip = IdeaSamebugPlugin.getInstance().conversionService.tipHit(response);
-        afterPostFormUI(tip);
-    }
-
-    @Override
     protected final void handleBadRequest(@NotNull final TipCreate.BadRequest fieldErrors) {
         IHelpOthersCTA.BadRequest error = null;
         IHelpOthersCTA.BadRequest.TipBody tipBody = null;
@@ -73,8 +66,6 @@ public abstract class CreateTipFormHandler extends PostFormHandler<SearchHit<Sam
         if (tipBody != null) error = new IHelpOthersCTA.BadRequest(tipBody);
         handleBadRequestUI(error);
     }
-
-    protected abstract void afterPostFormUI(@NotNull ITipHit.Model tip);
 
     protected abstract void handleBadRequestUI(@Nullable IHelpOthersCTA.BadRequest errors);
 

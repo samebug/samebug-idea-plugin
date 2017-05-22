@@ -15,12 +15,14 @@
  */
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
+import com.samebug.clients.common.tracking.Funnel;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.MessageService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,6 +39,7 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
     private WriteTipScreen tipScreen;
 
     public WriteTip(IHelpOthersCTA.Model model, CTA_TYPE ctaType) {
+        DataService.putData(this, TrackingKeys.WriteTipTransaction, Funnel.newTransactionId());
         this.model = new IHelpOthersCTA.Model(model);
         this.ctaType = ctaType;
 
@@ -86,10 +89,11 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
         tipScreen = null;
         add(ctaScreen.getCTAScreen());
 
-        ctaScreen.getCTAButton().addMouseListener(new MouseAdapter() {
+        final JComponent button = ctaScreen.getCTAButton();
+        button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                TrackingService.trace(Events.writeTipOpen());
+                SwingRawEvent.writeTipHookTrigger(button, DataService.getData(button, TrackingKeys.WriteTipTransaction), null);
                 changeToOpenState();
             }
         });

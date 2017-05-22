@@ -22,16 +22,20 @@ import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.awt.RelativePoint;
+import com.samebug.clients.common.tracking.Funnel;
+import com.samebug.clients.common.tracking.Location;
 import com.samebug.clients.common.ui.component.popup.IHelpRequestPopup;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.notifications.IncomingHelpRequestNotification;
-import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.component.popup.HelpRequestPopup;
 import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -58,7 +62,8 @@ public final class HelpRequestPopupController {
     public void showIncomingHelpRequest(@NotNull IncomingHelpRequest helpRequest, @NotNull IncomingHelpRequestNotification notification) {
         IHelpRequestPopup.Model popupModel = IdeaSamebugPlugin.getInstance().conversionService.convertHelpRequestPopup(helpRequest);
         HelpRequestPopup popup = new HelpRequestPopup(popupModel);
-
+        DataService.putData(popup, TrackingKeys.Location, new Location.HelpRequestNotification(helpRequest.getMatch().getHelpRequest().getId()));
+        DataService.putData(popup, TrackingKeys.WriteTipTransaction, Funnel.newTransactionId());
         HelpRequestPopupListener helpRequestPopupListener = new HelpRequestPopupListener(this);
         ListenerService.putListenerToComponent(popup, IHelpRequestPopup.Listener.class, helpRequestPopupListener);
 
@@ -77,7 +82,7 @@ public final class HelpRequestPopupController {
         balloons.put(popup, balloon);
         balloon.show(pointToShowPopup, Balloon.Position.atLeft);
 
-        TrackingService.trace(Events.helpRequestNotificationShow(helpRequest.getMatch().getHelpRequest().getId()));
+        TrackingService.trace(SwingRawEvent.notificationShow(popup));
     }
 
     void hideAndRemoveIncomingHelpRequest(@NotNull IHelpRequestPopup view) {

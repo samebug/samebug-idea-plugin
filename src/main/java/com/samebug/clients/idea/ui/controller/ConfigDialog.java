@@ -17,9 +17,9 @@ package com.samebug.clients.idea.ui.controller;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.idea.tracking.IdeaRawEvent;
 import com.samebug.clients.idea.ui.layout.ConfigDialogPanel;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,7 +43,7 @@ public final class ConfigDialog implements Configurable {
     @Nullable
     @Override
     public JComponent createComponent() {
-        TrackingService.trace(Events.configOpen());
+        TrackingService.trace(IdeaRawEvent.configOpen());
         dialog = new ConfigDialogPanel();
         return dialog.controlPanel;
     }

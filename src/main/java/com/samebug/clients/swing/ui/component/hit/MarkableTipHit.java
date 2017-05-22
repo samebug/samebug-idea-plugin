@@ -15,19 +15,25 @@
  */
 package com.samebug.clients.swing.ui.component.hit;
 
+import com.samebug.clients.common.tracking.SolutionHit;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.animation.*;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.base.listener.AncestorListenerAdapter;
 import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.FontService;
-import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
 import java.awt.*;
 
 public final class MarkableTipHit extends RoundedBackgroundPanel implements IAnimatedComponent, ITipHit {
@@ -35,7 +41,7 @@ public final class MarkableTipHit extends RoundedBackgroundPanel implements IAni
     @NotNull
     private final ComponentAnimationController myAnimationController;
 
-    public MarkableTipHit(Model model) {
+    public MarkableTipHit(final Model model) {
         myAnimationController = new ComponentAnimationController(this);
         setBackgroundColor(ColorService.Tip);
         DataService.putData(this, DataService.SolutionId, model.solutionId);
@@ -54,6 +60,17 @@ public final class MarkableTipHit extends RoundedBackgroundPanel implements IAni
         add(mark, "cell 0 2, align left");
         add(filler, "cell 0 2, growx");
         add(author, "cell 0 2, align right");
+
+        addAncestorListener(new AncestorListenerAdapter() {
+            @Override
+            public void ancestorAdded(AncestorEvent event) {
+                DataService.putData(MarkableTipHit.this, TrackingKeys.SolutionHit, new SolutionHit(
+                        model.solutionId, DataService.getData(MarkableTipHit.this, DataService.SolutionHitIndex), model.solutionMatchLevel, model.documentId)
+                );
+                final String transactionId = DataService.getData(MarkableTipHit.this, TrackingKeys.SolutionTransaction);
+                TrackingService.trace(SwingRawEvent.solutionDisplay(MarkableTipHit.this, transactionId));
+            }
+        });
     }
 
     public ControllableAnimation fadeIn() {

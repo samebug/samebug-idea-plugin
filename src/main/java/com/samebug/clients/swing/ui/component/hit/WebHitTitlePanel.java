@@ -16,6 +16,7 @@
 package com.samebug.clients.swing.ui.component.hit;
 
 import com.samebug.clients.common.ui.component.hit.IWebHit;
+import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.common.ui.modules.TextService;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.label.TimestampLabel;

@@ -15,12 +15,12 @@
  */
 package com.samebug.clients.swing.ui.testModules;
 
-import com.samebug.clients.http.entities.tracking.TrackEvent;
-import com.samebug.clients.swing.ui.modules.TrackingService;
+import com.samebug.clients.common.tracking.RawEvent;
+import com.samebug.clients.common.ui.modules.TrackingService;
 
 public final class TestTrackingService extends TrackingService {
     @Override
-    protected void internalTrace(TrackEvent event) {
+    protected void internalTrace(RawEvent event) {
         System.out.println(event.unsafePresentation());
     }
 }

@@ -20,11 +20,11 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.ProjectManager;
+import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.idea.components.application.IdeaConnectionService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.controller.ConfigDialog;
 import com.samebug.clients.swing.ui.modules.IconService;
-import com.samebug.clients.swing.ui.modules.MessageService;
 
 public final class ConfigureAction extends AnAction implements DumbAware {
     @Override

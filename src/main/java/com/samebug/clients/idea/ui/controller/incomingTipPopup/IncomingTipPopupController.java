@@ -22,13 +22,18 @@ import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.awt.RelativePoint;
+import com.samebug.clients.common.tracking.Location;
 import com.samebug.clients.common.ui.component.popup.IIncomingTipPopup;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.entities.notification.IncomingAnswer;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.notifications.IncomingTipNotification;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.component.popup.IncomingTipPopup;
 import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.DataService;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -56,6 +61,7 @@ public final class IncomingTipPopupController {
     public void showIncomingTip(@NotNull IncomingAnswer incomingTip, @NotNull IncomingTipNotification notification) {
         IIncomingTipPopup.Model popupModel = IdeaSamebugPlugin.getInstance().conversionService.convertIncomingTipPopup(incomingTip);
         IncomingTipPopup popup = new IncomingTipPopup(popupModel);
+        DataService.putData(popup, TrackingKeys.Location, new Location.TipAnswerNotification(incomingTip.getSolution().getId()));
 
         BalloonBuilder balloonBuilder = JBPopupFactory.getInstance().createBalloonBuilder(popup);
         balloonBuilder.setFillColor(ColorService.forCurrentTheme(ColorService.Background));
@@ -71,6 +77,8 @@ public final class IncomingTipPopupController {
         notifications.put(popup, notification);
         balloons.put(popup, balloon);
         balloon.show(pointToShowPopup, Balloon.Position.atLeft);
+
+        TrackingService.trace(SwingRawEvent.notificationShow(popup));
     }
 
     void hideAndRemoveIncomingHelpRequest(@NotNull IIncomingTipPopup view) {

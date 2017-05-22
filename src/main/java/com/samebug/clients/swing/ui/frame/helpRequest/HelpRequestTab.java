@@ -15,9 +15,13 @@
  */
 package com.samebug.clients.swing.ui.frame.helpRequest;
 
+import com.samebug.clients.common.tracking.Funnel;
+import com.samebug.clients.common.tracking.PageTabs;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequest;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestTab;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.animation.ControllableAnimation;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
@@ -26,8 +30,8 @@ import com.samebug.clients.swing.ui.base.scrollPane.SamebugScrollPane;
 import com.samebug.clients.swing.ui.component.helpRequest.AnsweredHelpRequest;
 import com.samebug.clients.swing.ui.component.helpRequest.NonAnsweredHelpRequest;
 import com.samebug.clients.swing.ui.component.hit.NonMarkableTipHit;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.FontService;
-import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,11 +50,13 @@ public final class HelpRequestTab extends TransparentPanel implements IHelpReque
     private final java.util.List<NonMarkableTipHit> tipHits;
 
     public HelpRequestTab(Model model) {
+        DataService.putData(this, TrackingKeys.PageTab, PageTabs.HelpRequest.TipHits);
         request = new NonAnsweredHelpRequest(model.helpRequest);
         tipHits = new ArrayList<NonMarkableTipHit>();
         for (int i = 0; i < model.tipHits.size(); i++) {
             NonMarkableTipHit.Model m = model.tipHits.get(i);
             NonMarkableTipHit hit = new NonMarkableTipHit(m);
+            DataService.putData(hit, TrackingKeys.SolutionTransaction, Funnel.newTransactionId());
             tipHits.add(hit);
         }
 

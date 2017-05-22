@@ -13,20 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.tracking;
+package com.samebug.clients.swing.ui.base.listener;
 
-import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 
-import javax.swing.*;
+public class AncestorListenerAdapter implements AncestorListener {
+    @Override
+    public void ancestorAdded(AncestorEvent event) {
 
-class ShowToolwindowBuilder extends TrackBuilder {
-    public ShowToolwindowBuilder(String category, String action, BaseFrameController controller) {
-        super(category, action);
-        try {
-            JComponent v = (JComponent) controller.view;
-            add("screenWidth", v.getWidth());
-            add("screenHeight", v.getHeight());
-        } catch (Exception ignored) {
-        }
+    }
+
+    @Override
+    public void ancestorRemoved(AncestorEvent event) {
+
+    }
+
+    @Override
+    public void ancestorMoved(AncestorEvent event) {
+
     }
 }
