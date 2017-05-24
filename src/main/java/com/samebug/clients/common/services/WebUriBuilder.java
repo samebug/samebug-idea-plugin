@@ -54,8 +54,8 @@ public final class WebUriBuilder {
     }
 
     @NotNull
-    public URI forgottenPassword(@NotNull final int userId) {
-        return resolveToRoot("/user/" + userId);
+    public URI forgottenPassword() {
+        return resolveToRoot("/password-forgot");
     }
 
     @NotNull

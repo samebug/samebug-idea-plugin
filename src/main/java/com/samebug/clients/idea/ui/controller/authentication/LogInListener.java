@@ -28,7 +28,6 @@ import com.samebug.clients.swing.ui.modules.DataService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.net.URI;
 
 public final class LogInListener implements ILogInForm.Listener {
     final AuthenticationController controller;
@@ -55,9 +54,7 @@ public final class LogInListener implements ILogInForm.Listener {
 
     @Override
     public void forgotPassword(ILogInForm source) {
-        // TODO make a password recovery request to the server, and tell the user to check emails?
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-        URI forgottenPasswordUri = plugin.uriBuilder.getServerRoot();
-        BrowserUtil.browse(forgottenPasswordUri);
+        BrowserUtil.browse(plugin.uriBuilder.forgottenPassword());
     }
 }
