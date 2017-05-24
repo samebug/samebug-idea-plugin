@@ -87,7 +87,7 @@ public final class IdeaTrackingService extends TrackingService implements Config
         final Map<String, String> agent = new HashMap<String, String>();
         final LookAndFeel laf = UIManager.getLookAndFeel();
         final ApplicationInfo appInfo = ApplicationInfo.getInstance();
-        final IdeaPluginDescriptor plugin = PluginManager.getPlugin(PluginId.getId("Samebug"));
+        final IdeaPluginDescriptor plugin = PluginManager.getPlugin(PluginId.getId(IdeaSamebugPlugin.ID));
         final String pluginVersion = plugin == null ? null : plugin.getVersion();
         final String instanceId = config.instanceId;
 

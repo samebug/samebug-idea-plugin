@@ -64,6 +64,7 @@ import java.util.concurrent.atomic.AtomicReference;
 )
 public final class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<ApplicationSettings>, Disposable {
     private static final Logger LOGGER = Logger.getInstance(IdeaSamebugPlugin.class);
+    public static final String ID = "Samebug";
     private AtomicReference<ApplicationSettings> state = new AtomicReference<ApplicationSettings>(new ApplicationSettings());
 
     public String applicationUserAgent;
@@ -111,7 +112,7 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     @Override
     public void initComponent() {
         ApplicationInfo appInfo = ApplicationInfo.getInstance();
-        IdeaPluginDescriptor plugin = PluginManager.getPlugin(PluginId.getId("Samebug"));
+        IdeaPluginDescriptor plugin = PluginManager.getPlugin(PluginId.getId(ID));
         assert plugin != null : "Samebug plugin is not registered!";
         applicationUserAgent = "Samebug-Plugin" + "/" + plugin.getVersion()
                 + " IntelliJ/" + appInfo.getApiVersion()
