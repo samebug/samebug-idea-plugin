@@ -220,6 +220,9 @@ public class SwingRawEvent extends RawEvent {
         return new SwingRawEvent("Bugmate", "Displayed", source) {
             protected void myLazyFields() {
                 withData("bugmate", bugmate);
+                withData("position", DataService.getData(eventSource, TrackingKeys.BugmateHitIndex));
+                withData("level", level);
+                withData("matchingGroupId", matchingGroupId);
             }
         };
     }
