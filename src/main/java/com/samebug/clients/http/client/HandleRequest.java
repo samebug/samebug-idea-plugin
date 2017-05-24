@@ -40,7 +40,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 interface HandleRequest<T> {
-    HttpRequestBase createRequest();
+    HttpRequestBase getRequest();
 
     T onSuccess(HttpResponse response);
 
@@ -188,7 +188,7 @@ final class Builder {
         }
 
         @Override
-        public HttpRequestBase createRequest() {
+        public HttpRequestBase getRequest() {
             return request;
         }
 
@@ -224,7 +224,7 @@ final class Builder {
         }
 
         @Override
-        public HttpRequestBase createRequest() {
+        public HttpRequestBase getRequest() {
             return request;
         }
 

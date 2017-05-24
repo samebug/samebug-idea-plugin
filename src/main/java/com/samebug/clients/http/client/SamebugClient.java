@@ -279,6 +279,8 @@ public final class SamebugClient {
                 .unauthenticated()
                 .<JsonErrors<SignUp.ErrorCode>>withFormErrorType(new TypeToken<JsonErrors<SignUp.ErrorCode>>() {}.getType())
                 .withResponseType(AuthenticationResponseResource.class);
+        // NOTE: this is a bit leaky (mutating through a field), but otherwise it would be so overcomplicated...
+        request.getRequest().setHeader("Cookie", "registration-hook=plugin");
         final PostFormResponse<AuthenticationResponseResource, JsonErrors<SignUp.ErrorCode>> response = rawClient.execute(request);
         switch (response.getResultType()) {
             case SUCCESS:

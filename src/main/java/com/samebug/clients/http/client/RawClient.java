@@ -94,7 +94,7 @@ public final class RawClient {
     }
 
     public <T> T execute(final HandleRequest<T> handler) {
-        final HttpRequestBase request = handler.createRequest();
+        final HttpRequestBase request = handler.getRequest();
 
         // initialize connection status
         ConnectionStatus connectionStatus;
