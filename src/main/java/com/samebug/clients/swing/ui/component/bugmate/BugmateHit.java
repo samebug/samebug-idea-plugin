@@ -28,9 +28,13 @@ import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
+import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.event.AncestorEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URL;
 import java.util.Date;
 
 public final class BugmateHit extends TransparentPanel implements IBugmateHit {
@@ -46,6 +50,15 @@ public final class BugmateHit extends TransparentPanel implements IBugmateHit {
         add(avatar, "cell 0 0, spany 2");
         add(name, "cell 1 0");
         add(timestamp, "cell 1 1");
+
+        avatar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                URL profileUrl = model.user.getUrl();
+                getListener().profileClick(BugmateHit.this, profileUrl);
+                if (profileUrl != null) TrackingService.trace(SwingRawEvent.linkClick(BugmateHit.this, profileUrl));
+            }
+        });
 
         addAncestorListener(new AncestorListenerAdapter() {
             @Override
@@ -87,5 +100,9 @@ public final class BugmateHit extends TransparentPanel implements IBugmateHit {
         public void updateRelativeTimestamp() {
             setText(MessageService.message("samebug.component.bugmate.hit.occurred", nSeen, TextService.prettyTime(lastSeen)));
         }
+    }
+
+    private IBugmateHit.Listener getListener() {
+        return ListenerService.getListener(this, IBugmateHit.Listener.class);
     }
 }

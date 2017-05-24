@@ -29,6 +29,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.net.URI;
+import java.net.URL;
 
 public class SwingRawEvent extends RawEvent {
     // Funnels
@@ -248,6 +249,15 @@ public class SwingRawEvent extends RawEvent {
         return new SwingRawEvent("Interaction", "LinkClicked", source) {
             protected void myLazyFields() {
                 withData("to", uri.toString());
+                withData("label", DataService.getData(eventSource, TrackingKeys.Label));
+            }
+        };
+    }
+
+    public static RawEvent linkClick(@NotNull final JComponent source, @NotNull final URL url) {
+        return new SwingRawEvent("Interaction", "LinkClicked", source) {
+            protected void myLazyFields() {
+                withData("to", url.toString());
                 withData("label", DataService.getData(eventSource, TrackingKeys.Label));
             }
         };

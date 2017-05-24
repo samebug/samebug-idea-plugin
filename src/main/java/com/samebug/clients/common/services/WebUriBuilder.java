@@ -39,16 +39,6 @@ public final class WebUriBuilder {
     }
 
     @NotNull
-    public URI assets(@NotNull final String assetUri) {
-        return resolveToRoot("/assets/" + assetUri);
-    }
-
-    @NotNull
-    public URI sourceIcon(@NotNull final String iconId) {
-        return resolveToRoot("/assets/images/sources/" + iconId + ".png");
-    }
-
-    @NotNull
     public URI profile(@NotNull final int userId) {
         return resolveToRoot("/user/" + userId);
     }

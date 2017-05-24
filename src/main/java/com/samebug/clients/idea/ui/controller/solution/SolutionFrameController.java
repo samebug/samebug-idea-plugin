@@ -21,6 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.concurrency.FixedFuture;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.tracking.Locations;
+import com.samebug.clients.common.ui.component.bugmate.IBugmateHit;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
@@ -45,6 +46,7 @@ import com.samebug.clients.idea.messages.IncomingHelpRequest;
 import com.samebug.clients.idea.messages.ProfileUpdate;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
 import com.samebug.clients.idea.messages.WebSocketStatusUpdate;
+import com.samebug.clients.idea.ui.controller.component.BugmateHitListener;
 import com.samebug.clients.idea.ui.controller.component.ProfileListener;
 import com.samebug.clients.idea.ui.controller.component.WebHitListener;
 import com.samebug.clients.idea.ui.controller.component.WebResultsTabListener;
@@ -71,6 +73,7 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
     final RevokeHelpRequestListener revokeHelpRequestListener;
     final HelpOthersCTAListener helpOthersCTAListener;
     final WebHitListener webHitListener;
+    final BugmateHitListener bugmateHitListener;
     final MarkButtonListener markButtonListener;
     final ProfileListener profileListener;
     final SolutionFrameListener frameListener;
@@ -93,6 +96,9 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
 
         webHitListener = new WebHitListener(searchId);
         ListenerService.putListenerToComponent(frame, IWebHit.Listener.class, webHitListener);
+
+        bugmateHitListener = new BugmateHitListener();
+        ListenerService.putListenerToComponent(frame, IBugmateHit.Listener.class, bugmateHitListener);
 
         requestHelpListener = new RequestHelpListener(this);
         ListenerService.putListenerToComponent(frame, IAskForHelp.Listener.class, requestHelpListener);

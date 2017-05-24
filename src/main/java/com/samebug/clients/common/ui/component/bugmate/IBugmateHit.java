@@ -17,7 +17,9 @@ package com.samebug.clients.common.ui.component.bugmate;
 
 import com.samebug.clients.common.entities.user.SamebugUser;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.net.URL;
 import java.util.Date;
 
 public interface IBugmateHit {
@@ -47,5 +49,6 @@ public interface IBugmateHit {
     }
 
     interface Listener {
+        void profileClick(@NotNull IBugmateHit source, @Nullable URL profileUrl);
     }
 }
