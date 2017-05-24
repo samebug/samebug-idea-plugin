@@ -21,6 +21,7 @@ import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DataKeys;
 import com.intellij.openapi.application.ApplicationInfo;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
@@ -29,9 +30,12 @@ import com.intellij.util.ui.UIUtil;
 import com.samebug.clients.common.tracking.TrackedUser;
 import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.client.SamebugClient;
+import com.samebug.clients.http.entities.tracking.TrackEvent;
+import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.ConfigChangeListener;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.xml.bind.DatatypeConverter;
@@ -59,28 +63,38 @@ public final class IdeaTrackingService extends TrackingService implements Config
     protected void internalTrace(com.samebug.clients.common.tracking.RawEvent rawEvent) {
         if (config.isTrackingEnabled && rawEvent != null) {
             try {
-                try {
-                    addAgent(rawEvent);
-                } catch (Exception ignored) {
-                }
-                try {
-                    addUser(rawEvent);
-                } catch (Exception ignored) {
-                }
-                try {
-                    addProject(rawEvent);
-                } catch (Exception ignored) {
-                }
-                try {
-                    addContext(rawEvent);
-                } catch (Exception ignored) {
-                }
-                SamebugClient client = IdeaSamebugPlugin.getInstance().clientService.getClient();
-                client.trace(rawEvent.getEvent());
-            } catch (Exception e) {
-                LOGGER.debug("Failed to report tracking event", e);
+                addAgent(rawEvent);
+            } catch (Exception ignored) {
             }
+            try {
+                addUser(rawEvent);
+            } catch (Exception ignored) {
+            }
+            try {
+                addProject(rawEvent);
+            } catch (Exception ignored) {
+            }
+            try {
+                addContext(rawEvent);
+            } catch (Exception ignored) {
+            }
+            postEventInBackground(rawEvent.getEvent());
         }
+    }
+
+    // IMPROVE: use a queue if it eats up the worker threads
+    private void postEventInBackground(@NotNull final TrackEvent event) {
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                SamebugClient client = IdeaSamebugPlugin.getInstance().clientService.getClient();
+                try {
+                    client.trace(event);
+                } catch (SamebugClientException e) {
+                    LOGGER.debug("Failed to report tracking event", e);
+                }
+            }
+        });
     }
 
     private void addAgent(com.samebug.clients.common.tracking.RawEvent e) {
