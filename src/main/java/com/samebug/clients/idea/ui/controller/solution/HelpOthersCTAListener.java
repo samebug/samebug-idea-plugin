@@ -53,7 +53,7 @@ final class HelpOthersCTAListener implements IHelpOthersCTA.Listener {
         final JComponent sourceComponent = (JComponent) source;
         final String transactionId = DataService.getData(sourceComponent, TrackingKeys.WriteTipTransaction);
 
-        TrackingService.trace(SwingRawEvent.writeTipSubmit(sourceComponent, transactionId));
+        TrackingService.trace(SwingRawEvent.writeTipSubmit(sourceComponent, transactionId, null));
         new CreateTipFormHandler(formData, controller.searchId) {
             @Override
             protected void beforePostForm() {
@@ -68,7 +68,7 @@ final class HelpOthersCTAListener implements IHelpOthersCTA.Listener {
 
                 source.successPostTip(tip);
                 resultTabs.tipWritten(tip);
-                TrackingService.trace(SwingRawEvent.writeTipCreate(sourceComponent, transactionId, response));
+                TrackingService.trace(SwingRawEvent.writeTipCreate(sourceComponent, transactionId, null, response));
             }
 
             @Override

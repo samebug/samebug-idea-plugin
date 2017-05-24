@@ -24,7 +24,7 @@ import com.intellij.unscramble.AnalyzeStacktraceUtil;
 import com.samebug.clients.common.search.StackTraceListener;
 import com.samebug.clients.common.search.StackTraceMatcher;
 import com.samebug.clients.common.services.SearchService;
-import com.samebug.clients.common.tracking.Location;
+import com.samebug.clients.common.tracking.Locations;
 import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.entities.jsonapi.CreatedSearchResource;
@@ -64,7 +64,7 @@ public final class AnalyzeDialog extends DialogWrapper {
         searchAction = new SamebugSearch();
         setTitle(MessageService.message("samebug.menu.analyze.dialog.title"));
         DataService.putData(panel, TrackingKeys.SearchTransaction, transactionId);
-        DataService.putData(panel, TrackingKeys.Location, new Location.SearchDialog());
+        DataService.putData(panel, TrackingKeys.Location, new Locations.SearchDialog());
         init();
     }
 

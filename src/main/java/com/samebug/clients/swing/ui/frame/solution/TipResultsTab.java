@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.frame.solution;
 
-import com.samebug.clients.common.tracking.Funnel;
+import com.samebug.clients.common.tracking.Funnels;
 import com.samebug.clients.common.tracking.PageTabs;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
@@ -56,7 +56,7 @@ public final class TipResultsTab extends TransparentPanel implements IAnimatedCo
         for (int i = 0; i < model.tipHits.size(); i++) {
             MarkableTipHit.Model m = model.tipHits.get(i);
             MarkableTipHit hit = new MarkableTipHit(m);
-            DataService.putData(hit, TrackingKeys.SolutionTransaction, Funnel.newTransactionId());
+            DataService.putData(hit, TrackingKeys.SolutionTransaction, Funnels.newTransactionId());
             tipHits.add(hit);
         }
         contentPanel = new ContentPanel(ctaModel, model.bugmateList, model.myHelpRequest, model.askForHelp);

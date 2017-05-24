@@ -17,7 +17,7 @@ package com.samebug.clients.idea.ui.controller.authentication;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
-import com.samebug.clients.common.tracking.Location;
+import com.samebug.clients.common.tracking.Locations;
 import com.samebug.clients.common.ui.component.authentication.IAnonymousUseForm;
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
 import com.samebug.clients.common.ui.component.authentication.ISignUpForm;
@@ -49,7 +49,7 @@ public final class AuthenticationController extends BaseFrameController<IAuthent
         anonymousUseListener = new AnonymousUseListener(this);
         ListenerService.putListenerToComponent(frame, IAnonymousUseForm.Listener.class, anonymousUseListener);
 
-        DataService.putData(frame, TrackingKeys.Location, new Location.Authentication());
+        DataService.putData(frame, TrackingKeys.Location, new Locations.Authentication());
         DataService.putData(frame, TrackingKeys.PageViewId, TrackingService.newPageViewId());
     }
 }

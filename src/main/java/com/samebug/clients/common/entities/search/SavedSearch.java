@@ -71,4 +71,16 @@ public class SavedSearch implements SearchRequest {
     public boolean hasWebHit() {
         return savedSearch.getMeta().getHasExternalSolutions();
     }
+
+    public SolutionType getSolutionType() {
+        if (hasTip()) return SolutionType.TIP;
+        else if (hasHelpRequest()) return SolutionType.HELP_REQUEST;
+        else if (hasBugmate()) return SolutionType.BUGMATE;
+        else if (hasWebHit()) return SolutionType.WEBHIT;
+        return SolutionType.NONE;
+    }
+
+    public enum SolutionType {
+        TIP, HELP_REQUEST, BUGMATE, WEBHIT, NONE
+    }
 }

@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.helpRequest;
 
+import com.samebug.clients.common.tracking.Hooks;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
 import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.common.ui.modules.TextService;
@@ -24,6 +25,7 @@ import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.label.TimestampLabel;
+import com.samebug.clients.swing.ui.base.listener.AncestorListenerAdapter;
 import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
 import com.samebug.clients.swing.ui.modules.ColorService;
@@ -33,6 +35,7 @@ import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
@@ -66,8 +69,15 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
                 if (isEnabled()) {
                     getListener().previewClicked(HelpRequestPreview.this, model.helpRequestId);
                     final String transactionId = DataService.getData(HelpRequestPreview.this, TrackingKeys.WriteTipTransaction);
-                    SwingRawEvent.writeTipHookTrigger(HelpRequestPreview.this, transactionId, model.helpRequestId);
+                    TrackingService.trace(SwingRawEvent.writeTipHookTrigger(HelpRequestPreview.this, transactionId, model.helpRequestId, Hooks.WriteTip.HELP_REQUEST_RESPONSE));
                 }
+            }
+        });
+        addAncestorListener(new AncestorListenerAdapter() {
+            @Override
+            public void ancestorAdded(AncestorEvent event) {
+                removeAncestorListener(this);
+                TrackingService.trace(SwingRawEvent.helpRequestDisplay(HelpRequestPreview.this, model.helpRequestId));
             }
         });
     }

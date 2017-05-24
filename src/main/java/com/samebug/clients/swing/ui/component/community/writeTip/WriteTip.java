@@ -15,10 +15,12 @@
  */
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
-import com.samebug.clients.common.tracking.Funnel;
+import com.samebug.clients.common.tracking.Funnels;
+import com.samebug.clients.common.tracking.Hooks;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.swing.tracking.SwingRawEvent;
 import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.modules.DataService;
@@ -39,7 +41,7 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
     private WriteTipScreen tipScreen;
 
     public WriteTip(IHelpOthersCTA.Model model, CTA_TYPE ctaType) {
-        DataService.putData(this, TrackingKeys.WriteTipTransaction, Funnel.newTransactionId());
+        DataService.putData(this, TrackingKeys.WriteTipTransaction, Funnels.newTransactionId());
         this.model = new IHelpOthersCTA.Model(model);
         this.ctaType = ctaType;
 
@@ -93,7 +95,8 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                SwingRawEvent.writeTipHookTrigger(button, DataService.getData(button, TrackingKeys.WriteTipTransaction), null);
+                TrackingService.trace(SwingRawEvent.writeTipHookTrigger(
+                        button, DataService.getData(button, TrackingKeys.WriteTipTransaction), null, Hooks.WriteTip.SEARCH));
                 changeToOpenState();
             }
         });

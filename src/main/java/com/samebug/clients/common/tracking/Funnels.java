@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public final class Funnel {
+public final class Funnels {
     public static final String AUTHENTICATION = "authentication";
     public static final String HELP_REQUEST = "help-request";
     public static final String WRITE_TIP = "write-tip";
@@ -44,5 +44,5 @@ public final class Funnel {
         return UUID.randomUUID().toString();
     }
 
-    private Funnel() {}
+    private Funnels() {}
 }

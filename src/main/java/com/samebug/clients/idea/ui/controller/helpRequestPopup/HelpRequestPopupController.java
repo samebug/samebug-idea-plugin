@@ -22,8 +22,8 @@ import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.awt.RelativePoint;
-import com.samebug.clients.common.tracking.Funnel;
-import com.samebug.clients.common.tracking.Location;
+import com.samebug.clients.common.tracking.Funnels;
+import com.samebug.clients.common.tracking.Locations;
 import com.samebug.clients.common.ui.component.popup.IHelpRequestPopup;
 import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
@@ -62,8 +62,8 @@ public final class HelpRequestPopupController {
     public void showIncomingHelpRequest(@NotNull IncomingHelpRequest helpRequest, @NotNull IncomingHelpRequestNotification notification) {
         IHelpRequestPopup.Model popupModel = IdeaSamebugPlugin.getInstance().conversionService.convertHelpRequestPopup(helpRequest);
         HelpRequestPopup popup = new HelpRequestPopup(popupModel);
-        DataService.putData(popup, TrackingKeys.Location, new Location.HelpRequestNotification(helpRequest.getMatch().getHelpRequest().getId()));
-        DataService.putData(popup, TrackingKeys.WriteTipTransaction, Funnel.newTransactionId());
+        DataService.putData(popup, TrackingKeys.Location, new Locations.HelpRequestNotification(helpRequest.getMatch().getHelpRequest().getId()));
+        DataService.putData(popup, TrackingKeys.WriteTipTransaction, Funnels.newTransactionId());
         HelpRequestPopupListener helpRequestPopupListener = new HelpRequestPopupListener(this);
         ListenerService.putListenerToComponent(popup, IHelpRequestPopup.Listener.class, helpRequestPopupListener);
 

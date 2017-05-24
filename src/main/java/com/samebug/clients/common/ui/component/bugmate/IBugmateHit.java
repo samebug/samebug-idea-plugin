@@ -15,35 +15,34 @@
  */
 package com.samebug.clients.common.ui.component.bugmate;
 
+import com.samebug.clients.common.entities.user.SamebugUser;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.net.URL;
 import java.util.Date;
 
 public interface IBugmateHit {
     final class Model {
         @NotNull
-        public final String displayName;
-        @Nullable
-        public final URL avatarUrl;
+        public final SamebugUser.Base user;
         @NotNull
         public final Integer nSeen;
         @NotNull
         public final Date lastSeen;
         @NotNull
-        public final ConnectionStatus status;
+        public final Integer level;
+        @NotNull
+        public final String matchingGroupId;
 
         public Model(Model rhs) {
-            this(rhs.displayName, rhs.avatarUrl, rhs.nSeen, rhs.lastSeen, rhs.status);
+            this(rhs.user, rhs.nSeen, rhs.lastSeen, rhs.level, rhs.matchingGroupId);
         }
 
-        public Model(@NotNull String displayName, @Nullable URL avatarUrl, @NotNull Integer nSeen, @NotNull Date lastSeen, @NotNull ConnectionStatus status) {
-            this.displayName = displayName;
-            this.avatarUrl = avatarUrl;
+        public Model(@NotNull SamebugUser.Base user, @NotNull Integer nSeen, @NotNull Date lastSeen, @NotNull Integer level, @NotNull String matchingGroupId) {
+            this.user = user;
             this.nSeen = nSeen;
             this.lastSeen = lastSeen;
-            this.status = status;
+            this.level = level;
+            this.matchingGroupId = matchingGroupId;
         }
     }
 

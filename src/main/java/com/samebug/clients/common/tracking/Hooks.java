@@ -13,30 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.solution;
+package com.samebug.clients.common.tracking;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.net.URL;
-import java.util.Date;
-
-public abstract class Document {
-    private URL url;
-    private Date createdAt;
-    private String documentId;
-
-    @NotNull
-    public final URL getUrl() {
-        return url;
+public final class Hooks {
+    public static final class Authentication {
+        public static final String UNAUTHENTICATED = "unauthenticated";
     }
 
-    @NotNull
-    public final Date getCreatedAt() {
-        return createdAt;
+    public static final class Search {
+        public static final String MENU = "ide-menu";
     }
 
-    @NotNull
-    public final String getDocumentId() {
-        return documentId;
+    public static final class HelpRequest {
+        public static final String ASK_BUGMATES = "bugmates-ask";
     }
+
+    public static final class WriteTip {
+        public static final String HELP_REQUEST_RESPONSE = "help-request-response";
+        public static final String SEARCH = "search";
+    }
+
+    private Hooks() {}
 }

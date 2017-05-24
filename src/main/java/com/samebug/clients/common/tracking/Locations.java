@@ -17,13 +17,13 @@ package com.samebug.clients.common.tracking;
 
 import org.jetbrains.annotations.NotNull;
 
-public final class Location {
+public final class Locations {
 
     public static final class Search extends Base {
         public final Integer searchId;
 
         public Search(@NotNull Integer searchId) {
-            super("stack-trace-search--location");
+            super("search");
             this.searchId = searchId;
         }
     }
@@ -32,20 +32,20 @@ public final class Location {
         public final String helpRequestId;
 
         public HelpRequest(@NotNull String helpRequestId) {
-            super("help-request--location");
+            super("help-request");
             this.helpRequestId = helpRequestId;
         }
     }
 
     public static final class HelpRequestList extends Base {
         public HelpRequestList() {
-            super("help-request-list--location");
+            super("incoming-help-requests");
         }
     }
 
     public static final class Authentication extends Base {
         public Authentication() {
-            super("authentication--location");
+            super("authentication");
         }
     }
 
@@ -53,7 +53,7 @@ public final class Location {
         public final String helpRequestId;
 
         public HelpRequestNotification(@NotNull String helpRequestId) {
-            super("help-request-notification--location");
+            super("help-request-notification");
             this.helpRequestId = helpRequestId;
         }
     }
@@ -62,28 +62,28 @@ public final class Location {
         public final Integer solutionId;
 
         public TipAnswerNotification(@NotNull Integer solutionId) {
-            super("tip-answer-notification--location");
+            super("tip-answer-notification");
             this.solutionId = solutionId;
         }
     }
 
     public static final class SearchDialog extends Base {
         public SearchDialog() {
-            super("search-dialog--location");
+            super("search-dialog");
         }
     }
 
 
     public abstract static class Base {
         public final String type;
-        public String tab;
+        public String tabId;
 
         protected Base(String type) {
             this.type = type;
         }
     }
 
-    private Location() {
+    private Locations() {
 
     }
 }

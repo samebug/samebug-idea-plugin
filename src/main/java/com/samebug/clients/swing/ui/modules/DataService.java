@@ -23,7 +23,6 @@ import java.awt.*;
 
 public final class DataService {
     public static final Key<Integer> SolutionId = new Key<Integer>("SolutionId");
-    public static final Key<Integer> SolutionHitIndex = new Key<Integer>("SolutionHitIndex");
 
 
     @SuppressWarnings("unchecked")

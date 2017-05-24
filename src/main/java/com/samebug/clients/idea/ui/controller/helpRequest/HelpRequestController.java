@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.entities.search.ReadableSearchGroup;
 import com.samebug.clients.common.services.HelpRequestStore;
-import com.samebug.clients.common.tracking.Location;
+import com.samebug.clients.common.tracking.Locations;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.hit.IWebHit;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
@@ -137,7 +137,7 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
                     public void run() {
                         view.loadingSucceeded(model);
                         JComponent frame = (JComponent) view;
-                        DataService.putData(frame, TrackingKeys.Location, new Location.HelpRequest(helpRequestMatch.getHelpRequest().getId()));
+                        DataService.putData(frame, TrackingKeys.Location, new Locations.HelpRequest(helpRequestMatch.getHelpRequest().getId()));
                         DataService.putData(frame, TrackingKeys.PageViewId, TrackingService.newPageViewId());
                     }
                 });

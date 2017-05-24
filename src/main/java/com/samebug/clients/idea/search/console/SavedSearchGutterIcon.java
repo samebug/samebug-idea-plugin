@@ -39,11 +39,18 @@ final class SavedSearchGutterIcon extends SearchMark implements DumbAware {
     @NotNull
     @Override
     public Icon getIcon() {
-        if (search.hasTip()) return IconService.gutterTip;
-        else if (search.hasHelpRequest()) return IconService.gutterHelpRequest;
-        else if (search.hasBugmate()) return IconService.gutterSamebug;
-        else if (search.hasWebHit()) return IconService.gutterSamebug;
-        return IconService.gutterSamebug;
+        switch (search.getSolutionType()) {
+            case TIP:
+                return IconService.gutterTip;
+            case HELP_REQUEST:
+                return IconService.gutterHelpRequest;
+            case BUGMATE:
+                return IconService.gutterSamebug;
+            case WEBHIT:
+                return IconService.gutterSamebug;
+            default:
+                return IconService.gutterSamebug;
+        }
     }
 
     @Override
@@ -69,11 +76,18 @@ final class SavedSearchGutterIcon extends SearchMark implements DumbAware {
     @Override
     @NotNull
     public String getTooltipText() {
-        if (search.hasTip()) return MessageService.message("samebug.gutter.savedSearch.hasTip.tooltip");
-        else if (search.hasHelpRequest()) return MessageService.message("samebug.gutter.savedSearch.hasHelpRequest.tooltip");
-        else if (search.hasBugmate()) return MessageService.message("samebug.gutter.savedSearch.hasBugmates.tooltip");
-        else if (search.hasWebHit()) return MessageService.message("samebug.gutter.savedSearch.hasSolutions.tooltip");
-        return MessageService.message("samebug.gutter.savedSearch.nothing.tooltip");
+        switch (search.getSolutionType()) {
+            case TIP:
+                return MessageService.message("samebug.gutter.savedSearch.hasTip.tooltip");
+            case HELP_REQUEST:
+                return MessageService.message("samebug.gutter.savedSearch.hasHelpRequest.tooltip");
+            case BUGMATE:
+                return MessageService.message("samebug.gutter.savedSearch.hasBugmates.tooltip");
+            case WEBHIT:
+                return MessageService.message("samebug.gutter.savedSearch.hasSolutions.tooltip");
+            default:
+                return MessageService.message("samebug.gutter.savedSearch.nothing.tooltip");
+        }
     }
 
     @NotNull
@@ -84,8 +98,27 @@ final class SavedSearchGutterIcon extends SearchMark implements DumbAware {
                 Integer searchId = search.getSearchId();
                 Project project = getEventProject(e);
                 if (project != null) {
+                    final String solutionType;
+                    switch (search.getSolutionType()) {
+                        case TIP:
+                            solutionType = "tip";
+                            break;
+                        case HELP_REQUEST:
+                            solutionType = "help-request";
+                            break;
+                        case BUGMATE:
+                            solutionType = "bugmate";
+                            break;
+                        case WEBHIT:
+                            solutionType = "webhit";
+                            break;
+                        default:
+                            solutionType = "none";
+                            break;
+                    }
+
                     project.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchId);
-                    TrackingService.trace(IdeaRawEvent.gutterIconClick(searchId));
+                    TrackingService.trace(IdeaRawEvent.gutterIconClick(searchId, solutionType));
                 }
             }
         };

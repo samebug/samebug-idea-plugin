@@ -69,7 +69,7 @@ public class RawEvent {
     }
 
     @NotNull
-    protected RawEvent withFunnel(@NotNull Funnel.Instance funnel) {
+    protected RawEvent withFunnel(@NotNull Funnels.Instance funnel) {
         withField("funnelId", funnel.funnelId);
         withField("transactionId", funnel.transactionId);
         return this;

@@ -54,7 +54,6 @@ final class MarkButtonListener implements IMarkButton.Listener {
                 }
             }.execute();
         } else {
-            TrackingService.trace(SwingRawEvent.markCancelSubmit(source, transactionId, markId));
             new CancelMarkFormHandler(controller.view, markButton, markId) {
                 @Override
                 protected void afterPostForm(@NotNull Mark response) {

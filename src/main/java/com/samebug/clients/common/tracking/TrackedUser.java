@@ -13,30 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.solution;
+package com.samebug.clients.common.tracking;
 
-import org.jetbrains.annotations.NotNull;
+public final class TrackedUser {
+    public final Integer userId;
+    public final Integer workspaceId;
+    public final String visitorId;
 
-import java.net.URL;
-import java.util.Date;
-
-public abstract class Document {
-    private URL url;
-    private Date createdAt;
-    private String documentId;
-
-    @NotNull
-    public final URL getUrl() {
-        return url;
-    }
-
-    @NotNull
-    public final Date getCreatedAt() {
-        return createdAt;
-    }
-
-    @NotNull
-    public final String getDocumentId() {
-        return documentId;
+    public TrackedUser(Integer userId, Integer workspaceId, String visitorId) {
+        this.userId = userId;
+        this.workspaceId = workspaceId;
+        this.visitorId = visitorId;
     }
 }

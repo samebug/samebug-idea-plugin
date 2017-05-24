@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.frame.helpRequest;
 
-import com.samebug.clients.common.tracking.Funnel;
+import com.samebug.clients.common.tracking.Funnels;
 import com.samebug.clients.common.tracking.PageTabs;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequest;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
@@ -56,7 +56,7 @@ public final class HelpRequestTab extends TransparentPanel implements IHelpReque
         for (int i = 0; i < model.tipHits.size(); i++) {
             NonMarkableTipHit.Model m = model.tipHits.get(i);
             NonMarkableTipHit hit = new NonMarkableTipHit(m);
-            DataService.putData(hit, TrackingKeys.SolutionTransaction, Funnel.newTransactionId());
+            DataService.putData(hit, TrackingKeys.SolutionTransaction, Funnels.newTransactionId());
             tipHits.add(hit);
         }
 

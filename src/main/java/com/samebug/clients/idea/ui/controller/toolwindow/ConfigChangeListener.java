@@ -17,7 +17,8 @@ package com.samebug.clients.idea.ui.controller.toolwindow;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.tracking.Funnel;
+import com.samebug.clients.common.tracking.Funnels;
+import com.samebug.clients.common.tracking.Hooks;
 import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
@@ -48,8 +49,8 @@ public class ConfigChangeListener implements com.samebug.clients.idea.messages.C
         if (!SBUtil.equals(c.apiKey, old.apiKey) || !SBUtil.equals(c.workspaceId, old.workspaceId)) IdeaSamebugPlugin.getInstance().profileStore.invalidate();
 
         if (c.apiKey == null) {
-            final String authenticationTransactionId = Funnel.newTransactionId();
-            TrackingService.trace(SwingRawEvent.authenticationHookTriggered(null, authenticationTransactionId));
+            final String authenticationTransactionId = Funnels.newTransactionId();
+            TrackingService.trace(SwingRawEvent.authenticationHookTriggered(authenticationTransactionId, Hooks.Authentication.UNAUTHENTICATED));
             twc.focusOnAuthentication(authenticationTransactionId);
         } else {
             if (!SBUtil.equals(c.apiKey, old.apiKey) || !SBUtil.equals(c.serverRoot, old.serverRoot)) twc.focusOnHelpRequestList();

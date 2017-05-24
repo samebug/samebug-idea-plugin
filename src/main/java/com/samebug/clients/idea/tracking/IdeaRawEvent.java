@@ -26,16 +26,16 @@ import javax.swing.*;
 public class IdeaRawEvent extends RawEvent {
 
     public static RawEvent toolWindowOpen(@NotNull final Project project) {
-        return new IdeaRawEvent("Interaction", "ToolWindow-Open") {
-            protected void myLazyFields() {
+        return new IdeaRawEvent("Interaction", "ToolWindowOpened") {
+            protected void lazyFields() {
                 withProject(project);
             }
         };
     }
 
     public static RawEvent toolWindowShowContent(@NotNull final Project project, @NotNull final BaseFrameController controller) {
-        return new IdeaRawEvent("Interaction", "ToolWindow-ShowContent") {
-            protected void myLazyFields() {
+        return new IdeaRawEvent("Interaction", "ToolWindowContentShowed") {
+            protected void lazyFields() {
                 withProject(project);
                 withToolWindow(controller);
             }
@@ -43,24 +43,24 @@ public class IdeaRawEvent extends RawEvent {
     }
 
     public static RawEvent projectOpen(@NotNull final Project project) {
-        return new IdeaRawEvent("Interaction", "Project-Open") {
-            protected void myLazyFields() {
+        return new IdeaRawEvent("Interaction", "ProjectOpened") {
+            protected void lazyFields() {
                 withProject(project);
             }
         };
     }
 
     public static RawEvent projectClose(@NotNull final Project project) {
-        return new IdeaRawEvent("Interaction", "Project-Close") {
-            protected void myLazyFields() {
+        return new IdeaRawEvent("Interaction", "ProjectClosed") {
+            protected void lazyFields() {
                 withProject(project);
             }
         };
     }
 
     public static RawEvent debugStart(@NotNull final Project project, @NotNull final DebugSessionInfo debugSessionInfo) {
-        return new IdeaRawEvent("Interaction", "Debug-Start") {
-            protected void myLazyFields() {
+        return new IdeaRawEvent("Interaction", "DebugStarted") {
+            protected void lazyFields() {
                 withProject(project);
                 withDebugSession(debugSessionInfo);
             }
@@ -68,8 +68,8 @@ public class IdeaRawEvent extends RawEvent {
     }
 
     public static RawEvent debugStop(@NotNull final Project project, @NotNull final DebugSessionInfo debugSessionInfo) {
-        return new IdeaRawEvent("Interaction", "Debug-Stop") {
-            protected void myLazyFields() {
+        return new IdeaRawEvent("Interaction", "DebugStopped") {
+            protected void lazyFields() {
                 withProject(project);
                 withDebugSession(debugSessionInfo);
             }
@@ -77,37 +77,38 @@ public class IdeaRawEvent extends RawEvent {
     }
 
     public static RawEvent pluginInstall() {
-        return new IdeaRawEvent("Interaction", "Plugin-FirstRun") {
-            protected void myLazyFields() {
+        return new IdeaRawEvent("Interaction", "PluginFirstRun") {
+            protected void lazyFields() {
             }
         };
     }
 
     public static RawEvent configOpen() {
-        return new IdeaRawEvent("Interaction", "Settings-Open") {
-            protected void myLazyFields() {
+        return new IdeaRawEvent("Interaction", "SettingsOpened") {
+            protected void lazyFields() {
             }
         };
     }
 
     public static RawEvent changeApiKey() {
-        return new IdeaRawEvent("Interaction", "Settings-ChangeApiKey") {
-            protected void myLazyFields() {
+        return new IdeaRawEvent("Interaction", "SettingsApiKeyChanged") {
+            protected void lazyFields() {
             }
         };
     }
 
     public static RawEvent changeWorkspace() {
-        return new IdeaRawEvent("Interaction", "Settings-ChangeWorkspace") {
-            protected void myLazyFields() {
+        return new IdeaRawEvent("Interaction", "SettingsWorkspaceChanged") {
+            protected void lazyFields() {
             }
         };
     }
 
-    public static RawEvent gutterIconClick(@NotNull final Integer searchId) {
-        return new IdeaRawEvent("Interaction", "Gutter-Clicked") {
-            protected void myLazyFields() {
+    public static RawEvent gutterIconClick(@NotNull final Integer searchId, @NotNull final String solutionType) {
+        return new IdeaRawEvent("Interaction", "GutterClicked") {
+            protected void lazyFields() {
                 withData("searchId", searchId);
+                withData("solutionType", solutionType);
             }
         };
     }

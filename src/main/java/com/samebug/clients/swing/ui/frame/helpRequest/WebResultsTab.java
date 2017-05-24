@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.frame.helpRequest;
 
-import com.samebug.clients.common.tracking.Funnel;
+import com.samebug.clients.common.tracking.Funnels;
 import com.samebug.clients.common.tracking.PageTabs;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
@@ -62,7 +62,7 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
         for (int i = 0; i < model.webHits.size(); i++) {
             NonMarkableWebHit.Model m = model.webHits.get(i);
             NonMarkableWebHit hit = new NonMarkableWebHit(m);
-            DataService.putData(hit, TrackingKeys.SolutionTransaction, Funnel.newTransactionId());
+            DataService.putData(hit, TrackingKeys.SolutionTransaction, Funnels.newTransactionId());
             webHits.add(hit);
         }
 
@@ -125,7 +125,7 @@ public final class WebResultsTab extends TransparentPanel implements IWebResults
             for (int i = 0; i < webHits.size(); i++) {
                 if (i != 0) add(new Separator(), gbc);
                 NonMarkableWebHit hit = webHits.get(i);
-                DataService.putData(hit, DataService.SolutionHitIndex, i);
+                DataService.putData(hit, TrackingKeys.SolutionHitIndex, i);
                 add(hit, gbc);
             }
         }

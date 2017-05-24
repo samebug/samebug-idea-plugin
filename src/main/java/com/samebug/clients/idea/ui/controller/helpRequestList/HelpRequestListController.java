@@ -19,7 +19,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.tracking.Location;
+import com.samebug.clients.common.tracking.Locations;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.frame.IFrame;
@@ -103,7 +103,7 @@ public final class HelpRequestListController extends BaseFrameController<IHelpRe
                     public void run() {
                         view.loadingSucceeded(model);
                         JComponent frame = (JComponent) view;
-                        DataService.putData(frame, TrackingKeys.Location, new Location.HelpRequestList());
+                        DataService.putData(frame, TrackingKeys.Location, new Locations.HelpRequestList());
                         DataService.putData(frame, TrackingKeys.PageViewId, TrackingService.newPageViewId());
                     }
                 });

@@ -53,8 +53,9 @@ public final class NonMarkableTipHit extends RoundedBackgroundPanel implements I
         addAncestorListener(new AncestorListenerAdapter() {
             @Override
             public void ancestorAdded(AncestorEvent event) {
+                removeAncestorListener(this);
                 DataService.putData(NonMarkableTipHit.this, TrackingKeys.SolutionHit, new SolutionHit(
-                        model.solutionId, DataService.getData(NonMarkableTipHit.this, DataService.SolutionHitIndex), model.solutionMatchLevel, model.documentId)
+                        model.solutionId, DataService.getData(NonMarkableTipHit.this, TrackingKeys.SolutionHitIndex), model.solutionMatchLevel, model.documentId)
                 );
                 final String transactionId = DataService.getData(NonMarkableTipHit.this, TrackingKeys.SolutionTransaction);
                 TrackingService.trace(SwingRawEvent.solutionDisplay(NonMarkableTipHit.this, transactionId));

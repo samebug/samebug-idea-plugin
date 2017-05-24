@@ -64,8 +64,9 @@ public final class MarkableTipHit extends RoundedBackgroundPanel implements IAni
         addAncestorListener(new AncestorListenerAdapter() {
             @Override
             public void ancestorAdded(AncestorEvent event) {
+                removeAncestorListener(this);
                 DataService.putData(MarkableTipHit.this, TrackingKeys.SolutionHit, new SolutionHit(
-                        model.solutionId, DataService.getData(MarkableTipHit.this, DataService.SolutionHitIndex), model.solutionMatchLevel, model.documentId)
+                        model.solutionId, DataService.getData(MarkableTipHit.this, TrackingKeys.SolutionHitIndex), model.solutionMatchLevel, model.documentId)
                 );
                 final String transactionId = DataService.getData(MarkableTipHit.this, TrackingKeys.SolutionTransaction);
                 TrackingService.trace(SwingRawEvent.solutionDisplay(MarkableTipHit.this, transactionId));

@@ -18,8 +18,10 @@ package com.samebug.clients.swing.ui.component.bugmate;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateHit;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
 import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import net.miginfocom.swing.MigLayout;
 
@@ -54,8 +56,10 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
 
         private BugmateGrid(List<IBugmateHit.Model> bugmateHitModels) {
             bugmateHits = new ArrayList<BugmateHit>(bugmateHitModels.size());
-            for (IBugmateHit.Model bugmateHitModel : bugmateHitModels) {
+            for (int i = 0; i < bugmateHitModels.size(); ++i) {
+                IBugmateHit.Model bugmateHitModel = bugmateHitModels.get(i);
                 BugmateHit hit = new BugmateHit(bugmateHitModel);
+                DataService.putData(hit, TrackingKeys.BugmateHitIndex, i);
                 bugmateHits.add(hit);
             }
 

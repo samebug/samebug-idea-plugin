@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.idea.ui.controller.helpRequestPopup;
 
+import com.samebug.clients.common.tracking.Hooks;
 import com.samebug.clients.common.ui.component.popup.IHelpRequestPopup;
 import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
@@ -41,7 +42,7 @@ public final class HelpRequestPopupListener implements IHelpRequestPopup.Listene
         final String transactionId = DataService.getData(popup, TrackingKeys.WriteTipTransaction);
         controller.twc.focusOnHelpRequest(helpRequestId, transactionId);
         controller.hideAndRemoveIncomingHelpRequest(source);
-        TrackingService.trace(SwingRawEvent.writeTipHookTrigger(popup, transactionId, helpRequestId));
+        TrackingService.trace(SwingRawEvent.writeTipHookTrigger(popup, transactionId, helpRequestId, Hooks.WriteTip.HELP_REQUEST_RESPONSE));
     }
 
     @Override

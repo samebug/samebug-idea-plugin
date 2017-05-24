@@ -26,6 +26,7 @@ import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.util.ui.UIUtil;
+import com.samebug.clients.common.tracking.TrackedUser;
 import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.client.SamebugClient;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
@@ -90,23 +91,18 @@ public final class IdeaTrackingService extends TrackingService implements Config
         final String pluginVersion = plugin == null ? null : plugin.getVersion();
         final String instanceId = config.instanceId;
 
-        agent.put("type", "intellij-plugin");
+        agent.put("type", "ide-plugin");
+        agent.put("ideCodeName", appInfo.getBuild().getProductCode());
         if (laf != null) agent.put("lookAndFeel", laf.getName());
         if (pluginVersion != null) agent.put("pluginVersion", pluginVersion);
         if (instanceId != null) agent.put("instanceId", instanceId);
         agent.put("isRetina", Boolean.toString(UIUtil.isRetina()));
-        agent.put("intellijBuild", appInfo.getApiVersion());
+        agent.put("ideBuild", appInfo.getApiVersion());
         e.withField("agent", agent);
     }
 
     private void addUser(com.samebug.clients.common.tracking.RawEvent e) {
-        Map<String, String> user = new HashMap<String, String>();
-        Integer userId = config.userId;
-        if (userId != null) user.put("userId", userId.toString());
-
-        Integer workspaceId = config.workspaceId;
-        if (workspaceId != null) user.put("workspaceId", workspaceId.toString());
-
+        TrackedUser user = new TrackedUser(config.userId, config.workspaceId, null);
         e.withField("user", user);
     }
 

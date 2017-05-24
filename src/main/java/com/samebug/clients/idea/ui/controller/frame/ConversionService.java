@@ -51,7 +51,7 @@ import com.samebug.clients.http.entities.solution.SamebugTip;
 import com.samebug.clients.http.entities.solution.SolutionSlot;
 import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.http.entities.user.RegisteredSamebugUser;
-import com.samebug.clients.http.entities.user.SamebugUser;
+import com.samebug.clients.http.entities.user.SamebugVisitor;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -75,7 +75,7 @@ public final class ConversionService {
         IMarkButton.Model mark = convertMarkPanel(hit);
         RegisteredSamebugUser author = tip.getAuthor();
         Integer solutionMatchLevel = hit.getScore() instanceof StackTraceSearchHitScore ? ((StackTraceSearchHitScore) hit.getScore()).getLevel() : 0;
-        return new ITipHit.Model(tip.getMessage(), hit.getSolution().getId(), solutionMatchLevel, tip.getId(),
+        return new ITipHit.Model(tip.getMessage(), hit.getSolution().getId(), solutionMatchLevel, tip.getDocumentId(),
                 tip.getCreatedAt(), author.getDisplayName(), author.getAvatarUrl(), mark);
     }
 
@@ -87,7 +87,7 @@ public final class ConversionService {
             IMarkButton.Model mark = convertMarkPanel(externalHit);
             Integer solutionMatchLevel = externalHit.getScore() instanceof StackTraceSearchHitScore ? ((StackTraceSearchHitScore) externalHit.getScore()).getLevel() : 0;
             IWebHit.Model webHit =
-                    new IWebHit.Model(doc.getTitle(), doc.getUrl(), externalSolution.getId(), solutionMatchLevel, doc.getId(),
+                    new IWebHit.Model(doc.getTitle(), doc.getUrl(), externalSolution.getId(), solutionMatchLevel, doc.getDocumentId(),
                             externalSolution.getCreatedAt(), doc.getAuthor().getDisplayName(),
                             doc.getSource().getName(), doc.getSource().getIcon(),
                             mark);
@@ -104,20 +104,24 @@ public final class ConversionService {
         }
         final List<IBugmateHit.Model> bugmateHits = new ArrayList<IBugmateHit.Model>(bugmates.getData().size());
         for (BugmateMatch b : bugmates.getData()) {
-            SamebugUser mate = b.getBugmate();
             final SearchGroup g = b.getMatchingGroup();
             final Integer nMateHasSeenThisSearch = g.getNumberOfSearches();
             final Date lastTimeMateHasSeenThisSearch = g.getLastSeen();
-            ConnectionStatus status;
+            final com.samebug.clients.common.entities.user.SamebugUser.Base userModel;
             if (b.getBugmate() instanceof RegisteredSamebugUser) {
                 final RegisteredSamebugUser bugmate = (RegisteredSamebugUser) b.getBugmate();
+                final ConnectionStatus status;
                 if (bugmate.getOnline() == null) status = ConnectionStatus.UNDEFINED;
                 else if (bugmate.getOnline()) status = ConnectionStatus.ONLINE;
                 else status = ConnectionStatus.UNDEFINED;
+                userModel = new com.samebug.clients.common.entities.user.SamebugUser.Registered(bugmate.getUrl(), bugmate.getAvatarUrl(), status,
+                        bugmate.getId(), bugmate.getDisplayName());
             } else {
-                status = ConnectionStatus.UNDEFINED;
+                final SamebugVisitor bugmate = (SamebugVisitor) b.getBugmate();
+                userModel = new com.samebug.clients.common.entities.user.SamebugUser.Visitor(bugmate.getUrl(), bugmate.getAvatarUrl(),
+                        ConnectionStatus.UNDEFINED, bugmate.getVisitorId());
             }
-            IBugmateHit.Model model = new IBugmateHit.Model(mate.getDisplayName(), mate.getAvatarUrl(), nMateHasSeenThisSearch, lastTimeMateHasSeenThisSearch, status);
+            IBugmateHit.Model model = new IBugmateHit.Model(userModel, nMateHasSeenThisSearch, lastTimeMateHasSeenThisSearch, b.getLevel(), b.getMatchingGroup().getId());
             bugmateHits.add(model);
         }
         String exceptionTitle = headLine(search.getQueryInfo());

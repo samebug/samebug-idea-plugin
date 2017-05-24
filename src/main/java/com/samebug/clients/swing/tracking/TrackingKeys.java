@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.tracking;
 
-import com.samebug.clients.common.tracking.Location;
+import com.samebug.clients.common.tracking.Locations;
 import com.samebug.clients.common.tracking.SolutionHit;
 import com.samebug.clients.swing.ui.modules.DataService;
 
@@ -28,9 +28,11 @@ public final class TrackingKeys {
 
     public static final DataService.Key<String> PageViewId = new DataService.Key<String>("track.PageViewId");
     public static final DataService.Key<String> PageTab = new DataService.Key<String>("track.PageTab");
-    public static final DataService.Key<Location.Base> Location = new DataService.Key<Location.Base>("track.Location");
+    public static final DataService.Key<Locations.Base> Location = new DataService.Key<Locations.Base>("track.Location");
     public static final DataService.Key<String> Label = new DataService.Key<String>("track.Label");
     public static final DataService.Key<SolutionHit> SolutionHit = new DataService.Key<SolutionHit>("track.SolutionHit");
+    public static final DataService.Key<Integer> SolutionHitIndex = new DataService.Key<Integer>("SolutionHitIndex");
+    public static final DataService.Key<Integer> BugmateHitIndex = new DataService.Key<Integer>("BugmateHitIndex");
 
     private TrackingKeys() {}
 }

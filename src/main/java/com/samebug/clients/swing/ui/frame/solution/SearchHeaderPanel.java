@@ -16,9 +16,11 @@
 package com.samebug.clients.swing.ui.frame.solution;
 
 import com.samebug.clients.common.ui.frame.solution.ISearchHeaderPanel;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
@@ -48,6 +50,7 @@ public final class SearchHeaderPanel extends SamebugPanel implements ISearchHead
 
             setText(model.title);
 
+            DataService.putData(this, TrackingKeys.Label, getText());
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {

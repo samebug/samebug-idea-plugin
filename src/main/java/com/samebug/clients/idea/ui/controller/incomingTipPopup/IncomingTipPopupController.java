@@ -22,7 +22,7 @@ import com.intellij.openapi.ui.popup.BalloonBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.wm.IdeFrame;
 import com.intellij.ui.awt.RelativePoint;
-import com.samebug.clients.common.tracking.Location;
+import com.samebug.clients.common.tracking.Locations;
 import com.samebug.clients.common.ui.component.popup.IIncomingTipPopup;
 import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.entities.notification.IncomingAnswer;
@@ -61,7 +61,7 @@ public final class IncomingTipPopupController {
     public void showIncomingTip(@NotNull IncomingAnswer incomingTip, @NotNull IncomingTipNotification notification) {
         IIncomingTipPopup.Model popupModel = IdeaSamebugPlugin.getInstance().conversionService.convertIncomingTipPopup(incomingTip);
         IncomingTipPopup popup = new IncomingTipPopup(popupModel);
-        DataService.putData(popup, TrackingKeys.Location, new Location.TipAnswerNotification(incomingTip.getSolution().getId()));
+        DataService.putData(popup, TrackingKeys.Location, new Locations.TipAnswerNotification(incomingTip.getSolution().getId()));
 
         BalloonBuilder balloonBuilder = JBPopupFactory.getInstance().createBalloonBuilder(popup);
         balloonBuilder.setFillColor(ColorService.forCurrentTheme(ColorService.Background));

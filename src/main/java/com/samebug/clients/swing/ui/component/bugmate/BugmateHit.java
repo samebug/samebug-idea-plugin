@@ -15,31 +15,51 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
+import com.samebug.clients.common.entities.user.SamebugUser;
+import com.samebug.clients.common.tracking.TrackedUser;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateHit;
 import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.common.ui.modules.TextService;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.base.listener.AncestorListenerAdapter;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import net.miginfocom.swing.MigLayout;
 
+import javax.swing.event.AncestorEvent;
 import java.util.Date;
 
 public final class BugmateHit extends TransparentPanel implements IBugmateHit {
     private static final int AvatarSize = 44;
 
-    public BugmateHit(Model model) {
-        final NameLabel name = new NameLabel(model.displayName);
+    public BugmateHit(final Model model) {
+        final NameLabel name = new NameLabel(model.user.getDisplayName());
         final TimestampLabel timestamp = new TimestampLabel(model.nSeen, model.lastSeen);
-        final AvatarIcon avatar = new AvatarIcon(model.avatarUrl, AvatarSize, model.status);
+        final AvatarIcon avatar = new AvatarIcon(model.user.getAvatarUrl(), AvatarSize, model.user.getStatus());
 
         setLayout(new MigLayout("", "0[]10px[]0", "0[]0[]0"));
 
         add(avatar, "cell 0 0, spany 2");
         add(name, "cell 1 0");
         add(timestamp, "cell 1 1");
+
+        addAncestorListener(new AncestorListenerAdapter() {
+            @Override
+            public void ancestorAdded(AncestorEvent event) {
+                removeAncestorListener(this);
+                final TrackedUser bugmate;
+                if (model.user instanceof SamebugUser.Registered) {
+                    bugmate = new TrackedUser(((SamebugUser.Registered) model.user).getId(), null, null);
+                } else {
+                    bugmate = new TrackedUser(null, null, ((SamebugUser.Visitor) model.user).getVisitorId());
+                }
+                TrackingService.trace(SwingRawEvent.bugmateDisplay(BugmateHit.this, bugmate, model.level, model.matchingGroupId));
+            }
+        });
     }
 
 

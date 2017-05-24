@@ -43,8 +43,9 @@ public final class MarkableWebHit extends SamebugPanel implements IWebHit {
         addAncestorListener(new AncestorListenerAdapter() {
             @Override
             public void ancestorAdded(AncestorEvent event) {
+                removeAncestorListener(this);
                 DataService.putData(MarkableWebHit.this, TrackingKeys.SolutionHit, new SolutionHit(
-                        model.solutionId, DataService.getData(MarkableWebHit.this, DataService.SolutionHitIndex), model.solutionMatchLevel, model.documentId)
+                        model.solutionId, DataService.getData(MarkableWebHit.this, TrackingKeys.SolutionHitIndex), model.solutionMatchLevel, model.documentId)
                 );
                 final String transactionId = DataService.getData(MarkableWebHit.this, TrackingKeys.SolutionTransaction);
                 TrackingService.trace(SwingRawEvent.solutionDisplay(MarkableWebHit.this, transactionId));

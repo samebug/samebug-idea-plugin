@@ -20,7 +20,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.concurrency.FixedFuture;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.tracking.Location;
+import com.samebug.clients.common.tracking.Locations;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
@@ -159,7 +159,7 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
                             public void run() {
                                 view.loadingSucceeded(model);
                                 JComponent frame = (JComponent) view;
-                                DataService.putData(frame, TrackingKeys.Location, new Location.Search(searchId));
+                                DataService.putData(frame, TrackingKeys.Location, new Locations.Search(searchId));
                                 DataService.putData(frame, TrackingKeys.PageViewId, TrackingService.newPageViewId());
                             }
                         });

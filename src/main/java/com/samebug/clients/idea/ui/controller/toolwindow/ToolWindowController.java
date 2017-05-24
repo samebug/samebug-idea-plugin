@@ -27,7 +27,8 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.entities.search.ReadableSearchGroup;
-import com.samebug.clients.common.tracking.Funnel;
+import com.samebug.clients.common.tracking.Funnels;
+import com.samebug.clients.common.tracking.Hooks;
 import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.entities.EntityUtils;
@@ -99,8 +100,8 @@ public final class ToolWindowController implements FocusListener, Disposable {
         this.toolWindow = toolWindow;
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
         if (plugin.getState().apiKey == null) {
-            final String authenticationTransactionId = Funnel.newTransactionId();
-            TrackingService.trace(SwingRawEvent.authenticationHookTriggered(null, authenticationTransactionId));
+            final String authenticationTransactionId = Funnels.newTransactionId();
+            TrackingService.trace(SwingRawEvent.authenticationHookTriggered(authenticationTransactionId, Hooks.Authentication.UNAUTHENTICATED));
             focusOnAuthentication(authenticationTransactionId);
         } else focusOnHelpRequestList();
 
@@ -111,14 +112,12 @@ public final class ToolWindowController implements FocusListener, Disposable {
         AuthenticationController controller = new AuthenticationController(this, project);
         DataService.putData((JComponent) controller.view, TrackingKeys.AuthenticationTransaction, transactionId);
         openTab(controller, MessageService.message("samebug.toolwindow.authentication.tabName"));
-        TrackingService.trace(IdeaRawEvent.toolWindowShowContent(project, controller));
     }
 
     public void focusOnHelpRequestList() {
         HelpRequestListController controller = new HelpRequestListController(this, project);
         controller.load();
         openTab(controller, MessageService.message("samebug.toolwindow.helpRequestList.tabName"));
-        TrackingService.trace(IdeaRawEvent.toolWindowShowContent(project, controller));
     }
 
     public void focusOnHelpRequest(String helpRequestId, String transactionId) {
@@ -127,10 +126,9 @@ public final class ToolWindowController implements FocusListener, Disposable {
             ReadableSearchGroup readableGroup = EntityUtils.getReadableStackTraceSearchGroup(match);
             if (readableGroup != null) {
                 HelpRequestController controller = new HelpRequestController(this, project, match, readableGroup);
-                DataService.putData((JComponent) controller.view, TrackingKeys.HelpRequestTransaction, transactionId);
+                DataService.putData((JComponent) controller.view, TrackingKeys.WriteTipTransaction, transactionId);
                 controller.load();
                 openTab(controller, MessageService.message("samebug.toolwindow.helpRequest.tabName"));
-                TrackingService.trace(IdeaRawEvent.toolWindowShowContent(project, controller));
             } else {
                 currentFrame.view.popupError("samebug.frame.helpRequestList.openHelpRequest.error.notReadable");
             }
@@ -144,7 +142,6 @@ public final class ToolWindowController implements FocusListener, Disposable {
         SolutionFrameController controller = new SolutionFrameController(this, project, searchId);
         controller.load();
         openTab(controller, MessageService.message("samebug.toolwindow.search.tabName"));
-        TrackingService.trace(IdeaRawEvent.toolWindowShowContent(project, controller));
     }
 
     @Override
@@ -160,7 +157,7 @@ public final class ToolWindowController implements FocusListener, Disposable {
         Disposer.dispose(frame);
     }
 
-    private void openTab(BaseFrameController controller, String tabTitle) {
+    private void openTab(final BaseFrameController controller, String tabTitle) {
         ApplicationManager.getApplication().assertIsDispatchThread();
         final ToolWindow toolWindow = getToolWindow();
         final ContentManager toolwindowCM = toolWindow.getContentManager();
@@ -186,6 +183,7 @@ public final class ToolWindowController implements FocusListener, Disposable {
                 JComponent view = (JComponent) currentFrame.view;
                 view.revalidate();
                 view.repaint();
+                TrackingService.trace(IdeaRawEvent.toolWindowShowContent(project, controller));
             }
         });
     }
