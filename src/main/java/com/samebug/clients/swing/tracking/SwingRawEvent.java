@@ -181,7 +181,7 @@ public class SwingRawEvent extends RawEvent {
     // Search funnel
     public static RawEvent searchHookTrigger(@Nullable final String transactionId, @NotNull final String hookId) {
         return new RawEvent("StackTraceSearch", "HookTriggered") {
-            protected void myLazyFields() {
+            protected void lazyFields() {
                 withFunnel(new Funnels.Instance(Funnels.SEARCH, transactionId));
                 withData("hookId", hookId);
             }
