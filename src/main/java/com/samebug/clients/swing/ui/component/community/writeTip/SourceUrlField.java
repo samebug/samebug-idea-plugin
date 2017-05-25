@@ -13,29 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.swing.ui.component.authentication;
+package com.samebug.clients.swing.ui.component.community.writeTip;
 
+import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
+import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.swing.ui.base.form.InputField;
-import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
-import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public abstract class FormField<T> extends SamebugPanel {
-    final SamebugLabel descriptionLabel;
+public final class SourceUrlField extends JComponent {
     final InputField field;
     final ErrorLabel errorLabel;
 
-    public FormField(String description) {
-        descriptionLabel = new DescriptionLabel(description);
-        field = new InputField(null);
+    public SourceUrlField(@NotNull String placeholder) {
+        field = new InputField(placeholder);
         errorLabel = new ErrorLabel();
 
         field.addPropertyChangeListener(InputField.ERROR_PROPERTY, new PropertyChangeListener() {
@@ -49,41 +47,32 @@ public abstract class FormField<T> extends SamebugPanel {
             }
         });
 
-        setLayout(new MigLayout("fillx", "0[0, fill]0", "0[]0[]0[]0"));
-        add(descriptionLabel, "cell 0 0");
-        add(field, "cell 0 1");
+        setLayout(new MigLayout("fillx", "0[0, fill]0", "0[]0[]0"));
+        add(field, "cell 0 0");
     }
 
     public String getText() {
         return field.getText();
     }
 
-    public void setFormError(T errorCode) {
+    public void setFormError(@NotNull IHelpOthersCTA.BadRequest.SourceUrl error) {
         field.setError(true);
-        remove(errorLabel);
-        updateErrorLabel(errorLabel, errorCode);
-        add(errorLabel, "cell 0 2, wmin 0");
-    }
-
-    public void addActionListener(ActionListener actionListener) {
-        field.addActionListener(actionListener);
-    }
-
-    protected abstract void updateErrorLabel(SamebugMultilineLabel errorLabel, T errorCode);
-
-
-    final class DescriptionLabel extends SamebugLabel {
-        DescriptionLabel(String text) {
-            setText(text);
-            setFont(FontService.regular(14));
-            setForegroundColor(ColorService.NormalForm.fieldName);
-            setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
+        switch (error) {
+            case UNREACHABLE:
+                errorLabel.setText(MessageService.message("samebug.component.tip.write.error.sourceUrl.unreachable"));
+                break;
+            case UNRECOGNIZED:
+                errorLabel.setText(MessageService.message("samebug.component.tip.write.error.sourceUrl.unrecognized"));
+                break;
+            default:
         }
+        remove(errorLabel);
+        add(errorLabel, "cell 0 1, wmin 0");
     }
 
     final class ErrorLabel extends SamebugMultilineLabel {
         ErrorLabel() {
-            setForegroundColor(ColorService.NormalForm.error);
+            setForegroundColor(ColorService.TipForm.error);
             setFont(FontService.regular(12));
             setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
         }

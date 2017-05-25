@@ -28,6 +28,7 @@ import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
+import com.samebug.clients.swing.ui.component.community.writeTip.SourceUrlField;
 import com.samebug.clients.swing.ui.component.community.writeTip.WriteTipArea;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
 import com.samebug.clients.swing.ui.modules.ColorService;
@@ -47,6 +48,8 @@ public final class NonAnsweredHelpRequest extends RoundedBackgroundPanel impleme
 
     final ActionRow actions;
     final WriteTipArea writeTipArea;
+    final SamebugLabel sourceUrlLabel;
+    final SourceUrlField sourceUrl;
     final IHelpRequest.Model model;
 
     @NotNull
@@ -60,17 +63,21 @@ public final class NonAnsweredHelpRequest extends RoundedBackgroundPanel impleme
         final SamebugLabel displayName = new DisplayName(model.displayName);
         final HelpRequestBody helpRequestBody = new HelpRequestBody(model.helpRequestBody);
         writeTipArea = new WriteTipArea(MessageService.message("samebug.component.helpRequest.answer.placeholder", model.displayName));
+        sourceUrlLabel = new SamebugLabel(MessageService.message("samebug.component.tip.write.sourceUrl.label"), FontService.regular(14));
+        sourceUrlLabel.setForegroundColor(ColorService.TipText);
+        sourceUrl = new SourceUrlField(MessageService.message("samebug.component.tip.write.sourceUrl.placeholder"));
         actions = new ActionRow();
 
         setBackgroundColor(ColorService.Tip);
-        setLayout(new MigLayout("fillx", "20px[40px!]10px[300px, fill]20px", "20px[]20px[]0[]30px[]10px[]20px"));
+        setLayout(new MigLayout("fillx", "20px[40px!]10px[300px, fill]20px", "20px[]20px[]0[]30px[]15px[]5px[]10px[]20px"));
         add(titleLabel, "cell 0 0, spanx 2");
         add(avatar, "cell 0 1, spany 2, top");
         add(displayName, "cell 1 1, growx");
         add(helpRequestBody, "cell 1 2, wmin 0");
         add(writeTipArea, "cell 0 3, wmin 0, spanx 2, growx");
-        add(actions, "cell 0 4, spanx 2, growx");
-
+        add(sourceUrlLabel, "cell 0 4, spanx 2, growx");
+        add(sourceUrl, "cell 0 5, spanx 2, growx");
+        add(actions, "cell 0 6, spanx 2, growx");
     }
 
     @Override
@@ -88,6 +95,7 @@ public final class NonAnsweredHelpRequest extends RoundedBackgroundPanel impleme
         actions.sendButton.revertFromLoadingAnimation();
         if (errors != null) {
             if (errors.tipBody != null) writeTipArea.setFormError(errors.tipBody);
+            if (errors.sourceUrl != null) sourceUrl.setFormError(errors.sourceUrl);
         }
         revalidate();
         repaint();
@@ -130,7 +138,8 @@ public final class NonAnsweredHelpRequest extends RoundedBackgroundPanel impleme
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (isEnabled()) {
-                        getListener().postTip(NonAnsweredHelpRequest.this, writeTipArea.getText());
+                        final String sourceUrlText = sourceUrl.getText();
+                        getListener().postTip(NonAnsweredHelpRequest.this, writeTipArea.getText(), sourceUrlText.isEmpty() ? null : sourceUrlText);
                     }
                 }
             });

@@ -75,7 +75,7 @@ public final class WriteTipArea extends JComponent {
     }
 
     final class BorderedArea extends LengthRestrictedArea {
-        public BorderedArea() {
+        BorderedArea() {
             super(ColorService.TipForm);
             setLayout(new MigLayout("fillx", "10px[300px]10px", "10px[]10px[]6px"));
             add(myEditableArea, "cell 0 0, wmin 0, growx");
@@ -99,7 +99,7 @@ public final class WriteTipArea extends JComponent {
     }
 
     final class ErrorLabel extends SamebugMultilineLabel {
-        public ErrorLabel() {
+        ErrorLabel() {
             setForegroundColor(ColorService.TipForm.error);
             setFont(FontService.regular(12));
             setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));

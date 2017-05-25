@@ -17,6 +17,7 @@ package com.samebug.clients.common.ui.component.community;
 
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface IHelpOthersCTA {
     void startPostTip();
@@ -38,19 +39,25 @@ public interface IHelpOthersCTA {
     }
 
     final class BadRequest {
-        public BadRequest(TipBody tipBody) {
+        public BadRequest(TipBody tipBody, SourceUrl sourceUrl) {
             this.tipBody = tipBody;
+            this.sourceUrl = sourceUrl;
         }
 
         public final TipBody tipBody;
+        public final SourceUrl sourceUrl;
 
         public enum TipBody {
             TOO_SHORT, TOO_LONG
         }
 
+        public enum SourceUrl {
+            UNRECOGNIZED, UNREACHABLE
+        }
+
     }
 
     interface Listener {
-        void postTip(IHelpOthersCTA source, String tipBody);
+        void postTip(@NotNull IHelpOthersCTA source, @NotNull String tipBody, @Nullable String sourceUrl);
     }
 }

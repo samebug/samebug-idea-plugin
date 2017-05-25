@@ -49,8 +49,8 @@ public abstract class CreateTipFormHandler extends PostFormHandler<SearchHit<Sam
 
     @Override
     protected final void handleBadRequest(@NotNull final TipCreate.BadRequest fieldErrors) {
-        IHelpOthersCTA.BadRequest error = null;
         IHelpOthersCTA.BadRequest.TipBody tipBody = null;
+        IHelpOthersCTA.BadRequest.SourceUrl sourceUrl = null;
         for (TipCreate.ErrorCode errorCode : fieldErrors.errorList.getErrorCodes()) {
             switch (errorCode) {
                 case MESSAGE_TOO_SHORT:
@@ -59,11 +59,17 @@ public abstract class CreateTipFormHandler extends PostFormHandler<SearchHit<Sam
                 case MESSAGE_TOO_LONG:
                     tipBody = IHelpOthersCTA.BadRequest.TipBody.TOO_LONG;
                     break;
+                case UNREACHABLE_SOURCE:
+                    sourceUrl = IHelpOthersCTA.BadRequest.SourceUrl.UNREACHABLE;
+                    break;
+                case UNRECOGNIZED_SOURCE:
+                    sourceUrl = IHelpOthersCTA.BadRequest.SourceUrl.UNRECOGNIZED;
+                    break;
                 default:
                     LOGGER.warn("Unhandled error code " + errorCode);
             }
         }
-        if (tipBody != null) error = new IHelpOthersCTA.BadRequest(tipBody);
+        IHelpOthersCTA.BadRequest error = new IHelpOthersCTA.BadRequest(tipBody, sourceUrl);
         handleBadRequestUI(error);
     }
 

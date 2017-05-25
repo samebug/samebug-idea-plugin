@@ -51,14 +51,14 @@ final class WriteTipListener implements IHelpOthersCTA.Listener {
     }
 
     @Override
-    public void postTip(@NotNull final IHelpOthersCTA source, @NotNull final String tipBody) {
+    public void postTip(@NotNull final IHelpOthersCTA source, @NotNull final String tipBody, @Nullable final String sourceUrl) {
         final HelpRequestMatch match = controller.getHelpRequestMatch();
         final ReadableSearchGroup readableGroup = controller.getReadableSearchGroup();
         final HelpRequest helpRequest = match.getHelpRequest();
         final String helpRequestId = helpRequest.getId();
         final Integer accessibleSearchId = readableGroup.getLastSearchId();
 
-        NewSearchHit formData = new NewSearchHit(new NewSolution(new NewTip(tipBody, null), helpRequestId));
+        NewSearchHit formData = new NewSearchHit(new NewSolution(new NewTip(tipBody, sourceUrl), helpRequestId));
         final JComponent sourceComponent = (JComponent) source;
         final String transactionId = DataService.getData(sourceComponent, TrackingKeys.WriteTipTransaction);
 

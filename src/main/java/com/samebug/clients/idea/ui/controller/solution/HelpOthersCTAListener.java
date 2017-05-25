@@ -47,8 +47,8 @@ final class HelpOthersCTAListener implements IHelpOthersCTA.Listener {
     }
 
     @Override
-    public void postTip(@NotNull final IHelpOthersCTA source, @NotNull final String tipBody) {
-        NewSearchHit formData = new NewSearchHit(new NewSolution(new NewTip(tipBody, null)));
+    public void postTip(@NotNull final IHelpOthersCTA source, @NotNull final String tipBody, @Nullable final String sourceUrl) {
+        NewSearchHit formData = new NewSearchHit(new NewSolution(new NewTip(tipBody, sourceUrl)));
 
         final JComponent sourceComponent = (JComponent) source;
         final String transactionId = DataService.getData(sourceComponent, TrackingKeys.WriteTipTransaction);

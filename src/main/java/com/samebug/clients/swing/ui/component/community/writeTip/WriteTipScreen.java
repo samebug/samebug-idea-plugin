@@ -38,6 +38,8 @@ public class WriteTipScreen extends RoundedBackgroundPanel {
     final WriteTip writeTip;
     final SamebugLabel titleLabel;
     final WriteTipArea tipArea;
+    final SamebugLabel sourceUrlLabel;
+    final SourceUrlField sourceUrl;
     final ActionRow actionRow;
 
     WriteTipScreen(WriteTip writeTip) {
@@ -46,21 +48,25 @@ public class WriteTipScreen extends RoundedBackgroundPanel {
 
         titleLabel = new SamebugLabel(MessageService.message("samebug.component.tip.write.title"), FontService.regular(14));
         titleLabel.setForegroundColor(ColorService.TipText);
-        tipArea = new WriteTipArea(MessageService.message("samebug.component.tip.write.placeholder", writeTip.model.usersWaitingHelp));
+        tipArea = new WriteTipArea(MessageService.message("samebug.component.tip.write.message.placeholder", writeTip.model.usersWaitingHelp));
+        sourceUrlLabel = new SamebugLabel(MessageService.message("samebug.component.tip.write.sourceUrl.label"), FontService.regular(14));
+        sourceUrlLabel.setForegroundColor(ColorService.TipText);
+        sourceUrl = new SourceUrlField(MessageService.message("samebug.component.tip.write.sourceUrl.placeholder"));
         actionRow = new ActionRow();
 
-        setLayout(new MigLayout("fillx", "20px[fill]20px", "18px[]13px[]10px[]20px"));
+        setLayout(new MigLayout("fillx", "20px[fill]20px", "18px[]13px[]15px[]5px[]10px[]20px"));
         add(titleLabel, "cell 0 0");
         add(tipArea, "cell 0 1");
-        add(actionRow, "cell 0 2");
+        add(sourceUrlLabel, "cell 0 2");
+        add(sourceUrl, "cell 0 3");
+        add(actionRow, "cell 0 4");
     }
 
     public void setFormErrors(@NotNull final IHelpOthersCTA.BadRequest errors) {
         if (errors.tipBody != null) tipArea.setFormError(errors.tipBody);
+        if (errors.sourceUrl != null) sourceUrl.setFormError(errors.sourceUrl);
         revalidate();
         repaint();
-
-//        TrackingService.trace(Events.writeTipError(errors));
     }
 
 
@@ -86,8 +92,6 @@ public class WriteTipScreen extends RoundedBackgroundPanel {
                     TrackingService.trace(SwingRawEvent.buttonClick(cancelButton));
                 }
             });
-
-
         }
 
     }
@@ -104,7 +108,7 @@ public class WriteTipScreen extends RoundedBackgroundPanel {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (isEnabled()) {
-                        writeTip.getListener().postTip(writeTip, tipArea.getText());
+                        writeTip.getListener().postTip(writeTip, tipArea.getText(), sourceUrl.getText());
                     }
                 }
             });
