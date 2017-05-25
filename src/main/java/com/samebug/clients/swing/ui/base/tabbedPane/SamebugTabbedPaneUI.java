@@ -44,13 +44,12 @@ public class SamebugTabbedPaneUI extends BasicTabbedPaneUI {
 
     @Override
     protected void paintTabBorder(Graphics g, int tabPlacement, int tabIndex, int x, int y, int w, int h, boolean isSelected) {
-        // Override as our border is a simple line between tabs
-        // This is implemented as a line at the left side for each tabs except the first one.
+        // we highlight the selected tab by boxing it from the left, top and right side.
         g.setColor(ColorService.forCurrentTheme(ColorService.Separator));
         if (isSelected) {
-            g.drawLine(x, y + h, x, y);
-            g.drawLine(x, y, x + w, y);
-            g.drawLine(x + w, y, x + w, y + h);
+            g.drawLine(x, y + h - 1, x, y);
+            g.drawLine(x, y, x + w - 1, y);
+            g.drawLine(x + w - 1, y, x + w - 1, y + h - 1);
         }
     }
 
@@ -75,13 +74,15 @@ public class SamebugTabbedPaneUI extends BasicTabbedPaneUI {
 
     @Override
     protected void paintContentBorderTopEdge(Graphics g, int tabPlacement, int selectedIndex, int x, int y, int w, int h) {
+        // We want to draw a line under the tab area, excluding the selected tab.
         Rectangle r = new Rectangle();
         getTabBounds(selectedIndex, r);
         g.setColor(ColorService.forCurrentTheme(ColorService.Separator));
-        int startX = x + 20;
-        int endX = x + w;
-        if (startX < r.x) g.drawLine(startX, y - 10, r.x, y - 10);
-        if (r.x + r.width < endX) g.drawLine(r.x + r.width, y - 10, endX, y - 10);
+        int startX = x + tabAreaInsets.left;
+        int endX = x + w - tabAreaInsets.right - 1;
+        int separatorY = y - tabAreaInsets.bottom;
+        if (startX < r.x) g.drawLine(startX, separatorY, r.x, separatorY);
+        if (r.x + r.width < endX) g.drawLine(r.x + r.width, separatorY, endX, separatorY);
     }
 
     @Override

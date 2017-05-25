@@ -21,7 +21,7 @@ public final class CenterTabbedPaneUI extends SamebugTabbedPaneUI {
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        tabAreaInsets = new Insets(0, 0, 20, 0);
+        tabAreaInsets = new Insets(0, 0, 10, 0);
     }
 
     @Override

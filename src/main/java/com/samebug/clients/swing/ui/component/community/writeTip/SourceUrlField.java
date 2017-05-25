@@ -34,6 +34,7 @@ public final class SourceUrlField extends JComponent {
 
     public SourceUrlField(@NotNull String placeholder) {
         field = new InputField(placeholder);
+        field.setColors(ColorService.TipForm);
         errorLabel = new ErrorLabel();
 
         field.addPropertyChangeListener(InputField.ERROR_PROPERTY, new PropertyChangeListener() {

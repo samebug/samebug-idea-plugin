@@ -19,6 +19,7 @@ import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.DrawService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import org.jdesktop.swingx.prompt.PromptSupport;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -36,12 +37,12 @@ public class InputField extends JTextField {
 
     public InputField(@Nullable String prompt) {
         myColors = ColorService.NormalForm;
-        setFont(FontService.regular(16));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         updateColors();
         PromptSupport.setPrompt(prompt, this);
         PromptSupport.setFocusBehavior(PromptSupport.FocusBehavior.SHOW_PROMPT, this);
+        setFont(FontService.regular(16));
 
         addFocusListener(new FocusAdapter() {
             @Override
@@ -61,6 +62,11 @@ public class InputField extends JTextField {
         firePropertyChange(ERROR_PROPERTY, this.hasError, hasError);
         this.hasError = hasError;
         repaint();
+    }
+
+    public void setColors(@NotNull FormColors colors) {
+        myColors = colors;
+        updateColors();
     }
 
     @Override
