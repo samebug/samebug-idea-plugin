@@ -83,8 +83,10 @@ public class InputField extends JTextField {
 
     public void updateColors() {
         Color currentColor = ColorService.forCurrentTheme(myColors.text);
+        Color currentBackgroundColor = ColorService.forCurrentTheme(myColors.background);
         setCaretColor(currentColor);
         super.setForeground(currentColor);
+        super.setBackground(currentBackgroundColor);
         PromptSupport.setForeground(ColorService.forCurrentTheme(myColors.placeholder), this);
     }
 
