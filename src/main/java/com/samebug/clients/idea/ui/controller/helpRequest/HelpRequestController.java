@@ -126,6 +126,8 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
         final Future<IncomingHelpRequestList> incomingHelpRequestsTask = concurrencyService.incomingHelpRequests(false);
         final Future<SolutionList> solutionsTask = concurrencyService.solutions(accessibleSearchId);
         final Future<TipList> tipsTask = concurrencyService.tips(accessibleSearchId);
+        // IMPROVE: even if we have the help request received in constructor, we DO load it from the web to trigger status change from 'unread' to 'read'
+        concurrencyService.helpRequest(helpRequestMatch.getHelpRequest().getId());
 
         new LoadingTask() {
             @Override
