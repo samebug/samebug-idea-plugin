@@ -24,9 +24,9 @@ public class SamebugTabbedPaneUI extends BasicTabbedPaneUI {
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        tabInsets = new Insets(0, 0, 0, 0);
+        tabInsets = new Insets(10, 0, 10, 0);
         selectedTabPadInsets = new Insets(0, 0, 0, 0);
-        tabAreaInsets = new Insets(0, 20, 20, 0);
+        tabAreaInsets = new Insets(0, 20, 10, 0);
         contentBorderInsets = new Insets(0, 0, 0, 0);
     }
 
@@ -46,9 +46,11 @@ public class SamebugTabbedPaneUI extends BasicTabbedPaneUI {
     protected void paintTabBorder(Graphics g, int tabPlacement, int tabIndex, int x, int y, int w, int h, boolean isSelected) {
         // Override as our border is a simple line between tabs
         // This is implemented as a line at the left side for each tabs except the first one.
-        if (tabIndex > 0) {
-            g.setColor(ColorService.forCurrentTheme(ColorService.Separator));
-            g.drawLine(x, y, x, y + h);
+        g.setColor(ColorService.forCurrentTheme(ColorService.Separator));
+        if (isSelected) {
+            g.drawLine(x, y + h, x, y);
+            g.drawLine(x, y, x + w, y);
+            g.drawLine(x + w, y, x + w, y + h);
         }
     }
 
@@ -72,8 +74,24 @@ public class SamebugTabbedPaneUI extends BasicTabbedPaneUI {
     }
 
     @Override
-    protected void paintContentBorder(Graphics g, int tabPlacement, int selectedIndex) {
+    protected void paintContentBorderTopEdge(Graphics g, int tabPlacement, int selectedIndex, int x, int y, int w, int h) {
+        Rectangle r = new Rectangle();
+        getTabBounds(selectedIndex, r);
+        g.setColor(ColorService.forCurrentTheme(ColorService.Separator));
+        int startX = x + 20;
+        int endX = x + w;
+        if (startX < r.x) g.drawLine(startX, y - 10, r.x, y - 10);
+        if (r.x + r.width < endX) g.drawLine(r.x + r.width, y - 10, endX, y - 10);
     }
+
+    @Override
+    protected void paintContentBorderLeftEdge(Graphics g, int tabPlacement, int selectedIndex, int x, int y, int w, int h) {}
+
+    @Override
+    protected void paintContentBorderBottomEdge(Graphics g, int tabPlacement, int selectedIndex, int x, int y, int w, int h) {}
+
+    @Override
+    protected void paintContentBorderRightEdge(Graphics g, int tabPlacement, int selectedIndex, int x, int y, int w, int h) {}
 
     // This is overridden to make sure that the tabs will not scroll
     @Override
