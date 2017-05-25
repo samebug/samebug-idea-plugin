@@ -42,7 +42,7 @@ public class ApplicationSettings {
 
     public static final Integer defaultWorkspaceId = null;
     public static final String defaultServerRoot = "https://samebug.io";
-    public static final String defaultTrackingRoot = defaultServerRoot + "/track/trace";
+    public static final String defaultTrackingRoot = defaultServerRoot + "/tracking/trace";
     public static final boolean defaultIsTrackingEnabled = true;
     public static final int defaultConnectTimeout = 5000;
     public static final int defaultRequestTimeout = 10000;
