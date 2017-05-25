@@ -181,36 +181,48 @@
       "bugmateList": {
         "bugmateHits": [
           {
-            "userId": 1,
-            "displayName": "김범준",
-            "avatarUrl": null,
+            "user": {
+              "id": 1,
+              "displayName": "김범준",
+              "status": "ONLINE"
+            },
             "nSeen": 11,
             "lastSeen": "2017-01-01T00:00:00",
-            "status": "ONLINE"
+            "level": 0,
+            "matchingGroupId": ""
           },
           {
-            "userId": 1,
-            "displayName": "Trần Minh Tuấn",
-            "avatarUrl": null,
+            "user": {
+              "id": 1,
+              "displayName": "Trần Minh Tuấn",
+              "status": "ONLINE"
+            },
             "nSeen": 21,
             "lastSeen": "2017-01-01T00:00:00",
-            "status": "ONLINE"
+            "level": 0,
+            "matchingGroupId": ""
           },
           {
-            "userId": 1,
-            "displayName": "Сергей Колченко",
-            "avatarUrl": null,
+            "user": {
+              "id": 1,
+              "displayName": "Сергей Колченко",
+              "status": "ONLINE"
+            },
             "nSeen": 1,
             "lastSeen": "2017-01-01T00:00:00",
-            "status": "ONLINE"
+            "level": 0,
+            "matchingGroupId": ""
           },
           {
-            "userId": 1,
-            "displayName": "áíőű ÁÍŰŐ",
-            "avatarUrl": null,
+            "user": {
+              "id": 1,
+              "displayName": "áíőű ÁÍŰŐ",
+              "status": "OFFLINE"
+            },
             "nSeen": 6,
-            "lastSeen": "2016-12-01T00:00:00",
-            "status": "OFFLINE"
+            "lastSeen": "2017-01-01T00:00:00",
+            "level": 0,
+            "matchingGroupId": ""
           }
         ],
         "numberOfOtherBugmates": 16,

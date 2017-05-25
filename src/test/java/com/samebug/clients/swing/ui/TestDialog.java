@@ -16,6 +16,7 @@
 package com.samebug.clients.swing.ui;
 
 import com.google.gson.*;
+import com.samebug.clients.common.entities.user.SamebugUser;
 import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.idea.ui.modules.IdeaMessageService;
@@ -98,11 +99,22 @@ public abstract class TestDialog extends JDialog {
 
     private static Gson createGson() {
         GsonBuilder gsonBuilder = new GsonBuilder();
+        final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
         gsonBuilder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
                     @Override
                     public Date deserialize(JsonElement json, java.lang.reflect.Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
                         return formatter.parseDateTime(json.getAsJsonPrimitive().getAsString()).toDate();
+                    }
+                }
+        );
+        gsonBuilder.registerTypeAdapter(SamebugUser.Base.class, new JsonDeserializer<SamebugUser.Base>() {
+                    @Override
+                    public SamebugUser.Base deserialize(JsonElement json, java.lang.reflect.Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                        if (json.getAsJsonObject().has("id")) {
+                            return context.deserialize(json, SamebugUser.Registered.class);
+                        } else {
+                            return context.deserialize(json, SamebugUser.Visitor.class);
+                        }
                     }
                 }
         );
