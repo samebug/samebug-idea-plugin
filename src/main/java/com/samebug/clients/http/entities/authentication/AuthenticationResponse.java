@@ -23,6 +23,8 @@ public final class AuthenticationResponse {
     private RegisteredSamebugUser user;
     private String apiKey;
     private SamebugWorkspace defaultWorkspace;
+    private String type;
+    private String provider;
 
     @NotNull
     public RegisteredSamebugUser getUser() {
@@ -37,5 +39,15 @@ public final class AuthenticationResponse {
     @NotNull
     public SamebugWorkspace getDefaultWorkspace() {
         return defaultWorkspace;
+    }
+
+    @NotNull
+    public String getType() {
+        return type;
+    }
+
+    @NotNull
+    public String getProvider() {
+        return provider;
     }
 }

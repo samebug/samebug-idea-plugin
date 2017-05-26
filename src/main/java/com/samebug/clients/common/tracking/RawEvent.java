@@ -60,10 +60,9 @@ public class RawEvent {
 
     @NotNull
     protected RawEvent withAuthenticationResponse(@NotNull AuthenticationResponse response) {
-        // TODO
         Map<String, String> responseData = new HashMap<String, String>(2);
-        responseData.put("type", null);
-        responseData.put("provider", null);
+        responseData.put("type", response.getType());
+        responseData.put("provider", response.getProvider());
         withData("response", responseData);
         return this;
     }
