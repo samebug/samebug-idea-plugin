@@ -73,28 +73,31 @@ public class SamebugTabbedPaneUI extends BasicTabbedPaneUI {
     }
 
     @Override
-    protected void paintContentBorderTopEdge(Graphics g, int tabPlacement, int selectedIndex, int x, int y, int w, int h) {
+    protected void paintContentBorder(Graphics g, int tabPlacement, int selectedIndex) {
+        int width = tabPane.getWidth();
+        int height = tabPane.getHeight();
+        Insets insets = tabPane.getInsets();
+
+        int x = insets.left;
+        int y = insets.top;
+        int w = width - insets.right - insets.left;
+        y += calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight);
+
+        int startX = x + tabAreaInsets.left;
+        int endX = x + w - tabAreaInsets.right - 1;
+        int separatorY = y - tabAreaInsets.bottom;
+
+
+        // Fill region behind content area
+//        g.fillRect(x,y,w,h);
+
         // We want to draw a line under the tab area, excluding the selected tab.
         Rectangle r = new Rectangle();
         getTabBounds(selectedIndex, r);
         g.setColor(ColorService.forCurrentTheme(ColorService.Separator));
-        int startX = x + tabAreaInsets.left;
-        int endX = x + w - tabAreaInsets.right - 1;
-        int separatorY = y - tabAreaInsets.bottom;
         if (startX < r.x) g.drawLine(startX, separatorY, r.x, separatorY);
         if (r.x + r.width < endX) g.drawLine(r.x + r.width, separatorY, endX, separatorY);
-    }
 
-    @Override
-    protected void paintContentBorderLeftEdge(Graphics g, int tabPlacement, int selectedIndex, int x, int y, int w, int h) {
-    }
-
-    @Override
-    protected void paintContentBorderBottomEdge(Graphics g, int tabPlacement, int selectedIndex, int x, int y, int w, int h) {
-    }
-
-    @Override
-    protected void paintContentBorderRightEdge(Graphics g, int tabPlacement, int selectedIndex, int x, int y, int w, int h) {
     }
 
     // This is overridden to make sure that the tabs will not scroll
