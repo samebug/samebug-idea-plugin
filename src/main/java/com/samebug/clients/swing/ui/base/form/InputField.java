@@ -18,8 +18,12 @@ package com.samebug.clients.swing.ui.base.form;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.DrawService;
 import com.samebug.clients.swing.ui.modules.FontService;
+import org.jdesktop.swingx.prompt.PromptSupport;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicTextFieldUI;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -31,10 +35,14 @@ public class InputField extends JTextField {
     protected FormColors myColors;
     protected boolean hasError = false;
 
-    {
+    public InputField(@Nullable String prompt) {
         myColors = ColorService.NormalForm;
-        setFont(FontService.regular(16));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        updateColors();
+        PromptSupport.setPrompt(prompt, this);
+        PromptSupport.setFocusBehavior(PromptSupport.FocusBehavior.SHOW_PROMPT, this);
+        setFont(FontService.regular(16));
 
         addFocusListener(new FocusAdapter() {
             @Override
@@ -56,6 +64,11 @@ public class InputField extends JTextField {
         repaint();
     }
 
+    public void setColors(@NotNull FormColors colors) {
+        myColors = colors;
+        updateColors();
+    }
+
     @Override
     public void paintBorder(Graphics g) {
         Graphics2D g2 = DrawService.init(g);
@@ -67,4 +80,20 @@ public class InputField extends JTextField {
         g2.setColor(borderColor);
         g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, DrawService.RoundingDiameter, DrawService.RoundingDiameter);
     }
+
+    public void updateColors() {
+        Color currentColor = ColorService.forCurrentTheme(myColors.text);
+        Color currentBackgroundColor = ColorService.forCurrentTheme(myColors.background);
+        setCaretColor(currentColor);
+        super.setForeground(currentColor);
+        super.setBackground(currentBackgroundColor);
+        PromptSupport.setForeground(ColorService.forCurrentTheme(myColors.placeholder), this);
+    }
+
+    @Override
+    public void updateUI() {
+        setUI(new BasicTextFieldUI());
+        if (myColors != null) updateColors();
+    }
+
 }

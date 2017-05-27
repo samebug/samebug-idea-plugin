@@ -18,13 +18,10 @@ package com.samebug.clients.idea.ui.controller.solution;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.concurrency.FixedFuture;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.api.entities.bugmate.BugmatesResult;
-import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
-import com.samebug.clients.common.api.entities.profile.UserInfo;
-import com.samebug.clients.common.api.entities.profile.UserStats;
-import com.samebug.clients.common.api.entities.search.SearchDetails;
-import com.samebug.clients.common.api.entities.solution.Solutions;
+import com.samebug.clients.common.tracking.Locations;
+import com.samebug.clients.common.ui.component.bugmate.IBugmateHit;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
@@ -35,9 +32,21 @@ import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.solution.ISearchHeaderPanel;
 import com.samebug.clients.common.ui.frame.solution.ISolutionFrame;
 import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.http.entities.helprequest.HelpRequest;
+import com.samebug.clients.http.entities.jsonapi.BugmateList;
+import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
+import com.samebug.clients.http.entities.jsonapi.SolutionList;
+import com.samebug.clients.http.entities.jsonapi.TipList;
+import com.samebug.clients.http.entities.profile.UserStats;
+import com.samebug.clients.http.entities.search.Search;
+import com.samebug.clients.http.entities.search.SearchGroup;
+import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.idea.messages.IncomingHelpRequest;
+import com.samebug.clients.idea.messages.ProfileUpdate;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.idea.messages.WebSocketStatusUpdate;
+import com.samebug.clients.idea.ui.controller.component.BugmateHitListener;
 import com.samebug.clients.idea.ui.controller.component.ProfileListener;
 import com.samebug.clients.idea.ui.controller.component.WebHitListener;
 import com.samebug.clients.idea.ui.controller.component.WebResultsTabListener;
@@ -45,12 +54,12 @@ import com.samebug.clients.idea.ui.controller.externalEvent.ProfileUpdateListene
 import com.samebug.clients.idea.ui.controller.externalEvent.RefreshListener;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.frame.solution.SolutionFrame;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 
 import javax.swing.*;
-import java.util.List;
 import java.util.concurrent.Future;
 
 public final class SolutionFrameController extends BaseFrameController<ISolutionFrame> implements Disposable {
@@ -64,6 +73,7 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
     final RevokeHelpRequestListener revokeHelpRequestListener;
     final HelpOthersCTAListener helpOthersCTAListener;
     final WebHitListener webHitListener;
+    final BugmateHitListener bugmateHitListener;
     final MarkButtonListener markButtonListener;
     final ProfileListener profileListener;
     final SolutionFrameListener frameListener;
@@ -87,6 +97,9 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
         webHitListener = new WebHitListener(searchId);
         ListenerService.putListenerToComponent(frame, IWebHit.Listener.class, webHitListener);
 
+        bugmateHitListener = new BugmateHitListener();
+        ListenerService.putListenerToComponent(frame, IBugmateHit.Listener.class, bugmateHitListener);
+
         requestHelpListener = new RequestHelpListener(this);
         ListenerService.putListenerToComponent(frame, IAskForHelp.Listener.class, requestHelpListener);
 
@@ -109,7 +122,8 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
 
         profileUpdateListener = new ProfileUpdateListener(this);
         projectConnection.subscribe(IncomingHelpRequest.TOPIC, profileUpdateListener);
-
+        projectConnection.subscribe(ProfileUpdate.TOPIC, profileUpdateListener);
+        projectConnection.subscribe(WebSocketStatusUpdate.TOPIC, profileUpdateListener);
     }
 
     public int getSearchId() {
@@ -118,37 +132,45 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
 
     public void load() {
         view.setLoading();
-        final Future<UserInfo> userInfoTask = concurrencyService.userInfo();
-        final Future<UserStats> userStatsTask = concurrencyService.userStats();
-        final Future<IncomingHelpRequests> incomingHelpRequestsTask = concurrencyService.incomingHelpRequests(false);
-        final Future<Solutions> solutionsTask = concurrencyService.solutions(searchId);
-        final Future<BugmatesResult> bugmatesTask = concurrencyService.bugmates(searchId);
-        final Future<SearchDetails> searchTask = concurrencyService.search(searchId);
-        load(solutionsTask, bugmatesTask, searchTask, incomingHelpRequestsTask, userInfoTask, userStatsTask);
-    }
 
-    private void load(final Future<Solutions> solutionsTask,
-                      final Future<BugmatesResult> bugmatesTask,
-                      final Future<SearchDetails> searchTask,
-                      final Future<IncomingHelpRequests> incomingHelpRequestsTask,
-                      final Future<UserInfo> userInfoTask,
-                      final Future<UserStats> userStatsTask) {
+        final Future<Me> userInfoTask = concurrencyService.userInfo();
+        final Future<UserStats> userStatsTask = concurrencyService.userStats();
+        final Future<IncomingHelpRequestList> incomingHelpRequestsTask = concurrencyService.incomingHelpRequests(false);
+        final Future<SolutionList> solutionsTask = concurrencyService.solutions(searchId);
+        final Future<TipList> tipsTask = concurrencyService.tips(searchId);
+        final Future<BugmateList> bugmatesTask = concurrencyService.bugmates(searchId);
+        final Future<Search> searchTask = concurrencyService.search(searchId);
+
         new LoadingTask() {
             @Override
             protected void load() throws Exception {
-                final SolutionFrame.Model model =
-                        conversionService.solutionFrame(searchTask.get(), solutionsTask.get(), bugmatesTask.get(), incomingHelpRequestsTask.get(),
-                                userInfoTask.get(), userStatsTask.get());
-                ApplicationManager.getApplication().invokeLater(new Runnable() {
+                // Wait for the search to see our help request id on that search, so we can load and show that help request.
+                Search search = searchTask.get();
+                SearchGroup group = search.getGroup();
+                String myHelpRequestId = group.getHelpRequestId();
+
+                final Future<HelpRequest> helpRequestTask;
+                if (myHelpRequestId == null) helpRequestTask = new FixedFuture<HelpRequest>(null);
+                else helpRequestTask = concurrencyService.helpRequest(myHelpRequestId);
+
+                new LoadingTask() {
                     @Override
-                    public void run() {
-                        view.loadingSucceeded(model);
+                    protected void load() throws Exception {
+                        final SolutionFrame.Model model =
+                                conversionService.solutionFrame(searchTask.get(),
+                                        tipsTask.get().getData(), solutionsTask.get().getData(), bugmatesTask.get(), helpRequestTask.get(), incomingHelpRequestsTask.get(),
+                                        userInfoTask.get(), userStatsTask.get());
+                        ApplicationManager.getApplication().invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                JComponent frame = (JComponent) view;
+                                DataService.putData(frame, TrackingKeys.Location, new Locations.Search(searchId));
+                                DataService.putData(frame, TrackingKeys.PageViewId, TrackingService.newPageViewId());
+                                view.loadingSucceeded(model);
+                            }
+                        });
                     }
-                });
-                List<IWebHit.Model> solutions = model.resultTabs.webResults.webHits;
-                for (int i = 0; i < solutions.size(); ++i) {
-                    TrackingService.trace(Events.solutionDisplay(solutions.get(i).solutionId, i));
-                }
+                }.executeInBackground();
             }
         }.executeInBackground();
     }

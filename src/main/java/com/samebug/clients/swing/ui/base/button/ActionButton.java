@@ -71,6 +71,5 @@ public abstract class ActionButton extends BasicButton {
         setFilled(filledState);
         setEnabled(true);
         removeAll();
-        // TODO destroy animation to free stop the task?
     }
 }

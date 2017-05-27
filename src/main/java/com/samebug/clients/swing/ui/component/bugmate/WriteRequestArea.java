@@ -15,26 +15,22 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
-import com.samebug.clients.common.api.form.CreateHelpRequest;
-import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
-import com.samebug.clients.common.ui.component.form.IFormField;
+import com.samebug.clients.common.ui.component.community.IAskForHelp;
+import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.swing.ui.base.form.LengthRestrictedArea;
-import com.samebug.clients.swing.ui.base.form.MaxCharactersConstraints;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.component.helpRequest.ExceptionPreview;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
-import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.text.AbstractDocument;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public final class WriteRequestArea extends JComponent implements IFormField {
-    public static final int MaxOvershootCharacters = 200;
-    public static final int MaxCharacters = 140;
+public final class WriteRequestArea extends JComponent {
+    public static final int MaxCharacters = 256;
 
     final RequestHelp requestHelp;
     final BorderedArea borderedArea;
@@ -60,16 +56,18 @@ public final class WriteRequestArea extends JComponent implements IFormField {
         add(borderedArea);
     }
 
-    @Override
     public String getText() {
         return borderedArea.getText();
     }
 
-    @Override
-    public void setFormError(String errorCode) throws ErrorCodeMismatchException {
+    public void setFormError(@NotNull final IAskForHelp.BadRequest.Context errorCode) {
         borderedArea.setError(true);
-        if (CreateHelpRequest.E_TOO_LONG.equals(errorCode)) errorLabel.setText(MessageService.message("samebug.component.helpRequest.ask.error.long"));
-        else throw new ErrorCodeMismatchException(errorCode);
+        switch (errorCode) {
+            case TOO_LONG:
+                errorLabel.setText(MessageService.message("samebug.component.helpRequest.ask.error.long"));
+                break;
+            default:
+        }
         remove(errorLabel);
         add(errorLabel, "cell 0 1, wmin 0");
     }
@@ -77,7 +75,7 @@ public final class WriteRequestArea extends JComponent implements IFormField {
     final class BorderedArea extends LengthRestrictedArea {
         final JComponent exceptionPreview;
 
-        public BorderedArea() {
+        BorderedArea() {
             super(ColorService.NormalForm);
             exceptionPreview = new MyExceptionPreview();
 
@@ -87,7 +85,6 @@ public final class WriteRequestArea extends JComponent implements IFormField {
             add(exceptionPreview, "cell 0 2, wmin 0, growx");
 
             setBackgroundColor(ColorService.Background);
-            ((AbstractDocument) myEditableArea.getDocument()).setDocumentFilter(new MaxCharactersConstraints(MaxOvershootCharacters));
         }
 
         @Override
@@ -106,7 +103,7 @@ public final class WriteRequestArea extends JComponent implements IFormField {
         }
 
         private final class MyExceptionPreview extends ExceptionPreview {
-            public MyExceptionPreview() {
+            MyExceptionPreview() {
                 super(requestHelp.model.exceptionTitle);
                 setBackgroundColor(ColorService.Tip);
                 setForegroundColor(ColorService.TipText);
@@ -115,7 +112,7 @@ public final class WriteRequestArea extends JComponent implements IFormField {
     }
 
     final class ErrorLabel extends SamebugMultilineLabel {
-        public ErrorLabel() {
+        ErrorLabel() {
             setForegroundColor(ColorService.NormalForm.error);
             setFont(FontService.regular(12));
             setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));

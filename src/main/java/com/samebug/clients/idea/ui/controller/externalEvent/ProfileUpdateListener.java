@@ -15,17 +15,23 @@
  */
 package com.samebug.clients.idea.ui.controller.externalEvent;
 
-import com.samebug.clients.common.api.entities.helpRequest.HelpRequest;
+import com.samebug.clients.common.ui.component.bugmate.ConnectionStatus;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
-import com.samebug.clients.idea.messages.IncomingHelpRequest;
+import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
+import com.samebug.clients.http.entities.profile.UserStats;
+import com.samebug.clients.idea.messages.ProfileUpdate;
+import com.samebug.clients.idea.messages.WebSocketStatusUpdate;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-public final class ProfileUpdateListener implements IncomingHelpRequest {
+public final class ProfileUpdateListener implements
+        com.samebug.clients.idea.messages.IncomingHelpRequest, ProfileUpdate, WebSocketStatusUpdate {
     final BaseFrameController controller;
 
     public ProfileUpdateListener(final BaseFrameController controller) {
@@ -33,12 +39,45 @@ public final class ProfileUpdateListener implements IncomingHelpRequest {
     }
 
     @Override
-    public void showHelpRequest(HelpRequest helpRequest) {
+    public void showHelpRequest(IncomingHelpRequest helpRequest) {
         // nothing to do
     }
 
     @Override
-    public void addHelpRequest(HelpRequest helpRequest) {
+    public void addHelpRequest(IncomingHelpRequest helpRequest) {
+        IProfilePanel profilePanel = getProfilePanel();
+        if (profilePanel != null) {
+            IProfilePanel.Model oldModel = profilePanel.getModel();
+            IProfilePanel.Model newModel = new IProfilePanel.Model(oldModel.messages + 1, oldModel.marks, oldModel.tips, oldModel.thanks,
+                    oldModel.name, oldModel.avatarUrl, oldModel.status);
+            profilePanel.setModel(newModel);
+        }
+    }
+
+    @Override
+    public void updateProfileStatistics(@NotNull final UserStats stats) {
+        IProfilePanel profilePanel = getProfilePanel();
+        if (profilePanel != null) {
+            IProfilePanel.Model oldModel = profilePanel.getModel();
+            IProfilePanel.Model newModel = new IProfilePanel.Model(oldModel.messages, stats.getNumberOfVotes(), stats.getNumberOfTips(), stats.getNumberOfThanks(),
+                    oldModel.name, oldModel.avatarUrl, oldModel.status);
+            profilePanel.setModel(newModel);
+        }
+    }
+
+    @Override
+    public void updateConnectionStatus(ConnectionStatus status) {
+        IProfilePanel profilePanel = getProfilePanel();
+        if (profilePanel != null) {
+            IProfilePanel.Model oldModel = profilePanel.getModel();
+            IProfilePanel.Model newModel = new IProfilePanel.Model(oldModel.messages, oldModel.marks, oldModel.tips, oldModel.thanks, oldModel.name, oldModel.avatarUrl, status);
+            profilePanel.setModel(newModel);
+        }
+    }
+
+    // IMPROVE if this is slow
+    @Nullable
+    private IProfilePanel getProfilePanel() {
         final Component view = (JComponent) controller.view;
         IProfilePanel profilePanel = null;
         java.util.List<Component> components = new LinkedList<Component>();
@@ -51,8 +90,6 @@ public final class ProfileUpdateListener implements IncomingHelpRequest {
             components.remove(0);
         }
 
-        if (profilePanel != null) {
-            profilePanel.increaseMessages();
-        }
+        return profilePanel;
     }
 }

@@ -15,20 +15,23 @@
  */
 package com.samebug.clients.swing.ui.component.community.writeTip;
 
-import com.samebug.clients.common.api.form.FieldError;
+import com.samebug.clients.common.tracking.Funnels;
+import com.samebug.clients.common.tracking.Hooks;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.component.hit.ITipHit;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.MessageService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 
 public final class WriteTip extends JComponent implements IHelpOthersCTA {
     final IHelpOthersCTA.Model model;
@@ -38,6 +41,7 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
     private WriteTipScreen tipScreen;
 
     public WriteTip(IHelpOthersCTA.Model model, CTA_TYPE ctaType) {
+        DataService.putData(this, TrackingKeys.WriteTipTransaction, Funnels.newTransactionId());
         this.model = new IHelpOthersCTA.Model(model);
         this.ctaType = ctaType;
 
@@ -52,16 +56,15 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
     }
 
     @Override
-    public void successPostTip() {
-        // TODO do we have to properly close the loading animation on the send button?
+    public void successPostTip(@NotNull ITipHit.Model tip) {
         if (ctaScreen == null) changeToClosedState();
     }
 
     @Override
-    public void failPostTipWithFormError(List<FieldError> errors) throws FormMismatchException {
+    public void failPostTipWithFormError(@Nullable final BadRequest errors) {
         if (tipScreen != null) {
             tipScreen.actionRow.sendButton.revertFromLoadingAnimation();
-            tipScreen.setFormErrors(errors);
+            if (errors != null) tipScreen.setFormErrors(errors);
         }
     }
 
@@ -88,10 +91,12 @@ public final class WriteTip extends JComponent implements IHelpOthersCTA {
         tipScreen = null;
         add(ctaScreen.getCTAScreen());
 
-        ctaScreen.getCTAButton().addMouseListener(new MouseAdapter() {
+        final JComponent button = ctaScreen.getCTAButton();
+        button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                TrackingService.trace(Events.writeTipOpen());
+                TrackingService.trace(SwingRawEvent.writeTipHookTrigger(
+                        button, DataService.getData(button, TrackingKeys.WriteTipTransaction), null, Hooks.WriteTip.SEARCH));
                 changeToOpenState();
             }
         });

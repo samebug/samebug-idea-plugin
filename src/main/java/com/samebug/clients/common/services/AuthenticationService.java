@@ -15,16 +15,16 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.api.client.ClientResponse;
-import com.samebug.clients.common.api.client.SamebugClient;
-import com.samebug.clients.common.api.entities.profile.LoggedInUser;
-import com.samebug.clients.common.api.entities.profile.UserInfo;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.api.form.AnonymousUse;
-import com.samebug.clients.common.api.form.LogIn;
-import com.samebug.clients.common.api.form.SignUp;
+import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
+import com.samebug.clients.http.entities.user.Me;
+import com.samebug.clients.http.entities.user.SamebugWorkspace;
+import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.exceptions.SamebugException;
+import com.samebug.clients.http.form.LogIn;
+import com.samebug.clients.http.form.SignUp;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class AuthenticationService {
@@ -34,82 +34,51 @@ public final class AuthenticationService {
         this.clientService = clientService;
     }
 
-    public UserInfo apiKeyAuthentication(final String apiKey, @Nullable final Integer workspaceId) throws SamebugClientException {
-        final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<UserInfo> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<UserInfo>() {
-                    ClientResponse<UserInfo> request() {
-                        // TODO the server should accept the workspaceId
-                        return client.getUserInfo(apiKey);
-                    }
-
-                    protected void success(UserInfo result) {
-                        // NOTE: this is a special case, we handle connection status by the result, not by the http status
-                        clientService.updateAuthenticated(result.getUserExist());
-                        // TODO tell the client service if there is a problem with the workspace
-                        // TODO if workspaceId is null, save the returned default workspace id to application settings.
-                    }
-                };
-        return clientService.execute(requestHandler);
+    public void apiKeyAuthentication() throws SamebugException {
+        final Me userInfo = clientService.getClient().getUserInfo();
+        updateSettings(userInfo.getId(), userInfo.getWorkspace());
     }
 
 
-    public LoggedInUser logIn(final LogIn data) throws SamebugClientException {
-        final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<LoggedInUser> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<LoggedInUser>() {
-                    ClientResponse<LoggedInUser> request() {
-                        return client.logIn(data);
-                    }
-
-                    protected void success(LoggedInUser result) {
-                        updateSettings(result);
-                    }
-                };
-        return clientService.execute(requestHandler);
+    public AuthenticationResponse logIn(final LogIn.Data data) throws SamebugClientException, LogIn.BadRequest {
+        AuthenticationResponse result = clientService.getClient().logIn(data);
+        updateSettings(result);
+        return result;
     }
 
-    public LoggedInUser signUp(final SignUp data) throws SamebugClientException {
-        final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<LoggedInUser> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<LoggedInUser>() {
-                    ClientResponse<LoggedInUser> request() {
-                        return client.signUp(data);
-                    }
-
-                    protected void success(LoggedInUser result) {
-                        updateSettings(result);
-                    }
-                };
-        return clientService.execute(requestHandler);
+    public AuthenticationResponse signUp(final SignUp.Data data) throws SamebugClientException, SignUp.BadRequest {
+        AuthenticationResponse result = clientService.getClient().signUp(data);
+        updateSettings(result);
+        return result;
     }
 
-    public LoggedInUser anonymousUse(final AnonymousUse data) throws SamebugClientException {
-        final SamebugClient client = clientService.client;
-
-        ClientService.ConnectionAwareHttpRequest<LoggedInUser> requestHandler =
-                new ClientService.ConnectionAwareHttpRequest<LoggedInUser>() {
-                    ClientResponse<LoggedInUser> request() {
-                        return client.anonymousUse(data);
-                    }
-
-                    protected void success(LoggedInUser result) {
-                        updateSettings(result);
-                    }
-                };
-        return clientService.execute(requestHandler);
+    public AuthenticationResponse anonymousUse() throws SamebugClientException {
+        AuthenticationResponse result = clientService.getClient().anonymousUse();
+        updateSettings(result);
+        return result;
     }
 
-    private void updateSettings(LoggedInUser user) {
+    // TODO make this class abstract, and implement the updateSettings in the Idea-specialization.
+    private void updateSettings(AuthenticationResponse response) {
+        updateSettings(response.getApiKey(), response.getUser().getId(), response.getDefaultWorkspace());
+    }
+
+    private void updateSettings(@NotNull final Integer userId, @Nullable final SamebugWorkspace currentWorkspace) {
         IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
         ApplicationSettings oldSettings = plugin.getState();
         ApplicationSettings newSettings = new ApplicationSettings(oldSettings);
-        newSettings.apiKey = user.apiKey;
-        if (oldSettings.workspaceId == null) newSettings.workspaceId = user.defaultWorkspaceId;
-        newSettings.userId = user.userId;
+        newSettings.userId = userId;
+        if (currentWorkspace != null) newSettings.workspaceId = currentWorkspace.getId();
+        if (!oldSettings.equals(newSettings)) plugin.saveSettings(newSettings);
+    }
+
+    private void updateSettings(@NotNull final String apiKey, @NotNull final Integer userId, @NotNull final SamebugWorkspace currentWorkspace) {
+        IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
+        ApplicationSettings oldSettings = plugin.getState();
+        ApplicationSettings newSettings = new ApplicationSettings(oldSettings);
+        newSettings.apiKey = apiKey;
+        newSettings.userId = userId;
+        newSettings.workspaceId = currentWorkspace.getId();
         if (!oldSettings.equals(newSettings)) plugin.saveSettings(newSettings);
     }
 }

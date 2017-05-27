@@ -20,8 +20,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBus;
-import com.samebug.clients.common.api.exceptions.*;
 import com.samebug.clients.common.ui.frame.IFrame;
+import com.samebug.clients.http.exceptions.*;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +30,7 @@ import javax.swing.*;
 import java.util.concurrent.ExecutionException;
 
 public abstract class BaseFrameController<T extends IFrame> implements Disposable {
-    final static Logger LOGGER = Logger.getInstance(BaseFrameController.class);
+    static final Logger LOGGER = Logger.getInstance(BaseFrameController.class);
 
     public final ToolWindowController twc;
     public final Project myProject;
@@ -79,7 +79,6 @@ public abstract class BaseFrameController<T extends IFrame> implements Disposabl
 
 
         protected void handleInterruptedException(InterruptedException e) {
-            // TODO not sure when could it happen, probably safe to retry
             LOGGER.warn("Loading interrupted", e);
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override
@@ -104,7 +103,6 @@ public abstract class BaseFrameController<T extends IFrame> implements Disposabl
         }
 
         protected void handleSamebugClientException(final SamebugClientException e) {
-            // TODO error with loading, bad connection, bad apikey, server error, etc
             LOGGER.warn("Error during loading solutions", e);
             ApplicationManager.getApplication().invokeLater(new Runnable() {
                 @Override

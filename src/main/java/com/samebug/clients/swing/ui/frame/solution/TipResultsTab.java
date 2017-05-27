@@ -15,12 +15,15 @@
  */
 package com.samebug.clients.swing.ui.frame.solution;
 
+import com.samebug.clients.common.tracking.Funnels;
+import com.samebug.clients.common.tracking.PageTabs;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.solution.ITipResultsTab;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.animation.*;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
@@ -29,25 +32,31 @@ import com.samebug.clients.swing.ui.component.bugmate.BugmateList;
 import com.samebug.clients.swing.ui.component.bugmate.RequestHelp;
 import com.samebug.clients.swing.ui.component.bugmate.RevokeHelpRequest;
 import com.samebug.clients.swing.ui.component.community.writeTip.WriteTip;
-import com.samebug.clients.swing.ui.component.hit.TipHit;
+import com.samebug.clients.swing.ui.component.hit.MarkableTipHit;
+import com.samebug.clients.swing.ui.modules.DataService;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class TipResultsTab extends TransparentPanel implements ITipResultsTab {
+public final class TipResultsTab extends TransparentPanel implements IAnimatedComponent, ITipResultsTab {
     private final ContentPanel contentPanel;
-    private final List<TipHit> tipHits;
+    private final List<MarkableTipHit> tipHits;
 
-    private ComponentAnimation myAnimation;
+    @NotNull
+    private final ComponentAnimationController myAnimationController;
 
     public TipResultsTab(Model model, IHelpOthersCTA.Model ctaModel) {
-        tipHits = new ArrayList<TipHit>();
+        DataService.putData(this, TrackingKeys.PageTab, PageTabs.Search.TipHits);
+        myAnimationController = new ComponentAnimationController(this);
+        tipHits = new ArrayList<MarkableTipHit>();
         for (int i = 0; i < model.tipHits.size(); i++) {
-            TipHit.Model m = model.tipHits.get(i);
-            TipHit hit = new TipHit(m);
+            MarkableTipHit.Model m = model.tipHits.get(i);
+            MarkableTipHit hit = new MarkableTipHit(m);
+            DataService.putData(hit, TrackingKeys.SolutionTransaction, Funnels.newTransactionId());
             tipHits.add(hit);
         }
         contentPanel = new ContentPanel(ctaModel, model.bugmateList, model.myHelpRequest, model.askForHelp);
@@ -63,24 +72,43 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
 
     @Override
     public void paint(Graphics g) {
-        if (myAnimation == null || !myAnimation.isRunning()) super.paint(g);
-        else myAnimation.paint(g);
+        myAnimationController.paint(g);
     }
 
-    public ControllableAnimation fadeOut(int totalFrames) {
-        return new MyFadeOutAnimation(totalFrames);
+    @Override
+    public void paintOriginalComponent(Graphics g) {
+        super.paint(g);
     }
 
-    public ControllableAnimation fadeIn(int totalFrames) {
-        return new MyFadeInAnimation(totalFrames);
+    public ControllableAnimation fadeOut(int frames) {
+        final PaintableAnimation myAnimation = new MyFadeOutAnimation(frames);
+        // TODO this is still not good, AnimationController cannot handle multiple pending animations
+        myAnimation.runBeforeStart(new Runnable() {
+            @Override
+            public void run() {
+                myAnimationController.prepareNewAnimation(myAnimation);
+            }
+        });
+        return myAnimation;
     }
 
-    public ControllableAnimation animatedAddTip(final ITipHit.Model model, final int tipFloatInFrames) {
-        final TipHit newTip = new TipHit(model);
-        return contentPanel.addTip(newTip, tipHits, tipFloatInFrames);
+    public ControllableAnimation fadeIn(int frames) {
+        final PaintableAnimation myAnimation = new MyFadeInAnimation(frames);
+        myAnimation.runBeforeStart(new Runnable() {
+            @Override
+            public void run() {
+                myAnimationController.prepareNewAnimation(myAnimation);
+            }
+        });
+        return myAnimation;
     }
 
-    private static final class ContentPanel extends SamebugPanel {
+    public ControllableAnimation animatedAddTip(final ITipHit.Model model) {
+        final MarkableTipHit newTip = new MarkableTipHit(model);
+        return contentPanel.addTip(newTip, tipHits);
+    }
+
+    private static final class ContentPanel extends SamebugPanel implements IAnimatedComponent {
         final ListPanel listPanel;
         final WriteTip writeTip;
         final WriteTip cta;
@@ -88,9 +116,11 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
         final IBugmateList.Model bugmateListModel;
         final JComponent helpRequest;
 
-        private ComponentAnimation contentPanelAnimation;
+        @NotNull
+        private final ComponentAnimationController myAnimationController;
 
         ContentPanel(IHelpOthersCTA.Model ctaModel, IBugmateList.Model bugmateListModel, IMyHelpRequest.Model myHelpRequestModel, IAskForHelp.Model askForHelpModel) {
+            myAnimationController = new ComponentAnimationController(this);
             this.bugmateListModel = bugmateListModel;
             listPanel = new ListPanel();
             writeTip = new WriteTip(ctaModel, WriteTip.CTA_TYPE.SMALL);
@@ -103,7 +133,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
             }
         }
 
-        void setContent(List<TipHit> tipHits) {
+        void setContent(List<MarkableTipHit> tipHits) {
             removeAll();
             listPanel.setContent(tipHits);
             if (tipHits.size() > 0 && bugmateListModel.bugmateHits.size() > 0) {
@@ -145,31 +175,34 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
             validate();
         }
 
-        ControllableAnimation addTip(final TipHit newTip, final List<TipHit> tipHits, int tipFloatInFrames) {
-            if (contentPanelAnimation != null) contentPanelAnimation.forceFinish();
-
-            contentPanelAnimation = new GrowFromTop(tipFloatInFrames, newTip.getPreferredSize().height);
-            contentPanelAnimation.runBeforeStart(new Runnable() {
+        ControllableAnimation addTip(final MarkableTipHit newTip, final List<MarkableTipHit> tipHits) {
+            PaintableAnimation myAnimation = new GrowFromTop(newTip.getPreferredSize().height);
+            myAnimation.runBeforeStart(new Runnable() {
                 @Override
                 public void run() {
                     tipHits.add(0, newTip);
                     setContent(tipHits);
                 }
             });
-            ControllableAnimation tipFadeInAnimation = newTip.fadeIn(tipFloatInFrames);
-            return contentPanelAnimation.with(tipFadeInAnimation);
+            myAnimationController.prepareNewAnimation(myAnimation);
+            ControllableAnimation tipFadeInAnimation = newTip.fadeIn();
+            return myAnimation.with(tipFadeInAnimation);
         }
 
         @Override
         public void paint(Graphics g) {
-            if (contentPanelAnimation == null || !contentPanelAnimation.isRunning()) super.paint(g);
-            else contentPanelAnimation.paint(g);
+            myAnimationController.paint(g);
+        }
+
+        @Override
+        public void paintOriginalComponent(Graphics g) {
+            super.paint(g);
         }
 
         private final class GrowFromTop extends DynamicallyUpdatedGrowFromTopAnimation {
 
-            GrowFromTop(int tipFloatInFrames, int growPixels) {
-                super(tipFloatInFrames, ContentPanel.this, growPixels);
+            GrowFromTop(int growPixels) {
+                super(30, ContentPanel.this, growPixels);
                 assert myGrownSize.height >= growPixels : "Cannot grow " + growPixels + " pixels because its final size is less than that";
             }
 
@@ -186,12 +219,12 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         }
 
-        void setContent(List<TipHit> tipHits) {
+        void setContent(List<MarkableTipHit> tipHits) {
             removeAll();
             for (int i = 0; i < tipHits.size(); i++) {
                 if (i == 0) add(Box.createRigidArea(new Dimension(0, 10)));
                 else add(Box.createRigidArea(new Dimension(0, 20)));
-                TipHit hit = tipHits.get(i);
+                MarkableTipHit hit = tipHits.get(i);
                 add(hit);
             }
         }
@@ -199,7 +232,7 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
 
     private final class MyFadeInAnimation extends FadeInAnimation {
 
-        public MyFadeInAnimation(int totalFrames) {
+        MyFadeInAnimation(int totalFrames) {
             super(TipResultsTab.this, totalFrames);
             runBeforeStart(new Runnable() {
                 @Override
@@ -207,8 +240,6 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
                     if (tipHits.isEmpty()) {
                         contentPanel.setZeroFromOneTipContent();
                     }
-                    if (myAnimation != null) myAnimation.forceFinish();
-                    myAnimation = MyFadeInAnimation.this;
                 }
             });
         }
@@ -221,15 +252,8 @@ public final class TipResultsTab extends TransparentPanel implements ITipResults
 
     private final class MyFadeOutAnimation extends FadeOutAnimation {
 
-        public MyFadeOutAnimation(int totalFrames) {
+        MyFadeOutAnimation(int totalFrames) {
             super(TipResultsTab.this, totalFrames);
-            runBeforeStart(new Runnable() {
-                @Override
-                public void run() {
-                    if (myAnimation != null) myAnimation.forceFinish();
-                    myAnimation = MyFadeOutAnimation.this;
-                }
-            });
         }
 
         @Override

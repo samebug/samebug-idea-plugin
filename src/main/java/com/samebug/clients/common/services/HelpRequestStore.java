@@ -15,25 +15,33 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.api.entities.helpRequest.IncomingHelpRequests;
-import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
+import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
+import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class HelpRequestStore {
-    IncomingHelpRequests incoming;
+    @Nullable
+    IncomingHelpRequestList incoming;
 
     public HelpRequestStore() {
 
     }
 
-    public IncomingHelpRequests get() {
+    @Nullable
+    public IncomingHelpRequestList get() {
         return incoming;
     }
 
-    public MatchingHelpRequest getHelpRequest(String id) {
-        for (MatchingHelpRequest h : incoming.matches) {
-            if (h.helpRequest.id.equals(id)) return h;
+    @Nullable
+    public HelpRequestMatch getIncomingHelpRequest(@NotNull final String id) {
+        HelpRequestMatch match = null;
+        if (incoming != null) {
+            for (HelpRequestMatch h : incoming.getData()) {
+                if (id.equals(h.getHelpRequest().getId())) match = h;
+            }
         }
-        return null;
+        return match;
     }
 
     public void invalidate() {

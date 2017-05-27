@@ -24,8 +24,6 @@ import java.text.MessageFormat;
 /**
  * Copied from com.intellij.util.ui.Animator
  */
-// TODO isn't there a better solution where we don't have to destory it after usage?
-// TODO actually this is only a problem for repeating animations, that can't kill themselves.
 public abstract class Animator {
     private final String myName;
     private final int myTotalFrames;

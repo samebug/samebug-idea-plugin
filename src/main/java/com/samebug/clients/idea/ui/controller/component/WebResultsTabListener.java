@@ -19,7 +19,7 @@ import com.samebug.clients.common.ui.frame.solution.IWebResultsTab;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.modules.BrowserUtil;
 
-import java.net.URL;
+import java.net.URI;
 
 public final class WebResultsTabListener implements IWebResultsTab.Listener {
     final int searchId;
@@ -31,7 +31,7 @@ public final class WebResultsTabListener implements IWebResultsTab.Listener {
 
     @Override
     public void moreClicked() {
-        URL url = IdeaSamebugPlugin.getInstance().urlBuilder.search(searchId);
-        BrowserUtil.browse(url);
+        URI uri = IdeaSamebugPlugin.getInstance().uriBuilder.search(searchId);
+        BrowserUtil.browse(uri);
     }
 }

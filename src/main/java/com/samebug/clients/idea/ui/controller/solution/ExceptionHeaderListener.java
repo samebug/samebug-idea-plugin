@@ -16,21 +16,25 @@
 package com.samebug.clients.idea.ui.controller.solution;
 
 import com.samebug.clients.common.ui.frame.solution.ISearchHeaderPanel;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.modules.BrowserUtil;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
 
-import java.net.URL;
+import javax.swing.*;
+import java.net.URI;
 
 final class ExceptionHeaderListener implements ISearchHeaderPanel.Listener {
     final SolutionFrameController controller;
 
-    public ExceptionHeaderListener(final SolutionFrameController controller) {
+    ExceptionHeaderListener(final SolutionFrameController controller) {
         this.controller = controller;
     }
 
     @Override
-    public void titleClicked() {
-        final URL searchUrl = IdeaSamebugPlugin.getInstance().urlBuilder.search(controller.searchId);
-        BrowserUtil.browse(searchUrl);
+    public void titleClicked(ISearchHeaderPanel source) {
+        final URI searchUri = IdeaSamebugPlugin.getInstance().uriBuilder.search(controller.searchId);
+        BrowserUtil.browse(searchUri);
+        TrackingService.trace(SwingRawEvent.linkClick((JComponent) source, searchUri));
     }
 }

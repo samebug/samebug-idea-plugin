@@ -16,14 +16,20 @@
 package com.samebug.clients.swing.ui.component.popup;
 
 import com.samebug.clients.common.ui.component.popup.IHelpRequestPopup;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
-import com.samebug.clients.swing.ui.modules.*;
+import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.DataService;
+import com.samebug.clients.swing.ui.modules.FontService;
+import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -32,11 +38,11 @@ import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
 
 public final class HelpRequestPopup extends SamebugPanel implements IHelpRequestPopup {
-    private final static int AvatarSize = 40;
+    private static final int AvatarSize = 40;
 
     public HelpRequestPopup(Model model) {
         final JComponent avatar = new AvatarIcon(model.avatarUrl, AvatarSize);
-        final SamebugLabel title = new SamebugLabel(MessageService.message("samebug.notification.incomingHelpRequest.title", model.displayName), FontService.demi(14));
+        final SamebugLabel title = new SamebugLabel(MessageService.message("samebug.component.helpRequest.incoming.title", model.displayName), FontService.demi(14));
         final RequestBody body = new RequestBody(model.helpRequestBody);
         final AnswerButton answer = new AnswerButton();
         final JComponent later = new LaterButton();
@@ -55,7 +61,7 @@ public final class HelpRequestPopup extends SamebugPanel implements IHelpRequest
     }
 
     final class RequestBody extends SamebugMultilineLabel {
-        public RequestBody(String body) {
+        RequestBody(String body) {
             setText(body);
             setFont(FontService.regular(14));
         }
@@ -66,12 +72,13 @@ public final class HelpRequestPopup extends SamebugPanel implements IHelpRequest
             setText(MessageService.message("samebug.notification.incomingHelpRequest.answer"));
             setFont(FontService.demi(14));
             setFilled(true);
+            DataService.putData(this, TrackingKeys.Label, getText());
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (isEnabled()) {
                         getListener().answerClick(HelpRequestPopup.this);
-                        TrackingService.trace(Events.helpRequestNotificationAnswer());
+                        TrackingService.trace(SwingRawEvent.buttonClick(AnswerButton.this));
                     }
                 }
             });
@@ -89,7 +96,11 @@ public final class HelpRequestPopup extends SamebugPanel implements IHelpRequest
                 public void mouseClicked(MouseEvent e) {
                     if (isEnabled()) {
                         getListener().laterClick(HelpRequestPopup.this);
-                        TrackingService.trace(Events.helpRequestNotificationLater());
+                        TrackingService.trace(new SwingRawEvent("Button", "Click", LaterButton.this) {
+                            protected void myLazyFields() {
+                                withData("label", getText());
+                            }
+                        });
                     }
                 }
             });

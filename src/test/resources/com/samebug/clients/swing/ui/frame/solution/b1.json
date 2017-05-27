@@ -11,11 +11,15 @@
       "bugmateList": {
         "bugmateHits": [
           {
-            "userId": 1,
-            "displayName": "Petra",
-            "avatarUrl": null,
+            "user": {
+              "id": 1,
+              "displayName": "Petra",
+              "status": "ONLINE"
+            },
             "nSeen": 11,
-            "lastSeen": "2017-01-01T00:00:00"
+            "lastSeen": "2017-01-01T00:00:00",
+            "level": 0,
+            "matchingGroupId": ""
           }
         ],
         "numberOfOtherBugmates": 0,
@@ -33,7 +37,8 @@
     "tips": 48,
     "thanks": 15,
     "name": "Adam",
-    "avatarUrl": null
+    "avatarUrl": null,
+    "status": "ONLINE"
   },
   "header": {
     "title": "UnsupportedDriverException: Could not instantiate class"

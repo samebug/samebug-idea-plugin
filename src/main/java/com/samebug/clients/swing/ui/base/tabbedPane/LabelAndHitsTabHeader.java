@@ -15,8 +15,10 @@
  */
 package com.samebug.clients.swing.ui.base.tabbedPane;
 
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import net.miginfocom.swing.MigLayout;
 
@@ -29,6 +31,7 @@ public class LabelAndHitsTabHeader extends SamebugTabHeader {
     protected Color[] selectedHitColor = ColorService.SelectedTab;
 
     public LabelAndHitsTabHeader(String tabName, int hits) {
+        DataService.putData(this, TrackingKeys.Label, tabName);
         tabLabel = new SamebugLabel(tabName, FontService.demi(16));
         hitsLabel = new HitsLabel(HitsLabel.SMALL);
         setHits(hits);
@@ -51,6 +54,5 @@ public class LabelAndHitsTabHeader extends SamebugTabHeader {
 
         // hit label in selected state has a visually corrected color
         if (hitsLabel != null && selected) hitsLabel.setForeground(ColorService.forCurrentTheme(selectedHitColor));
-
     }
 }

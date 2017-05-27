@@ -28,4 +28,6 @@ public final class DrawService {
         );
         return g2;
     }
+
+    private DrawService() {}
 }

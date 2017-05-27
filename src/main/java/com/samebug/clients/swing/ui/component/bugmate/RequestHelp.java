@@ -15,14 +15,15 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
-import com.samebug.clients.common.api.form.FieldError;
+import com.samebug.clients.common.tracking.Funnels;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
+import com.samebug.clients.swing.tracking.TrackingKeys;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.List;
 
 public final class RequestHelp extends JComponent implements IAskForHelp {
     final Model model;
@@ -31,6 +32,7 @@ public final class RequestHelp extends JComponent implements IAskForHelp {
     private RequestHelpScreen tipScreen;
 
     public RequestHelp(Model model) {
+        DataService.putData(this, TrackingKeys.HelpRequestTransaction, Funnels.newTransactionId());
         this.model = model;
         setLayout(new MigLayout("fillx", "0[fill]0", "0[fill]0"));
         changeToClosedState();
@@ -43,9 +45,9 @@ public final class RequestHelp extends JComponent implements IAskForHelp {
     }
 
     @Override
-    public void failRequestTip(List<FieldError> errors) throws FormMismatchException {
+    public void failRequestTip(@Nullable final BadRequest errors) {
         if (tipScreen != null) {
-            tipScreen.setFormErrors(errors);
+            if (errors != null) tipScreen.setFormErrors(errors);
             tipScreen.sendButton.revertFromLoadingAnimation();
         }
     }

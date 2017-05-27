@@ -15,19 +15,19 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.common.api.entities.search.SearchDetails;
+import com.samebug.clients.http.entities.search.Search;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class SearchStore {
-    final Map<Integer, SearchDetails> searches;
+    final Map<Integer, Search> searches;
 
     public SearchStore() {
-        this.searches = new ConcurrentHashMap<Integer, SearchDetails>();
+        this.searches = new ConcurrentHashMap<Integer, Search>();
     }
 
-    public SearchDetails get(int searchId) {
+    public Search get(int searchId) {
         return searches.get(searchId);
     }
 }

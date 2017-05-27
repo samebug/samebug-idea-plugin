@@ -15,6 +15,7 @@
  */
 package com.samebug.clients.swing.ui.modules;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -22,7 +23,7 @@ import java.awt.*;
 
 public final class DataService {
     public static final Key<Integer> SolutionId = new Key<Integer>("SolutionId");
-    public static final Key<Integer> WebHitIndex = new Key<Integer>("WebHitIndex");
+
 
     @SuppressWarnings("unchecked")
     @Nullable
@@ -35,7 +36,15 @@ public final class DataService {
         return null;
     }
 
-    public static <T> void putData(JComponent component, Key<T> key, T data) {
+    @SuppressWarnings("unchecked")
+    @Nullable
+    public static <T> T getComponentData(@NotNull JComponent component, @NotNull Key<T> key) {
+        Object data = component.getClientProperty(key.name);
+        if (data != null) return (T) data;
+        else return null;
+    }
+
+    public static <T> void putData(@NotNull JComponent component, @NotNull Key<T> key, @Nullable T data) {
         component.putClientProperty(key.name, data);
     }
 
@@ -46,4 +55,6 @@ public final class DataService {
             this.name = "samebug." + name;
         }
     }
+
+    private DataService() {}
 }

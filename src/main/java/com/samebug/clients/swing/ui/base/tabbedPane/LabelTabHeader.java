@@ -15,7 +15,9 @@
  */
 package com.samebug.clients.swing.ui.base.tabbedPane;
 
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import net.miginfocom.swing.MigLayout;
 
@@ -23,6 +25,7 @@ public class LabelTabHeader extends SamebugTabHeader {
     protected final SamebugLabel tabLabel;
 
     public LabelTabHeader(String tabName) {
+        DataService.putData(this, TrackingKeys.Label, tabName);
         tabLabel = new SamebugLabel(tabName, FontService.demi(16));
 
         setLayout(new MigLayout("", "0[]0", "0[20px, fill]0"));

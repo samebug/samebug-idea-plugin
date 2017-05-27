@@ -21,27 +21,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-abstract class FadeAnimation extends ComponentAnimation {
+abstract class FadeAnimation extends PaintableAnimation {
     protected final JComponent myComponent;
-    protected BufferedImage myComponentImage;
     private final boolean myFadeIn;
     protected double myRatio = 0;
 
-    public FadeAnimation(JComponent component, int totalFrames, boolean fadeIn) {
+    FadeAnimation(JComponent component, int totalFrames, boolean fadeIn) {
         super(totalFrames);
         myComponent = component;
         myFadeIn = fadeIn;
-        runBeforeStart(new Runnable() {
-            @Override
-            public void run() {
-                // TODO does this work properly on Retina?
-                // in the intellij code they used  myComponentImage = UIUtil.createImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                myComponentImage = new BufferedImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                Graphics2D graphics = myComponentImage.createGraphics();
-                myComponent.paint(graphics);
-                graphics.dispose();
-            }
-        });
     }
 
     @Override
@@ -53,10 +41,16 @@ abstract class FadeAnimation extends ComponentAnimation {
         double linearProgress = Math.max(0, Math.min(1, (double) frame / myTotalFrames));
         if (!myFadeIn) linearProgress = 1 - linearProgress;
         myRatio = (1 - Math.cos(Math.PI * linearProgress)) / 2;
+        myComponent.repaint();
     }
 
     @Override
     public final void doPaint(Graphics g) {
+        BufferedImage myComponentImage = new BufferedImage(myComponent.getWidth(), myComponent.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = myComponentImage.createGraphics();
+        ((IAnimatedComponent) myComponent).paintOriginalComponent(graphics);
+        graphics.dispose();
+
         Graphics2D g2 = DrawService.init(g);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) myRatio));
         g2.drawImage(myComponentImage, 0, 0, myComponent.getWidth(), myComponent.getHeight(), myComponent);

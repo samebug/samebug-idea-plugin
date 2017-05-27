@@ -15,20 +15,17 @@
  */
 package com.samebug.clients.swing.ui.component.authentication;
 
-import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.ui.component.authentication.IAnonymousUseForm;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.MessageService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 
 public class AnonymousUseForm extends JComponent implements IAnonymousUseForm {
     final SamebugButton useAnonymously;
@@ -45,7 +42,7 @@ public class AnonymousUseForm extends JComponent implements IAnonymousUseForm {
     }
 
     @Override
-    public void failPost(List<FieldError> errors) throws FormMismatchException {
+    public void failPost() {
         useAnonymously.revertFromLoadingAnimation();
     }
 
@@ -59,14 +56,12 @@ public class AnonymousUseForm extends JComponent implements IAnonymousUseForm {
         {
             setFilled(false);
             setText(MessageService.message("samebug.component.authentication.anonymousUse"));
+            DataService.putData(this, TrackingKeys.Label, getText());
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (isEnabled()) {
                         getListener().useAnonymously(AnonymousUseForm.this);
-                        String parentName = AnonymousUseForm.this.getParent().getName();
-                        String dialogType = parentName.contains("LogIn") ? "SignIn" : "SignUp";
-                        TrackingService.trace(Events.registrationSend("anonymous", dialogType));
                     }
                 }
             });

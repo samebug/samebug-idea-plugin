@@ -25,6 +25,8 @@ public interface IWebHit {
         public final String title;
         public final URL url;
         public final int solutionId;
+        public final Integer solutionMatchLevel;
+        public final String documentId;
         public final Date createdAt;
         public final String createdBy;
         @Nullable
@@ -32,14 +34,18 @@ public interface IWebHit {
         public final String sourceIcon;
         public final IMarkButton.Model mark;
 
+
         public Model(Model rhs) {
-            this(rhs.title, rhs.url, rhs.solutionId, rhs.createdAt, rhs.createdBy, rhs.sourceName, rhs.sourceIcon, rhs.mark);
+            this(rhs.title, rhs.url, rhs.solutionId, rhs.solutionMatchLevel, rhs.documentId, rhs.createdAt, rhs.createdBy, rhs.sourceName, rhs.sourceIcon, rhs.mark);
         }
 
-        public Model(String title, URL url, int solutionId, Date createdAt, String createdBy, @Nullable String sourceName, String sourceIcon, IMarkButton.Model mark) {
+        public Model(String title, URL url, int solutionId, Integer solutionMatchLevel, String documentId, Date createdAt, String createdBy,
+                     @Nullable String sourceName, String sourceIcon, IMarkButton.Model mark) {
             this.title = title;
             this.url = url;
             this.solutionId = solutionId;
+            this.solutionMatchLevel = solutionMatchLevel;
+            this.documentId = documentId;
             this.createdAt = createdAt;
             this.createdBy = createdBy;
             this.sourceName = sourceName;

@@ -15,20 +15,18 @@
  */
 package com.samebug.clients.swing.ui.component.authentication;
 
-import com.samebug.clients.common.api.form.FieldError;
-import com.samebug.clients.common.api.form.LogIn;
+import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
-import com.samebug.clients.common.ui.component.form.ErrorCodeMismatchException;
-import com.samebug.clients.common.ui.component.form.FieldNameMismatchException;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.MessageService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -36,12 +34,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class LogInForm extends JComponent implements ILogInForm {
-    final FormField email;
-    final PasswordFormField password;
+    private static final Logger LOGGER = Logger.getInstance(LogInForm.class);
+    final FormField<BadRequest.Email> email;
+    final PasswordFormField<BadRequest.Password> password;
     final SamebugButton logIn;
     final LinkLabel forgotPassword;
 
@@ -62,7 +59,7 @@ public final class LogInForm extends JComponent implements ILogInForm {
             public void mouseClicked(MouseEvent e) {
                 if (forgotPassword.isEnabled()) {
                     getListener().forgotPassword(LogInForm.this);
-                    TrackingService.trace(Events.registrationForgottenPasswordClicked());
+                    TrackingService.trace(SwingRawEvent.buttonClick(LogInForm.this));
                 }
             }
         });
@@ -83,24 +80,10 @@ public final class LogInForm extends JComponent implements ILogInForm {
     }
 
     @Override
-    public void failPost(List<FieldError> errors) throws FormMismatchException {
+    public void failPost(BadRequest errors) {
         logIn.revertFromLoadingAnimation();
-
-        List<FieldError> mismatched = new ArrayList<FieldError>();
-        for (FieldError f : errors) {
-            try {
-                if (f.key.equals(LogIn.EMAIL)) email.setFormError(f.code);
-                else if (f.key.equals(LogIn.PASSWORD)) password.setFormError(f.code);
-                else throw new FieldNameMismatchException(f.key);
-            } catch (ErrorCodeMismatchException e) {
-                mismatched.add(f);
-            } catch (FieldNameMismatchException e) {
-                mismatched.add(f);
-            }
-        }
-        if (!mismatched.isEmpty()) throw new FormMismatchException(mismatched);
-
-        TrackingService.trace(Events.registrationError("SignIn", errors));
+        if (errors.email != null) email.setFormError(errors.email);
+        if (errors.password != null) password.setFormError(errors.password);
     }
 
     @Override
@@ -111,33 +94,39 @@ public final class LogInForm extends JComponent implements ILogInForm {
 
     private void sendForm() {
         getListener().logIn(LogInForm.this, email.getText(), password.getText());
-        TrackingService.trace(Events.registrationSend("credentials", "SignIn"));
     }
 
-    final class EmailField extends FormField {
-        public EmailField() {
+    final class EmailField extends FormField<ILogInForm.BadRequest.Email> {
+        EmailField() {
             super(MessageService.message("samebug.component.authentication.email"));
         }
 
         @Override
-        protected void updateErrorLabel(SamebugMultilineLabel errorLabel, String errorCode) throws ErrorCodeMismatchException {
-            if (errorCode.equals(LogIn.E_UNKNOWN_CREDENTIALS)) errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.email.unknown"));
-            else if (errorCode.equals(LogIn.E_EMAIL_INVALID)) errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.email.invalid"));
-            else if (errorCode.equals(LogIn.E_EMAIL_LONG)) errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.email.long"));
-            else throw new ErrorCodeMismatchException(errorCode);
+        protected void updateErrorLabel(SamebugMultilineLabel errorLabel, ILogInForm.BadRequest.Email errorCode) {
+            switch (errorCode) {
+                case UNKNOWN_CREDENTIALS:
+                    errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.email.unknown"));
+                    break;
+                default:
+                    LOGGER.warn("Unhandled error code " + errorCode);
+            }
         }
     }
 
-    final class PasswordField extends PasswordFormField {
-        public PasswordField() {
+    final class PasswordField extends PasswordFormField<ILogInForm.BadRequest.Password> {
+        PasswordField() {
             super(MessageService.message("samebug.component.authentication.password"));
         }
 
         @Override
-        protected void updateErrorLabel(SamebugMultilineLabel errorLabel, String errorCode) throws ErrorCodeMismatchException {
-            if (errorCode.equals(LogIn.E_UNKNOWN_CREDENTIALS)) errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.password.unknown"));
-            else if (errorCode.equals(LogIn.E_EMPTY_PASSWORD)) errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.password.empty"));
-            else throw new ErrorCodeMismatchException(errorCode);
+        protected void updateErrorLabel(SamebugMultilineLabel errorLabel, ILogInForm.BadRequest.Password errorCode) {
+            switch (errorCode) {
+                case UNKNOWN_CREDENTIALS:
+                    errorLabel.setText(MessageService.message("samebug.component.authentication.logIn.error.password.unknown"));
+                    break;
+                default:
+                    LOGGER.warn("Unhandled error code " + errorCode);
+            }
         }
     }
 
@@ -145,6 +134,7 @@ public final class LogInForm extends JComponent implements ILogInForm {
         {
             setFilled(true);
             setText(MessageService.message("samebug.component.authentication.logIn"));
+            DataService.putData(this, TrackingKeys.Label, getText());
         }
     }
 
@@ -152,6 +142,7 @@ public final class LogInForm extends JComponent implements ILogInForm {
         {
             setText(MessageService.message("samebug.component.authentication.forgotPassword"));
             setFont(FontService.demi(14));
+            DataService.putData(this, TrackingKeys.Label, getText());
         }
     }
 

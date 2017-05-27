@@ -15,72 +15,64 @@
  */
 package com.samebug.clients.idea.ui.controller.form;
 
-import com.samebug.clients.common.api.client.RestError;
-import com.samebug.clients.common.api.entities.solution.RestHit;
-import com.samebug.clients.common.api.entities.solution.Tip;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.api.form.CreateTip;
-import com.samebug.clients.common.api.form.FieldError;
+import com.intellij.openapi.diagnostic.Logger;
 import com.samebug.clients.common.services.SolutionService;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
-import com.samebug.clients.common.ui.frame.IFrame;
+import com.samebug.clients.http.entities.search.NewSearchHit;
+import com.samebug.clients.http.entities.search.SearchHit;
+import com.samebug.clients.http.entities.solution.SamebugTip;
+import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.form.TipCreate;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.swing.ui.modules.MessageService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+public abstract class CreateTipFormHandler extends PostFormHandler<SearchHit<SamebugTip>, TipCreate.BadRequest> {
+    private static final Logger LOGGER = Logger.getInstance(CreateTipFormHandler.class);
 
-public abstract class CreateTipFormHandler extends PostFormHandler<RestHit<Tip>> {
-    final IFrame frame;
-    final IHelpOthersCTA form;
-    final CreateTip data;
+    @NotNull
+    final NewSearchHit data;
+    @NotNull
+    final Integer searchId;
 
-    public CreateTipFormHandler(IFrame frame, IHelpOthersCTA form, CreateTip data) {
-        this.frame = frame;
-        this.form = form;
+    public CreateTipFormHandler(@NotNull final NewSearchHit data, @NotNull final Integer searchId) {
         this.data = data;
+        this.searchId = searchId;
     }
 
+    @NotNull
     @Override
-    protected void beforePostForm() {
-        form.startPostTip();
-    }
-
-    @Override
-    protected RestHit<Tip> postForm() throws SamebugClientException {
+    protected final SearchHit<SamebugTip> postForm() throws SamebugClientException, TipCreate.BadRequest {
         final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
-        return solutionService.postTip(data.searchId, data.body, data.sourceUrl, data.helpRequestId);
+        return solutionService.postTip(searchId, data);
     }
 
     @Override
-    protected void handleFieldError(FieldError fieldError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleFieldError(fieldError, globalErrors, fieldErrors);
-        if (CreateTip.BODY.equals(fieldError.key)) fieldErrors.add(fieldError);
-        else globalErrors.add(MessageService.message("samebug.error.pluginBug"));
+    protected final void handleBadRequest(@NotNull final TipCreate.BadRequest fieldErrors) {
+        IHelpOthersCTA.BadRequest.TipBody tipBody = null;
+        IHelpOthersCTA.BadRequest.SourceUrl sourceUrl = null;
+        for (TipCreate.ErrorCode errorCode : fieldErrors.errorList.getErrorCodes()) {
+            switch (errorCode) {
+                case MESSAGE_TOO_SHORT:
+                    tipBody = IHelpOthersCTA.BadRequest.TipBody.TOO_SHORT;
+                    break;
+                case MESSAGE_TOO_LONG:
+                    tipBody = IHelpOthersCTA.BadRequest.TipBody.TOO_LONG;
+                    break;
+                case UNREACHABLE_SOURCE:
+                    sourceUrl = IHelpOthersCTA.BadRequest.SourceUrl.UNREACHABLE;
+                    break;
+                case UNRECOGNIZED_SOURCE:
+                    sourceUrl = IHelpOthersCTA.BadRequest.SourceUrl.UNRECOGNIZED;
+                    break;
+                default:
+                    LOGGER.warn("Unhandled error code " + errorCode);
+            }
+        }
+        IHelpOthersCTA.BadRequest error = new IHelpOthersCTA.BadRequest(tipBody, sourceUrl);
+        handleBadRequestUI(error);
     }
 
-    @Override
-    protected void handleNonFormBadRequests(RestError nonFormError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleNonFormBadRequests(nonFormError, globalErrors, fieldErrors);
-        if (nonFormError.code.equals(CreateTip.E_TOO_SHORT)) fieldErrors.add(new FieldError(CreateTip.BODY, CreateTip.E_TOO_SHORT));
-        else if (nonFormError.code.equals(CreateTip.E_TOO_LONG)) fieldErrors.add(new FieldError(CreateTip.BODY, CreateTip.E_TOO_LONG));
-        else globalErrors.add(MessageService.message("samebug.component.tip.write.error.badRequest"));
-    }
+    protected abstract void handleBadRequestUI(@Nullable IHelpOthersCTA.BadRequest errors);
 
-    @Override
-    protected void handleOtherClientExceptions(SamebugClientException exception, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleOtherClientExceptions(exception, globalErrors, fieldErrors);
-        globalErrors.add(MessageService.message("samebug.component.tip.write.error.unhandled"));
-    }
-
-    @Override
-    protected void showFieldErrors(List<FieldError> fieldErrors) throws FormMismatchException {
-        form.failPostTipWithFormError(fieldErrors);
-    }
-
-    @Override
-    protected void showGlobalErrors(List<String> globalErrors) {
-        // TODO showing more errors?
-        if (!globalErrors.isEmpty()) frame.popupError(globalErrors.get(0));
-    }
 }

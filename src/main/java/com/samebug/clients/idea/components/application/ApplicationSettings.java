@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.idea.components.application;
 
-import com.samebug.clients.common.api.client.Config;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -36,17 +35,19 @@ public class ApplicationSettings {
     public int connectTimeout = defaultConnectTimeout;
     public int requestTimeout = defaultRequestTimeout;
     public boolean isApacheLoggingEnabled = defaultIsApacheLoggingEnabled;
+    public boolean isJsonDebugEnabled = defaultIsJsonDebugEnabled;
     public boolean isToolwindowDefaultModeOverridden = defaultIsToolwindowDefaultModeOverridden;
 
     //=========================================================================
 
     public static final Integer defaultWorkspaceId = null;
     public static final String defaultServerRoot = "https://samebug.io";
-    public static final String defaultTrackingRoot = defaultServerRoot + "/track/trace";
+    public static final String defaultTrackingRoot = defaultServerRoot + "/tracking/trace";
     public static final boolean defaultIsTrackingEnabled = true;
     public static final int defaultConnectTimeout = 5000;
     public static final int defaultRequestTimeout = 10000;
     public static final boolean defaultIsApacheLoggingEnabled = false;
+    public static final boolean defaultIsJsonDebugEnabled = false;
     public static final boolean defaultIsToolwindowDefaultModeOverridden = false;
 
     public ApplicationSettings() {
@@ -63,6 +64,7 @@ public class ApplicationSettings {
         this.connectTimeout = rhs.connectTimeout;
         this.requestTimeout = rhs.requestTimeout;
         this.isApacheLoggingEnabled = rhs.isApacheLoggingEnabled;
+        this.isJsonDebugEnabled = rhs.isJsonDebugEnabled;
         this.isToolwindowDefaultModeOverridden = rhs.isToolwindowDefaultModeOverridden;
     }
 
@@ -88,20 +90,8 @@ public class ApplicationSettings {
                     && rhs.connectTimeout == connectTimeout
                     && rhs.requestTimeout == requestTimeout
                     && rhs.isApacheLoggingEnabled == isApacheLoggingEnabled
+                    && rhs.isJsonDebugEnabled == isJsonDebugEnabled
                     && rhs.isToolwindowDefaultModeOverridden == isToolwindowDefaultModeOverridden;
         }
-    }
-
-    public Config getNetworkConfig() {
-        final Config config = new Config();
-        config.apiKey = apiKey;
-        config.workspaceId = workspaceId;
-        config.serverRoot = serverRoot;
-        config.trackingRoot = trackingRoot;
-        config.isTrackingEnabled = isTrackingEnabled;
-        config.connectTimeout = connectTimeout;
-        config.requestTimeout = requestTimeout;
-        config.isApacheLoggingEnabled = isApacheLoggingEnabled;
-        return config;
     }
 }

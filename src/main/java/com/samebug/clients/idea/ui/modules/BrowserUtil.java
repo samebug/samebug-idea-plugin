@@ -15,15 +15,19 @@
  */
 package com.samebug.clients.idea.ui.modules;
 
-import com.samebug.clients.idea.tracking.Events;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.URI;
 import java.net.URL;
 
-final public class BrowserUtil {
+public final class BrowserUtil {
+    public static void browse(@NotNull URI uri) {
+        com.intellij.ide.BrowserUtil.browse(uri);
+    }
+
     public static void browse(@NotNull URL url) {
-        TrackingService.trace(Events.linkClick(url));
         com.intellij.ide.BrowserUtil.browse(url);
     }
+
+    private BrowserUtil() {}
 }

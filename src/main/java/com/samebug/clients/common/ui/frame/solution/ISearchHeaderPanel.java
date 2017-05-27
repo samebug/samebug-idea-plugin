@@ -29,6 +29,6 @@ public interface ISearchHeaderPanel {
     }
 
     interface Listener {
-        void titleClicked();
+        void titleClicked(ISearchHeaderPanel source);
     }
 }

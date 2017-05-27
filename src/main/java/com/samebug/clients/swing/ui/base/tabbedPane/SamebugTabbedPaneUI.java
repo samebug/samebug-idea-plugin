@@ -24,9 +24,9 @@ public class SamebugTabbedPaneUI extends BasicTabbedPaneUI {
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        tabInsets = new Insets(0, 0, 0, 0);
+        tabInsets = new Insets(10, 0, 10, 0);
         selectedTabPadInsets = new Insets(0, 0, 0, 0);
-        tabAreaInsets = new Insets(0, 20, 20, 0);
+        tabAreaInsets = new Insets(0, 20, 10, 0);
         contentBorderInsets = new Insets(0, 0, 0, 0);
     }
 
@@ -44,11 +44,12 @@ public class SamebugTabbedPaneUI extends BasicTabbedPaneUI {
 
     @Override
     protected void paintTabBorder(Graphics g, int tabPlacement, int tabIndex, int x, int y, int w, int h, boolean isSelected) {
-        // Override as our border is a simple line between tabs
-        // This is implemented as a line at the left side for each tabs except the first one.
-        if (tabIndex > 0) {
-            g.setColor(ColorService.forCurrentTheme(ColorService.Separator));
-            g.drawLine(x, y, x, y + h);
+        // we highlight the selected tab by boxing it from the left, top and right side.
+        g.setColor(ColorService.forCurrentTheme(ColorService.Separator));
+        if (isSelected) {
+            g.drawLine(x, y + h - 1, x, y);
+            g.drawLine(x, y, x + w - 1, y);
+            g.drawLine(x + w - 1, y, x + w - 1, y + h - 1);
         }
     }
 
@@ -73,6 +74,30 @@ public class SamebugTabbedPaneUI extends BasicTabbedPaneUI {
 
     @Override
     protected void paintContentBorder(Graphics g, int tabPlacement, int selectedIndex) {
+        int width = tabPane.getWidth();
+        int height = tabPane.getHeight();
+        Insets insets = tabPane.getInsets();
+
+        int x = insets.left;
+        int y = insets.top;
+        int w = width - insets.right - insets.left;
+        y += calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight);
+
+        int startX = x + tabAreaInsets.left;
+        int endX = x + w - tabAreaInsets.right - 1;
+        int separatorY = y - tabAreaInsets.bottom;
+
+
+        // Fill region behind content area
+//        g.fillRect(x,y,w,h);
+
+        // We want to draw a line under the tab area, excluding the selected tab.
+        Rectangle r = new Rectangle();
+        getTabBounds(selectedIndex, r);
+        g.setColor(ColorService.forCurrentTheme(ColorService.Separator));
+        if (startX < r.x) g.drawLine(startX, separatorY, r.x, separatorY);
+        if (r.x + r.width < endX) g.drawLine(r.x + r.width, separatorY, endX, separatorY);
+
     }
 
     // This is overridden to make sure that the tabs will not scroll

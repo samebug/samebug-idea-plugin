@@ -17,13 +17,17 @@ package com.samebug.clients.idea.ui.controller.authentication;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
+import com.samebug.clients.common.tracking.Locations;
 import com.samebug.clients.common.ui.component.authentication.IAnonymousUseForm;
 import com.samebug.clients.common.ui.component.authentication.ILogInForm;
 import com.samebug.clients.common.ui.component.authentication.ISignUpForm;
 import com.samebug.clients.common.ui.frame.authentication.IAuthenticationFrame;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.toolwindow.ToolWindowController;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.frame.authentication.AuthenticationFrame;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 
 import javax.swing.*;
@@ -35,13 +39,16 @@ public final class AuthenticationController extends BaseFrameController<IAuthent
 
     public AuthenticationController(ToolWindowController twc, Project project) {
         super(twc, project, new AuthenticationFrame());
-
         JComponent frame = (JComponent) view;
+        DataService.putData(frame, TrackingKeys.Location, new Locations.Authentication());
+        DataService.putData(frame, TrackingKeys.PageViewId, TrackingService.newPageViewId());
+
         signUpListener = new SignUpListener(this);
         ListenerService.putListenerToComponent(frame, ISignUpForm.Listener.class, signUpListener);
         logInListener = new LogInListener(this);
         ListenerService.putListenerToComponent(frame, ILogInForm.Listener.class, logInListener);
         anonymousUseListener = new AnonymousUseListener(this);
         ListenerService.putListenerToComponent(frame, IAnonymousUseForm.Listener.class, anonymousUseListener);
+
     }
 }

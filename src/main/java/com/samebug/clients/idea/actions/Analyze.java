@@ -17,12 +17,19 @@ package com.samebug.clients.idea.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.project.DumbAware;
+import com.samebug.clients.common.tracking.Funnels;
+import com.samebug.clients.common.tracking.Hooks;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.idea.ui.dialog.analyze.AnalyzeDialog;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
 
-public class Analyze extends AnAction {
+public class Analyze extends AnAction implements DumbAware {
     @Override
     public void actionPerformed(AnActionEvent e) {
-        AnalyzeDialog dialog = new AnalyzeDialog(e.getProject());
+        final String transactionId = Funnels.newTransactionId();
+        TrackingService.trace(SwingRawEvent.searchHookTrigger(transactionId, Hooks.Search.MENU));
+        AnalyzeDialog dialog = new AnalyzeDialog(e.getProject(), transactionId);
         dialog.show();
     }
 }

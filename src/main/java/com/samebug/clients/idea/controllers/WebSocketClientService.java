@@ -18,13 +18,11 @@ package com.samebug.clients.idea.controllers;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.samebug.clients.common.api.client.Config;
-import com.samebug.clients.common.api.entities.helpRequest.IncomingTip;
-import com.samebug.clients.common.api.entities.helpRequest.MatchingHelpRequest;
-import com.samebug.clients.common.api.websocket.NotificationHandler;
-import com.samebug.clients.common.api.websocket.SamebugNotificationWatcher;
-import com.samebug.clients.common.api.websocket.WebSocketClient;
-import com.samebug.clients.common.api.websocket.WebSocketConfig;
+import com.samebug.clients.http.client.Config;
+import com.samebug.clients.http.websocket.WebSocketClient;
+import com.samebug.clients.http.websocket.WebSocketConfig;
+import com.samebug.clients.http.websocket.WebSocketEventHandler;
+import com.samebug.clients.idea.components.application.IdeaWebSocketEventHandler;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.handler.ssl.SslContextBuilder;
@@ -32,16 +30,12 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.ide.PooledThreadExecutor;
 
 import javax.net.ssl.SSLException;
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public final class WebSocketClientService implements Disposable {
-    final static Logger LOGGER = Logger.getInstance(WebSocketClientService.class);
-    final static long MinimalConnectBackoff = 10000L;
+    static final Logger LOGGER = Logger.getInstance(WebSocketClientService.class);
+    static final long MinimalConnectBackoff = 10000L;
 
     final NotificationController notificationController;
     final AtomicReference<WebSocketClient> client;
@@ -58,32 +52,8 @@ public final class WebSocketClientService implements Disposable {
     }
 
     public void configure(final Config config) {
-        try {
-            Map<String, Object> authHeaders = new HashMap<String, Object>();
-            if (config.apiKey != null) authHeaders.put("X-Samebug-ApiKey", config.apiKey);
-            if (config.workspaceId != null) authHeaders.put("X-Samebug-WorkspaceId", config.workspaceId);
-            URI serverUri = URI.create(config.serverRoot);
-            String host = serverUri.getHost();
-            int port = serverUri.getPort();
-            String scheme = serverUri.getScheme().endsWith("s") ? "wss" : "ws";
-            URI endpointUri = new URI(scheme, null, host, port, "/socket/notifications/websocket", null, null);
-            final SamebugNotificationWatcher eventHandler = new SamebugNotificationWatcher(new NotificationHandler() {
-                @Override
-                public void helpRequestReceived(MatchingHelpRequest helpRequestNotification) {
-                    notificationController.incomingHelpRequest(helpRequestNotification.helpRequest);
-                }
-
-                @Override
-                public void tipReceived(IncomingTip tipNotification) {
-                    // TODO
-                }
-            });
-
-            this.wsConfig = new WebSocketConfig(endpointUri, authHeaders, eventHandler, group);
-        } catch (URISyntaxException e) {
-            LOGGER.warn("Failed to configure websocket client", e);
-            this.wsConfig = null;
-        }
+        final WebSocketEventHandler eventHandler = new IdeaWebSocketEventHandler(notificationController);
+        this.wsConfig = new WebSocketConfig(URI.create(config.serverRoot), config.apiKey, config.workspaceId, eventHandler, group);
         checkConnectionAndConnectOnBackgroundThreadIfNecessary();
     }
 
@@ -94,7 +64,9 @@ public final class WebSocketClientService implements Disposable {
         if (currentClient != null && currentClient.isOpen()) return;
         if (wsConfig == null) return;
         if (System.currentTimeMillis() < timestampOfLastConnect + MinimalConnectBackoff) return;
+        if (ApplicationManager.getApplication().isDisposeInProgress()) return;
 
+        LOGGER.info("Connecting websocket client");
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
@@ -102,13 +74,18 @@ public final class WebSocketClientService implements Disposable {
                     timestampOfLastConnect = System.currentTimeMillis();
                     WebSocketClient c = WebSocketClientFactory.create(wsConfig);
                     client.set(c);
-                    LOGGER.info("Successfully configured websocket client");
+                    LOGGER.info("Successfully connected websocket client");
                 } catch (Exception e) {
                     client.set(null);
-                    LOGGER.warn("Failed to configure websocket client", e);
+                    LOGGER.warn("Failed to connect websocket client", e);
                 }
             }
         });
+    }
+
+    public boolean isConnected() {
+        WebSocketClient currentClient = client.get();
+        return currentClient != null && currentClient.isOpen();
     }
 
     @Override
@@ -117,14 +94,12 @@ public final class WebSocketClientService implements Disposable {
         if (c != null) {
             try {
                 c.close();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 LOGGER.warn("Error on closing websocket", e);
             }
         }
-        if (wsConfig != null) {
-            // TODO do we want to handle this future?
-            wsConfig.group.shutdownGracefully();
-        }
+        // NOTE: this service is a singleton, this shutdown happens when exiting IDEA
+        group.shutdownGracefully();
     }
 }
 
@@ -138,11 +113,18 @@ final class WebSocketClientFactory {
             canWeUseWebsocket = false;
         }
         if (canWeUseWebsocket) {
-            return new WebSocketClient(config);
+            try {
+                return new WebSocketClient(config);
+            } catch (Exception e) {
+                WebSocketClientService.LOGGER.warn("Failed to create websocket client", e);
+                return null;
+            }
         } else {
             WebSocketClientService.LOGGER.warn("This intellij version does not have a websocket-compatible netty version");
             return null;
         }
     }
+
+    private WebSocketClientFactory() {}
 }
 

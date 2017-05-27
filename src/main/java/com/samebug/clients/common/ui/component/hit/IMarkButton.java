@@ -23,6 +23,8 @@ public interface IMarkButton {
 
     void interruptLoading();
 
+    Model getModel();
+
     void update(Model model);
 
     final class Model {

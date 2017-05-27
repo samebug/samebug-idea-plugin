@@ -33,10 +33,10 @@ public abstract class ControllableAnimation {
         myTotalFrames = totalFrames;
         myCurrentFrame = -1;
         myState = State.INITIALIZED;
-        runAfterStart = new ArrayList<Runnable>();
-        runBeforeStart = new ArrayList<Runnable>();
-        runAfterFinish = new ArrayList<Runnable>();
-        runBeforeFinish = new ArrayList<Runnable>();
+        runAfterStart = new ArrayList<Runnable>(0);
+        runBeforeStart = new ArrayList<Runnable>(4);
+        runAfterFinish = new ArrayList<Runnable>(0);
+        runBeforeFinish = new ArrayList<Runnable>(0);
     }
 
     public final void start() {
@@ -99,11 +99,6 @@ public abstract class ControllableAnimation {
     public final void runBeforeStart(Runnable work) {
         assert !isStarted() : "Adding task to animation start when it is already in state " + myState;
         runBeforeStart.add(work);
-    }
-
-    public final void runAfterStart(Runnable work) {
-        assert !isStarted() : "Adding task to animation start when it is already in state " + myState;
-        runAfterStart.add(work);
     }
 
     protected abstract void doStart();

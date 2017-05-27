@@ -386,32 +386,48 @@
       "bugmateList": {
         "bugmateHits": [
           {
-            "userId": 1,
-            "displayName": "Petra",
-            "avatarUrl": null,
+            "user": {
+              "id": 1,
+              "displayName": "Petra",
+              "status": "ONLINE"
+            },
             "nSeen": 11,
-            "lastSeen": "2017-01-01T00:00:00"
+            "lastSeen": "2017-01-01T00:00:00",
+            "level": 0,
+            "matchingGroupId": ""
           },
           {
-            "userId": 1,
-            "displayName": "ZsoltVad",
-            "avatarUrl": null,
+            "user": {
+              "id": 1,
+              "displayName": "ZsoltVad",
+              "status": "ONLINE"
+            },
             "nSeen": 21,
-            "lastSeen": "2017-01-01T00:00:00"
+            "lastSeen": "2017-01-01T00:00:00",
+            "level": 0,
+            "matchingGroupId": ""
           },
           {
-            "userId": 1,
-            "displayName": "rp",
-            "avatarUrl": null,
+            "user": {
+              "id": 1,
+              "displayName": "rp",
+              "status": "ONLINE"
+            },
             "nSeen": 1,
-            "lastSeen": "2017-01-01T00:00:00"
+            "lastSeen": "2017-01-01T00:00:00",
+            "level": 0,
+            "matchingGroupId": ""
           },
           {
-            "userId": 1,
-            "displayName": "devidegiannico",
-            "avatarUrl": null,
+            "user": {
+              "id": 1,
+              "displayName": "devidegiannico",
+              "status": "OFFLINE"
+            },
             "nSeen": 6,
-            "lastSeen": "2016-12-01T00:00:00"
+            "lastSeen": "2016-12-01T00:00:00",
+            "level": 0,
+            "matchingGroupId": ""
           }
         ],
         "numberOfOtherBugmates": 16,
@@ -429,7 +445,8 @@
     "tips": 48,
     "thanks": 15,
     "name": "Adam",
-    "avatarUrl": null
+    "avatarUrl": null,
+    "status": "ONLINE"
   },
   "header": {
     "title": "UnsupportedDriverException: Could not instantiate class"

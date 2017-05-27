@@ -15,37 +15,52 @@
  */
 package com.samebug.clients.idea.ui.controller.solution;
 
-import com.samebug.clients.common.api.entities.solution.MarkResponse;
-import com.samebug.clients.common.api.form.CancelMark;
-import com.samebug.clients.common.api.form.CreateMark;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.http.entities.mark.Mark;
+import com.samebug.clients.http.entities.mark.NewMark;
 import com.samebug.clients.idea.ui.controller.form.CancelMarkFormHandler;
 import com.samebug.clients.idea.ui.controller.form.CreateMarkFormHandler;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
+import com.samebug.clients.swing.ui.modules.DataService;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 final class MarkButtonListener implements IMarkButton.Listener {
+    @NotNull
     final SolutionFrameController controller;
 
-    public MarkButtonListener(final SolutionFrameController controller) {
+    MarkButtonListener(@NotNull final SolutionFrameController controller) {
         this.controller = controller;
     }
 
     @Override
-    public void markClicked(final IMarkButton markButton, final Integer solutionId, final Integer markId) {
+    public void markClicked(@NotNull final IMarkButton markButton, @NotNull final Integer solutionId, @Nullable final Integer markId) {
+        final JComponent source = (JComponent) markButton;
+        final String transactionId = DataService.getData(source, TrackingKeys.SolutionTransaction);
         if (markId == null) {
 
-            new CreateMarkFormHandler(controller.view, markButton, new CreateMark(controller.searchId, solutionId)) {
+            TrackingService.trace(SwingRawEvent.markSubmit(source, transactionId));
+            new CreateMarkFormHandler(controller.view, markButton, new NewMark(solutionId), controller.searchId) {
                 @Override
-                protected void afterPostForm(MarkResponse response) {
-                    final IMarkButton.Model newModel = controller.conversionService.convertMarkResponse(response);
+                protected void afterPostForm(@NotNull Mark response) {
+                    final IMarkButton.Model oldModel = markButton.getModel();
+                    final IMarkButton.Model newModel = new IMarkButton.Model(oldModel.marks + 1, response.getId(), oldModel.userCanMark);
                     markButton.update(newModel);
+                    TrackingService.trace(SwingRawEvent.markCreate(source, transactionId, response.getId()));
                 }
             }.execute();
         } else {
-            new CancelMarkFormHandler(controller.view, markButton, new CancelMark(markId)) {
+            new CancelMarkFormHandler(controller.view, markButton, markId) {
                 @Override
-                protected void afterPostForm(MarkResponse response) {
-                    final IMarkButton.Model newModel = controller.conversionService.convertRetractedMarkResponse(response);
+                protected void afterPostForm(@NotNull Mark response) {
+                    final IMarkButton.Model oldModel = markButton.getModel();
+                    final IMarkButton.Model newModel = new IMarkButton.Model(oldModel.marks - 1, null, oldModel.userCanMark);
                     markButton.update(newModel);
+                    TrackingService.trace(SwingRawEvent.markCancel(source, transactionId, markId));
                 }
             }.execute();
         }

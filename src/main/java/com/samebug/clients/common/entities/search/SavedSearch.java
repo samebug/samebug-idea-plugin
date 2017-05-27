@@ -15,27 +15,28 @@
  */
 package com.samebug.clients.common.entities.search;
 
-import com.samebug.clients.common.api.entities.search.CreatedSearch;
+import com.samebug.clients.http.entities.jsonapi.CreatedSearchResource;
+import com.samebug.clients.http.entities.jsonapi.NewSearchMeta;
 import org.jetbrains.annotations.NotNull;
 
 public class SavedSearch implements SearchRequest {
+    @NotNull
     private final String trace;
+    @NotNull
     private final SearchInfo searchInfo;
-    private final CreatedSearch savedSearch;
+    @NotNull
+    private final CreatedSearchResource savedSearch;
 
-    public SavedSearch(SearchInfo searchInfo, String trace, CreatedSearch savedSearch) {
+    public SavedSearch(@NotNull final SearchInfo searchInfo, @NotNull final String trace, @NotNull final CreatedSearchResource savedSearch) {
         this.searchInfo = searchInfo;
         this.savedSearch = savedSearch;
-        Integer lineOffset = savedSearch.getFirstLine();
-        if (lineOffset != null) {
-            int startOffset = 0;
-            for (int line = 0; line < lineOffset; ++line) {
-                startOffset = trace.indexOf("\n", startOffset) + 1;
-            }
-            this.trace = trace.substring(startOffset);
-        } else {
-            this.trace = trace;
+        final NewSearchMeta meta = savedSearch.getMeta();
+        Integer lineOffset = meta.getFirstLine();
+        int startOffset = 0;
+        for (int line = 0; line < lineOffset; ++line) {
+            startOffset = trace.indexOf("\n", startOffset) + 1;
         }
+        this.trace = trace.substring(startOffset);
     }
 
     @Override
@@ -45,12 +46,41 @@ public class SavedSearch implements SearchRequest {
     }
 
     @Override
+    @NotNull
     public SearchInfo getSearchInfo() {
         return searchInfo;
     }
 
     @NotNull
-    public CreatedSearch getSavedSearch() {
-        return savedSearch;
+    public Integer getSearchId() {
+        return savedSearch.getData().getId();
+    }
+
+    public boolean hasTip() {
+        return savedSearch.getMeta().getHasTips();
+    }
+
+    public boolean hasHelpRequest() {
+        return savedSearch.getMeta().getHasHelpRequests();
+    }
+
+    public boolean hasBugmate() {
+        return savedSearch.getMeta().getHasBugmates();
+    }
+
+    public boolean hasWebHit() {
+        return savedSearch.getMeta().getHasExternalSolutions();
+    }
+
+    public SolutionType getSolutionType() {
+        if (hasTip()) return SolutionType.TIP;
+        else if (hasHelpRequest()) return SolutionType.HELP_REQUEST;
+        else if (hasBugmate()) return SolutionType.BUGMATE;
+        else if (hasWebHit()) return SolutionType.WEBHIT;
+        return SolutionType.NONE;
+    }
+
+    public enum SolutionType {
+        TIP, HELP_REQUEST, BUGMATE, WEBHIT, NONE
     }
 }

@@ -16,14 +16,16 @@
 package com.samebug.clients.swing.ui.base.frame;
 
 import com.samebug.clients.common.ui.frame.IFrame;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.animation.LoadingAnimation;
 import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.multiline.CenteredMultilineLabel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.IconService;
-import com.samebug.clients.swing.ui.modules.MessageService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -106,7 +108,7 @@ public abstract class BasicFrame extends ErrorBarPane implements IFrame {
     protected abstract FrameListener getListener();
 
     private final class LoadingPanel extends TransparentPanel {
-        public LoadingPanel() {
+        LoadingPanel() {
             final LoadingAnimation animation = new LoadingAnimation(40);
             final CenteredMultilineLabel label = new CenteredMultilineLabel();
             label.setText(MessageService.message("samebug.frame.loading"));
@@ -117,73 +119,84 @@ public abstract class BasicFrame extends ErrorBarPane implements IFrame {
     }
 
     private class ErrorPanel extends TransparentPanel {
-        public ErrorPanel(String description, String buttonLabel, MouseListener mouseListener) {
-            final JLabel alertImage = new JLabel(IconService.alert());
-            final CenteredMultilineLabel label = new CenteredMultilineLabel();
+        protected final JLabel alertImage;
+        protected final CenteredMultilineLabel label;
+        protected final SamebugButton reloadButton;
+
+        ErrorPanel(String description) {
+            alertImage = new JLabel(IconService.alert());
+            label = new CenteredMultilineLabel();
             label.setText(description);
-            final SamebugButton reloadButton = new SamebugButton(MessageService.message("samebug.component.error.general.button"), false);
+            reloadButton = new SamebugButton(MessageService.message("samebug.component.error.general.button"), false);
+            DataService.putData(reloadButton, TrackingKeys.Label, reloadButton.getText());
             final MouseListener reloadAction = new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     getListener().reload();
-                    TrackingService.trace(Events.recoveryReload());
+                    TrackingService.trace(SwingRawEvent.buttonClick(reloadButton));
                 }
             };
             reloadButton.addMouseListener(reloadAction);
+        }
+    }
 
-            // TODO this is a bit hackish...
-            if (buttonLabel != null && mouseListener != null) {
-                final SamebugButton alternativeButton = new SamebugButton(buttonLabel, false);
-                alternativeButton.addMouseListener(mouseListener);
-                setLayout(new MigLayout("fillx", "0[]0", "0:push[]30px[]30px[]30px[]0:push"));
-                add(alternativeButton, "cell 0 2, al center");
-                add(reloadButton, "cell 0 3, al center");
-            } else {
-                setLayout(new MigLayout("fillx", "0[]0", "0:push[]30px[]30px[]0:push"));
-                add(reloadButton, "cell 0 2, al center");
-            }
+    private final class ConnectionErrorPanel extends ErrorPanel {
+        ConnectionErrorPanel() {
+            super(MessageService.message("samebug.component.error.connection.description"));
+            setLayout(new MigLayout("fillx", "0[]0", "0:push[]30px[]30px[]0:push"));
+            add(reloadButton, "cell 0 2, al center");
             add(alertImage, "cell 0 0, wmin 0, growx");
             add(label, "cell 0 1, wmin 0, growx");
         }
     }
 
-    private final class ConnectionErrorPanel extends ErrorPanel {
-        public ConnectionErrorPanel() {
-            super(MessageService.message("samebug.component.error.connection.description"), null, null);
-        }
-    }
-
     private final class GeneralErrorPanel extends ErrorPanel {
-        public GeneralErrorPanel() {
-            super(MessageService.message("samebug.component.error.general.description"), null, null);
+        GeneralErrorPanel() {
+            super(MessageService.message("samebug.component.error.general.description"));
+            setLayout(new MigLayout("fillx", "0[]0", "0:push[]30px[]30px[]0:push"));
+            add(reloadButton, "cell 0 2, al center");
+            add(alertImage, "cell 0 0, wmin 0, growx");
+            add(label, "cell 0 1, wmin 0, growx");
         }
     }
 
     private final class NetworkErrorPanel extends ErrorPanel {
-        public NetworkErrorPanel() {
-            super(MessageService.message("samebug.component.error.network.description"),
-                    MessageService.message("samebug.component.error.network.button"),
-                    new MouseAdapter() {
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
-                            getListener().openNetworkSettings();
-                            TrackingService.trace(Events.recoveryOpenIdeaSettings());
-                        }
-                    });
+        NetworkErrorPanel() {
+            super(MessageService.message("samebug.component.error.network.description"));
+            final SamebugButton alternativeButton = new SamebugButton(MessageService.message("samebug.component.error.network.button"), false);
+            DataService.putData(alternativeButton, TrackingKeys.Label, alternativeButton.getText());
+            alternativeButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    getListener().openNetworkSettings();
+                    TrackingService.trace(SwingRawEvent.buttonClick(alternativeButton));
+                }
+            });
+            setLayout(new MigLayout("fillx", "0[]0", "0:push[]30px[]30px[]30px[]0:push"));
+            add(alternativeButton, "cell 0 2, al center");
+            add(reloadButton, "cell 0 3, al center");
+            add(alertImage, "cell 0 0, wmin 0, growx");
+            add(label, "cell 0 1, wmin 0, growx");
         }
     }
 
     private final class AuthenticationErrorPanel extends ErrorPanel {
-        public AuthenticationErrorPanel() {
-            super(MessageService.message("samebug.component.error.authentication.description"),
-                    MessageService.message("samebug.component.error.authentication.button"),
-                    new MouseAdapter() {
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
-                            getListener().openSamebugSettings();
-                            TrackingService.trace(Events.recoveryOpenSamebugSettings());
-                        }
-                    });
+        AuthenticationErrorPanel() {
+            super(MessageService.message("samebug.component.error.authentication.description"));
+            final SamebugButton alternativeButton = new SamebugButton(MessageService.message("samebug.component.error.authentication.button"), false);
+            DataService.putData(alternativeButton, TrackingKeys.Label, alternativeButton.getText());
+            alternativeButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    getListener().openSamebugSettings();
+                    TrackingService.trace(SwingRawEvent.buttonClick(alternativeButton));
+                }
+            });
+            setLayout(new MigLayout("fillx", "0[]0", "0:push[]30px[]30px[]30px[]0:push"));
+            add(alternativeButton, "cell 0 2, al center");
+            add(reloadButton, "cell 0 3, al center");
+            add(alertImage, "cell 0 0, wmin 0, growx");
+            add(label, "cell 0 1, wmin 0, growx");
         }
     }
 

@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.ui.modules;
 
 import com.intellij.AbstractBundle;
-import com.samebug.clients.swing.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.MessageService;
 
 public final class IdeaMessageService extends MessageService {
     private static final MessageBundle BUNDLE = new MessageBundle();

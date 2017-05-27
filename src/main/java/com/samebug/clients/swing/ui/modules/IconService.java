@@ -22,9 +22,9 @@ import javax.swing.*;
 public abstract class IconService {
     protected static IconService INSTANCE;
 
-    protected final static String alertPath = "/com/samebug/images/alert.png";
-    protected final static String alertErrorBarPath = "/com/samebug/images/alertErrorBar.png";
-    protected final static String loadingPath = "/com/samebug/images/loading.gif";
+    protected static final String alertPath = "/com/samebug/images/alert.png";
+    protected static final String alertErrorBarPath = "/com/samebug/images/alertErrorBar.png";
+    protected static final String loadingPath = "/com/samebug/images/loading.gif";
 
     public static void install(IconService instance) {
         assert INSTANCE == null : "IconService has already been installed";
@@ -45,12 +45,14 @@ public abstract class IconService {
 
     protected abstract Icon getImage(String path);
 
-    public final static Icon twSamebug = IconLoader.getIcon("/com/samebug/toolwindow/samebug.png");
-    public final static Icon twBolt = IconLoader.getIcon("/com/samebug/toolwindow/bolt.png");
+    public static final Icon twSamebug = IconLoader.getIcon("/com/samebug/toolwindow/samebug.png");
+    public static final Icon twBolt = IconLoader.getIcon("/com/samebug/toolwindow/bolt.png");
 
-    public final static Icon gutterSamebug = IconLoader.getIcon("/com/samebug/icons/gutter/samebug-15x15.png");
-    public final static Icon gutterLoading = IconLoader.getIcon("/com/samebug/icons/gutter/loading.gif");
+    public static final Icon gutterLoading = IconLoader.getIcon("/com/samebug/icons/gutter/loading.gif");
+    public static final Icon gutterSamebug = IconLoader.getIcon("/com/samebug/icons/gutter/samebug-15x15.png");
+    public static final Icon gutterTip = IconLoader.getIcon("/com/samebug/icons/gutter/tip.png");
+    public static final Icon gutterHelpRequest = IconLoader.getIcon("/com/samebug/icons/gutter/helpRequest.png");
 
-    public final static Icon cogwheel = IconLoader.getIcon("/com/samebug/icons/cogwheel.png");
-    public final static Icon cogwheelTodo = IconLoader.getIcon("/com/samebug/icons/cogwheel-todo.png");
+    public static final Icon cogwheel = IconLoader.getIcon("/com/samebug/icons/cogwheel.png");
+    public static final Icon cogwheelTodo = IconLoader.getIcon("/com/samebug/icons/cogwheel-todo.png");
 }

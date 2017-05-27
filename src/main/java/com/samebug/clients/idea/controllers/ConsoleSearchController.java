@@ -18,14 +18,16 @@ package com.samebug.clients.idea.controllers;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.api.entities.search.CreatedSearch;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
 import com.samebug.clients.common.entities.search.DebugSessionInfo;
 import com.samebug.clients.common.entities.search.RequestedSearch;
 import com.samebug.clients.common.entities.search.SavedSearch;
 import com.samebug.clients.common.entities.search.SearchInfo;
 import com.samebug.clients.common.services.SearchRequestService;
 import com.samebug.clients.common.services.SearchService;
+import com.samebug.clients.http.entities.jsonapi.CreatedSearchResource;
+import com.samebug.clients.http.entities.search.QueryInfo;
+import com.samebug.clients.http.entities.search.StackTraceInfo;
+import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.search.SearchRequestListener;
 import com.samebug.clients.idea.search.StackTraceMatcherListener;
@@ -48,8 +50,9 @@ public class ConsoleSearchController implements StackTraceMatcherListener {
                 if (!project.isDisposed()) project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).newSearchRequest(requestedSearch);
 
                 try {
-                    CreatedSearch result = searchService.search(stackTrace);
-                    if (result.getStackTraceId() == null) {
+                    CreatedSearchResource result = searchService.search(stackTrace);
+                    QueryInfo queryInfo = result.getData().getQueryInfo();
+                    if (!(queryInfo instanceof StackTraceInfo)) {
                         // ignore text search
                         searchRequestService.searchFailed(searchInfo);
                         if (!project.isDisposed()) project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failedSearch(searchInfo);

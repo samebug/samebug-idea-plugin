@@ -64,6 +64,10 @@ public class SamebugButton extends ActionButton {
 
     }
 
+    public String getText() {
+        return label.getText();
+    }
+
     private void addLabel() {
         label.setForeground(currentChildrenColor);
         setLayout(new MigLayout("", "12px:push[]12px:push", "11px[]12px"));

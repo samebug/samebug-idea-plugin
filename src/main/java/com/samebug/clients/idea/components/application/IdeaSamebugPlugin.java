@@ -15,28 +15,39 @@
  */
 package com.samebug.clients.idea.components.application;
 
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.api.WebUrlBuilder;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
+import com.intellij.util.net.HttpConfigurable;
 import com.samebug.clients.common.services.*;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.http.client.Config;
+import com.samebug.clients.http.client.ProxyConfig;
+import com.samebug.clients.http.exceptions.SamebugException;
 import com.samebug.clients.idea.controllers.ConsoleSearchController;
-import com.samebug.clients.idea.controllers.NotificationController;
 import com.samebug.clients.idea.controllers.TimedTasks;
-import com.samebug.clients.idea.controllers.WebSocketClientService;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.idea.tracking.IdeaRawEvent;
+import com.samebug.clients.idea.tracking.IdeaTrackingService;
 import com.samebug.clients.idea.ui.controller.frame.ConcurrencyService;
 import com.samebug.clients.idea.ui.controller.frame.ConversionService;
 import com.samebug.clients.idea.ui.controller.toolwindow.ConfigChangeListener;
-import com.samebug.clients.idea.ui.modules.*;
+import com.samebug.clients.idea.ui.modules.IdeaColorService;
+import com.samebug.clients.idea.ui.modules.IdeaIconService;
+import com.samebug.clients.idea.ui.modules.IdeaListenerService;
+import com.samebug.clients.idea.ui.modules.IdeaMessageService;
 import com.samebug.clients.swing.ui.modules.*;
+import com.samebug.util.SBUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,29 +62,26 @@ import java.util.concurrent.atomic.AtomicReference;
                 @Storage(id = "SamebugClient", file = "$APP_CONFIG$/SamebugClient.xml")
         }
 )
-final public class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<ApplicationSettings>, Disposable {
-    final private static Logger LOGGER = Logger.getInstance(IdeaSamebugPlugin.class);
+public final class IdeaSamebugPlugin implements ApplicationComponent, PersistentStateComponent<ApplicationSettings>, Disposable {
+    private static final Logger LOGGER = Logger.getInstance(IdeaSamebugPlugin.class);
+    public static final String ID = "Samebug";
     private AtomicReference<ApplicationSettings> state = new AtomicReference<ApplicationSettings>(new ApplicationSettings());
 
-    public WebUrlBuilder urlBuilder = new WebUrlBuilder(state.get().serverRoot);
-    public ClientService clientService;
+    public String applicationUserAgent;
+    public WebUriBuilder uriBuilder = new WebUriBuilder(state.get().serverRoot);
+    public IdeaClientService clientService;
     public ProfileStore profileStore;
     public ProfileService profileService;
-    public SolutionStore solutionStore;
     public SolutionService solutionService;
     public SearchRequestStore searchRequestStore;
     public SearchRequestService searchRequestService;
     public SearchStore searchStore;
     public SearchService searchService;
-    public BugmateStore bugmateStore;
-    public BugmateService bugmateService;
     public HelpRequestStore helpRequestStore;
     public HelpRequestService helpRequestService;
     public AuthenticationService authenticationService;
     public ConversionService conversionService;
     public ConcurrencyService concurrencyService;
-    public NotificationController notificationController;
-    public WebSocketClientService webSocketClientService;
 
     @Nullable
     private MessageBusConnection connection;
@@ -93,8 +101,8 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
                 ApplicationSettings settings = state.get();
                 if (settings.apiKey != null) {
                     try {
-                        authenticationService.apiKeyAuthentication(settings.apiKey, settings.workspaceId);
-                    } catch (SamebugClientException ignored) {
+                        authenticationService.apiKeyAuthentication();
+                    } catch (SamebugException ignored) {
                     }
                 }
             }
@@ -103,6 +111,13 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
 
     @Override
     public void initComponent() {
+        ApplicationInfo appInfo = ApplicationInfo.getInstance();
+        IdeaPluginDescriptor plugin = PluginManager.getPlugin(PluginId.getId(ID));
+        assert plugin != null : "Samebug plugin is not registered!";
+        applicationUserAgent = "Samebug-Plugin" + "/" + plugin.getVersion()
+                + " IntelliJ/" + appInfo.getApiVersion()
+                + " (" + System.getProperty("os.name") + "/" + System.getProperty("os.version") + ")";
+
         try {
             FontService.registerFonts();
         } catch (IOException e) {
@@ -113,33 +128,26 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
 
         MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
         connection = messageBus.connect(this);
-        clientService = new ClientService(messageBus);
-        clientService.configure(state.get().getNetworkConfig());
+        clientService = new IdeaClientService(messageBus);
+        clientService.configure(getNetworkConfig(state.get()));
         profileStore = new ProfileStore();
         profileService = new ProfileService(clientService, profileStore);
-        solutionStore = new SolutionStore();
-        solutionService = new SolutionService(clientService, solutionStore);
+        solutionService = new SolutionService(clientService);
         searchStore = new SearchStore();
         searchService = new SearchService(clientService, searchStore);
         searchRequestStore = new SearchRequestStore();
         searchRequestService = new SearchRequestService(searchRequestStore);
-        bugmateStore = new BugmateStore();
-        bugmateService = new BugmateService(clientService, bugmateStore);
         helpRequestStore = new HelpRequestStore();
         helpRequestService = new HelpRequestService(clientService, helpRequestStore);
         authenticationService = new AuthenticationService(clientService);
         conversionService = new ConversionService();
         concurrencyService = new ConcurrencyService(profileStore, profileService,
-                solutionStore, solutionService,
-                bugmateStore, bugmateService,
+                solutionService,
                 helpRequestStore, helpRequestService,
-                searchStore, searchService);
+                searchService);
 
         TimedTasks timedTasks = new TimedTasks();
         ConsoleSearchController consoleSearchController = new ConsoleSearchController(messageBus.connect(this));
-        notificationController = new NotificationController();
-        webSocketClientService = new WebSocketClientService(notificationController);
-        webSocketClientService.configure(state.get().getNetworkConfig());
 
         ColorService.install(new IdeaColorService());
         WebImageService.install();
@@ -156,8 +164,8 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         if (connection != null) {
             connection.disconnect();
         }
-        if (webSocketClientService != null) {
-            webSocketClientService.dispose();
+        if (clientService != null) {
+            clientService.dispose();
         }
     }
 
@@ -181,15 +189,22 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public void saveSettings(final ApplicationSettings settings) {
         ApplicationSettings oldSettings = state.get();
         ApplicationSettings newSettings = new ApplicationSettings(settings);
+
+        // If authentication data (apiKey or workspace id) is changed, we have to do some cleanup
+        if (!SBUtil.equals(newSettings.apiKey, oldSettings.apiKey) || !SBUtil.equals(newSettings.workspaceId, oldSettings.workspaceId)) {
+            // clear the caches
+            helpRequestStore.invalidate();
+            profileStore.invalidate();
+        }
+
         state.set(newSettings);
         try {
-            if (clientService != null) clientService.configure(newSettings.getNetworkConfig());
-            if (webSocketClientService != null) webSocketClientService.configure(newSettings.getNetworkConfig());
-            urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
+            if (clientService != null) clientService.configure(getNetworkConfig(newSettings));
+            uriBuilder = new WebUriBuilder(newSettings.serverRoot);
             ApplicationManager.getApplication().getMessageBus().syncPublisher(ConfigChangeListener.TOPIC).configChange(oldSettings, newSettings);
         } finally {
-            if (oldSettings.apiKey != newSettings.apiKey) TrackingService.trace(Events.changeApiKey());
-            if (oldSettings.workspaceId != newSettings.workspaceId) TrackingService.trace(Events.changeWorkspace());
+            if (!SBUtil.equals(newSettings.apiKey, oldSettings.apiKey)) TrackingService.trace(IdeaRawEvent.changeApiKey());
+            if (!SBUtil.equals(newSettings.workspaceId, oldSettings.workspaceId)) TrackingService.trace(IdeaRawEvent.changeWorkspace());
         }
     }
 
@@ -197,8 +212,26 @@ final public class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public void loadState(ApplicationSettings state) {
         ApplicationSettings newSettings = new ApplicationSettings(state);
         this.state.set(newSettings);
-        if (clientService != null) clientService.configure(newSettings.getNetworkConfig());
-        if (webSocketClientService != null) webSocketClientService.configure(newSettings.getNetworkConfig());
-        urlBuilder = new WebUrlBuilder(newSettings.serverRoot);
+        if (clientService != null) clientService.configure(getNetworkConfig(newSettings));
+        uriBuilder = new WebUriBuilder(newSettings.serverRoot);
+    }
+
+    @NotNull
+    private Config getNetworkConfig(@NotNull ApplicationSettings settings) {
+        ProxyConfig proxyConfig;
+        try {
+            final HttpConfigurable iConfig = HttpConfigurable.getInstance();
+            if (iConfig.isHttpProxyEnabledForUrl(settings.serverRoot)) {
+                proxyConfig = new ProxyConfig(iConfig.PROXY_HOST, iConfig.PROXY_PORT, iConfig.getProxyLogin(), iConfig.getPlainProxyPassword());
+            } else {
+                proxyConfig = null;
+            }
+        } catch (Exception ignored) {
+            // if that fails, we pretend there is no proxy. This might fail do to subtle changes in the HttpConfigurable class between intellij versions.
+            proxyConfig = null;
+        }
+        return new Config(settings.apiKey, settings.userId, settings.workspaceId, settings.serverRoot,
+                settings.trackingRoot, settings.isTrackingEnabled, settings.connectTimeout, settings.requestTimeout,
+                settings.isApacheLoggingEnabled, settings.isJsonDebugEnabled, proxyConfig, applicationUserAgent);
     }
 }

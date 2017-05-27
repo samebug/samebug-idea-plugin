@@ -15,27 +15,34 @@
  */
 package com.samebug.clients.swing.ui.component.helpRequest;
 
+import com.samebug.clients.common.tracking.Hooks;
 import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
+import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.common.ui.modules.TextService;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
+import com.samebug.clients.swing.ui.base.button.SamebugButton;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.label.TimestampLabel;
+import com.samebug.clients.swing.ui.base.listener.AncestorListenerAdapter;
 import com.samebug.clients.swing.ui.base.panel.RoundedBackgroundPanel;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
 import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
 import java.util.Date;
 
 public final class HelpRequestPreview extends RoundedBackgroundPanel implements IHelpRequestPreview {
-    private final static int AvatarSize = 40;
+    private static final int AvatarSize = 40;
 
     public HelpRequestPreview(final Model model) {
         setBackgroundColor(ColorService.Tip);
@@ -45,28 +52,38 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
         final SamebugLabel helpRequestBody = new HelpRequestBody(model.helpRequestBody, viewedByMe);
         final InfoBar infos = new InfoBar(model.createdAt);
         final SamebugLabel exceptionBody = new ExceptionPreview(model.exceptionBody, viewedByMe);
+        final ResponseButton responseButton = new ResponseButton();
 
-        setLayout(new MigLayout("fillx", MessageFormat.format("20px[{0}px!]10px[250px, fill]20px", AvatarSize), "20px[]0[]15px[]20px"));
+        setLayout(new MigLayout("fillx", MessageFormat.format("20px[{0}px!]10px[250px, fill]20px", AvatarSize), "20px[]0[]15px[]10px[]20px"));
 
         add(avatar, "cell 0 0, spany 2");
         add(diplayName, "cell 1 0");
         add(infos, "cell 1 0, top left");
         add(helpRequestBody, "cell 1 1, wmin 0");
         add(exceptionBody, "cell 1 2, wmin 0");
+        add(responseButton, "cell 0 3, spanx 2");
 
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (isEnabled()) {
                     getListener().previewClicked(HelpRequestPreview.this, model.helpRequestId);
-                    TrackingService.trace(Events.helpRequestOpen(model.helpRequestId));
+                    final String transactionId = DataService.getData(HelpRequestPreview.this, TrackingKeys.WriteTipTransaction);
+                    TrackingService.trace(SwingRawEvent.writeTipHookTrigger(HelpRequestPreview.this, transactionId, model.helpRequestId, Hooks.WriteTip.HELP_REQUEST_RESPONSE));
                 }
+            }
+        });
+        addAncestorListener(new AncestorListenerAdapter() {
+            @Override
+            public void ancestorAdded(AncestorEvent event) {
+                removeAncestorListener(this);
+                TrackingService.trace(SwingRawEvent.helpRequestDisplay(HelpRequestPreview.this, model.helpRequestId));
             }
         });
     }
 
     final class DisplayName extends SamebugLabel {
-        public DisplayName(String name) {
+        DisplayName(String name) {
             super(name);
             setFont(FontService.demi(16));
             setForegroundColor(ColorService.TipText);
@@ -74,7 +91,7 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
     }
 
     final class HelpRequestBody extends SamebugLabel {
-        public HelpRequestBody(String body, boolean viewedByMe) {
+        HelpRequestBody(String body, boolean viewedByMe) {
             super(body);
             if (viewedByMe) setFont(FontService.regular(16));
             else setFont(FontService.demi(16));
@@ -85,7 +102,7 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
     final class InfoBar extends SamebugLabel implements TimestampLabel {
         private final Date createdAt;
 
-        public InfoBar(Date createdAt) {
+        InfoBar(Date createdAt) {
             this.createdAt = createdAt;
             setHorizontalAlignment(SwingConstants.RIGHT);
             setFont(FontService.regular(12));
@@ -100,7 +117,7 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
     }
 
     final class ExceptionPreview extends SamebugLabel {
-        public ExceptionPreview(String body, boolean viewedByMe) {
+        ExceptionPreview(String body, boolean viewedByMe) {
             super(body);
             if (viewedByMe) setFont(FontService.regular(16));
             else setFont(FontService.demi(16));
@@ -113,5 +130,24 @@ public final class HelpRequestPreview extends RoundedBackgroundPanel implements 
 
     private Listener getListener() {
         return ListenerService.getListener(this, Listener.class);
+    }
+}
+
+final class ResponseButton extends SamebugButton {
+    ResponseButton() {
+        super();
+        setText(MessageService.message("samebug.frame.helpRequestList.response"));
+        setFilled(true);
+        setInteractionColors(ColorService.MarkInteraction);
+        setBackgroundColor(ColorService.Tip);
+        setFont(FontService.demi(14));
+        DataService.putData(this, TrackingKeys.Label, getText());
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                ResponseButton.this.getParent().dispatchEvent(e);
+                TrackingService.trace(SwingRawEvent.buttonClick(ResponseButton.this));
+            }
+        });
     }
 }

@@ -17,8 +17,13 @@ package com.samebug.clients.idea.ui.controller.toolwindow;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.util.messages.MessageBusConnection;
+import com.samebug.clients.common.tracking.Funnels;
+import com.samebug.clients.common.tracking.Hooks;
+import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.util.SBUtil;
 
 public class ConfigChangeListener implements com.samebug.clients.idea.messages.ConfigChangeListener {
     final ToolWindowController twc;
@@ -41,16 +46,14 @@ public class ConfigChangeListener implements com.samebug.clients.idea.messages.C
     }
 
     private void doConfigChange(ApplicationSettings old, ApplicationSettings c) {
-        if (!equals(c.apiKey, old.apiKey) || !equals(c.workspaceId, old.workspaceId)) IdeaSamebugPlugin.getInstance().profileStore.invalidate();
+        if (!SBUtil.equals(c.apiKey, old.apiKey) || !SBUtil.equals(c.workspaceId, old.workspaceId)) IdeaSamebugPlugin.getInstance().profileStore.invalidate();
 
-        if (c.apiKey == null) twc.focusOnAuthentication();
-        else {
-            if (!equals(c.apiKey, old.apiKey) || !equals(c.serverRoot, old.serverRoot)) twc.focusOnHelpRequestList();
+        if (c.apiKey == null) {
+            final String authenticationTransactionId = Funnels.newTransactionId();
+            TrackingService.trace(SwingRawEvent.authenticationHookTriggered(authenticationTransactionId, Hooks.Authentication.UNAUTHENTICATED));
+            twc.focusOnAuthentication(authenticationTransactionId);
+        } else {
+            if (!SBUtil.equals(c.apiKey, old.apiKey) || !SBUtil.equals(c.serverRoot, old.serverRoot)) twc.focusOnHelpRequestList();
         }
-    }
-
-    // TODO lifted java 8 Objects.equals, remove it when we use java 8
-    private static boolean equals(Object a, Object b) {
-        return (a == b) || (a != null && a.equals(b));
     }
 }

@@ -16,12 +16,12 @@
 package com.samebug.clients.swing.ui.frame.helpRequest;
 
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestHeader;
+import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.component.profile.AvatarIcon;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
-import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -30,7 +30,7 @@ import java.net.URL;
 import java.text.MessageFormat;
 
 public final class HelpRequestHeader extends JComponent implements IHelpRequestHeader {
-    private final static int AvatarSize = 26;
+    private static final int AvatarSize = 26;
 
     public HelpRequestHeader(Model model) {
         final HeaderTextLabel header = new HeaderTextLabel(model.title);
@@ -60,7 +60,7 @@ public final class HelpRequestHeader extends JComponent implements IHelpRequestH
     }
 
     final class AuthorRow extends JComponent {
-        public AuthorRow(String displayName, URL avatarUrl) {
+        AuthorRow(String displayName, URL avatarUrl) {
             final SamebugLabel by = new SamebugLabel(MessageService.message("samebug.frame.helpRequest.author.by"), FontService.demi(14));
             final AvatarIcon avatar = new AvatarIcon(avatarUrl, AvatarSize);
             final SamebugLabel name = new SamebugLabel(displayName, FontService.demi(14));

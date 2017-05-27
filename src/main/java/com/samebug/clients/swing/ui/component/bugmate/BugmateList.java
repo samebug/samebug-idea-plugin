@@ -17,10 +17,12 @@ package com.samebug.clients.swing.ui.component.bugmate;
 
 import com.samebug.clients.common.ui.component.bugmate.IBugmateHit;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.FontService;
-import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import java.util.ArrayList;
@@ -54,12 +56,14 @@ public final class BugmateList extends TransparentPanel implements IBugmateList 
 
         private BugmateGrid(List<IBugmateHit.Model> bugmateHitModels) {
             bugmateHits = new ArrayList<BugmateHit>(bugmateHitModels.size());
-            for (IBugmateHit.Model bugmateHitModel : bugmateHitModels) {
+            for (int i = 0; i < bugmateHitModels.size(); ++i) {
+                IBugmateHit.Model bugmateHitModel = bugmateHitModels.get(i);
                 BugmateHit hit = new BugmateHit(bugmateHitModel);
+                DataService.putData(hit, TrackingKeys.BugmateHitIndex, i);
                 bugmateHits.add(hit);
             }
 
-            // TODO generalize it if necessary, for 4 items it's fine
+            // IMPROVE generalize it if necessary, for 4 items it's fine
             if (bugmateHits.size() <= 2) {
                 setLayout(new MigLayout("fillx", "0[]20px:push[]0", "0[]0"));
             } else {

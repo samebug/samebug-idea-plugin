@@ -57,8 +57,7 @@ public class SamebugTabbedPane extends JTabbedPane {
         if (hits != null) tabHeader = new LabelAndHitsTabHeader(tabName, hits);
         else tabHeader = new LabelTabHeader(tabName);
 
-        if (getTabCount() == 0) tabHeader.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
-        else tabHeader.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        tabHeader.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 
         int newTabIndex = getTabCount();
         super.addTab(null, tabComponent);

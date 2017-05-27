@@ -21,30 +21,34 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.unscramble.AnalyzeStacktraceUtil;
-import com.samebug.clients.common.api.entities.search.CreatedSearch;
-import com.samebug.clients.common.api.exceptions.BadRequest;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.api.exceptions.UserUnauthenticated;
 import com.samebug.clients.common.search.StackTraceListener;
 import com.samebug.clients.common.search.StackTraceMatcher;
 import com.samebug.clients.common.services.SearchService;
+import com.samebug.clients.common.tracking.Locations;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.http.entities.jsonapi.CreatedSearchResource;
+import com.samebug.clients.http.entities.search.Search;
+import com.samebug.clients.http.entities.search.StackTraceInfo;
+import com.samebug.clients.http.exceptions.BadRequest;
+import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.exceptions.UserUnauthenticated;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.FocusListener;
-import com.samebug.clients.idea.tracking.Events;
 import com.samebug.clients.idea.ui.modules.BrowserUtil;
-import com.samebug.clients.swing.ui.modules.MessageService;
-import com.samebug.clients.swing.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
+import com.samebug.clients.swing.ui.modules.DataService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 
-final public class AnalyzeDialog extends DialogWrapper {
-    final static Logger LOGGER = Logger.getInstance(AnalyzeDialog.class);
+public final class AnalyzeDialog extends DialogWrapper {
+    static final Logger LOGGER = Logger.getInstance(AnalyzeDialog.class);
     final Project myProject;
     JPanel panel;
     final JPanel warningPanel;
@@ -52,14 +56,15 @@ final public class AnalyzeDialog extends DialogWrapper {
 
     AnalyzeStacktraceUtil.StacktraceEditorPanel myEditorPanel;
 
-    public AnalyzeDialog(Project project) {
+    public AnalyzeDialog(Project project, String transactionId) {
         super(project);
         myProject = project;
         panel = new JPanel();
         warningPanel = new JPanel();
         searchAction = new SamebugSearch();
         setTitle(MessageService.message("samebug.menu.analyze.dialog.title"));
-        TrackingService.trace(Events.openSearchDialog());
+        DataService.putData(panel, TrackingKeys.SearchTransaction, transactionId);
+        DataService.putData(panel, TrackingKeys.Location, new Locations.SearchDialog());
         init();
     }
 
@@ -78,11 +83,10 @@ final public class AnalyzeDialog extends DialogWrapper {
 
     @Override
     public JComponent getPreferredFocusedComponent() {
-        // TODO focus on search button
-        return myEditorPanel.getEditorComponent();
+        return getButton(searchAction);
     }
 
-    // TODO call this on editor input/periodically
+    // IMPROVE call this on editor input/periodically
     protected void displayWarningIfNotStackTrace() {
         final String trace = myEditorPanel.getText();
         boolean hasStackTrace = new Parser().hasStackTrace(trace);
@@ -108,7 +112,7 @@ final public class AnalyzeDialog extends DialogWrapper {
         return new Action[]{getCancelAction(), searchAction};
     }
 
-    final protected class SamebugSearch extends DialogWrapperAction implements DumbAware {
+    protected final class SamebugSearch extends DialogWrapperAction implements DumbAware {
 
         public SamebugSearch() {
             super(MessageService.message("samebug.menu.analyze.dialog.samebugButton"));
@@ -116,7 +120,7 @@ final public class AnalyzeDialog extends DialogWrapper {
 
         @Override
         protected void doAction(ActionEvent e) {
-            TrackingService.trace(Events.searchInSearchDialog());
+            TrackingService.trace(SwingRawEvent.searchSubmit(panel, DataService.getData(panel, TrackingKeys.SearchTransaction)));
             final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
             final SearchService searchService = plugin.searchService;
             final String trace = myEditorPanel.getText();
@@ -127,13 +131,14 @@ final public class AnalyzeDialog extends DialogWrapper {
             }
             try {
                 // NOTE: this search post happens on the UI thread, but we own the UI thread as long as the dialog is opened.
-                CreatedSearch result = searchService.search(trace);
-                final int searchId = result.getSearchId();
+                CreatedSearchResource result = searchService.search(trace);
+                Search search = result.getData();
+                final int searchId = search.getId();
 
-                if (result.getStackTraceId() == null) displayError(MessageService.message("samebug.menu.analyze.dialog.error.textSearch"));
+                if (!(search.getQueryInfo() instanceof StackTraceInfo)) displayError(MessageService.message("samebug.menu.analyze.dialog.error.textSearch"));
                 else {
                     myProject.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchId);
-                    TrackingService.trace(Events.searchSucceedInSearchDialog(searchId));
+                    TrackingService.trace(SwingRawEvent.searchCreate(panel, DataService.getData(panel, TrackingKeys.SearchTransaction), search));
                     AnalyzeDialog.this.close(OK_EXIT_CODE);
                 }
             } catch (BadRequest e1) {
@@ -156,8 +161,8 @@ final public class AnalyzeDialog extends DialogWrapper {
         }
     }
 
-    // TODO using the serious parser, get the typename and message and use them for google search
-    final protected class GoogleSearch extends DialogWrapperAction implements DumbAware {
+    // IMPROVE using the serious parser, get the typename and message and use them for google search
+    protected final class GoogleSearch extends DialogWrapperAction implements DumbAware {
 
         public GoogleSearch() {
             super(MessageService.message("samebug.menu.analyze.dialog.googleButton"));
@@ -166,17 +171,13 @@ final public class AnalyzeDialog extends DialogWrapper {
         @Override
         protected void doAction(ActionEvent e) {
             final String trace = myEditorPanel.getText();
-            try {
-                URL url = new URL("https://www.google.hu/search?q=" + trace);
-                BrowserUtil.browse(url);
-            } catch (MalformedURLException e1) {
-                LOGGER.warn("Failed to open browser for google search", e1);
-            }
+            URI uri = URI.create("https://www.google.hu/search?q=" + trace);
+            BrowserUtil.browse(uri);
         }
     }
 
-    // TODO get the serious parser
-    final protected class Parser implements StackTraceListener {
+    // IMPROVE get the serious parser
+    protected final class Parser implements StackTraceListener {
         final StackTraceMatcher parser;
         boolean found;
 

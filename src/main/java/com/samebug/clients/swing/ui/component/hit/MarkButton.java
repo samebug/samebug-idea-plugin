@@ -16,21 +16,28 @@
 package com.samebug.clients.swing.ui.component.hit;
 
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
-import com.samebug.clients.idea.tracking.Events;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.swing.ui.base.animation.*;
 import com.samebug.clients.swing.ui.base.button.ActionButton;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.modules.*;
+import com.samebug.util.SBUtil;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public final class MarkButton extends ActionButton implements IMarkButton {
+public final class MarkButton extends ActionButton implements IAnimatedComponent, IMarkButton {
     private Model model;
 
+    @NotNull
+    private final ComponentAnimationController myAnimationController;
+
     public MarkButton(Model model) {
+        myAnimationController = new ComponentAnimationController(this);
         this.model = new Model(model);
         normalState();
         addMouseListener(new MouseAdapter() {
@@ -38,12 +45,6 @@ public final class MarkButton extends ActionButton implements IMarkButton {
             public void mouseClicked(MouseEvent e) {
                 if (isEnabled()) {
                     getListener().markClicked(MarkButton.this, getSolutionId(), MarkButton.this.model.userMarkId);
-
-                    if (MarkButton.this.model.userMarkId == null) {
-                        TrackingService.trace(Events.mark());
-                    } else {
-                        TrackingService.trace(Events.markCancelled());
-                    }
                 }
             }
         });
@@ -55,7 +56,16 @@ public final class MarkButton extends ActionButton implements IMarkButton {
         normalState();
         revalidate();
         repaint();
+    }
 
+    @Override
+    public void paint(Graphics g) {
+        myAnimationController.paint(g);
+    }
+
+    @Override
+    public void paintOriginalComponent(Graphics g) {
+        super.paint(g);
     }
 
     public void setLoading() {
@@ -66,9 +76,35 @@ public final class MarkButton extends ActionButton implements IMarkButton {
         revertFromLoadingAnimation();
     }
 
+    public Model getModel() {
+        return model;
+    }
+
     public void update(Model model) {
-        this.model = new Model(model);
-        revertFromLoadingAnimation();
+        final int CycleDuration = 300;
+        boolean stateChanged = !SBUtil.equals(model.userMarkId, this.model.userMarkId);
+        this.model = model;
+        if (stateChanged) {
+            final PaintableAnimation fadeOut = new MyFadeOutAnimation(30);
+            final PaintableAnimation fadeIn = new MyFadeInAnimation(30);
+            myAnimationController.prepareNewAnimation(fadeOut);
+            fadeIn.runBeforeStart(new Runnable() {
+                @Override
+                public void run() {
+                    MarkButton.super.revertFromLoadingAnimation();
+                    normalState();
+                    revalidate();
+                    repaint();
+                    myAnimationController.prepareNewAnimation(fadeIn);
+                }
+            });
+            new SequenceAnimator(fadeOut.andThen(fadeIn), CycleDuration).resume();
+        } else {
+            super.revertFromLoadingAnimation();
+            normalState();
+            revalidate();
+            repaint();
+        }
     }
 
     private void normalState() {
@@ -98,7 +134,7 @@ public final class MarkButton extends ActionButton implements IMarkButton {
     }
 
     private final class MarkLabel extends SamebugLabel {
-        public MarkLabel(boolean markedByMe, boolean markableByMe) {
+        MarkLabel(boolean markedByMe, boolean markableByMe) {
             setHorizontalAlignment(SwingConstants.CENTER);
             if (markableByMe && !markedByMe) setText(MessageService.message("samebug.component.mark.mark"));
             else if (markableByMe && markedByMe) setText(MessageService.message("samebug.component.mark.marked"));
@@ -122,4 +158,29 @@ public final class MarkButton extends ActionButton implements IMarkButton {
     private Listener getListener() {
         return ListenerService.getListener(this, IMarkButton.Listener.class);
     }
+
+    private final class MyFadeInAnimation extends FadeInAnimation {
+
+        MyFadeInAnimation(int totalFrames) {
+            super(MarkButton.this, totalFrames);
+        }
+
+        @Override
+        protected void doFinish() {
+            MarkButton.this.repaint();
+        }
+    }
+
+    private final class MyFadeOutAnimation extends FadeOutAnimation {
+
+        MyFadeOutAnimation(int totalFrames) {
+            super(MarkButton.this, totalFrames);
+        }
+
+        @Override
+        protected void doFinish() {
+            MarkButton.this.repaint();
+        }
+    }
+
 }

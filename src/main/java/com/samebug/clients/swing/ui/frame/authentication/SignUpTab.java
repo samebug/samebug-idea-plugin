@@ -15,15 +15,19 @@
  */
 package com.samebug.clients.swing.ui.frame.authentication;
 
+import com.samebug.clients.common.tracking.PageTabs;
+import com.samebug.clients.swing.tracking.TrackingKeys;
+import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.component.authentication.AnonymousUseForm;
 import com.samebug.clients.swing.ui.component.authentication.Delimeter;
 import com.samebug.clients.swing.ui.component.authentication.SignUpForm;
+import com.samebug.clients.swing.ui.modules.DataService;
 import net.miginfocom.swing.MigLayout;
 
-import javax.swing.*;
-
-public final class SignUpTab extends JComponent {
+public final class SignUpTab extends SamebugPanel {
     {
+        DataService.putData(this, TrackingKeys.PageTab, PageTabs.Authentication.SignUp);
+
         final SignUpForm signUpForm = new SignUpForm();
         final Delimeter delimeter = new Delimeter();
         final AnonymousUseForm anonymousUseForm = new AnonymousUseForm();
@@ -32,5 +36,6 @@ public final class SignUpTab extends JComponent {
         add(signUpForm, "cell 0 0");
         add(delimeter, "cell 0 1");
         add(anonymousUseForm, "cell 0 2");
+
     }
 }

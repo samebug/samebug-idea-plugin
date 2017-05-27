@@ -15,30 +15,28 @@
  */
 package com.samebug.clients.idea.ui.controller.form;
 
-import com.samebug.clients.common.api.client.RestError;
-import com.samebug.clients.common.api.entities.solution.MarkResponse;
-import com.samebug.clients.common.api.exceptions.SamebugClientException;
-import com.samebug.clients.common.api.form.CancelMark;
-import com.samebug.clients.common.api.form.CreateMark;
-import com.samebug.clients.common.api.form.FieldError;
 import com.samebug.clients.common.services.SolutionService;
-import com.samebug.clients.common.ui.component.form.FormMismatchException;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.common.ui.frame.IFrame;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.http.entities.mark.Mark;
+import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.form.MarkCancel;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.swing.ui.modules.MessageService;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
-public abstract class CancelMarkFormHandler extends PostFormHandler<MarkResponse> {
+public abstract class CancelMarkFormHandler extends PostFormHandler<Mark, MarkCancel.BadRequest> {
+    @NotNull
     final IFrame frame;
+    @NotNull
     final IMarkButton button;
-    final CancelMark data;
+    @NotNull
+    final Integer markId;
 
-    public CancelMarkFormHandler(IFrame frame, IMarkButton button, CancelMark data) {
+    public CancelMarkFormHandler(@NotNull final IFrame frame, @NotNull final IMarkButton button, @NotNull final Integer markId) {
         this.frame = frame;
         this.button = button;
-        this.data = data;
+        this.markId = markId;
     }
 
     @Override
@@ -46,38 +44,22 @@ public abstract class CancelMarkFormHandler extends PostFormHandler<MarkResponse
         button.setLoading();
     }
 
+    @NotNull
     @Override
-    protected MarkResponse postForm() throws SamebugClientException {
+    protected Mark postForm() throws SamebugClientException, MarkCancel.BadRequest {
         final SolutionService solutionService = IdeaSamebugPlugin.getInstance().solutionService;
-        return solutionService.retractMark(data.markId);
+        return solutionService.retractMark(markId);
     }
 
     @Override
-    protected void handleFieldError(FieldError fieldError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleFieldError(fieldError, globalErrors, fieldErrors);
-        globalErrors.add(MessageService.message("samebug.error.pluginBug"));
-    }
-
-    @Override
-    protected void handleNonFormBadRequests(RestError nonFormError, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleNonFormBadRequests(nonFormError, globalErrors, fieldErrors);
-        if (nonFormError.code.equals(CreateMark.E_ALREADY_MARKED)) globalErrors.add(MessageService.message("samebug.component.mark.cancel.error.alreadyCancelled"));
-        else globalErrors.add(MessageService.message("samebug.component.mark.cancel.error.badRequest"));
-    }
-
-    @Override
-    protected void handleOtherClientExceptions(SamebugClientException exception, List<String> globalErrors, List<FieldError> fieldErrors) {
-        super.handleOtherClientExceptions(exception, globalErrors, fieldErrors);
-        globalErrors.add(MessageService.message("samebug.component.mark.cancel.error.unhandled"));
-    }
-
-    @Override
-    protected void showFieldErrors(List<FieldError> fieldErrors) throws FormMismatchException {
+    protected void handleBadRequest(@NotNull MarkCancel.BadRequest fieldErrors) {
+        frame.popupError(MessageService.message("samebug.component.mark.cancel.error.unhandled"));
         button.interruptLoading();
     }
 
     @Override
-    protected void showGlobalErrors(List<String> globalErrors) {
-        if (!globalErrors.isEmpty()) frame.popupError(globalErrors.get(0));
+    protected void handleOtherClientExceptions(@NotNull SamebugClientException exception) {
+        frame.popupError(MessageService.message("samebug.component.mark.cancel.error.unhandled"));
+        button.interruptLoading();
     }
 }

@@ -16,8 +16,13 @@
 package com.samebug.clients.idea.ui.layout;
 
 import com.intellij.openapi.options.ConfigurationException;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.http.exceptions.SamebugClientException;
+import com.samebug.clients.http.exceptions.UserUnauthenticated;
+import com.samebug.clients.http.exceptions.UserUnauthorized;
 import com.samebug.clients.idea.components.application.ApplicationSettings;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
+import com.samebug.util.SBUtil;
 
 import javax.swing.*;
 import java.net.URI;
@@ -55,7 +60,7 @@ public class ConfigDialogPanel {
                 }
                 URI.create(settings.serverRoot);
             } catch (Exception e) {
-                throw new ConfigurationException(settings.serverRoot + " is not a valid URI");
+                throw new ConfigurationException(MessageService.message("samebug.configure.error.invalidUrl", settings.serverRoot));
             }
             try {
                 final String trackingRoot = settings.trackingRoot;
@@ -65,31 +70,33 @@ public class ConfigDialogPanel {
                 }
                 URI.create(settings.trackingRoot);
             } catch (Exception e) {
-                throw new ConfigurationException(settings.trackingRoot + " is not a valid URI");
+                throw new ConfigurationException(MessageService.message("samebug.configure.error.invalidUrl", settings.trackingRoot));
             }
+
+            // If the api key is changed, clear the userId, which is a derived data.
+            if (!SBUtil.equals(settings.apiKey, currentConfig.apiKey)) {
+                settings.userId = null;
+            }
+
             IdeaSamebugPlugin.getInstance().saveSettings(settings);
             currentConfig = settings;
-            IdeaSamebugPlugin.getInstance().checkAuthenticationInTheBackgroundWithCurrentConfig();
+            try {
+                // IMPROVE: this is an http call on the UI thread. It would be nice to do this in the background and show a progress indicator.
+                // We have to wait the authentication result, because this will set the previously cleared userId.
+                IdeaSamebugPlugin.getInstance().authenticationService.apiKeyAuthentication();
+            } catch (UserUnauthenticated e) {
+                if (currentConfig.apiKey != null) throw new ConfigurationException(MessageService.message("samebug.configure.error.apiKey"));
+            } catch (UserUnauthorized e) {
+                throw new ConfigurationException(MessageService.message("samebug.configure.error.workspace"));
+            } catch (SamebugClientException ignored) {
+            }
         } catch (Exception e) {
-            throw new ConfigurationException("Failed to save configuration: " + e.getMessage());
+            throw new ConfigurationException(MessageService.message("samebug.configure.error.unknown", e.getMessage()));
         }
     }
 
     public void reset() {
         toUI(currentConfig);
-    }
-
-    // Apparently, IntelliJ's way to reset to defaults seems to be simply deleting the config files.
-    public void resetToDefaults() {
-        final ApplicationSettings settings = currentConfig;
-        settings.workspaceId = ApplicationSettings.defaultWorkspaceId;
-        settings.serverRoot = ApplicationSettings.defaultServerRoot;
-        settings.trackingRoot = ApplicationSettings.defaultTrackingRoot;
-        settings.isTrackingEnabled = ApplicationSettings.defaultIsTrackingEnabled;
-        settings.connectTimeout = ApplicationSettings.defaultConnectTimeout;
-        settings.requestTimeout = ApplicationSettings.defaultRequestTimeout;
-        settings.isApacheLoggingEnabled = ApplicationSettings.defaultIsApacheLoggingEnabled;
-        toUI(settings);
     }
 
     ApplicationSettings fromUI() {

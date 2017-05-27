@@ -25,7 +25,7 @@ import java.util.List;
  * <p/>
  * When a stacktrace is found, notifies the StackTraceListener.
  */
-final public class StackTraceMatcher extends MatcherStateMachine implements LogScanner {
+public final class StackTraceMatcher extends MatcherStateMachine implements LogScanner {
     public static final int FINISH_STACKTRACE_TIMEOUT = 1000;
     private final StackTraceListener listener;
     // FIXME: It would be better not to use swing timer here

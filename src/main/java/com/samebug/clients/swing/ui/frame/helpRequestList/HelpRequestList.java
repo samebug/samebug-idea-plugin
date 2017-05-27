@@ -15,7 +15,10 @@
  */
 package com.samebug.clients.swing.ui.frame.helpRequestList;
 
+import com.samebug.clients.common.tracking.Funnels;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestList;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.CenteredMultilineLabel;
@@ -24,8 +27,8 @@ import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.base.scrollPane.SamebugScrollPane;
 import com.samebug.clients.swing.ui.component.helpRequest.HelpRequestPreview;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
-import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -45,6 +48,7 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
         for (int i = 0; i < model.requestPreviews.size(); i++) {
             HelpRequestPreview.Model m = model.requestPreviews.get(i);
             HelpRequestPreview hit = new HelpRequestPreview(m);
+            DataService.putData(hit, TrackingKeys.WriteTipTransaction, Funnels.newTransactionId());
             previews.add(hit);
         }
 
@@ -60,7 +64,7 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
     }
 
     private final class ContentPanel extends SamebugPanel {
-        public ContentPanel() {
+        ContentPanel() {
             if (previews.isEmpty()) {
                 final EmptyListPanel emptyPanel = new EmptyListPanel();
                 setLayout(new MigLayout("fillx", "20px[fill]0", "0[]0"));
@@ -74,7 +78,7 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
     }
 
     private final class ListPanel extends TransparentPanel {
-        public ListPanel() {
+        ListPanel() {
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
             // webHits is required to be initialized here (the hit views are actually added to the list)
@@ -100,8 +104,6 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
                     setLayout(new MigLayout("fillx", "40px[300px]40px", "40px[]27px[]40px"));
                     add(emptylabel, "cell 0 0, al center");
                     add(description, "cell 0 1, growx, wmin 0");
-                    // TODO: after a change in the layout, it seems that revalidate-repaint is sometimes not enough in IntelliJ
-                    validate();
                     revalidate();
                     repaint();
                 }

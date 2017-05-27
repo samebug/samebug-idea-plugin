@@ -15,16 +15,26 @@
  */
 package com.samebug.clients.swing.ui.frame.helpRequest;
 
+import com.samebug.clients.common.tracking.Funnels;
+import com.samebug.clients.common.tracking.PageTabs;
+import com.samebug.clients.common.ui.component.helpRequest.IHelpRequest;
+import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestTab;
+import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.swing.tracking.TrackingKeys;
+import com.samebug.clients.swing.ui.base.animation.ControllableAnimation;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.base.scrollPane.SamebugScrollPane;
-import com.samebug.clients.swing.ui.component.helpRequest.HelpRequest;
-import com.samebug.clients.swing.ui.component.hit.TipHit;
+import com.samebug.clients.swing.ui.component.helpRequest.AnsweredHelpRequest;
+import com.samebug.clients.swing.ui.component.helpRequest.NonAnsweredHelpRequest;
+import com.samebug.clients.swing.ui.component.hit.NonMarkableTipHit;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.FontService;
-import com.samebug.clients.swing.ui.modules.MessageService;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,15 +43,20 @@ import java.util.ArrayList;
 public final class HelpRequestTab extends TransparentPanel implements IHelpRequestTab {
     private final JScrollPane scrollPane;
     private final SamebugPanel contentPanel;
-    private final HelpRequest request;
-    private final java.util.List<TipHit> tipHits;
+    @NotNull
+    private final NonAnsweredHelpRequest request;
+    @Nullable
+    private AnsweredHelpRequest response;
+    private final java.util.List<NonMarkableTipHit> tipHits;
 
     public HelpRequestTab(Model model) {
-        request = new HelpRequest(model.helpRequest);
-        tipHits = new ArrayList<TipHit>();
+        DataService.putData(this, TrackingKeys.PageTab, PageTabs.HelpRequest.TipHits);
+        request = new NonAnsweredHelpRequest(model.helpRequest);
+        tipHits = new ArrayList<NonMarkableTipHit>();
         for (int i = 0; i < model.tipHits.size(); i++) {
-            TipHit.Model m = model.tipHits.get(i);
-            TipHit hit = new TipHit(m);
+            NonMarkableTipHit.Model m = model.tipHits.get(i);
+            NonMarkableTipHit hit = new NonMarkableTipHit(m);
+            DataService.putData(hit, TrackingKeys.SolutionTransaction, Funnels.newTransactionId());
             tipHits.add(hit);
         }
 
@@ -52,6 +67,25 @@ public final class HelpRequestTab extends TransparentPanel implements IHelpReque
 
         setLayout(new BorderLayout());
         add(scrollPane);
+    }
+
+    public ControllableAnimation animatedAddResponse(@NotNull final ITipHit.Model newTipModel) {
+        assert response == null : "This help request is already in answered state";
+
+        IHelpRequest.Model helpRequestModel = request.getModel();
+        response = new AnsweredHelpRequest(helpRequestModel, newTipModel);
+        ControllableAnimation shrinkAwayHelpRequest = request.shrinkAway(response.getPreferredSize().height);
+        ControllableAnimation fadeInResponse = response.fadeIn();
+        fadeInResponse.runBeforeStart(new Runnable() {
+            @Override
+            public void run() {
+                contentPanel.remove(0);
+                contentPanel.add(response, 0);
+                contentPanel.validate();
+            }
+        });
+
+        return shrinkAwayHelpRequest.andThen(fadeInResponse);
     }
 
     private final class ContentPanel extends SamebugPanel {
@@ -79,7 +113,7 @@ public final class HelpRequestTab extends TransparentPanel implements IHelpReque
             for (int i = 0; i < tipHits.size(); i++) {
                 if (i == 0) add(Box.createRigidArea(new Dimension(0, 10)));
                 else add(Box.createRigidArea(new Dimension(0, 20)));
-                TipHit hit = tipHits.get(i);
+                NonMarkableTipHit hit = tipHits.get(i);
                 add(hit);
             }
         }
