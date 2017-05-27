@@ -137,10 +137,10 @@ public final class HelpRequestController extends BaseFrameController<IHelpReques
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        view.loadingSucceeded(model);
                         JComponent frame = (JComponent) view;
                         DataService.putData(frame, TrackingKeys.Location, new Locations.HelpRequest(helpRequestMatch.getHelpRequest().getId()));
                         DataService.putData(frame, TrackingKeys.PageViewId, TrackingService.newPageViewId());
+                        view.loadingSucceeded(model);
                     }
                 });
             }

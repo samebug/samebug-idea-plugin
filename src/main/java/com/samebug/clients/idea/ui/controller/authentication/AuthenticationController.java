@@ -39,8 +39,9 @@ public final class AuthenticationController extends BaseFrameController<IAuthent
 
     public AuthenticationController(ToolWindowController twc, Project project) {
         super(twc, project, new AuthenticationFrame());
-
         JComponent frame = (JComponent) view;
+        DataService.putData(frame, TrackingKeys.Location, new Locations.Authentication());
+        DataService.putData(frame, TrackingKeys.PageViewId, TrackingService.newPageViewId());
 
         signUpListener = new SignUpListener(this);
         ListenerService.putListenerToComponent(frame, ISignUpForm.Listener.class, signUpListener);
@@ -49,7 +50,5 @@ public final class AuthenticationController extends BaseFrameController<IAuthent
         anonymousUseListener = new AnonymousUseListener(this);
         ListenerService.putListenerToComponent(frame, IAnonymousUseForm.Listener.class, anonymousUseListener);
 
-        DataService.putData(frame, TrackingKeys.Location, new Locations.Authentication());
-        DataService.putData(frame, TrackingKeys.PageViewId, TrackingService.newPageViewId());
     }
 }
