@@ -14,17 +14,8 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>Removed search history</li>
-        <li>Total UI update</li>
-        <li>Smooth login/signup from the plugin</li>
-        <li>Show bugmates</li>
-        <li>Ask and answer help requests</li>
-
-        <li>Less eager websocket connect</li>
-        <li>Post form on Enter</li>
+        <li>Minor UI fixes and improvements</li>
       </ul>
-
-      Check it at <a href="https://medium.com/@samebug/samebug-integration-0-14-0-15c2d47462d3">our blog</a>
     ]]>
     </change-notes>
 
