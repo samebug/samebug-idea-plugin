@@ -35,7 +35,7 @@ public final class WebUriBuilder {
 
     @NotNull
     public URI search(@NotNull final Integer searchId) {
-        return resolveToRoot("/search/" + searchId);
+        return resolveToRoot("/searches/" + searchId);
     }
 
     @NotNull
