@@ -301,6 +301,8 @@ public final class SamebugClient {
                 .post()
                 .unauthenticated()
                 .withResponseType(AuthenticationResponseResource.class);
+        // NOTE: this is a bit leaky (mutating through a field), but otherwise it would be so overcomplicated...
+        request.getRequest().setHeader("Cookie", "registration-hook=unauthenticated");
         return extractResponse(rawClient.execute(request)).getData();
     }
 
