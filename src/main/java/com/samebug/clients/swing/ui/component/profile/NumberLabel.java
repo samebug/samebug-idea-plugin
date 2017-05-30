@@ -20,6 +20,7 @@ import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -62,6 +63,11 @@ public class NumberLabel extends TransparentPanel {
     public void updateUI() {
         super.updateUI();
         updateChildrenColor();
+    }
+
+    @NotNull
+    public String getText() {
+        return numberLabel.getText() + " " + hintLabel.getText();
     }
 
     private void updateChildrenColor() {
