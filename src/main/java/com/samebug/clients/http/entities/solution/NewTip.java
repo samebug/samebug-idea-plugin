@@ -28,6 +28,7 @@ public final class NewTip {
 
     public NewTip(@NotNull final String message, @Nullable final String sourceUrl) {
         this.message = message;
-        this.sourceUrl = sourceUrl;
+        this.sourceUrl = sourceUrl == null ? null :
+                sourceUrl.isEmpty() ? null : sourceUrl;
     }
 }

@@ -50,8 +50,7 @@ public final class RequestHelpScreen extends JComponent {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (isEnabled()) {
-                    final String helpRequestText = writeRequestArea.getText();
-                    requestHelp.getListener().askBugmates(requestHelp, helpRequestText.isEmpty() ? null : helpRequestText);
+                    requestHelp.getListener().askBugmates(requestHelp, writeRequestArea.getText());
                 }
             }
         });
