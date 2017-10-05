@@ -59,15 +59,14 @@ final class RequestHelpListener implements IAskForHelp.Listener, IAskForHelpViaC
     @Override
     public void askTeammates(final IAskForHelpViaChat source) {
         final JComponent sourceComponent = (JComponent) source;
-        final String transactionId = DataService.getData(sourceComponent, TrackingKeys.HelpRequestTransaction);
 
-        TrackingService.trace(SwingRawEvent.helpRequestSubmit(sourceComponent, transactionId));
         new NewChatFormHandler(controller.view, source, new NewChatRoom(), controller.searchId) {
             @Override
             protected void afterPostForm(@NotNull ChatRoom response) {
                 source.successStartChat();
                 Integer searchId = response.getSource().getSearch().getId();
                 URI searchUrl = IdeaSamebugPlugin.getInstance().uriBuilder.search(searchId);
+                TrackingService.trace(SwingRawEvent.chatOpened(sourceComponent, searchId));
                 BrowserUtil.browse(searchUrl);
             }
         }.execute();

@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
-import com.samebug.clients.common.tracking.Hooks;
 import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.swing.tracking.SwingRawEvent;
@@ -49,8 +48,7 @@ public final class RequestHelpViaChatScreen extends TransparentPanel {
                 public void mouseClicked(MouseEvent e) {
                     if (isEnabled()) {
                         requestHelp.getListener().askTeammates(requestHelp);
-                        TrackingService.trace(SwingRawEvent.helpRequestHookTrigger(
-                                AskButton.this, DataService.getData(AskButton.this, TrackingKeys.HelpRequestTransaction), Hooks.HelpRequest.ASK_BUGMATES));
+                        TrackingService.trace(SwingRawEvent.buttonClick(AskButton.this));
                     }
                 }
             });

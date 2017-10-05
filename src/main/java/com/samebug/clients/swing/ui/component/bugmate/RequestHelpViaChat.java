@@ -15,10 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.bugmate;
 
-import com.samebug.clients.common.tracking.Funnels;
 import com.samebug.clients.common.ui.component.community.IAskForHelpViaChat;
-import com.samebug.clients.swing.tracking.TrackingKeys;
-import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +28,6 @@ public final class RequestHelpViaChat extends JComponent implements IAskForHelpV
     private RequestHelpViaChatScreen ctaScreen;
 
     public RequestHelpViaChat(Model model) {
-        DataService.putData(this, TrackingKeys.HelpRequestTransaction, Funnels.newTransactionId());
         this.model = model;
         setLayout(new MigLayout("fillx", "0[fill]0", "0[fill]0"));
         changeToClosedState();
