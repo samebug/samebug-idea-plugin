@@ -60,6 +60,11 @@ final class RestUriBuilder {
     }
 
     @NotNull
+    public URI chatOnSearch(@NotNull final Integer searchId) {
+        return resolve("searches/" + searchId + "/chat");
+    }
+
+    @NotNull
     public URI helpRequests(@NotNull final Integer searchId) {
         return resolve("searches/" + searchId + "/help-requests");
     }

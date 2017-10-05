@@ -23,6 +23,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.samebug.clients.common.tracking.Locations;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateHit;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
+import com.samebug.clients.common.ui.component.community.IAskForHelpViaChat;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.common.ui.component.hit.IMarkButton;
@@ -102,6 +103,7 @@ public final class SolutionFrameController extends BaseFrameController<ISolution
 
         requestHelpListener = new RequestHelpListener(this);
         ListenerService.putListenerToComponent(frame, IAskForHelp.Listener.class, requestHelpListener);
+        ListenerService.putListenerToComponent(frame, IAskForHelpViaChat.Listener.class, requestHelpListener);
 
         revokeHelpRequestListener = new RevokeHelpRequestListener(this);
         ListenerService.putListenerToComponent(frame, IMyHelpRequest.Listener.class, revokeHelpRequestListener);

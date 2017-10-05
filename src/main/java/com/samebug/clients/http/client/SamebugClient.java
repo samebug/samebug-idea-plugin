@@ -18,7 +18,9 @@ package com.samebug.clients.http.client;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
+import com.samebug.clients.http.entities.chat.ChatRoom;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
+import com.samebug.clients.http.entities.helprequest.NewChatRoom;
 import com.samebug.clients.http.entities.helprequest.NewHelpRequest;
 import com.samebug.clients.http.entities.jsonapi.*;
 import com.samebug.clients.http.entities.mark.Mark;
@@ -164,6 +166,26 @@ public final class SamebugClient {
                 throw response.getException();
             case FORM_ERROR:
                 throw new HelpRequestCreate.BadRequest(response.getFormError());
+            default:
+                throw new IllegalStateException();
+        }
+    }
+
+    @NotNull
+    public ChatRoom createNewChat(@NotNull final Integer searchId, @NotNull final NewChatRoom data) throws SamebugClientException, CreateChatRoom.BadRequest {
+        Builder.BadRequestCapableResponseJson<ChatRoomResource, JsonErrors<CreateChatRoom.ErrorCode>> request = requestBuilder
+                .at(uriBuilder.chatOnSearch(searchId))
+                .post(data)
+                .<JsonErrors<CreateChatRoom.ErrorCode>>withFormErrorType(new TypeToken<JsonErrors<CreateChatRoom.ErrorCode>>() {}.getType())
+                .withResponseType(ChatRoomResource.class);
+        final PostFormResponse<ChatRoomResource, JsonErrors<CreateChatRoom.ErrorCode>> response = rawClient.execute(request);
+        switch (response.getResultType()) {
+            case SUCCESS:
+                return response.getResult().getData();
+            case EXCEPTION:
+                throw response.getException();
+            case FORM_ERROR:
+                throw new CreateChatRoom.BadRequest(response.getFormError());
             default:
                 throw new IllegalStateException();
         }

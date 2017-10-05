@@ -16,18 +16,25 @@
 package com.samebug.clients.idea.ui.controller.solution;
 
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
+import com.samebug.clients.common.ui.component.community.IAskForHelpViaChat;
 import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.http.entities.chat.ChatRoom;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
+import com.samebug.clients.http.entities.helprequest.NewChatRoom;
 import com.samebug.clients.http.entities.helprequest.NewHelpRequest;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.controller.form.CreateHelpRequestFormHandler;
+import com.samebug.clients.idea.ui.controller.form.NewChatFormHandler;
+import com.samebug.clients.idea.ui.modules.BrowserUtil;
 import com.samebug.clients.swing.tracking.SwingRawEvent;
 import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.modules.DataService;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.net.URI;
 
-final class RequestHelpListener implements IAskForHelp.Listener {
+final class RequestHelpListener implements IAskForHelp.Listener, IAskForHelpViaChat.Listener {
     final SolutionFrameController controller;
 
     RequestHelpListener(final SolutionFrameController controller) {
@@ -45,6 +52,23 @@ final class RequestHelpListener implements IAskForHelp.Listener {
             protected void afterPostForm(@NotNull HelpRequest response) {
                 controller.load();
                 TrackingService.trace(SwingRawEvent.helpRequestCreate(sourceComponent, transactionId, response.getId()));
+            }
+        }.execute();
+    }
+
+    @Override
+    public void askTeammates(final IAskForHelpViaChat source) {
+        final JComponent sourceComponent = (JComponent) source;
+        final String transactionId = DataService.getData(sourceComponent, TrackingKeys.HelpRequestTransaction);
+
+        TrackingService.trace(SwingRawEvent.helpRequestSubmit(sourceComponent, transactionId));
+        new NewChatFormHandler(controller.view, source, new NewChatRoom(), controller.searchId) {
+            @Override
+            protected void afterPostForm(@NotNull ChatRoom response) {
+                source.successStartChat();
+                Integer searchId = response.getSource().getSearch().getId();
+                URI searchUrl = IdeaSamebugPlugin.getInstance().uriBuilder.search(searchId);
+                BrowserUtil.browse(searchUrl);
             }
         }.execute();
     }
