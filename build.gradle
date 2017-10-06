@@ -106,7 +106,7 @@ task checkstyle(type: Checkstyle) {
 
 test {
     exclude 'com/samebug/clients/http/**'
-//    exclude 'com/samebug/clients/swing/ui/**'
+    exclude 'com/samebug/clients/swing/ui/**'
 }
 
 task httpTest(type: Test, description: 'Run http client tests') {
