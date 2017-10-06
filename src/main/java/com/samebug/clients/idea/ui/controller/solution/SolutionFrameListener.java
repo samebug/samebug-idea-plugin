@@ -21,7 +21,7 @@ import com.samebug.clients.idea.ui.controller.frame.BaseFrameListener;
 final class SolutionFrameListener extends BaseFrameListener implements ISolutionFrame.Listener {
     final SolutionFrameController controller;
 
-    public SolutionFrameListener(final SolutionFrameController controller) {
+    SolutionFrameListener(final SolutionFrameController controller) {
         super(controller.myProject);
         this.controller = controller;
     }

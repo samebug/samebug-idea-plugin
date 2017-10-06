@@ -43,7 +43,7 @@ public final class HelpRequestHeader extends JComponent implements IHelpRequestH
 
 
     final class HeaderTextLabel extends SamebugMultilineLabel {
-        public HeaderTextLabel(String text) {
+        HeaderTextLabel(String text) {
             setFont(FontService.demi(24));
             setForegroundColor(ColorService.EmphasizedText);
             setText(text);

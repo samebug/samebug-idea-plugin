@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 final class RevokeHelpRequestListener implements IMyHelpRequest.Listener {
     final SolutionFrameController controller;
 
-    public RevokeHelpRequestListener(final SolutionFrameController controller) {
+    RevokeHelpRequestListener(final SolutionFrameController controller) {
         this.controller = controller;
     }
 

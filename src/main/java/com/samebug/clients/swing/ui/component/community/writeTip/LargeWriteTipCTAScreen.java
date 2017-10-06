@@ -27,7 +27,7 @@ final class LargeWriteTipCTAScreen extends EmphasizedPanel implements WriteTipCT
     final SamebugButton button;
     final CenteredMultilineLabel label;
 
-    public LargeWriteTipCTAScreen() {
+    LargeWriteTipCTAScreen() {
         button = new SamebugButton(MessageService.message("samebug.component.tip.write.cta.button"), true);
         label = new CenteredMultilineLabel();
 
