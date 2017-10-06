@@ -24,6 +24,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.samebug.clients.http.entities.notification.ChatInvitation;
 import com.samebug.clients.http.entities.notification.IncomingAnswer;
 import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.http.entities.notification.Notification;
@@ -73,6 +74,20 @@ public final class NotificationController implements NotificationHandler {
     }
 
     @Override
+    public void chatInvitationReceived(final ChatInvitation chatInvitation) {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+                if (openProjects.length != 0) {
+                    Project projectToShowPopup = selectProjectToShowPopup(openProjects);
+                    projectToShowPopup.getMessageBus().syncPublisher(com.samebug.clients.idea.messages.IncomingChatInvitation.TOPIC).invitedToChat(chatInvitation);
+                }
+            }
+        });
+    }
+
+    @Override
     public void otherNotificationType(Notification notification) {
         LOGGER.warn("Unhandled incoming notification: " + notification);
     }
@@ -83,7 +98,7 @@ public final class NotificationController implements NotificationHandler {
 
         // get project from focus
         DataContext dataContext = DataManager.getInstance().getDataContextFromFocus().getResult();
-        projectToShowPopup = DataKeys.PROJECT.getData(dataContext);
+        projectToShowPopup = dataContext == null ? null : DataKeys.PROJECT.getData(dataContext);
 
         // get last opened project that must not be null
         if (projectToShowPopup == null) {

@@ -17,13 +17,13 @@ package com.samebug.clients.http.entities.user;
 
 public final class SamebugWorkspace {
     private Integer id;
-    private String name;
+    private String displayName;
 
     public Integer getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getDisplayName() {
+        return displayName;
     }
 }
