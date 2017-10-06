@@ -172,6 +172,15 @@ public final class SamebugClient {
     }
 
     @NotNull
+    public ChatRoom getChatRoom(@NotNull final Integer searchId) throws SamebugClientException {
+        Builder.SimpleResponseHandler<ChatRoomResource> request = requestBuilder
+                .at(uriBuilder.chatOnSearch(searchId))
+                .get()
+                .withResponseType(ChatRoomResource.class);
+        return extractResponse(rawClient.execute(request)).getData();
+    }
+
+    @NotNull
     public ChatRoom createNewChat(@NotNull final Integer searchId, @NotNull final NewChatRoom data) throws SamebugClientException, CreateChatRoom.BadRequest {
         Builder.BadRequestCapableResponseJson<ChatRoomResource, JsonErrors<CreateChatRoom.ErrorCode>> request = requestBuilder
                 .at(uriBuilder.chatOnSearch(searchId))

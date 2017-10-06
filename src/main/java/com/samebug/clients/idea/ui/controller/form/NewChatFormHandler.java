@@ -54,7 +54,9 @@ public abstract class NewChatFormHandler extends PostFormHandler<ChatRoom, Creat
     @Override
     protected ChatRoom postForm() throws SamebugClientException, CreateChatRoom.BadRequest {
         final ChatService chatService = IdeaSamebugPlugin.getInstance().chatService;
-        return chatService.createChatRoom(searchId, data);
+        ChatRoom existingRoom = chatService.chatRoom(searchId);
+        if (existingRoom == null) return chatService.createChatRoom(searchId, data);
+        else return existingRoom;
     }
 
     @Override
