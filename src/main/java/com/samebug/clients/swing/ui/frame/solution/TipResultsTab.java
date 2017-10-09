@@ -19,6 +19,7 @@ import com.samebug.clients.common.tracking.Funnels;
 import com.samebug.clients.common.tracking.PageTabs;
 import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
 import com.samebug.clients.common.ui.component.community.IAskForHelp;
+import com.samebug.clients.common.ui.component.community.IAskForHelpViaChat;
 import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
 import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
@@ -29,7 +30,7 @@ import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.base.scrollPane.SamebugScrollPane;
 import com.samebug.clients.swing.ui.component.bugmate.BugmateList;
-import com.samebug.clients.swing.ui.component.bugmate.RequestHelp;
+import com.samebug.clients.swing.ui.component.bugmate.RequestHelpViaChat;
 import com.samebug.clients.swing.ui.component.bugmate.RevokeHelpRequest;
 import com.samebug.clients.swing.ui.component.community.writeTip.WriteTip;
 import com.samebug.clients.swing.ui.component.hit.MarkableTipHit;
@@ -129,7 +130,9 @@ public final class TipResultsTab extends TransparentPanel implements IAnimatedCo
             if (myHelpRequestModel != null) {
                 helpRequest = new RevokeHelpRequest(myHelpRequestModel);
             } else {
-                helpRequest = new RequestHelp(askForHelpModel);
+                // TODO currently there is no data here, so we just mock it.
+                IAskForHelpViaChat.Model askForHelpViaChatModel = new IAskForHelpViaChat.Model();
+                helpRequest = new RequestHelpViaChat(askForHelpViaChatModel);
             }
         }
 

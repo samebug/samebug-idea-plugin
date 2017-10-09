@@ -72,6 +72,7 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public IdeaClientService clientService;
     public ProfileStore profileStore;
     public ProfileService profileService;
+    public ChatService chatService;
     public SolutionService solutionService;
     public SearchRequestStore searchRequestStore;
     public SearchRequestService searchRequestService;
@@ -132,6 +133,7 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         clientService.configure(getNetworkConfig(state.get()));
         profileStore = new ProfileStore();
         profileService = new ProfileService(clientService, profileStore);
+        chatService = new ChatService(clientService);
         solutionService = new SolutionService(clientService);
         searchStore = new SearchStore();
         searchService = new SearchService(clientService, searchStore);

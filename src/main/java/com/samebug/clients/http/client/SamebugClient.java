@@ -18,7 +18,9 @@ package com.samebug.clients.http.client;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
+import com.samebug.clients.http.entities.chat.ChatRoom;
 import com.samebug.clients.http.entities.helprequest.HelpRequest;
+import com.samebug.clients.http.entities.helprequest.NewChatRoom;
 import com.samebug.clients.http.entities.helprequest.NewHelpRequest;
 import com.samebug.clients.http.entities.jsonapi.*;
 import com.samebug.clients.http.entities.mark.Mark;
@@ -170,6 +172,35 @@ public final class SamebugClient {
     }
 
     @NotNull
+    public ChatRoom getChatRoom(@NotNull final Integer searchId) throws SamebugClientException {
+        Builder.SimpleResponseHandler<ChatRoomResource> request = requestBuilder
+                .at(uriBuilder.chatOnSearch(searchId))
+                .get()
+                .withResponseType(ChatRoomResource.class);
+        return extractResponse(rawClient.execute(request)).getData();
+    }
+
+    @NotNull
+    public ChatRoom createNewChat(@NotNull final Integer searchId, @NotNull final NewChatRoom data) throws SamebugClientException, CreateChatRoom.BadRequest {
+        Builder.BadRequestCapableResponseJson<ChatRoomResource, JsonErrors<CreateChatRoom.ErrorCode>> request = requestBuilder
+                .at(uriBuilder.chatOnSearch(searchId))
+                .post(data)
+                .<JsonErrors<CreateChatRoom.ErrorCode>>withFormErrorType(new TypeToken<JsonErrors<CreateChatRoom.ErrorCode>>() {}.getType())
+                .withResponseType(ChatRoomResource.class);
+        final PostFormResponse<ChatRoomResource, JsonErrors<CreateChatRoom.ErrorCode>> response = rawClient.execute(request);
+        switch (response.getResultType()) {
+            case SUCCESS:
+                return response.getResult().getData();
+            case EXCEPTION:
+                throw response.getException();
+            case FORM_ERROR:
+                throw new CreateChatRoom.BadRequest(response.getFormError());
+            default:
+                throw new IllegalStateException();
+        }
+    }
+
+    @NotNull
     public HelpRequest cancelHelpRequest(@NotNull final String helpRequestId) throws SamebugClientException, HelpRequestCancel.BadRequest {
         Builder.BadRequestCapableResponseJson<HelpRequestResource, JsonErrors<HelpRequestCancel.ErrorCode>> request = requestBuilder
                 .at(uriBuilder.helpRequest(helpRequestId))
@@ -301,6 +332,8 @@ public final class SamebugClient {
                 .post()
                 .unauthenticated()
                 .withResponseType(AuthenticationResponseResource.class);
+        // NOTE: this is a bit leaky (mutating through a field), but otherwise it would be so overcomplicated...
+        request.getRequest().setHeader("Cookie", "registration-hook=unauthenticated");
         return extractResponse(rawClient.execute(request)).getData();
     }
 

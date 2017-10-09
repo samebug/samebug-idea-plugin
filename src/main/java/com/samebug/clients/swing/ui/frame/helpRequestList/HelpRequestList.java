@@ -18,6 +18,8 @@ package com.samebug.clients.swing.ui.frame.helpRequestList;
 import com.samebug.clients.common.tracking.Funnels;
 import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestList;
 import com.samebug.clients.common.ui.modules.MessageService;
+import com.samebug.clients.common.ui.modules.TrackingService;
+import com.samebug.clients.swing.tracking.SwingRawEvent;
 import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
@@ -96,6 +98,7 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
             final LinkLabel openLabel = new LinkLabel(MessageService.message("samebug.frame.helpRequestList.openLabel"));
             final CenteredMultilineLabel description = new CenteredMultilineLabel();
             description.setText(MessageService.message("samebug.frame.helpRequestList.description"));
+            DataService.putData(openLabel, TrackingKeys.Label, openLabel.getText());
 
             openLabel.addMouseListener(new MouseAdapter() {
                 @Override
@@ -106,6 +109,7 @@ public final class HelpRequestList extends SamebugPanel implements IHelpRequestL
                     add(description, "cell 0 1, growx, wmin 0");
                     revalidate();
                     repaint();
+                    TrackingService.trace(SwingRawEvent.buttonClick(openLabel));
                 }
             });
 

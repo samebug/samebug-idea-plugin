@@ -13,21 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.solution;
+package com.samebug.clients.http.entities.helprequest;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public final class NewTip {
+public final class NewChatRoom {
     @NotNull
-    public final String type = "new--tip";
-    @NotNull
-    public final String message;
-    @Nullable
-    public final String sourceUrl;
-
-    public NewTip(@NotNull final String message, @Nullable final String sourceUrl) {
-        this.message = message;
-        this.sourceUrl = sourceUrl == null ? null : sourceUrl.isEmpty() ? null : sourceUrl;
-    }
+    public final String type = "new--chat-room";
 }

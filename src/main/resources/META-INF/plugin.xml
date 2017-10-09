@@ -1,4 +1,4 @@
-<idea-plugin version="2">
+<idea-plugin>
     <id>Samebug</id>
     <name>Samebug</name>
     <vendor email="hello@samebug.io" url="http://samebug.io">Samebug</vendor>
@@ -14,7 +14,7 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>Minor UI fixes and improvements</li>
+        <li>Introduce opening chat for search</li>
       </ul>
     ]]>
     </change-notes>

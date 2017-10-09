@@ -16,6 +16,7 @@
 package com.samebug.clients.http.json;
 
 import com.google.common.collect.ImmutableMap;
+import com.samebug.clients.http.entities.notification.ChatInvitation;
 import com.samebug.clients.http.entities.notification.IncomingAnswer;
 import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.http.entities.notification.Notification;
@@ -25,6 +26,7 @@ public class NotificationAdapter extends AbstractObjectAdapter<Notification> {
         typeClasses = ImmutableMap.<String, Class<? extends Notification>>builder()
                 .put("incoming--help-request--created", IncomingHelpRequest.class)
                 .put("incoming--answer", IncomingAnswer.class)
+                .put("chat--invitation", ChatInvitation.class)
                 .build();
     }
 }

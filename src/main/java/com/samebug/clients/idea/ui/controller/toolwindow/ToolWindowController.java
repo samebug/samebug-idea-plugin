@@ -34,17 +34,15 @@ import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.entities.EntityUtils;
 import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.messages.FocusListener;
-import com.samebug.clients.idea.messages.IncomingHelpRequest;
-import com.samebug.clients.idea.messages.IncomingTip;
-import com.samebug.clients.idea.messages.RefreshTimestampsListener;
+import com.samebug.clients.idea.messages.*;
 import com.samebug.clients.idea.tracking.IdeaRawEvent;
 import com.samebug.clients.idea.ui.controller.authentication.AuthenticationController;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
 import com.samebug.clients.idea.ui.controller.helpRequest.HelpRequestController;
 import com.samebug.clients.idea.ui.controller.helpRequestList.HelpRequestListController;
-import com.samebug.clients.idea.ui.controller.helpRequestPopup.HelpRequestPopupController;
-import com.samebug.clients.idea.ui.controller.incomingTipPopup.IncomingTipPopupController;
+import com.samebug.clients.idea.ui.controller.popupController.HelpRequestPopupController;
+import com.samebug.clients.idea.ui.controller.popupController.IncomingChatInvitationPopupController;
+import com.samebug.clients.idea.ui.controller.popupController.IncomingTipPopupController;
 import com.samebug.clients.idea.ui.controller.solution.SolutionFrameController;
 import com.samebug.clients.swing.tracking.SwingRawEvent;
 import com.samebug.clients.swing.tracking.TrackingKeys;
@@ -64,10 +62,12 @@ public final class ToolWindowController implements FocusListener, Disposable {
     final Timer dateLabelRefresher;
     final IncomingHelpRequestPopupListener incomingHelpRequestPopupListener;
     final IncomingTipPopupListener incomingTipPopupListener;
+    final IncomingChatInvitationPopupListener incomingChatInvitationPopupListener;
     final ConfigChangeListener configChangeListener;
 
     final HelpRequestPopupController helpRequestPopupController;
     final IncomingTipPopupController incomingTipPopupController;
+    final IncomingChatInvitationPopupController incomingChatInvitationPopupController;
 
     public ToolWindowController(@NotNull final Project project) {
         this.project = project;
@@ -87,13 +87,16 @@ public final class ToolWindowController implements FocusListener, Disposable {
 
         incomingHelpRequestPopupListener = new IncomingHelpRequestPopupListener(this);
         incomingTipPopupListener = new IncomingTipPopupListener(this);
+        incomingChatInvitationPopupListener = new IncomingChatInvitationPopupListener(this);
         configChangeListener = new ConfigChangeListener(this);
         helpRequestPopupController = new HelpRequestPopupController(this, project);
         incomingTipPopupController = new IncomingTipPopupController(this, project);
+        incomingChatInvitationPopupController = new IncomingChatInvitationPopupController(this, project);
         MessageBusConnection connection = project.getMessageBus().connect(project);
         connection.subscribe(FocusListener.TOPIC, this);
         connection.subscribe(IncomingHelpRequest.TOPIC, incomingHelpRequestPopupListener);
         connection.subscribe(IncomingTip.TOPIC, incomingTipPopupListener);
+        connection.subscribe(IncomingChatInvitation.TOPIC, incomingChatInvitationPopupListener);
     }
 
     public void initToolWindow(@NotNull ToolWindow toolWindow) {

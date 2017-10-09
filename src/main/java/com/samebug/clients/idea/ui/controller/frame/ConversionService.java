@@ -27,6 +27,7 @@ import com.samebug.clients.common.ui.component.hit.IMarkButton;
 import com.samebug.clients.common.ui.component.hit.ITipHit;
 import com.samebug.clients.common.ui.component.hit.IWebHit;
 import com.samebug.clients.common.ui.component.popup.IHelpRequestPopup;
+import com.samebug.clients.common.ui.component.popup.IIncomingChatInvitationPopup;
 import com.samebug.clients.common.ui.component.popup.IIncomingTipPopup;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestFrame;
@@ -42,6 +43,7 @@ import com.samebug.clients.http.entities.helprequest.HelpRequest;
 import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
 import com.samebug.clients.http.entities.jsonapi.BugmateList;
 import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
+import com.samebug.clients.http.entities.notification.ChatInvitation;
 import com.samebug.clients.http.entities.notification.IncomingAnswer;
 import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.http.entities.profile.UserStats;
@@ -51,6 +53,7 @@ import com.samebug.clients.http.entities.solution.SamebugTip;
 import com.samebug.clients.http.entities.solution.SolutionSlot;
 import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.http.entities.user.RegisteredSamebugUser;
+import com.samebug.clients.http.entities.user.SamebugUser;
 import com.samebug.clients.http.entities.user.SamebugVisitor;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -207,6 +210,12 @@ public final class ConversionService {
         SamebugTip tip = incomingTip.getSolution().getDocument();
         RegisteredSamebugUser author = tip.getAuthor();
         return new IIncomingTipPopup.Model(tip.getMessage(), author.getDisplayName(), author.getAvatarUrl());
+    }
+
+    public IIncomingChatInvitationPopup.Model convertIncomingChatInvitationPopup(ChatInvitation chatInvitation) {
+        Search search = chatInvitation.getInvitationSource().getSearch();
+        SamebugUser inviter = chatInvitation.getInviter();
+        return new IIncomingChatInvitationPopup.Model(search.getId(), inviter.getDisplayName(), inviter.getAvatarUrl());
     }
 
     public static String headLine(QueryInfo search) {

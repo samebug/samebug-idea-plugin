@@ -13,21 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities.solution;
+package com.samebug.clients.common.ui.component.community;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+public interface IAskForHelpViaChat {
+    void startChat();
 
-public final class NewTip {
-    @NotNull
-    public final String type = "new--tip";
-    @NotNull
-    public final String message;
-    @Nullable
-    public final String sourceUrl;
+    void failStartChat(BadRequest errors);
 
-    public NewTip(@NotNull final String message, @Nullable final String sourceUrl) {
-        this.message = message;
-        this.sourceUrl = sourceUrl == null ? null : sourceUrl.isEmpty() ? null : sourceUrl;
+    void successStartChat();
+
+    final class Model {
+
+        public Model(Model rhs) {
+            this();
+        }
+
+        public Model() {
+        }
+    }
+
+    final class BadRequest {
+        public BadRequest() {
+        }
+    }
+
+    interface Listener {
+        void askTeammates(IAskForHelpViaChat source);
     }
 }

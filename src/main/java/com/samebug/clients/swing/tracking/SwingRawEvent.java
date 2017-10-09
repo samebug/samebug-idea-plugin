@@ -228,6 +228,15 @@ public class SwingRawEvent extends RawEvent {
     }
 
 
+    public static RawEvent chatOpened(@NotNull final JComponent source, @NotNull final Integer searchId) {
+        return new SwingRawEvent("Chat", "Opened", source) {
+            protected void myLazyFields() {
+                withData("searchId", searchId);
+            }
+        };
+    }
+
+
     // Generic interactions
     public static RawEvent buttonClick(@NotNull final JComponent source) {
         return new SwingRawEvent("Interaction", "ButtonClicked", source) {

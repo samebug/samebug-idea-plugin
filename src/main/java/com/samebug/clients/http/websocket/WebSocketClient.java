@@ -31,12 +31,11 @@ import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 
 import javax.net.ssl.SSLException;
-import java.io.Closeable;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 
-public final class WebSocketClient implements Closeable {
+public final class WebSocketClient {
     private final int port;
     private final String host;
     private final URI wsEndpoint;
@@ -93,10 +92,9 @@ public final class WebSocketClient implements Closeable {
         return channel;
     }
 
-    @Override
-    public void close() {
-        channel.writeAndFlush(new CloseWebSocketFrame()).syncUninterruptibly();
-        channel.closeFuture().syncUninterruptibly();
+    public void close() throws InterruptedException {
+        channel.writeAndFlush(new CloseWebSocketFrame()).sync();
+        channel.closeFuture().sync();
     }
 
 

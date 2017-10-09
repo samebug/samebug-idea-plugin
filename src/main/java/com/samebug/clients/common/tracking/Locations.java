@@ -23,7 +23,7 @@ public final class Locations {
         public final Integer searchId;
 
         public Search(@NotNull Integer searchId) {
-            super("search");
+            super("stack-trace-search");
             this.searchId = searchId;
         }
     }

@@ -75,7 +75,7 @@ public abstract class PasswordFormField<T> extends SamebugPanel {
     }
 
     final class DescriptionLabel extends SamebugLabel {
-        public DescriptionLabel(String text) {
+        DescriptionLabel(String text) {
             setText(text);
             setFont(FontService.regular(14));
             setForegroundColor(ColorService.NormalForm.fieldName);
@@ -84,7 +84,7 @@ public abstract class PasswordFormField<T> extends SamebugPanel {
     }
 
     final class ErrorLabel extends SamebugMultilineLabel {
-        public ErrorLabel() {
+        ErrorLabel() {
             setForegroundColor(ColorService.NormalForm.error);
             setFont(FontService.regular(12));
             setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));

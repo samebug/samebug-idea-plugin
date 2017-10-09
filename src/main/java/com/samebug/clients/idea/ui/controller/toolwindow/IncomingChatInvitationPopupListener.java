@@ -17,24 +17,24 @@ package com.samebug.clients.idea.ui.controller.toolwindow;
 
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
-import com.samebug.clients.http.entities.notification.IncomingAnswer;
-import com.samebug.clients.idea.notifications.IncomingTipNotification;
+import com.samebug.clients.http.entities.notification.ChatInvitation;
+import com.samebug.clients.idea.notifications.IncomingChatInvitationNotification;
 
-public final class IncomingTipPopupListener implements com.samebug.clients.idea.messages.IncomingTip {
+public final class IncomingChatInvitationPopupListener implements com.samebug.clients.idea.messages.IncomingChatInvitation {
     final ToolWindowController twc;
 
-    public IncomingTipPopupListener(ToolWindowController twc) {
+    public IncomingChatInvitationPopupListener(ToolWindowController twc) {
         this.twc = twc;
     }
 
     @Override
-    public void showTip(IncomingAnswer tip) {
-        IncomingTipNotification n = new IncomingTipNotification(tip);
+    public void invitedToChat(ChatInvitation chatInvitation) {
+        IncomingChatInvitationNotification n = new IncomingChatInvitationNotification(chatInvitation);
         NotificationDisplayType notificationType = NotificationsConfigurationImpl.getSettings(n.getGroupId()).getDisplayType();
         if (NotificationDisplayType.BALLOON == notificationType) {
             // This is the type we set by default.
             // In this case, do not use it as a notification, but create instead a custom balloon and show that, because we cannot customize the presentation of a notification
-            twc.incomingTipPopupController.showIncomingChatInvitation(tip, n);
+            twc.incomingChatInvitationPopupController.showIncomingChatInvitation(chatInvitation, n);
         } else {
             // if the user changed it, than handle it as a well-behaved notification
             n.notify(twc.project);

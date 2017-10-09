@@ -48,7 +48,7 @@ final class EnumAdapter<T extends Enum<T>> extends TypeAdapter<T> {
     private final Map<T, String> constantToName = new HashMap<T, String>();
     private final String enumName;
 
-    public EnumAdapter(Class<T> classOfT) {
+    EnumAdapter(Class<T> classOfT) {
         enumName = classOfT.getName();
         try {
             for (T constant : classOfT.getEnumConstants()) {

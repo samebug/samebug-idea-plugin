@@ -19,9 +19,11 @@ import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.swing.tracking.SwingRawEvent;
+import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
@@ -85,6 +87,7 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
         marks = new NumberLabel(model.marks, MessageService.message("samebug.component.profile.marks.label"));
         tips = new NumberLabel(model.tips, MessageService.message("samebug.component.profile.tips.label"));
         thanks = new NumberLabel(model.thanks, MessageService.message("samebug.component.profile.thanks.label"));
+        DataService.putData(messages, TrackingKeys.Label, messages.getText());
 
         setLayout(new MigLayout("fillx", "0[]8px[]0[grow]0[]19px[]19px[]19px[]0", "10px[]10px"));
 
@@ -103,7 +106,7 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
             @Override
             public void mouseClicked(MouseEvent e) {
                 getListener().messagesClicked();
-                TrackingService.trace(SwingRawEvent.buttonClick(ProfilePanel.this));
+                TrackingService.trace(SwingRawEvent.buttonClick(messages));
             }
         });
     }

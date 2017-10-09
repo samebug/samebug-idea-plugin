@@ -13,19 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.websocket;
+package com.samebug.clients.idea.messages;
 
+import com.intellij.util.messages.Topic;
 import com.samebug.clients.http.entities.notification.ChatInvitation;
-import com.samebug.clients.http.entities.notification.IncomingAnswer;
-import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
-import com.samebug.clients.http.entities.notification.Notification;
 
-public interface NotificationHandler {
-    void helpRequestReceived(IncomingHelpRequest helpRequestNotification);
+public interface IncomingChatInvitation {
+    Topic<IncomingChatInvitation> TOPIC = Topic.create("incoming chat invitation", IncomingChatInvitation.class);
 
-    void tipReceived(IncomingAnswer tipNotification);
-
-    void chatInvitationReceived(ChatInvitation chatInvitation);
-
-    void otherNotificationType(Notification notification);
+    void invitedToChat(ChatInvitation chatInvitation);
 }

@@ -2,6 +2,7 @@ package com.samebug.clients.http.websocket;
 
 import com.samebug.clients.http.client.TestWithSamebugClient;
 import com.samebug.clients.http.entities.helprequest.NewHelpRequest;
+import com.samebug.clients.http.entities.notification.ChatInvitation;
 import com.samebug.clients.http.entities.notification.IncomingAnswer;
 import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.http.entities.notification.Notification;
@@ -82,6 +83,11 @@ public class WebSocketClientTest extends TestWithSamebugClient {
 
         @Override
         public void tipReceived(IncomingAnswer tipNotification) {
+            receivedSomeMessage = true;
+        }
+
+        @Override
+        public void chatInvitationReceived(ChatInvitation chatInvitation) {
             receivedSomeMessage = true;
         }
 

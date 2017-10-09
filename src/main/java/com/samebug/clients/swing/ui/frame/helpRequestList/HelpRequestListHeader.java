@@ -45,7 +45,7 @@ public final class HelpRequestListHeader extends JComponent implements IHelpRequ
     }
 
     final class HelpRequests extends HitsLabel {
-        public HelpRequests(int n) {
+        HelpRequests(int n) {
             super(HitsLabel.LARGE);
             setText(Integer.toString(n));
             setForegroundColor(ColorService.SelectedTab);

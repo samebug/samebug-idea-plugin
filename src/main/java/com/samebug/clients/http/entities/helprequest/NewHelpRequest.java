@@ -25,6 +25,6 @@ public final class NewHelpRequest {
     public final String context;
 
     public NewHelpRequest(@Nullable final String context) {
-        this.context = context;
+        this.context = context == null ? null : context.isEmpty() ? null : context;
     }
 }
