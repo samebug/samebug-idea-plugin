@@ -13,8 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities;
+package com.samebug.clients.common.ui.frame.welcome;
 
-public final class EntityUtils {
-    private EntityUtils() {}
+public interface IWelcome {
+    final class Model {
+        public Model(Model rhs) {
+            this();
+        }
+
+        public Model() {
+        }
+    }
+
+    interface Listener {
+        void moreClicked();
+    }
 }

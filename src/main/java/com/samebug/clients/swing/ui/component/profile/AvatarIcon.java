@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.swing.ui.component.profile;
 
-import com.samebug.clients.common.ui.component.bugmate.ConnectionStatus;
+import com.samebug.clients.common.ui.component.profile.ConnectionStatus;
 import com.samebug.clients.swing.ui.modules.ColorService;
 import com.samebug.clients.swing.ui.modules.DrawService;
 import com.samebug.clients.swing.ui.modules.WebImageService;

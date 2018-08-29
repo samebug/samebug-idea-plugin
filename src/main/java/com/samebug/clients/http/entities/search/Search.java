@@ -23,7 +23,6 @@ import java.util.Date;
 
 public final class Search {
     private Integer id;
-    private SearchGroup group;
     private Date timestamp;
     private SamebugUser user;
     private Integer workspaceId;
@@ -32,11 +31,6 @@ public final class Search {
     @NotNull
     public Integer getId() {
         return id;
-    }
-
-    @NotNull
-    public SearchGroup getGroup() {
-        return group;
     }
 
     @NotNull

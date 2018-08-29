@@ -40,53 +40,8 @@ final class RestUriBuilder {
     }
 
     @NotNull
-    public URI solutionsForSearch(@NotNull final Integer searchId) {
-        return resolve("searches/" + searchId + "/external-solutions");
-    }
-
-    @NotNull
-    public URI tipsForSearch(@NotNull final Integer searchId) {
-        return resolve("searches/" + searchId + "/tips");
-    }
-
-    @NotNull
-    public URI bugmatesForSearch(@NotNull final Integer searchId) {
-        return resolve("searches/" + searchId + "/bugmates");
-    }
-
-    @NotNull
     public URI me() {
         return resolve("auth/me");
-    }
-
-    @NotNull
-    public URI chatOnSearch(@NotNull final Integer searchId) {
-        return resolve("searches/" + searchId + "/chat");
-    }
-
-    @NotNull
-    public URI helpRequests(@NotNull final Integer searchId) {
-        return resolve("searches/" + searchId + "/help-requests");
-    }
-
-    @NotNull
-    public URI helpRequest(String helpRequestId) {
-        return resolve("help-requests/" + helpRequestId);
-    }
-
-    @NotNull
-    public URI marksForSearch(@NotNull final Integer searchId) {
-        return resolve("searches/" + searchId + "/marks");
-    }
-
-    @NotNull
-    public URI mark(@NotNull final Integer markId) {
-        return resolve("marks/" + markId);
-    }
-
-    @NotNull
-    public URI incomingHelpRequests(@NotNull final Integer userId) {
-        return resolve("users/" + userId + "/incoming-help-requests");
     }
 
     @NotNull

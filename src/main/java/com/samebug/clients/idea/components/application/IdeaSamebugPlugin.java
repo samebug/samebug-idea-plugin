@@ -72,14 +72,10 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
     public IdeaClientService clientService;
     public ProfileStore profileStore;
     public ProfileService profileService;
-    public ChatService chatService;
-    public SolutionService solutionService;
     public SearchRequestStore searchRequestStore;
     public SearchRequestService searchRequestService;
     public SearchStore searchStore;
     public SearchService searchService;
-    public HelpRequestStore helpRequestStore;
-    public HelpRequestService helpRequestService;
     public AuthenticationService authenticationService;
     public ConversionService conversionService;
     public ConcurrencyService concurrencyService;
@@ -133,19 +129,13 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         clientService.configure(getNetworkConfig(state.get()));
         profileStore = new ProfileStore();
         profileService = new ProfileService(clientService, profileStore);
-        chatService = new ChatService(clientService);
-        solutionService = new SolutionService(clientService);
         searchStore = new SearchStore();
         searchService = new SearchService(clientService, searchStore);
         searchRequestStore = new SearchRequestStore();
         searchRequestService = new SearchRequestService(searchRequestStore);
-        helpRequestStore = new HelpRequestStore();
-        helpRequestService = new HelpRequestService(clientService, helpRequestStore);
         authenticationService = new AuthenticationService(clientService);
         conversionService = new ConversionService();
         concurrencyService = new ConcurrencyService(profileStore, profileService,
-                solutionService,
-                helpRequestStore, helpRequestService,
                 searchService);
 
         TimedTasks timedTasks = new TimedTasks();
@@ -195,7 +185,6 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
         // If authentication data (apiKey or workspace id) is changed, we have to do some cleanup
         if (!SBUtil.equals(newSettings.apiKey, oldSettings.apiKey) || !SBUtil.equals(newSettings.workspaceId, oldSettings.workspaceId)) {
             // clear the caches
-            helpRequestStore.invalidate();
             profileStore.invalidate();
         }
 

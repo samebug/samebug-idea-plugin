@@ -44,7 +44,7 @@ public final class SignUpListener implements ISignUpForm.Listener {
             @Override
             protected void afterPostForm(@NotNull AuthenticationResponse response) {
                 source.successPost();
-                controller.twc.focusOnHelpRequestList();
+                controller.twc.focusOnWelcome();
                 TrackingService.trace(SwingRawEvent.authenticationSucceeded(sourceComponent, authenticationTransactionId, response));
             }
         }.execute();

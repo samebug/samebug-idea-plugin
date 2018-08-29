@@ -15,9 +15,8 @@
  */
 package com.samebug.clients.idea.ui.controller.externalEvent;
 
-import com.samebug.clients.common.ui.component.bugmate.ConnectionStatus;
+import com.samebug.clients.common.ui.component.profile.ConnectionStatus;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
-import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.idea.messages.ProfileUpdate;
 import com.samebug.clients.idea.messages.WebSocketStatusUpdate;
@@ -30,28 +29,11 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-public final class ProfileUpdateListener implements
-        com.samebug.clients.idea.messages.IncomingHelpRequest, ProfileUpdate, WebSocketStatusUpdate {
+public final class ProfileUpdateListener implements ProfileUpdate, WebSocketStatusUpdate {
     final BaseFrameController controller;
 
     public ProfileUpdateListener(final BaseFrameController controller) {
         this.controller = controller;
-    }
-
-    @Override
-    public void showHelpRequest(IncomingHelpRequest helpRequest) {
-        // nothing to do
-    }
-
-    @Override
-    public void addHelpRequest(IncomingHelpRequest helpRequest) {
-        IProfilePanel profilePanel = getProfilePanel();
-        if (profilePanel != null) {
-            IProfilePanel.Model oldModel = profilePanel.getModel();
-            IProfilePanel.Model newModel = new IProfilePanel.Model(oldModel.messages + 1, oldModel.marks, oldModel.tips, oldModel.thanks,
-                    oldModel.name, oldModel.avatarUrl, oldModel.status);
-            profilePanel.setModel(newModel);
-        }
     }
 
     @Override

@@ -13,8 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities;
+package com.samebug.clients.idea.ui.controller.welcome;
 
-public final class EntityUtils {
-    private EntityUtils() {}
+import com.samebug.clients.common.ui.frame.welcome.IWelcomeFrame;
+import com.samebug.clients.idea.ui.controller.frame.BaseFrameListener;
+
+public final class WelcomeFrameListener extends BaseFrameListener implements IWelcomeFrame.Listener {
+    final WelcomeController controller;
+
+    public WelcomeFrameListener(final WelcomeController controller) {
+        super(controller.myProject);
+        this.controller = controller;
+    }
+
+    @Override
+    public void reload() {
+        controller.load();
+    }
 }

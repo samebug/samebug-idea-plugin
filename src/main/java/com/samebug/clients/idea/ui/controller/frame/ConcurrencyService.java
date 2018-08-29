@@ -16,12 +16,9 @@
 package com.samebug.clients.idea.ui.controller.frame;
 
 import com.intellij.util.concurrency.FixedFuture;
-import com.samebug.clients.common.services.*;
-import com.samebug.clients.http.entities.helprequest.HelpRequest;
-import com.samebug.clients.http.entities.jsonapi.BugmateList;
-import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
-import com.samebug.clients.http.entities.jsonapi.SolutionList;
-import com.samebug.clients.http.entities.jsonapi.TipList;
+import com.samebug.clients.common.services.ProfileService;
+import com.samebug.clients.common.services.ProfileStore;
+import com.samebug.clients.common.services.SearchService;
 import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.search.Search;
 import com.samebug.clients.http.entities.user.Me;
@@ -36,20 +33,12 @@ public final class ConcurrencyService {
     private final ExecutorService executor;
     private final ProfileStore profileStore;
     private final ProfileService profileService;
-    private final SolutionService solutionService;
-    private final HelpRequestStore helpRequestStore;
-    private final HelpRequestService helpRequestService;
     private final SearchService searchService;
 
     public ConcurrencyService(ProfileStore profileStore, ProfileService profileService,
-                              SolutionService solutionService,
-                              HelpRequestStore helpRequestStore, HelpRequestService helpRequestService,
                               SearchService searchService) {
         this.profileStore = profileStore;
         this.profileService = profileService;
-        this.solutionService = solutionService;
-        this.helpRequestStore = helpRequestStore;
-        this.helpRequestService = helpRequestService;
         this.searchService = searchService;
         executor = PooledThreadExecutor.INSTANCE;
     }
@@ -74,53 +63,6 @@ public final class ConcurrencyService {
             }
         });
         else return new FixedFuture<UserStats>(current);
-    }
-
-    public Future<SolutionList> solutions(final int searchId) {
-        return executor.submit(new Callable<SolutionList>() {
-            @Override
-            public SolutionList call() throws SamebugClientException {
-                return solutionService.loadWebHits(searchId);
-            }
-        });
-    }
-
-    public Future<TipList> tips(final int searchId) {
-        return executor.submit(new Callable<TipList>() {
-            @Override
-            public TipList call() throws SamebugClientException {
-                return solutionService.loadTipHits(searchId);
-            }
-        });
-    }
-
-    public Future<BugmateList> bugmates(final int searchId) {
-        return executor.submit(new Callable<BugmateList>() {
-            @Override
-            public BugmateList call() throws SamebugClientException {
-                return solutionService.loadBugmates(searchId);
-            }
-        });
-    }
-
-    public Future<IncomingHelpRequestList> incomingHelpRequests(boolean forceReload) {
-        IncomingHelpRequestList current = helpRequestStore.get();
-        if (current == null || forceReload) return executor.submit(new Callable<IncomingHelpRequestList>() {
-            @Override
-            public IncomingHelpRequestList call() throws SamebugClientException {
-                return helpRequestService.loadIncoming();
-            }
-        });
-        else return new FixedFuture<IncomingHelpRequestList>(current);
-    }
-
-    public Future<HelpRequest> helpRequest(final String helpRequestId) {
-        return executor.submit(new Callable<HelpRequest>() {
-            @Override
-            public HelpRequest call() throws SamebugClientException {
-                return helpRequestService.getHelpRequest(helpRequestId);
-            }
-        });
     }
 
     public Future<Search> search(final int searchId) {

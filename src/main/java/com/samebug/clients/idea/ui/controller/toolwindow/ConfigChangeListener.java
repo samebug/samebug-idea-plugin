@@ -53,7 +53,7 @@ public class ConfigChangeListener implements com.samebug.clients.idea.messages.C
             TrackingService.trace(SwingRawEvent.authenticationHookTriggered(authenticationTransactionId, Hooks.Authentication.UNAUTHENTICATED));
             twc.focusOnAuthentication(authenticationTransactionId);
         } else {
-            if (!SBUtil.equals(c.apiKey, old.apiKey) || !SBUtil.equals(c.serverRoot, old.serverRoot)) twc.focusOnHelpRequestList();
+            if (!SBUtil.equals(c.apiKey, old.apiKey) || !SBUtil.equals(c.serverRoot, old.serverRoot)) twc.focusOnWelcome();
         }
     }
 }

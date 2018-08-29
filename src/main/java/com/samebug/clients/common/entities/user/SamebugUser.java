@@ -15,7 +15,7 @@
  */
 package com.samebug.clients.common.entities.user;
 
-import com.samebug.clients.common.ui.component.bugmate.ConnectionStatus;
+import com.samebug.clients.common.ui.component.profile.ConnectionStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

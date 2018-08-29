@@ -16,23 +16,16 @@
 package com.samebug.clients.swing.tracking;
 
 import com.samebug.clients.common.tracking.Locations;
-import com.samebug.clients.common.tracking.SolutionHit;
 import com.samebug.clients.swing.ui.modules.DataService;
 
 public final class TrackingKeys {
     public static final DataService.Key<String> AuthenticationTransaction = new DataService.Key<String>("track.AuthenticationTransaction");
-    public static final DataService.Key<String> HelpRequestTransaction = new DataService.Key<String>("track.HelpRequestTransaction");
-    public static final DataService.Key<String> SolutionTransaction = new DataService.Key<String>("track.SolutionTransaction");
-    public static final DataService.Key<String> WriteTipTransaction = new DataService.Key<String>("track.WriteTipTransaction");
     public static final DataService.Key<String> SearchTransaction = new DataService.Key<String>("track.SearchTransaction");
 
     public static final DataService.Key<String> PageViewId = new DataService.Key<String>("track.PageViewId");
     public static final DataService.Key<String> PageTab = new DataService.Key<String>("track.PageTab");
     public static final DataService.Key<Locations.Base> Location = new DataService.Key<Locations.Base>("track.Location");
     public static final DataService.Key<String> Label = new DataService.Key<String>("track.Label");
-    public static final DataService.Key<SolutionHit> SolutionHit = new DataService.Key<SolutionHit>("track.SolutionHit");
-    public static final DataService.Key<Integer> SolutionHitIndex = new DataService.Key<Integer>("SolutionHitIndex");
-    public static final DataService.Key<Integer> BugmateHitIndex = new DataService.Key<Integer>("BugmateHitIndex");
 
     private TrackingKeys() {}
 }

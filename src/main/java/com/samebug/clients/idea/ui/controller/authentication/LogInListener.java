@@ -46,7 +46,7 @@ public final class LogInListener implements ILogInForm.Listener {
             @Override
             protected void afterPostForm(@NotNull AuthenticationResponse response) {
                 source.successPost();
-                controller.twc.focusOnHelpRequestList();
+                controller.twc.focusOnWelcome();
                 TrackingService.trace(SwingRawEvent.authenticationSucceeded(sourceComponent, authenticationTransactionId, response));
             }
         }.execute();

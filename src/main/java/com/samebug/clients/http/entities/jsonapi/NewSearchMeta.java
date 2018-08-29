@@ -17,6 +17,7 @@ package com.samebug.clients.http.entities.jsonapi;
 
 import org.jetbrains.annotations.NotNull;
 
+// TODO @poroszd what will we return for searches?
 public final class NewSearchMeta {
     private Boolean hasTips;
     private Boolean hasExternalSolutions;

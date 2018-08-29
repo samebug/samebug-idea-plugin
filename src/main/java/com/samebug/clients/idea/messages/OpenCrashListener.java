@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.http.entities;
+package com.samebug.clients.idea.messages;
 
-public final class EntityUtils {
-    private EntityUtils() {}
+import com.intellij.util.messages.Topic;
+
+public interface OpenCrashListener {
+    Topic<OpenCrashListener> TOPIC = Topic.create("open crash", OpenCrashListener.class);
+
+    void openCrash(int searchId);
 }

@@ -13,22 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.samebug.clients.idea.ui.controller.component;
+package com.samebug.clients.common.ui.frame.welcome;
 
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
-import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
+import com.samebug.clients.common.ui.frame.IFrame;
 
-public final class ProfileListener implements IProfilePanel.Listener {
-    final BaseFrameController controller;
+public interface IWelcomeFrame extends IFrame {
+    void loadingSucceeded(Model model);
 
-    public ProfileListener(final BaseFrameController controller) {
-        this.controller = controller;
+    void setLoading();
+
+    final class Model {
+        public final IProfilePanel.Model profilePanel;
+
+        public Model(Model rhs) {
+            this(rhs.profilePanel);
+        }
+
+        public Model(IProfilePanel.Model profilePanel) {
+            this.profilePanel = profilePanel;
+        }
     }
 
-    @Override
-    public void messagesClicked() {
-        controller.twc.focusOnWelcome();
+    interface Listener extends FrameListener {
     }
-
-
 }

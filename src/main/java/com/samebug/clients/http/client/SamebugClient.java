@@ -18,24 +18,16 @@ package com.samebug.clients.http.client;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
-import com.samebug.clients.http.entities.chat.ChatRoom;
-import com.samebug.clients.http.entities.helprequest.HelpRequest;
-import com.samebug.clients.http.entities.helprequest.NewChatRoom;
-import com.samebug.clients.http.entities.helprequest.NewHelpRequest;
 import com.samebug.clients.http.entities.jsonapi.*;
-import com.samebug.clients.http.entities.mark.Mark;
-import com.samebug.clients.http.entities.mark.NewMark;
 import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.search.NewSearch;
-import com.samebug.clients.http.entities.search.NewSearchHit;
 import com.samebug.clients.http.entities.search.Search;
-import com.samebug.clients.http.entities.search.SearchHit;
-import com.samebug.clients.http.entities.solution.SamebugTip;
 import com.samebug.clients.http.entities.tracking.TrackEvent;
 import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.exceptions.UserUnauthenticated;
-import com.samebug.clients.http.form.*;
+import com.samebug.clients.http.form.LogIn;
+import com.samebug.clients.http.form.SignUp;
 import com.samebug.clients.http.json.Json;
 import com.samebug.clients.http.response.GetResponse;
 import com.samebug.clients.http.response.PostFormResponse;
@@ -100,185 +92,6 @@ public final class SamebugClient {
                 .get()
                 .withResponseType(SearchResource.class);
         return extractResponse(rawClient.execute(request)).getData();
-    }
-
-    @NotNull
-    public SolutionList getSolutions(@NotNull final Integer searchId) throws SamebugClientException {
-        Builder.SimpleResponseHandler<SolutionList> request = requestBuilder
-                .at(uriBuilder.solutionsForSearch(searchId))
-                .parameter("max", "20")
-                .get()
-                .withResponseType(SolutionList.class);
-        return extractResponse(rawClient.execute(request));
-    }
-
-    @NotNull
-    public TipList getTips(@NotNull final Integer searchId) throws SamebugClientException {
-        Builder.SimpleResponseHandler<TipList> request = requestBuilder
-                .at(uriBuilder.tipsForSearch(searchId))
-                .parameter("max", "20")
-                .get()
-                .withResponseType(TipList.class);
-        return extractResponse(rawClient.execute(request));
-    }
-
-    @NotNull
-    public BugmateList getBugmates(@NotNull final Integer searchId) throws SamebugClientException {
-        Builder.SimpleResponseHandler<BugmateList> request = requestBuilder
-                .at(uriBuilder.bugmatesForSearch(searchId))
-                .parameter("max", "4")
-                .get()
-                .withResponseType(BugmateList.class);
-        return extractResponse(rawClient.execute(request));
-    }
-
-    @NotNull
-    public IncomingHelpRequestList getIncomingHelpRequests() throws SamebugClientException {
-        if (config.userId == null) throw new UserUnauthenticated();
-        Builder.SimpleResponseHandler<IncomingHelpRequestList> request = requestBuilder
-                .at(uriBuilder.incomingHelpRequests(config.userId))
-                .get()
-                .withResponseType(IncomingHelpRequestList.class);
-        return extractResponse(rawClient.execute(request));
-    }
-
-    @NotNull
-    public HelpRequest getHelpRequest(@NotNull final String helpRequestId) throws SamebugClientException {
-        Builder.SimpleResponseHandler<HelpRequestResource> request = requestBuilder
-                .at(uriBuilder.helpRequest(helpRequestId))
-                .get()
-                .withResponseType(HelpRequestResource.class);
-        return extractResponse(rawClient.execute(request)).getData();
-    }
-
-    @NotNull
-    public HelpRequest createHelpRequest(@NotNull final Integer searchId, @NotNull final NewHelpRequest data) throws SamebugClientException, HelpRequestCreate.BadRequest {
-        Builder.BadRequestCapableResponseJson<HelpRequestResource, JsonErrors<HelpRequestCreate.ErrorCode>> request = requestBuilder
-                .at(uriBuilder.helpRequests(searchId))
-                .post(data)
-                .<JsonErrors<HelpRequestCreate.ErrorCode>>withFormErrorType(new TypeToken<JsonErrors<HelpRequestCreate.ErrorCode>>() {}.getType())
-                .withResponseType(HelpRequestResource.class);
-        final PostFormResponse<HelpRequestResource, JsonErrors<HelpRequestCreate.ErrorCode>> response = rawClient.execute(request);
-        switch (response.getResultType()) {
-            case SUCCESS:
-                return response.getResult().getData();
-            case EXCEPTION:
-                throw response.getException();
-            case FORM_ERROR:
-                throw new HelpRequestCreate.BadRequest(response.getFormError());
-            default:
-                throw new IllegalStateException();
-        }
-    }
-
-    @NotNull
-    public ChatRoom getChatRoom(@NotNull final Integer searchId) throws SamebugClientException {
-        Builder.SimpleResponseHandler<ChatRoomResource> request = requestBuilder
-                .at(uriBuilder.chatOnSearch(searchId))
-                .get()
-                .withResponseType(ChatRoomResource.class);
-        return extractResponse(rawClient.execute(request)).getData();
-    }
-
-    @NotNull
-    public ChatRoom createNewChat(@NotNull final Integer searchId, @NotNull final NewChatRoom data) throws SamebugClientException, CreateChatRoom.BadRequest {
-        Builder.BadRequestCapableResponseJson<ChatRoomResource, JsonErrors<CreateChatRoom.ErrorCode>> request = requestBuilder
-                .at(uriBuilder.chatOnSearch(searchId))
-                .post(data)
-                .<JsonErrors<CreateChatRoom.ErrorCode>>withFormErrorType(new TypeToken<JsonErrors<CreateChatRoom.ErrorCode>>() {}.getType())
-                .withResponseType(ChatRoomResource.class);
-        final PostFormResponse<ChatRoomResource, JsonErrors<CreateChatRoom.ErrorCode>> response = rawClient.execute(request);
-        switch (response.getResultType()) {
-            case SUCCESS:
-                return response.getResult().getData();
-            case EXCEPTION:
-                throw response.getException();
-            case FORM_ERROR:
-                throw new CreateChatRoom.BadRequest(response.getFormError());
-            default:
-                throw new IllegalStateException();
-        }
-    }
-
-    @NotNull
-    public HelpRequest cancelHelpRequest(@NotNull final String helpRequestId) throws SamebugClientException, HelpRequestCancel.BadRequest {
-        Builder.BadRequestCapableResponseJson<HelpRequestResource, JsonErrors<HelpRequestCancel.ErrorCode>> request = requestBuilder
-                .at(uriBuilder.helpRequest(helpRequestId))
-                .delete()
-                .<JsonErrors<HelpRequestCancel.ErrorCode>>withFormErrorType(new TypeToken<JsonErrors<HelpRequestCancel.ErrorCode>>() {}.getType())
-                .withResponseType(HelpRequestResource.class);
-        final PostFormResponse<HelpRequestResource, JsonErrors<HelpRequestCancel.ErrorCode>> response = rawClient.execute(request);
-        switch (response.getResultType()) {
-            case SUCCESS:
-                return response.getResult().getData();
-            case EXCEPTION:
-                throw response.getException();
-            case FORM_ERROR:
-                throw new HelpRequestCancel.BadRequest(response.getFormError());
-            default:
-                throw new IllegalStateException();
-        }
-    }
-
-    @NotNull
-    public SearchHit<SamebugTip> createTip(@NotNull final Integer searchId, @NotNull final NewSearchHit data) throws SamebugClientException, TipCreate.BadRequest {
-        // NOTE: posting a tip includes downloading the source on the server side, which might take a while, so maybe we should allow longer timeout
-        Builder.BadRequestCapableResponseJson<CreateTipResource, JsonErrors<TipCreate.ErrorCode>> request = requestBuilder
-                .at(uriBuilder.tipsForSearch(searchId))
-                .post(data)
-                .<JsonErrors<TipCreate.ErrorCode>>withFormErrorType(new TypeToken<JsonErrors<TipCreate.ErrorCode>>() {}.getType())
-                .withResponseType(CreateTipResource.class);
-        final PostFormResponse<CreateTipResource, JsonErrors<TipCreate.ErrorCode>> response = rawClient.execute(request);
-        switch (response.getResultType()) {
-            case SUCCESS:
-                return response.getResult().getData();
-            case EXCEPTION:
-                throw response.getException();
-            case FORM_ERROR:
-                throw new TipCreate.BadRequest(response.getFormError());
-            default:
-                throw new IllegalStateException();
-        }
-    }
-
-    @NotNull
-    public Mark postMark(@NotNull final Integer searchId, @NotNull final NewMark data) throws SamebugClientException, MarkCreate.BadRequest {
-        Builder.BadRequestCapableResponseJson<MarkResource, JsonErrors<MarkCreate.ErrorCode>> request = requestBuilder
-                .at(uriBuilder.marksForSearch(searchId))
-                .post(data)
-                .<JsonErrors<MarkCreate.ErrorCode>>withFormErrorType(new TypeToken<JsonErrors<MarkCreate.ErrorCode>>() {}.getType())
-                .withResponseType(MarkResource.class);
-        final PostFormResponse<MarkResource, JsonErrors<MarkCreate.ErrorCode>> response = rawClient.execute(request);
-        switch (response.getResultType()) {
-            case SUCCESS:
-                return response.getResult().getData();
-            case EXCEPTION:
-                throw response.getException();
-            case FORM_ERROR:
-                throw new MarkCreate.BadRequest(response.getFormError());
-            default:
-                throw new IllegalStateException();
-        }
-    }
-
-    @NotNull
-    public Mark cancelMark(@NotNull final Integer markId) throws SamebugClientException, MarkCancel.BadRequest {
-        Builder.BadRequestCapableResponseJson<MarkResource, JsonErrors<MarkCancel.ErrorCode>> request = requestBuilder
-                .at(uriBuilder.mark(markId))
-                .delete()
-                .<JsonErrors<MarkCancel.ErrorCode>>withFormErrorType(new TypeToken<JsonErrors<MarkCancel.ErrorCode>>() {}.getType())
-                .withResponseType(MarkResource.class);
-        final PostFormResponse<MarkResource, JsonErrors<MarkCancel.ErrorCode>> response = rawClient.execute(request);
-        switch (response.getResultType()) {
-            case SUCCESS:
-                return response.getResult().getData();
-            case EXCEPTION:
-                throw response.getException();
-            case FORM_ERROR:
-                throw new MarkCancel.BadRequest(response.getFormError());
-            default:
-                throw new IllegalStateException();
-        }
     }
 
     @NotNull

@@ -26,24 +26,16 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBusConnection;
-import com.samebug.clients.common.entities.search.ReadableSearchGroup;
 import com.samebug.clients.common.tracking.Funnels;
 import com.samebug.clients.common.tracking.Hooks;
 import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.common.ui.modules.TrackingService;
-import com.samebug.clients.http.entities.EntityUtils;
-import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.*;
 import com.samebug.clients.idea.tracking.IdeaRawEvent;
 import com.samebug.clients.idea.ui.controller.authentication.AuthenticationController;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
-import com.samebug.clients.idea.ui.controller.helpRequest.HelpRequestController;
-import com.samebug.clients.idea.ui.controller.helpRequestList.HelpRequestListController;
-import com.samebug.clients.idea.ui.controller.popupController.HelpRequestPopupController;
-import com.samebug.clients.idea.ui.controller.popupController.IncomingChatInvitationPopupController;
-import com.samebug.clients.idea.ui.controller.popupController.IncomingTipPopupController;
-import com.samebug.clients.idea.ui.controller.solution.SolutionFrameController;
+import com.samebug.clients.idea.ui.controller.welcome.WelcomeController;
 import com.samebug.clients.swing.tracking.SwingRawEvent;
 import com.samebug.clients.swing.tracking.TrackingKeys;
 import com.samebug.clients.swing.ui.modules.DataService;
@@ -53,21 +45,16 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public final class ToolWindowController implements FocusListener, Disposable {
+public final class ToolWindowController implements Disposable {
     @NotNull
     final Project project;
     ToolWindow toolWindow;
     BaseFrameController currentFrame;
 
     final Timer dateLabelRefresher;
-    final IncomingHelpRequestPopupListener incomingHelpRequestPopupListener;
-    final IncomingTipPopupListener incomingTipPopupListener;
-    final IncomingChatInvitationPopupListener incomingChatInvitationPopupListener;
     final ConfigChangeListener configChangeListener;
+    final OpenCrashListener openCrashListener;
 
-    final HelpRequestPopupController helpRequestPopupController;
-    final IncomingTipPopupController incomingTipPopupController;
-    final IncomingChatInvitationPopupController incomingChatInvitationPopupController;
 
     public ToolWindowController(@NotNull final Project project) {
         this.project = project;
@@ -85,18 +72,9 @@ public final class ToolWindowController implements FocusListener, Disposable {
         dateLabelRefresher.setInitialDelay(LabelRefreshInitialDelayInMs);
         dateLabelRefresher.start();
 
-        incomingHelpRequestPopupListener = new IncomingHelpRequestPopupListener(this);
-        incomingTipPopupListener = new IncomingTipPopupListener(this);
-        incomingChatInvitationPopupListener = new IncomingChatInvitationPopupListener(this);
         configChangeListener = new ConfigChangeListener(this);
-        helpRequestPopupController = new HelpRequestPopupController(this, project);
-        incomingTipPopupController = new IncomingTipPopupController(this, project);
-        incomingChatInvitationPopupController = new IncomingChatInvitationPopupController(this, project);
+        openCrashListener = new OpenCrashListener(this);
         MessageBusConnection connection = project.getMessageBus().connect(project);
-        connection.subscribe(FocusListener.TOPIC, this);
-        connection.subscribe(IncomingHelpRequest.TOPIC, incomingHelpRequestPopupListener);
-        connection.subscribe(IncomingTip.TOPIC, incomingTipPopupListener);
-        connection.subscribe(IncomingChatInvitation.TOPIC, incomingChatInvitationPopupListener);
     }
 
     public void initToolWindow(@NotNull ToolWindow toolWindow) {
@@ -106,7 +84,7 @@ public final class ToolWindowController implements FocusListener, Disposable {
             final String authenticationTransactionId = Funnels.newTransactionId();
             TrackingService.trace(SwingRawEvent.authenticationHookTriggered(authenticationTransactionId, Hooks.Authentication.UNAUTHENTICATED));
             focusOnAuthentication(authenticationTransactionId);
-        } else focusOnHelpRequestList();
+        } else focusOnWelcome();
 
         TrackingService.trace(IdeaRawEvent.toolWindowOpen(project));
     }
@@ -117,34 +95,10 @@ public final class ToolWindowController implements FocusListener, Disposable {
         openTab(controller, MessageService.message("samebug.toolwindow.authentication.tabName"));
     }
 
-    public void focusOnHelpRequestList() {
-        HelpRequestListController controller = new HelpRequestListController(this, project);
+    public void focusOnWelcome() {
+        WelcomeController controller = new WelcomeController(this, project);
         controller.load();
-        openTab(controller, MessageService.message("samebug.toolwindow.helpRequestList.tabName"));
-    }
-
-    public void focusOnHelpRequest(String helpRequestId, String transactionId) {
-        HelpRequestMatch match = IdeaSamebugPlugin.getInstance().helpRequestStore.getIncomingHelpRequest(helpRequestId);
-        if (match != null) {
-            ReadableSearchGroup readableGroup = EntityUtils.getReadableStackTraceSearchGroup(match);
-            if (readableGroup != null) {
-                HelpRequestController controller = new HelpRequestController(this, project, match, readableGroup);
-                DataService.putData((JComponent) controller.view, TrackingKeys.WriteTipTransaction, transactionId);
-                controller.load();
-                openTab(controller, MessageService.message("samebug.toolwindow.helpRequest.tabName"));
-            } else {
-                currentFrame.view.popupError("samebug.frame.helpRequestList.openHelpRequest.error.notReadable");
-            }
-        } else {
-            currentFrame.view.popupError("samebug.frame.helpRequestList.openHelpRequest.error.gone");
-        }
-    }
-
-    @Override
-    public void focusOnSearch(final int searchId) {
-        SolutionFrameController controller = new SolutionFrameController(this, project, searchId);
-        controller.load();
-        openTab(controller, MessageService.message("samebug.toolwindow.search.tabName"));
+        openTab(controller, MessageService.message("samebug.toolwindow.welcome.tabName"));
     }
 
     @Override
