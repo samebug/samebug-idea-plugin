@@ -25,7 +25,6 @@ import com.samebug.clients.common.ui.frame.IFrame;
 import com.samebug.clients.common.ui.frame.welcome.IWelcome;
 import com.samebug.clients.common.ui.frame.welcome.IWelcomeFrame;
 import com.samebug.clients.common.ui.modules.TrackingService;
-import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.messages.ProfileUpdate;
@@ -82,13 +81,12 @@ public final class WelcomeController extends BaseFrameController<IWelcomeFrame> 
         view.setLoading();
 
         final Future<Me> userInfoTask = concurrencyService.userInfo();
-        final Future<UserStats> userStatsTask = concurrencyService.userStats();
 
         new LoadingTask() {
             @Override
             protected void load() throws Exception {
                 final IWelcomeFrame.Model model = conversionService.convertWelcomeFrame(
-                        userInfoTask.get(), userStatsTask.get());
+                        userInfoTask.get());
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                     @Override
                     public void run() {

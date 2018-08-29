@@ -16,14 +16,11 @@
 package com.samebug.clients.swing.ui.component.profile;
 
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
-import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.swing.tracking.SwingRawEvent;
-import com.samebug.clients.swing.tracking.TrackingKeys;
-import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.base.label.LinkLabel;
 import com.samebug.clients.swing.ui.base.panel.TransparentPanel;
 import com.samebug.clients.swing.ui.modules.ColorService;
-import com.samebug.clients.swing.ui.modules.DataService;
 import com.samebug.clients.swing.ui.modules.FontService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
 import net.miginfocom.swing.MigLayout;
@@ -39,10 +36,7 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
 
     private Model model;
     private AvatarIcon avatarIcon;
-    private MessageLabel messages;
-    private NumberLabel marks;
-    private NumberLabel tips;
-    private NumberLabel thanks;
+    private LinkLabel name;
 
     public ProfilePanel(@NotNull final Model model) {
         this.model = model;
@@ -81,34 +75,22 @@ public final class ProfilePanel extends TransparentPanel implements IProfilePane
         removeAll();
 
         avatarIcon = new AvatarIcon(model.avatarUrl, AvatarIconSize, model.status);
-        SamebugLabel name = new SamebugLabel(model.name, FontService.demi(14));
-        final JPanel glue = new TransparentPanel();
-        messages = new MessageLabel(model.messages);
-        marks = new NumberLabel(model.marks, MessageService.message("samebug.component.profile.marks.label"));
-        tips = new NumberLabel(model.tips, MessageService.message("samebug.component.profile.tips.label"));
-        thanks = new NumberLabel(model.thanks, MessageService.message("samebug.component.profile.thanks.label"));
-        DataService.putData(messages, TrackingKeys.Label, messages.getText());
+        name = new LinkLabel(model.name, FontService.demi(14));
 
-        setLayout(new MigLayout("fillx", "0[]8px[]0[grow]0[]19px[]19px[]19px[]0", "10px[]10px"));
+        setLayout(new MigLayout("fillx", "0[]8px[grow]0", "10px[]10px"));
 
         add(avatarIcon, "");
         add(name, "");
-        add(glue, "");
-        add(messages, "");
-        add(marks, "");
-        add(tips, "");
-        add(thanks, "");
 
         repaint();
         revalidate();
 
-        messages.addMouseListener(new MouseAdapter() {
+        name.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                getListener().messagesClicked();
-                TrackingService.trace(SwingRawEvent.buttonClick(messages));
+                getListener().profileClicked(model.userId);
+                TrackingService.trace(SwingRawEvent.buttonClick(name));
             }
         });
     }
 }
-

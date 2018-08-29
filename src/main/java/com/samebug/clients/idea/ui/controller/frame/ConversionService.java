@@ -18,41 +18,23 @@ package com.samebug.clients.idea.ui.controller.frame;
 import com.samebug.clients.common.ui.component.profile.ConnectionStatus;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
 import com.samebug.clients.common.ui.frame.welcome.IWelcomeFrame;
-import com.samebug.clients.http.entities.profile.UserStats;
-import com.samebug.clients.http.entities.search.QueryInfo;
-import com.samebug.clients.http.entities.search.StackTraceInfo;
 import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public final class ConversionService {
     public ConversionService() {
     }
 
-    public IProfilePanel.Model profilePanel(Me user, UserStats statistics) {
+    public IProfilePanel.Model profilePanel(Me user) {
         ConnectionStatus status = IdeaSamebugPlugin.getInstance().clientService.getWsClient().isConnected() ? ConnectionStatus.ONLINE : ConnectionStatus.OFFLINE;
         // TODO @poroszd change profile panel!
-        return new IProfilePanel.Model(0, statistics.getNumberOfVotes(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(),
+        return new IProfilePanel.Model(user.getId(),
                 user.getDisplayName(), user.getAvatarUrl(), status);
     }
 
-    public IWelcomeFrame.Model convertWelcomeFrame(Me user, UserStats statistics) {
-        IProfilePanel.Model profile = profilePanel(user, statistics);
+    public IWelcomeFrame.Model convertWelcomeFrame(Me user) {
+        IProfilePanel.Model profile = profilePanel(user);
 
         return new IWelcomeFrame.Model(profile);
-    }
-
-    public static String headLine(QueryInfo search) {
-        if (search instanceof StackTraceInfo) {
-            StackTraceInfo i = (StackTraceInfo) search;
-            return headLine(i.getExceptionType(), i.getExceptionMessage());
-        } else {
-            throw new IllegalArgumentException(search + " is not stack trace");
-        }
-    }
-
-    public static String headLine(@NotNull String typeName, @Nullable String message) {
-        return (message != null) ? typeName + ": " + message : typeName;
     }
 }

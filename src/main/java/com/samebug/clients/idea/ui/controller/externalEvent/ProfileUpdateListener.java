@@ -36,13 +36,13 @@ public final class ProfileUpdateListener implements ProfileUpdate, WebSocketStat
         this.controller = controller;
     }
 
+    // TODO @poroszd change this when we have statistics
     @Override
     public void updateProfileStatistics(@NotNull final UserStats stats) {
         IProfilePanel profilePanel = getProfilePanel();
         if (profilePanel != null) {
             IProfilePanel.Model oldModel = profilePanel.getModel();
-            IProfilePanel.Model newModel = new IProfilePanel.Model(oldModel.messages, stats.getNumberOfVotes(), stats.getNumberOfTips(), stats.getNumberOfThanks(),
-                    oldModel.name, oldModel.avatarUrl, oldModel.status);
+            IProfilePanel.Model newModel = new IProfilePanel.Model(oldModel.userId, oldModel.name, oldModel.avatarUrl, oldModel.status);
             profilePanel.setModel(newModel);
         }
     }
@@ -52,7 +52,7 @@ public final class ProfileUpdateListener implements ProfileUpdate, WebSocketStat
         IProfilePanel profilePanel = getProfilePanel();
         if (profilePanel != null) {
             IProfilePanel.Model oldModel = profilePanel.getModel();
-            IProfilePanel.Model newModel = new IProfilePanel.Model(oldModel.messages, oldModel.marks, oldModel.tips, oldModel.thanks, oldModel.name, oldModel.avatarUrl, status);
+            IProfilePanel.Model newModel = new IProfilePanel.Model(oldModel.userId, oldModel.name, oldModel.avatarUrl, status);
             profilePanel.setModel(newModel);
         }
     }

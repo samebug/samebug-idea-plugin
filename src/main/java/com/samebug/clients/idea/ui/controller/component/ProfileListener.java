@@ -16,7 +16,11 @@
 package com.samebug.clients.idea.ui.controller.component;
 
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
+import com.samebug.clients.idea.ui.modules.BrowserUtil;
+
+import java.net.URI;
 
 public final class ProfileListener implements IProfilePanel.Listener {
     final BaseFrameController controller;
@@ -26,8 +30,9 @@ public final class ProfileListener implements IProfilePanel.Listener {
     }
 
     @Override
-    public void messagesClicked() {
-        controller.twc.focusOnWelcome();
+    public void profileClicked(Integer userId) {
+        URI profileUrl = IdeaSamebugPlugin.getInstance().uriBuilder.profile(userId);
+        BrowserUtil.browse(profileUrl);
     }
 
 
