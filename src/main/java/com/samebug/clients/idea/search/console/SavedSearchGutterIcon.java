@@ -124,4 +124,3 @@ final class SavedSearchGutterIcon extends SearchMark implements DumbAware {
         };
     }
 }
-

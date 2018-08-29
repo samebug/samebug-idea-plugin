@@ -56,27 +56,7 @@ public class SavedSearch implements SearchRequest {
         return savedSearch.getData().getId();
     }
 
-    public boolean hasTip() {
-        return savedSearch.getMeta().getHasTips();
-    }
-
-    public boolean hasHelpRequest() {
-        return savedSearch.getMeta().getHasHelpRequests();
-    }
-
-    public boolean hasBugmate() {
-        return savedSearch.getMeta().getHasBugmates();
-    }
-
-    public boolean hasWebHit() {
-        return savedSearch.getMeta().getHasExternalSolutions();
-    }
-
     public SolutionType getSolutionType() {
-        if (hasTip()) return SolutionType.TIP;
-        else if (hasHelpRequest()) return SolutionType.HELP_REQUEST;
-        else if (hasBugmate()) return SolutionType.BUGMATE;
-        else if (hasWebHit()) return SolutionType.WEBHIT;
         return SolutionType.NONE;
     }
 

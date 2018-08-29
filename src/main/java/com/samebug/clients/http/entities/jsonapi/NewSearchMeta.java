@@ -17,33 +17,8 @@ package com.samebug.clients.http.entities.jsonapi;
 
 import org.jetbrains.annotations.NotNull;
 
-// TODO @poroszd what will we return for searches?
 public final class NewSearchMeta {
-    private Boolean hasTips;
-    private Boolean hasExternalSolutions;
-    private Boolean hasBugmates;
-    private Boolean hasHelpRequests;
     private Integer firstLine;
-
-    @NotNull
-    public Boolean getHasTips() {
-        return hasTips;
-    }
-
-    @NotNull
-    public Boolean getHasHelpRequests() {
-        return hasHelpRequests;
-    }
-
-    @NotNull
-    public Boolean getHasExternalSolutions() {
-        return hasExternalSolutions;
-    }
-
-    @NotNull
-    public Boolean getHasBugmates() {
-        return hasBugmates;
-    }
 
     @NotNull
     public Integer getFirstLine() {
