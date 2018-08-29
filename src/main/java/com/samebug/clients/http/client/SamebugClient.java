@@ -19,13 +19,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
 import com.samebug.clients.http.entities.jsonapi.*;
-import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.search.NewSearch;
 import com.samebug.clients.http.entities.search.Search;
 import com.samebug.clients.http.entities.tracking.TrackEvent;
 import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.http.exceptions.SamebugClientException;
-import com.samebug.clients.http.exceptions.UserUnauthenticated;
 import com.samebug.clients.http.form.LogIn;
 import com.samebug.clients.http.form.SignUp;
 import com.samebug.clients.http.json.Json;
@@ -63,16 +61,6 @@ public final class SamebugClient {
                 .at(uriBuilder.me())
                 .get()
                 .withResponseType(MeResource.class);
-        return extractResponse(rawClient.execute(request)).getData();
-    }
-
-    @NotNull
-    public UserStats getUserStats() throws SamebugClientException {
-        if (config.userId == null) throw new UserUnauthenticated();
-        Builder.SimpleResponseHandler<UserStatsResource> request = requestBuilder
-                .at(uriBuilder.userStats(config.userId))
-                .get()
-                .withResponseType(UserStatsResource.class);
         return extractResponse(rawClient.execute(request)).getData();
     }
 

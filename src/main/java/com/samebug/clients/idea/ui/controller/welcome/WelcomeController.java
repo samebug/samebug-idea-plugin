@@ -27,7 +27,6 @@ import com.samebug.clients.common.ui.frame.welcome.IWelcomeFrame;
 import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.messages.ProfileUpdate;
 import com.samebug.clients.idea.messages.RefreshTimestampsListener;
 import com.samebug.clients.idea.messages.WebSocketStatusUpdate;
 import com.samebug.clients.idea.ui.controller.component.ProfileListener;
@@ -73,7 +72,6 @@ public final class WelcomeController extends BaseFrameController<IWelcomeFrame> 
         refreshListener = new RefreshListener(this);
         projectConnection.subscribe(RefreshTimestampsListener.TOPIC, refreshListener);
         profileUpdateListener = new ProfileUpdateListener(this);
-        projectConnection.subscribe(ProfileUpdate.TOPIC, profileUpdateListener);
         projectConnection.subscribe(WebSocketStatusUpdate.TOPIC, profileUpdateListener);
     }
 

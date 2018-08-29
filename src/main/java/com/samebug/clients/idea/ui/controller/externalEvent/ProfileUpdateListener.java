@@ -17,11 +17,8 @@ package com.samebug.clients.idea.ui.controller.externalEvent;
 
 import com.samebug.clients.common.ui.component.profile.ConnectionStatus;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
-import com.samebug.clients.http.entities.profile.UserStats;
-import com.samebug.clients.idea.messages.ProfileUpdate;
 import com.samebug.clients.idea.messages.WebSocketStatusUpdate;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -29,22 +26,11 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-public final class ProfileUpdateListener implements ProfileUpdate, WebSocketStatusUpdate {
+public final class ProfileUpdateListener implements WebSocketStatusUpdate {
     final BaseFrameController controller;
 
     public ProfileUpdateListener(final BaseFrameController controller) {
         this.controller = controller;
-    }
-
-    // TODO @poroszd change this when we have statistics
-    @Override
-    public void updateProfileStatistics(@NotNull final UserStats stats) {
-        IProfilePanel profilePanel = getProfilePanel();
-        if (profilePanel != null) {
-            IProfilePanel.Model oldModel = profilePanel.getModel();
-            IProfilePanel.Model newModel = new IProfilePanel.Model(oldModel.userId, oldModel.name, oldModel.avatarUrl, oldModel.status);
-            profilePanel.setModel(newModel);
-        }
     }
 
     @Override

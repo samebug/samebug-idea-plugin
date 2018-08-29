@@ -27,7 +27,6 @@ public final class ConversionService {
 
     public IProfilePanel.Model profilePanel(Me user) {
         ConnectionStatus status = IdeaSamebugPlugin.getInstance().clientService.getWsClient().isConnected() ? ConnectionStatus.ONLINE : ConnectionStatus.OFFLINE;
-        // TODO @poroszd change profile panel!
         return new IProfilePanel.Model(user.getId(),
                 user.getDisplayName(), user.getAvatarUrl(), status);
     }

@@ -15,12 +15,8 @@
  */
 package com.samebug.clients.idea.controllers;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.samebug.clients.http.entities.profile.UserStats;
-import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.messages.ProfileUpdate;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Timer;
@@ -32,18 +28,11 @@ public class TimedTasks {
     @NotNull
     final Timer timer;
 
-    TimerTask userStatsRefresher;
     TimerTask webSocketChecker;
 
     public TimedTasks() {
         timer = new Timer("Samebug-timed-tasks");
 
-        userStatsRefresher = new TimerTask() {
-            @Override
-            public void run() {
-                reloadUserStats();
-            }
-        };
         webSocketChecker = new TimerTask() {
             @Override
             public void run() {
@@ -51,24 +40,7 @@ public class TimedTasks {
             }
         };
 
-        timer.schedule(userStatsRefresher, 5000, 60000);
         timer.schedule(webSocketChecker, 60000, 60000);
-    }
-
-
-    public void reloadUserStats() {
-        final IdeaSamebugPlugin plugin = IdeaSamebugPlugin.getInstance();
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    UserStats stats = plugin.profileService.loadUserStats();
-                    ApplicationManager.getApplication().getMessageBus().syncPublisher(ProfileUpdate.TOPIC).updateProfileStatistics(stats);
-                } catch (SamebugClientException e) {
-                    LOGGER.warn("Failed to execute loadUserStats", e);
-                }
-            }
-        });
     }
 
     public void checkWebSocketConnection() {

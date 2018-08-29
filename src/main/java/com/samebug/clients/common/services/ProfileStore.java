@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.user.Me;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,12 +25,8 @@ public final class ProfileStore {
     @NotNull
     final AtomicReference<Me> user;
 
-    @NotNull
-    final AtomicReference<UserStats> statistics;
-
     public ProfileStore() {
         this.user = new AtomicReference<Me>();
-        this.statistics = new AtomicReference<UserStats>();
     }
 
     @Nullable
@@ -39,13 +34,7 @@ public final class ProfileStore {
         return user.get();
     }
 
-    @Nullable
-    public UserStats getUserStats() {
-        return statistics.get();
-    }
-
     public void invalidate() {
         user.set(null);
-        statistics.set(null);
     }
 }

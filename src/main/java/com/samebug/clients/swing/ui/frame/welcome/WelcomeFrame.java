@@ -17,6 +17,8 @@ package com.samebug.clients.swing.ui.frame.welcome;
 
 import com.samebug.clients.common.ui.frame.welcome.IWelcomeFrame;
 import com.samebug.clients.swing.ui.base.frame.BasicFrame;
+import com.samebug.clients.swing.ui.base.label.SamebugLabel;
+import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.component.profile.ProfilePanel;
 import com.samebug.clients.swing.ui.modules.ListenerService;
@@ -24,26 +26,37 @@ import com.samebug.clients.swing.ui.modules.ListenerService;
 import java.awt.*;
 
 public final class WelcomeFrame extends BasicFrame implements IWelcomeFrame {
-    private HelpRequests helpRequests;
+    private WelcomePanel welcomePanel;
 
     public WelcomeFrame() {
         setLoading();
     }
 
     public void loadingSucceeded(Model model) {
-        helpRequests = new HelpRequests(model);
-        addMainComponent(helpRequests);
+        welcomePanel = new WelcomePanel(model);
+        addMainComponent(welcomePanel);
     }
 
-    // TODO @poroszd rename, redesign
-    private final class HelpRequests extends SamebugPanel {
+    private final class WelcomePanel extends SamebugPanel {
         private final ProfilePanel profilePanel;
+        private final WelcomePanelInner welcomePanelInner;
 
-        HelpRequests(Model model) {
+        WelcomePanel(Model model) {
             profilePanel = new ProfilePanel(model.profilePanel);
+            welcomePanelInner = new WelcomePanelInner();
 
             setLayout(new BorderLayout());
+            add(welcomePanelInner, BorderLayout.CENTER);
             add(profilePanel, BorderLayout.SOUTH);
+        }
+    }
+
+    private final class WelcomePanelInner extends SamebugPanel {
+        WelcomePanelInner() {
+            SamebugMultilineLabel l = new SamebugMultilineLabel();
+            add(new SamebugLabel("Samebug plugin is active!"));
+            l.setText("You will find the [bug] icon near stack traces in the console. Click on it to open Samebug knowledge base to find or share help on that stack trace.");
+            add(l);
         }
     }
 

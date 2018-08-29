@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
@@ -36,12 +35,6 @@ public final class ProfileService {
     public Me loadUserInfo() throws SamebugClientException {
         Me result = clientService.getClient().getUserInfo();
         store.user.set(result);
-        return result;
-    }
-
-    public UserStats loadUserStats() throws SamebugClientException {
-        UserStats result = clientService.getClient().getUserStats();
-        store.statistics.set(result);
         return result;
     }
 }

@@ -19,7 +19,6 @@ import com.intellij.util.concurrency.FixedFuture;
 import com.samebug.clients.common.services.ProfileService;
 import com.samebug.clients.common.services.ProfileStore;
 import com.samebug.clients.common.services.SearchService;
-import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.search.Search;
 import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.http.exceptions.SamebugClientException;
@@ -52,17 +51,6 @@ public final class ConcurrencyService {
             }
         });
         else return new FixedFuture<Me>(current);
-    }
-
-    public Future<UserStats> userStats() {
-        UserStats current = profileStore.getUserStats();
-        if (current == null) return executor.submit(new Callable<UserStats>() {
-            @Override
-            public UserStats call() throws SamebugClientException {
-                return profileService.loadUserStats();
-            }
-        });
-        else return new FixedFuture<UserStats>(current);
     }
 
     public Future<Search> search(final int searchId) {

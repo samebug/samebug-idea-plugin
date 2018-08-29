@@ -45,11 +45,6 @@ final class RestUriBuilder {
     }
 
     @NotNull
-    public URI userStats(@NotNull final Integer userId) {
-        return resolve("users/" + userId + "/stats");
-    }
-
-    @NotNull
     public URI anonymousSignUp() {
         return resolve("auth/signup-anonymously");
     }
