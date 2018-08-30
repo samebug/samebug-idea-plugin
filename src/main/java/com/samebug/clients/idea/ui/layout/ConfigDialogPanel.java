@@ -85,7 +85,8 @@ public class ConfigDialogPanel {
                 // We have to wait the authentication result, because this will set the previously cleared userId.
                 IdeaSamebugPlugin.getInstance().authenticationService.apiKeyAuthentication();
             } catch (UserUnauthenticated e) {
-                if (currentConfig.apiKey != null) throw new ConfigurationException(MessageService.message("samebug.configure.error.apiKey"));
+                if (currentConfig.apiKey != null)
+                    throw new ConfigurationException(MessageService.message("samebug.configure.error.apiKey"));
             } catch (UserUnauthorized e) {
                 throw new ConfigurationException(MessageService.message("samebug.configure.error.workspace"));
             } catch (SamebugClientException ignored) {

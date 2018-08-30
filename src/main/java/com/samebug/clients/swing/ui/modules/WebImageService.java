@@ -87,7 +87,8 @@ public final class WebImageService {
                     @Override
                     public void run() {
                         BufferedImage loadedImage = readImageAndSaveToCache(url);
-                        if (loadedImage != null) observer.imageUpdate(loadedImage, ImageObserver.ALLBITS, 0, 0, loadedImage.getWidth(), loadedImage.getHeight());
+                        if (loadedImage != null)
+                            observer.imageUpdate(loadedImage, ImageObserver.ALLBITS, 0, 0, loadedImage.getWidth(), loadedImage.getHeight());
                     }
                 });
                 return null;

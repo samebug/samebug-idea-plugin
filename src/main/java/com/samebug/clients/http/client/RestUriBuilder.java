@@ -25,7 +25,8 @@ final class RestUriBuilder {
 
     RestUriBuilder(@NotNull final String serverRoot) {
         assert !serverRoot.endsWith("/");
-        if ("http://localhost:9000".equals(serverRoot) || "http://127.0.0.1:9000".equals(serverRoot)) this.gateway = URI.create(serverRoot + "/");
+        if ("http://localhost:9000".equals(serverRoot) || "http://127.0.0.1:9000".equals(serverRoot))
+            this.gateway = URI.create(serverRoot + "/");
         else this.gateway = URI.create(serverRoot + "/").resolve("rest/1.0");
     }
 

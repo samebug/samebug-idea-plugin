@@ -194,8 +194,10 @@ public final class IdeaSamebugPlugin implements ApplicationComponent, Persistent
             uriBuilder = new WebUriBuilder(newSettings.serverRoot);
             ApplicationManager.getApplication().getMessageBus().syncPublisher(ConfigChangeListener.TOPIC).configChange(oldSettings, newSettings);
         } finally {
-            if (!SBUtil.equals(newSettings.apiKey, oldSettings.apiKey)) TrackingService.trace(IdeaRawEvent.changeApiKey());
-            if (!SBUtil.equals(newSettings.workspaceId, oldSettings.workspaceId)) TrackingService.trace(IdeaRawEvent.changeWorkspace());
+            if (!SBUtil.equals(newSettings.apiKey, oldSettings.apiKey))
+                TrackingService.trace(IdeaRawEvent.changeApiKey());
+            if (!SBUtil.equals(newSettings.workspaceId, oldSettings.workspaceId))
+                TrackingService.trace(IdeaRawEvent.changeWorkspace());
         }
     }
 

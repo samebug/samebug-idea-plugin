@@ -135,7 +135,8 @@ public final class AnalyzeDialog extends DialogWrapper {
                 Search search = result.getData();
                 final int searchId = search.getId();
 
-                if (!(search.getQueryInfo() instanceof StackTraceInfo)) displayError(MessageService.message("samebug.menu.analyze.dialog.error.textSearch"));
+                if (!(search.getQueryInfo() instanceof StackTraceInfo))
+                    displayError(MessageService.message("samebug.menu.analyze.dialog.error.textSearch"));
                 else {
                     myProject.getMessageBus().syncPublisher(OpenCrashListener.TOPIC).openCrash(searchId);
                     TrackingService.trace(SwingRawEvent.searchCreate(panel, DataService.getData(panel, TrackingKeys.SearchTransaction), search));

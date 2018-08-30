@@ -101,7 +101,8 @@ public final class RawClient {
         if (request.containsHeader("X-Samebug-ApiKey")) {
             connectionStatus = ConnectionStatus.authenticatedConnection();
             // NOTE if the api key was set, but it is null, we can tell that we will fail to authenticate without actually executing the request.
-            if (request.getFirstHeader("X-Samebug-ApiKey").getValue() == null) return handler.onError(new UserUnauthenticated());
+            if (request.getFirstHeader("X-Samebug-ApiKey").getValue() == null)
+                return handler.onError(new UserUnauthenticated());
         } else {
             connectionStatus = ConnectionStatus.unauthenticatedConnection();
         }

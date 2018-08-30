@@ -110,7 +110,8 @@ public abstract class BaseFrameController<T extends IFrame> implements Disposabl
                     if (e instanceof SamebugTimeout) view.loadingFailedWithRetriableError();
                     else if (e instanceof UserUnauthenticated) view.loadingFailedWithAuthenticationError();
                     else if (e instanceof UserUnauthorized) view.loadingFailedWithAuthorizationError();
-                    else if (e instanceof UnsuccessfulResponseStatus && ((UnsuccessfulResponseStatus) e).statusCode == 500) view.loadingFailedWithServerError();
+                    else if (e instanceof UnsuccessfulResponseStatus && ((UnsuccessfulResponseStatus) e).statusCode == 500)
+                        view.loadingFailedWithServerError();
                     else if (e instanceof HttpError) view.loadingFailedWithNetworkError();
                     else view.loadingFailedWithGenericError();
                 }

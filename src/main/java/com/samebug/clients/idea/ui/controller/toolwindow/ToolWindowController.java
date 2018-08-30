@@ -31,7 +31,7 @@ import com.samebug.clients.common.tracking.Hooks;
 import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.common.ui.modules.TrackingService;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.messages.*;
+import com.samebug.clients.idea.messages.RefreshTimestampsListener;
 import com.samebug.clients.idea.tracking.IdeaRawEvent;
 import com.samebug.clients.idea.ui.controller.authentication.AuthenticationController;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;

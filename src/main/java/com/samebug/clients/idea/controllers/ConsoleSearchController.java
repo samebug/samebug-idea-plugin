@@ -47,7 +47,8 @@ public class ConsoleSearchController implements StackTraceMatcherListener {
                 final SearchInfo searchInfo = new SearchInfo(sessionInfo);
 
                 RequestedSearch requestedSearch = searchRequestService.searchStart(searchInfo, stackTrace);
-                if (!project.isDisposed()) project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).newSearchRequest(requestedSearch);
+                if (!project.isDisposed())
+                    project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).newSearchRequest(requestedSearch);
 
                 try {
                     CreatedSearchResource result = searchService.search(stackTrace);
@@ -55,17 +56,21 @@ public class ConsoleSearchController implements StackTraceMatcherListener {
                     if (!(queryInfo instanceof StackTraceInfo)) {
                         // ignore text search
                         searchRequestService.searchFailed(searchInfo);
-                        if (!project.isDisposed()) project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failedSearch(searchInfo);
+                        if (!project.isDisposed())
+                            project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failedSearch(searchInfo);
                     } else {
                         SavedSearch savedSearchRequest = searchRequestService.searchSucceeded(searchInfo, requestedSearch, result);
                         if (!project.isDisposed()) {
-                            if (savedSearchRequest != null) project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).savedSearch(savedSearchRequest);
-                            else project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failedSearch(searchInfo);
+                            if (savedSearchRequest != null)
+                                project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).savedSearch(savedSearchRequest);
+                            else
+                                project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failedSearch(searchInfo);
                         }
                     }
                 } catch (SamebugClientException e) {
                     searchRequestService.searchFailed(searchInfo);
-                    if (!project.isDisposed()) project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failedSearch(searchInfo);
+                    if (!project.isDisposed())
+                        project.getMessageBus().syncPublisher(SearchRequestListener.TOPIC).failedSearch(searchInfo);
                 }
             }
         });
