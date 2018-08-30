@@ -16,13 +16,19 @@
 package com.samebug.clients.swing.ui.frame.welcome;
 
 import com.samebug.clients.common.ui.frame.welcome.IWelcomeFrame;
+import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.swing.ui.base.frame.BasicFrame;
 import com.samebug.clients.swing.ui.base.label.SamebugLabel;
 import com.samebug.clients.swing.ui.base.multiline.SamebugMultilineLabel;
 import com.samebug.clients.swing.ui.base.panel.SamebugPanel;
 import com.samebug.clients.swing.ui.component.profile.ProfilePanel;
+import com.samebug.clients.swing.ui.modules.ColorService;
+import com.samebug.clients.swing.ui.modules.FontService;
+import com.samebug.clients.swing.ui.modules.IconService;
 import com.samebug.clients.swing.ui.modules.ListenerService;
+import net.miginfocom.swing.MigLayout;
 
+import javax.swing.*;
 import java.awt.*;
 
 public final class WelcomeFrame extends BasicFrame implements IWelcomeFrame {
@@ -53,10 +59,26 @@ public final class WelcomeFrame extends BasicFrame implements IWelcomeFrame {
 
     private final class WelcomePanelInner extends SamebugPanel {
         WelcomePanelInner() {
-            SamebugMultilineLabel l = new SamebugMultilineLabel();
-            add(new SamebugLabel("Samebug plugin is active!"));
-            l.setText("You will find the [bug] icon near stack traces in the console. Click on it to open Samebug knowledge base to find or share help on that stack trace.");
-            add(l);
+            TitleLabel title = new TitleLabel();
+            JLabel i = new JLabel(null, IconService.welcomeSnapshot, SwingConstants.LEFT);
+            SamebugMultilineLabel l1 = new SamebugMultilineLabel();
+            l1.setText(MessageService.message("samebug.frame.welcome.l1"));
+            SamebugMultilineLabel l2 = new SamebugMultilineLabel();
+            l2.setText(MessageService.message("samebug.frame.welcome.l2"));
+
+            setLayout(new MigLayout("fillx", "20px[grow]20px", "30px[]30px[]10px[]30px[]0:push"));
+            add(title, "cell 0 0, al center");
+            add(l1, "cell 0 1, al left, grow x, wmin 0");
+            add(i, "cell 0 2, al left, grow x, wmin 0");
+            add(l2, "cell 0 3, al left, grow x, wmin 0");
+        }
+    }
+
+    private final class TitleLabel extends SamebugLabel {
+        {
+            setText(MessageService.message("samebug.frame.welcome.title"));
+            setFont(FontService.demi(24));
+            setForegroundColor(ColorService.EmphasizedText);
         }
     }
 

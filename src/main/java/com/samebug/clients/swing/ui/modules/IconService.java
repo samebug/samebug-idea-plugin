@@ -55,4 +55,7 @@ public abstract class IconService {
 
     public static final Icon cogwheel = IconLoader.getIcon("/com/samebug/icons/cogwheel.png");
     public static final Icon cogwheelTodo = IconLoader.getIcon("/com/samebug/icons/cogwheel-todo.png");
+
+
+    public static final Icon welcomeSnapshot = IconLoader.getIcon("/com/samebug/welcome/plugin-snapshot.png");
 }
