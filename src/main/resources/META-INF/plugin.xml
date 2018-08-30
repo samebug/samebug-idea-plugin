@@ -4,20 +4,12 @@
     <vendor email="hello@samebug.io" url="http://samebug.io">Samebug</vendor>
 
     <description><![CDATA[
-      Automated stack search integration from <a href="https://samebug.io">samebug.io</a>
+      Automated stack trace search integration from <a href="https://samebug.io">samebug.io</a>
       <ul>
         <li>Captures stack traces on your debug console</li>
-        <li>search solutions on Samebug</li>
-        <li>connects you to other Samebug users to help each other</li>
+        <li>Connects your stack traces to the Samebug knowledge base</li>
       </ul>
     ]]></description>
-
-    <change-notes><![CDATA[
-      <ul>
-        <li>Introduce opening chat for search</li>
-      </ul>
-    ]]>
-    </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
     <idea-version since-build="141.0"/>
