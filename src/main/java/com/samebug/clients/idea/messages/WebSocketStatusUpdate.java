@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package com.samebug.clients.idea.messages;
 
 import com.intellij.util.messages.Topic;
-import com.samebug.clients.common.ui.component.bugmate.ConnectionStatus;
+import com.samebug.clients.common.ui.component.profile.ConnectionStatus;
 
 public interface WebSocketStatusUpdate {
     Topic<WebSocketStatusUpdate> TOPIC = Topic.create("websocket status update", WebSocketStatusUpdate.class);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,8 @@ public class ConfigDialogPanel {
                 // We have to wait the authentication result, because this will set the previously cleared userId.
                 IdeaSamebugPlugin.getInstance().authenticationService.apiKeyAuthentication();
             } catch (UserUnauthenticated e) {
-                if (currentConfig.apiKey != null) throw new ConfigurationException(MessageService.message("samebug.configure.error.apiKey"));
+                if (currentConfig.apiKey != null)
+                    throw new ConfigurationException(MessageService.message("samebug.configure.error.apiKey"));
             } catch (UserUnauthorized e) {
                 throw new ConfigurationException(MessageService.message("samebug.configure.error.workspace"));
             } catch (SamebugClientException ignored) {

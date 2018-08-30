@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.samebug.clients.common.entities.search.SavedSearch;
 import com.samebug.clients.common.ui.modules.MessageService;
 import com.samebug.clients.common.ui.modules.TrackingService;
-import com.samebug.clients.idea.messages.FocusListener;
+import com.samebug.clients.idea.messages.OpenCrashListener;
 import com.samebug.clients.idea.tracking.IdeaRawEvent;
 import com.samebug.clients.swing.ui.modules.IconService;
 import org.jetbrains.annotations.NotNull;
@@ -117,11 +117,10 @@ final class SavedSearchGutterIcon extends SearchMark implements DumbAware {
                             break;
                     }
 
-                    project.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchId);
+                    project.getMessageBus().syncPublisher(OpenCrashListener.TOPIC).openCrash(searchId);
                     TrackingService.trace(IdeaRawEvent.gutterIconClick(searchId, solutionType));
                 }
             }
         };
     }
 }
-

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,225 +15,25 @@
  */
 package com.samebug.clients.idea.ui.controller.frame;
 
-import com.samebug.clients.common.ui.component.bugmate.ConnectionStatus;
-import com.samebug.clients.common.ui.component.bugmate.IBugmateHit;
-import com.samebug.clients.common.ui.component.bugmate.IBugmateList;
-import com.samebug.clients.common.ui.component.community.IAskForHelp;
-import com.samebug.clients.common.ui.component.community.IHelpOthersCTA;
-import com.samebug.clients.common.ui.component.helpRequest.IHelpRequest;
-import com.samebug.clients.common.ui.component.helpRequest.IHelpRequestPreview;
-import com.samebug.clients.common.ui.component.helpRequest.IMyHelpRequest;
-import com.samebug.clients.common.ui.component.hit.IMarkButton;
-import com.samebug.clients.common.ui.component.hit.ITipHit;
-import com.samebug.clients.common.ui.component.hit.IWebHit;
-import com.samebug.clients.common.ui.component.popup.IHelpRequestPopup;
-import com.samebug.clients.common.ui.component.popup.IIncomingChatInvitationPopup;
-import com.samebug.clients.common.ui.component.popup.IIncomingTipPopup;
+import com.samebug.clients.common.ui.component.profile.ConnectionStatus;
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
-import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestFrame;
-import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestHeader;
-import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestTab;
-import com.samebug.clients.common.ui.frame.helpRequest.IHelpRequestTabs;
-import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestList;
-import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListFrame;
-import com.samebug.clients.common.ui.frame.helpRequestList.IHelpRequestListHeader;
-import com.samebug.clients.common.ui.frame.solution.*;
-import com.samebug.clients.http.entities.bugmate.BugmateMatch;
-import com.samebug.clients.http.entities.helprequest.HelpRequest;
-import com.samebug.clients.http.entities.helprequest.HelpRequestMatch;
-import com.samebug.clients.http.entities.jsonapi.BugmateList;
-import com.samebug.clients.http.entities.jsonapi.IncomingHelpRequestList;
-import com.samebug.clients.http.entities.notification.ChatInvitation;
-import com.samebug.clients.http.entities.notification.IncomingAnswer;
-import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
-import com.samebug.clients.http.entities.profile.UserStats;
-import com.samebug.clients.http.entities.search.*;
-import com.samebug.clients.http.entities.solution.ExternalDocument;
-import com.samebug.clients.http.entities.solution.SamebugTip;
-import com.samebug.clients.http.entities.solution.SolutionSlot;
+import com.samebug.clients.common.ui.frame.welcome.IWelcomeFrame;
 import com.samebug.clients.http.entities.user.Me;
-import com.samebug.clients.http.entities.user.RegisteredSamebugUser;
-import com.samebug.clients.http.entities.user.SamebugUser;
-import com.samebug.clients.http.entities.user.SamebugVisitor;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public final class ConversionService {
     public ConversionService() {
     }
 
-    public IMarkButton.Model convertMarkPanel(SearchHit hit) {
-        boolean userCanMark = hit.getMarkable();
-        Integer activeMarkId = hit.getActiveMark() == null ? null : hit.getActiveMark().getId();
-        return new IMarkButton.Model(hit.getVotes().getVotesOnDocument(), activeMarkId, userCanMark);
-    }
-
-    public ITipHit.Model tipHit(SearchHit<SamebugTip> hit) {
-        SamebugTip tip = hit.getSolution().getDocument();
-        IMarkButton.Model mark = convertMarkPanel(hit);
-        RegisteredSamebugUser author = tip.getAuthor();
-        Integer solutionMatchLevel = hit.getScore() instanceof StackTraceSearchHitScore ? ((StackTraceSearchHitScore) hit.getScore()).getLevel() : 0;
-        return new ITipHit.Model(tip.getMessage(), hit.getSolution().getId(), solutionMatchLevel, tip.getDocumentId(),
-                tip.getCreatedAt(), author.getDisplayName(), author.getAvatarUrl(), mark);
-    }
-
-    public IWebResultsTab.Model webResultsTab(List<SearchHit<ExternalDocument>> solutions) {
-        final List<IWebHit.Model> webHits = new ArrayList<IWebHit.Model>(solutions.size());
-        for (SearchHit<ExternalDocument> externalHit : solutions) {
-            SolutionSlot<ExternalDocument> externalSolution = externalHit.getSolution();
-            ExternalDocument doc = externalSolution.getDocument();
-            IMarkButton.Model mark = convertMarkPanel(externalHit);
-            Integer solutionMatchLevel = externalHit.getScore() instanceof StackTraceSearchHitScore ? ((StackTraceSearchHitScore) externalHit.getScore()).getLevel() : 0;
-            IWebHit.Model webHit =
-                    new IWebHit.Model(doc.getTitle(), doc.getUrl(), externalSolution.getId(), solutionMatchLevel, doc.getDocumentId(),
-                            externalSolution.getCreatedAt(), doc.getAuthor().getDisplayName(),
-                            doc.getSource().getName(), doc.getSource().getIcon(),
-                            mark);
-            webHits.add(webHit);
-        }
-        return new IWebResultsTab.Model(webHits);
-    }
-
-    public ITipResultsTab.Model tipResultsTab(Search search, List<SearchHit<SamebugTip>> solutions, BugmateList bugmates, HelpRequest helpRequest) {
-        final List<ITipHit.Model> tipHits = new ArrayList<ITipHit.Model>(solutions.size());
-        for (SearchHit<SamebugTip> tipSolution : solutions) {
-            ITipHit.Model tipHit = tipHit(tipSolution);
-            tipHits.add(tipHit);
-        }
-        final List<IBugmateHit.Model> bugmateHits = new ArrayList<IBugmateHit.Model>(bugmates.getData().size());
-        for (BugmateMatch b : bugmates.getData()) {
-            final SearchGroup g = b.getMatchingGroup();
-            final Integer nMateHasSeenThisSearch = g.getNumberOfSearches();
-            final Date lastTimeMateHasSeenThisSearch = g.getLastSeen();
-            final com.samebug.clients.common.entities.user.SamebugUser.Base userModel;
-            if (b.getBugmate() instanceof RegisteredSamebugUser) {
-                final RegisteredSamebugUser bugmate = (RegisteredSamebugUser) b.getBugmate();
-                final ConnectionStatus status;
-                if (bugmate.getOnline() == null) status = ConnectionStatus.UNDEFINED;
-                else if (bugmate.getOnline()) status = ConnectionStatus.ONLINE;
-                else status = ConnectionStatus.UNDEFINED;
-                userModel = new com.samebug.clients.common.entities.user.SamebugUser.Registered(bugmate.getUrl(), bugmate.getAvatarUrl(), status,
-                        bugmate.getId(), bugmate.getDisplayName());
-            } else {
-                final SamebugVisitor bugmate = (SamebugVisitor) b.getBugmate();
-                userModel = new com.samebug.clients.common.entities.user.SamebugUser.Visitor(bugmate.getUrl(), bugmate.getAvatarUrl(),
-                        ConnectionStatus.UNDEFINED, bugmate.getVisitorId());
-            }
-            IBugmateHit.Model model = new IBugmateHit.Model(userModel, nMateHasSeenThisSearch, lastTimeMateHasSeenThisSearch, b.getLevel(), b.getMatchingGroup().getId());
-            bugmateHits.add(model);
-        }
-        String exceptionTitle = headLine(search.getQueryInfo());
-        IBugmateList.Model bugmateList = new IBugmateList.Model(bugmateHits, bugmates.getMeta().getTotal() - bugmateHits.size());
-        IAskForHelp.Model askForHelp = new IAskForHelp.Model(bugmates.getMeta().getTotal(), exceptionTitle);
-        IMyHelpRequest.Model myHelpRequest = (helpRequest != null) ? new IMyHelpRequest.Model(helpRequest.getId(), helpRequest.getCreatedAt(), helpRequest.getContext()) : null;
-        return new ITipResultsTab.Model(tipHits, bugmateList, askForHelp, myHelpRequest);
-    }
-
-    public IProfilePanel.Model profilePanel(IncomingHelpRequestList incomingRequests, Me user, UserStats statistics) {
+    public IProfilePanel.Model profilePanel(Me user) {
         ConnectionStatus status = IdeaSamebugPlugin.getInstance().clientService.getWsClient().isConnected() ? ConnectionStatus.ONLINE : ConnectionStatus.OFFLINE;
-        return new IProfilePanel.Model(incomingRequests.getMeta().getTotal(), statistics.getNumberOfVotes(), statistics.getNumberOfTips(), statistics.getNumberOfThanks(),
+        return new IProfilePanel.Model(user.getId(),
                 user.getDisplayName(), user.getAvatarUrl(), status);
     }
 
-    public ISolutionFrame.Model solutionFrame(Search search, List<SearchHit<SamebugTip>> tipHits, List<SearchHit<ExternalDocument>> webHits,
-                                              BugmateList bugmates, HelpRequest helpRequest, IncomingHelpRequestList incomingRequests, Me user, UserStats statistics) {
-        IWebResultsTab.Model webResults = webResultsTab(webHits);
-        ITipResultsTab.Model tipResults = tipResultsTab(search, tipHits, bugmates, helpRequest);
+    public IWelcomeFrame.Model convertWelcomeFrame(Me user) {
+        IProfilePanel.Model profile = profilePanel(user);
 
-        IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(bugmates.getMeta().getTotal());
-        String exceptionTitle = headLine(search.getQueryInfo());
-        IResultTabs.Model resultTabs = new IResultTabs.Model(webResults, tipResults, cta);
-        ISearchHeaderPanel.Model header = new ISearchHeaderPanel.Model(exceptionTitle);
-        IProfilePanel.Model profile = profilePanel(incomingRequests, user, statistics);
-        return new ISolutionFrame.Model(resultTabs, header, profile);
-    }
-
-    public IHelpRequestHeader.Model helpRequestHeader(HelpRequestMatch helpRequestMatch) {
-        HelpRequest helpRequest = helpRequestMatch.getHelpRequest();
-        RegisteredSamebugUser requester = helpRequest.getRequester();
-        return new IHelpRequestHeader.Model(headLine(helpRequestMatch), requester.getDisplayName(), requester.getAvatarUrl());
-    }
-
-    public IHelpRequestTab.Model helpRequestTab(List<SearchHit<SamebugTip>> tipHits, HelpRequestMatch helpRequestMatch) {
-        HelpRequest helpRequest = helpRequestMatch.getHelpRequest();
-        final List<ITipHit.Model> tipHitModels = new ArrayList<ITipHit.Model>(tipHits.size());
-        for (SearchHit<SamebugTip> tipSolution : tipHits) {
-            ITipHit.Model tipHit = tipHit(tipSolution);
-            tipHitModels.add(tipHit);
-        }
-        RegisteredSamebugUser requester = helpRequest.getRequester();
-        IHelpRequest.Model request = new IHelpRequest.Model(requester.getDisplayName(), requester.getAvatarUrl(), helpRequest.getCreatedAt(), helpRequest.getContext());
-        return new IHelpRequestTab.Model(tipHitModels, request);
-    }
-
-
-    public IHelpRequestFrame.Model convertHelpRequestFrame(List<SearchHit<SamebugTip>> tipHits, List<SearchHit<ExternalDocument>> webHits, HelpRequestMatch helpRequestMatch,
-                                                           IncomingHelpRequestList incomingRequests, Me user, UserStats statistics) {
-        IWebResultsTab.Model webResults = webResultsTab(webHits);
-        IHelpRequestTab.Model helpRequestTab = helpRequestTab(tipHits, helpRequestMatch);
-        IHelpOthersCTA.Model cta = new IHelpOthersCTA.Model(0);
-        IHelpRequestTabs.Model tabs = new IHelpRequestTabs.Model(webResults, helpRequestTab, cta);
-        IHelpRequestHeader.Model header = helpRequestHeader(helpRequestMatch);
-        IProfilePanel.Model profile = profilePanel(incomingRequests, user, statistics);
-
-        return new IHelpRequestFrame.Model(tabs, header, profile);
-    }
-
-    public IHelpRequestListFrame.Model convertHelpRequestListFrame(IncomingHelpRequestList incomingRequests, Me user, UserStats statistics) {
-        List<IHelpRequestPreview.Model> requestPreviews = new ArrayList<IHelpRequestPreview.Model>(incomingRequests.getData().size());
-        for (HelpRequestMatch m : incomingRequests.getData()) {
-            HelpRequest r = m.getHelpRequest();
-            RegisteredSamebugUser requester = r.getRequester();
-            String exceptionBody = headLine(m);
-            IHelpRequestPreview.Model preview = new IHelpRequestPreview.Model(requester.getDisplayName(), requester.getAvatarUrl(), r.getCreatedAt(),
-                    m.getViewedAt(), r.getContext(), r.getId(), exceptionBody);
-            requestPreviews.add(preview);
-        }
-        IHelpRequestList.Model requestList = new IHelpRequestList.Model(requestPreviews);
-        IHelpRequestListHeader.Model header = new IHelpRequestListHeader.Model(incomingRequests.getMeta().getTotal());
-        IProfilePanel.Model profile = profilePanel(incomingRequests, user, statistics);
-
-        return new IHelpRequestListFrame.Model(header, requestList, profile);
-    }
-
-    public IHelpRequestPopup.Model convertHelpRequestPopup(IncomingHelpRequest incomingRequest) {
-        HelpRequest hr = incomingRequest.getMatch().getHelpRequest();
-        return new IHelpRequestPopup.Model(hr.getContext(), hr.getRequester().getDisplayName(), hr.getRequester().getAvatarUrl());
-    }
-
-    public IIncomingTipPopup.Model convertIncomingTipPopup(IncomingAnswer incomingTip) {
-        SamebugTip tip = incomingTip.getSolution().getDocument();
-        RegisteredSamebugUser author = tip.getAuthor();
-        return new IIncomingTipPopup.Model(tip.getMessage(), author.getDisplayName(), author.getAvatarUrl());
-    }
-
-    public IIncomingChatInvitationPopup.Model convertIncomingChatInvitationPopup(ChatInvitation chatInvitation) {
-        Search search = chatInvitation.getInvitationSource().getSearch();
-        SamebugUser inviter = chatInvitation.getInviter();
-        return new IIncomingChatInvitationPopup.Model(search.getId(), inviter.getDisplayName(), inviter.getAvatarUrl());
-    }
-
-    public static String headLine(QueryInfo search) {
-        if (search instanceof StackTraceInfo) {
-            StackTraceInfo i = (StackTraceInfo) search;
-            return headLine(i.getExceptionType(), i.getExceptionMessage());
-        } else {
-            throw new IllegalArgumentException(search + " is not stack trace");
-        }
-    }
-
-    public static String headLine(HelpRequestMatch helpRequestMatch) {
-        QueryInfo searchInfo = helpRequestMatch.getMatchingGroup().getLastSearchInfo();
-        assert searchInfo != null : "User should always see his own group's query info";
-        return headLine(searchInfo);
-    }
-
-    public static String headLine(@NotNull String typeName, @Nullable String message) {
-        return (message != null) ? typeName + ": " + message : typeName;
+        return new IWelcomeFrame.Model(profile);
     }
 }

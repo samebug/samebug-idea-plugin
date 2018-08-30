@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.services;
 
-import com.samebug.clients.http.entities.profile.UserStats;
 import com.samebug.clients.http.entities.user.Me;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import org.jetbrains.annotations.NotNull;
@@ -36,12 +35,6 @@ public final class ProfileService {
     public Me loadUserInfo() throws SamebugClientException {
         Me result = clientService.getClient().getUserInfo();
         store.user.set(result);
-        return result;
-    }
-
-    public UserStats loadUserStats() throws SamebugClientException {
-        UserStats result = clientService.getClient().getUserStats();
-        store.statistics.set(result);
         return result;
     }
 }

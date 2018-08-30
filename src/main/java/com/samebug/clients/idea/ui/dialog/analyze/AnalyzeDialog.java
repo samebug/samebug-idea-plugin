@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import com.samebug.clients.http.exceptions.BadRequest;
 import com.samebug.clients.http.exceptions.SamebugClientException;
 import com.samebug.clients.http.exceptions.UserUnauthenticated;
 import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
-import com.samebug.clients.idea.messages.FocusListener;
+import com.samebug.clients.idea.messages.OpenCrashListener;
 import com.samebug.clients.idea.ui.modules.BrowserUtil;
 import com.samebug.clients.swing.tracking.SwingRawEvent;
 import com.samebug.clients.swing.tracking.TrackingKeys;
@@ -135,9 +135,10 @@ public final class AnalyzeDialog extends DialogWrapper {
                 Search search = result.getData();
                 final int searchId = search.getId();
 
-                if (!(search.getQueryInfo() instanceof StackTraceInfo)) displayError(MessageService.message("samebug.menu.analyze.dialog.error.textSearch"));
+                if (!(search.getQueryInfo() instanceof StackTraceInfo))
+                    displayError(MessageService.message("samebug.menu.analyze.dialog.error.textSearch"));
                 else {
-                    myProject.getMessageBus().syncPublisher(FocusListener.TOPIC).focusOnSearch(searchId);
+                    myProject.getMessageBus().syncPublisher(OpenCrashListener.TOPIC).openCrash(searchId);
                     TrackingService.trace(SwingRawEvent.searchCreate(panel, DataService.getData(panel, TrackingKeys.SearchTransaction), search));
                     AnalyzeDialog.this.close(OK_EXIT_CODE);
                 }

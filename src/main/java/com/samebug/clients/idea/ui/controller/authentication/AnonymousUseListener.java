@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public final class AnonymousUseListener implements IAnonymousUseForm.Listener {
             @Override
             protected void afterPostForm(@NotNull AuthenticationResponse response) {
                 source.successPost();
-                controller.twc.focusOnHelpRequestList();
+                controller.twc.focusOnWelcome();
                 TrackingService.trace(SwingRawEvent.authenticationSucceeded(sourceComponent, authenticationTransactionId, response));
             }
         }.execute();

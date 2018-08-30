@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package com.samebug.clients.common.ui.component.profile;
 
-import com.samebug.clients.common.ui.component.bugmate.ConnectionStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
@@ -27,23 +26,17 @@ public interface IProfilePanel {
     void setModel(@NotNull Model model);
 
     final class Model {
-        public final int messages;
-        public final int marks;
-        public final int tips;
-        public final int thanks;
+        public final Integer userId;
         public final String name;
         public final URL avatarUrl;
         public final ConnectionStatus status;
 
         public Model(Model rhs) {
-            this(rhs.messages, rhs.marks, rhs.tips, rhs.thanks, rhs.name, rhs.avatarUrl, rhs.status);
+            this(rhs.userId, rhs.name, rhs.avatarUrl, rhs.status);
         }
 
-        public Model(int messages, int marks, int tips, int thanks, String name, URL avatarUrl, ConnectionStatus status) {
-            this.messages = messages;
-            this.marks = marks;
-            this.tips = tips;
-            this.thanks = thanks;
+        public Model(Integer userId, String name, URL avatarUrl, ConnectionStatus status) {
+            this.userId = userId;
             this.name = name;
             this.avatarUrl = avatarUrl;
             this.status = status;
@@ -51,6 +44,6 @@ public interface IProfilePanel {
     }
 
     interface Listener {
-        void messagesClicked();
+        void profileClicked(Integer userId);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -121,8 +121,10 @@ public abstract class BasicButton extends JComponent {
     private void paintBorder(Graphics2D g2) {
         // draw the rounded border
         g2.setColor(getForeground());
-        if (filled) g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, DrawService.RoundingDiameter, DrawService.RoundingDiameter);
-        else g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, DrawService.RoundingDiameter, DrawService.RoundingDiameter);
+        if (filled)
+            g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, DrawService.RoundingDiameter, DrawService.RoundingDiameter);
+        else
+            g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, DrawService.RoundingDiameter, DrawService.RoundingDiameter);
     }
 
     private void paintContent(Graphics2D g2) {
@@ -139,7 +141,8 @@ public abstract class BasicButton extends JComponent {
     // TODO maybe interaction listener should handle the disabled state also?
     private void updateColors() {
         if (isEnabled() && interactionListener != null) setForeground(interactionListener.getColor());
-        else if (!isEnabled() && interactionColors != null) setForeground(ColorService.forCurrentTheme(interactionColors.disabled));
+        else if (!isEnabled() && interactionColors != null)
+            setForeground(ColorService.forCurrentTheme(interactionColors.disabled));
         setBackground(ColorService.forCurrentTheme(backgroundColor));
     }
 

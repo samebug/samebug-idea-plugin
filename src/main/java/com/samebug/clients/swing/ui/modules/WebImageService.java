@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,7 +87,8 @@ public final class WebImageService {
                     @Override
                     public void run() {
                         BufferedImage loadedImage = readImageAndSaveToCache(url);
-                        if (loadedImage != null) observer.imageUpdate(loadedImage, ImageObserver.ALLBITS, 0, 0, loadedImage.getWidth(), loadedImage.getHeight());
+                        if (loadedImage != null)
+                            observer.imageUpdate(loadedImage, ImageObserver.ALLBITS, 0, 0, loadedImage.getWidth(), loadedImage.getHeight());
                     }
                 });
                 return null;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,7 +101,8 @@ public final class RawClient {
         if (request.containsHeader("X-Samebug-ApiKey")) {
             connectionStatus = ConnectionStatus.authenticatedConnection();
             // NOTE if the api key was set, but it is null, we can tell that we will fail to authenticate without actually executing the request.
-            if (request.getFirstHeader("X-Samebug-ApiKey").getValue() == null) return handler.onError(new UserUnauthenticated());
+            if (request.getFirstHeader("X-Samebug-ApiKey").getValue() == null)
+                return handler.onError(new UserUnauthenticated());
         } else {
             connectionStatus = ConnectionStatus.unauthenticatedConnection();
         }

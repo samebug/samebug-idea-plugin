@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,4 +55,7 @@ public abstract class IconService {
 
     public static final Icon cogwheel = IconLoader.getIcon("/com/samebug/icons/cogwheel.png");
     public static final Icon cogwheelTodo = IconLoader.getIcon("/com/samebug/icons/cogwheel-todo.png");
+
+
+    public static final Icon welcomeSnapshot = IconLoader.getIcon("/com/samebug/welcome/plugin-snapshot.png");
 }

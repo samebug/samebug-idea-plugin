@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,8 @@ package com.samebug.clients.swing.tracking;
 import com.samebug.clients.common.tracking.Funnels;
 import com.samebug.clients.common.tracking.Locations;
 import com.samebug.clients.common.tracking.RawEvent;
-import com.samebug.clients.common.tracking.TrackedUser;
 import com.samebug.clients.http.entities.authentication.AuthenticationResponse;
 import com.samebug.clients.http.entities.search.Search;
-import com.samebug.clients.http.entities.search.SearchHit;
-import com.samebug.clients.http.entities.solution.SamebugTip;
 import com.samebug.clients.swing.ui.modules.DataService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,123 +58,6 @@ public class SwingRawEvent extends RawEvent {
     }
 
 
-    // Help request funnel
-    public static RawEvent helpRequestHookTrigger(@NotNull final JComponent source, @Nullable final String transactionId, @NotNull final String hookId) {
-        return new SwingRawEvent("HelpRequest", "HookTriggered", source) {
-            protected void myLazyFields() {
-                withFunnel(new Funnels.Instance(Funnels.HELP_REQUEST, transactionId));
-                withData("hookId", hookId);
-            }
-        };
-    }
-
-    public static RawEvent helpRequestSubmit(@NotNull final JComponent source, @Nullable final String transactionId) {
-        return new SwingRawEvent("HelpRequest", "Submitted", source) {
-            protected void myLazyFields() {
-                withFunnel(new Funnels.Instance(Funnels.HELP_REQUEST, transactionId));
-            }
-        };
-    }
-
-    public static RawEvent helpRequestCreate(@NotNull final JComponent source, @Nullable final String transactionId, @NotNull final String helpRequestId) {
-        return new SwingRawEvent("HelpRequest", "Created", source) {
-            protected void myLazyFields() {
-                withFunnel(new Funnels.Instance(Funnels.HELP_REQUEST, transactionId));
-                withData("helpRequestId", helpRequestId);
-            }
-        };
-    }
-
-    public static RawEvent helpRequestDisplay(@NotNull final JComponent source, @NotNull final String helpRequestId) {
-        return new SwingRawEvent("HelpRequest", "Displayed", source) {
-            protected void myLazyFields() {
-                withData("helpRequestId", helpRequestId);
-            }
-        };
-    }
-
-
-    // Write tip funnel
-    public static RawEvent writeTipHookTrigger(@NotNull final JComponent source, @Nullable final String transactionId,
-                                               @Nullable final String helpRequestId, @NotNull final String hookId) {
-        return new SwingRawEvent("WriteTip", "HookTriggered", source) {
-            protected void myLazyFields() {
-                withFunnel(new Funnels.Instance(Funnels.WRITE_TIP, transactionId));
-                withData("helpRequestId", helpRequestId);
-                withData("hookId", hookId);
-            }
-        };
-    }
-
-    public static RawEvent writeTipSubmit(@NotNull final JComponent source, @Nullable final String transactionId, @Nullable final String helpRequestId) {
-        return new SwingRawEvent("WriteTip", "Submitted", source) {
-            protected void myLazyFields() {
-                withFunnel(new Funnels.Instance(Funnels.WRITE_TIP, transactionId));
-                withData("helpRequestId", helpRequestId);
-            }
-        };
-    }
-
-    public static RawEvent writeTipCreate(@NotNull final JComponent source, @Nullable final String transactionId,
-                                          @Nullable final String helpRequestId, @NotNull final SearchHit<SamebugTip> response) {
-        return new SwingRawEvent("WriteTip", "Created", source) {
-            protected void myLazyFields() {
-                withFunnel(new Funnels.Instance(Funnels.WRITE_TIP, transactionId));
-                withData("solutionId", response.getSolution().getId());
-                withData("documentId", response.getSolution().getDocument().getDocumentId());
-                withData("helpRequestId", helpRequestId);
-            }
-        };
-    }
-
-    // Solution funnel
-    public static RawEvent solutionDisplay(@NotNull final JComponent source, @Nullable final String transactionId) {
-        return new SwingRawEvent("Solution", "Displayed", source) {
-            protected void myLazyFields() {
-                withFunnel(new Funnels.Instance(Funnels.SOLUTION, transactionId));
-                withHit();
-            }
-        };
-    }
-
-    public static RawEvent solutionClick(@NotNull final JComponent source, @Nullable final String transactionId) {
-        return new SwingRawEvent("Solution", "Clicked", source) {
-            protected void myLazyFields() {
-                withFunnel(new Funnels.Instance(Funnels.SOLUTION, transactionId));
-                withHit();
-            }
-        };
-    }
-
-    public static RawEvent markSubmit(@NotNull final JComponent source, @Nullable final String transactionId) {
-        return new SwingRawEvent("Mark", "Submitted", source) {
-            protected void myLazyFields() {
-                withFunnel(new Funnels.Instance(Funnels.SOLUTION, transactionId));
-                withHit();
-            }
-        };
-    }
-
-    public static RawEvent markCreate(@NotNull final JComponent source, @Nullable final String transactionId, @NotNull final Integer markId) {
-        return new SwingRawEvent("Mark", "Created", source) {
-            protected void myLazyFields() {
-                withFunnel(new Funnels.Instance(Funnels.SOLUTION, transactionId));
-                withData("markId", markId);
-                withHit();
-            }
-        };
-    }
-
-    public static RawEvent markCancel(@NotNull final JComponent source, @Nullable final String transactionId, @NotNull final Integer markId) {
-        return new SwingRawEvent("Mark", "Cancelled", source) {
-            protected void myLazyFields() {
-                withFunnel(new Funnels.Instance(Funnels.SOLUTION, transactionId));
-                withHit();
-                withData("cancelledMarkId", markId);
-            }
-        };
-    }
-
     // Search funnel
     public static RawEvent searchHookTrigger(@Nullable final String transactionId, @NotNull final String hookId) {
         return new RawEvent("StackTraceSearch", "HookTriggered") {
@@ -213,29 +93,6 @@ public class SwingRawEvent extends RawEvent {
             }
         };
     }
-
-    // Bugmates
-    public static RawEvent bugmateDisplay(@NotNull final JComponent source,
-                                          @NotNull final TrackedUser bugmate, @NotNull final Integer level, @NotNull final String matchingGroupId) {
-        return new SwingRawEvent("Bugmate", "Displayed", source) {
-            protected void myLazyFields() {
-                withData("bugmate", bugmate);
-                withData("position", DataService.getData(eventSource, TrackingKeys.BugmateHitIndex));
-                withData("level", level);
-                withData("matchingGroupId", matchingGroupId);
-            }
-        };
-    }
-
-
-    public static RawEvent chatOpened(@NotNull final JComponent source, @NotNull final Integer searchId) {
-        return new SwingRawEvent("Chat", "Opened", source) {
-            protected void myLazyFields() {
-                withData("searchId", searchId);
-            }
-        };
-    }
-
 
     // Generic interactions
     public static RawEvent buttonClick(@NotNull final JComponent source) {
@@ -306,11 +163,5 @@ public class SwingRawEvent extends RawEvent {
 
     protected void myLazyFields() {
 
-    }
-
-    @NotNull
-    SwingRawEvent withHit() {
-        withData("hit", DataService.getData(eventSource, TrackingKeys.SolutionHit));
-        return this;
     }
 }

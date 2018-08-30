@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,8 @@ class AbstractObjectAdapter<T> implements JsonDeserializer<T> {
         else {
             JsonObject jsonObject = json.getAsJsonObject();
             JsonElement typeFieldValue = jsonObject.get(typeField);
-            if (typeFieldValue == null) throw new JsonParseException("Cannot serialize " + typeOfT + " because the type field" + typeField + " is missing");
+            if (typeFieldValue == null)
+                throw new JsonParseException("Cannot serialize " + typeOfT + " because the type field" + typeField + " is missing");
             else {
                 String type = jsonObject.get(typeField).getAsString();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,8 @@ final class RestUriBuilder {
 
     RestUriBuilder(@NotNull final String serverRoot) {
         assert !serverRoot.endsWith("/");
-        if ("http://localhost:9000".equals(serverRoot) || "http://127.0.0.1:9000".equals(serverRoot)) this.gateway = URI.create(serverRoot + "/");
+        if ("http://localhost:9000".equals(serverRoot) || "http://127.0.0.1:9000".equals(serverRoot))
+            this.gateway = URI.create(serverRoot + "/");
         else this.gateway = URI.create(serverRoot + "/").resolve("rest/1.0");
     }
 
@@ -40,58 +41,8 @@ final class RestUriBuilder {
     }
 
     @NotNull
-    public URI solutionsForSearch(@NotNull final Integer searchId) {
-        return resolve("searches/" + searchId + "/external-solutions");
-    }
-
-    @NotNull
-    public URI tipsForSearch(@NotNull final Integer searchId) {
-        return resolve("searches/" + searchId + "/tips");
-    }
-
-    @NotNull
-    public URI bugmatesForSearch(@NotNull final Integer searchId) {
-        return resolve("searches/" + searchId + "/bugmates");
-    }
-
-    @NotNull
     public URI me() {
         return resolve("auth/me");
-    }
-
-    @NotNull
-    public URI chatOnSearch(@NotNull final Integer searchId) {
-        return resolve("searches/" + searchId + "/chat");
-    }
-
-    @NotNull
-    public URI helpRequests(@NotNull final Integer searchId) {
-        return resolve("searches/" + searchId + "/help-requests");
-    }
-
-    @NotNull
-    public URI helpRequest(String helpRequestId) {
-        return resolve("help-requests/" + helpRequestId);
-    }
-
-    @NotNull
-    public URI marksForSearch(@NotNull final Integer searchId) {
-        return resolve("searches/" + searchId + "/marks");
-    }
-
-    @NotNull
-    public URI mark(@NotNull final Integer markId) {
-        return resolve("marks/" + markId);
-    }
-
-    @NotNull
-    public URI incomingHelpRequests(@NotNull final Integer userId) {
-        return resolve("users/" + userId + "/incoming-help-requests");
-    }
-
-    @NotNull
-    public URI userStats(@NotNull final Integer userId) {
-        return resolve("users/" + userId + "/stats");
     }
 
     @NotNull

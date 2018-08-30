@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,8 @@
  */
 package com.samebug.clients.http.websocket;
 
-import com.samebug.clients.http.entities.notification.ChatInvitation;
-import com.samebug.clients.http.entities.notification.IncomingAnswer;
-import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.http.entities.notification.Notification;
 
 public interface NotificationHandler {
-    void helpRequestReceived(IncomingHelpRequest helpRequestNotification);
-
-    void tipReceived(IncomingAnswer tipNotification);
-
-    void chatInvitationReceived(ChatInvitation chatInvitation);
-
     void otherNotificationType(Notification notification);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package com.samebug.clients.idea.components.application;
 import com.google.gson.JsonParseException;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.samebug.clients.common.ui.component.bugmate.ConnectionStatus;
+import com.samebug.clients.common.ui.component.profile.ConnectionStatus;
 import com.samebug.clients.http.websocket.NotificationHandler;
 import com.samebug.clients.http.websocket.SamebugWebSocketEventHandler;
 import com.samebug.clients.idea.messages.WebSocketStatusUpdate;

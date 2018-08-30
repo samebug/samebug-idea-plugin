@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import java.util.Date;
 
 public final class Search {
     private Integer id;
-    private SearchGroup group;
     private Date timestamp;
     private SamebugUser user;
     private Integer workspaceId;
@@ -32,11 +31,6 @@ public final class Search {
     @NotNull
     public Integer getId() {
         return id;
-    }
-
-    @NotNull
-    public SearchGroup getGroup() {
-        return group;
     }
 
     @NotNull

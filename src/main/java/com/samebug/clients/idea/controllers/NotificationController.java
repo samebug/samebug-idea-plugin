@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +20,10 @@ import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationsConfiguration;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.DataKeys;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.samebug.clients.http.entities.notification.ChatInvitation;
-import com.samebug.clients.http.entities.notification.IncomingAnswer;
-import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.http.entities.notification.Notification;
 import com.samebug.clients.http.websocket.NotificationHandler;
-import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 
 public final class NotificationController implements NotificationHandler {
     static final Logger LOGGER = Logger.getInstance(NotificationController.class);
@@ -37,54 +31,6 @@ public final class NotificationController implements NotificationHandler {
 
     public NotificationController() {
         NotificationsConfiguration.getNotificationsConfiguration().register(PROFILE, NotificationDisplayType.BALLOON, false);
-    }
-
-    @Override
-    public void helpRequestReceived(final IncomingHelpRequest helpRequest) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-                for (Project p : openProjects) {
-                    p.getMessageBus().syncPublisher(com.samebug.clients.idea.messages.IncomingHelpRequest.TOPIC).addHelpRequest(helpRequest);
-                }
-                if (openProjects.length != 0) {
-                    Project projectToShowPopup = selectProjectToShowPopup(openProjects);
-                    projectToShowPopup.getMessageBus().syncPublisher(com.samebug.clients.idea.messages.IncomingHelpRequest.TOPIC).showHelpRequest(helpRequest);
-                }
-            }
-        });
-
-        // Invalidate currently cached help request list
-        IdeaSamebugPlugin.getInstance().helpRequestStore.invalidate();
-    }
-
-    @Override
-    public void tipReceived(final IncomingAnswer tip) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-                if (openProjects.length != 0) {
-                    Project projectToShowPopup = selectProjectToShowPopup(openProjects);
-                    projectToShowPopup.getMessageBus().syncPublisher(com.samebug.clients.idea.messages.IncomingTip.TOPIC).showTip(tip);
-                }
-            }
-        });
-    }
-
-    @Override
-    public void chatInvitationReceived(final ChatInvitation chatInvitation) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-                if (openProjects.length != 0) {
-                    Project projectToShowPopup = selectProjectToShowPopup(openProjects);
-                    projectToShowPopup.getMessageBus().syncPublisher(com.samebug.clients.idea.messages.IncomingChatInvitation.TOPIC).invitedToChat(chatInvitation);
-                }
-            }
-        });
     }
 
     @Override

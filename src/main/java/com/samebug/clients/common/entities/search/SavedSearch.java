@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,27 +56,7 @@ public class SavedSearch implements SearchRequest {
         return savedSearch.getData().getId();
     }
 
-    public boolean hasTip() {
-        return savedSearch.getMeta().getHasTips();
-    }
-
-    public boolean hasHelpRequest() {
-        return savedSearch.getMeta().getHasHelpRequests();
-    }
-
-    public boolean hasBugmate() {
-        return savedSearch.getMeta().getHasBugmates();
-    }
-
-    public boolean hasWebHit() {
-        return savedSearch.getMeta().getHasExternalSolutions();
-    }
-
     public SolutionType getSolutionType() {
-        if (hasTip()) return SolutionType.TIP;
-        else if (hasHelpRequest()) return SolutionType.HELP_REQUEST;
-        else if (hasBugmate()) return SolutionType.BUGMATE;
-        else if (hasWebHit()) return SolutionType.WEBHIT;
         return SolutionType.NONE;
     }
 

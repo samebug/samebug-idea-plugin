@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,6 @@ package com.samebug.clients.http.websocket;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import com.samebug.clients.http.entities.notification.ChatInvitation;
-import com.samebug.clients.http.entities.notification.IncomingAnswer;
-import com.samebug.clients.http.entities.notification.IncomingHelpRequest;
 import com.samebug.clients.http.entities.notification.Notification;
 import com.samebug.clients.http.json.Json;
 
@@ -33,9 +30,6 @@ public abstract class SamebugWebSocketEventHandler implements WebSocketEventHand
 
     protected void readMessage(String message) throws JsonParseException {
         Notification n = gson.fromJson(message, Notification.class);
-        if (n instanceof IncomingHelpRequest) handler.helpRequestReceived((IncomingHelpRequest) n);
-        else if (n instanceof IncomingAnswer) handler.tipReceived((IncomingAnswer) n);
-        else if (n instanceof ChatInvitation) handler.chatInvitationReceived((ChatInvitation) n);
-        else handler.otherNotificationType(n);
+        handler.otherNotificationType(n);
     }
 }

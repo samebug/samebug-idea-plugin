@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,8 @@ public class StackTraceMatcherFactory implements LogScannerFactory {
     private class StackTracePublisher implements StackTraceListener {
         @Override
         public void stacktraceFound(String stacktrace) {
-            if (!myProject.isDisposed()) myProject.getMessageBus().syncPublisher(StackTraceMatcherListener.TOPIC).stackTraceFound(myProject, sessionInfo, stacktrace);
+            if (!myProject.isDisposed())
+                myProject.getMessageBus().syncPublisher(StackTraceMatcherListener.TOPIC).stackTraceFound(myProject, sessionInfo, stacktrace);
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,14 +46,16 @@ public class ConfigChangeListener implements com.samebug.clients.idea.messages.C
     }
 
     private void doConfigChange(ApplicationSettings old, ApplicationSettings c) {
-        if (!SBUtil.equals(c.apiKey, old.apiKey) || !SBUtil.equals(c.workspaceId, old.workspaceId)) IdeaSamebugPlugin.getInstance().profileStore.invalidate();
+        if (!SBUtil.equals(c.apiKey, old.apiKey) || !SBUtil.equals(c.workspaceId, old.workspaceId))
+            IdeaSamebugPlugin.getInstance().profileStore.invalidate();
 
         if (c.apiKey == null) {
             final String authenticationTransactionId = Funnels.newTransactionId();
             TrackingService.trace(SwingRawEvent.authenticationHookTriggered(authenticationTransactionId, Hooks.Authentication.UNAUTHENTICATED));
             twc.focusOnAuthentication(authenticationTransactionId);
         } else {
-            if (!SBUtil.equals(c.apiKey, old.apiKey) || !SBUtil.equals(c.serverRoot, old.serverRoot)) twc.focusOnHelpRequestList();
+            if (!SBUtil.equals(c.apiKey, old.apiKey) || !SBUtil.equals(c.serverRoot, old.serverRoot))
+                twc.focusOnWelcome();
         }
     }
 }

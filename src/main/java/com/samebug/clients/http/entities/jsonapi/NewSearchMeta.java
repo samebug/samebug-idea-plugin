@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,31 +18,7 @@ package com.samebug.clients.http.entities.jsonapi;
 import org.jetbrains.annotations.NotNull;
 
 public final class NewSearchMeta {
-    private Boolean hasTips;
-    private Boolean hasExternalSolutions;
-    private Boolean hasBugmates;
-    private Boolean hasHelpRequests;
     private Integer firstLine;
-
-    @NotNull
-    public Boolean getHasTips() {
-        return hasTips;
-    }
-
-    @NotNull
-    public Boolean getHasHelpRequests() {
-        return hasHelpRequests;
-    }
-
-    @NotNull
-    public Boolean getHasExternalSolutions() {
-        return hasExternalSolutions;
-    }
-
-    @NotNull
-    public Boolean getHasBugmates() {
-        return hasBugmates;
-    }
 
     @NotNull
     public Integer getFirstLine() {

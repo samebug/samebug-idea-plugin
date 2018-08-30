@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Samebug, Inc.
+ * Copyright 2018 Samebug, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,11 @@
 package com.samebug.clients.idea.ui.controller.component;
 
 import com.samebug.clients.common.ui.component.profile.IProfilePanel;
+import com.samebug.clients.idea.components.application.IdeaSamebugPlugin;
 import com.samebug.clients.idea.ui.controller.frame.BaseFrameController;
+import com.samebug.clients.idea.ui.modules.BrowserUtil;
+
+import java.net.URI;
 
 public final class ProfileListener implements IProfilePanel.Listener {
     final BaseFrameController controller;
@@ -26,8 +30,9 @@ public final class ProfileListener implements IProfilePanel.Listener {
     }
 
     @Override
-    public void messagesClicked() {
-        controller.twc.focusOnHelpRequestList();
+    public void profileClicked(Integer userId) {
+        URI profileUrl = IdeaSamebugPlugin.getInstance().uriBuilder.profile(userId);
+        BrowserUtil.browse(profileUrl);
     }
 
 
